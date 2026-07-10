@@ -7,7 +7,7 @@ import '@lion/ui/define/lion-calendar.js';
 import { sendKeys } from '@web/test-runner-commands';
 import { isSameDate } from '@lion/ui/calendar.js';
 import { CalendarObject, DayObject } from '@lion/ui/calendar-test-helpers.js';
-import { LionCalendarSuite } from '../test-suites/LionCalendar.suite.js';
+import { runCalendarSuite } from '../test-suites/LionCalendar.suite.js';
 
 /**
  * @typedef {import('../src/LionCalendar.js').LionCalendar} LionCalendar
@@ -1670,6 +1670,6 @@ describe('<lion-calendar>', () => {
   });
 
   describe('Run suite', () => {
-    LionCalendarSuite();
+    runCalendarSuite();
   });
 });

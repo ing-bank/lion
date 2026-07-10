@@ -1,11 +1,10 @@
-import { html } from 'lit';
 import { LionCalendar } from '@lion/ui/calendar.js';
-import { expect, fixture, waitUntil, unsafeStatic, defineCE } from '@open-wc/testing';
+import { expect, html, fixture, waitUntil, unsafeStatic, defineCE } from '@open-wc/testing';
 import sinon from 'sinon';
 import '@lion/ui/define/lion-calendar.js';
 import { sendKeys } from '@web/test-runner-commands';
 
-export function LionCalendarSuite({ klass = LionCalendar } = {}) {
+export function runCalendarSuite({ klass = LionCalendar } = {}) {
   const tagStringCalendar = defineCE(class extends klass {});
   const tagCalendar = unsafeStatic(tagStringCalendar);
 
@@ -15,7 +14,7 @@ export function LionCalendarSuite({ klass = LionCalendar } = {}) {
      *
      * Setup:
      * - There is a dialog invoker button that has a keyup handler.
-     * - The dialog invoker button opens the dialog on click.
+     * - The dialog invoker button gets focused (important!) and then opens the dialog on click.
      * - The dialog contains lion-calendar.
      * - When a date is selected, the dialog closes.
      *
@@ -36,6 +35,10 @@ export function LionCalendarSuite({ klass = LionCalendar } = {}) {
 
     let el;
     const keyUpSpy = sinon.spy();
+    const test = () => {
+      console.log('button keyup');
+      keyUpSpy();
+    };
     const getDialogEl = () => el.querySelector('dialog');
     const openDialogButtonClickHandler = () => getDialogEl()?.showModal();
     const userSelectedDateChangedHandler = () => getDialogEl()?.close();
@@ -43,7 +46,7 @@ export function LionCalendarSuite({ klass = LionCalendar } = {}) {
     el = await fixture(html`
       <div>
         <button 
-          @keyup="${keyUpSpy}" 
+          @keyup="${test}" 
           @click="${openDialogButtonClickHandler}"
         >
           Open Dialog
@@ -59,9 +62,10 @@ export function LionCalendarSuite({ klass = LionCalendar } = {}) {
     `);
 
     const openDialogButton = el.querySelector('button');
-    const calendarEl = el.querySelector(tagCalendar);
+    const calendarEl = el.querySelector(tagStringCalendar);
     await calendarEl?.updateComplete;
 
+    openDialogButton?.focus();
     openDialogButton?.click();
     const getSelectedDateEl = () =>
       calendarEl?.shadowRoot?.querySelector('.calendar__day-button[selected]');
