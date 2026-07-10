@@ -482,6 +482,7 @@ describe('<lion-input-datepicker>', () => {
       const selectedDateEl = calendarEl?.shadowRoot?.querySelector(
         '.calendar__day-button[selected]',
       );
+      // @ts-ignore
       selectedDateEl?.focus();
 
       // Move focus to 18th of December

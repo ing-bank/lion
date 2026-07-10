@@ -33,6 +33,7 @@ export function runCalendarSuite({ klass = LionCalendar } = {}) {
      * - This prevents the dialog invoker button from receiving and handling that `keyup` after the dialog closes.
      */
 
+    /** @type {HTMLElement} */
     let el;
     const keyUpSpy = sinon.spy();
     const test = () => {
@@ -62,11 +63,14 @@ export function runCalendarSuite({ klass = LionCalendar } = {}) {
     `);
 
     const openDialogButton = el.querySelector('button');
-    const calendarEl = el.querySelector(tagStringCalendar);
+    const calendarEl = /** @type {LionCalendar} */ (el.querySelector(tagStringCalendar));
     await calendarEl?.updateComplete;
 
     openDialogButton?.focus();
     openDialogButton?.click();
+    /**
+     * @returns {HTMLElement | null | undefined}
+     */
     const getSelectedDateEl = () =>
       calendarEl?.shadowRoot?.querySelector('.calendar__day-button[selected]');
     await waitUntil(getSelectedDateEl);

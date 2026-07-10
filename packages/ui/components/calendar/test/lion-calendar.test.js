@@ -15,8 +15,15 @@ import { runCalendarSuite } from '../test-suites/LionCalendar.suite.js';
  */
 
 const fixture = /** @type {(arg: TemplateResult) => Promise<LionCalendar>} */ (_fixture);
-
+/**
+ * @param {HTMLElement} el
+ * @returns {HTMLElement | null | undefined}
+ */
 const getSelectedDateEl = el => el?.shadowRoot?.querySelector('.calendar__day-button[selected]');
+/**
+ * @param {HTMLElement} el
+ * @returns {void}
+ */
 const focusSelectedDate = el => getSelectedDateEl(el)?.focus();
 
 describe('<lion-calendar>', () => {
