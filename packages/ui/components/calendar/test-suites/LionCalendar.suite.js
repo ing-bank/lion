@@ -36,10 +36,6 @@ export function runCalendarSuite({ klass = LionCalendar } = {}) {
     /** @type {HTMLElement} */
     let el;
     const keyUpSpy = sinon.spy();
-    const test = () => {
-      console.log('button keyup');
-      keyUpSpy();
-    };
     const getDialogEl = () => el.querySelector('dialog');
     const openDialogButtonClickHandler = () => getDialogEl()?.showModal();
     const userSelectedDateChangedHandler = () => getDialogEl()?.close();
@@ -47,7 +43,7 @@ export function runCalendarSuite({ klass = LionCalendar } = {}) {
     el = await fixture(html`
       <div>
         <button 
-          @keyup="${test}" 
+          @keyup="${keyUpSpy}" 
           @click="${openDialogButtonClickHandler}"
         >
           Open Dialog
