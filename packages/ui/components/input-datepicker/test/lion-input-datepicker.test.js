@@ -9,6 +9,7 @@ import { DatepickerInputObject } from '@lion/ui/input-datepicker-test-helpers.js
 import { LionInputDatepicker } from '@lion/ui/input-datepicker.js';
 
 import '@lion/ui/define/lion-input-datepicker.js';
+import { runDatepickerSuite } from '../test-suites/LionInputDatepicker.suite.js';
 
 /**
  * @typedef {import('lit').TemplateResult} TemplateResult
@@ -837,5 +838,9 @@ describe('<lion-input-datepicker>', () => {
         'Datepicker does not get rendered as a popover',
       ).to.be.true;
     });
+  });
+
+  describe('Run suite', () => {
+    runDatepickerSuite();
   });
 });
