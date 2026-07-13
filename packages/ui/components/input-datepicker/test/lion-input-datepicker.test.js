@@ -4,11 +4,12 @@ import { IsDateDisabled, MaxDate, MinDate, MinMaxDate } from '@lion/ui/form-core
 import { aTimeout, defineCE, expect, fixture as _fixture, nextFrame } from '@open-wc/testing';
 import { mimicClick } from '@lion/ui/overlays-test-helpers.js';
 import sinon from 'sinon';
-import { setViewport } from '@web/test-runner-commands';
+import { sendKeys, setViewport } from '@web/test-runner-commands';
 import { DatepickerInputObject } from '@lion/ui/input-datepicker-test-helpers.js';
 import { LionInputDatepicker } from '@lion/ui/input-datepicker.js';
 
 import '@lion/ui/define/lion-input-datepicker.js';
+import { runDatepickerSuite } from '../test-suites/LionInputDatepicker.suite.js';
 
 /**
  * @typedef {import('lit').TemplateResult} TemplateResult
@@ -479,10 +480,14 @@ describe('<lion-input-datepicker>', () => {
       // Open the calendar
       await elObj.openCalendar();
 
+      const selectedDateEl = calendarEl?.shadowRoot?.querySelector(
+        '.calendar__day-button[selected]',
+      );
+      // @ts-ignore
+      selectedDateEl?.focus();
+
       // Move focus to 18th of December
-      calendarEl.shadowRoot
-        ?.querySelector('#js-content-wrapper')
-        ?.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight' }));
+      await sendKeys({ press: 'ArrowRight' });
 
       expect(/** @type {Date} */ (calendarEl.focusedDate).getTime()).to.equal(
         new Date('December 18, 2020 03:24:00 GMT+0000').getTime(),
@@ -833,5 +838,9 @@ describe('<lion-input-datepicker>', () => {
         'Datepicker does not get rendered as a popover',
       ).to.be.true;
     });
+  });
+
+  describe('Run suite', () => {
+    runDatepickerSuite();
   });
 });
