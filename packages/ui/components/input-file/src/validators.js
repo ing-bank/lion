@@ -2,13 +2,14 @@ import { Validator } from '@lion/ui/form-core.js';
 import { getLocalizeManager } from '@lion/ui/localize-no-side-effects.js';
 
 /**
+ * @typedef {import('../../form-core/types/validate/index.js').FeedbackMessageData} FeedbackMessageData
  * @typedef {import('../../form-core/types/validate/validate.js').ValidatorConfig} ValidatorConfig
  * @typedef {import('../../form-core/types/validate/validate.js').ValidatorParam} ValidatorParam
  * @typedef {import('../../form-core/types/validate/validate.js').ValidatorOutcome} ValidatorOutcome
  * @typedef {import('../types/input-file.js').InputFile} InputFile
  */
 
-/* eslint max-classes-per-file: ["error", 2] */
+/* eslint max-classes-per-file: ["error", 3] */
 export class IsAcceptedFile extends Validator {
   static validatorName = 'IsAcceptedFile';
 
@@ -110,5 +111,34 @@ export class DuplicateFileNames extends Validator {
     // TODO: we need to make sure namespace is loaded
     // TODO: keep Validators localize system agnostic
     return localizeManager.msg('lion-input-file:uploadTextDuplicateFileName');
+  }
+}
+
+export class MaxFileCount extends Validator {
+  static get validatorName() {
+    return 'MaxFileCount';
+  }
+
+  /**
+   * @param {Partial<FeedbackMessageData>} [data]
+   * @returns {Promise<string|Element>}
+   */
+  static async getMessage(data) {
+    const localizeManager = getLocalizeManager();
+    if (!data?.params || typeof data.params !== 'number' || data.params <= 0) {
+      return 'Invalid MaxFileCount parameter. Please provide a valid number greater than 0.';
+    }
+    return localizeManager.msg('lion-input-file:maxFileCountExceeded', {
+      maxFileCount: data.params,
+    });
+  }
+
+  /**
+   * @param {File[]} value
+   * @param {number} maxFiles
+   * @returns {boolean}
+   */
+  execute(value, maxFiles = this.param || 0) {
+    return maxFiles > 0 && value.length > maxFiles;
   }
 }
