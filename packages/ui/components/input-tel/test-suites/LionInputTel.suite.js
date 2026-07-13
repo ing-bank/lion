@@ -222,6 +222,12 @@ export function runInputTelSuite({ klass = LionInputTel } = {}) {
         expect(el._inputNode.inputMode).to.equal('tel');
       });
 
+      it('sets autocomplete to "tel"', async () => {
+        const el = await fixture(html` <${tag}></${tag}> `);
+        // @ts-expect-error [allow-protected] inside tests
+        expect(el._inputNode.autocomplete).to.equal('tel');
+      });
+
       it('formats according to locale', async () => {
         const el = await fixture(
           html` <${tag} .modelValue="${'+31612345678'}" .allowedRegions="${['NL']}"></${tag}> `,
