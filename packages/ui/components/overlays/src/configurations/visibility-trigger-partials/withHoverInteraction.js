@@ -37,7 +37,16 @@ export function withHoverInteraction({
       /** @type {NodeJS.Timeout} */
       let pendingLongpressTimeout;
       let longpressCompleted = false;
-      let lastPointerWasTouch = false;
+      // A tap fires pointerdown → pointerup → focusin because the browser moves keyboard focus to
+      // the tapped element. We only want focusin to open the tooltip when triggered by keyboard (Tab),
+      // not by tap. isLastPointerTouch marks that the preceding pointer event was a touch so the
+      // focusin handler can skip it.
+      let isLastPointerTouch = false;
+      // A tap fires the full mouse compatibility sequence: pointerdown → pointerup → mousedown → mouseup → click.
+      // Browsers generate these compatibility events automatically so touch works with mouse-only code.
+      // After a longpress the same click fires, which would trigger any click handler on the invoker
+      // e.g. opening a dialog alongside the tooltip. We register a capture-phase listener at longpress
+      // completion to intercept it, as capture runs before bubble so we stop it regardless of registration order.
       /** @type {((e: Event) => void) | null} */
       let pendingClickSuppressor = null;
 
@@ -68,16 +77,13 @@ export function withHoverInteraction({
       /**
        * @param {Event|PointerEvent} event
        */
-      async function handleHoverAndFocus(event) {
+      function handleHoverAndFocus(event) {
         const { type } = event;
         isFocused = type === 'focusout' ? false : isFocused || type === 'focusin';
         isHovered = type === 'mouseleave' ? false : isHovered || type === 'mouseenter';
-        // On touch devices, only open on keyboard-triggered focus, not tap-triggered focus.
-        // :focus-visible alone is unreliable — some browsers apply it on tap too — so we
-        // also track whether a touch pointerdown just preceded this focusin.
         if (!isHoverSupported && type === 'focusin') {
-          if (lastPointerWasTouch) {
-            lastPointerWasTouch = false;
+          if (isLastPointerTouch) {
+            isLastPointerTouch = false;
             return;
           }
           if (!controller.invokerNode?.matches(':focus-visible')) return;
@@ -92,19 +98,21 @@ export function withHoverInteraction({
       }
 
       /** @param {PointerEvent} event */
-      async function handleLongpress(event) {
+      function handleLongpress(event) {
         clearTimeout(pendingLongpressTimeout);
         if (event.pointerType !== 'touch') return;
         const { type } = event;
 
         if (type === 'pointerdown') {
           longpressCompleted = false;
-          lastPointerWasTouch = true;
+          isLastPointerTouch = true;
           pendingLongpressTimeout = setTimeout(() => {
             longpressCompleted = true;
+            // Intercept the compatibility click the browser generates at the end of the touch sequence.
+            // Capture phase ensures we run before any bubble-phase handler (e.g. a dialog opener).
             pendingClickSuppressor = e => e.stopImmediatePropagation();
             controller.invokerNode?.addEventListener('click', pendingClickSuppressor, {
-              once: true,
+              once: true, // auto-removes after first click
               capture: true,
             });
             openClose({ shouldOpen: true });
