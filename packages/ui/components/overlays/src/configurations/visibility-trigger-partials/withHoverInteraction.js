@@ -37,11 +37,20 @@ export function withHoverInteraction({
       /** @type {NodeJS.Timeout} */
       let pendingLongpressTimeout;
       let longpressCompleted = false;
+      let lastPointerWasTouch = false;
+      /** @type {((e: Event) => void) | null} */
+      let pendingClickSuppressor = null;
 
       function resetActive() {
         isFocused = false;
         isHovered = false;
         longpressCompleted = false;
+        if (pendingClickSuppressor) {
+          controller.invokerNode?.removeEventListener('click', pendingClickSuppressor, {
+            capture: true,
+          });
+          pendingClickSuppressor = null;
+        }
       }
 
       /**
@@ -63,13 +72,16 @@ export function withHoverInteraction({
         const { type } = event;
         isFocused = type === 'focusout' ? false : isFocused || type === 'focusin';
         isHovered = type === 'mouseleave' ? false : isHovered || type === 'mouseenter';
-        // On touch devices, only open on keyboard-triggered focus, not tap-triggered focus
-        if (
-          !isHoverSupported &&
-          type === 'focusin' &&
-          !controller.invokerNode?.matches(':focus-visible')
-        )
-          return;
+        // On touch devices, only open on keyboard-triggered focus, not tap-triggered focus.
+        // :focus-visible alone is unreliable — some browsers apply it on tap too — so we
+        // also track whether a touch pointerdown just preceded this focusin.
+        if (!isHoverSupported && type === 'focusin') {
+          if (lastPointerWasTouch) {
+            lastPointerWasTouch = false;
+            return;
+          }
+          if (!controller.invokerNode?.matches(':focus-visible')) return;
+        }
         const shouldOpen = isFocused || isHovered;
         openClose({ shouldOpen, openTimeout: delayIn, closeTimeout: delayOut });
       }
@@ -87,8 +99,14 @@ export function withHoverInteraction({
 
         if (type === 'pointerdown') {
           longpressCompleted = false;
+          lastPointerWasTouch = true;
           pendingLongpressTimeout = setTimeout(() => {
             longpressCompleted = true;
+            pendingClickSuppressor = e => e.stopImmediatePropagation();
+            controller.invokerNode?.addEventListener('click', pendingClickSuppressor, {
+              once: true,
+              capture: true,
+            });
             openClose({ shouldOpen: true });
           }, longpressDuration);
         } else {
@@ -140,6 +158,12 @@ export function withHoverInteraction({
             controller.invokerNode?.removeEventListener('pointerdown', handleLongpress);
             controller.invokerNode?.removeEventListener('pointerup', handleLongpress);
             controller.invokerNode?.removeEventListener('pointerleave', handleLongpress);
+            if (pendingClickSuppressor) {
+              controller.invokerNode?.removeEventListener('click', pendingClickSuppressor, {
+                capture: true,
+              });
+              pendingClickSuppressor = null;
+            }
           }
         },
       };

@@ -169,6 +169,39 @@ export const longpress = () => html`
 `;
 ```
 
+## Mobile: tooltip on an invoker that also opens an overlay
+
+When an invoker opens an overlay on tap, the two interactions do not collide:
+
+- **Tap**: dialog opens, tooltip does not show.
+- **Long-press 500ms**: tooltip shows, click is suppressed so the dialog does not open.
+
+> To test on desktop: enable Chrome DevTools device emulation, pick a phone preset, **reload the page**, then tap or long-press the button.
+
+```js preview-story
+export const overlayAndLongpress = () => html`
+  <style>
+    .demo-tooltip-invoker {
+      margin: 50px;
+    }
+  </style>
+  <lion-tooltip has-arrow>
+    <button
+      slot="invoker"
+      class="demo-tooltip-invoker"
+      @click="${e => e.target.closest('lion-tooltip').nextElementSibling.showModal()}"
+    >
+      Tap opens dialog /</br> Long-press shows tooltip
+    </button>
+    <div slot="content">Tooltip content</div>
+  </lion-tooltip>
+  <dialog>
+    <p>Dialog opened by tap</p>
+    <button @click="${e => e.target.closest('dialog').close()}">Close</button>
+  </dialog>
+`;
+```
+
 ## Arrow
 
 By default, the arrow is disabled for our tooltip. Via the `has-arrow` property it can be enabled.

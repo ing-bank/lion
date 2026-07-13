@@ -87,4 +87,32 @@ describe('withHoverInteraction (isHoverSupported: false)', () => {
     clock.tick(300);
     expect(ctrl.isShown).to.equal(false);
   });
+
+  it('suppresses focusin that immediately follows a touch pointerdown', () => {
+    ctrl.invokerNode?.dispatchEvent(
+      new PointerEvent('pointerdown', { pointerType: 'touch', bubbles: true }),
+    );
+    ctrl.invokerNode?.dispatchEvent(
+      new PointerEvent('pointerup', { pointerType: 'touch', bubbles: true }),
+    );
+    ctrl.invokerNode?.dispatchEvent(new Event('focusin', { bubbles: true }));
+    clock.tick(1); // fires any 0ms open timer if focusin was not suppressed
+    expect(ctrl.isShown).to.equal(false);
+  });
+
+  it('suppresses the click event that fires after a completed longpress', async () => {
+    ctrl.invokerNode?.dispatchEvent(
+      new PointerEvent('pointerdown', { pointerType: 'touch', bubbles: true }),
+    );
+    clock.runAll();
+    await Promise.resolve();
+    expect(ctrl.isShown).to.equal(true);
+
+    let clickFired = false;
+    ctrl.invokerNode?.addEventListener('click', () => {
+      clickFired = true;
+    });
+    ctrl.invokerNode?.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+    expect(clickFired).to.equal(false);
+  });
 });
