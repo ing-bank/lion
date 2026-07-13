@@ -224,8 +224,9 @@ export function runInputTelSuite({ klass = LionInputTel } = {}) {
 
       it('sets autocomplete to "tel"', async () => {
         const el = await fixture(html` <${tag}></${tag}> `);
+        await el.updateComplete;
         // @ts-expect-error [allow-protected] inside tests
-        expect(el._inputNode.autocomplete).to.equal('tel');
+        expect(el._inputNode.getAttribute('autocomplete')).to.equal('tel');
       });
 
       it('formats according to locale', async () => {
