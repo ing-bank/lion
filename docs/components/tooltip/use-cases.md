@@ -151,7 +151,7 @@ Modifier explanations:
 
 On desktop the tooltip is triggered by hover and focus, as usual. On touch devices where hover is unavailable, the same tooltip instead responds to a long-press on the invoker (default 500ms). No extra configuration is needed. The tooltip auto-detects which interaction model to use via the `(hover: hover)` CSS media query.
 
-> To test the touch path on desktop: enable Chrome DevTools device emulation, pick a phone preset, **reload the page**, then press-and-hold the invoker for 500ms. Tap or hover will no longer trigger it.
+> To test the touch path on desktop: enable Chrome DevTools device emulation, **reload the page**, then press-and-hold the invoker for 500ms. Tap or hover will no longer trigger it.
 
 ```js preview-story
 export const longpress = () => html`
@@ -169,14 +169,14 @@ export const longpress = () => html`
 `;
 ```
 
-## Mobile: tooltip on an invoker that also opens an overlay
+### Mobile: tooltip on an invoker that also opens an overlay
 
 When an invoker opens an overlay on tap, the two interactions do not collide:
 
 - **Tap**: dialog opens, tooltip does not show.
 - **Long-press 500ms**: tooltip shows, click is suppressed so the dialog does not open.
 
-> To test on desktop: enable Chrome DevTools device emulation, pick a phone preset, **reload the page**, then tap or long-press the button.
+> To test on desktop: enable Chrome DevTools device emulation, **reload the page**, then tap or long-press the button.
 
 ```js preview-story
 export const overlayAndLongpress = () => html`
