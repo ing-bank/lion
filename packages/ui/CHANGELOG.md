@@ -1,5 +1,12 @@
 # @lion/ui
 
+## 0.19.1
+
+### Patch Changes
+
+- 4bb9e6c: [input-email] set autocomplete to email by default
+- 4bb9e6c: [input-tel] set autocomplete to tel by default
+
 ## 0.19.0
 
 ### Minor Changes
