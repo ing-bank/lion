@@ -21,7 +21,7 @@ allFundamentals
     if (!fundamentalsByCategory.has(category)) {
       fundamentalsByCategory.set(category, []);
     }
-    
+
     fundamentalsByCategory.get(category).push({
       href: `/fundamentals/${fundamentalPath}/`,
       label,
@@ -44,7 +44,7 @@ const sortedCategories = new Map(
   activeNavItem="fundamentals"
   sectionName="Fundamentals"
   description="Fundamentals for building with Lion UI components"
-  backLink={`${import.meta.env.BASE_URL}/`}
+  backLink={`${import.meta.env.BASE_URL}`}
   backLinkLabel="← Back to Home"
   itemsByCategory={sortedCategories}
   headings={headings.map(h => ({ name: h.text, url: h.slug }))}

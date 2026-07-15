@@ -47,7 +47,7 @@ allFundamentals
     if (!fundamentalsByCategory.has(category)) {
       fundamentalsByCategory.set(category, []);
     }
-    
+
     fundamentalsByCategory.get(category).push({
       href: `/fundamentals/${fundamentalPath}/`,
       label,
@@ -71,7 +71,7 @@ const sortedCategories = new Map(
   sectionName="Fundamentals"
   itemName={fundamentalName}
   description={entry.data?.description || `${displayName} fundamental.`}
-  backLink={`${import.meta.env.BASE_URL}/fundamentals/`}
+  backLink={`${import.meta.env.BASE_URL}fundamentals/`}
   backLinkLabel="← Back to Fundamentals"
   itemsByCategory={sortedCategories}
   headings={headings.map(h => ({ name: h.text, url: h.slug }))}
