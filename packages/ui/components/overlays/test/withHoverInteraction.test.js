@@ -6,8 +6,8 @@ import { withHoverInteraction } from '../src/configurations/visibility-trigger-p
 function makeCtrl(opts = {}) {
   return new OverlayController({
     placementMode: 'local',
-    contentNode: fixtureSync(html`<div>content</div>`),
-    invokerNode: fixtureSync(html`<button>invoker</button>`),
+    contentNode: /** @type {HTMLElement} */ (fixtureSync(html`<div>content</div>`)),
+    invokerNode: /** @type {HTMLElement} */ (fixtureSync(html`<button>invoker</button>`)),
     ...withHoverInteraction(opts),
   });
 }
