@@ -15,10 +15,5 @@ describe('<lion-input> integrations', () => {
   runFormatMixinSuite({
     tagString,
     modelValueType: String,
-    valueToggler: ({ toggleValue }) => (!toggleValue ? 'lion-input-value-1' : 'lion-input-value-2'),
-    getExpectedInitialModelValue: () => '',
-    getExpectedInitialFormattedValue: () => '',
-    getExpectedInitialSerializedValue: () => '',
-    valueChangeCounterOffset: 0,
   });
 });

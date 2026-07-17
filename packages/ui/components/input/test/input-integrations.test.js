@@ -27,11 +27,6 @@ describe('<lion-input> integrations', () => {
   runFormatMixinSuite({
     tagString: fieldTagString,
     modelValueType: String,
-    valueToggler: ({ toggleValue }) => (!toggleValue ? 'input-value-1' : 'input-value-2'),
-    getExpectedInitialModelValue: () => '',
-    getExpectedInitialFormattedValue: () => '',
-    getExpectedInitialSerializedValue: () => '',
-    valueChangeCounterOffset: 0,
   });
 
   runNativeTextFieldMixinSuite({

@@ -7,10 +7,5 @@ describe('<lion-input-email> integrations', () => {
   runFormatMixinSuite({
     tagString,
     modelValueType: 'email',
-    valueToggler: ({ toggleValue }) => (!toggleValue ? 'test@example.com' : 'user@test.org'),
-    getExpectedInitialModelValue: () => '',
-    getExpectedInitialFormattedValue: () => '',
-    getExpectedInitialSerializedValue: () => '',
-    valueChangeCounterOffset: 0,
   });
 });

@@ -1,5 +1,6 @@
 import { getFormControlMembers, mimicUserInput } from '@lion/ui/form-core-test-helpers.js';
 import { FormatMixin, Unparseable, Validator } from '@lion/ui/form-core.js';
+import { parseDate } from '@lion/ui/localize-no-side-effects.js';
 import { aTimeout, defineCE, expect, fixture, html, unsafeStatic } from '@open-wc/testing';
 import { LitElement } from 'lit';
 import sinon from 'sinon';
@@ -38,13 +39,119 @@ class FormatClass extends FormatMixin(LitElement) {
  * @typedef {object} FormatMixinSuiteConfig
  * @property {string | null} [tagString] - Optional. Element tag name; if omitted, one will be auto-generated via defineCE()
  * @property {string | null} [childTagString] - Optional. Not currently used
- * @property {(opts: { toggleValue: boolean, viewValue: boolean }) => any} valueToggler - REQUIRED. Provide different test values for toggleValue=false vs toggleValue=true
- * @property {(el: FormatClass) => any} getExpectedInitialModelValue - REQUIRED. Expected initial modelValue state when element is created without a value
- * @property {(el: FormatClass) => any} getExpectedInitialFormattedValue - REQUIRED. Expected initial formattedValue state when element is created without a value
- * @property {(el: FormatClass) => any} getExpectedInitialSerializedValue - REQUIRED. Expected initial serializedValue state when element is created without a value
  * @property {ArrayConstructor | ObjectConstructor | NumberConstructor | BooleanConstructor | StringConstructor | DateConstructor | 'iban' | 'email'} modelValueType - REQUIRED. The model value type for this component
- * @property {number} valueChangeCounterOffset - REQUIRED. Offset for model-value-changed event counter. Use 0 for most types, 1 for Date types where parseDate() creates new objects
+ * @property {(opts: { toggleValue: boolean, viewValue: boolean }) => any} [valueToggler] - Optional. Provide different test values for toggleValue=false vs toggleValue=true. If not provided, defaults will be generated based on modelValueType.
+ * @property {(el: FormatClass) => any} [getExpectedInitialModelValue] - Optional. Expected initial modelValue state when element is created without a value. If not provided, defaults will be generated based on modelValueType.
+ * @property {(el: FormatClass) => any} [getExpectedInitialFormattedValue] - Optional. Expected initial formattedValue state when element is created without a value. If not provided, defaults will be generated based on modelValueType.
+ * @property {(el: FormatClass) => any} [getExpectedInitialSerializedValue] - Optional. Expected initial serializedValue state when element is created without a value. If not provided, defaults will be generated based on modelValueType.
+ * @property {number} [valueChangeCounterOffset] - Optional. Offset for model-value-changed event counter. Use 0 for most types, 1 for Date types where parseDate() creates new objects. If not provided, defaults will be generated based on modelValueType.
  */
+
+/**
+ * Creates default valueToggler based on modelValueType for backwards compatibility
+ * @param {ArrayConstructor | ObjectConstructor | NumberConstructor | BooleanConstructor | StringConstructor | DateConstructor | 'iban' | 'email'} modelValueType
+ * @returns {(opts: { toggleValue: boolean, viewValue: boolean }) => any}
+ */
+function createDefaultValueToggler(modelValueType) {
+  if (modelValueType === String) {
+    return ({ toggleValue }) => (!toggleValue ? 'test-value-1' : 'test-value-2');
+  }
+  if (modelValueType === 'iban') {
+    return ({ toggleValue }) => (!toggleValue ? 'NL20INGB0001234567' : 'NL91ABNA0417164300');
+  }
+  if (modelValueType === 'email') {
+    return ({ toggleValue }) => (!toggleValue ? 'test@example.com' : 'user@test.org');
+  }
+  if (modelValueType === Number) {
+    return ({ toggleValue, viewValue }) => {
+      if (viewValue) {
+        return !toggleValue ? '100' : '200';
+      }
+      return !toggleValue ? 100 : 200;
+    };
+  }
+  if (modelValueType === Date) {
+    return ({ toggleValue, viewValue }) => {
+      if (viewValue) {
+        return !toggleValue ? '01/01/2020' : '02/02/2021';
+      }
+      return !toggleValue ? parseDate('01/01/2020') : parseDate('02/02/2021');
+    };
+  }
+  if (modelValueType === Object) {
+    return ({ toggleValue, viewValue }) => {
+      if (viewValue) {
+        return !toggleValue ? '{"value": 1}' : '{"value": 2}';
+      }
+      return !toggleValue ? { value: 1 } : { value: 2 };
+    };
+  }
+  if (modelValueType === Boolean) {
+    return ({ toggleValue }) => !toggleValue;
+  }
+  if (modelValueType === Array) {
+    return ({ toggleValue, viewValue }) => {
+      if (viewValue) {
+        return !toggleValue ? '[1]' : '[2]';
+      }
+      return !toggleValue ? [1] : [2];
+    };
+  }
+  // Fallback for unknown types
+  return ({ toggleValue }) => (!toggleValue ? 'test-value-1' : 'test-value-2');
+}
+
+/**
+ * Creates default getExpectedInitialModelValue based on modelValueType
+ * @param {ArrayConstructor | ObjectConstructor | NumberConstructor | BooleanConstructor | StringConstructor | DateConstructor | 'iban' | 'email'} modelValueType
+ * @returns {() => any}
+ */
+function createDefaultGetExpectedInitialModelValue(modelValueType) {
+  if (modelValueType === Boolean) {
+    return () => false;
+  }
+  if (modelValueType === Object) {
+    return () => ({});
+  }
+  if (modelValueType === Array) {
+    return () => [];
+  }
+  // String, Number, Date, 'iban', 'email' all default to empty string
+  return () => '';
+}
+
+/**
+ * Creates default getExpectedInitialFormattedValue based on modelValueType
+ * @param {ArrayConstructor | ObjectConstructor | NumberConstructor | BooleanConstructor | StringConstructor | DateConstructor | 'iban' | 'email'} modelValueType
+ * @returns {() => any}
+ */
+function createDefaultGetExpectedInitialFormattedValue(modelValueType) {
+  // Same as modelValue for default case
+  return createDefaultGetExpectedInitialModelValue(modelValueType);
+}
+
+/**
+ * Creates default getExpectedInitialSerializedValue based on modelValueType
+ * @param {ArrayConstructor | ObjectConstructor | NumberConstructor | BooleanConstructor | StringConstructor | DateConstructor | 'iban' | 'email'} modelValueType
+ * @returns {() => any}
+ */
+function createDefaultGetExpectedInitialSerializedValue(modelValueType) {
+  // Same as modelValue for default case
+  return createDefaultGetExpectedInitialModelValue(modelValueType);
+}
+
+/**
+ * Creates default valueChangeCounterOffset based on modelValueType
+ * @param {ArrayConstructor | ObjectConstructor | NumberConstructor | BooleanConstructor | StringConstructor | DateConstructor | 'iban' | 'email'} modelValueType
+ * @returns {number}
+ */
+function createDefaultValueChangeCounterOffset(modelValueType) {
+  // Date types need offset of 1 because parseDate creates new objects
+  if (modelValueType === Date) {
+    return 1;
+  }
+  return 0;
+}
 
 /**
  * @param {FormatMixinSuiteConfig} [customConfig]
@@ -54,47 +161,29 @@ export function runFormatMixinSuite(customConfig) {
     ...customConfig,
   };
 
-  // Validate required config options
-  if (typeof cfg.valueToggler !== 'function') {
+  // Validate that modelValueType is provided (required for generating defaults)
+  if (!cfg.modelValueType) {
     throw new Error(
-      'FormatMixinSuite: valueToggler is REQUIRED in config. ' +
-        'Provide a function that returns different test values for toggleValue=false and toggleValue=true.\n' +
-        'Example: valueToggler: ({ toggleValue, viewValue }) => !toggleValue ? myValue1 : myValue2',
+      'FormatMixinSuite: modelValueType is REQUIRED in config. ' +
+        'Provide the model value type for this component (e.g., String, Number, Date, Object, Boolean, Array, "iban", "email").',
     );
   }
-  /** @type {Function} */
-  // @ts-ignore [allow-non-null-assertion] - validated above
-  const { valueToggler } = cfg;
 
-  if (typeof cfg.getExpectedInitialModelValue !== 'function') {
-    throw new Error(
-      'FormatMixinSuite: getExpectedInitialModelValue is REQUIRED in config. ' +
-        'Provide a function that returns the expected initial modelValue state.',
-    );
-  }
-  /** @type {Function} */
-  // @ts-ignore [allow-non-null-assertion] - validated above
-  const { getExpectedInitialModelValue } = cfg;
-
-  if (typeof cfg.getExpectedInitialFormattedValue !== 'function') {
-    throw new Error(
-      'FormatMixinSuite: getExpectedInitialFormattedValue is REQUIRED in config. ' +
-        'Provide a function that returns the expected initial formattedValue state.',
-    );
-  }
-  /** @type {Function} */
-  // @ts-ignore [allow-non-null-assertion] - validated above
-  const { getExpectedInitialFormattedValue } = cfg;
-
-  if (typeof cfg.getExpectedInitialSerializedValue !== 'function') {
-    throw new Error(
-      'FormatMixinSuite: getExpectedInitialSerializedValue is REQUIRED in config. ' +
-        'Provide a function that returns the expected initial serializedValue state.',
-    );
-  }
-  /** @type {Function} */
-  // @ts-ignore [allow-non-null-assertion] - validated above
-  const { getExpectedInitialSerializedValue } = cfg;
+  // Use provided values or generate defaults based on modelValueType
+  const valueToggler = cfg.valueToggler || createDefaultValueToggler(cfg.modelValueType);
+  const getExpectedInitialModelValue =
+    cfg.getExpectedInitialModelValue ||
+    createDefaultGetExpectedInitialModelValue(cfg.modelValueType);
+  const getExpectedInitialFormattedValue =
+    cfg.getExpectedInitialFormattedValue ||
+    createDefaultGetExpectedInitialFormattedValue(cfg.modelValueType);
+  const getExpectedInitialSerializedValue =
+    cfg.getExpectedInitialSerializedValue ||
+    createDefaultGetExpectedInitialSerializedValue(cfg.modelValueType);
+  const valueChangeCounterOffset =
+    cfg.valueChangeCounterOffset !== undefined
+      ? cfg.valueChangeCounterOffset
+      : createDefaultValueChangeCounterOffset(cfg.modelValueType);
 
   /**
    * Generates test values by delegating to the component's valueToggler function.
@@ -263,7 +352,7 @@ export function runFormatMixinSuite(customConfig) {
         expect(isTriggeredByUser).to.be.true;
 
         // All value comparison logic is the responsibility of consuming components
-        const counterOffset = cfg.valueChangeCounterOffset ?? 0;
+        const counterOffset = valueChangeCounterOffset;
 
         mimicUserInput(formatEl, generateValueBasedOnType({ viewValue: true }));
         expect(counter).to.equal(1 + counterOffset);

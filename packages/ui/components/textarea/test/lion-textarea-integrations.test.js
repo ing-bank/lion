@@ -16,11 +16,6 @@ describe('<lion-textarea> integrations', () => {
   runFormatMixinSuite({
     tagString,
     modelValueType: String,
-    valueToggler: ({ toggleValue }) => (!toggleValue ? 'textarea-value-1' : 'textarea-value-2'),
-    getExpectedInitialModelValue: () => '',
-    getExpectedInitialFormattedValue: () => '',
-    getExpectedInitialSerializedValue: () => '',
-    valueChangeCounterOffset: 0,
   });
 
   runNativeTextFieldMixinSuite({

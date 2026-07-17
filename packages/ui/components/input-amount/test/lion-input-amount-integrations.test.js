@@ -16,15 +16,5 @@ describe('<lion-input-amount> integrations', () => {
   runFormatMixinSuite({
     tagString,
     modelValueType: Number,
-    valueToggler: ({ toggleValue, viewValue }) => {
-      if (viewValue) {
-        return !toggleValue ? '100' : '200';
-      }
-      return !toggleValue ? 100 : 200;
-    },
-    getExpectedInitialModelValue: () => '',
-    getExpectedInitialFormattedValue: () => '',
-    getExpectedInitialSerializedValue: () => '',
-    valueChangeCounterOffset: 0,
   });
 });
