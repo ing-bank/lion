@@ -18,4 +18,5 @@ export default {
   selectTextDuplicateFileName: 'Soubor se stejným názvem byl již přítomen.',
   selectTextMultipleFile: 'Vybrat soubory',
   selectTextSingleFile: 'Vybrat soubor',
+  maxFileCountExceeded: 'Počet nahraných souborů nesmí překročit {maxFileCount}.',
 };

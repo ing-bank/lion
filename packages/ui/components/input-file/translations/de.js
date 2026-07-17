@@ -17,4 +17,6 @@ export default {
   selectTextDuplicateFileName: 'Eine Datei mit demselben Dateinamen war bereits vorhanden.',
   selectTextMultipleFile: 'Dateien auswählen',
   selectTextSingleFile: 'Datei auswählen',
+  maxFileCountExceeded:
+    'Die Anzahl der hochgeladenen Dateien darf {maxFileCount} nicht überschreiten.',
 };
