@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.19.4
+
+### Patch Changes
+
+- d582c8d: make compatible with newer oxc-parser
+
 ## 0.19.3
 
 ### Patch Changes

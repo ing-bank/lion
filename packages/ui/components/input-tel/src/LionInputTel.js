@@ -137,6 +137,7 @@ export class LionInputTel extends LocalizeMixin(LionInput) {
    */
   constructor() {
     super();
+    this.autocomplete = 'tel';
 
     /**
      * Determines what the formatter output should look like.
@@ -192,7 +193,6 @@ export class LionInputTel extends LocalizeMixin(LionInput) {
    */
   firstUpdated(changedProperties) {
     super.firstUpdated(changedProperties);
-
     // This will trigger the right keyboard on mobile
     this._inputNode.inputMode = 'tel';
   }

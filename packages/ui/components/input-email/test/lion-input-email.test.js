@@ -15,6 +15,12 @@ describe('<lion-input-email>', () => {
     expect(_inputNode.type).to.equal('text');
   });
 
+  it('sets autocomplete to "email"', async () => {
+    const el = await fixture(`<lion-input-email></lion-input-email>`);
+    // @ts-expect-error [allow-protected] inside tests
+    expect(el._inputNode.getAttribute('autocomplete')).to.equal('email');
+  });
+
   it('has validator "IsEmail" applied by default', async () => {
     // More elaborate tests can be found in lion-validate/test/StringValidators.test.js
     const el = await fixture(`<lion-input-email></lion-input-email>`);

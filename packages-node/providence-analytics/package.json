@@ -1,6 +1,6 @@
 {
   "name": "providence-analytics",
-  "version": "0.19.3",
+  "version": "0.19.4",
   "description": "Providence is the 'All Seeing Eye' that measures effectivity and popularity of software. Release management will become highly efficient due to an accurate impact analysis of (breaking) changes",
   "license": "MIT",
   "author": "ing-bank",
@@ -40,7 +40,7 @@
     "@rollup/plugin-node-resolve": "^16.0.3",
     "commander": "^2.20.3",
     "globby": "^16.1.0",
-    "oxc-parser": "0.112.0",
+    "oxc-parser": "0.137.0",
     "parse5": "^8.0.0",
     "semver": "^7.7.3"
   },

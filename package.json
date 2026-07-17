@@ -25,7 +25,9 @@
     "lint": "run-p lint:*",
     "lint:eslint": "eslint --ext .js,.html .",
     "lint:markdownlint": "git ls-files '*.md' | xargs markdownlint --ignore '{.github/**/*.md,.changeset/*.md,**/CHANGELOG.md,packages/ui/_legacy-changelogs/*.md}'",
+    "lint:phone-number-up-to-date": "node ./scripts/lint-phone-number-lib.js",
     "lint:prettier": "prettier \"**/*.js\" --list-different || (echo '↑↑ these files are not prettier formatted ↑↑' && exit 1)",
+    "lint:types": "npm run types",
     "lint:versions": "node ./scripts/lint-versions.js",
     "prepare": "husky install",
     "preview": "npx serve _site",
@@ -50,7 +52,9 @@
     "packages-node/*"
   ],
   "dependencies": {
-    "lit": "^3.3.2"
+    "@playwright/test": "^1.61.0",
+    "lit": "^3.3.2",
+    "playwright": "^1.61.0"
   },
   "devDependencies": {
     "@astrojs/lit": "^4.3.0",

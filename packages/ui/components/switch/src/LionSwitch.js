@@ -148,7 +148,7 @@ export class LionSwitch extends ScopedElementsMixin(ChoiceInputMixin(LionField))
    * @protected
    */
   _onLabelClick() {
-    if (this.disabled) {
+    if (this.disabled || this.readOnly) {
       return;
     }
     this._inputNode.focus();

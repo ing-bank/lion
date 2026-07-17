@@ -238,7 +238,7 @@ const ChoiceInputMixinImplementation = superclass =>
      */
     // eslint-disable-next-line no-unused-vars
     _toggleChecked(ev) {
-      if (this.disabled) {
+      if (this.disabled || this.readOnly) {
         return;
       }
       this._isHandlingUserInput = true;

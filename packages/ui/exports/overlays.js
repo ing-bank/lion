@@ -8,6 +8,7 @@ export { withBottomSheetConfig } from '../components/overlays/src/configurations
 export { withModalDialogConfig } from '../components/overlays/src/configurations/withModalDialogConfig.js';
 export { withDropdownConfig } from '../components/overlays/src/configurations/withDropdownConfig.js';
 export { withTooltipConfig } from '../components/overlays/src/configurations/withTooltipConfig.js';
+export { withPopoverConfig } from '../components/overlays/src/configurations/withPopoverConfig.js';
 
 export { deepContains } from '../components/overlays/src/utils/deep-contains.js';
 // re-export via this entrypoint for backwards compatibility

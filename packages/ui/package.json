@@ -1,6 +1,6 @@
 {
   "name": "@lion/ui",
-  "version": "0.17.0",
+  "version": "0.19.1",
   "description": "A package of extendable web components",
   "license": "MIT",
   "author": "ing-bank",
@@ -68,7 +68,7 @@
     "@open-wc/scoped-elements": "^3.0.6",
     "@popperjs/core": "^2.11.8",
     "autosize": "^6.0.0",
-    "awesome-phonenumber": "^6.4.0",
+    "awesome-phonenumber": "^7.8.0",
     "ibantools": "^4.3.9",
     "lit": "^3.1.2",
     "singleton-manager": "^1.8.0"
