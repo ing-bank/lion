@@ -8,4 +8,11 @@ export default {
     'Deze datum is niet beschikbaar. Vroegste beschikbare datum is {params}. Kies een andere datum.',
   afterDisabledDate:
     'Deze datum is niet beschikbaar. Laatste beschikbare datum is {params}. Kies een andere datum.',
+  selectMonth: 'Selecteer maand',
+  selectYear: 'Selecteer jaar',
+  monthSelectionOpened: 'Maandselectie, 12 maanden beschikbaar',
+  yearSelectionOpened: 'Jaarselectie, jaren {startYear} tot {endYear} beschikbaar',
+  previousYearRange: 'Vorig jaarbereik',
+  nextYearRange: 'Volgend jaarbereik',
+  yearsRange: 'Jaren {startYear} tot {endYear}',
 };

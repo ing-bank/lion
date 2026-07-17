@@ -38,24 +38,17 @@ describe('<lion-calendar>', () => {
 
       const el = await fixture(html`<lion-calendar></lion-calendar>`);
 
-      expect(el.shadowRoot?.querySelector('#year')).dom.to.equal(`
-        <h2
-          id="year"
-          class="calendar__navigation-heading"
-          aria-atomic="true"
-        >
-          2000
-        </h2>
-      `);
-      expect(el.shadowRoot?.querySelector('#month')).dom.to.equal(`
-      <h2
-        id="month"
-        class="calendar__navigation-heading"
-        aria-atomic="true"
-      >
-        December
-      </h2>
-    `);
+      // Year heading is now an interactive button (WCAG: role=button)
+      const yearHeading = el.shadowRoot?.querySelector('#year-heading');
+      expect(yearHeading).to.exist;
+      expect(yearHeading?.tagName.toLowerCase()).to.equal('button');
+      expect(yearHeading?.textContent?.trim()).to.include('2000');
+
+      // Month heading is now an interactive button (WCAG: role=button)
+      const monthHeading = el.shadowRoot?.querySelector('#month-heading');
+      expect(monthHeading).to.exist;
+      expect(monthHeading?.tagName.toLowerCase()).to.equal('button');
+      expect(monthHeading?.textContent?.trim()).to.include('December');
 
       clock.restore();
     });
