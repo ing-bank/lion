@@ -731,6 +731,112 @@ describe('<lion-calendar>', () => {
           expect(elObj.nextYearButtonEl?.hasAttribute('disabled')).to.equal(false);
           expect(elObj.nextYearButtonEl.getAttribute('aria-label')).to.equal('Next year, May 2001');
         });
+
+        it('adjusts month when navigating to previous year with minDate constraint', async () => {
+          const clock = sinon.useFakeTimers({ now: new Date('2026/07/15').getTime() });
+
+          const el = await fixture(html`
+            <lion-calendar
+              .centralDate="${new Date('2027/02/15')}"
+              .minDate="${new Date('2026/07/15')}"
+            ></lion-calendar>
+          `);
+          const elObj = new CalendarObject(el);
+          expect(elObj.activeMonth).to.equal('February');
+          expect(elObj.activeYear).to.equal('2027');
+
+          /** @type {HTMLElement} */ (elObj.previousYearButtonEl).click();
+          await el.updateComplete;
+
+          // Should adjust to July (minDate month) instead of staying at February
+          expect(elObj.activeMonth).to.equal('July');
+          expect(elObj.activeYear).to.equal('2026');
+          expect(isSameDate(el.centralDate, new Date('2026/07/15'))).to.be.true;
+
+          clock.restore();
+        });
+
+        it('adjusts month when navigating to next year with maxDate constraint', async () => {
+          const clock = sinon.useFakeTimers({ now: new Date('2025/05/15').getTime() });
+
+          const el = await fixture(html`
+            <lion-calendar
+              .centralDate="${new Date('2025/10/15')}"
+              .maxDate="${new Date('2026/07/15')}"
+            ></lion-calendar>
+          `);
+          const elObj = new CalendarObject(el);
+          expect(elObj.activeMonth).to.equal('October');
+          expect(elObj.activeYear).to.equal('2025');
+
+          /** @type {HTMLElement} */ (elObj.nextYearButtonEl).click();
+          await el.updateComplete;
+
+          // Should adjust to July (maxDate month) instead of staying at October
+          expect(elObj.activeMonth).to.equal('July');
+          expect(elObj.activeYear).to.equal('2026');
+          expect(isSameDate(el.centralDate, new Date('2026/07/15'))).to.be.true;
+
+          clock.restore();
+        });
+
+        it('does not adjust month when navigating to year without minDate/maxDate constraint', async () => {
+          const el = await fixture(html`
+            <lion-calendar
+              .centralDate="${new Date('2026/07/15')}"
+              .minDate="${new Date('2025/01/15')}"
+            ></lion-calendar>
+          `);
+          const elObj = new CalendarObject(el);
+          expect(elObj.activeMonth).to.equal('July');
+          expect(elObj.activeYear).to.equal('2026');
+
+          /** @type {HTMLElement} */ (elObj.previousYearButtonEl).click();
+          await el.updateComplete;
+
+          // Month should stay July since 2025/07 is after minDate (2025/01)
+          expect(elObj.activeMonth).to.equal('July');
+          expect(elObj.activeYear).to.equal('2025');
+          expect(isSameDate(el.centralDate, new Date('2025/07/15'))).to.be.true;
+        });
+
+        it('preserves day when adjusting month for year navigation', async () => {
+          const el = await fixture(html`
+            <lion-calendar
+              .centralDate="${new Date('2027/02/28')}"
+              .minDate="${new Date('2026/07/15')}"
+            ></lion-calendar>
+          `);
+          const elObj = new CalendarObject(el);
+
+          /** @type {HTMLElement} */ (elObj.previousYearButtonEl).click();
+          await el.updateComplete;
+
+          // Should preserve day 28 when adjusting to July
+          expect(elObj.activeMonth).to.equal('July');
+          expect(elObj.activeYear).to.equal('2026');
+          expect(el.centralDate.getDate()).to.equal(28);
+          expect(isSameDate(el.centralDate, new Date('2026/07/28'))).to.be.true;
+        });
+
+        it('adjusts day to max available when month has fewer days during year navigation', async () => {
+          const el = await fixture(html`
+            <lion-calendar
+              .centralDate="${new Date('2027/01/31')}"
+              .minDate="${new Date('2026/04/01')}"
+            ></lion-calendar>
+          `);
+          const elObj = new CalendarObject(el);
+
+          /** @type {HTMLElement} */ (elObj.previousYearButtonEl).click();
+          await el.updateComplete;
+
+          // January 31 2027 -> navigating back to 2026 with minDate in April
+          // Should adjust to April and cap day at 30 (April has only 30 days)
+          expect(elObj.activeMonth).to.equal('April');
+          expect(elObj.activeYear).to.equal('2026');
+          expect(el.centralDate.getDate()).to.equal(30);
+        });
       });
 
       describe('Month', () => {
