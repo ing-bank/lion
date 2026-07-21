@@ -1,5 +1,11 @@
 # @lion/ui
 
+## 0.20.0-menu-system.1
+
+### Patch Changes
+
+- 86d3807: [tooltip]: support longpress on mobile
+
 ## 0.18.1
 
 ### Patch Changes

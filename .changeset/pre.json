@@ -13,13 +13,6 @@
     "@lion/ui": "0.16.1"
   },
   "changesets": [
-    "bright-lions-fold",
-    "fluffy-apes-juggle",
-    "hot-planets-kick",
-    "smooth-pants-occur",
-    "tender-paws-trade",
-    "true-rules-hide",
-    "warm-monkeys-play",
-    "yellow-rocks-drum"
+    "real-stars-fix"
   ]
 }
