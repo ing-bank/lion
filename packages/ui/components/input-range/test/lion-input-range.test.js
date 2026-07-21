@@ -155,5 +155,47 @@ describe('<lion-input-range>', () => {
       expect(el.modelValue).to.equal(0);
       expect(typeof el.modelValue).to.equal('number');
     });
+
+    it('sets aria-valuetext to minLabel when modelValue equals min', async () => {
+      const el = await fixture(html`
+        <lion-input-range min="0" max="100" min-label="Low" .modelValue=${50}></lion-input-range>
+      `);
+
+      el.modelValue = 0;
+      await nextFrame();
+
+      expect(el._inputNode.getAttribute('aria-valuetext')).to.equal('Low');
+    });
+
+    it('sets aria-valuetext to maxLabel when modelValue equals max', async () => {
+      const el = await fixture(html`
+        <lion-input-range min="0" max="100" max-label="High" .modelValue=${50}></lion-input-range>
+      `);
+
+      el.modelValue = 100;
+      await nextFrame();
+
+      expect(el._inputNode.getAttribute('aria-valuetext')).to.equal('High');
+    });
+
+    it('removes aria-valuetext when modelValue is between min and max', async () => {
+      const el = await fixture(html`
+        <lion-input-range
+          min="0"
+          max="100"
+          min-label="Low"
+          max-label="High"
+          .modelValue=${0}
+        ></lion-input-range>
+      `);
+
+      await nextFrame();
+      expect(el._inputNode.getAttribute('aria-valuetext')).to.equal('Low');
+
+      el.modelValue = 50;
+      await nextFrame();
+
+      expect(el._inputNode.hasAttribute('aria-valuetext')).to.equal(false);
+    });
   });
 });
