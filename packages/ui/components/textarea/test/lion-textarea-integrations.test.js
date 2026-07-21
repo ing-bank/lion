@@ -1,6 +1,6 @@
 import {
-  runInteractionStateMixinSuite,
   runFormatMixinSuite,
+  runInteractionStateMixinSuite,
   runNativeTextFieldMixinSuite,
 } from '@lion/ui/form-core-test-suites.js';
 
@@ -15,6 +15,7 @@ describe('<lion-textarea> integrations', () => {
 
   runFormatMixinSuite({
     tagString,
+    modelValueType: String,
   });
 
   runNativeTextFieldMixinSuite({

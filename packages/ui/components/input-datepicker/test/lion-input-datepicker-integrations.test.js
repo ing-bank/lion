@@ -1,6 +1,6 @@
 import {
-  runInteractionStateMixinSuite,
   runFormatMixinSuite,
+  runInteractionStateMixinSuite,
 } from '@lion/ui/form-core-test-suites.js';
 
 import '@lion/ui/define/lion-input-datepicker.js';

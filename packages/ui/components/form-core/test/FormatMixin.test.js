@@ -1,3 +1,6 @@
 import { runFormatMixinSuite } from '../test-suites/FormatMixin.suite.js';
 
-runFormatMixinSuite();
+runFormatMixinSuite({
+  tagString: null,
+  modelValueType: String,
+});

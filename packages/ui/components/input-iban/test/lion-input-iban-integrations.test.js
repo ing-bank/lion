@@ -1,5 +1,5 @@
-import { runFormatMixinSuite } from '@lion/ui/form-core-test-suites.js';
 import '@lion/ui/define/lion-input-iban.js';
+import { runFormatMixinSuite } from '@lion/ui/form-core-test-suites.js';
 
 const tagString = 'lion-input-iban';
 
