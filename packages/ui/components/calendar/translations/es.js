@@ -8,4 +8,11 @@ export default {
     'Esta fecha no está disponible. La fecha más próxima disponible es {params}. Elija otra.',
   afterDisabledDate:
     'Esta fecha no está disponible. La fecha más lejana disponible es {params}. Elija otra.',
+  selectMonth: 'Seleccionar mes',
+  selectYear: 'Seleccionar año',
+  monthSelectionOpened: 'Selección de mes, 12 meses disponibles',
+  yearSelectionOpened: 'Selección de año, años {startYear} a {endYear} disponibles',
+  previousYearRange: 'Rango de años anterior',
+  nextYearRange: 'Siguiente rango de años',
+  yearsRange: 'Años {startYear} a {endYear}',
 };
