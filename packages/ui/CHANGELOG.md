@@ -1,5 +1,15 @@
 # @lion/ui
 
+## 0.20.0
+
+### Minor Changes
+
+- 0f9d819: FormatMixin requestUpdate supports object model values. LionInputAmountDropdown adds hasChanged to modelValue
+
+### Patch Changes
+
+- 5a98184: Convert tooltip tests to reusable suites
+
 ## 0.19.1
 
 ### Patch Changes
