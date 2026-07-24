@@ -84,4 +84,118 @@ describe('<lion-input-range>', () => {
     const el = await fixture(`<lion-input-range label="range" disabled></lion-input-range>`);
     await expect(el).to.be.accessible();
   });
+
+  describe('Custom min/max labels', () => {
+    it('displays custom minLabel in the limits when provided', async () => {
+      const el = await fixture(html`
+        <lion-input-range min="0" max="100" min-label="Low" .modelValue=${50}></lion-input-range>
+      `);
+      const minDiv = /** @type {HTMLElement} */ (
+        /** @type {ShadowRoot} */ (el.shadowRoot).querySelectorAll('.input-range__limits > div')[0]
+      );
+      expect(minDiv.textContent?.trim()).to.equal('Minimum Low');
+    });
+
+    it('displays custom maxLabel in the limits when provided', async () => {
+      const el = await fixture(html`
+        <lion-input-range min="0" max="100" max-label="High" .modelValue=${50}></lion-input-range>
+      `);
+      const maxDiv = /** @type {HTMLElement} */ (
+        /** @type {ShadowRoot} */ (el.shadowRoot).querySelectorAll('.input-range__limits > div')[1]
+      );
+      expect(maxDiv.textContent?.trim()).to.equal('Maximum High');
+    });
+
+    it('displays custom minLabel as value display when value equals min', async () => {
+      const el = await fixture(html`
+        <lion-input-range min="0" max="100" min-label="Low" .modelValue=${0}></lion-input-range>
+      `);
+      const valueSpan = /** @type {HTMLElement} */ (
+        /** @type {ShadowRoot} */ (el.shadowRoot).querySelector('.input-range__value')
+      );
+      expect(valueSpan.innerText).to.equal('Low');
+    });
+
+    it('displays custom maxLabel as value display when value equals max', async () => {
+      const el = await fixture(html`
+        <lion-input-range min="0" max="100" max-label="High" .modelValue=${100}></lion-input-range>
+      `);
+      const valueSpan = /** @type {HTMLElement} */ (
+        /** @type {ShadowRoot} */ (el.shadowRoot).querySelector('.input-range__value')
+      );
+      expect(valueSpan.innerText).to.equal('High');
+    });
+
+    it('displays formatted number when value is between min and max', async () => {
+      const el = await fixture(html`
+        <lion-input-range
+          min="0"
+          max="100"
+          min-label="Low"
+          max-label="High"
+          .modelValue=${50}
+        ></lion-input-range>
+      `);
+      const valueSpan = /** @type {HTMLElement} */ (
+        /** @type {ShadowRoot} */ (el.shadowRoot).querySelector('.input-range__value')
+      );
+      expect(valueSpan.innerText).to.equal('50');
+    });
+
+    it('maintains numeric modelValue even when displaying custom label', async () => {
+      const el = await fixture(html`
+        <lion-input-range min="0" max="100" min-label="Low" .modelValue=${0}></lion-input-range>
+      `);
+      const valueSpan = /** @type {HTMLElement} */ (
+        /** @type {ShadowRoot} */ (el.shadowRoot).querySelector('.input-range__value')
+      );
+      // Display shows custom label
+      expect(valueSpan.innerText).to.equal('Low');
+      // But modelValue is still the number
+      expect(el.modelValue).to.equal(0);
+      expect(typeof el.modelValue).to.equal('number');
+    });
+
+    it('sets aria-valuetext to minLabel when modelValue equals min', async () => {
+      const el = await fixture(html`
+        <lion-input-range min="0" max="100" min-label="Low" .modelValue=${50}></lion-input-range>
+      `);
+
+      el.modelValue = 0;
+      await nextFrame();
+
+      expect(el._inputNode.getAttribute('aria-valuetext')).to.equal('Low');
+    });
+
+    it('sets aria-valuetext to maxLabel when modelValue equals max', async () => {
+      const el = await fixture(html`
+        <lion-input-range min="0" max="100" max-label="High" .modelValue=${50}></lion-input-range>
+      `);
+
+      el.modelValue = 100;
+      await nextFrame();
+
+      expect(el._inputNode.getAttribute('aria-valuetext')).to.equal('High');
+    });
+
+    it('removes aria-valuetext when modelValue is between min and max', async () => {
+      const el = await fixture(html`
+        <lion-input-range
+          min="0"
+          max="100"
+          min-label="Low"
+          max-label="High"
+          .modelValue=${0}
+        ></lion-input-range>
+      `);
+
+      await nextFrame();
+      expect(el._inputNode.getAttribute('aria-valuetext')).to.equal('Low');
+
+      el.modelValue = 50;
+      await nextFrame();
+
+      expect(el._inputNode.hasAttribute('aria-valuetext')).to.equal(false);
+    });
+  });
 });
