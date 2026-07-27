@@ -93,15 +93,16 @@ export async function pathsArrayFromCollectionName(
 }
 
 /**
- * @param {string} processArgStr
+ * @param {string[]} processArgs
  * @param {object} [opts]
  * @returns {Promise<{ code:number; output:string }>}
  * @throws {Error}
  */
-export function spawnProcess(processArgStr, opts) {
-  const processArgs = processArgStr.split(' ');
+export function spawnProcess(processArgs, opts) {
+  const [cmd, ...args] = processArgs;
+  // shell: false (default) prevents shell injection; cmd and args are explicitly separated // nosemgrep: javascript.lang.security.detect-child-process.detect-child-process
   // eslint-disable-next-line camelcase
-  const proc = child_process.spawn(processArgs[0], processArgs.slice(1), opts);
+  const proc = child_process.spawn(cmd, args, { ...opts, shell: false });
   /** @type {string} */
   let output;
   proc.stdout.on('data', data => {
