@@ -60,6 +60,20 @@ import '@lion/ui/define/lion-input-range.js';
 ></lion-input-range>
 ```
 
+## Custom Min Max Labels
+
+```html preview-story
+<lion-input-range
+  min="0"
+  max="11"
+  min-label="less than 1 item"
+  max-label="more than 10 items"
+  .modelValue="${4}"
+  unit="Items"
+  label="Items"
+></lion-input-range>
+```
+
 ## Disabled
 
 ```html preview-story
