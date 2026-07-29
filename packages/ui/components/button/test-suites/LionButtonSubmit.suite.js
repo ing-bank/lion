@@ -4,7 +4,7 @@ import { aTimeout, defineCE, expect, fixture, html, unsafeStatic } from '@open-w
 import { sendKeys } from '@web/test-runner-commands';
 import sinon from 'sinon';
 
-export function LionButtonSubmitSuite({ klass = LionButtonSubmit } = {}) {
+export function LionButtonSubmitSuite({ klass = LionButtonSubmit, visualDiffEnabled } = {}) {
   const tagStringButton = defineCE(class extends klass {});
   const tagButton = unsafeStatic(tagStringButton);
 
@@ -15,6 +15,7 @@ export function LionButtonSubmitSuite({ klass = LionButtonSubmit } = {}) {
       );
       expect(el.type).to.equal('submit');
       expect(el.getAttribute('type')).to.be.equal('submit');
+      await visualDiffEnabled(el, 'has-type-submit-by-default');
     });
 
     describe('Implicit form submission', () => {
