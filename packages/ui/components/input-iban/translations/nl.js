@@ -2,34 +2,34 @@ export default {
   error: {
     IsIBAN: 'Vul een geldige waarde in voor {fieldName}.',
     IsCountryIBAN:
-      'Vul een geldige {params, select,\n' +
-      'AT {Oostenrijkse}\n' +
-      'BE {Belgische}\n' +
-      'CZ {Tsjechische}\n' +
-      'DE {Duitse}\n' +
-      'ES {Spaanse}\n' +
-      'FR {Franse}\n' +
-      'HU {Hongaarse}\n' +
-      'IT {Italiaanse}\n' +
-      'NL {Nederlandse}\n' +
-      'PL {Poolse}\n' +
-      'RO {Roemeense}\n' +
+      'Vul een geldige waarde uit {params, select,\n' +
+      'AT {Oostenrijk}\n' +
+      'BE {België}\n' +
+      'CZ {Tsjechië}\n' +
+      'DE {Duitsland}\n' +
+      'ES {Spanje}\n' +
+      'FR {Frankrijk}\n' +
+      'HU {Hongarije}\n' +
+      'IT {Italië}\n' +
+      'NL {Nederland}\n' +
+      'PL {Polen}\n' +
+      'RO {Roemenië}\n' +
       'other {{params}}\n' +
-      '} waarde in voor {fieldName}.',
+      '} in voor {fieldName}.',
     IsNotCountryIBAN:
-      'Een {userSuppliedCountryCode, select,\n' +
-      'AT {Oostenrijkse}\n' +
-      'BE {Belgische}\n' +
-      'CZ {Tsjechische}\n' +
-      'DE {Duitse}\n' +
-      'ES {Spaanse}\n' +
-      'FR {Franse}\n' +
-      'HU {Hongaarse}\n' +
-      'IT {Italiaanse}\n' +
-      'NL {Nederlandse}\n' +
-      'PL {Poolse}\n' +
-      'RO {Roemeense}\n' +
+      'Een waarde uit {userSuppliedCountryCode, select,\n' +
+      'AT {Oostenrijk}\n' +
+      'BE {België}\n' +
+      'CZ {Tsjechië}\n' +
+      'DE {Duitsland}\n' +
+      'ES {Spanje}\n' +
+      'FR {Frankrijk}\n' +
+      'HU {Hongarije}\n' +
+      'IT {Italië}\n' +
+      'NL {Nederland}\n' +
+      'PL {Polen}\n' +
+      'RO {Roemenië}\n' +
       'other {{userSuppliedCountryCode}}\n' +
-      '} waarde is niet toegestaan voor {fieldName}.',
+      '} is niet toegestaan voor {fieldName}.',
   },
 };
