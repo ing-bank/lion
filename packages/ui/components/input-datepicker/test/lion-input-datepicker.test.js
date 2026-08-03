@@ -456,7 +456,7 @@ describe('<lion-input-datepicker>', () => {
         expect(el.validationStates.error).to.have.property('IsDate');
       });
 
-      it('shows a date even if the validator throws an error', async () => {
+      it('syncs view value from calendar if custom validator is in error state', async () => {
         const myDate = new Date('30/01/2022');
         const el = await fixture(html`
           <lion-input-datepicker
