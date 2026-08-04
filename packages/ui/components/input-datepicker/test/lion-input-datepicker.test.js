@@ -3,6 +3,7 @@ import { html, LitElement } from 'lit';
 import { IsDateDisabled, MaxDate, MinDate, MinMaxDate } from '@lion/ui/form-core.js';
 import { aTimeout, defineCE, expect, fixture as _fixture, nextFrame } from '@open-wc/testing';
 import { mimicClick } from '@lion/ui/overlays-test-helpers.js';
+import { parseDate } from '@lion/ui/localize.js';
 import sinon from 'sinon';
 import { sendKeys, setViewport } from '@web/test-runner-commands';
 import { AlwaysInvalid } from '@lion/ui/form-core-test-helpers.js';
@@ -457,12 +458,8 @@ describe('<lion-input-datepicker>', () => {
       });
 
       it('syncs view value from calendar if custom validator is in error state', async () => {
-        const myDate = new Date('30/01/2022');
         const el = await fixture(html`
-          <lion-input-datepicker
-            .modelValue="${myDate}"
-            .validators=${[new AlwaysInvalid()]}
-          ></lion-input-datepicker>
+          <lion-input-datepicker .validators=${[new AlwaysInvalid()]}></lion-input-datepicker>
         `);
 
         const elObj = new DatepickerInputObject(el);
@@ -473,13 +470,41 @@ describe('<lion-input-datepicker>', () => {
         expect(el.hasFeedbackFor).to.include('error');
         expect(el.validationStates).to.have.property('error');
         expect(el.validationStates.error).to.have.property('AlwaysInvalid');
-
-        expect(isSameDate(/** @type {Date} */ (new Date(el.value)), elObj.calendarEl.selectedDate))
+        expect(isSameDate(/** @type {Date} */ (parseDate(el.value)), elObj.calendarEl.selectedDate))
           .to.be.true;
         expect(
           isSameDate(
             // @ts-ignore [allow-protected] in test
-            /** @type {Date} */ (new Date(el._inputNode.value)),
+            /** @type {Date} */ (parseDate(el._inputNode.value)),
+            elObj.calendarEl.selectedDate,
+          ),
+        ).to.be.true;
+      });
+
+      it('syncs view value from calendar if custom validator is in error state, when there was a previous modelValue', async () => {
+        const modelValue = new Date('2022/12/30');
+        const el = await fixture(html`
+          <lion-input-datepicker
+            .modelValue="${modelValue}"
+            .validators=${[new AlwaysInvalid()]}
+          ></lion-input-datepicker>
+        `);
+        expect(isSameDate(/** @type {Date} */ (parseDate(el.value)), modelValue)).to.be.true;
+
+        const elObj = new DatepickerInputObject(el);
+        await elObj.openCalendar();
+        await elObj.selectMonthDay(12);
+        await el.updateComplete; // safari take a little longer
+
+        expect(el.hasFeedbackFor).to.include('error');
+        expect(el.validationStates).to.have.property('error');
+        expect(el.validationStates.error).to.have.property('AlwaysInvalid');
+        expect(isSameDate(/** @type {Date} */ (parseDate(el.value)), elObj.calendarEl.selectedDate))
+          .to.be.true;
+        expect(
+          isSameDate(
+            // @ts-ignore [allow-protected] in test
+            /** @type {Date} */ (parseDate(el._inputNode.value)),
             elObj.calendarEl.selectedDate,
           ),
         ).to.be.true;

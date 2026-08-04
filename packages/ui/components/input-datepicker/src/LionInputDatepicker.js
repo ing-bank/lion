@@ -130,6 +130,10 @@ export class LionInputDatepicker extends ScopedElementsMixin(
     );
   }
 
+  get _isEditingTextField() {
+    return this.focused && this._isHandlingUserInput;
+  }
+
   constructor() {
     super();
     /** @private */
@@ -372,9 +376,9 @@ export class LionInputDatepicker extends ScopedElementsMixin(
          * The calendar selection will update the modelValue, but not the view value, so we need
          * to set it manually
          */
-        if (this.value === '' && this.hasFeedbackFor?.includes('error') && this.serializedValue) {
-          this.value = this.serializedValue;
-        }
+        // if (this.hasFeedbackFor?.includes('error') && this.serializedValue) {
+        //   this.value = this.formatter(this.deserializer(this.serializedValue));
+        // }
       }
 
       this._isHandlingUserInput = false;
