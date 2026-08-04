@@ -73,7 +73,7 @@ const FormatMixinImplementation = superclass =>
     /**
      * During format/parse, we sometimes need to know how the current viewValue the user
      * interacts with "came to be". Was it already formatted before for instance?
-     * If so, in case of an amount input, we might want to stick to the curent interpretation of separators.
+     * If so, in case of an amount input, we might want to stick to the current interpretation of separators.
      */
     #viewValueState = {
       didFormatterOutputSyncToView: false,
@@ -125,8 +125,8 @@ const FormatMixinImplementation = superclass =>
     }
 
     get _isEditingTextField() {
-      console.debug(this._isHandlingUserInput);
-      // for backwd. compat
+      // For backward compatibility. Ideally we check whether the input is focused,
+      // like we do in "hybrid" (picker + textbox) components like datepicker
       return this._isHandlingUserInput;
     }
 
@@ -296,7 +296,6 @@ const FormatMixinImplementation = superclass =>
       // This means, whenever we are in hasError and modelValue is set
       // imperatively, we DO want to format a value (it is the only way to get meaningful
       // input into `._inputNode` with modelValue as input)
-      console.debug('_isEditingTextField', this._isEditingTextField);
       if (this._isEditingTextField && this.hasFeedbackFor?.includes('error') && this._inputNode) {
         return this.value;
       }

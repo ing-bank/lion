@@ -371,14 +371,6 @@ export class LionInputDatepicker extends ScopedElementsMixin(
         this.modelValue = undefined;
       } else {
         this.modelValue = selectedDate;
-        /**
-         * In case a custom validator is used, the dates inside the calendar will not be disabled.
-         * The calendar selection will update the modelValue, but not the view value, so we need
-         * to set it manually
-         */
-        // if (this.hasFeedbackFor?.includes('error') && this.serializedValue) {
-        //   this.value = this.formatter(this.deserializer(this.serializedValue));
-        // }
       }
 
       this._isHandlingUserInput = false;
