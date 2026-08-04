@@ -130,6 +130,10 @@ export class LionInputDatepicker extends ScopedElementsMixin(
     );
   }
 
+  get _isEditingTextField() {
+    return this.focused && this._isHandlingUserInput;
+  }
+
   constructor() {
     super();
     /** @private */

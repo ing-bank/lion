@@ -73,7 +73,7 @@ const FormatMixinImplementation = superclass =>
     /**
      * During format/parse, we sometimes need to know how the current viewValue the user
      * interacts with "came to be". Was it already formatted before for instance?
-     * If so, in case of an amount input, we might want to stick to the curent interpretation of separators.
+     * If so, in case of an amount input, we might want to stick to the current interpretation of separators.
      */
     #viewValueState = {
       didFormatterOutputSyncToView: false,
@@ -124,13 +124,19 @@ const FormatMixinImplementation = superclass =>
       }
     }
 
+    get _isEditingTextField() {
+      // For backward compatibility. Ideally we check whether the input is focused,
+      // like we do in "hybrid" (picker + textbox) components like datepicker
+      return this._isHandlingUserInput;
+    }
+
     /**
      * Preprocessors could be considered 'live formatters'. Their result is shown to the user
      * on keyup instead of after blurring the field. The biggest difference between preprocessors
      * and formatters is their moment of execution: preprocessors are run before modelValue is
      * computed (and work based on view value), whereas formatters are run after the parser (and
      * are based on modelValue)
-     * Automatically formats code while typing. It depends on a preprocessro that smartly
+     * Automatically formats code while typing. It depends on a preprocessor that smartly
      * updates the viewValue and caret position for best UX.
      * @example
      * ```js
@@ -283,15 +289,14 @@ const FormatMixinImplementation = superclass =>
       // - Why check for this.hasError?
       // We only want to format values that are considered valid. For best UX,
       // we only 'reward' valid inputs.
-      // - Why check for _isHandlingUserInput?
+      // - Why check for _isEditingTextField?
       // Downwards sync is prevented whenever we are in an `@user-input-changed` flow, [2].
       // If we are in a 'imperatively set `.modelValue`' flow, [1], we want to reflect back
       // the value, no matter what.
       // This means, whenever we are in hasError and modelValue is set
       // imperatively, we DO want to format a value (it is the only way to get meaningful
       // input into `._inputNode` with modelValue as input)
-
-      if (this._isHandlingUserInput && this.hasFeedbackFor?.includes('error') && this._inputNode) {
+      if (this._isEditingTextField && this.hasFeedbackFor?.includes('error') && this._inputNode) {
         return this.value;
       }
 
