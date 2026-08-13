@@ -73,12 +73,39 @@ export class LionInputAmountDropdown extends LionInputAmount {
    * @configure LitElement
    * @type {any}
    */
-  static properties = {
-    modelValue: { type: Object, hasChanged: hasChangedAmountDropdownModelValue },
-    preferredCurrencies: { type: Array },
-    allowedCurrencies: { type: Array },
-    __dropdownSlot: { type: String },
-  };
+  static get properties() {
+    return {
+      modelValue: {
+        type: Object,
+        attribute: false,
+        hasChanged: hasChangedAmountDropdownModelValue,
+      },
+      preferredCurrencies: { type: Array },
+      allowedCurrencies: { type: Array },
+      __dropdownSlot: { type: String },
+    };
+  }
+
+  /** @type {import('../types/index.js').AmountDropdownModelValue} */
+  _modelValue;
+
+  /**
+   * The FormatMixin has a hard link between this.value and this.modelValue. This doesn't work for
+   * the amount dropdown class. Overwriting set modelValue makes sure that the modelValue remains the correct type with properties.
+   */
+  set modelValue(value) {
+    if (value) {
+      this._modelValue = /** @type {import('../types/index.js').AmountDropdownModelValue} */ (
+        value
+      );
+    } else {
+      this._modelValue = { currency: this.currency, amount: '' };
+    }
+  }
+
+  get modelValue() {
+    return /** @type {import('../types/index.js').AmountDropdownModelValue} */ (this._modelValue);
+  }
 
   static localizeNamespaces = [
     { 'lion-input-amount-dropdown': localizeNamespaceLoader },
@@ -292,6 +319,9 @@ export class LionInputAmountDropdown extends LionInputAmount {
 
     this.parser = parseAmount;
 
+    /** @type {import('../types/index.js').AmountDropdownModelValue} */
+    this._modelValue = { currency: this.currency, amount: '' };
+
     /**
      * @param {import("../types/index.js").AmountDropdownModelValue} modelValue
      * @param {import('../../localize/types/LocalizeMixinTypes.js').FormatNumberOptions} [givenOptions] Locale Options
@@ -406,7 +436,8 @@ export class LionInputAmountDropdown extends LionInputAmount {
    * @protected
    */
   _initModelValueBasedOnDropdown() {
-    if (!this._initialModelValue && !this.dirty) {
+    const { currency, amount } = this._initialModelValue || {};
+    if (!currency && !amount && !this.dirty) {
       this.__initializedCurrencyCode = this.currency;
       this._initialModelValue = { currency: this.currency };
       this.modelValue = this._initialModelValue;

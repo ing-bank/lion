@@ -44,6 +44,8 @@ class FormatClass extends FormatMixin(LitElement) {
  * @property {(el: FormatClass) => any} [getExpectedInitialModelValue] - Optional. Expected initial modelValue state when element is created without a value. If not provided, defaults will be generated based on modelValueType.
  * @property {(el: FormatClass) => any} [getExpectedInitialFormattedValue] - Optional. Expected initial formattedValue state when element is created without a value. If not provided, defaults will be generated based on modelValueType.
  * @property {(el: FormatClass) => any} [getExpectedInitialSerializedValue] - Optional. Expected initial serializedValue state when element is created without a value. If not provided, defaults will be generated based on modelValueType.
+ * @property {(el: FormatClass) => any} [getExpectedModelValueForEmptyInputNode] - Optional. Expected modelValue after user clears the input node value. Defaults to empty string.
+ * @property {(value: string, opts?: any) => any} [parser] - Optional. Parser override used by tests. When provided, it is applied before connectedCallback so fallback init sync uses it.
  * @property {number} [valueChangeCounterOffset] - Optional. Offset for model-value-changed event counter. Use 0 for most types, 1 for Date types where parseDate() creates new objects. If not provided, defaults will be generated based on modelValueType.
  */
 
@@ -180,6 +182,10 @@ export function runFormatMixinSuite(customConfig) {
   const getExpectedInitialSerializedValue =
     cfg.getExpectedInitialSerializedValue ||
     createDefaultGetExpectedInitialSerializedValue(cfg.modelValueType);
+  const getExpectedModelValueForEmptyInputNode =
+    cfg.getExpectedModelValueForEmptyInputNode || (() => '');
+  const defaultParser = (/** @type {string} */ value) => value.replace('foo: ', '');
+  const parser = cfg.parser || defaultParser;
   const valueChangeCounterOffset =
     cfg.valueChangeCounterOffset !== undefined
       ? cfg.valueChangeCounterOffset
@@ -226,6 +232,13 @@ export function runFormatMixinSuite(customConfig) {
   }
 
   /**
+   * @param {FormatClass} el
+   */
+  function generateExpectedModelValueForEmptyInputNode(el) {
+    return getExpectedModelValueForEmptyInputNode(el);
+  }
+
+  /**
    * @param {any} actual
    * @param {any} expected
    * @param {string} message
@@ -253,7 +266,7 @@ export function runFormatMixinSuite(customConfig) {
       fooFormat = await fixture(html`
         <${tag}
           .formatter="${/** @param {string} value */ value => `foo: ${value}`}"
-          .parser="${/** @param {string} value */ value => value.replace('foo: ', '')}"
+          .parser="${parser}"
           .serializer="${/** @param {string} value */ value => `[foo] ${value}`}"
           .deserializer="${/** @param {string} value */ value => value.replace('[foo] ', '')}"
         >
@@ -368,7 +381,7 @@ export function runFormatMixinSuite(customConfig) {
           <${tag}
             value="string"
             .formatter=${/** @param {string} value */ value => `foo: ${value}`}
-            .parser=${/** @param {string} value */ value => value.replace('foo: ', '')}
+            .parser=${parser}
             .serializer=${/** @param {string} value */ value => `[foo] ${value}`}
             .deserializer=${/** @param {string} value */ value => value.replace('[foo] ', '')}
           >
@@ -378,12 +391,14 @@ export function runFormatMixinSuite(customConfig) {
         );
         // Now check if the format/parse/serialize loop has been triggered
         await formatElem.updateComplete;
-        expect(formatElem.formattedValue).to.equal('foo: string');
+        const expectedFormattedValue = `foo: ${formatElem.modelValue}`;
+        const expectedSerializedValue = `[foo] ${formatElem.modelValue}`;
 
-        expect(formatElem._inputNode.value).to.equal('foo: string');
+        expect(formatElem.formattedValue).to.equal(expectedFormattedValue);
 
-        expect(formatElem.serializedValue).to.equal('[foo] string');
-        expect(formatElem.modelValue).to.equal('string');
+        expect(formatElem._inputNode.value).to.equal(expectedFormattedValue);
+
+        expect(formatElem.serializedValue).to.equal(expectedSerializedValue);
       });
 
       describe('Unparseable values', () => {
@@ -445,9 +460,11 @@ export function runFormatMixinSuite(customConfig) {
           );
           // This could happen when the user erases the input value
           mimicUserInput(el, '');
-          // For backwards compatibility, we keep the modelValue an empty string here.
-          // Undefined would be more appropriate 'conceptually', however
-          expect(el.modelValue).to.equal('');
+          expectValue(
+            el.modelValue,
+            generateExpectedModelValueForEmptyInputNode(el),
+            'modelValue after clearing input node value',
+          );
         });
       });
     });
@@ -794,13 +811,13 @@ export function runFormatMixinSuite(customConfig) {
         `)
           );
 
-          expect(parserSpy.callCount).to.equal(1);
+          const initialParserCallCount = parserSpy.callCount;
           // This could happen for instance in a reset
           el.modelValue = undefined;
-          expect(parserSpy.callCount).to.equal(1);
+          expect(parserSpy.callCount).to.equal(initialParserCallCount);
           // This could happen when the user erases the input value
           mimicUserInput(el, '');
-          expect(parserSpy.callCount).to.equal(1);
+          expect(parserSpy.callCount).to.equal(initialParserCallCount);
         });
       });
 
@@ -824,12 +841,12 @@ export function runFormatMixinSuite(customConfig) {
 
           const { _inputNode } = getFormControlMembers(el);
 
-          expect(preprocessorSpy.callCount).to.equal(1);
+          const initialPreprocessorCallCount = preprocessorSpy.callCount;
 
           const parserSpy = sinon.spy(el, 'parser');
           mimicUserInput(el, toBeCorrectedVal);
 
-          expect(preprocessorSpy.callCount).to.equal(2);
+          expect(preprocessorSpy.callCount).to.equal(initialPreprocessorCallCount + 1);
           expect(parserSpy.lastCall.args[0]).to.equal(val);
           expect(_inputNode.value).to.equal(val);
         });
