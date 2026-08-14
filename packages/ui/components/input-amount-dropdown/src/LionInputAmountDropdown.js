@@ -90,14 +90,16 @@ export class LionInputAmountDropdown extends LionInputAmount {
   _modelValue;
 
   /**
-   * The FormatMixin has a hard link between this.value and this.modelValue. This doesn't work for
-   * the amount dropdown class. Overwriting set modelValue makes sure that the modelValue remains the correct type with properties.
+   * The FormatMixin _syncValueUpwards method creates a hard link between this.value and this.modelValue.
+   * The amount dropdown class value and modelValue are different. Overwriting set modelValue makes sure
+   * that the modelValue remains the correct type with associated properties.
    */
   set modelValue(value) {
     if (value) {
       this._modelValue = /** @type {import('../types/index.js').AmountDropdownModelValue} */ (
         value
       );
+      // Below is needed because A1 and A2 in _callParser (FormatMixin) return values that are the wrong type.
     } else {
       this._modelValue = { currency: this.currency, amount: '' };
     }
