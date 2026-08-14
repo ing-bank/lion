@@ -86,8 +86,12 @@ export class LionInputAmountDropdown extends LionInputAmount {
     };
   }
 
-  /** @type {import('../types/index.js').AmountDropdownModelValue} */
-  _modelValue;
+  /**
+   * The internal modelValue is a combination of the amount and the currency code. The amount is a number, the currency code is a string.
+   * @private
+   * @type {import('../types/index.js').AmountDropdownModelValue}
+   */
+  __modelValue;
 
   /**
    * For a FormControl to function properly, its modelValue, serializedValue and  viewValue/formattedValue
@@ -98,17 +102,17 @@ export class LionInputAmountDropdown extends LionInputAmount {
    */
   set modelValue(value) {
     if (value) {
-      this._modelValue = /** @type {import('../types/index.js').AmountDropdownModelValue} */ (
+      this.__modelValue = /** @type {import('../types/index.js').AmountDropdownModelValue} */ (
         value
       );
       // Below is needed because A1 and A2 in _callParser (FormatMixin) return values that are the wrong type.
     } else {
-      this._modelValue = { currency: this.currency, amount: '' };
+      this.__modelValue = { currency: this.currency, amount: '' };
     }
   }
 
   get modelValue() {
-    return /** @type {import('../types/index.js').AmountDropdownModelValue} */ (this._modelValue);
+    return /** @type {import('../types/index.js').AmountDropdownModelValue} */ (this.__modelValue);
   }
 
   static localizeNamespaces = [
@@ -324,7 +328,7 @@ export class LionInputAmountDropdown extends LionInputAmount {
     this.parser = parseAmount;
 
     /** @type {import('../types/index.js').AmountDropdownModelValue} */
-    this._modelValue = { currency: this.currency, amount: '' };
+    this.__modelValue = { currency: this.currency, amount: '' };
 
     /**
      * @param {import("../types/index.js").AmountDropdownModelValue} modelValue
