@@ -90,9 +90,11 @@ export class LionInputAmountDropdown extends LionInputAmount {
   _modelValue;
 
   /**
-   * The FormatMixin _syncValueUpwards method creates a hard link between this.value and this.modelValue.
-   * The amount dropdown class value and modelValue are different. Overwriting set modelValue makes sure
-   * that the modelValue remains the correct type with associated properties.
+   * For a FormControl to function properly, its modelValue, serializedValue and  viewValue/formattedValue
+   * should always translate in two directions. This is expected by `_callParser` method. It guards for empty
+   * viewValues. As the viewValue (`.value`) only concerns the amount part and not the currency part in
+   * InputAmountDropdown, this contract is broken. 
+   * Below, we compensate for this.
    */
   set modelValue(value) {
     if (value) {
