@@ -100,6 +100,7 @@ export class LionInputAmountDropdown extends LionInputAmount {
    * InputAmountDropdown, this contract is broken.
    * Below, we compensate for this.
    */
+  // @ts-expect-error - modelValue is overridden as an accessor but is defined as a property in parent class
   set modelValue(value) {
     if (value) {
       this.__modelValue = /** @type {import('../types/index.js').AmountDropdownModelValue} */ (
@@ -572,7 +573,10 @@ export class LionInputAmountDropdown extends LionInputAmount {
     }
 
     // 2. Try to get the currency from user input
-    if (this.modelValue?.currency && this.allowedCurrencies?.includes(this.modelValue?.currency)) {
+    if (
+      this.modelValue?.currency &&
+      this.allowedCurrencies?.includes(/** @type {CurrencyCode} */ (this.modelValue?.currency))
+    ) {
       this.currency = this.modelValue.currency;
       return;
     }
