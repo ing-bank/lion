@@ -97,7 +97,7 @@ export class LionInputAmountDropdown extends LionInputAmount {
    * For a FormControl to function properly, its modelValue, serializedValue and  viewValue/formattedValue
    * should always translate in two directions. This is expected by `_callParser` method. It guards for empty
    * viewValues. As the viewValue (`.value`) only concerns the amount part and not the currency part in
-   * InputAmountDropdown, this contract is broken. 
+   * InputAmountDropdown, this contract is broken.
    * Below, we compensate for this.
    */
   set modelValue(value) {
