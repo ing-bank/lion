@@ -1,5 +1,16 @@
 # @lion/ui
 
+## 0.21.0
+
+### Minor Changes
+
+- 790cbc2: Fix InputAmountDropdown currency reset when amount input field is cleared
+- 902e303: Added custom min max labels to input range
+
+### Patch Changes
+
+- c5fe913: [input-datepicker] choosing an invalid date via the picker still shows up inside the input when making use of a custom validator
+
 ## 0.20.0
 
 ### Minor Changes
