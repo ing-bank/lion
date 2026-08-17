@@ -110,6 +110,15 @@ describe('Ajax', () => {
       expect(response.headers.get('X-Custom-Header')).to.equal('y-custom-value');
     });
 
+    it('calls fetch with the given query params', async () => {
+      await ajax.fetch('/foo', { params: { query: 'param', intValue: 1 } });
+
+      expect(fetchStub).to.have.been.calledOnce;
+      const request = fetchStub.getCall(0).args[0];
+
+      expect(request.url).to.equal(`${window.location.origin}/foo?query=param&intValue=1`);
+    });
+
     it('throws on 4xx responses', async () => {
       fetchStub.returns(Promise.resolve(new Response('', { status: 400 })));
 

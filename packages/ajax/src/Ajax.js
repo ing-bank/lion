@@ -144,7 +144,15 @@ export class Ajax {
    * @returns {Promise<Response>}
    */
   async fetch(info, init, parseErrorResponse = false) {
-    const request = /** @type {CacheRequest} */ (new Request(info, { ...init }));
+    const baseUrl = typeof info === 'string' ? info : /** @type {Request} */ (info).url;
+    const url = `${baseUrl}${init?.params ? `?${new URLSearchParams(init.params)}` : ''}`;
+
+    const request = /** @type {CacheRequest} */ (
+      typeof info === 'string'
+        ? new Request(url, { ...init })
+        : new Request({ ...info, url }, { ...init })
+    );
+
     request.cacheOptions = init?.cacheOptions;
     request.params = init?.params;
 
