@@ -8,6 +8,7 @@ describe('<lion-input-amount-dropdown> integrations', () => {
   runFormatMixinSuite({
     tagString,
     modelValueType: Object,
+    parser: value => value.replace('foo: ', ''),
     valueToggler: ({ toggleValue, viewValue }) => {
       if (viewValue) {
         return !toggleValue ? '123' : '456';
@@ -17,6 +18,10 @@ describe('<lion-input-amount-dropdown> integrations', () => {
     getExpectedInitialModelValue: el => ({ currency: /** @type {any} */ (el).currency }),
     getExpectedInitialFormattedValue: el => ({ currency: /** @type {any} */ (el).currency }),
     getExpectedInitialSerializedValue: el => ({ currency: /** @type {any} */ (el).currency }),
+    getExpectedModelValueForEmptyInputNode: el => ({
+      currency: /** @type {any} */ (el).currency,
+      amount: '',
+    }),
     valueChangeCounterOffset: 0,
   });
 });

@@ -392,6 +392,7 @@ export function runInputAmountDropdownSuite({ klass } = { klass: LionInputAmount
       // @ts-ignore
       expect(el._isEmpty(), 'missing amount property').to.be.true;
 
+      // @ts-ignore
       el.modelValue = null;
       await el.updateComplete;
       // @ts-ignore
