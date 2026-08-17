@@ -13,13 +13,7 @@ export function dataTemplate(
     <div id="js-content-wrapper">
       ${data.months.map(
         month => html`
-          <table
-            role="grid"
-            data-wrap-cols
-            aria-readonly="true"
-            class="calendar__grid"
-            aria-labelledby="month year"
-          >
+          <table role="grid" data-wrap-cols aria-readonly="true" class="calendar__grid">
             <thead>
               <tr role="row">
                 ${weekdaysShort.map(

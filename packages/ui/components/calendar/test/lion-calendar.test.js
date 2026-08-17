@@ -870,7 +870,7 @@ describe('<lion-calendar>', () => {
                 30
               </span>
               <span class="u-sr-only">
-                September 2019 Monday
+                September 2019.
               </span>
             </div>
           `);
@@ -934,7 +934,7 @@ describe('<lion-calendar>', () => {
                 15
               </span>
               <span class="u-sr-only">
-                December 2000 Friday This date is unavailable. Please choose another date.
+                December 2000. This date is unavailable. Please choose another date.
               </span>
             </div>
           `);
@@ -963,7 +963,7 @@ describe('<lion-calendar>', () => {
                 1
               </span>
               <span class="u-sr-only">
-                December 2000 Friday This date is unavailable. Earliest available date is 9 December 2000. Please choose another date.
+                December 2000. This date is unavailable. Earliest available date is 9 December 2000. Please choose another date.
               </span>
             </div>
           `);
@@ -992,7 +992,7 @@ describe('<lion-calendar>', () => {
                 30
               </span>
               <span class="u-sr-only">
-                December 2000 Saturday This date is unavailable. Latest available date is 9 December 2000. Please choose another date.
+                December 2000. This date is unavailable. Latest available date is 9 December 2000. Please choose another date.
               </span>
             </div>
           `);
