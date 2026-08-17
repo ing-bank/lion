@@ -25,13 +25,13 @@ const { title = "Components - Lion UI", components = [] } = Astro.props;
     <meta name="view-transition" content="same-origin" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{title}</title>
-    <link rel="icon" type="image/svg+xml" href={`${import.meta.env.BASE_URL}/favicon.svg`} />
+    <link rel="icon" type="image/svg+xml" href={`${import.meta.env.BASE_URL}favicon.svg`} />
     <meta name="generator" content={Astro.generator} />
-    
-    <link rel="stylesheet" href={`${import.meta.env.BASE_URL}/styles/styles.css`} />
-    <link rel="stylesheet" href={`${import.meta.env.BASE_URL}/styles/components.css`} />
-    <link rel="stylesheet" href={`${import.meta.env.BASE_URL}/styles/transitions.css`} />
-    <link rel="stylesheet" href={`${import.meta.env.BASE_URL}/styles/scroll-animations.css`} />
+
+    <link rel="stylesheet" href={`${import.meta.env.BASE_URL}styles/styles.css`} />
+    <link rel="stylesheet" href={`${import.meta.env.BASE_URL}styles/components.css`} />
+    <link rel="stylesheet" href={`${import.meta.env.BASE_URL}styles/transitions.css`} />
+    <link rel="stylesheet" href={`${import.meta.env.BASE_URL}styles/scroll-animations.css`} />
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -56,7 +56,7 @@ const { title = "Components - Lion UI", components = [] } = Astro.props;
 <body>
     <div class="scroll-progress"></div>
     <div class="grid-background"></div>
-    
+
     <TopNav activeNavItem="components" />
 
     <main>
@@ -88,14 +88,14 @@ const { title = "Components - Lion UI", components = [] } = Astro.props;
         <div class="container">
             <div class="footer-row">
                 <div class="footer-brand">
-                    <img src={`${import.meta.env.BASE_URL}/lionui-text.svg`} alt="lion ui" height="16" class="logo-text-svg" />
+                    <img src={`${import.meta.env.BASE_URL}lionui-text.svg`} alt="lion ui" height="16" class="logo-text-svg" />
                     <p class="copyright">&copy; 2025 Lion Project. MIT License.</p>
                 </div>
                 <div class="footer-links">
-                    <a href={`${import.meta.env.BASE_URL}/blog/`}>Blog</a>
+                    <a href={`${import.meta.env.BASE_URL}blog/`}>Blog</a>
                     <a href="https://github.com/ing-bank/lion/issues">Help</a>
                     <a href="https://github.com/ing-bank/lion">GitHub</a>
-                    <a href={`${import.meta.env.BASE_URL}/about/slack/`}>Slack</a>
+                    <a href={`${import.meta.env.BASE_URL}about/slack/`}>Slack</a>
                     <a href="https://github.com/ing-bank/lion/blob/master/CONTRIBUTING.md">Contribute</a>
                 </div>
             </div>
