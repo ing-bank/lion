@@ -25,11 +25,11 @@ export class CalendarObject {
   }
 
   get yearHeadingEl() {
-    return this.el.shadowRoot?.querySelector('#year');
+    return this.el.shadowRoot?.querySelector('#year-heading');
   }
 
   get monthHeadingEl() {
-    return this.el.shadowRoot?.querySelector('#month');
+    return this.el.shadowRoot?.querySelector('#month-heading');
   }
 
   get nextYearButtonEl() {
@@ -165,10 +165,12 @@ export class CalendarObject {
    * States
    */
   get activeMonth() {
-    return this.monthHeadingEl?.textContent?.trim();
+    const text = this.monthHeadingEl?.textContent || '';
+    return text.replace('▾', '').trim();
   }
 
   get activeYear() {
-    return this.yearHeadingEl?.textContent?.trim();
+    const text = this.yearHeadingEl?.textContent || '';
+    return text.replace('▾', '').trim();
   }
 }
