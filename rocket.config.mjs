@@ -30,18 +30,20 @@ class LionTitleMetaPlugin {
 
 export default {
   presets: [rocketLaunch(), rocketBlog()],
+  pathPrefix: '/prev/',
+  outputDir: '_site/prev',
   eleventy(eleventyConfig) {
     eleventyConfig.setUseGitIgnore(false);
     eleventyConfig.addPassthroughCopy('CNAME');
   },
   checkLinks: {
-    ignoreLinkPatterns: ['**/astro'],
+    ignoreLinkPatterns: ['**/astro', '**/prev'],
   },
   absoluteBaseUrl: absoluteBaseUrlNetlify('http://localhost:8080'),
   setupUnifiedPlugins: [
     adjustPluginOptions(mdjsSetupCode, {
       simulationSettings: {
-        simulatorUrl: '/simulator/',
+        simulatorUrl: '/prev/simulator/',
         languages: [
           { key: 'de-DE', name: 'German' },
           { key: 'en-GB', name: 'English (United Kingdom)' },

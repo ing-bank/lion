@@ -8,7 +8,7 @@ const componentsByCategory = new Map();
 components.forEach(component => {
   const [compName] = component.href.split('/').filter(p => p && p !== 'components');
   const category = compName || 'other';
-  
+
   if (!componentsByCategory.has(category)) {
     componentsByCategory.set(category, []);
   }
@@ -25,7 +25,7 @@ components.forEach(component => {
   sectionName="Components"
   itemName={componentName}
   description={description}
-  backLink={`${import.meta.env.BASE_URL}/components/`}
+  backLink={`${import.meta.env.BASE_URL}components/`}
   backLinkLabel="← Back to Overview"
   itemsByCategory={componentsByCategory}
   headings={headings}

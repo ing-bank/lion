@@ -92,21 +92,21 @@ async function getNavigation(collectionName, baseUrl = '/', isSortedAlphabetical
 
 const components = await getNavigation(
   "lionComponents",
-  `${import.meta.env.BASE_URL}/components`
+  `${import.meta.env.BASE_URL}components`
 );
 const fundamentals = await getNavigation(
   "lionFundamentals",
-  `${import.meta.env.BASE_URL}/fundamentals`,
+  `${import.meta.env.BASE_URL}fundamentals`,
   false
 );
 const guides = await getNavigation(
   "lionGuides",
-  `${import.meta.env.BASE_URL}/guides`,
+  `${import.meta.env.BASE_URL}guides`,
   false
 );
 const blogEntries = await getNavigation(
   "lionBlog",
-  `${import.meta.env.BASE_URL}/blog`,
+  `${import.meta.env.BASE_URL}blog`,
   false,
   entry => entry.data?.published
 );
@@ -124,25 +124,25 @@ const navData = [
   // },
   {
     name: "fundamentals",
-    url: `${import.meta.env.BASE_URL}/fundamentals`,
+    url: `${import.meta.env.BASE_URL}fundamentals`,
     iconId: 'lion-portal:portal:sdk',
     children: fundamentals,
   },
   {
     name: "guides",
-    url: `${import.meta.env.BASE_URL}/guides`,
+    url: `${import.meta.env.BASE_URL}guides`,
     iconId: 'lion-portal:portal:extension',
     children: guides,
   },
   {
     name: "components",
-    url: `${import.meta.env.BASE_URL}/components`,
+    url: `${import.meta.env.BASE_URL}components`,
     iconId: 'lion-portal:portal:deployedCode',
     children: components,
   },
   {
     name: "blog",
-    url: `${import.meta.env.BASE_URL}/blog`,
+    url: `${import.meta.env.BASE_URL}blog`,
     iconId: 'lion-portal:portal:deployedCode',
     children: blogEntries,
   },
@@ -253,14 +253,14 @@ const { variant } = Astro.props;
 <header class="site-header">
     <div class="container">
         <a href=`${import.meta.env.BASE_URL}` class="logo">
-            <img src=`${import.meta.env.BASE_URL}/logo.svg` alt="Lion Logo" width="32" height="32">
-            <img src=`${import.meta.env.BASE_URL}/lionui-text.svg` alt="lion ui" height="16" class="logo-text-svg">
+            <img src=`${import.meta.env.BASE_URL}logo.svg` alt="Lion Logo" width="32" height="32">
+            <img src=`${import.meta.env.BASE_URL}lionui-text.svg` alt="lion ui" height="16" class="logo-text-svg">
         </a>
-        
+
         <div>
-          <UIPortalMainNav 
-            client:load 
-            nav-data={JSON.stringify({ items: navData })} 
+          <UIPortalMainNav
+            client:load
+            nav-data={JSON.stringify({ items: navData })}
             variant={variant || ''}
           />
         </div>

@@ -79,14 +79,14 @@ const {
     <meta name="view-transition" content="same-origin" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{title}</title>
-    <link rel="icon" type="image/svg+xml" href=`${import.meta.env.BASE_URL}/favicon.svg` />
+    <link rel="icon" type="image/svg+xml" href=`${import.meta.env.BASE_URL}favicon.svg` />
     <meta name="generator" content={Astro.generator} />
-    
-    <link rel="stylesheet" href=`${import.meta.env.BASE_URL}/styles/styles.css`>
-    <link rel="stylesheet" href=`${import.meta.env.BASE_URL}/styles/components.css`>
-    <link rel="stylesheet" href=`${import.meta.env.BASE_URL}/styles/blog.css`>
-    <link rel="stylesheet" href=`${import.meta.env.BASE_URL}/styles/transitions.css`>
-    <link rel="stylesheet" href=`${import.meta.env.BASE_URL}/styles/scroll-animations.css`>
+
+    <link rel="stylesheet" href=`${import.meta.env.BASE_URL}styles/styles.css`>
+    <link rel="stylesheet" href=`${import.meta.env.BASE_URL}styles/components.css`>
+    <link rel="stylesheet" href=`${import.meta.env.BASE_URL}styles/blog.css`>
+    <link rel="stylesheet" href=`${import.meta.env.BASE_URL}styles/transitions.css`>
+    <link rel="stylesheet" href=`${import.meta.env.BASE_URL}styles/scroll-animations.css`>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -110,7 +110,7 @@ const {
 </head>
 <body class="blog-page">
     <div class="scroll-progress"></div>
-    
+
     <TopNav activeNavItem="blog" variant="l1-blog" />
 
     <main>
@@ -132,14 +132,14 @@ const {
         <div class="container">
             <div class="footer-row">
                 <div class="footer-brand">
-                    <img src=`${import.meta.env.BASE_URL}/lionui-text.svg` alt="lion ui" height="16" class="logo-text-svg">
+                    <img src=`${import.meta.env.BASE_URL}lionui-text.svg` alt="lion ui" height="16" class="logo-text-svg">
                     <p class="copyright">&copy; 2025 Lion Project. MIT License.</p>
                 </div>
                 <div class="footer-links">
-                    <a href=`${import.meta.env.BASE_URL}/blog/`>Blog</a>
+                    <a href=`${import.meta.env.BASE_URL}blog/`>Blog</a>
                     <a href="https://github.com/ing-bank/lion/issues">Help</a>
                     <a href="https://github.com/ing-bank/lion">GitHub</a>
-                    <a href=`${import.meta.env.BASE_URL}/about/slack/`>Slack</a>
+                    <a href=`${import.meta.env.BASE_URL}about/slack/`>Slack</a>
                     <a href="https://github.com/ing-bank/lion/blob/master/CONTRIBUTING.md">Contribute</a>
                 </div>
             </div>
@@ -163,13 +163,13 @@ const {
 
         // Interactive Blueprint Script
         const groups = document.querySelectorAll('.blueprint-bg g');
-        
+
         groups.forEach(group => {
             group.addEventListener('mouseenter', () => {
                 const dimensions = group.querySelectorAll('.dimension-line, .dimension-text, line[stroke-dasharray="2 2"], .angle-indicator');
                 dimensions.forEach(el => el.style.opacity = '1');
             });
-            
+
             group.addEventListener('mouseleave', () => {
                 const dimensions = group.querySelectorAll('.dimension-line, .dimension-text, line[stroke-dasharray="2 2"], .angle-indicator');
                 dimensions.forEach(el => el.style.opacity = '0');
@@ -180,7 +180,7 @@ const {
         document.addEventListener('mousemove', (e) => {
             const x = (window.innerWidth / 2 - e.pageX) / 50;
             const y = (window.innerHeight / 2 - e.pageY) / 50;
-            
+
             const svg = document.querySelector('.blueprint-bg svg');
             if(svg) {
                 svg.style.setProperty('--mouse-x', x + 'px');
