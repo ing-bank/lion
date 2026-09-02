@@ -132,10 +132,9 @@ class MyComponent extends ScopedElementsMixin(LitElement) {
     <button>Nutritional value</button>
   </h3>
   <p slot="content">
-    Orange flesh is 87% water, 12% carbohydrates, 1% protein, and contains negligible fat (table).
-    In a 100 gram reference amount, orange flesh provides 47 calories, and is a rich source of
-    vitamin C, providing 64% of the Daily Value. No other micronutrients are present in significant
-    amounts (table).
+   Orange flesh is composed of approximately 87% water, 12% carbohydrates, 1% protein, and contains negligible fat.
+   In a 100-gram serving, orange flesh provides 47 calories and is a rich source of vitamin C, supplying about 64% of the Daily Value.
+   No other micronutrients are present in significant amounts.
   </p>
 </lion-accordion>
 ```
