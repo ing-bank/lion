@@ -36,11 +36,11 @@ const telDropdownConfig = {
 /**
  * @param {{ klass:LionInputTelDropdown, config: {} }} config
  */
-export function runInputTelDropdownParenthesesSuite({
+
+export function runInputTelDropdownParenthesesSuite(
   // @ts-ignore
-  klass = LionInputTelDropdown,
-  config = telDropdownConfig,
-}) {
+  { klass, config } = { klass: LionInputTelDropdown, config: telDropdownConfig },
+) {
   // @ts-ignore
   const tagName = defineCE(/** @type {* & HTMLElement} */ (class extends klass {}));
   const tag = unsafeStatic(tagName);
