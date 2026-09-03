@@ -6,11 +6,11 @@ import { LionInputTelDropdown } from '@lion/ui/input-tel-dropdown.js';
 import { PhoneUtilManager } from '@lion/ui/input-tel.js';
 import { sendKeys, selectOption } from '@web/test-runner-commands';
 import {
-  defineCE,
   expect,
+  defineCE,
+  unsafeStatic,
   fixture as _fixture,
   html,
-  unsafeStatic,
   waitUntil,
 } from '@open-wc/testing';
 
@@ -28,19 +28,19 @@ const fixture = /** @type {(arg: string | TemplateResult) => Promise<LionInputTe
  */
 const telDropdownConfig = {
   getTelDropdownInvokerEl: el => el.querySelector('select'),
-  waitUntilDropdownMenuIsVisible: async () => true,
   selectNlOption: async () => {
     await selectOption({ selector: 'select', value: 'NL' });
   },
 };
 
 /**
- * @param {{ klass:LionInputTelDropdown, config: typeof telDropdownConfig }} config
+ * @param {{ klass:LionInputTelDropdown, config: {} }} config
  */
-export function runInputTelDropdownParenthesesSuite(
-  // @ts-expect-error
-  { klass, config } = { klass: LionInputTelDropdown, config: telDropdownConfig },
-) {
+export function runInputTelDropdownParenthesesSuite({
+  // @ts-ignore
+  klass = LionInputTelDropdown,
+  config = telDropdownConfig,
+}) {
   // @ts-ignore
   const tagName = defineCE(/** @type {* & HTMLElement} */ (class extends klass {}));
   const tag = unsafeStatic(tagName);
