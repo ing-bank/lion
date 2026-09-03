@@ -177,6 +177,7 @@ const ChoiceInputMixinImplementation = superclass =>
         <div class="choice-field__label">
           <slot name="label"></slot>
         </div>
+        ${this._afterLabel()}
         <small class="choice-field__help-text">
           <slot name="help-text"></slot>
         </small>
@@ -188,6 +189,13 @@ const ChoiceInputMixinImplementation = superclass =>
      * @protected
      */
     _choiceGraphicTemplate() {
+      return nothing;
+    }
+
+    /**
+     * @protected
+     */
+    _afterLabel() {
       return nothing;
     }
 
