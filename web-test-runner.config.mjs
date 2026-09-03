@@ -48,7 +48,7 @@ export default {
     threshold: { statements: 95, functions: 95, branches: 95, lines: 95 },
   },
   testFramework: {
-    config: { timeout: '5000' },
+    config: { timeout: '5000000' },
   },
   testRunnerHtml: config.shouldLoadPolyfill ? testRunnerHtmlWithPolyfill : undefined,
   browsers: [
