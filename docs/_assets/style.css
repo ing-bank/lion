@@ -1,3 +1,14 @@
+body, #content-wrapper {
+  background-color: white;
+}
+
+@media (prefers-color-scheme: dark) {
+  body {
+    background-color: #222;
+    filter: invert(1) hue-rotate(180deg);
+  }
+}
+
 body[layout='layout-home'] .markdown-body .call-to-action:nth-of-type(2) {
   background: linear-gradient(to right, #555, #222);
 }
