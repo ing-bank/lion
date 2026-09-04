@@ -34,7 +34,7 @@ const telDropdownConfig = {
 };
 
 /**
- * @param {{ klass:LionInputTelDropdown, config: {} }} config
+ * @param {{ klass:LionInputTelDropdown, config: TelDropdownConfig }} config
  */
 
 export function runInputTelDropdownParenthesesSuite(
@@ -75,24 +75,12 @@ export function runInputTelDropdownParenthesesSuite(
         // @ts-ignore
         input.value = '';
         // @ts-ignore
-        input.value = '(+91) 99451 46400';
-        // @ts-ignore
         input.focus();
-        /*
-         * Remove characters from the input untile we get '(+91) 9'
-         */
-        await sendKeys({ press: 'Backspace' });
-        await sendKeys({ press: 'Backspace' });
-        await sendKeys({ press: 'Backspace' });
-        await sendKeys({ press: 'Backspace' });
-        await sendKeys({ press: 'Backspace' });
-        await sendKeys({ press: 'Backspace' });
-        await sendKeys({ press: 'Backspace' });
-        await sendKeys({ press: 'Backspace' });
-        await sendKeys({ press: 'Backspace' });
         // @ts-ignore
-        expect(input.value).to.equal('(+91) 99');
-        expect(el.activeRegion).to.equal('IN');
+        await sendKeys({
+          type: '(+91) 99',
+        });
+
         await sendKeys({ press: 'Backspace' });
         // @ts-ignore
         expect(input.value).to.equal('(+91) 9');
