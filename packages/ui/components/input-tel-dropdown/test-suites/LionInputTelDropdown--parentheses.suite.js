@@ -80,7 +80,6 @@ export function runInputTelDropdownParenthesesSuite(
         await sendKeys({
           type: '(+91) 99',
         });
-
         await sendKeys({ press: 'Backspace' });
         // @ts-ignore
         expect(input.value).to.equal('(+91) 9');
