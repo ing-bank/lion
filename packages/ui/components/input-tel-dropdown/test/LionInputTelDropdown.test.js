@@ -1,5 +1,8 @@
 import { mimicUserChangingDropdown } from '@lion/ui/input-tel-dropdown-test-helpers.js';
-import { runInputTelDropdownSuite } from '@lion/ui/input-tel-dropdown-test-suites.js';
+import {
+  runInputTelDropdownSuite,
+  runInputTelDropdownParenthesesSuite,
+} from '@lion/ui/input-tel-dropdown-test-suites.js';
 import { LionInputTelDropdown } from '@lion/ui/input-tel-dropdown.js';
 import { runInputTelSuite } from '@lion/ui/input-tel-test-suites.js';
 import { aTimeout, expect, fixture } from '@open-wc/testing';
@@ -63,6 +66,7 @@ class WithFormControlInputTelDropdown extends ScopedElementsMixin(LionInputTelDr
 // @ts-expect-error
 runInputTelSuite({ klass: LionInputTelDropdown });
 runInputTelDropdownSuite();
+runInputTelDropdownParenthesesSuite();
 
 describe('WithFormControlInputTelDropdown', () => {
   // @ts-expect-error

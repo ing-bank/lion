@@ -1,4 +1,3 @@
-import { Unparseable } from '@lion/ui/form-core.js';
 import { LocalizeMixin } from '@lion/ui/localize-no-side-effects.js';
 import { LionInput } from '@lion/ui/input.js';
 
@@ -325,9 +324,7 @@ export class LionInputTel extends LocalizeMixin(LionInput) {
 
     // 2. Try to derive action region from user value
     const regex = /[+0-9]+/gi;
-    const value = !(this.modelValue instanceof Unparseable)
-      ? this.modelValue
-      : this.value.match(regex)?.join('');
+    const value = this.value.match(regex)?.join('');
     const regionDerivedFromValue =
       value && this._phoneUtil && this._phoneUtil.parsePhoneNumber(value).regionCode;
 
