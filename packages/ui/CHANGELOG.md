@@ -1,5 +1,11 @@
 # @lion/ui
 
+## 0.21.1
+
+### Patch Changes
+
+- 38ca745: [input-tel-dropdown] fix syncing between input with dropdown
+
 ## 0.21.0
 
 ### Minor Changes
