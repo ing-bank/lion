@@ -123,7 +123,7 @@ describe('FocusMixin', () => {
     expect(el.focused).to.be.false;
   });
 
-  it('dispatches [focus, blur] events', async () => {
+  it('dispatches [focus, blur] events with { composed: true }', async () => {
     const el = /** @type {Focusable} */ (
       await fixture(html`
       <${tag}><input slot="input"></${tag}>
@@ -134,7 +134,7 @@ describe('FocusMixin', () => {
     expect(focusEv).to.be.instanceOf(Event);
     expect(focusEv.target).to.equal(el);
     expect(focusEv.bubbles).to.be.false;
-    expect(focusEv.composed).to.be.false;
+    expect(focusEv.composed).to.be.true;
 
     setTimeout(() => {
       el.focus();
@@ -144,7 +144,7 @@ describe('FocusMixin', () => {
     expect(blurEv).to.be.instanceOf(Event);
     expect(blurEv.target).to.equal(el);
     expect(blurEv.bubbles).to.be.false;
-    expect(blurEv.composed).to.be.false;
+    expect(blurEv.composed).to.be.true;
   });
 
   it('dispatches [focusin, focusout] events with { bubbles: true, composed: true }', async () => {
