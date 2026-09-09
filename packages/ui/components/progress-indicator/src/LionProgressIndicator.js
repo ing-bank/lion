@@ -1,6 +1,7 @@
 /* eslint-disable import/no-extraneous-dependencies */
-import { LitElement, nothing } from 'lit';
+import { css, html, LitElement, nothing } from 'lit';
 import { getLocalizeManager, LocalizeMixin } from '@lion/ui/localize-no-side-effects.js';
+import { localizeNamespaceLoader } from './localizeNamespaceLoader.js';
 
 /**
  * @typedef {import('lit').TemplateResult} TemplateResult
@@ -21,73 +22,16 @@ export class LionProgressIndicator extends LocalizeMixin(LitElement) {
       max: {
         type: Number,
       },
+      label: { type: String },
       _ariaLabel: { attribute: 'aria-label', type: String },
       _ariaLabelledby: { attribute: 'aria-labelledby', type: String },
     };
   }
 
-  static get localizeNamespaces() {
-    return [
-      {
-        'lion-progress-indicator': /** @param {string} locale */ locale => {
-          switch (locale) {
-            case 'bg-BG':
-            case 'bg':
-              return import('@lion/ui/progress-indicator-translations/bg.js');
-            case 'cs-CZ':
-            case 'cs':
-              return import('@lion/ui/progress-indicator-translations/cs.js');
-            case 'de-DE':
-            case 'de':
-              return import('@lion/ui/progress-indicator-translations/de.js');
-            case 'en-AU':
-            case 'en-GB':
-            case 'en-US':
-            case 'en-PH':
-            case 'en':
-              return import('@lion/ui/progress-indicator-translations/en.js');
-            case 'es-ES':
-            case 'es':
-              return import('@lion/ui/progress-indicator-translations/es.js');
-            case 'fr-BE':
-            case 'fr-FR':
-            case 'fr':
-              return import('@lion/ui/progress-indicator-translations/fr.js');
-            case 'hu-HU':
-            case 'hu':
-              return import('@lion/ui/progress-indicator-translations/hu.js');
-            case 'it-IT':
-            case 'it':
-              return import('@lion/ui/progress-indicator-translations/it.js');
-            case 'nl-BE':
-            case 'nl-NL':
-            case 'nl':
-              return import('@lion/ui/progress-indicator-translations/nl.js');
-            case 'pl-PL':
-            case 'pl':
-              return import('@lion/ui/progress-indicator-translations/pl.js');
-            case 'ro-RO':
-            case 'ro':
-              return import('@lion/ui/progress-indicator-translations/ro.js');
-            case 'ru-RU':
-            case 'ru':
-              return import('@lion/ui/progress-indicator-translations/ru.js');
-            case 'sk-SK':
-            case 'sk':
-              return import('@lion/ui/progress-indicator-translations/sk.js');
-            case 'uk-UA':
-            case 'uk':
-              return import('@lion/ui/progress-indicator-translations/uk.js');
-            case 'zh-CN':
-            case 'zh':
-              return import('@lion/ui/progress-indicator-translations/zh.js');
-            default:
-              return import('@lion/ui/progress-indicator-translations/en.js');
-          }
-        },
-      },
-    ];
-  }
+  static localizeNamespaces = [
+    { 'lion-progress-indicator': localizeNamespaceLoader },
+    ...super.localizeNamespaces,
+  ];
 
   /**
    * @readonly
@@ -118,13 +62,33 @@ export class LionProgressIndicator extends LocalizeMixin(LitElement) {
     return ((this.value - this.min) / (this.max - this.min)) * 100;
   }
 
+  static get styles() {
+    return css`
+      .sr-only {
+        position: absolute;
+        overflow: hidden;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        border: 0;
+        margin: 0;
+        clip: rect(1px, 1px, 1px, 1px);
+        clip-path: inset(100%);
+        white-space: nowrap;
+      }
+    `;
+  }
+
   constructor() {
     super();
     this.value = 0;
     this.min = 0;
     this.max = 100;
+    /** @type {string|TemplateResult} */
+    this.label = '';
     this._ariaLabel = '';
     this._ariaLabelledby = '';
+    this._localizeManager = getLocalizeManager();
     this.__hasDefaultLabelSet = false;
   }
 
@@ -135,12 +99,26 @@ export class LionProgressIndicator extends LocalizeMixin(LitElement) {
   }
 
   render() {
-    return this._graphicTemplate();
+    return html`
+      ${this._graphicTemplate()}
+      ${this.indeterminate ? html`<span class="sr-only">${this.label}</span>` : nothing}
+    `;
   }
 
   connectedCallback() {
     super.connectedCallback();
-    this.setAttribute('role', 'progressbar');
+    if (this.indeterminate) {
+      this.setAttribute('role', 'status');
+    } else {
+      this.setAttribute('role', 'progressbar');
+    }
+  }
+
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    if (this.__hasDefaultLabelSet) {
+      this._removeDefaultLabel();
+    }
   }
 
   /**
@@ -172,7 +150,7 @@ export class LionProgressIndicator extends LocalizeMixin(LitElement) {
           this.setAttribute('aria-valuenow', this.value.toString());
         }
         if (this.__hasDefaultLabelSet === true) {
-          this.removeAttribute('aria-label');
+          this._removeDefaultLabel();
         }
       }
       if (changedProperties.has('min')) {
@@ -204,13 +182,34 @@ export class LionProgressIndicator extends LocalizeMixin(LitElement) {
     this.removeAttribute('aria-valuemax');
   }
 
-  _setDefaultLabel() {
-    const localizeManager = getLocalizeManager();
-    if (this._ariaLabelledby) {
-      this.removeAttribute('aria-label');
-    } else if (!this._ariaLabel) {
-      this.setAttribute('aria-label', localizeManager.msg('lion-progress-indicator:loading'));
-      this.__hasDefaultLabelSet = true;
+  __setLabel() {
+    if (this.__hasDefaultLabelSet) {
+      setTimeout(() => {
+        this.label = this._localizeManager.msg('lion-progress-indicator:loading');
+      }, 500);
     }
+  }
+
+  __removeLabel() {
+    this.label = html`&nbsp;`;
+  }
+
+  _setDefaultLabel() {
+    if (this._ariaLabelledby || this._ariaLabel) {
+      this._removeDefaultLabel();
+    } else if (!this.__hasDefaultLabelSet) {
+      this.__hasDefaultLabelSet = true;
+      this.__setLabel();
+      this.repeatLabel = setInterval(() => {
+        this.__removeLabel();
+        this.__setLabel();
+      }, 8000);
+    }
+  }
+
+  _removeDefaultLabel() {
+    this.label = '';
+    clearInterval(this.repeatLabel);
+    this.__hasDefaultLabelSet = false;
   }
 }
