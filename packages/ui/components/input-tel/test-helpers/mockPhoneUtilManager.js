@@ -1,7 +1,7 @@
 import { PhoneUtilManager } from '../src/PhoneUtilManager.js';
 
 const originalLoadComplete = PhoneUtilManager.loadComplete;
-const originalIsLoaded = PhoneUtilManager.isLoaded;
+const originalIsLoaded = Object.getOwnPropertyDescriptor(PhoneUtilManager, 'isLoaded')?.get;
 
 export function mockPhoneUtilManager() {
   /** @type {(value: any) => void} */
@@ -21,5 +21,8 @@ export function mockPhoneUtilManager() {
 
 export function restorePhoneUtilManager() {
   PhoneUtilManager.loadComplete = originalLoadComplete;
-  Object.defineProperty(PhoneUtilManager, 'isLoaded', { get: () => originalIsLoaded });
+  Object.defineProperty(PhoneUtilManager, 'isLoaded', {
+    // @ts-ignore
+    get: () => originalIsLoaded.call(PhoneUtilManager),
+  });
 }
