@@ -127,6 +127,8 @@ export class LionSelectRich extends SlotMixin(ScopedElementsMixin(OverlayMixin(L
     this.singleOption = false;
     /** @protected */
     this._arrowWidth = 28;
+    /** @private */
+    this.__invokerWidthResizeObserver = undefined;
 
     /** @private */
     this.__onKeyUp = this.__onKeyUp.bind(this);
@@ -428,6 +430,9 @@ export class LionSelectRich extends SlotMixin(ScopedElementsMixin(OverlayMixin(L
   _teardownOverlayCtrl() {
     super._teardownOverlayCtrl();
 
+    this.__invokerWidthResizeObserver?.disconnect();
+    this.__invokerWidthResizeObserver = undefined;
+
     this._overlayCtrl.removeEventListener('show', this.__overlayOnShow);
     this._overlayCtrl.removeEventListener('before-show', this.__overlayBeforeShow);
     this._overlayCtrl.removeEventListener('hide', this.__overlayOnHide);
@@ -441,28 +446,32 @@ export class LionSelectRich extends SlotMixin(ScopedElementsMixin(OverlayMixin(L
   async _alignInvokerWidth() {
     await this.updateComplete;
 
-    if (!this._overlayCtrl?.content) {
+    if (!this._overlayCtrl?.content || this.__invokerWidthResizeObserver) {
       return;
     }
 
     const initContentDisplay = this._overlayCtrl.content.style.display;
     const initContentMinWidth = this._overlayCtrl.contentWrapperNode.style.minWidth;
     const initContentWidth = this._overlayCtrl.contentWrapperNode.style.width;
+
+    this.__invokerWidthResizeObserver = new ResizeObserver(([entry]) => {
+      this.__invokerWidthResizeObserver?.disconnect();
+      this.__invokerWidthResizeObserver = undefined;
+
+      const contentWidth = entry.contentRect.width;
+      if (contentWidth > 0) {
+        this._invokerNode.style.width = `${contentWidth + this._arrowWidth}px`;
+      }
+
+      this._overlayCtrl.content.style.display = initContentDisplay;
+      this._overlayCtrl.contentWrapperNode.style.minWidth = initContentMinWidth;
+      this._overlayCtrl.contentWrapperNode.style.width = initContentWidth;
+    });
+    this.__invokerWidthResizeObserver.observe(this._overlayCtrl.contentWrapperNode);
+
     this._overlayCtrl.content.style.display = '';
     this._overlayCtrl.contentWrapperNode.style.minWidth = 'auto';
     this._overlayCtrl.contentWrapperNode.style.width = 'auto';
-    const contentWidth = this._overlayCtrl.contentWrapperNode.getBoundingClientRect().width;
-    /**
-     * TODO when inside an overlay the current solution doesn't work.
-     * Since that dialog is still hidden, open and close the select-rich
-     * doesn't have any effect so the contentWidth returns 0
-     */
-    if (contentWidth > 0) {
-      this._invokerNode.style.width = `${contentWidth + this._arrowWidth}px`;
-    }
-    this._overlayCtrl.content.style.display = initContentDisplay;
-    this._overlayCtrl.contentWrapperNode.style.minWidth = initContentMinWidth;
-    this._overlayCtrl.contentWrapperNode.style.width = initContentWidth;
   }
 
   /**
