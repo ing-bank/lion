@@ -213,6 +213,85 @@ describe('lion-select-rich', () => {
       expect(firstChild.textContent).to.equal('30');
     });
 
+    it('measures the invoker width without a synchronous layout read', async () => {
+      const el = await fixture(html`
+        <lion-select-rich>
+          <lion-option .choiceValue=${10}>Item 1</lion-option>
+          <lion-option .choiceValue=${20}>Item 2 with long label</lion-option>
+        </lion-select-rich>
+      `);
+      await nextFrame();
+      await nextFrame();
+
+      /** @type {ResizeObserverCallback | undefined} */
+      let resizeObserverCallback;
+      /** @type {FrameRequestCallback | undefined} */
+      let requestAnimationFrameCallback;
+      const observeSpy = sinon.spy();
+      const disconnectSpy = sinon.spy();
+      const resizeObserverStub = sinon.stub(window, 'ResizeObserver').callsFake(callback => {
+        resizeObserverCallback = callback;
+        return /** @type {ResizeObserver} */ (
+          /** @type {unknown} */ ({
+            observe: observeSpy,
+            disconnect: disconnectSpy,
+            unobserve: sinon.spy(),
+          })
+        );
+      });
+      const requestAnimationFrameStub = sinon
+        .stub(window, 'requestAnimationFrame')
+        .callsFake(frameCallback => {
+          requestAnimationFrameCallback = frameCallback;
+          return 1;
+        });
+
+      try {
+        const { _invokerNode, _overlayCtrl } = getSelectRichMembers(el);
+        const { contentWrapperNode } = _overlayCtrl;
+        const initContentDisplay = _overlayCtrl.content.style.display;
+        const initContentContain = contentWrapperNode.style.contain;
+        const initContentMinWidth = contentWrapperNode.style.minWidth;
+        const initContentWidth = contentWrapperNode.style.width;
+        const getBoundingClientRectSpy = sinon.spy(contentWrapperNode, 'getBoundingClientRect');
+
+        await Promise.all([
+          el._alignInvokerWidth(),
+          el._alignInvokerWidth(),
+          el._alignInvokerWidth(),
+        ]);
+
+        expect(resizeObserverStub).not.to.have.been.called;
+        expect(requestAnimationFrameStub).to.have.been.calledOnce;
+        if (!requestAnimationFrameCallback) {
+          throw new Error('Expected requestAnimationFrame callback');
+        }
+        requestAnimationFrameCallback(performance.now());
+        await waitUntil(() => resizeObserverCallback);
+
+        expect(contentWrapperNode.style.contain).to.equal('layout');
+
+        if (!resizeObserverCallback) {
+          throw new Error('Expected ResizeObserver callback');
+        }
+        resizeObserverCallback(
+          [/** @type {ResizeObserverEntry} */ ({ contentRect: { width: 120 } })],
+          /** @type {ResizeObserver} */ ({}),
+        );
+
+        expect(_invokerNode.style.width).to.equal('148px');
+        expect(getBoundingClientRectSpy).not.to.have.been.called;
+        expect(disconnectSpy).to.have.been.calledOnce;
+        expect(_overlayCtrl.content.style.display).to.equal(initContentDisplay);
+        expect(contentWrapperNode.style.contain).to.equal(initContentContain);
+        expect(contentWrapperNode.style.minWidth).to.equal(initContentMinWidth);
+        expect(contentWrapperNode.style.width).to.equal(initContentWidth);
+      } finally {
+        requestAnimationFrameStub.restore();
+        resizeObserverStub.restore();
+      }
+    });
+
     // FIXME: wrong values in safari/webkit even though this passes in the "real" debug browsers
     it.skip('inherits the content width including arrow width', async () => {
       const el = await fixture(html`
