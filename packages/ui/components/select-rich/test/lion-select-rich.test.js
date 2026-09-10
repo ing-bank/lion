@@ -213,6 +213,54 @@ describe('lion-select-rich', () => {
       expect(firstChild.textContent).to.equal('30');
     });
 
+    it('measures the invoker width without a synchronous layout read', async () => {
+      /** @type {ResizeObserverCallback | undefined} */
+      let resizeObserverCallback;
+      const observeSpy = sinon.spy();
+      const disconnectSpy = sinon.spy();
+      const resizeObserverStub = sinon.stub(window, 'ResizeObserver').callsFake(callback => {
+        resizeObserverCallback = callback;
+        return /** @type {ResizeObserver} */ (
+          /** @type {unknown} */ ({
+            observe: observeSpy,
+            disconnect: disconnectSpy,
+            unobserve: sinon.spy(),
+          })
+        );
+      });
+
+      try {
+        const el = await fixture(html`
+          <lion-select-rich>
+            <lion-option .choiceValue=${10}>Item 1</lion-option>
+            <lion-option .choiceValue=${20}>Item 2 with long label</lion-option>
+          </lion-select-rich>
+        `);
+        await waitUntil(() => resizeObserverCallback);
+
+        const { _invokerNode, _overlayCtrl } = getSelectRichMembers(el);
+        const { contentWrapperNode } = _overlayCtrl;
+        const getBoundingClientRectSpy = sinon.spy(contentWrapperNode, 'getBoundingClientRect');
+
+        if (!resizeObserverCallback) {
+          throw new Error('Expected ResizeObserver callback');
+        }
+        resizeObserverCallback(
+          [/** @type {ResizeObserverEntry} */ ({ contentRect: { width: 120 } })],
+          /** @type {ResizeObserver} */ ({}),
+        );
+
+        expect(_invokerNode.style.width).to.equal('148px');
+        expect(getBoundingClientRectSpy).not.to.have.been.called;
+        expect(disconnectSpy).to.have.been.calledOnce;
+        expect(_overlayCtrl.content.style.display).to.equal('none');
+        expect(contentWrapperNode.style.minWidth).to.equal('');
+        expect(contentWrapperNode.style.width).to.equal('');
+      } finally {
+        resizeObserverStub.restore();
+      }
+    });
+
     // FIXME: wrong values in safari/webkit even though this passes in the "real" debug browsers
     it.skip('inherits the content width including arrow width', async () => {
       const el = await fixture(html`
