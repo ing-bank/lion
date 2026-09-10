@@ -216,6 +216,8 @@ describe('lion-select-rich', () => {
     it('measures the invoker width without a synchronous layout read', async () => {
       /** @type {ResizeObserverCallback | undefined} */
       let resizeObserverCallback;
+      /** @type {FrameRequestCallback | undefined} */
+      let requestAnimationFrameCallback;
       const observeSpy = sinon.spy();
       const disconnectSpy = sinon.spy();
       const resizeObserverStub = sinon.stub(window, 'ResizeObserver').callsFake(callback => {
@@ -228,6 +230,12 @@ describe('lion-select-rich', () => {
           })
         );
       });
+      const requestAnimationFrameStub = sinon
+        .stub(window, 'requestAnimationFrame')
+        .callsFake(frameCallback => {
+          requestAnimationFrameCallback = frameCallback;
+          return 1;
+        });
 
       try {
         const el = await fixture(html`
@@ -236,6 +244,14 @@ describe('lion-select-rich', () => {
             <lion-option .choiceValue=${20}>Item 2 with long label</lion-option>
           </lion-select-rich>
         `);
+        await waitUntil(() => requestAnimationFrameCallback);
+
+        expect(resizeObserverStub).not.to.have.been.called;
+        expect(requestAnimationFrameStub).to.have.been.calledOnce;
+        if (!requestAnimationFrameCallback) {
+          throw new Error('Expected requestAnimationFrame callback');
+        }
+        requestAnimationFrameCallback(performance.now());
         await waitUntil(() => resizeObserverCallback);
 
         const { _invokerNode, _overlayCtrl } = getSelectRichMembers(el);
@@ -257,6 +273,7 @@ describe('lion-select-rich', () => {
         expect(contentWrapperNode.style.minWidth).to.equal('');
         expect(contentWrapperNode.style.width).to.equal('');
       } finally {
+        requestAnimationFrameStub.restore();
         resizeObserverStub.restore();
       }
     });

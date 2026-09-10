@@ -130,6 +130,8 @@ export class LionSelectRich extends SlotMixin(ScopedElementsMixin(OverlayMixin(L
     this._arrowWidth = 28;
     /** @private */
     this.__invokerWidthResizeObserver = undefined;
+    /** @private */
+    this.__invokerWidthRequestAnimationFrame = undefined;
 
     /** @private */
     this.__onKeyUp = this.__onKeyUp.bind(this);
@@ -430,14 +432,16 @@ export class LionSelectRich extends SlotMixin(ScopedElementsMixin(OverlayMixin(L
    */
   _teardownOverlayCtrl() {
     super._teardownOverlayCtrl();
-
     if (!this._overlayCtrl) {
       return;
     }
 
-    if (this.__alignInvokerWidthFrame !== undefined) {
-      cancelAnimationFrame(this.__alignInvokerWidthFrame);
-      this.__alignInvokerWidthFrame = undefined;
+    this.__invokerWidthResizeObserver?.disconnect();
+    this.__invokerWidthResizeObserver = undefined;
+    if (this.__invokerWidthRequestAnimationFrame !== undefined) {
+      cancelAnimationFrame(this.__invokerWidthRequestAnimationFrame);
+      this.__invokerWidthRequestAnimationFrame = undefined;
+    }
     }
 
     this._overlayCtrl.removeEventListener('show', this.__overlayOnShow);
@@ -453,32 +457,43 @@ export class LionSelectRich extends SlotMixin(ScopedElementsMixin(OverlayMixin(L
   async _alignInvokerWidth() {
     await this.updateComplete;
 
-    if (!this._overlayCtrl?.content || this.__invokerWidthResizeObserver) {
+    if (
+      !this._overlayCtrl?.content ||
+      this.__invokerWidthResizeObserver ||
+      this.__invokerWidthRequestAnimationFrame !== undefined
+    ) {
       return;
     }
 
-    const initContentDisplay = this._overlayCtrl.content.style.display;
-    const initContentMinWidth = this._overlayCtrl.contentWrapperNode.style.minWidth;
-    const initContentWidth = this._overlayCtrl.contentWrapperNode.style.width;
-
-    this.__invokerWidthResizeObserver = new ResizeObserver(([entry]) => {
-      this.__invokerWidthResizeObserver?.disconnect();
-      this.__invokerWidthResizeObserver = undefined;
-
-      const contentWidth = entry.contentRect.width;
-      if (contentWidth > 0) {
-        this._invokerNode.style.width = `${contentWidth + this._arrowWidth}px`;
+    this.__invokerWidthRequestAnimationFrame = requestAnimationFrame(() => {
+      this.__invokerWidthRequestAnimationFrame = undefined;
+      if (!this._overlayCtrl?.content) {
+        return;
       }
 
-      this._overlayCtrl.content.style.display = initContentDisplay;
-      this._overlayCtrl.contentWrapperNode.style.minWidth = initContentMinWidth;
-      this._overlayCtrl.contentWrapperNode.style.width = initContentWidth;
-    });
-    this.__invokerWidthResizeObserver.observe(this._overlayCtrl.contentWrapperNode);
+      const initContentDisplay = this._overlayCtrl.content.style.display;
+      const initContentMinWidth = this._overlayCtrl.contentWrapperNode.style.minWidth;
+      const initContentWidth = this._overlayCtrl.contentWrapperNode.style.width;
 
-    this._overlayCtrl.content.style.display = '';
-    this._overlayCtrl.contentWrapperNode.style.minWidth = 'auto';
-    this._overlayCtrl.contentWrapperNode.style.width = 'auto';
+      this.__invokerWidthResizeObserver = new ResizeObserver(([entry]) => {
+        this.__invokerWidthResizeObserver?.disconnect();
+        this.__invokerWidthResizeObserver = undefined;
+
+        const contentWidth = entry.contentRect.width;
+        if (contentWidth > 0) {
+          this._invokerNode.style.width = `${contentWidth + this._arrowWidth}px`;
+        }
+
+        this._overlayCtrl.content.style.display = initContentDisplay;
+        this._overlayCtrl.contentWrapperNode.style.minWidth = initContentMinWidth;
+        this._overlayCtrl.contentWrapperNode.style.width = initContentWidth;
+      });
+      this.__invokerWidthResizeObserver.observe(this._overlayCtrl.contentWrapperNode);
+
+      this._overlayCtrl.content.style.display = '';
+      this._overlayCtrl.contentWrapperNode.style.minWidth = 'auto';
+      this._overlayCtrl.contentWrapperNode.style.width = 'auto';
+    });
   }
 
   /**
