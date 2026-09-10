@@ -214,6 +214,15 @@ describe('lion-select-rich', () => {
     });
 
     it('measures the invoker width without a synchronous layout read', async () => {
+      const el = await fixture(html`
+        <lion-select-rich>
+          <lion-option .choiceValue=${10}>Item 1</lion-option>
+          <lion-option .choiceValue=${20}>Item 2 with long label</lion-option>
+        </lion-select-rich>
+      `);
+      await nextFrame();
+      await nextFrame();
+
       /** @type {ResizeObserverCallback | undefined} */
       let resizeObserverCallback;
       /** @type {FrameRequestCallback | undefined} */
@@ -238,13 +247,19 @@ describe('lion-select-rich', () => {
         });
 
       try {
-        const el = await fixture(html`
-          <lion-select-rich>
-            <lion-option .choiceValue=${10}>Item 1</lion-option>
-            <lion-option .choiceValue=${20}>Item 2 with long label</lion-option>
-          </lion-select-rich>
-        `);
-        await waitUntil(() => requestAnimationFrameCallback);
+        const { _invokerNode, _overlayCtrl } = getSelectRichMembers(el);
+        const { contentWrapperNode } = _overlayCtrl;
+        const initContentDisplay = _overlayCtrl.content.style.display;
+        const initContentContain = contentWrapperNode.style.contain;
+        const initContentMinWidth = contentWrapperNode.style.minWidth;
+        const initContentWidth = contentWrapperNode.style.width;
+        const getBoundingClientRectSpy = sinon.spy(contentWrapperNode, 'getBoundingClientRect');
+
+        await Promise.all([
+          el._alignInvokerWidth(),
+          el._alignInvokerWidth(),
+          el._alignInvokerWidth(),
+        ]);
 
         expect(resizeObserverStub).not.to.have.been.called;
         expect(requestAnimationFrameStub).to.have.been.calledOnce;
@@ -254,9 +269,7 @@ describe('lion-select-rich', () => {
         requestAnimationFrameCallback(performance.now());
         await waitUntil(() => resizeObserverCallback);
 
-        const { _invokerNode, _overlayCtrl } = getSelectRichMembers(el);
-        const { contentWrapperNode } = _overlayCtrl;
-        const getBoundingClientRectSpy = sinon.spy(contentWrapperNode, 'getBoundingClientRect');
+        expect(contentWrapperNode.style.contain).to.equal('layout');
 
         if (!resizeObserverCallback) {
           throw new Error('Expected ResizeObserver callback');
@@ -269,9 +282,10 @@ describe('lion-select-rich', () => {
         expect(_invokerNode.style.width).to.equal('148px');
         expect(getBoundingClientRectSpy).not.to.have.been.called;
         expect(disconnectSpy).to.have.been.calledOnce;
-        expect(_overlayCtrl.content.style.display).to.equal('none');
-        expect(contentWrapperNode.style.minWidth).to.equal('');
-        expect(contentWrapperNode.style.width).to.equal('');
+        expect(_overlayCtrl.content.style.display).to.equal(initContentDisplay);
+        expect(contentWrapperNode.style.contain).to.equal(initContentContain);
+        expect(contentWrapperNode.style.minWidth).to.equal(initContentMinWidth);
+        expect(contentWrapperNode.style.width).to.equal(initContentWidth);
       } finally {
         requestAnimationFrameStub.restore();
         resizeObserverStub.restore();
