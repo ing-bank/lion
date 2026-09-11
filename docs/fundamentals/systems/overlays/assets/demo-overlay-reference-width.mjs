@@ -222,8 +222,10 @@ export class DemoOverlayReferenceWidth extends LitElement {
     if (!this.__measureObserver) return;
     this.__measureObserver.disconnect();
     const invoker = this.shadowRoot?.querySelector('.invoker-box');
+    const innerContent = this.shadowRoot?.querySelector('.inner-content-box');
     const content = this.shadowRoot?.querySelector('.content-box');
     if (invoker) this.__measureObserver.observe(invoker);
+    if (innerContent) this.__measureObserver.observe(innerContent);
     if (content) this.__measureObserver.observe(content);
   }
 
@@ -256,6 +258,11 @@ export class DemoOverlayReferenceWidth extends LitElement {
   /** @param {number} width */
   _setInvokerWidth(width) {
     this.invokerWidth = width;
+  }
+
+  /** @param {number} width */
+  _setContentWidth(width) {
+    this.contentWidth = width;
   }
 
   render() {
@@ -309,6 +316,15 @@ export class DemoOverlayReferenceWidth extends LitElement {
             <button type="button" @click="${() => this._setInvokerWidth(360)}">360px</button>
           </div>
         </div>
+
+        <div class="control-group">
+          <label>Content Preset Width:</label>
+          <div class="preset-buttons">
+            <button type="button" @click="${() => this._setContentWidth(180)}">180px</button>
+            <button type="button" @click="${() => this._setContentWidth(280)}">280px</button>
+            <button type="button" @click="${() => this._setContentWidth(380)}">380px</button>
+          </div>
+        </div>
       </div>
 
       <div class="stage-card">
@@ -324,17 +340,19 @@ export class DemoOverlayReferenceWidth extends LitElement {
             style="width: ${this.invokerWidth}px;"
           >
             <button type="button" class="invoker-button">
-              Click to Open Dropdown ${this.source === 'reference' ? '↔' : ''}
+              Click to Open Dropdown ${this.source === 'reference' ? '↔' : ''} (Original: ${this.invokerWidth}px)
             </button>
           </div>
 
           <div
             slot="content"
-            class="content-box demo-overlay ${this.source === 'content' ? 'resizable-box' : ''}"
-            style="${this.source === 'content' ? `width: ${this.contentWidth}px;` : ''}"
+            class="content-box demo-overlay"
           >
-            <div>
-              Dropdown Content ${this.source === 'content' ? '↔' : ''}
+            <div
+              class="inner-content-box ${this.source === 'content' ? 'resizable-box' : ''}"
+              style="width: ${this.contentWidth}px; background-color: #222222; color: #ffffff; padding: 10px; border-radius: 4px; box-sizing: border-box;"
+            >
+              Dropdown Content ${this.source === 'content' ? '↔' : ''} (Original: ${this.contentWidth}px)
             </div>
             <button
               type="button"
@@ -348,6 +366,8 @@ export class DemoOverlayReferenceWidth extends LitElement {
       </div>
 
       <div class="metrics">
+        <span>Original Invoker Width: <strong class="badge">${this.invokerWidth}px</strong></span>
+        <span>Original Content Width: <strong class="badge">${this.contentWidth}px</strong></span>
         <span>Measured Invoker Width: <strong class="badge">${this.measuredInvokerWidth}px</strong></span>
         <span>Measured Content Width: <strong class="badge">${this.measuredContentWidth}px</strong></span>
       </div>

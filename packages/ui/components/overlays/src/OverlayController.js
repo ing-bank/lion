@@ -1301,6 +1301,47 @@ export class OverlayController extends EventTarget {
   }
 
   /**
+   * Helper to measure the natural content width of `contentWrapperNode`,
+   * unhiding the dialog wrapper temporarily if necessary.
+   * @protected
+   * @returns {number}
+   */
+  _measureContentWrapperWidth() {
+    const wrapper = this.contentWrapperNode;
+    if (!wrapper || !wrapper.isConnected) return 0;
+
+    const dialog = this.__wrappingDialogNode;
+    const isHidden = !this.isShown;
+
+    const prevDialogDisplay = dialog ? dialog.style.display : '';
+    const prevDialogVisibility = dialog ? dialog.style.visibility : '';
+    const prevDialogPosition = dialog ? dialog.style.position : '';
+    const prevWrapperMinWidth = wrapper.style.minWidth;
+    const prevWrapperWidth = wrapper.style.width;
+
+    if (isHidden && dialog) {
+      dialog.style.visibility = 'hidden';
+      dialog.style.position = 'absolute';
+      dialog.style.display = 'block';
+    }
+    wrapper.style.minWidth = 'auto';
+    wrapper.style.width = 'auto';
+
+    // eslint-disable-next-line lion/no-forced-layout-reads
+    const { width } = wrapper.getBoundingClientRect();
+
+    if (isHidden && dialog) {
+      dialog.style.display = prevDialogDisplay;
+      dialog.style.position = prevDialogPosition;
+      dialog.style.visibility = prevDialogVisibility;
+    }
+    wrapper.style.minWidth = prevWrapperMinWidth;
+    wrapper.style.width = prevWrapperWidth;
+
+    return width;
+  }
+
+  /**
    * Helper to normalize `inheritsReferenceWidth` config into a structured object.
    * @protected
    * @returns {{ mode: 'max' | 'full' | 'min' | 'none', source?: 'content', widthOffset: number }}
@@ -1379,6 +1420,15 @@ export class OverlayController extends EventTarget {
       }
     };
 
+    const getSourceWidth = () => {
+      if (norm.source === 'content') {
+        return this._measureContentWrapperWidth();
+      }
+      return sourceNode.getBoundingClientRect().width;
+    };
+
+    updateWidth(getSourceWidth());
+
     if (
       !this.__referenceWidthResizeObserver ||
       this.__observedSourceNode !== sourceNode ||
@@ -1391,7 +1441,10 @@ export class OverlayController extends EventTarget {
         const borderBox = Array.isArray(entry.borderBoxSize)
           ? entry.borderBoxSize[0]
           : entry.borderBoxSize;
-        const width = borderBox?.inlineSize ?? entry.contentRect.width;
+        let width = borderBox?.inlineSize ?? entry.contentRect.width;
+        if (width <= 0 && norm.source === 'content') {
+          width = this._measureContentWrapperWidth();
+        }
         if (this.__referenceWidthAnimationFrame !== undefined) {
           cancelAnimationFrame(this.__referenceWidthAnimationFrame);
         }
@@ -1401,11 +1454,6 @@ export class OverlayController extends EventTarget {
         });
       });
       this.__referenceWidthResizeObserver.observe(sourceNode);
-    }
-
-    if (phase === 'show') {
-      const initialWidth = sourceNode.getBoundingClientRect().width;
-      updateWidth(initialWidth);
     }
   }
 
