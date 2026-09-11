@@ -393,6 +393,25 @@ describe('Local Positioning', () => {
       expect(ctrl.contentWrapperNode.style.width).to.equal('60px');
     });
 
+    it('disconnects observer when inheritsReferenceWidth is set to none', async () => {
+      const invokerNode = /** @type {HTMLElement} */ (
+        await fixture(html` <div role="button" style="width: 60px;">invoker</div> `)
+      );
+      const ctrl = new OverlayController({
+        ...withLocalTestConfig(),
+        inheritsReferenceWidth: 'min',
+        invokerNode,
+      });
+      await ctrl.show();
+      expect(ctrl.contentWrapperNode.style.minWidth).to.equal('60px');
+      // @ts-ignore
+      expect(ctrl.__referenceWidthResizeObserver).to.be.an.instanceOf(ResizeObserver);
+
+      ctrl.updateConfig({ inheritsReferenceWidth: 'none' });
+      // @ts-ignore
+      expect(ctrl.__referenceWidthResizeObserver).to.be.undefined;
+    });
+
     it('does not force layout when aligning reference width in OverlayController', async () => {
       const invokerNode = /** @type {HTMLElement} */ (
         await fixture(html` <div role="button" style="width: 60px;">invoker</div> `)
