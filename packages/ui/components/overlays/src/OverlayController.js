@@ -795,7 +795,7 @@ export class OverlayController extends EventTarget {
     const event = new CustomEvent('before-show', { cancelable: true });
     this.dispatchEvent(event);
     if (!event.defaultPrevented) {
-      if (this.inheritsReferenceWidth && this.inheritsReferenceWidth !== 'none') {
+      if (this.inheritsReferenceWidth) {
         this._handleInheritsReferenceWidth({ phase: 'before-show' });
       }
       if ('HTMLDialogElement' in window && this.__wrappingDialogNode instanceof HTMLDialogElement) {
@@ -1010,8 +1010,8 @@ export class OverlayController extends EventTarget {
     if (this.handlesAccessibility) {
       this._handleAccessibility({ phase });
     }
-    if (this.inheritsReferenceWidth && this.inheritsReferenceWidth !== 'none') {
-      this._handleInheritsReferenceWidth();
+    if (this.inheritsReferenceWidth) {
+      this._handleInheritsReferenceWidth({ phase });
     }
     if (this.visibilityTriggerFunction) {
       this._handleVisibilityTriggers({ phase });
@@ -1344,13 +1344,13 @@ export class OverlayController extends EventTarget {
       }
     };
 
-    const initialWidth = this._referenceNode.getBoundingClientRect().width;
-    updateWidth(initialWidth);
-
     if (
       !this.__referenceWidthResizeObserver ||
       this.__observedReferenceNode !== this._referenceNode
     ) {
+      const initialWidth = this._referenceNode.getBoundingClientRect().width;
+      updateWidth(initialWidth);
+
       this.__referenceWidthResizeObserver?.disconnect();
       this.__observedReferenceNode = this._referenceNode;
       this.__referenceWidthResizeObserver = new ResizeObserver(([entry]) => {

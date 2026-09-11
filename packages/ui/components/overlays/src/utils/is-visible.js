@@ -43,6 +43,10 @@ export function isVisible(element) {
     return true;
   }
 
+  if (typeof element.checkVisibility === 'function') {
+    return element.checkVisibility({ checkOpacity: false, checkVisibilityCSS: true });
+  }
+
   // display: none is not inherited, so finally check if element has calculated width or height
   // matches display: none from parent
   return !!(element.offsetWidth || element.offsetHeight || element.getClientRects().length);
