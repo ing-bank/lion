@@ -380,7 +380,7 @@ describe('Local Positioning', () => {
       expect(ctrl.contentWrapperNode.style.maxWidth).to.equal('60px');
     });
 
-    it('can set the invokerNode width from contentNode width plus widthOffset when inheritsReferenceWidth is an object', async () => {
+    it('can set the invokerNode width from contentNode width plus widthOffset when closed and when open', async () => {
       const invokerNode = /** @type {HTMLElement} */ (
         await fixture(html` <div role="button">invoker</div> `)
       );
@@ -397,11 +397,41 @@ describe('Local Positioning', () => {
         },
         invokerNode,
       });
-      await ctrl.show();
-      await new Promise(resolve => {
-        requestAnimationFrame(() => resolve());
-      });
+
+      // Works when overlay is closed
+      expect(ctrl.isShown).to.be.false;
       expect(ctrl.invokerNode.style.width).to.equal('148px');
+
+      // Also works when opened
+      await ctrl.show();
+      expect(ctrl.invokerNode.style.width).to.equal('148px');
+    });
+
+    it('ensures invoker and content have equal width when source is content and widthOffset is 0', async () => {
+      const invokerNode = /** @type {HTMLElement} */ (
+        await fixture(html` <div role="button">invoker</div> `)
+      );
+      const contentNode = /** @type {HTMLElement} */ (
+        await fixture(html` <div style="width: 210px;">content</div> `)
+      );
+      const ctrl = new OverlayController({
+        ...withLocalTestConfig(),
+        contentNode,
+        inheritsReferenceWidth: {
+          mode: 'full',
+          source: 'content',
+          widthOffset: 0,
+        },
+        invokerNode,
+      });
+
+      expect(ctrl.isShown).to.be.false;
+      expect(ctrl.invokerNode.style.width).to.equal('210px');
+
+      await ctrl.show();
+      const contentWidth = ctrl.contentWrapperNode.getBoundingClientRect().width;
+      const invokerWidth = ctrl.invokerNode.getBoundingClientRect().width;
+      expect(invokerWidth).to.equal(contentWidth);
     });
 
     it('disconnects observer when inheritsReferenceWidth is set to none', async () => {

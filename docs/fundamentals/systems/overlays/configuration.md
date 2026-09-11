@@ -426,15 +426,21 @@ export const inheritsReferenceWidthInteractive = () => html`
 
 ### Minimum Reference Width (`inheritsReferenceWidth: 'min'`)
 
-The overlay content wrapper is assigned a `min-width` equal to the invoker width.
+The overlay content wrapper is assigned a `min-width` equal to the invoker width. In this example, the inner content has an original width of 100px, while the outer overlay container expands to a minimum width of 250px.
 
 ```js preview-story
 export const inheritsReferenceWidthMin = () => {
   const config = { ...withDropdownConfig(), inheritsReferenceWidth: 'min' };
   return html`
     <demo-el-using-overlaymixin .config="${config}">
-      <button slot="invoker" style="width: 200px;">Wide Invoker (200px)</button>
-      <div slot="content" class="demo-overlay">Dropdown content (at least 200px wide)</div>
+      <button slot="invoker" style="width: 250px;">Wide Invoker (original width: 250px)</button>
+      <div slot="content" class="demo-overlay">
+        <div
+          style="width: 100px; background-color: #222; color: #fff; padding: 8px; box-sizing: border-box;"
+        >
+          Inner content (original width 100px, container expanded to min-width 250px)
+        </div>
+      </div>
     </demo-el-using-overlaymixin>
   `;
 };
@@ -442,15 +448,21 @@ export const inheritsReferenceWidthMin = () => {
 
 ### Full Reference Width (`inheritsReferenceWidth: 'full'`)
 
-The overlay content wrapper width is set to match the invoker width exactly.
+The overlay content wrapper width is set to match the invoker width exactly. In this example, the inner content has an original width of 120px, while the outer overlay container is expanded to exactly 300px.
 
 ```js preview-story
 export const inheritsReferenceWidthFull = () => {
   const config = { ...withDropdownConfig(), inheritsReferenceWidth: 'full' };
   return html`
     <demo-el-using-overlaymixin .config="${config}">
-      <button slot="invoker" style="width: 250px;">Wide Invoker (250px)</button>
-      <div slot="content" class="demo-overlay">Dropdown content (exactly 250px wide)</div>
+      <button slot="invoker" style="width: 300px;">Wide Invoker (original width: 300px)</button>
+      <div slot="content" class="demo-overlay">
+        <div
+          style="width: 120px; background-color: #222; color: #fff; padding: 8px; box-sizing: border-box;"
+        >
+          Inner content (original width 120px, container expanded to full width 300px)
+        </div>
+      </div>
     </demo-el-using-overlaymixin>
   `;
 };
@@ -458,16 +470,20 @@ export const inheritsReferenceWidthFull = () => {
 
 ### Maximum Reference Width (`inheritsReferenceWidth: 'max'`)
 
-The overlay content wrapper is assigned a `max-width` equal to the invoker width.
+The overlay content wrapper is assigned a `max-width` equal to the invoker width. In this example, the inner content has an original width of 350px, while the outer overlay container is constrained down to 180px.
 
 ```js preview-story
 export const inheritsReferenceWidthMax = () => {
   const config = { ...withDropdownConfig(), inheritsReferenceWidth: 'max' };
   return html`
     <demo-el-using-overlaymixin .config="${config}">
-      <button slot="invoker" style="width: 180px;">Invoker (180px)</button>
+      <button slot="invoker" style="width: 180px;">Invoker (original width: 180px)</button>
       <div slot="content" class="demo-overlay">
-        Long text inside content constrained to max-width of 180px.
+        <div
+          style="width: 350px; background-color: #222; color: #fff; padding: 8px; box-sizing: border-box;"
+        >
+          Inner content (original width 350px, container constrained to max-width 180px)
+        </div>
       </div>
     </demo-el-using-overlaymixin>
   `;
@@ -476,7 +492,7 @@ export const inheritsReferenceWidthMax = () => {
 
 ### Reverse Width Inheritance (`source: 'content'`)
 
-Using object configuration, setting `source: 'content'` measures the overlay content width and applies it to the invoker button. An optional `widthOffset` (e.g. `28` for an arrow icon) can be added.
+Using object configuration, setting `source: 'content'` measures the overlay content width and applies it to the invoker button. In this example, the invoker button has an original width of 100px and expands to 308px (`280px` content width + `28px` offset).
 
 ```js preview-story
 export const inheritsContentWidth = () => {
@@ -490,9 +506,13 @@ export const inheritsContentWidth = () => {
   };
   return html`
     <demo-el-using-overlaymixin .config="${config}">
-      <button slot="invoker">Invoker (sized by content)</button>
+      <button slot="invoker" style="width: 100px;">Invoker (original width: 100px)</button>
       <div slot="content" class="demo-overlay">
-        Long content item that dictates the invoker button width
+        <div
+          style="width: 280px; background-color: #222; color: #fff; padding: 8px; box-sizing: border-box;"
+        >
+          Inner content (original width 280px, sizes invoker to 280px + 28px = 308px)
+        </div>
       </div>
     </demo-el-using-overlaymixin>
   `;
