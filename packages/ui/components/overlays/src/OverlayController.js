@@ -1302,41 +1302,33 @@ export class OverlayController extends EventTarget {
 
   /**
    * Helper to normalize `inheritsReferenceWidth` config into a structured object.
-   * @param {import('../types/OverlayConfig.js').ReferenceWidthInheritance} [override]
    * @protected
-   * @returns {{ mode: 'max' | 'full' | 'min' | 'none', source: 'reference' | 'content', widthOffset: number }}
+   * @returns {{ mode: 'max' | 'full' | 'min' | 'none', source?: 'content', widthOffset: number }}
    */
-  _getNormalizedReferenceWidthConfig(override) {
-    const raw = override || this.config?.inheritsReferenceWidth;
+  _getNormalizedReferenceWidthConfig() {
+    const raw = this.config?.inheritsReferenceWidth;
     if (!raw || raw === 'none') {
-      return { mode: 'none', source: 'reference', widthOffset: 0 };
+      return { mode: 'none', widthOffset: 0 };
     }
     if (typeof raw === 'string') {
-      return { mode: raw, source: 'reference', widthOffset: 0 };
+      return { mode: raw, widthOffset: 0 };
     }
     if (typeof raw === 'object') {
       return {
         mode: raw.mode || 'full',
-        source: raw.source || 'reference',
+        source: raw.source,
         widthOffset: raw.widthOffset ?? raw.offset ?? 0,
       };
     }
-    return { mode: 'none', source: 'reference', widthOffset: 0 };
+    return { mode: 'none', widthOffset: 0 };
   }
 
   /**
-   * @param {({ phase?: OverlayPhase } & Partial<import('../types/OverlayConfig.js').ReferenceWidthInheritanceObject>)} [options]
+   * @param {{ phase?: OverlayPhase }} [options]
    * @protected
    */
-  _handleInheritsReferenceWidth(options = {}) {
-    const { phase, ...overrideOpts } = options;
-    const hasOverride = Boolean(
-      overrideOpts.mode ||
-        overrideOpts.source ||
-        overrideOpts.widthOffset !== undefined ||
-        overrideOpts.offset !== undefined,
-    );
-    const norm = this._getNormalizedReferenceWidthConfig(hasOverride ? overrideOpts : undefined);
+  _handleInheritsReferenceWidth({ phase } = {}) {
+    const norm = this._getNormalizedReferenceWidthConfig();
 
     if (phase === 'teardown' || norm.mode === 'none' || this.placementMode === 'global') {
       this.__referenceWidthResizeObserver?.disconnect();

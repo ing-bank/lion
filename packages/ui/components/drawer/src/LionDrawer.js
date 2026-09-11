@@ -138,16 +138,13 @@ export class LionDrawer extends LionCollapsible {
    * @override
    */
   async _hideAnimation({ contentNode }) {
-    if (
-      ((this.position === 'left' || this.position === 'right') &&
-        this._contentWidth === this.minWidth) ||
-      (this.position === 'top' && this._contentHeight === this.minHeight)
-    ) {
-      return;
-    }
-
     const min = this.position === 'top' ? this.minHeight : this.minWidth;
     const prop = this.position === 'top' ? 'height' : 'width';
+
+    const currentStyleVal = contentNode.style.getPropertyValue(prop) || contentNode.style[prop];
+    if (currentStyleVal === min) {
+      return;
+    }
 
     contentNode.style.setProperty(prop, /** @type {string} */ (min));
     await this._waitForTransition({ contentNode });

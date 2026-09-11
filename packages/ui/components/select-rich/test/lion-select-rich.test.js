@@ -213,6 +213,28 @@ describe('lion-select-rich', () => {
       expect(firstChild.textContent).to.equal('30');
     });
 
+    it('syncs invoker width to match content width plus arrow width', async () => {
+      const el = await fixture(html`
+        <lion-select-rich>
+          <lion-option .choiceValue=${10}>Item 1</lion-option>
+          <lion-option .choiceValue=${20}>Item 2 with long label</lion-option>
+        </lion-select-rich>
+      `);
+      el.opened = true;
+      const { _invokerNode, _overlayCtrl } = getSelectRichMembers(el);
+      await el.updateComplete;
+      await new Promise(resolve => {
+        requestAnimationFrame(() => resolve());
+      });
+
+      const contentWidth = _overlayCtrl.contentWrapperNode.getBoundingClientRect().width;
+      expect(contentWidth).to.be.above(0);
+      expect(parseFloat(_invokerNode.style.width)).to.be.closeTo(
+        contentWidth + el._arrowWidth,
+        0.1,
+      );
+    });
+
     // FIXME: wrong values in safari/webkit even though this passes in the "real" debug browsers
     it.skip('inherits the content width including arrow width', async () => {
       const el = await fixture(html`
@@ -372,7 +394,7 @@ describe('lion-select-rich', () => {
       expect(elSingleOption.opened).to.be.false;
     });
 
-    it('sets inheritsReferenceWidth to min by default', async () => {
+    it('sets inheritsReferenceWidth to full with content source by default', async () => {
       const el = await fixture(html`
         <lion-select-rich name="favoriteColor" label="Favorite color">
           <lion-option .choiceValue=${'red'}>Red</lion-option>
@@ -382,11 +404,19 @@ describe('lion-select-rich', () => {
       `);
       const { _overlayCtrl } = getSelectRichMembers(el);
 
-      expect(_overlayCtrl.inheritsReferenceWidth).to.equal('min');
+      expect(_overlayCtrl.inheritsReferenceWidth).to.deep.equal({
+        mode: 'full',
+        source: 'content',
+        widthOffset: 28,
+      });
       el.opened = true;
       await el.updateComplete;
 
-      expect(_overlayCtrl.inheritsReferenceWidth).to.equal('min');
+      expect(_overlayCtrl.inheritsReferenceWidth).to.deep.equal({
+        mode: 'full',
+        source: 'content',
+        widthOffset: 28,
+      });
     });
 
     it('should override the inheritsWidth prop when no default selected feature is used', async () => {
