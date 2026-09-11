@@ -178,35 +178,36 @@ export class OverlaysManager {
         // Tracks the amount of active preventsScroll overlays.
         // Only the first overlay captures body metrics and only the last one restores them.
         if (this.__bodySizeVars.preventScrollCount === 0) {
-          this.__bodySizeVars.clientWidth = document.body.clientWidth;
-          this.__bodySizeVars.clientHeight = document.body.clientHeight;
+          if (window.getComputedStyle) {
+            const bodyStyle = window.getComputedStyle(document.body);
+            this.__bodySizeVars.marginRight =
+              parseInt(bodyStyle.getPropertyValue('margin-right'), 10) || 0;
+            this.__bodySizeVars.marginBottom =
+              parseInt(bodyStyle.getPropertyValue('margin-bottom'), 10) || 0;
+          } else {
+            this.__bodySizeVars.marginRight = 0;
+            this.__bodySizeVars.marginBottom = 0;
+          }
           this.__bodySizeVars.marginRightInline = document.body.style.marginRight;
           this.__bodySizeVars.marginBottomInline = document.body.style.marginBottom;
+
+          const scrollbarWidth = Math.max(
+            0,
+            window.innerWidth - document.documentElement.clientWidth,
+          );
+          const scrollbarHeight = Math.max(
+            0,
+            window.innerHeight - document.documentElement.clientHeight,
+          );
+          this.__bodySizeVars.newMarginRight = this.__bodySizeVars.marginRight + scrollbarWidth;
+          this.__bodySizeVars.newMarginBottom = this.__bodySizeVars.marginBottom + scrollbarHeight;
         }
         this.__bodySizeVars.preventScrollCount += 1;
         break;
       case 'show': {
         if (this.__bodySizeVars.preventScrollCount === 1) {
-          if (window.getComputedStyle) {
-            const bodyStyle = window.getComputedStyle(document.body);
-            this.__bodySizeVars.marginRight = parseInt(
-              bodyStyle.getPropertyValue('margin-right'),
-              10,
-            );
-            this.__bodySizeVars.marginBottom = parseInt(
-              bodyStyle.getPropertyValue('margin-bottom'),
-              10,
-            );
-          } else {
-            this.__bodySizeVars.marginRight = 0;
-            this.__bodySizeVars.marginBottom = 0;
-          }
-          const scrollbarWidth =
-            document.body.clientWidth - /** @type {number} */ (this.__bodySizeVars.clientWidth);
-          const scrollbarHeight =
-            document.body.clientHeight - /** @type {number} */ (this.__bodySizeVars.clientHeight);
-          const newMarginRight = this.__bodySizeVars.marginRight + scrollbarWidth;
-          const newMarginBottom = this.__bodySizeVars.marginBottom + scrollbarHeight;
+          const newMarginRight = this.__bodySizeVars.newMarginRight ?? 0;
+          const newMarginBottom = this.__bodySizeVars.newMarginBottom ?? 0;
           // @ts-expect-error [external]: CSS not yet typed
           if (window.CSS?.number && document.body.attributeStyleMap?.set) {
             // @ts-ignore

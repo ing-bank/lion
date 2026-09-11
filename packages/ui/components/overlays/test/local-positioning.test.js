@@ -1,5 +1,6 @@
 /* eslint-disable lit-a11y/click-events-have-key-events */
 import { expect, fixture, fixtureSync } from '@open-wc/testing';
+import { executeServerCommand } from '@web/test-runner-commands';
 import { html } from 'lit/static-html.js';
 import { OverlayController } from '@lion/ui/overlays.js';
 import { browserDetection } from '@lion/ui/core.js';
@@ -379,17 +380,103 @@ describe('Local Positioning', () => {
       expect(ctrl.contentWrapperNode.style.maxWidth).to.equal('60px');
     });
 
-    it('can set the contentNode width as the invokerNode width', async () => {
+    it('can set the invokerNode width from contentNode width plus widthOffset when closed and when open', async () => {
+      const invokerNode = /** @type {HTMLElement} */ (
+        await fixture(html` <div role="button">invoker</div> `)
+      );
+      const contentNode = /** @type {HTMLElement} */ (
+        await fixture(html` <div style="width: 120px;">content</div> `)
+      );
+      const ctrl = new OverlayController({
+        ...withLocalTestConfig(),
+        contentNode,
+        inheritsReferenceWidth: {
+          mode: 'full',
+          source: 'content',
+          widthOffset: 28,
+        },
+        invokerNode,
+      });
+
+      // Works when overlay is closed
+      expect(ctrl.isShown).to.be.false;
+      expect(ctrl.invokerNode.style.width).to.equal('148px');
+
+      // Also works when opened
+      await ctrl.show();
+      expect(ctrl.invokerNode.style.width).to.equal('148px');
+    });
+
+    it('ensures invoker and content have equal width when source is content and widthOffset is 0', async () => {
+      const invokerNode = /** @type {HTMLElement} */ (
+        await fixture(html` <div role="button">invoker</div> `)
+      );
+      const contentNode = /** @type {HTMLElement} */ (
+        await fixture(html` <div style="width: 210px;">content</div> `)
+      );
+      const ctrl = new OverlayController({
+        ...withLocalTestConfig(),
+        contentNode,
+        inheritsReferenceWidth: {
+          mode: 'full',
+          source: 'content',
+          widthOffset: 0,
+        },
+        invokerNode,
+      });
+
+      expect(ctrl.isShown).to.be.false;
+      expect(ctrl.invokerNode.style.width).to.equal('210px');
+
+      await ctrl.show();
+      const contentWidth = ctrl.contentWrapperNode.getBoundingClientRect().width;
+      const invokerWidth = ctrl.invokerNode.getBoundingClientRect().width;
+      expect(invokerWidth).to.equal(contentWidth);
+    });
+
+    it('disconnects observer when inheritsReferenceWidth is set to none', async () => {
       const invokerNode = /** @type {HTMLElement} */ (
         await fixture(html` <div role="button" style="width: 60px;">invoker</div> `)
       );
       const ctrl = new OverlayController({
         ...withLocalTestConfig(),
-        inheritsReferenceWidth: 'full',
+        inheritsReferenceWidth: 'min',
         invokerNode,
       });
       await ctrl.show();
-      expect(ctrl.contentWrapperNode.style.width).to.equal('60px');
+      expect(ctrl.contentWrapperNode.style.minWidth).to.equal('60px');
+      // @ts-ignore
+      expect(ctrl.__referenceWidthResizeObserver).to.be.an.instanceOf(ResizeObserver);
+
+      ctrl.updateConfig({ inheritsReferenceWidth: 'none' });
+      // @ts-ignore
+      expect(ctrl.__referenceWidthResizeObserver).to.be.undefined;
+    });
+
+    it('does not force layout when aligning reference width in OverlayController', async () => {
+      const invokerNode = /** @type {HTMLElement} */ (
+        await fixture(html` <div role="button" style="width: 60px;">invoker</div> `)
+      );
+      const ctrl = new OverlayController({
+        ...withLocalTestConfig(),
+        inheritsReferenceWidth: 'min',
+        invokerNode,
+      });
+
+      /** @type {{ supported: boolean }} */
+      const startResult = await executeServerCommand('forced-layout-trace:start');
+      if (!startResult?.supported) {
+        ctrl._handleInheritsReferenceWidth();
+        expect(ctrl.contentWrapperNode.style.minWidth).to.equal('60px');
+        return;
+      }
+
+      ctrl._handleInheritsReferenceWidth();
+
+      /** @type {{ events: Array<{ name: string, duration: number }> }} */
+      const traceResult = await executeServerCommand('forced-layout-trace:stop');
+      expect(traceResult.events).to.deep.equal([]);
+      expect(ctrl.contentWrapperNode.style.minWidth).to.equal('60px');
     });
   });
 });
