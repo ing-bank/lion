@@ -49,6 +49,6 @@ export function isVisible(element) {
 
   // display: none is not inherited, so finally check if element has calculated width or height
   // matches display: none from parent
-  // eslint-disable-next-line lion-perf/prefer-check-visibility
+  // eslint-disable-next-line lion/prefer-check-visibility
   return !!(element.offsetWidth || element.offsetHeight || element.getClientRects().length);
 }
