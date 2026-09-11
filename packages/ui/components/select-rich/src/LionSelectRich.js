@@ -361,10 +361,14 @@ export class LionSelectRich extends SlotMixin(ScopedElementsMixin(OverlayMixin(L
    * @configure OverlayMixin
    * @protected
    */
-  // eslint-disable-next-line class-methods-use-this
   _defineOverlayConfig() {
     return {
       ...withDropdownConfig(),
+      inheritsReferenceWidth: {
+        mode: 'full',
+        source: 'content',
+        widthOffset: this._arrowWidth,
+      },
       // Needs more advanced behavior (see `__invokerOnClick`)
       visibilityTriggerFunction: undefined,
     };
@@ -452,7 +456,7 @@ export class LionSelectRich extends SlotMixin(ScopedElementsMixin(OverlayMixin(L
    * Align invoker width with content width.
    * Only triggered when its child option list changes the width of invoker.
    * Batched via requestAnimationFrame to coalesce multiple option updates into a single frame.
-   * Delegates to OverlayController using inheritsReferenceWidth override options.
+   * Delegates to OverlayController.
    * @protected
    */
   async _alignInvokerWidth() {
@@ -462,11 +466,7 @@ export class LionSelectRich extends SlotMixin(ScopedElementsMixin(OverlayMixin(L
     }
     this.__alignInvokerWidthFrame = requestAnimationFrame(() => {
       this.__alignInvokerWidthFrame = undefined;
-      this._overlayCtrl?._handleInheritsReferenceWidth({
-        mode: 'full',
-        source: 'content',
-        widthOffset: this._arrowWidth,
-      });
+      this._overlayCtrl?._handleInheritsReferenceWidth();
     });
   }
 
