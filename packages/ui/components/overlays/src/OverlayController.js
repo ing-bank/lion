@@ -359,11 +359,11 @@ export class OverlayController extends EventTarget {
   }
 
   /**
-   * Will align contentNode with referenceNode (invokerNode by default) for local overlays.
-   * Usually needed for dropdowns. 'max' will prevent contentNode from exceeding width of
-   * referenceNode, 'min' guarantees that contentNode will be at least as wide as referenceNode.
-   * 'full' will make sure that the invoker width always is the same.
-   * @type {'max' | 'full' | 'min' | 'none' | undefined }
+   * Will align contentNode with referenceNode (invokerNode by default) or vice versa for local overlays.
+   * Usually needed for dropdowns or select-rich. 'max' will prevent target from exceeding width of
+   * source, 'min' guarantees target is at least as wide as source.
+   * 'full' will make sure width matches source width + widthOffset.
+   * @type {import('../types/OverlayConfig.js').ReferenceWidthInheritance | undefined }
    */
   get inheritsReferenceWidth() {
     return this.config?.inheritsReferenceWidth;
@@ -1301,26 +1301,68 @@ export class OverlayController extends EventTarget {
   }
 
   /**
-   * @param {{ phase?: OverlayPhase }} [options]
+   * Helper to normalize `inheritsReferenceWidth` config into a structured object.
+   * @param {import('../types/OverlayConfig.js').ReferenceWidthInheritance} [override]
+   * @protected
+   * @returns {{ mode: 'max' | 'full' | 'min' | 'none', source: 'reference' | 'content', widthOffset: number }}
+   */
+  _getNormalizedReferenceWidthConfig(override) {
+    const raw = override || this.config?.inheritsReferenceWidth;
+    if (!raw || raw === 'none') {
+      return { mode: 'none', source: 'reference', widthOffset: 0 };
+    }
+    if (typeof raw === 'string') {
+      return { mode: raw, source: 'reference', widthOffset: 0 };
+    }
+    if (typeof raw === 'object') {
+      return {
+        mode: raw.mode || 'full',
+        source: raw.source || 'reference',
+        widthOffset: raw.widthOffset ?? raw.offset ?? 0,
+      };
+    }
+    return { mode: 'none', source: 'reference', widthOffset: 0 };
+  }
+
+  /**
+   * @param {({ phase?: OverlayPhase } & Partial<import('../types/OverlayConfig.js').ReferenceWidthInheritanceObject>)} [options]
    * @protected
    */
-  _handleInheritsReferenceWidth({ phase } = {}) {
-    if (phase === 'teardown') {
+  _handleInheritsReferenceWidth(options = {}) {
+    const { phase, ...overrideOpts } = options;
+    const hasOverride = Boolean(
+      overrideOpts.mode ||
+        overrideOpts.source ||
+        overrideOpts.widthOffset !== undefined ||
+        overrideOpts.offset !== undefined,
+    );
+    const norm = this._getNormalizedReferenceWidthConfig(hasOverride ? overrideOpts : undefined);
+
+    if (phase === 'teardown' || norm.mode === 'none' || this.placementMode === 'global') {
       this.__referenceWidthResizeObserver?.disconnect();
       this.__referenceWidthResizeObserver = undefined;
-      this.__observedReferenceNode = undefined;
+      this.__observedSourceNode = undefined;
+      this.__observedTargetNode = undefined;
+      if (this.__referenceWidthAnimationFrame !== undefined) {
+        cancelAnimationFrame(this.__referenceWidthAnimationFrame);
+        this.__referenceWidthAnimationFrame = undefined;
+      }
       return;
     }
 
-    if (
-      !this._referenceNode ||
-      this.placementMode === 'global' ||
-      !this.inheritsReferenceWidth ||
-      this.inheritsReferenceWidth === 'none'
-    ) {
+    const sourceNode = norm.source === 'content' ? this.contentWrapperNode : this._referenceNode;
+    const targetNode =
+      norm.source === 'content' ? this._referenceNode || this.invokerNode : this.contentWrapperNode;
+
+    if (!sourceNode || !targetNode) {
       this.__referenceWidthResizeObserver?.disconnect();
       this.__referenceWidthResizeObserver = undefined;
-      this.__observedReferenceNode = undefined;
+      this.__observedSourceNode = undefined;
+      this.__observedTargetNode = undefined;
+      if (this.__referenceWidthAnimationFrame !== undefined) {
+        cancelAnimationFrame(this.__referenceWidthAnimationFrame);
+        this.__referenceWidthAnimationFrame = undefined;
+      }
       return;
     }
 
@@ -1329,17 +1371,17 @@ export class OverlayController extends EventTarget {
      */
     const updateWidth = width => {
       if (width <= 0) return;
-      const referenceWidth = `${width}px`;
-      switch (this.inheritsReferenceWidth) {
+      const finalWidth = `${width + norm.widthOffset}px`;
+      switch (norm.mode) {
         case 'max':
-          this.contentWrapperNode.style.maxWidth = referenceWidth;
+          targetNode.style.maxWidth = finalWidth;
           break;
         case 'full':
-          this.contentWrapperNode.style.width = referenceWidth;
+          targetNode.style.width = finalWidth;
           break;
         case 'min':
-          this.contentWrapperNode.style.minWidth = referenceWidth;
-          this.contentWrapperNode.style.width = 'auto';
+          targetNode.style.minWidth = finalWidth;
+          targetNode.style.width = 'auto';
           break;
         /* no default */
       }
@@ -1347,21 +1389,31 @@ export class OverlayController extends EventTarget {
 
     if (
       !this.__referenceWidthResizeObserver ||
-      this.__observedReferenceNode !== this._referenceNode
+      this.__observedSourceNode !== sourceNode ||
+      this.__observedTargetNode !== targetNode
     ) {
-      const initialWidth = this._referenceNode.getBoundingClientRect().width;
-      updateWidth(initialWidth);
-
       this.__referenceWidthResizeObserver?.disconnect();
-      this.__observedReferenceNode = this._referenceNode;
+      this.__observedSourceNode = sourceNode;
+      this.__observedTargetNode = targetNode;
       this.__referenceWidthResizeObserver = new ResizeObserver(([entry]) => {
         const borderBox = Array.isArray(entry.borderBoxSize)
           ? entry.borderBoxSize[0]
           : entry.borderBoxSize;
         const width = borderBox?.inlineSize ?? entry.contentRect.width;
-        updateWidth(width);
+        if (this.__referenceWidthAnimationFrame !== undefined) {
+          cancelAnimationFrame(this.__referenceWidthAnimationFrame);
+        }
+        this.__referenceWidthAnimationFrame = requestAnimationFrame(() => {
+          this.__referenceWidthAnimationFrame = undefined;
+          updateWidth(width);
+        });
       });
-      this.__referenceWidthResizeObserver.observe(this._referenceNode);
+      this.__referenceWidthResizeObserver.observe(sourceNode);
+    }
+
+    if (phase === 'show') {
+      const initialWidth = sourceNode.getBoundingClientRect().width;
+      updateWidth(initialWidth);
     }
   }
 

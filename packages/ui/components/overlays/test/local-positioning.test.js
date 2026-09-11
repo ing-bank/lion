@@ -380,17 +380,28 @@ describe('Local Positioning', () => {
       expect(ctrl.contentWrapperNode.style.maxWidth).to.equal('60px');
     });
 
-    it('can set the contentNode width as the invokerNode width', async () => {
+    it('can set the invokerNode width from contentNode width plus widthOffset when inheritsReferenceWidth is an object', async () => {
       const invokerNode = /** @type {HTMLElement} */ (
-        await fixture(html` <div role="button" style="width: 60px;">invoker</div> `)
+        await fixture(html` <div role="button">invoker</div> `)
+      );
+      const contentNode = /** @type {HTMLElement} */ (
+        await fixture(html` <div style="width: 120px;">content</div> `)
       );
       const ctrl = new OverlayController({
         ...withLocalTestConfig(),
-        inheritsReferenceWidth: 'full',
+        contentNode,
+        inheritsReferenceWidth: {
+          mode: 'full',
+          source: 'content',
+          widthOffset: 28,
+        },
         invokerNode,
       });
       await ctrl.show();
-      expect(ctrl.contentWrapperNode.style.width).to.equal('60px');
+      await new Promise(resolve => {
+        requestAnimationFrame(() => resolve());
+      });
+      expect(ctrl.invokerNode.style.width).to.equal('148px');
     });
 
     it('disconnects observer when inheritsReferenceWidth is set to none', async () => {
