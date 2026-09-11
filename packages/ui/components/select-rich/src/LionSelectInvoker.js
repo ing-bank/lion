@@ -22,6 +22,7 @@ export class LionSelectInvoker extends SlotMixin(LionButton) {
         :host {
           justify-content: space-between;
           align-items: center;
+          contain: layout;
         }
 
         #content-wrapper {
