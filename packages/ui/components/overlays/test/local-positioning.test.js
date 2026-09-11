@@ -1,5 +1,6 @@
 /* eslint-disable lit-a11y/click-events-have-key-events */
 import { expect, fixture, fixtureSync } from '@open-wc/testing';
+import { executeServerCommand } from '@web/test-runner-commands';
 import { html } from 'lit/static-html.js';
 import { OverlayController } from '@lion/ui/overlays.js';
 import { browserDetection } from '@lion/ui/core.js';
@@ -390,6 +391,53 @@ describe('Local Positioning', () => {
       });
       await ctrl.show();
       expect(ctrl.contentWrapperNode.style.width).to.equal('60px');
+    });
+
+    it('does not force layout when aligning reference width in OverlayController', async () => {
+      const invokerNode = /** @type {HTMLElement} */ (
+        await fixture(html` <div role="button" style="width: 60px;">invoker</div> `)
+      );
+      const ctrl = new OverlayController({
+        ...withLocalTestConfig(),
+        inheritsReferenceWidth: 'min',
+        invokerNode,
+      });
+
+      /** @type {{ supported: boolean }} */
+      const startResult = await executeServerCommand('forced-layout-trace:start');
+      if (!startResult?.supported) {
+        ctrl._handleInheritsReferenceWidth();
+        expect(ctrl.contentWrapperNode.style.minWidth).to.equal('60px');
+        return;
+      }
+
+      ctrl._handleInheritsReferenceWidth();
+
+      /** @type {{ events: Array<{ name: string, duration: number }> }} */
+      const traceResult = await executeServerCommand('forced-layout-trace:stop');
+      expect(traceResult.events).to.deep.equal([]);
+      expect(ctrl.contentWrapperNode.style.minWidth).to.equal('60px');
+    });
+
+    it('detects forced layout when synchronously reading geometry after a style write', async () => {
+      const el = /** @type {HTMLElement} */ (
+        await fixture(html`<div style="width: 100px;">test</div>`)
+      );
+
+      /** @type {{ supported: boolean }} */
+      const startResult = await executeServerCommand('forced-layout-trace:start');
+      if (!startResult?.supported) {
+        return;
+      }
+
+      el.style.width = '200px';
+      // Forced layout: sync read after style write
+      // eslint-disable-next-line no-unused-expressions
+      el.offsetWidth;
+
+      /** @type {{ events: Array<{ name: string, duration: number }> }} */
+      const traceResult = await executeServerCommand('forced-layout-trace:stop');
+      expect(traceResult.events.length).to.be.at.least(1);
     });
   });
 });
