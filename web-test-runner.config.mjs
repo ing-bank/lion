@@ -6,6 +6,7 @@ import { glob } from 'node:fs/promises';
 const config = {
   shouldLoadPolyfill: !process.argv.includes('--no-scoped-registries-polyfill'),
   shouldRunDevMode: process.argv.includes('--dev-mode'),
+  files: process.argv.includes('--files'),
 };
 
 async function getTestGroups() {
@@ -56,7 +57,7 @@ export default {
     playwrightLauncher({ product: 'chromium' }),
     playwrightLauncher({ product: 'webkit' }),
   ],
-  groups,
+  groups: config.files ? undefined : groups,
   filterBrowserLogs(/** @type {{ type: 'error'|'warn'|'debug'; args: string[] }} */ log) {
     return log.type === 'error' || log.type === 'debug';
   },
