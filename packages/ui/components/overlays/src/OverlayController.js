@@ -635,14 +635,15 @@ export class OverlayController extends EventTarget {
       wrappingDialogElement.setAttribute('tabindex', '-1');
     }
 
-    this.__wrappingDialogNode.style.display = 'none';
-    this.contentWrapperNode.style.zIndex = '1';
-
+    // eslint-disable-next-line lion-perf/no-forced-layout-reads
     if (getComputedStyle(this.contentNode).position === 'absolute') {
       // Having a _contWrapperNode and a contentNode with 'position:absolute' results in
       // computed height of 0...
       this.contentNode.style.position = 'static';
     }
+
+    this.__wrappingDialogNode.style.display = 'none';
+    this.contentWrapperNode.style.zIndex = '1';
 
     // Here we prevent any interference of the native <dialog> element with the keyboard behavior
     // as defined by the OverlayController. This is needed until we can configure `closedby="none"`

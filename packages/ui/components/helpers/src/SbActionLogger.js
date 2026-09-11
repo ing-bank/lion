@@ -262,7 +262,7 @@ export class SbActionLogger extends LitElement {
     if (cueEl) {
       cueEl.classList.remove('header__log-cue-overlay--slide');
       // This triggers browser to stop batching changes because it has to evaluate something.
-      // eslint-disable-next-line no-void
+      // eslint-disable-next-line no-void, lion-perf/no-forced-layout-reads
       void this.offsetWidth;
       // So that when we arrive here, the browser sees this adding as an actual 'change'
       // and this means the animation gets refired.

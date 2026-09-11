@@ -451,6 +451,7 @@ export class LionSelectRich extends SlotMixin(ScopedElementsMixin(OverlayMixin(L
     this._overlayCtrl.content.style.display = '';
     this._overlayCtrl.contentWrapperNode.style.minWidth = 'auto';
     this._overlayCtrl.contentWrapperNode.style.width = 'auto';
+    // eslint-disable-next-line lion-perf/no-forced-layout-reads
     const contentWidth = this._overlayCtrl.contentWrapperNode.getBoundingClientRect().width;
     /**
      * TODO when inside an overlay the current solution doesn't work.

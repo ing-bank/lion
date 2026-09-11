@@ -36,6 +36,7 @@ export const drawerStyle = css`
     overflow: hidden;
     box-sizing: border-box;
     transition: var(--transition-property) 0.3s cubic-bezier(0.25, 0.1, 0.25, 1);
+    contain: layout;
   }
 
   .headline-container {
