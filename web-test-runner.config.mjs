@@ -2,7 +2,7 @@ import { litSsrPlugin } from '@lit-labs/testing/web-test-runner-ssr-plugin.js';
 // @ts-expect-error
 import { playwrightLauncher } from '@web/test-runner-playwright';
 import { glob } from 'node:fs/promises';
-import { forcedLayoutPlugin } from './scripts/web-test-runner/forced-layout-plugin.mjs';
+import { advancedPerfPlugin } from './packages-node/web-test-runner-advanced-perf/src/index.js';
 
 const config = {
   shouldLoadPolyfill: !process.argv.includes('--no-scoped-registries-polyfill'),
@@ -68,5 +68,5 @@ export default {
   filterBrowserLogs(/** @type {{ type: 'error'|'warn'|'debug'; args: string[] }} */ log) {
     return log.type === 'error' || log.type === 'debug';
   },
-  plugins: [litSsrPlugin(), forcedLayoutPlugin()],
+  plugins: [litSsrPlugin(), advancedPerfPlugin()],
 };

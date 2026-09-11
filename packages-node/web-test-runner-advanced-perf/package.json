@@ -1,0 +1,32 @@
+{
+  "private": true,
+  "name": "@lion/web-test-runner-advanced-perf",
+  "version": "0.1.0",
+  "description": "Web Test Runner plugin for advanced performance tracing, Lighthouse metrics, and render timing",
+  "license": "MIT",
+  "author": "ing-bank",
+  "homepage": "https://github.com/ing-bank/lion/",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ing-bank/lion.git",
+    "directory": "packages-node/web-test-runner-advanced-perf"
+  },
+  "type": "module",
+  "exports": {
+    ".": "./src/index.js"
+  },
+  "main": "src/index.js",
+  "files": [
+    "src"
+  ],
+  "scripts": {
+    "test": "npm run test:node",
+    "test:node": "mocha 'test/**/*.test.js'",
+    "test:watch": "npm run test:node -- --watch"
+  },
+  "keywords": [
+    "lion-tools",
+    "performance",
+    "web-test-runner-plugin"
+  ]
+}

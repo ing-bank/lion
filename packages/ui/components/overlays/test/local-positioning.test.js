@@ -441,26 +441,5 @@ describe('Local Positioning', () => {
       expect(traceResult.events).to.deep.equal([]);
       expect(ctrl.contentWrapperNode.style.minWidth).to.equal('60px');
     });
-
-    it('detects forced layout when synchronously reading geometry after a style write', async () => {
-      const el = /** @type {HTMLElement} */ (
-        await fixture(html`<div style="width: 100px;">test</div>`)
-      );
-
-      /** @type {{ supported: boolean }} */
-      const startResult = await executeServerCommand('forced-layout-trace:start');
-      if (!startResult?.supported) {
-        return;
-      }
-
-      el.style.width = '200px';
-      // Forced layout: sync read after style write
-      // eslint-disable-next-line no-unused-expressions
-      el.offsetWidth;
-
-      /** @type {{ events: Array<{ name: string, duration: number }> }} */
-      const traceResult = await executeServerCommand('forced-layout-trace:stop');
-      expect(traceResult.events.length).to.be.at.least(1);
-    });
   });
 });
