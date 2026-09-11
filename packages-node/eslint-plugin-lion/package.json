@@ -1,6 +1,6 @@
 {
   "private": true,
-  "name": "eslint-plugin-lion-perf",
+  "name": "eslint-plugin-lion",
   "version": "0.1.0",
   "description": "ESLint plugin for detecting layout thrashing, forced reflows, and enforcing web performance best practices based on Chrome Dev and Jake Archibald guidance",
   "license": "MIT",
@@ -9,7 +9,7 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/ing-bank/lion.git",
-    "directory": "packages-node/eslint-plugin-lion-perf"
+    "directory": "packages-node/eslint-plugin-lion"
   },
   "type": "module",
   "exports": {

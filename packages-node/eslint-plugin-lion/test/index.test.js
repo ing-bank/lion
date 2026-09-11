@@ -7,7 +7,7 @@ const ruleTester = new RuleTester({
   parserOptions: { ecmaVersion: 2022, sourceType: 'module' },
 });
 
-describe('eslint-plugin-lion-perf', () => {
+describe('eslint-plugin-lion', () => {
   describe('no-forced-layout-reads', () => {
     ruleTester.run('no-forced-layout-reads', noForcedLayoutReadsRule, {
       invalid: [
