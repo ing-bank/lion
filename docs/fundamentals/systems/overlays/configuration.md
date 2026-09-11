@@ -394,6 +394,100 @@ export const preventsScroll = () => {
 };
 ```
 
+## inheritsReferenceWidth (placementMode: 'local')
+
+Aligns dimensions between the reference/invoker node and the overlay content wrapper for local overlays.
+
+Can be specified as a mode string (`'min'`, `'max'`, `'full'`, or `'none'`), or as an options object for advanced control:
+
+```ts
+type ReferenceWidthInheritance =
+  | 'min'
+  | 'max'
+  | 'full'
+  | 'none'
+  | {
+      mode?: 'min' | 'max' | 'full' | 'none'; // Width alignment mode (default: 'full')
+      source?: 'reference' | 'content'; // Source element to measure (default: 'reference')
+      widthOffset?: number; // Pixel offset added to measured width (default: 0)
+    };
+```
+
+### Minimum Reference Width (`inheritsReferenceWidth: 'min'`)
+
+The overlay content wrapper is assigned a `min-width` equal to the invoker width.
+
+```js preview-story
+export const inheritsReferenceWidthMin = () => {
+  const config = { ...withDropdownConfig(), inheritsReferenceWidth: 'min' };
+  return html`
+    <demo-el-using-overlaymixin .config="${config}">
+      <button slot="invoker" style="width: 200px;">Wide Invoker (200px)</button>
+      <div slot="content" class="demo-overlay">Dropdown content (at least 200px wide)</div>
+    </demo-el-using-overlaymixin>
+  `;
+};
+```
+
+### Full Reference Width (`inheritsReferenceWidth: 'full'`)
+
+The overlay content wrapper width is set to match the invoker width exactly.
+
+```js preview-story
+export const inheritsReferenceWidthFull = () => {
+  const config = { ...withDropdownConfig(), inheritsReferenceWidth: 'full' };
+  return html`
+    <demo-el-using-overlaymixin .config="${config}">
+      <button slot="invoker" style="width: 250px;">Wide Invoker (250px)</button>
+      <div slot="content" class="demo-overlay">Dropdown content (exactly 250px wide)</div>
+    </demo-el-using-overlaymixin>
+  `;
+};
+```
+
+### Maximum Reference Width (`inheritsReferenceWidth: 'max'`)
+
+The overlay content wrapper is assigned a `max-width` equal to the invoker width.
+
+```js preview-story
+export const inheritsReferenceWidthMax = () => {
+  const config = { ...withDropdownConfig(), inheritsReferenceWidth: 'max' };
+  return html`
+    <demo-el-using-overlaymixin .config="${config}">
+      <button slot="invoker" style="width: 180px;">Invoker (180px)</button>
+      <div slot="content" class="demo-overlay">
+        Long text inside content constrained to max-width of 180px.
+      </div>
+    </demo-el-using-overlaymixin>
+  `;
+};
+```
+
+### Reverse Width Inheritance (`source: 'content'`)
+
+Using object configuration, setting `source: 'content'` measures the overlay content width and applies it to the invoker button. An optional `widthOffset` (e.g. `28` for an arrow icon) can be added.
+
+```js preview-story
+export const inheritsContentWidth = () => {
+  const config = {
+    ...withDropdownConfig(),
+    inheritsReferenceWidth: {
+      mode: 'full',
+      source: 'content',
+      widthOffset: 28,
+    },
+  };
+  return html`
+    <demo-el-using-overlaymixin .config="${config}">
+      <button slot="invoker">Invoker (sized by content)</button>
+      <div slot="content" class="demo-overlay">
+        Long content item that dictates the invoker button width
+      </div>
+    </demo-el-using-overlaymixin>
+  `;
+};
+```
+
 ## viewportConfig
 
 Determines where the overlay is placed relative to the viewport. This can only be used in combination with a 'global' `placementMode`.
