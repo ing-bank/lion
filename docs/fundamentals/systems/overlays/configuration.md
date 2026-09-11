@@ -17,6 +17,7 @@ eleventyNavigation:
 import { html } from '@mdjs/mdjs-preview';
 import './assets/demo-el-using-overlaymixin.js';
 import './assets/applyDemoOverlayStyles.js';
+import './assets/demo-overlay-reference-width.mjs';
 import { withDropdownConfig, withModalDialogConfig, withTooltipConfig } from '@lion/ui/overlays.js';
 ```
 
@@ -411,6 +412,16 @@ type ReferenceWidthInheritance =
       source?: 'reference' | 'content'; // Source element to measure (default: 'reference')
       widthOffset?: number; // Pixel offset added to measured width (default: 0)
     };
+```
+
+### Interactive Playground
+
+Use the interactive demo below to configure every `inheritsReferenceWidth` option (`mode`, `source`, `widthOffset`) and drag the resize handle on the invoker/content box to see live width inheritance in action:
+
+```js preview-story
+export const inheritsReferenceWidthInteractive = () => html`
+  <demo-overlay-reference-width></demo-overlay-reference-width>
+`;
 ```
 
 ### Minimum Reference Width (`inheritsReferenceWidth: 'min'`)
