@@ -635,7 +635,7 @@ export class OverlayController extends EventTarget {
       wrappingDialogElement.setAttribute('tabindex', '-1');
     }
 
-    // eslint-disable-next-line lion-perf/no-forced-layout-reads
+    // eslint-disable-next-line lion/no-forced-layout-reads
     if (getComputedStyle(this.contentNode).position === 'absolute') {
       // Having a _contWrapperNode and a contentNode with 'position:absolute' results in
       // computed height of 0...

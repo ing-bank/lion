@@ -10,11 +10,11 @@ export const rules = {
 
 export const configs = {
   recommended: {
-    plugins: ['lion-perf'],
+    plugins: ['lion'],
     rules: {
-      'lion-perf/no-forced-layout-reads': 'error',
-      'lion-perf/prefer-check-visibility': 'warn',
-      'lion-perf/prefer-css-containment': 'warn',
+      'lion/no-forced-layout-reads': 'error',
+      'lion/prefer-check-visibility': 'warn',
+      'lion/prefer-css-containment': 'warn',
     },
   },
 };
