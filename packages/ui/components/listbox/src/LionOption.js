@@ -36,6 +36,7 @@ export class LionOption extends DisabledMixin(
           background-color: white;
           padding: 4px;
           cursor: default;
+          contain: content;
         }
 
         :host([hidden]) {

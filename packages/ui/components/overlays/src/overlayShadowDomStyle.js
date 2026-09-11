@@ -14,6 +14,7 @@ export const overlayShadowDomStyle = css`
     width: 100%;
     height: 100%;
     pointer-events: none;
+    contain: layout;
   }
 
   .overlays__overlay-container::backdrop {
@@ -72,6 +73,7 @@ export const overlayShadowDomStyle = css`
   ::slotted(.overlays__overlay),
   .overlays__overlay {
     pointer-events: auto;
+    contain: content;
   }
 
   .overlays__backdrop {
