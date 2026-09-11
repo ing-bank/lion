@@ -1,13 +1,5 @@
-const START_COMMANDS = new Set([
-  'perf:start',
-  'advanced-perf:start',
-  'forced-layout-trace:start',
-]);
-const STOP_COMMANDS = new Set([
-  'perf:stop',
-  'advanced-perf:stop',
-  'forced-layout-trace:stop',
-]);
+const START_COMMANDS = new Set(['perf:start', 'advanced-perf:start', 'forced-layout-trace:start']);
+const STOP_COMMANDS = new Set(['perf:stop', 'advanced-perf:stop', 'forced-layout-trace:stop']);
 const LIGHTHOUSE_COMMANDS = new Set([
   'perf:get-lighthouse-metrics',
   'advanced-perf:get-lighthouse-metrics',
@@ -100,7 +92,7 @@ export function findForcedLayoutEvents(traceEvents, frameId) {
       );
     })
     .map(event => ({
-      duration: Math.round((/** @type {number} */ (event.dur) / 1000) * 100) / 100, // ms
+      duration: Math.round(/** @type {number} */ ((event.dur) / 1000) * 100) / 100, // ms
       name: event.name,
       timestamp: event.ts,
     }));
@@ -121,12 +113,11 @@ export function analyzeTracePerformance(traceEvents, frameId) {
   let totalPaintUs = 0;
   let totalScriptUs = 0;
   let scheduledLayoutUs = 0;
-  let forcedLayoutUs = 0;
 
-  for (const event of traceEvents.filter(isCompleteEvent)) {
-    if (getEventFrameId(event) !== frameId) continue;
-    const dur = /** @type {number} */ (event.dur);
-    const name = /** @type {string} */ (event.name);
+  for (const event of traceEvents
+    .filter(isCompleteEvent)
+    .filter(ev => getEventFrameId(ev) === frameId)) {
+    const { dur, name } = /** @type {{ dur: number, name: string }} */ (event);
 
     if (name === 'Layout') {
       totalLayoutUs += dur;
@@ -140,8 +131,6 @@ export function analyzeTracePerformance(traceEvents, frameId) {
       );
       if (isScheduled) {
         scheduledLayoutUs += dur;
-      } else {
-        forcedLayoutUs += dur;
       }
     } else if (name === 'UpdateLayoutTree') {
       totalRecalcStyleUs += dur;
@@ -151,6 +140,8 @@ export function analyzeTracePerformance(traceEvents, frameId) {
       totalScriptUs += dur;
     }
   }
+
+  const forcedLayoutUs = forcedLayoutEvents.reduce((sum, ev) => sum + ev.duration * 1000, 0);
 
   const layoutTime = Math.round((totalLayoutUs / 1000) * 100) / 100;
   const recalcStyleTime = Math.round((totalRecalcStyleUs / 1000) * 100) / 100;
@@ -181,8 +172,7 @@ function erf(x) {
   const t = 1.0 / (1.0 + 0.3275911 * a);
   const y =
     1.0 -
-    ((((1.061405429 * t - 1.453152027) * t + 1.421413741) * t - 0.284496736) * t +
-      0.254829592) *
+    ((((1.061405429 * t - 1.453152027) * t + 1.421413741) * t - 0.284496736) * t + 0.254829592) *
       t *
       Math.exp(-a * a);
   return sign * y;
@@ -213,7 +203,7 @@ function logNormalScore(value, p10, median) {
  *
  * @param {{ fcp?: number, lcp?: number, tbt?: number, cls?: number, speedIndex?: number }} metrics
  */
-export function calculateLighthouseScore(metrics) {
+export function calculateLighthouseScore(metrics = {}) {
   const fcp = metrics.fcp ?? 0;
   const lcp = metrics.lcp ?? fcp;
   const tbt = metrics.tbt ?? 0;
@@ -340,7 +330,12 @@ export function advancedPerfPlugin() {
           const paintEntries = performance.getEntriesByType('paint');
           const fcpEntry = paintEntries.find(entry => entry.name === 'first-contentful-paint');
           const fpEntry = paintEntries.find(entry => entry.name === 'first-paint');
-          const fcp = fcpEntry ? fcpEntry.startTime : fpEntry ? fpEntry.startTime : 0;
+          let fcp = 0;
+          if (fcpEntry) {
+            fcp = fcpEntry.startTime;
+          } else if (fpEntry) {
+            fcp = fpEntry.startTime;
+          }
 
           const lcpEntries = performance.getEntriesByType('largest-contentful-paint');
           const lcp = lcpEntries.length > 0 ? lcpEntries[lcpEntries.length - 1].startTime : fcp;
@@ -411,7 +406,9 @@ export function advancedPerfPlugin() {
               reflowDuration = performance.now() - startReflow;
             }
 
-            await new Promise(resolve => requestAnimationFrame(resolve));
+            await new Promise(resolve => {
+              requestAnimationFrame(() => resolve(undefined));
+            });
             performance.mark(endMark);
 
             performance.measure('render-measure', startMark, endMark);
