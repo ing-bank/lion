@@ -458,5 +458,51 @@ describe('Local Positioning', () => {
       const traceResult = await executeServerCommand('forced-layout-trace:stop');
       expect(traceResult.events.length).to.be.at.least(1);
     });
+
+    it('measures Lighthouse performance metrics and score per component', async () => {
+      const invokerNode = /** @type {HTMLElement} */ (
+        await fixture(html` <div role="button" style="width: 60px;">invoker</div> `)
+      );
+      const ctrl = new OverlayController({
+        ...withLocalTestConfig(),
+        inheritsReferenceWidth: 'min',
+        invokerNode,
+      });
+      await ctrl.show();
+
+      /** @type {{ supported: boolean, lighthouse?: { score: number, metrics: Record<string, number> }, cdpMetrics?: Record<string, number> }} */
+      const result = await executeServerCommand('perf:get-lighthouse-metrics');
+      if (!result?.supported) {
+        return;
+      }
+
+      expect(result.lighthouse).to.be.an('object');
+      expect(result.lighthouse?.score).to.be.a('number');
+      expect(result.lighthouse?.score).to.be.within(0, 100);
+      expect(result.lighthouse?.metrics).to.have.keys(['fcp', 'lcp', 'tbt', 'cls', 'speedIndex']);
+      expect(result.cdpMetrics).to.be.an('object');
+    });
+
+    it('measures render and paint performance with and without reflow', async () => {
+      await fixture(html`<div style="width: 100px;">test</div>`);
+
+      /** @type {{ supported: boolean, renderPerformance?: { duration: number, hasReflow: boolean, reflowDuration: number } }} */
+      const noReflowResult = await executeServerCommand('perf:measure-render', {
+        measureReflow: false,
+      });
+      if (!noReflowResult?.supported) {
+        return;
+      }
+
+      expect(noReflowResult.renderPerformance?.hasReflow).to.be.false;
+
+      /** @type {{ supported: boolean, renderPerformance?: { duration: number, hasReflow: boolean, reflowDuration: number } }} */
+      const withReflowResult = await executeServerCommand('perf:measure-render', {
+        measureReflow: true,
+      });
+
+      expect(withReflowResult.renderPerformance?.hasReflow).to.be.true;
+      expect(withReflowResult.renderPerformance?.reflowDuration).to.be.a('number');
+    });
   });
 });
