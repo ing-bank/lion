@@ -11,6 +11,7 @@ import { LionSelectInvoker } from './LionSelectInvoker.js';
  * @typedef {import('../../form-core/types/registration/FormRegisteringMixinTypes.js').FormRegisteringHost} FormRegisteringHost
  * @typedef {import('../../form-core/types/FormControlMixinTypes.js').FormControlHost} FormControlHost
  * @typedef {import('../../core/types/SlotMixinTypes.js').SlotsMap} SlotsMap
+ * @typedef {import('@lion/ui/overlays.js').OverlayController} OverlayController
  */
 
 function detectInteractionMode() {
@@ -361,7 +362,7 @@ export class LionSelectRich extends SlotMixin(ScopedElementsMixin(OverlayMixin(L
    * @protected
    */
   _defineOverlayConfig() {
-    return {
+    return /** @type {import('@lion/ui/types/overlays.js').OverlayConfig} */ ({
       ...withDropdownConfig(),
       inheritsReferenceWidth: {
         mode: 'full',
@@ -370,7 +371,7 @@ export class LionSelectRich extends SlotMixin(ScopedElementsMixin(OverlayMixin(L
       },
       // Needs more advanced behavior (see `__invokerOnClick`)
       visibilityTriggerFunction: undefined,
-    };
+    });
   }
 
   /**
@@ -461,7 +462,7 @@ export class LionSelectRich extends SlotMixin(ScopedElementsMixin(OverlayMixin(L
     }
     this.__alignInvokerWidthFrame = requestAnimationFrame(() => {
       this.__alignInvokerWidthFrame = undefined;
-      this._overlayCtrl?._handleInheritsReferenceWidth();
+      /** @type {any} */ (this._overlayCtrl)?._handleInheritsReferenceWidth();
     });
   }
 

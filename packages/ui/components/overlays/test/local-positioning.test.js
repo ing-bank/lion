@@ -400,11 +400,13 @@ describe('Local Positioning', () => {
 
       // Works when overlay is closed
       expect(ctrl.isShown).to.be.false;
-      expect(ctrl.invokerNode.style.width).to.equal('148px');
+      const resolvedInvokerNode = /** @type {HTMLElement} */ (ctrl.invokerNode);
+      expect(resolvedInvokerNode).to.not.be.undefined;
+      expect(resolvedInvokerNode.style.width).to.equal('148px');
 
       // Also works when opened
       await ctrl.show();
-      expect(ctrl.invokerNode.style.width).to.equal('148px');
+      expect(resolvedInvokerNode.style.width).to.equal('148px');
     });
 
     it('ensures invoker and content have equal width when source is content and widthOffset is 0', async () => {
@@ -426,11 +428,13 @@ describe('Local Positioning', () => {
       });
 
       expect(ctrl.isShown).to.be.false;
-      expect(ctrl.invokerNode.style.width).to.equal('210px');
+      const resolvedInvokerNode = /** @type {HTMLElement} */ (ctrl.invokerNode);
+      expect(resolvedInvokerNode).to.not.be.undefined;
+      expect(resolvedInvokerNode.style.width).to.equal('210px');
 
       await ctrl.show();
       const contentWidth = ctrl.contentWrapperNode.getBoundingClientRect().width;
-      const invokerWidth = ctrl.invokerNode.getBoundingClientRect().width;
+      const invokerWidth = resolvedInvokerNode.getBoundingClientRect().width;
       expect(invokerWidth).to.equal(contentWidth);
     });
 
@@ -466,12 +470,12 @@ describe('Local Positioning', () => {
       /** @type {{ supported: boolean }} */
       const startResult = await executeServerCommand('forced-layout-trace:start');
       if (!startResult?.supported) {
-        ctrl._handleInheritsReferenceWidth();
+        /** @type {any} */ (ctrl)._handleInheritsReferenceWidth();
         expect(ctrl.contentWrapperNode.style.minWidth).to.equal('60px');
         return;
       }
 
-      ctrl._handleInheritsReferenceWidth();
+      /** @type {any} */ (ctrl)._handleInheritsReferenceWidth();
 
       /** @type {{ events: Array<{ name: string, duration: number }> }} */
       const traceResult = await executeServerCommand('forced-layout-trace:stop');
