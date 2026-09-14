@@ -45,6 +45,7 @@
     "test:screenshots": "npx rimraf screenshots/.diff/ && npx rimraf screenshots/.current/ && mocha --require scripts/screenshots/bootstrap.js --exit --timeout 10000 \"packages/**/test/*.screenshots-test.js\"",
     "test:screenshots:update": "cross-env UPDATE_SCREENSHOTS=true npm run test:screenshots",
     "test:statistical-bench": "web-test-runner --config web-test-runner-statistical-bench.config.mjs",
+    "test:statistical-bench:podman": "podman build --file Containerfile.statistical-bench --tag lion-statistical-bench:local . && podman run --rm --init --cpus=2 --memory=4g --memory-swap=4g --pids-limit=512 --shm-size=1g --network=none --security-opt=no-new-privileges lion-statistical-bench:local",
     "types": "npm run types --workspaces --if-present",
     "types-check-only": "npm run types-check-only --workspaces --if-present"
   },
