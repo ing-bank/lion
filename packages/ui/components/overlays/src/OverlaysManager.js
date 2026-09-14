@@ -67,6 +67,8 @@ export class OverlaysManager {
      *   marginBottomInline: string | undefined;
      *   marginRight: number | undefined;
      *   marginBottom: number | undefined;
+     *   newMarginRight: number | undefined;
+     *   newMarginBottom: number | undefined;
      * }}
      */
     this.__bodySizeVars = {
@@ -77,6 +79,8 @@ export class OverlaysManager {
       marginBottomInline: undefined,
       marginRight: undefined,
       marginBottom: undefined,
+      newMarginRight: undefined,
+      newMarginBottom: undefined,
     };
 
     this.__forTesting = {
