@@ -3,10 +3,61 @@ import {
   advancedPerfPlugin,
   analyzeTracePerformance,
   calculateLighthouseScore,
+  computeDifference,
+  formatBenchmarkReport,
   findForcedLayoutEvents,
+  renderBenchmarkReport,
+  summaryStats,
 } from '../src/index.js';
 
 describe('web-test-runner-advanced-perf', () => {
+  describe('statistical measurements', () => {
+    it('calculates a 95% confidence interval from repeated samples', () => {
+      const result = summaryStats([8, 10, 12, 10, 10]);
+
+      expect(result.mean).to.equal(10);
+      expect(result.size).to.equal(5);
+      expect(result.meanCI.low).to.be.below(10);
+      expect(result.meanCI.high).to.be.above(10);
+    });
+
+    it('calculates absolute and relative confidence intervals against a baseline', () => {
+      const baseline = summaryStats([8, 10, 12, 10, 10]);
+      const candidate = summaryStats([16, 18, 20, 18, 18]);
+      const result = computeDifference(baseline, candidate);
+
+      expect(result.absolute.low).to.be.above(0);
+      expect(result.relative.low).to.be.above(0);
+    });
+
+    it('formats statistical reports with two decimals and units', () => {
+      const report = formatBenchmarkReport({
+        benchmark: summaryStats([8, 10, 12, 10, 10]),
+      });
+
+      expect(report).to.deep.equal({
+        benchmark: {
+          '95% CI': '8.25 to 11.75 ms',
+          mean: '10.00 ms',
+          RSD: '14.14 %',
+          samples: '5.00 samples',
+          σ: '1.41 ms',
+        },
+      });
+    });
+
+    it('renders statistical report table cells without quotes', () => {
+      const table = renderBenchmarkReport(
+        formatBenchmarkReport({ benchmark: summaryStats([8, 10, 12, 10, 10]) }),
+      );
+
+      expect(table).to.include(
+        '| benchmark | 8.25 to 11.75 ms | 10.00 ms | 14.14 % | 5.00 samples | 1.41 ms |',
+      );
+      expect(table).not.to.include("'");
+    });
+  });
+
   describe('calculateLighthouseScore', () => {
     it('calculates near-100 score for optimal performance metrics', () => {
       const optimalMetrics = {
@@ -61,7 +112,13 @@ describe('web-test-runner-advanced-perf', () => {
     });
 
     it('applies standard Lighthouse v10/v11 weights (FCP:10%, SI:10%, LCP:25%, TBT:30%, CLS:25%)', () => {
-      const metrics = { cls: 0.1, fcp: 1800, lcp: 2500, speedIndex: 3400, tbt: 200 };
+      const metrics = {
+        cls: 0.1,
+        fcp: 1800,
+        lcp: 2500,
+        speedIndex: 3400,
+        tbt: 200,
+      };
       const result = calculateLighthouseScore(metrics);
 
       const expectedScore = Math.round(
@@ -82,7 +139,13 @@ describe('web-test-runner-advanced-perf', () => {
     it('detects unscheduled layout events for matching frame ID', () => {
       const traceEvents = [
         // Scheduled layout inside AnimationFrame::StyleAndLayout
-        { name: 'AnimationFrame::StyleAndLayout', ph: 'b', pid: 1, tid: 1, ts: 1000 },
+        {
+          name: 'AnimationFrame::StyleAndLayout',
+          ph: 'b',
+          pid: 1,
+          tid: 1,
+          ts: 1000,
+        },
         {
           args: { beginData: { frame: frameId } },
           dur: 500,
@@ -92,7 +155,13 @@ describe('web-test-runner-advanced-perf', () => {
           tid: 1,
           ts: 1100,
         },
-        { name: 'AnimationFrame::StyleAndLayout', ph: 'e', pid: 1, tid: 1, ts: 2000 },
+        {
+          name: 'AnimationFrame::StyleAndLayout',
+          ph: 'e',
+          pid: 1,
+          tid: 1,
+          ts: 2000,
+        },
 
         // Forced layout outside AnimationFrame::StyleAndLayout
         {
@@ -147,7 +216,13 @@ describe('web-test-runner-advanced-perf', () => {
 
     it('aggregates trace durations for layout, style, paint, and script execution', () => {
       const traceEvents = [
-        { name: 'AnimationFrame::StyleAndLayout', ph: 'b', pid: 1, tid: 1, ts: 1000 },
+        {
+          name: 'AnimationFrame::StyleAndLayout',
+          ph: 'b',
+          pid: 1,
+          tid: 1,
+          ts: 1000,
+        },
         {
           args: { beginData: { frame: frameId } },
           dur: 1000,
@@ -157,7 +232,13 @@ describe('web-test-runner-advanced-perf', () => {
           tid: 1,
           ts: 1100,
         },
-        { name: 'AnimationFrame::StyleAndLayout', ph: 'e', pid: 1, tid: 1, ts: 2500 },
+        {
+          name: 'AnimationFrame::StyleAndLayout',
+          ph: 'e',
+          pid: 1,
+          tid: 1,
+          ts: 2500,
+        },
 
         {
           args: { beginData: { frame: frameId } },
@@ -218,18 +299,40 @@ describe('web-test-runner-advanced-perf', () => {
     });
 
     it('returns undefined for non-perf commands', async () => {
-      const session = { browser: { name: 'Chromium', type: 'playwright' }, id: 's1' };
-      const result = await plugin.executeCommand({ command: 'unknown-command', session });
+      const session = {
+        browser: { name: 'Chromium', type: 'playwright' },
+        id: 's1',
+      };
+      const result = await plugin.executeCommand({
+        command: 'unknown-command',
+        session,
+      });
       expect(result).to.be.undefined;
     });
 
     it('returns { supported: false } for non-Playwright/Chromium browser sessions', async () => {
-      const firefoxSession = { browser: { name: 'Firefox', type: 'playwright' }, id: 's1' };
+      const firefoxSession = {
+        browser: { name: 'Firefox', type: 'playwright' },
+        id: 's1',
+      };
       const result = await plugin.executeCommand({
         command: 'perf:start',
         session: firefoxSession,
       });
       expect(result).to.deep.equal({ supported: false });
+    });
+
+    it('requires the statistical benchmark flag for perf:measure', async () => {
+      const session = {
+        browser: { name: 'Chromium', type: 'playwright' },
+        id: 's1',
+      };
+      const result = await plugin.executeCommand({
+        command: 'perf:measure',
+        session,
+      });
+
+      expect(result).to.deep.equal({ enabled: false, supported: true });
     });
 
     it('handles perf:start and perf:stop lifecycle', async () => {
@@ -287,7 +390,10 @@ describe('web-test-runner-advanced-perf', () => {
         id: 'session-1',
       };
 
-      const startResult = await plugin.executeCommand({ command: 'perf:start', session });
+      const startResult = await plugin.executeCommand({
+        command: 'perf:start',
+        session,
+      });
       expect(startResult).to.deep.equal({ supported: true });
 
       // Second start throws error
@@ -298,7 +404,10 @@ describe('web-test-runner-advanced-perf', () => {
         expect(err.message).to.include('already active');
       }
 
-      const stopResult = await plugin.executeCommand({ command: 'perf:stop', session });
+      const stopResult = await plugin.executeCommand({
+        command: 'perf:stop',
+        session,
+      });
       expect(stopResult.supported).to.be.true;
       expect(stopResult.events).to.have.lengthOf(1);
       expect(stopResult.events[0].name).to.equal('Layout');

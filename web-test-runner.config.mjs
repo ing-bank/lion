@@ -8,6 +8,8 @@ const config = {
   shouldLoadPolyfill: !process.argv.includes('--no-scoped-registries-polyfill'),
   shouldRunDevMode: process.argv.includes('--dev-mode'),
   files: process.argv.includes('--files'),
+  shouldRunStatisticalBench: process.argv.includes('--statisticalBench'),
+  shouldReportStatisticalBench: process.argv.includes('--statisticalBenchReport'),
 };
 
 async function getTestGroups() {
@@ -62,5 +64,11 @@ export default {
   filterBrowserLogs(/** @type {{ type: 'error'|'warn'|'debug'; args: string[] }} */ log) {
     return log.type === 'error' || log.type === 'debug';
   },
-  plugins: [litSsrPlugin(), advancedPerfPlugin()],
+  plugins: [
+    litSsrPlugin(),
+    advancedPerfPlugin({
+      report: config.shouldReportStatisticalBench,
+      statisticalBench: config.shouldRunStatisticalBench,
+    }),
+  ],
 };
