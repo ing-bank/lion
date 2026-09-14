@@ -13,7 +13,11 @@
   },
   "type": "module",
   "exports": {
-    ".": "./src/index.js"
+    ".": "./src/index.js",
+    "./browser.js": {
+      "types": "./src/browser.d.ts",
+      "default": "./src/browser.js"
+    }
   },
   "main": "src/index.js",
   "files": [
@@ -23,6 +27,9 @@
     "test": "npm run test:node",
     "test:node": "mocha 'test/**/*.test.js'",
     "test:watch": "npm run test:node -- --watch"
+  },
+  "dependencies": {
+    "@web/test-runner-commands": "^0.9.0"
   },
   "keywords": [
     "lion-tools",
