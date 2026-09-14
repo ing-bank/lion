@@ -289,6 +289,14 @@ export class OverlayController extends EventTarget {
 
     this._contentId = `overlay-content--${Math.random().toString(36).slice(2, 10)}`;
     this.__originalAttrs = new Map();
+    /** @type {ResizeObserver | undefined} */
+    this.__referenceWidthResizeObserver = undefined;
+    /** @type {number | undefined} */
+    this.__referenceWidthAnimationFrame = undefined;
+    /** @type {HTMLElement | undefined} */
+    this.__observedSourceNode = undefined;
+    /** @type {HTMLElement | undefined} */
+    this.__observedTargetNode = undefined;
     /** @private */
     this.__escKeyHandler = this.__escKeyHandler.bind(this);
     this.updateConfig(config);
@@ -878,7 +886,7 @@ export class OverlayController extends EventTarget {
    * @private
    */
   __storeOriginalAttrs(node, attrs) {
-    /** @type {Record<string, any>} */
+    /** @type {Record<string, string | null>} */
     const attrMap = {};
     attrs.forEach(attrName => {
       attrMap[attrName] = node.getAttribute(attrName);
@@ -1531,7 +1539,7 @@ export class OverlayController extends EventTarget {
   /**
    * Helper to normalize `inheritsReferenceWidth` config into a structured object.
    * @protected
-   * @returns {{ mode: 'max' | 'full' | 'min' | 'none', source?: 'content', widthOffset: number }}
+   * @returns {{ mode: 'max' | 'full' | 'min' | 'none', source?: 'reference' | 'content', widthOffset: number }}
    */
   _getNormalizedReferenceWidthConfig() {
     const raw = this.config?.inheritsReferenceWidth;
@@ -1542,11 +1550,11 @@ export class OverlayController extends EventTarget {
       return { mode: raw, widthOffset: 0 };
     }
     if (typeof raw === 'object') {
-      return {
+      return /** @type {{ mode: 'max' | 'full' | 'min' | 'none', source?: 'reference' | 'content', widthOffset: number }} */ ({
         mode: raw.mode || 'full',
         source: raw.source,
         widthOffset: raw.widthOffset ?? raw.offset ?? 0,
-      };
+      });
     }
     return { mode: 'none', widthOffset: 0 };
   }
@@ -1555,7 +1563,8 @@ export class OverlayController extends EventTarget {
    * @param {{ phase?: OverlayPhase }} [options]
    * @protected
    */
-  _handleInheritsReferenceWidth({ phase } = {}) {
+  _handleInheritsReferenceWidth(options = {}) {
+    const { phase } = options;
     const norm = this._getNormalizedReferenceWidthConfig();
 
     if (phase === 'teardown' || norm.mode === 'none' || this.placementMode === 'global') {

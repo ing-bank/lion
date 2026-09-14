@@ -92,7 +92,7 @@ export function findForcedLayoutEvents(traceEvents, frameId) {
       );
     })
     .map(event => ({
-      duration: Math.round(/** @type {number} */ ((event.dur) / 1000) * 100) / 100, // ms
+      duration: Math.round(/** @type {number} */ (event.dur / 1000) * 100) / 100, // ms
       name: event.name,
       timestamp: event.ts,
     }));

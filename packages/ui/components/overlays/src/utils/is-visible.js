@@ -43,8 +43,11 @@ export function isVisible(element) {
     return true;
   }
 
-  if (typeof element.checkVisibility === 'function') {
-    return element.checkVisibility({ checkOpacity: false, checkVisibilityCSS: true });
+  const { checkVisibility } = /** @type {{
+    checkVisibility?: (options?: { checkOpacity?: boolean, checkVisibilityCSS?: boolean }) => boolean;
+  }} */ (element);
+  if (typeof checkVisibility === 'function') {
+    return checkVisibility.call(element, { checkOpacity: false, checkVisibilityCSS: true });
   }
 
   // display: none is not inherited, so finally check if element has calculated width or height
