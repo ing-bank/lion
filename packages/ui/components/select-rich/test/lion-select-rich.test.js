@@ -223,16 +223,14 @@ describe('lion-select-rich', () => {
       el.opened = true;
       const { _invokerNode, _overlayCtrl } = getSelectRichMembers(el);
       await el.updateComplete;
-      await new Promise(resolve => {
+      await new Promise((/** @type {(value?: void) => void} */ resolve) => {
         requestAnimationFrame(() => resolve());
       });
 
       const contentWidth = _overlayCtrl.contentWrapperNode.getBoundingClientRect().width;
       expect(contentWidth).to.be.above(0);
-      expect(parseFloat(_invokerNode.style.width)).to.be.closeTo(
-        contentWidth + el._arrowWidth,
-        0.1,
-      );
+      const arrowWidth = /** @type {any} */ (el)._arrowWidth;
+      expect(parseFloat(_invokerNode.style.width)).to.be.closeTo(contentWidth + arrowWidth, 0.1);
     });
 
     // FIXME: wrong values in safari/webkit even though this passes in the "real" debug browsers
@@ -862,9 +860,8 @@ describe('lion-select-rich', () => {
         await waitUntil(isSelectRichRendered);
         getInvoker()?.click();
         await waitUntil(isDialogVisible);
-        const optionBlue = /** @type { HTMLElement | undefined } */ (
-          wrapperElementShadowRoot?.querySelectorAll('lion-option')
-        )?.[1];
+        const options = Array.from(wrapperElementShadowRoot?.querySelectorAll('lion-option') || []);
+        const optionBlue = /** @type {HTMLElement | undefined} */ (options[1]);
         optionBlue?.click();
         await waitUntil(() => !isDialogVisible());
         const selectedColourLabelBeforeTabSwitch = getSelectedColourLabel();
@@ -928,7 +925,7 @@ describe('lion-select-rich', () => {
                             colour =>
                               html`<lion-option
                                 .choiceValue="${colour.value}"
-                                checked="${colour.checked || nothing}"
+                                ?checked=${colour.checked}
                                 >${colour.label}</lion-option
                               >`,
                           )}
@@ -985,9 +982,8 @@ describe('lion-select-rich', () => {
         await waitUntil(isSelectRichRendered);
         getInvoker()?.click();
         await waitUntil(isDialogVisible);
-        const optionBlue = /** @type { HTMLElement | undefined } */ (
-          wrapperElementShadowRoot?.querySelectorAll('lion-option')
-        )?.[1];
+        const options = Array.from(wrapperElementShadowRoot?.querySelectorAll('lion-option') || []);
+        const optionBlue = /** @type {HTMLElement | undefined} */ (options[1]);
         optionBlue?.click();
         await waitUntil(() => !isDialogVisible());
         const selectedColourLabelBeforeTabSwitch = getSelectedColourLabel();
@@ -1112,9 +1108,8 @@ describe('lion-select-rich', () => {
         await waitUntil(isSelectRichRendered);
         getInvoker()?.click();
         await waitUntil(isDialogVisible);
-        const optionBlue = /** @type { HTMLElement | undefined } */ (
-          wrapperElementShadowRoot?.querySelectorAll('lion-option')
-        )?.[1];
+        const options = Array.from(wrapperElementShadowRoot?.querySelectorAll('lion-option') || []);
+        const optionBlue = /** @type {HTMLElement | undefined} */ (options[1]);
         optionBlue?.click();
         await waitUntil(() => !isDialogVisible());
         const selectedColourLabelBeforeTabSwitch = getSelectedColourLabel();
