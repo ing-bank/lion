@@ -89,6 +89,25 @@ const frameBudget = 1000 / 60;
 expect(result.benchmarks['open-listbox'].meanCI.high).to.be.below(frameBudget);
 ```
 
+### Containerized Runs
+
+The repository provides a resource-capped Podman command for comparable local and CI runs:
+
+```bash
+npm run test:statistical-bench:podman
+```
+
+It builds [Containerfile.statistical-bench](../../../../Containerfile.statistical-bench) with the pinned Node and Playwright Chromium versions, then runs the benchmark with two CPUs, 4 GiB of memory, a 512-process limit, 1 GiB of shared memory, and no network access. The image is built from the current working tree, so uncommitted changes are included.
+
+On macOS, initialize Podman's Linux VM once with matching capacity before using the command:
+
+```bash
+podman machine init --cpus 2 --memory 4096
+podman machine start
+```
+
+Container limits standardize the workload, not the underlying CPU. Use the same runner class for absolute budgets; use baseline-relative comparisons for results from different CPU architectures or busy hosts.
+
 ## Trace Commands
 
 The plugin also accepts Web Test Runner commands for Chromium tracing:

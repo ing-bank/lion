@@ -1,0 +1,12 @@
+.git
+.github
+.changeset
+_site
+_site-dev
+coverage
+node_modules
+**/node_modules
+dist
+**/dist
+.env
+.env.*
