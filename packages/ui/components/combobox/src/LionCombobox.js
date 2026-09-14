@@ -4,9 +4,9 @@ import { LionListbox } from '@lion/ui/listbox.js';
 import { LocalizeMixin } from '@lion/ui/localize-no-side-effects.js';
 import { OverlayMixin, withDropdownConfig } from '@lion/ui/overlays.js';
 import { css, html } from 'lit';
+import { CustomChoiceGroupMixin } from '../../form-core/src/choice-group/CustomChoiceGroupMixin.js';
 import { makeMatchingTextBold, unmakeMatchingTextBold } from './utils/makeMatchingTextBold.js';
 import { MatchesOption } from './validators.js';
-import { CustomChoiceGroupMixin } from '../../form-core/src/choice-group/CustomChoiceGroupMixin.js';
 
 const matchA11ySpanReverseFns = new WeakMap();
 
@@ -1021,6 +1021,20 @@ export class LionCombobox extends LocalizeMixin(OverlayMixin(CustomChoiceGroupMi
         this.activeIndex = -1;
       }
       this.modelValue = this.parser(inputValue);
+      /* Manually dispatch when textbox value changes but no option gets (un)checked (requireOptionMatch false)
+       * CustomChoiceGroupMixin does not fire model-value-changed when the text field is leading.
+       */
+      if (!this.requireOptionMatch && prevValue !== curValue) {
+        this.dispatchEvent(
+          new CustomEvent('model-value-changed', {
+            bubbles: true,
+            detail: {
+              formPath: [this],
+              isTriggeredByUser: Boolean(/** @type {*} */ (this)._isHandlingUserInput),
+            },
+          }),
+        );
+      }
     }
 
     // [8]. These values will help computing autofill intentions next autocomplete cycle
