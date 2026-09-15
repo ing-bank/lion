@@ -70,6 +70,7 @@ export class LionCombobox extends LocalizeMixin(OverlayMixin(CustomChoiceGroupMi
         .input-group__container {
           display: flex;
           border-bottom: 1px solid;
+          contain: layout;
         }
 
         * > ::slotted([slot='input']) {

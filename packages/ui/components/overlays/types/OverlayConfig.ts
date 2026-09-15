@@ -22,6 +22,19 @@ export type OverlayPhase =
   | 'remove';
 
 
+export type ReferenceWidthInheritanceMode = 'max' | 'full' | 'min' | 'none';
+
+export interface ReferenceWidthInheritanceObject {
+  mode?: ReferenceWidthInheritanceMode;
+  source?: 'reference' | 'content';
+  widthOffset?: number;
+  offset?: number;
+}
+
+export type ReferenceWidthInheritance =
+  | ReferenceWidthInheritanceMode
+  | ReferenceWidthInheritanceObject;
+
 export interface ViewportConfig {
   placement: ViewportPlacement;
 }
@@ -36,8 +49,8 @@ export interface OverlayConfig {
   viewportConfig?: ViewportConfig;
   /** Hides other overlays when multiple are opened (currently exclusive to globalOverlayController) */
   isBlocking?: boolean;
-  /** Will align contentNode with referenceNode (invokerNode by default) for local overlays. Usually needed for dropdowns. 'max' will prevent contentNode from exceeding width of referenceNode, 'min' guarantees that contentNode will be at least as wide as referenceNode. 'full' will make sure that the invoker width always is the same. */
-  inheritsReferenceWidth?: 'max' | 'full' | 'min' | 'none';
+  /** Will align contentNode with referenceNode (invokerNode by default) or vice versa for local overlays. Usually needed for dropdowns or select-rich. 'max' will prevent target from exceeding width of source, 'min' guarantees target is at least as wide as source, 'full' makes width match source + widthOffset. */
+  inheritsReferenceWidth?: ReferenceWidthInheritance;
   /** Change the default of 9999 */
   zIndex?: number;
 

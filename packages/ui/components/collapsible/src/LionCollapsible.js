@@ -19,6 +19,7 @@ export class LionCollapsible extends LitElement {
 
         :host ::slotted([slot='content']) {
           overflow: hidden;
+          contain: layout;
         }
       `,
     ];
