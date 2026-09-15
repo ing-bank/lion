@@ -1,6 +1,6 @@
 {
   "private": true,
-  "name": "@lion/web-test-runner-advanced-perf",
+  "name": "@lion-labs/web-test-runner-advanced-perf",
   "version": "0.1.0",
   "description": "Web Test Runner plugin for advanced performance tracing, Lighthouse metrics, and render timing",
   "license": "MIT",

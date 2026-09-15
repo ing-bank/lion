@@ -13,62 +13,121 @@ eleventyNavigation:
 
 # Web Test Runner Advanced Perf: Overview
 
-`@lion/web-test-runner-advanced-perf` adds Chromium performance tracing and repeated statistical measurements to Web Test Runner.
+`@lion-labs/web-test-runner-advanced-perf` adds Chromium performance tracing and repeated statistical measurements to Web Test Runner.
+
+The statistical benchmark API is inspired by [Tachometer](https://github.com/Polymer/tachometer); it is an independent, Web Test Runner-focused implementation and is not a replacement for Tachometer.
+
+## Chrome Metrics and Paint Timing
+
+The plugin uses Chrome's [DevTools Protocol](https://en.wikipedia.org/wiki/Chrome_DevTools#Chrome_DevTools_Protocol) and [Performance Timeline](https://developer.mozilla.org/docs/Web/API/Performance_API/Performance_data) to collect browser performance data during a test. `perf:get-lighthouse-metrics` returns Chrome DevTools metrics and a Lighthouse-style summary calculated from browser entries:
+
+- First Contentful Paint (FCP) is the time until the browser first renders page content.
+- Largest Contentful Paint (LCP) is the time until the largest visible content element is rendered.
+- Cumulative Layout Shift (CLS) sums layout shifts that did not follow recent user input.
+- Total Blocking Time (TBT) sums the time beyond 50 ms for each long task.
+- Speed Index is approximated from FCP and LCP; it is a useful relative signal, not a full Lighthouse page-load audit.
+
+These are [Core Web Vitals](https://en.wikipedia.org/wiki/Core_Web_Vitals)-style page metrics. They complement, rather than replace, the component benchmark: they reveal page-level loading, rendering, layout stability, and main-thread blocking, while `runBenchmarks()` measures a specific component operation.
+
+`mode: 'paint'` measures from immediately before the benchmark fixture is created until two nested [`requestAnimationFrame()`](https://developer.mozilla.org/docs/Web/API/Window/requestAnimationFrame) callbacks complete. The first callback waits for the browser's next rendering opportunity; the second ensures the operation has crossed a paint boundary. This is frame timing, not a `PerformancePaintTiming` entry: Paint Timing entries only describe initial page paints such as `first-paint` and `first-contentful-paint`.
 
 ## Installation
 
 ```bash
-npm i -D @lion/web-test-runner-advanced-perf @web/test-runner-commands
+npm i -D @lion-labs/web-test-runner-advanced-perf @web/test-runner-commands
 ```
 
-Configure the plugin with a Playwright Chromium launcher. Statistical benchmarks are opt-in so normal test runs stay fast.
+Configure a dedicated Web Test Runner file with Playwright Chromium. It discovers only `*.statistical-bench.js` files, keeping normal test runs fast.
 
 ```js
+import { litSsrPlugin } from '@lit-labs/testing/web-test-runner-ssr-plugin.js';
 import { playwrightLauncher } from '@web/test-runner-playwright';
-import { advancedPerfPlugin } from '@lion/web-test-runner-advanced-perf';
+import { advancedPerfPlugin } from '@lion-labs/web-test-runner-advanced-perf';
 
 export default {
   browsers: [playwrightLauncher({ product: 'chromium' })],
-  plugins: [advancedPerfPlugin({ statisticalBench: true, report: true })],
+  nodeResolve: true,
+  groups: [
+    {
+      name: 'statistical-benchmarks',
+      files: 'packages/ui/components/**/test/**/*.statistical-bench.js',
+    },
+  ],
+  plugins: [litSsrPlugin(), advancedPerfPlugin({ report: true, statisticalBench: true })],
+  testFramework: {
+    config: { timeout: '5000' },
+  },
 };
 ```
 
 ## Statistical Benchmarks
 
-Use `runBenchmarks()` in a browser test to measure an operation repeatedly. Every fixture is created before its timing window. For `mode: 'paint'`, the duration starts immediately before `run()` and ends after the next paint.
+Use `runBenchmarks()` in a browser test to measure an operation repeatedly. For `mode: 'paint'`, the duration starts immediately before the fixture is created and ends after the next paint.
 
 ```js
-import { fixture, html } from '@open-wc/testing';
-import { runBenchmarks } from '@lion/web-test-runner-advanced-perf/browser.js';
-import '@lion/ui/define/lion-select-rich.js';
+import { fixture, html, expect } from '@open-wc/testing';
+import { runBenchmarks } from '@lion-labs/web-test-runner-advanced-perf/browser.js';
 
-const result = await runBenchmarks(
-  [
-    {
-      name: 'open-listbox',
-      fixture: () => fixture(html`<lion-select-rich></lion-select-rich>`),
-      run: async selectRich => {
-        selectRich.opened = true;
-        await selectRich.updateComplete;
-      },
-      cleanup: selectRich => selectRich.remove(),
-    },
-  ],
-  { measure: { mode: 'paint' } },
-);
+const frameBudget = 1000 / 60;
+
+describe('<my-component> statistical benchmarks', () => {
+  it('measures component rendering', async () => {
+    const result = await runBenchmarks(
+      [
+        {
+          name: 'component-render',
+          fixture: () => fixture(html`<my-component></my-component>`),
+          cleanup: component => component.remove(),
+        },
+      ],
+      { measure: { mode: 'paint' } },
+    );
+
+    expect(result.benchmarks['component-render'].meanCI.high).to.be.below(frameBudget);
+  });
+});
 ```
 
-`run` is optional, which is useful when fixture setup is the operation under test. Set `reuseFixture: true` to retain one fixture across samples; otherwise every warm-up and measured sample receives a fresh fixture. `reset()` runs after every sample, and `cleanup()` runs for every non-reused fixture.
+`run` is optional, as in this fixture-rendering benchmark. Add it to measure work performed after fixture creation. Set `reuseFixture: true` to retain one fixture across samples; otherwise every warm-up and measured sample receives a fresh fixture. `reset()` runs after every sample, and `cleanup()` runs for every non-reused fixture.
 
 The result contains statistics for each named benchmark:
 
 ```js
-result.benchmarks['open-listbox'].mean;
-result.benchmarks['open-listbox'].meanCI.high;
-result.benchmarks['open-listbox'].relativeStandardDeviation;
+result.benchmarks['component-render'].mean;
+result.benchmarks['component-render'].meanCI.high;
+result.benchmarks['component-render'].relativeStandardDeviation;
 ```
 
-`meanCI` is the 95% confidence interval for the measured mean. With two or more benchmarks, all pairs are compared in `result.comparisons`. Mark one benchmark with `baseline: true` to designate it as the baseline in the result.
+### Results and Terminology
+
+A [benchmark](<https://en.wikipedia.org/wiki/Benchmark_(computing)>) is a repeatable measurement of one operation. A [sample](<https://en.wikipedia.org/wiki/Sample_(statistics)>) is one measured execution; the default run discards five warm-up samples and retains 50 measured samples. A [confidence interval](https://en.wikipedia.org/wiki/Confidence_interval) gives a range around an estimated value. This plugin uses a 95% Student-$t$ confidence interval because browser timings are sampled and have finite variance.
+
+`runBenchmarks()` returns `Promise<BenchmarkResult>`:
+
+- `baseline`: the name of the benchmark marked `baseline: true`, or `undefined` when none is marked.
+- `benchmarks`: a record keyed by benchmark name. Each value is `BenchmarkStatistics` for that benchmark's measured samples.
+- `comparisons`: a nested record keyed as `comparisons[candidate][baseline]`. It contains a `BenchmarkDifference` for every distinct pair; positive values mean the candidate is slower than the baseline.
+- `enabled`: `true` when the server plugin was configured with `statisticalBench: true`; otherwise the helper throws before returning a result.
+- `report`: whether this run contributes its benchmark statistics to the combined overview table printed when the test server stops.
+- `resolved`: `true` after the server completed every configured warm-up and measured sample.
+- `supported`: `true` for the supported Playwright Chromium session; the helper throws when it is `false`.
+- `timedOut`: `false` for a completed result. It is reserved for a runner that ends without a completed measurement.
+
+Every `BenchmarkStatistics` value contains:
+
+- `mean`: the [arithmetic mean](https://en.wikipedia.org/wiki/Arithmetic_mean) duration in milliseconds.
+- `meanCI.low` and `meanCI.high`: lower and upper bounds, in milliseconds, of the 95% confidence interval for `mean`.
+- `relativeStandardDeviation`: the [coefficient of variation](https://en.wikipedia.org/wiki/Coefficient_of_variation), $\sigma / \mu$, expressed as a ratio. Lower values indicate more stable samples.
+- `size`: the integer number of measured samples, excluding warm-ups.
+- `standardDeviation`: the sample [standard deviation](https://en.wikipedia.org/wiki/Standard_deviation), $\sigma$, in milliseconds.
+- `variance`: the sample [variance](https://en.wikipedia.org/wiki/Variance), $\sigma^2$, in squared milliseconds.
+
+Every `BenchmarkDifference` value contains two 95% confidence intervals for `candidate - baseline`:
+
+- `absolute.low` and `absolute.high`: the difference in milliseconds.
+- `relative.low` and `relative.high`: the difference relative to the baseline mean, as a ratio. For example, `0.10` means the candidate is estimated to be 10% slower.
+
+Mark one benchmark with `baseline: true` when interpreting comparisons against a reference implementation.
 
 ### Measurement Modes
 
@@ -78,7 +137,7 @@ result.benchmarks['open-listbox'].relativeStandardDeviation;
 
 `performance` reads a named Performance Timeline entry. Specify `entryName` and `entryType`; `measure` entries use their duration and other entry types use their start time.
 
-`paint` measures from the start of the benchmark operation to the next rendered frame. It requires Chromium.
+`paint` measures from immediately before fixture creation through a completed paint boundary. It requires Chromium.
 
 ### Reporting and Budgets
 
@@ -86,7 +145,7 @@ Set `report: true` in the plugin configuration or benchmark options to print a c
 
 ```js
 const frameBudget = 1000 / 60;
-expect(result.benchmarks['open-listbox'].meanCI.high).to.be.below(frameBudget);
+expect(result.benchmarks['component-render'].meanCI.high).to.be.below(frameBudget);
 ```
 
 ### Containerized Runs

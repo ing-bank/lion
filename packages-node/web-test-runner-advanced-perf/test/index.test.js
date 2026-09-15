@@ -30,7 +30,7 @@ describe('web-test-runner-advanced-perf', () => {
       expect(result.relative.low).to.be.above(0);
     });
 
-    it('formats statistical reports with two decimals and units', () => {
+    it('formats statistical reports with decimal precision and units', () => {
       const report = formatBenchmarkReport({
         benchmark: summaryStats([8, 10, 12, 10, 10]),
       });
@@ -40,7 +40,7 @@ describe('web-test-runner-advanced-perf', () => {
           '95% CI': '8.25 to 11.75 ms',
           mean: '10.00 ms',
           RSD: '14.14 %',
-          samples: '5.00 samples',
+          samples: '5 samples',
           σ: '1.41 ms',
         },
       });
@@ -52,7 +52,7 @@ describe('web-test-runner-advanced-perf', () => {
       );
 
       expect(table).to.include(
-        '| benchmark | 8.25 to 11.75 ms | 10.00 ms | 14.14 % | 5.00 samples | 1.41 ms |',
+        '| benchmark | 8.25 to 11.75 ms | 10.00 ms | 14.14 % | 5 samples | 1.41 ms |',
       );
       expect(table).not.to.include("'");
     });

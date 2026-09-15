@@ -1,5 +1,5 @@
 import { fixture, html, expect } from '@open-wc/testing';
-import { runBenchmarks } from '@lion/web-test-runner-advanced-perf/browser.js';
+import { runBenchmarks } from '@lion-labs/web-test-runner-advanced-perf/browser.js';
 import '@lion/ui/define/lion-select-rich.js';
 import '@lion/ui/define/lion-option.js';
 
