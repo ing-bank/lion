@@ -52,7 +52,7 @@ export function formatBenchmarkReport(benchmarks) {
         '95% CI': `${statistics.meanCI.low.toFixed(2)} to ${statistics.meanCI.high.toFixed(2)} ms`,
         mean: `${statistics.mean.toFixed(2)} ms`,
         RSD: `${(statistics.relativeStandardDeviation * 100).toFixed(2)} %`,
-        samples: `${statistics.size.toFixed(2)} samples`,
+        samples: `${statistics.size.toFixed(0)} samples`,
         σ: `${statistics.standardDeviation.toFixed(2)} ms`,
       },
     ]),
