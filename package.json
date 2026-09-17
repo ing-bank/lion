@@ -130,9 +130,6 @@
     "unist-util-visit": "^5.0.0",
     "wireit": "^0.14.13"
   },
-  "imports": {
-    "#components/*": "packages/ui/components/*"
-  },
   "bundlesize": [
     {
       "path": "./bundlesize/dist/*/*.js",
@@ -217,6 +214,9 @@
     "lit": "^3.2.1",
     "rocket-preset-extend-lion-docs": "^0.4.0",
     "unist-util-visit": "^5.0.0"
+  },
+  "imports": {
+    "#components/*": "packages/ui/components/*"
   },
   "overrides": {
     "@open-wc/semantic-dom-diff": "^0.21.0",
