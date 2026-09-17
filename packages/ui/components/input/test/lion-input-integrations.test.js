@@ -1,6 +1,6 @@
 import {
-  runInteractionStateMixinSuite,
   runFormatMixinSuite,
+  runInteractionStateMixinSuite,
 } from '@lion/ui/form-core-test-suites.js';
 
 import '@lion/ui/define/lion-input.js';
@@ -14,5 +14,6 @@ describe('<lion-input> integrations', () => {
 
   runFormatMixinSuite({
     tagString,
+    modelValueType: String,
   });
 });

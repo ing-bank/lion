@@ -17,4 +17,5 @@ export default {
   selectTextDuplicateFileName: 'Súbor s rovnakým názvom súboru už existoval.',
   selectTextMultipleFile: 'Vybrať súbory',
   selectTextSingleFile: 'Vybrať súbor',
+  maxFileCountExceeded: 'Počet nahratých súborov nesmie prekročiť {maxFileCount}.',
 };

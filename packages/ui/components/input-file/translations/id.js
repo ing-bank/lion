@@ -16,4 +16,5 @@ export default {
   selectTextDuplicateFileName: 'File dengan nama file yang sama sudah ada.',
   selectTextMultipleFile: 'Pilih beberapa file',
   selectTextSingleFile: 'Pilih berkas',
+  maxFileCountExceeded: 'Jumlah file yang diunggah tidak boleh melebihi {maxFileCount}.',
 };

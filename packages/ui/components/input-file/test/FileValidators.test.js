@@ -1,4 +1,5 @@
 import { expect } from '@open-wc/testing';
+import { MaxFileCount } from '@lion/ui/input-file.js';
 import { IsAcceptedFile } from '../src/validators.js';
 
 describe('lion-input-file: IsAcceptedFile', () => {
@@ -165,6 +166,36 @@ describe('lion-input-file: IsAcceptedFile', () => {
       });
 
       expect(returnVal).to.be.true;
+    });
+  });
+
+  describe('Max File Count', () => {
+    /**
+     *
+     * @param {string} filename
+     * @returns {File}
+     */
+    const newFile = filename => new File([], filename);
+
+    it('Allow up to 2 files', () => {
+      const validator = new MaxFileCount(2);
+      expect(MaxFileCount.validatorName).to.equal('MaxFileCount');
+
+      let isEnabled = validator.execute([newFile('file1.txt'), newFile('file2.txt')]);
+      expect(isEnabled).to.be.false;
+
+      isEnabled = validator.execute([
+        newFile('file1.txt'),
+        newFile('file2.txt'),
+        newFile('file3.txt'),
+      ]);
+      expect(isEnabled).to.be.true;
+    });
+
+    it('Allow any number of files with empty param', () => {
+      const validator = new MaxFileCount();
+      const isEnabled = validator.execute([newFile('file1.txt'), newFile('file2.txt')]);
+      expect(isEnabled).to.be.false;
     });
   });
 });

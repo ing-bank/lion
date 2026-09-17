@@ -1,6 +1,9 @@
 import '@lion/ui/define/lion-tooltip.js';
 import { aTimeout, expect, fixture, html, unsafeStatic } from '@open-wc/testing';
-import { runOverlayMixinSuite } from '@lion/ui/overlays-test-suites.js';
+import {
+  runOverlayMixinSuite,
+  runWithHoverInteractionSuite,
+} from '@lion/ui/overlays-test-suites.js';
 import sinon from 'sinon';
 
 /**
@@ -18,6 +21,11 @@ describe('lion-tooltip', () => {
       tag,
       suffix: ' for lion-tooltip',
     });
+  });
+
+  runWithHoverInteractionSuite({
+    tagString: 'lion-tooltip',
+    invokerTagString: 'button',
   });
 
   describe('Basic', () => {

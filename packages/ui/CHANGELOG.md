@@ -1,5 +1,53 @@
 # @lion/ui
 
+## 0.21.1
+
+### Patch Changes
+
+- 38ca745: [input-tel-dropdown] fix syncing between input with dropdown
+
+## 0.21.0
+
+### Minor Changes
+
+- 790cbc2: Fix InputAmountDropdown currency reset when amount input field is cleared
+- 902e303: Added custom min max labels to input range
+
+### Patch Changes
+
+- c5fe913: [input-datepicker] choosing an invalid date via the picker still shows up inside the input when making use of a custom validator
+
+## 0.20.0
+
+### Minor Changes
+
+- 0f9d819: FormatMixin requestUpdate supports object model values. LionInputAmountDropdown adds hasChanged to modelValue
+
+### Patch Changes
+
+- 5a98184: Convert tooltip tests to reusable suites
+
+## 0.19.1
+
+### Patch Changes
+
+- 4bb9e6c: [input-email] set autocomplete to email by default
+- 4bb9e6c: [input-tel] set autocomplete to tel by default
+
+## 0.19.0
+
+### Minor Changes
+
+- 52cabb1: add longpress tooltip on touch devices and suppress tap-focus and post-longpress click collisions
+
+### Patch Changes
+
+- 0ebd4f5: [calendar] emit `user-selected-date-changed` on `keyup` instead of `keydown`
+- 5752f6a: fix: [input-amount-dropdown] lion input amount dropdown not working with validators due to \_isEmpty implementation
+- 86d3807: [tooltip]: support longpress on mobile
+- 6c7c7bc: Added MaxFileCount validator to LionInputFile
+- 975cdec: update dependency of awesome-phonenumber to 7.8.0
+
 ## 0.18.1
 
 ### Patch Changes

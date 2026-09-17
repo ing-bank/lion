@@ -17,4 +17,5 @@ export default {
   selectTextDuplicateFileName: '已存在具有相同文件名的文件。',
   selectTextMultipleFile: '选择多个文件',
   selectTextSingleFile: '选择文件',
+  maxFileCountExceeded: '上传的文件数量不能超过 {maxFileCount} 个。',
 };

@@ -18,4 +18,5 @@ export default {
   selectTextDuplicateFileName: 'Un fichier portant le même nom de fichier était déjà présent.',
   selectTextMultipleFile: 'Sélectionnez des fichiers',
   selectTextSingleFile: 'Sélectionnez un fichier',
+  maxFileCountExceeded: 'Le nombre de fichiers téléchargés ne peut pas dépasser {maxFileCount}.',
 };

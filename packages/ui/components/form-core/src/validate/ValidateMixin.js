@@ -74,7 +74,8 @@ export const ValidateMixinImplementation = superclass =>
           attribute: 'shows-feedback-for',
           reflect: true,
           converter: {
-            fromAttribute: /** @param {string} value */ value => value.split(','),
+            fromAttribute: /** @param {string | null} value */ value =>
+              value ? value.split(',') : [],
             toAttribute: /** @param {[]} value */ value => value.join(','),
           },
         },

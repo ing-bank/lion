@@ -4,8 +4,10 @@ import { localizeTearDown } from '@lion/ui/localize-test-helpers.js';
 import { expect, fixture as _fixture } from '@open-wc/testing';
 import sinon from 'sinon';
 import '@lion/ui/define/lion-calendar.js';
+import { sendKeys } from '@web/test-runner-commands';
 import { isSameDate } from '@lion/ui/calendar.js';
 import { CalendarObject, DayObject } from '@lion/ui/calendar-test-helpers.js';
+import { runCalendarSuite } from '../test-suites/LionCalendar.suite.js';
 
 /**
  * @typedef {import('../src/LionCalendar.js').LionCalendar} LionCalendar
@@ -13,6 +15,16 @@ import { CalendarObject, DayObject } from '@lion/ui/calendar-test-helpers.js';
  */
 
 const fixture = /** @type {(arg: TemplateResult) => Promise<LionCalendar>} */ (_fixture);
+/**
+ * @param {HTMLElement} el
+ * @returns {HTMLElement | null | undefined}
+ */
+const getSelectedDateEl = el => el?.shadowRoot?.querySelector('.calendar__day-button[selected]');
+/**
+ * @param {HTMLElement} el
+ * @returns {void}
+ */
+const focusSelectedDate = el => getSelectedDateEl(el)?.focus();
 
 describe('<lion-calendar>', () => {
   const localizeManager = getLocalizeManager();
@@ -294,13 +306,14 @@ describe('<lion-calendar>', () => {
       `);
       const elObj = new CalendarObject(el);
 
-      el.__contentWrapperElement?.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowLeft' }));
+      focusSelectedDate(el);
+      await sendKeys({ press: 'ArrowLeft' });
       await el.updateComplete;
       expect(elObj.activeMonth).to.equal('October');
       expect(elObj.activeYear).to.equal('2000');
       expect(elObj.focusedDayObj?.monthday).to.equal(11);
 
-      el.__contentWrapperElement?.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+      await sendKeys({ press: 'Enter' });
       await el.updateComplete;
       expect(isSameDate(/** @type {Date} */ (el.selectedDate), new Date('2000/10/12'))).to.be.true;
       expect(dateChangedSpy.called).to.equal(false);
@@ -1120,16 +1133,14 @@ describe('<lion-calendar>', () => {
           expect(elObj.activeMonth).to.equal('January');
           expect(elObj.activeYear).to.equal('2001');
 
-          el.__contentWrapperElement?.dispatchEvent(
-            new KeyboardEvent('keydown', { key: 'PageUp' }),
-          );
+          focusSelectedDate(el);
+          await sendKeys({ press: 'PageUp' });
+
           await el.updateComplete;
           expect(elObj.activeMonth).to.equal('December');
           expect(elObj.activeYear).to.equal('2000');
 
-          el.__contentWrapperElement?.dispatchEvent(
-            new KeyboardEvent('keydown', { key: 'PageDown' }),
-          );
+          await sendKeys({ press: 'PageDown' });
           await el.updateComplete;
           expect(elObj.activeMonth).to.equal('January');
           expect(elObj.activeYear).to.equal('2001');
@@ -1139,20 +1150,36 @@ describe('<lion-calendar>', () => {
           const el = await fixture(html`
             <lion-calendar .selectedDate="${new Date('2001/01/02')}"></lion-calendar>
           `);
+          focusSelectedDate(el);
+
           const elObj = new CalendarObject(el);
           expect(elObj.activeMonth).to.equal('January');
           expect(elObj.activeYear).to.equal('2001');
 
-          el.__contentWrapperElement?.dispatchEvent(
-            new KeyboardEvent('keydown', { key: 'PageDown', altKey: true }),
-          );
+          await sendKeys({
+            down: 'Alt',
+          });
+          await sendKeys({
+            press: 'PageDown',
+          });
+          await sendKeys({
+            up: 'Alt',
+          });
+
           await el.updateComplete;
+          focusSelectedDate(el);
           expect(elObj.activeMonth).to.equal('January');
           expect(elObj.activeYear).to.equal('2002');
 
-          el.__contentWrapperElement?.dispatchEvent(
-            new KeyboardEvent('keydown', { key: 'PageUp', altKey: true }),
-          );
+          await sendKeys({
+            down: 'Alt',
+          });
+          await sendKeys({
+            press: 'PageUp',
+          });
+          await sendKeys({
+            up: 'Alt',
+          });
           await el.updateComplete;
           expect(elObj.activeMonth).to.equal('January');
           expect(elObj.activeYear).to.equal('2001');
@@ -1165,9 +1192,8 @@ describe('<lion-calendar>', () => {
             `);
             const elObj = new CalendarObject(el);
 
-            el.__contentWrapperElement?.dispatchEvent(
-              new KeyboardEvent('keydown', { key: 'ArrowDown' }),
-            );
+            focusSelectedDate(el);
+            await sendKeys({ press: 'ArrowDown' });
             await el.updateComplete;
             expect(elObj.focusedDayObj?.monthday).to.equal(2 + 7);
           });
@@ -1178,9 +1204,8 @@ describe('<lion-calendar>', () => {
             `);
             const elObj = new CalendarObject(el);
 
-            el.__contentWrapperElement?.dispatchEvent(
-              new KeyboardEvent('keydown', { key: 'ArrowUp' }),
-            );
+            focusSelectedDate(el);
+            await sendKeys({ press: 'ArrowUp' });
             await el.updateComplete;
             expect(elObj.focusedDayObj?.monthday).to.equal(26); // of month before
           });
@@ -1192,9 +1217,8 @@ describe('<lion-calendar>', () => {
             `);
             const elObj = new CalendarObject(el);
 
-            el.__contentWrapperElement?.dispatchEvent(
-              new KeyboardEvent('keydown', { key: 'ArrowLeft' }),
-            );
+            focusSelectedDate(el);
+            await sendKeys({ press: 'ArrowLeft' });
             await el.updateComplete;
             expect(elObj.focusedDayObj?.monthday).to.equal(12 - 1);
           });
@@ -1206,9 +1230,8 @@ describe('<lion-calendar>', () => {
             `);
             const elObj = new CalendarObject(el);
 
-            el.__contentWrapperElement?.dispatchEvent(
-              new KeyboardEvent('keydown', { key: 'ArrowRight' }),
-            );
+            focusSelectedDate(el);
+            await sendKeys({ press: 'ArrowRight' });
             await el.updateComplete;
             expect(elObj.focusedDayObj?.monthday).to.equal(12 + 1);
           });
@@ -1224,9 +1247,8 @@ describe('<lion-calendar>', () => {
             `);
             const elObj = new CalendarObject(el);
 
-            el.__contentWrapperElement?.dispatchEvent(
-              new KeyboardEvent('keydown', { key: 'ArrowRight' }),
-            );
+            focusSelectedDate(el);
+            await sendKeys({ press: 'ArrowRight' });
             await el.updateComplete;
             expect(elObj.focusedDayObj?.monthday).to.equal(3);
           });
@@ -1238,9 +1260,8 @@ describe('<lion-calendar>', () => {
             const elObj = new CalendarObject(el);
             expect(elObj.centralDayObj?.weekdayNameShort).to.equal('Sat');
 
-            el.__contentWrapperElement?.dispatchEvent(
-              new KeyboardEvent('keydown', { key: 'ArrowRight' }),
-            );
+            focusSelectedDate(el);
+            await sendKeys({ press: 'ArrowRight' });
             await el.updateComplete;
             expect(elObj.focusedDayObj?.monthday).to.equal(6);
             expect(elObj.focusedDayObj?.weekdayNameShort).to.equal('Sun');
@@ -1253,9 +1274,8 @@ describe('<lion-calendar>', () => {
             const elObj = new CalendarObject(el);
             expect(elObj.centralDayObj?.weekdayNameShort).to.equal('Sun');
 
-            el.__contentWrapperElement?.dispatchEvent(
-              new KeyboardEvent('keydown', { key: 'ArrowLeft' }),
-            );
+            focusSelectedDate(el);
+            await sendKeys({ press: 'ArrowLeft' });
             await el.updateComplete;
             expect(elObj.focusedDayObj?.monthday).to.equal(5);
             expect(elObj.focusedDayObj?.weekdayNameShort).to.equal('Sat');
@@ -1269,9 +1289,8 @@ describe('<lion-calendar>', () => {
             expect(elObj.activeMonth).to.equal('December');
             expect(elObj.activeYear).to.equal('2000');
 
-            el.__contentWrapperElement?.dispatchEvent(
-              new KeyboardEvent('keydown', { key: 'ArrowRight' }),
-            );
+            focusSelectedDate(el);
+            await sendKeys({ press: 'ArrowRight' });
             await el.updateComplete;
             expect(elObj.activeMonth).to.equal('January');
             expect(elObj.activeYear).to.equal('2001');
@@ -1286,9 +1305,8 @@ describe('<lion-calendar>', () => {
             expect(elObj.activeMonth).to.equal('January');
             expect(elObj.activeYear).to.equal('2001');
 
-            el.__contentWrapperElement?.dispatchEvent(
-              new KeyboardEvent('keydown', { key: 'ArrowLeft' }),
-            );
+            focusSelectedDate(el);
+            await sendKeys({ press: 'ArrowLeft' });
             await el.updateComplete;
             expect(elObj.activeMonth).to.equal('December');
             expect(elObj.activeYear).to.equal('2000');
@@ -1303,9 +1321,8 @@ describe('<lion-calendar>', () => {
             expect(elObj.activeMonth).to.equal('December');
             expect(elObj.activeYear).to.equal('2000');
 
-            el.__contentWrapperElement?.dispatchEvent(
-              new KeyboardEvent('keydown', { key: 'ArrowDown' }),
-            );
+            focusSelectedDate(el);
+            await sendKeys({ press: 'ArrowDown' });
             await el.updateComplete;
             expect(elObj.activeMonth).to.equal('January');
             expect(elObj.activeYear).to.equal('2001');
@@ -1320,9 +1337,8 @@ describe('<lion-calendar>', () => {
             expect(elObj.activeMonth).to.equal('January');
             expect(elObj.activeYear).to.equal('2001');
 
-            el.__contentWrapperElement?.dispatchEvent(
-              new KeyboardEvent('keydown', { key: 'ArrowUp' }),
-            );
+            focusSelectedDate(el);
+            await sendKeys({ press: 'ArrowUp' });
             await el.updateComplete;
             expect(elObj.activeMonth).to.equal('December');
             expect(elObj.activeYear).to.equal('2000');
@@ -1658,5 +1674,9 @@ describe('<lion-calendar>', () => {
       const el = await fixture(html`<lion-calendar hidden></lion-calendar>`);
       expect(el).not.to.be.displayed;
     });
+  });
+
+  describe('Run suite', () => {
+    runCalendarSuite();
   });
 });

@@ -17,4 +17,5 @@ export default {
   selectTextDuplicateFileName: 'Már volt ilyen nevű fájl.',
   selectTextMultipleFile: 'Fájl(ok) kiválasztása',
   selectTextSingleFile: 'Fájl kiválasztása',
+  maxFileCountExceeded: 'A feltöltött fájlok száma nem haladhatja meg a {maxFileCount}-ot.',
 };

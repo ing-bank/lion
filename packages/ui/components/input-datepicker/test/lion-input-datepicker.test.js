@@ -3,12 +3,15 @@ import { html, LitElement } from 'lit';
 import { IsDateDisabled, MaxDate, MinDate, MinMaxDate } from '@lion/ui/form-core.js';
 import { aTimeout, defineCE, expect, fixture as _fixture, nextFrame } from '@open-wc/testing';
 import { mimicClick } from '@lion/ui/overlays-test-helpers.js';
+import { parseDate } from '@lion/ui/localize.js';
 import sinon from 'sinon';
-import { setViewport } from '@web/test-runner-commands';
+import { sendKeys, setViewport } from '@web/test-runner-commands';
+import { AlwaysInvalid } from '@lion/ui/form-core-test-helpers.js';
 import { DatepickerInputObject } from '@lion/ui/input-datepicker-test-helpers.js';
 import { LionInputDatepicker } from '@lion/ui/input-datepicker.js';
 
 import '@lion/ui/define/lion-input-datepicker.js';
+import { runDatepickerSuite } from '../test-suites/LionInputDatepicker.suite.js';
 
 /**
  * @typedef {import('lit').TemplateResult} TemplateResult
@@ -454,6 +457,59 @@ describe('<lion-input-datepicker>', () => {
         expect(el.validationStates.error).to.have.property('IsDate');
       });
 
+      it('syncs view value from calendar if custom validator is in error state', async () => {
+        const el = await fixture(html`
+          <lion-input-datepicker .validators=${[new AlwaysInvalid()]}></lion-input-datepicker>
+        `);
+
+        const elObj = new DatepickerInputObject(el);
+        await elObj.openCalendar();
+        await elObj.selectMonthDay(12);
+        await el.updateComplete; // safari take a little longer
+
+        expect(el.hasFeedbackFor).to.include('error');
+        expect(el.validationStates).to.have.property('error');
+        expect(el.validationStates.error).to.have.property('AlwaysInvalid');
+        expect(isSameDate(/** @type {Date} */ (parseDate(el.value)), elObj.calendarEl.selectedDate))
+          .to.be.true;
+        expect(
+          isSameDate(
+            // @ts-ignore [allow-protected] in test
+            /** @type {Date} */ (parseDate(el._inputNode.value)),
+            elObj.calendarEl.selectedDate,
+          ),
+        ).to.be.true;
+      });
+
+      it('syncs view value from calendar if custom validator is in error state, when there was a previous modelValue', async () => {
+        const modelValue = new Date('2022/12/30');
+        const el = await fixture(html`
+          <lion-input-datepicker
+            .modelValue="${modelValue}"
+            .validators=${[new AlwaysInvalid()]}
+          ></lion-input-datepicker>
+        `);
+        expect(isSameDate(/** @type {Date} */ (parseDate(el.value)), modelValue)).to.be.true;
+
+        const elObj = new DatepickerInputObject(el);
+        await elObj.openCalendar();
+        await elObj.selectMonthDay(12);
+        await el.updateComplete; // safari take a little longer
+
+        expect(el.hasFeedbackFor).to.include('error');
+        expect(el.validationStates).to.have.property('error');
+        expect(el.validationStates.error).to.have.property('AlwaysInvalid');
+        expect(isSameDate(/** @type {Date} */ (parseDate(el.value)), elObj.calendarEl.selectedDate))
+          .to.be.true;
+        expect(
+          isSameDate(
+            // @ts-ignore [allow-protected] in test
+            /** @type {Date} */ (parseDate(el._inputNode.value)),
+            elObj.calendarEl.selectedDate,
+          ),
+        ).to.be.true;
+      });
+
       /**
        * Not in scope:
        * - min/max attr (like platform has): could be added in future if observers needed
@@ -479,10 +535,14 @@ describe('<lion-input-datepicker>', () => {
       // Open the calendar
       await elObj.openCalendar();
 
+      const selectedDateEl = calendarEl?.shadowRoot?.querySelector(
+        '.calendar__day-button[selected]',
+      );
+      // @ts-ignore
+      selectedDateEl?.focus();
+
       // Move focus to 18th of December
-      calendarEl.shadowRoot
-        ?.querySelector('#js-content-wrapper')
-        ?.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight' }));
+      await sendKeys({ press: 'ArrowRight' });
 
       expect(/** @type {Date} */ (calendarEl.focusedDate).getTime()).to.equal(
         new Date('December 18, 2020 03:24:00 GMT+0000').getTime(),
@@ -832,5 +892,9 @@ describe('<lion-input-datepicker>', () => {
         'Datepicker does not get rendered as a popover',
       ).to.be.true;
     });
+  });
+
+  describe('Run suite', () => {
+    runDatepickerSuite();
   });
 });
