@@ -9,13 +9,13 @@ eleventyNavigation:
   title: Introducing Lion UI
 ---
 
-### A new package
+## A new package
 
 Lion introduces a new package `@lion/ui` which is a collection of UI components that can be used in your application.
 It contains all the components/systems that used to be distributed via separate @lion/\* packages.
 This brings back around 40 packages to just 1.
 
-### Better dependency management
+## Better dependency management
 
 Since `@lion/ui` is now a single package, the dependencies of the individual components are now managed in a single
 `package.json` file. This results in a single folder of dependencies for all components instead of a folder
@@ -23,7 +23,7 @@ for each component separately.
 
 This means you will now have less dependencies that are easier to manage.
 
-### New entrypoints
+## New entrypoints
 
 All components are now imported from @lion/ui instead of @lion/\* packages and therefore this is a breaking change.
 Where before you would import from `@lion/<package>`, you will now import from `@lion/ui/<package>.js`.
@@ -52,7 +52,7 @@ maps to `/packages/exports/define/lion-accordion.js`.
 Support for this `exports` field was added to TypeScript 4.7 so for that reason, `@lion/ui` only supports TypeScript
 4.7+ with `"moduleResolution": "Node16"` or `"moduleResolution": "NodeNext"`.
 
-### A new changelog
+## A new changelog
 
 `@lion/ui` has [a new single CHANGELOG.md](https://github.com/ing-bank/lion/blob/master/packages/ui/CHANGELOG.md) in `/packages/ui` for the whole package. The older individual changelogs can be
 found in the `/packages/ui/_legacy-changelogs` folder.

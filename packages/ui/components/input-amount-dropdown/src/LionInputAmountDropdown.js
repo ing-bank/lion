@@ -1,14 +1,31 @@
-import { html, css } from 'lit';
-import { ref, createRef } from 'lit/directives/ref.js';
+import { css, html } from 'lit';
 import { ifDefined } from 'lit/directives/if-defined.js';
+import { createRef, ref } from 'lit/directives/ref.js';
 
 import { LionInputAmount } from '@lion/ui/input-amount.js';
 import { currencyUtil } from './currencyUtil.js';
-import { parseAmount } from './parsers.js';
 import { formatAmount } from './formatters.js';
+import { localizeNamespaceLoader } from './localizeNamespaceLoader.js';
+import { parseAmount } from './parsers.js';
 import { deserializer, serializer } from './serializers.js';
 import { CurrencyAndAmount } from './validators.js';
-import { localizeNamespaceLoader } from './localizeNamespaceLoader.js';
+
+/**
+ * @param {import('../types/index.js').AmountDropdownModelValue | undefined} newValue
+ * @param {import('../types/index.js').AmountDropdownModelValue | undefined} oldValue
+ * @returns {boolean}
+ */
+const hasChangedAmountDropdownModelValue = (newValue, oldValue) => {
+  if (newValue === oldValue) {
+    return false;
+  }
+
+  if (!newValue || !oldValue || typeof newValue !== 'object' || typeof oldValue !== 'object') {
+    return newValue !== oldValue;
+  }
+
+  return newValue.currency !== oldValue.currency || !Object.is(newValue.amount, oldValue.amount);
+};
 
 /**
  * Note: one could consider to implement LionInputAmountDropdown as a
@@ -56,11 +73,48 @@ export class LionInputAmountDropdown extends LionInputAmount {
    * @configure LitElement
    * @type {any}
    */
-  static properties = {
-    preferredCurrencies: { type: Array },
-    allowedCurrencies: { type: Array },
-    __dropdownSlot: { type: String },
-  };
+  static get properties() {
+    return {
+      modelValue: {
+        type: Object,
+        attribute: false,
+        hasChanged: hasChangedAmountDropdownModelValue,
+      },
+      preferredCurrencies: { type: Array },
+      allowedCurrencies: { type: Array },
+      __dropdownSlot: { type: String },
+    };
+  }
+
+  /**
+   * The internal modelValue is a combination of the amount and the currency code. The amount is a number, the currency code is a string.
+   * @private
+   * @type {import('../types/index.js').AmountDropdownModelValue}
+   */
+  __modelValue;
+
+  /**
+   * For a FormControl to function properly, its modelValue, serializedValue and  viewValue/formattedValue
+   * should always translate in two directions. This is expected by `_callParser` method. It guards for empty
+   * viewValues. As the viewValue (`.value`) only concerns the amount part and not the currency part in
+   * InputAmountDropdown, this contract is broken.
+   * Below, we compensate for this.
+   */
+  // @ts-expect-error - modelValue is overridden as an accessor but is defined as a property in parent class
+  set modelValue(value) {
+    if (value) {
+      this.__modelValue = /** @type {import('../types/index.js').AmountDropdownModelValue} */ (
+        value
+      );
+      // Below is needed because A1 and A2 in _callParser (FormatMixin) return values that are the wrong type.
+    } else {
+      this.__modelValue = { currency: this.currency, amount: '' };
+    }
+  }
+
+  get modelValue() {
+    return /** @type {import('../types/index.js').AmountDropdownModelValue} */ (this.__modelValue);
+  }
 
   static localizeNamespaces = [
     { 'lion-input-amount-dropdown': localizeNamespaceLoader },
@@ -274,6 +328,9 @@ export class LionInputAmountDropdown extends LionInputAmount {
 
     this.parser = parseAmount;
 
+    /** @type {import('../types/index.js').AmountDropdownModelValue} */
+    this.__modelValue = { currency: this.currency, amount: '' };
+
     /**
      * @param {import("../types/index.js").AmountDropdownModelValue} modelValue
      * @param {import('../../localize/types/LocalizeMixinTypes.js').FormatNumberOptions} [givenOptions] Locale Options
@@ -388,7 +445,8 @@ export class LionInputAmountDropdown extends LionInputAmount {
    * @protected
    */
   _initModelValueBasedOnDropdown() {
-    if (!this._initialModelValue && !this.dirty) {
+    const { currency, amount } = this._initialModelValue || {};
+    if (!currency && !amount && !this.dirty) {
       this.__initializedCurrencyCode = this.currency;
       this._initialModelValue = { currency: this.currency };
       this.modelValue = this._initialModelValue;
@@ -515,7 +573,10 @@ export class LionInputAmountDropdown extends LionInputAmount {
     }
 
     // 2. Try to get the currency from user input
-    if (this.modelValue?.currency && this.allowedCurrencies?.includes(this.modelValue?.currency)) {
+    if (
+      this.modelValue?.currency &&
+      this.allowedCurrencies?.includes(/** @type {CurrencyCode} */ (this.modelValue?.currency))
+    ) {
       this.currency = this.modelValue.currency;
       return;
     }

@@ -17,4 +17,5 @@ export default {
   selectTextDuplicateFileName: 'Există deja un fişier cu acelaşi nume de fişier.',
   selectTextMultipleFile: 'Selectare fișiere',
   selectTextSingleFile: 'Selectare fișier',
+  maxFileCountExceeded: 'Numărul de fișiere încărcate nu poate depăși {maxFileCount}.',
 };

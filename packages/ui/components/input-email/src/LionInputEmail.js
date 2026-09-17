@@ -10,6 +10,8 @@ import { LocalizeMixin } from '@lion/ui/localize-no-side-effects.js';
 export class LionInputEmail extends LocalizeMixin(LionInput) {
   constructor() {
     super();
+    this.autocomplete = 'email';
+
     // local-part@domain where the local part may be up to 64 characters long
     // and the domain may have a maximum of 255 characters.
     // @see https://www.wikiwand.com/en/Email_address

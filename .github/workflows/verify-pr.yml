@@ -13,10 +13,10 @@ jobs:
       - name: Sanity check
         run: node ./scripts/lock-scan.mjs
 
-      - name: Setup Node 18.x
+      - name: Setup Node 22.x
         uses: actions/setup-node@v4
         with:
-          node-version: 18.x
+          node-version: 22.x
           cache: npm
 
       - name: Install Dependencies
