@@ -853,10 +853,11 @@ describe('lion-combobox', () => {
 
       await mimicUserTyping(el, 'Foo');
       await el.updateComplete;
-      expect(fake).to.have.been.calledThrice;
-      expect(fake.firstCall.returnValue).to.equal('F');
-      expect(fake.secondCall.returnValue).to.equal('Fo');
-      expect(fake.thirdCall.returnValue).to.equal('Foo');
+      expect(fake.callCount).to.equal(4);
+      expect(fake.firstCall.returnValue).to.equal('');
+      expect(fake.secondCall.returnValue).to.equal('F');
+      expect(fake.thirdCall.returnValue).to.equal('Fo');
+      expect(fake.getCall(3).returnValue).to.equal('Foo');
       expect(el.modelValue).to.equal('Foo');
     });
 
