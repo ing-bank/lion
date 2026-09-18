@@ -13,6 +13,7 @@ import { getLocalizeManager } from '@lion/ui/localize-no-side-effects.js';
 import { Unparseable } from '@lion/ui/form-core.js';
 import { LionInputTel, PhoneNumber, PhoneUtilManager } from '@lion/ui/input-tel.js';
 import { mockPhoneUtilManager, restorePhoneUtilManager } from '@lion/ui/input-tel-test-helpers.js';
+import { nothing } from 'lit/html.js';
 
 /**
  * @typedef {import('lit').TemplateResult} TemplateResult
@@ -176,10 +177,10 @@ function runActiveRegionTests({ tag, phoneUtilLoadedAfterInit }) {
 }
 
 /**
- * @param {{ klass:LionInputTel }} config
+ * @param {{ klass: typeof LionInputTel, hasParentheses: boolean }} config
  */
 // @ts-ignore
-export function runInputTelSuite({ klass = LionInputTel } = {}) {
+export function runInputTelSuite({ klass = LionInputTel, hasParentheses = false } = {}) {
   // @ts-ignore
   const tagName = defineCE(/** @type {* & HTMLElement} */ (class extends klass {}));
   const tag = unsafeStatic(tagName);
@@ -207,7 +208,9 @@ export function runInputTelSuite({ klass = LionInputTel } = {}) {
 
       for (const { type, number, allowedRegions } of types) {
         it(`returns "${type}" for ${type} numbers`, async () => {
-          const el = await fixture(html` <${tag} .allowedRegions="${allowedRegions}"></${tag}> `);
+          const el = await fixture(
+            html` <${tag} format-country-code-style="${hasParentheses ? 'parentheses' : nothing}" .allowedRegions="${allowedRegions}"></${tag}> `,
+          );
           mimicUserInput(el, number);
           await aTimeout(0);
           expect(el.activePhoneNumberType).to.equal(type);
@@ -217,13 +220,17 @@ export function runInputTelSuite({ klass = LionInputTel } = {}) {
 
     describe('User interaction', () => {
       it('sets inputmode to "tel" for mobile keyboard', async () => {
-        const el = await fixture(html` <${tag}></${tag}> `);
+        const el = await fixture(
+          html` <${tag} format-country-code-style="${hasParentheses ? 'parentheses' : nothing}"></${tag}> `,
+        );
         // @ts-expect-error [allow-protected] inside tests
         expect(el._inputNode.inputMode).to.equal('tel');
       });
 
       it('sets autocomplete to "tel"', async () => {
-        const el = await fixture(html` <${tag}></${tag}> `);
+        const el = await fixture(
+          html` <${tag} format-country-code-style="${hasParentheses ? 'parentheses' : nothing}"></${tag}> `,
+        );
         await el.updateComplete;
         // @ts-expect-error [allow-protected] inside tests
         expect(el._inputNode.getAttribute('autocomplete')).to.equal('tel');
@@ -231,21 +238,25 @@ export function runInputTelSuite({ klass = LionInputTel } = {}) {
 
       it('formats according to locale', async () => {
         const el = await fixture(
-          html` <${tag} .modelValue="${'+31612345678'}" .allowedRegions="${['NL']}"></${tag}> `,
+          html` <${tag} format-country-code-style="${hasParentheses ? 'parentheses' : nothing}" .modelValue="${'+31612345678'}" .allowedRegions="${['NL']}"></${tag}> `,
         );
         await aTimeout(0);
-        expect(el.formattedValue).to.equal('+31 6 12345678');
+        const expectedNumber = hasParentheses ? '(+31) 6 12345678' : '+31 6 12345678';
+        expect(el.formattedValue).to.equal(expectedNumber);
       });
 
       it('does not reflect back formattedValue after activeRegion change when input still focused', async () => {
-        const el = await fixture(html` <${tag} .modelValue="${'+639608920056'}"></${tag}> `);
+        const el = await fixture(
+          html` <${tag} format-country-code-style="${hasParentheses ? 'parentheses' : nothing}" .modelValue="${'+639608920056'}"></${tag}> `,
+        );
         expect(el.activeRegion).to.equal('PH');
         el.focus();
         mimicUserInput(el, '+31612345678');
         await el.updateComplete;
         await el.updateComplete;
         expect(el.activeRegion).to.equal('NL');
-        expect(el.formattedValue).to.equal('+31 6 12345678');
+        const expectedNumber = hasParentheses ? '(+31) 6 12345678' : '+31 6 12345678';
+        expect(el.formattedValue).to.equal(expectedNumber);
         expect(el.value).to.equal('+31612345678');
       });
     });
@@ -254,14 +265,18 @@ export function runInputTelSuite({ klass = LionInputTel } = {}) {
     // https://en.wikipedia.org/wiki/E.164
     describe('Values', () => {
       it('stores a modelValue in E164 format', async () => {
-        const el = await fixture(html` <${tag} .allowedRegions="${['NL']}"></${tag}> `);
+        const el = await fixture(
+          html` <${tag} format-country-code-style="${hasParentheses ? 'parentheses' : nothing}" .allowedRegions="${['NL']}"></${tag}> `,
+        );
         mimicUserInput(el, '612345678');
         await aTimeout(0);
         expect(el.modelValue).to.equal('+31612345678');
       });
 
       it('stores a serializedValue in E164 format', async () => {
-        const el = await fixture(html` <${tag} .allowedRegions="${['NL']}"></${tag}> `);
+        const el = await fixture(
+          html` <${tag} format-country-code-style="${hasParentheses ? 'parentheses' : nothing}" .allowedRegions="${['NL']}"></${tag}> `,
+        );
         mimicUserInput(el, '612345678');
         await aTimeout(0);
         expect(el.serializedValue).to.equal('+31612345678');
@@ -269,7 +284,7 @@ export function runInputTelSuite({ klass = LionInputTel } = {}) {
 
       it('stores a formattedValue according to format strategy', async () => {
         const el = await fixture(
-          html` <${tag} format-strategy="national" .allowedRegions="${['NL']}"></${tag}> `,
+          html` <${tag} format-country-code-style="${hasParentheses ? 'parentheses' : nothing}" format-strategy="national" .allowedRegions="${['NL']}"></${tag}> `,
         );
         mimicUserInput(el, '612345678');
         await aTimeout(0);
@@ -279,7 +294,7 @@ export function runInputTelSuite({ klass = LionInputTel } = {}) {
       describe('Format strategies', () => {
         it('supports "national" strategy', async () => {
           const el = await fixture(
-            html` <${tag} format-strategy="national" .allowedRegions="${['NL']}"></${tag}> `,
+            html` <${tag} format-country-code-style="${hasParentheses ? 'parentheses' : nothing}" format-strategy="national" .allowedRegions="${['NL']}"></${tag}> `,
           );
           mimicUserInput(el, '612345678');
           await aTimeout(0);
@@ -288,34 +303,37 @@ export function runInputTelSuite({ klass = LionInputTel } = {}) {
 
         it('supports "international" strategy', async () => {
           const el = await fixture(
-            html` <${tag} format-strategy="international" .allowedRegions="${['NL']}"></${tag}> `,
+            html` <${tag} format-country-code-style="${hasParentheses ? 'parentheses' : nothing}" format-strategy="international" .allowedRegions="${['NL']}"></${tag}> `,
           );
           mimicUserInput(el, '612345678');
           await aTimeout(0);
-          expect(el.formattedValue).to.equal('+31 6 12345678');
+          const expectedNumber = hasParentheses ? '(+31) 6 12345678' : '+31 6 12345678';
+          expect(el.formattedValue).to.equal(expectedNumber);
         });
 
         it('supports "e164" strategy', async () => {
           const el = await fixture(
-            html` <${tag} format-strategy="e164" .allowedRegions="${['NL']}"></${tag}> `,
+            html` <${tag} format-country-code-style="${hasParentheses ? 'parentheses' : nothing}" format-strategy="e164" .allowedRegions="${['NL']}"></${tag}> `,
           );
           mimicUserInput(el, '612345678');
           await aTimeout(0);
-          expect(el.formattedValue).to.equal('+31612345678');
+          const expectedNumber = hasParentheses ? '(+31)612345678' : '+31612345678';
+          expect(el.formattedValue).to.equal(expectedNumber);
         });
 
         it('supports "rfc3966" strategy', async () => {
           const el = await fixture(
-            html` <${tag} format-strategy="rfc3966" .allowedRegions="${['NL']}"></${tag}> `,
+            html` <${tag} format-country-code-style="${hasParentheses ? 'parentheses' : nothing}" format-strategy="rfc3966" .allowedRegions="${['NL']}"></${tag}> `,
           );
           mimicUserInput(el, '612345678');
           await aTimeout(0);
-          expect(el.formattedValue).to.equal('tel:+31-6-12345678');
+          const expectedNumber = hasParentheses ? 'tel:(+31)-6-12345678' : 'tel:+31-6-12345678';
+          expect(el.formattedValue).to.equal(expectedNumber);
         });
 
         it('supports "significant" strategy', async () => {
           const el = await fixture(
-            html` <${tag} format-strategy="significant" .allowedRegions="${['NL']}"></${tag}> `,
+            html` <${tag} format-country-code-style="${hasParentheses ? 'parentheses' : nothing}" format-strategy="significant" .allowedRegions="${['NL']}"></${tag}> `,
           );
           mimicUserInput(el, '612345678');
           await aTimeout(0);
@@ -341,7 +359,7 @@ export function runInputTelSuite({ klass = LionInputTel } = {}) {
       // correct the format (although strictness will be preferred...)
       it.skip('does not allow modelValues in non E164 format', async () => {
         const el = await fixture(
-          html` <${tag} .modelValue="${'612345678'}" .allowedRegions="${['NL']}"></${tag}> `,
+          html` <${tag} format-country-code-style="${hasParentheses ? 'parentheses' : nothing}" .modelValue="${'612345678'}" .allowedRegions="${['NL']}"></${tag}> `,
         );
         expect(el.modelValue).to.equal(undefined);
       });
@@ -349,13 +367,15 @@ export function runInputTelSuite({ klass = LionInputTel } = {}) {
 
     describe('Validation', () => {
       it('applies PhoneNumber as default validator', async () => {
-        const el = await fixture(html` <${tag}></${tag}> `);
+        const el = await fixture(
+          html` <${tag} format-country-code-style="${hasParentheses ? 'parentheses' : nothing}"></${tag}> `,
+        );
         expect(el.defaultValidators.find(v => v instanceof PhoneNumber)).to.be.not.undefined;
       });
 
       it('configures PhoneNumber with regionCode before first validation', async () => {
         const el = fixtureSync(
-          html` <${tag} .allowedRegions="${['NL']}" .modelValue="${'612345678'}"></${tag}> `,
+          html` <${tag} format-country-code-style="${hasParentheses ? 'parentheses' : nothing}" .allowedRegions="${['NL']}" .modelValue="${'612345678'}"></${tag}> `,
         );
         const spy = sinon.spy(el, 'validate');
         const validatorInstance = /** @type {PhoneNumber} */ (
@@ -369,7 +389,7 @@ export function runInputTelSuite({ klass = LionInputTel } = {}) {
 
       it('updates PhoneNumber param on regionCode change', async () => {
         const el = await fixture(
-          html` <${tag} .allowedRegions="${['NL']}" .modelValue="${'612345678'}"></${tag}> `,
+          html` <${tag} format-country-code-style="${hasParentheses ? 'parentheses' : nothing}" .allowedRegions="${['NL']}" .modelValue="${'612345678'}"></${tag}> `,
         );
         const validatorInstance = /** @type {PhoneNumber} */ (
           el.defaultValidators.find(v => v instanceof PhoneNumber)
@@ -383,46 +403,56 @@ export function runInputTelSuite({ klass = LionInputTel } = {}) {
 
     describe('User interaction', () => {
       it('sets inputmode to "tel" for mobile keyboard', async () => {
-        const el = await fixture(html` <${tag}></${tag}> `);
+        const el = await fixture(
+          html` <${tag} format-country-code-style="${hasParentheses ? 'parentheses' : nothing}"></${tag}> `,
+        );
         // @ts-expect-error [allow-protected] inside tests
         expect(el._inputNode.inputMode).to.equal('tel');
       });
 
       it('formats according to locale', async () => {
-        const el = await fixture(html` <${tag} .allowedRegions="${['NL']}"></${tag}> `);
+        const el = await fixture(
+          html` <${tag} format-country-code-style="${hasParentheses ? 'parentheses' : nothing}" .allowedRegions="${['NL']}"></${tag}> `,
+        );
         await PhoneUtilManager.loadComplete;
         await el.updateComplete;
         el.modelValue = '612345678';
-        expect(el.formattedValue).to.equal('+31 6 12345678');
+        const expectedNumber = hasParentheses ? '(+31) 6 12345678' : '+31 6 12345678';
+        expect(el.formattedValue).to.equal(expectedNumber);
       });
     });
 
     describe('Live format', () => {
       it('calls .preprocessor on keyup', async () => {
-        const el = await fixture(html` <${tag} .allowedRegions="${['NL']}"></${tag}> `);
+        const el = await fixture(
+          html` <${tag} format-country-code-style="${hasParentheses ? 'parentheses' : nothing}" .allowedRegions="${['NL']}"></${tag}> `,
+        );
         mimicUserInput(el, '+316');
         await aTimeout(0);
-        expect(el.value).to.equal('+31 6');
+        const expectedNumber = hasParentheses ? '(+31) 6' : '+31 6';
+        expect(el.value).to.equal(expectedNumber);
       });
     });
 
     describe('Accessibility', () => {
       describe('Audit', () => {
         it('passes a11y audit', async () => {
-          const el = await fixture(html`<${tag} label="tel" .modelValue=${'0123456789'}></${tag}>`);
+          const el = await fixture(
+            html`<${tag} format-country-code-style="${hasParentheses ? 'parentheses' : nothing}" label="tel" .modelValue=${'0123456789'}></${tag}>`,
+          );
           await expect(el).to.be.accessible();
         });
 
         it('passes a11y audit when readonly', async () => {
           const el = await fixture(
-            html`<${tag} label="tel" readonly .modelValue=${'0123456789'}></${tag}>`,
+            html`<${tag} format-country-code-style="${hasParentheses ? 'parentheses' : nothing}" label="tel" readonly .modelValue=${'0123456789'}></${tag}>`,
           );
           await expect(el).to.be.accessible();
         });
 
         it('passes a11y audit when disabled', async () => {
           const el = await fixture(
-            html`<${tag} label="tel" disabled .modelValue=${'0123456789'}></${tag}>`,
+            html`<${tag} format-country-code-style="${hasParentheses ? 'parentheses' : nothing}" label="tel" disabled .modelValue=${'0123456789'}></${tag}>`,
           );
           await expect(el).to.be.accessible();
         });
@@ -442,17 +472,18 @@ export function runInputTelSuite({ klass = LionInputTel } = {}) {
 
       it('reformats once lib has been loaded', async () => {
         const el = await fixture(
-          html` <${tag} .modelValue="${'612345678'}" .allowedRegions="${['NL']}"></${tag}> `,
+          html` <${tag} format-country-code-style="${hasParentheses ? 'parentheses' : nothing}" .modelValue="${'612345678'}" .allowedRegions="${['NL']}"></${tag}> `,
         );
         expect(el.formattedValue).to.equal('612345678');
         resolveLoaded(undefined);
         await aTimeout(0);
-        expect(el.formattedValue).to.equal('+31 6 12345678');
+        const expectedNumber = hasParentheses ? '(+31) 6 12345678' : '+31 6 12345678';
+        expect(el.formattedValue).to.equal(expectedNumber);
       });
 
       it('validates once lib has been loaded', async () => {
         const el = await fixture(
-          html` <${tag} .modelValue="${'+31612345678'}" .allowedRegions="${['DE']}"></${tag}> `,
+          html` <${tag} format-country-code-style="${hasParentheses ? 'parentheses' : nothing}" .modelValue="${'+31612345678'}" .allowedRegions="${['DE']}"></${tag}> `,
         );
         expect(el.hasFeedbackFor).to.eql([]);
         resolveLoaded(undefined);
@@ -473,13 +504,15 @@ export function runInputTelSuite({ klass = LionInputTel } = {}) {
       it('can preconfigure the region code via prop', async () => {
         const currentCode = getRegionCodeBasedOnLocale();
         const newCode = currentCode === 'DE' ? 'NL' : 'DE';
-        const el = await fixture(html` <${tag} .allowedRegions="${[newCode]}"></${tag}> `);
+        const el = await fixture(
+          html` <${tag} format-country-code-style="${hasParentheses ? 'parentheses' : nothing}" .allowedRegions="${[newCode]}"></${tag}> `,
+        );
         expect(el.activeRegion).to.equal(newCode);
       });
 
       it.skip('reformats when region code is changed on the fly', async () => {
         const el = await fixture(
-          html` <${tag} .allowedRegions="${['NL']}" .modelValue="${'+31612345678'}"></${tag}> `,
+          html` <${tag} format-country-code-style="${hasParentheses ? 'parentheses' : nothing}" .allowedRegions="${['NL']}" .modelValue="${'+31612345678'}"></${tag}> `,
         );
         await el.updateComplete;
         expect(el.formattedValue).to.equal('+31 6 12345678');
