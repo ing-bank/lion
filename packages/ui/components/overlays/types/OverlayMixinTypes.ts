@@ -17,6 +17,8 @@ export interface DefineOverlayConfig {
 }
 
 export declare class OverlayHost {
+  static _getFocusableInvokerEl(focusableElOrWrapper: Element): Element | null;
+
   opened: Boolean;
   get config(): Partial<OverlayConfig>;
   set config(value: Partial<OverlayConfig>);

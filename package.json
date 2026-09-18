@@ -208,6 +208,9 @@
     "rocket-preset-extend-lion-docs": "^0.4.0",
     "unist-util-visit": "^5.0.0"
   },
+  "imports": {
+    "#components/*": "packages/ui/components/*"
+  },
   "overrides": {
     "sharp": "^0.29.x",
     "@mdjs/core": "^0.21.1",

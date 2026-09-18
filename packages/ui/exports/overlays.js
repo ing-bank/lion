@@ -9,6 +9,8 @@ export { withModalDialogConfig } from '../components/overlays/src/configurations
 export { withDropdownConfig } from '../components/overlays/src/configurations/withDropdownConfig.js';
 export { withTooltipConfig } from '../components/overlays/src/configurations/withTooltipConfig.js';
 export { withPopoverConfig } from '../components/overlays/src/configurations/withPopoverConfig.js';
+export { withClickInteraction } from '../components/overlays/src/configurations/visibility-trigger-partials/withClickInteraction.js';
+export { withHoverInteraction } from '../components/overlays/src/configurations/visibility-trigger-partials/withHoverInteraction.js';
 
 export { deepContains } from '../components/overlays/src/utils/deep-contains.js';
 // re-export via this entrypoint for backwards compatibility
@@ -20,3 +22,7 @@ export {
 } from '../components/overlays/src/utils/inert-siblings.js';
 
 export { overlays } from '../components/overlays/src/singleton.js';
+
+/**
+ * @typedef {import('../components/overlays/types/OverlayConfig.js').OverlayConfig} OverlayConfig
+ */

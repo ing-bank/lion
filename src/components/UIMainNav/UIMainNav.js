@@ -19,6 +19,12 @@ import {
   assertButton,
 } from '../shared/element-assertions.js';
 
+/**
+ * @typedef {import('lit').ElementPart} ElementPart
+ * @typedef {import('lit').TemplateResult} TemplateResult
+ * @typedef {import('../shared/UIBaseElementTypes.js').TemplateContext} TemplateContext
+ */
+
 // TODO: move to generic parts
 const iconIds = {
   // Search SVG template literal
@@ -124,17 +130,152 @@ export class UIMainNavPartDirective extends UIPartDirective {
   };
 
   setupFunctions = {
-    // root: (part, options) => this.constructor._setupRoot(part, options),
-    nav: (part, options) => this.constructor._setupNav(part, options),
-    'l1-invoker': (part, options) => this.constructor._setupL1Invoker(part, options),
-    level: (part, options) => this.constructor._setupLevel(part, options),
-    'level-back-btn': (part, options) => this.constructor._setupLevelBackBtn(part, options),
-    list: (part, options) => this.constructor._setupList(part, options),
-    listitem: (part, options) => this.constructor._setupListitem(part, options),
-    anchor: (part, options) => this.constructor._setupAnchor(part, options),
-    'level-invoker': (part, options) => this.constructor._setupInvokerForLevel(part, options),
-    'command-invoker': (part, options) => this.constructor._setupCommandInvoker(part, options),
-    icon: (part, options) => this.constructor._setupIcon(part, options),
+    /**
+     * @param {ElementPart} litPart
+     */
+    nav: ({ element }) => {
+      assertNav(element);
+    },
+    /**
+     * @param {ElementPart} litPart
+     * @param {{ context: TemplateContext, localContext: any }} param1
+     */
+    'l1-invoker': ({ element, options }, { context, localContext }) => {
+      assertButton(element);
+      element.setAttribute('aria-label', context.translations.l1Invoker);
+    },
+    /**
+     * @param {ElementPart} litPart
+     * @param {{ context: TemplateContext, localContext: any }} param1
+     */
+    level: ({ element, options }, { context, localContext }) => {
+      const { level, isToggleTarget, levelConfig } = localContext;
+
+      UIMainNavPartDirective.setLevel(element, level);
+      element.setAttribute('id', `level-${level}`);
+      context.registerRef(`level-${level}`, element);
+
+      const { showVia = 'disclosure', initialOpen, visuallyHidden = false } = levelConfig || {};
+
+      const invoker = context.refs[level === 1 ? 'l1-invoker' : `level-invoker-l${level}`];
+      if (!(isToggleTarget && invoker)) return;
+
+      if (localContext.levelConfig.hideToggle) {
+        return;
+      }
+
+      if (level === 1) {
+        new VisibilityToggleCtrl(options?.host, {
+          visuallyHidden: false,
+          initialOpen: false,
+          target: element,
+          mode: 'popover',
+          invoker,
+          level: 1,
+        });
+        return;
+      }
+
+      new VisibilityToggleCtrl(options?.host, {
+        target: element,
+        visuallyHidden,
+        mode: showVia,
+        initialOpen,
+        invoker,
+        level,
+      });
+    },
+    /**
+     * @param {ElementPart} litPart
+     * @param {{ context: TemplateContext, localContext: any }} param1
+     */
+    'level-back-btn': ({ element }, { context, localContext }) => {
+      assertButton(element);
+      UIMainNavPartDirective.setLevel(element, localContext.level);
+      element.setAttribute('type', 'button');
+      if (isServer) return;
+
+      element.addEventListener('click', ({}) => {
+        element.parentElement?.hidePopover();
+      });
+      context.registerRef(`level-back-btn-l${localContext.level}`, element);
+    },
+    /**
+     * @param {ElementPart} litPart
+     * @param {{ context: TemplateContext, localContext: any }} param1
+     */
+    list: ({ element }, { context, localContext }) => {
+      element.setAttribute('role', 'list');
+      assertList(element);
+
+      UIMainNavPartDirective.setLevel(element, localContext.level);
+
+      // element.setAttribute('data-part', 'list');
+      context.registerRef(`list-${localContext.level}`, element);
+    },
+    /**
+     * @param {ElementPart} litPart
+     * @param {{ context: TemplateContext, localContext: any }} param1
+     */
+    listitem: ({ element }, { context, localContext }) => {
+      assertListItem(element);
+      element.setAttribute('data-part', 'listitem');
+      UIMainNavPartDirective.setLevel(element, localContext.level);
+      context.registerRef(`listitem-l${localContext.level}`, element, { isPartOfCollection: true });
+    },
+    /**
+     * @param {ElementPart} litPart
+     * @param {{ context: TemplateContext, localContext: any }} param1
+     */
+    anchor: ({ element }, { context, localContext }) => {
+      UIMainNavPartDirective.setLevel(element, localContext.level);
+      assertAnchor(element);
+      element.setAttribute('data-part', 'anchor');
+      element.setAttribute('href', localContext.item.url);
+      if (localContext.item.target) {
+        element.setAttribute('target', localContext.item.target);
+      }
+      if (localContext.item.rel) {
+        element.setAttribute('rel', localContext.item.rel);
+      }
+      context.registerRef(`anchor-l${localContext.level}`, element, { isPartOfCollection: true });
+      if (localContext.item.active) {
+        element.setAttribute('aria-current', 'page');
+      }
+    },
+    'level-invoker': ({ element }, { context, localContext }) => {
+      assertButton(element);
+      UIMainNavPartDirective.setLevel(element, localContext.level);
+      element.setAttribute('data-part', 'level-invoker');
+      element.setAttribute('popovertarget', `level-${localContext.level + 1}`);
+      element.setAttribute('type', 'button');
+      context.registerRef(`level-invoker-l${localContext.level + 1}`, element);
+      if (isServer) return;
+
+      element.addEventListener('click', async event => {
+        const isLeftMouseClick = event.button === 0;
+        if (!isLeftMouseClick) return;
+        updateNavData(context.data.navData, {
+          activeItem: localContext.item,
+          shouldReset: true,
+        });
+        event.stopPropagation();
+      });
+    },
+    'command-invoker': ({ element, options }, { localContext }) => {
+      assertButton(element);
+      UIMainNavPartDirective.setLevel(element, localContext.level);
+      if (isServer) return;
+
+      element.addEventListener('click', () => {
+        options.host.dispatchEvent(new CustomEvent(localContext.item.command));
+      });
+    },
+    icon: ({ element }, { context, localContext }) => {
+      UIMainNavPartDirective.setLevel(element, localContext.level);
+      element.setAttribute('data-part', 'icon');
+      context.registerRef(`icon-l${localContext.level}`, element);
+    },
   };
 
   updateFunctions = {
@@ -173,17 +314,6 @@ export class UIMainNavPartDirective extends UIPartDirective {
     } else {
       element.removeAttribute?.('data-has-l1-open');
     }
-  }
-
-  static _setupNav({ element }) {
-    assertNav(element);
-    // element.setAttribute('data-part', 'nav');
-    // context.registerRef('nav', element);
-  }
-
-  static _setupL1Invoker({ element, options }, { context, localContext }) {
-    assertButton(element);
-    element.setAttribute('aria-label', context.translations.l1Invoker);
   }
 
   static _updateL1Invoker({ element, options }, { context, localContext }) {
@@ -229,73 +359,6 @@ export class UIMainNavPartDirective extends UIPartDirective {
     });
   }
 
-  static _setupLevel({ element, options }, { context, localContext }) {
-    const { level, isToggleTarget, levelConfig } = localContext;
-
-    this.setLevel(element, level);
-    // element.setAttribute('data-part', 'level');
-    element.setAttribute('id', `level-${level}`);
-    context.registerRef(`level-${level}`, element);
-
-    const { showVia = 'disclosure', initialOpen, visuallyHidden = false } = levelConfig || {};
-
-    // Toggles consist of invoker/target pairs. We get the already registered invoker here
-    const invoker = context.refs[level === 1 ? 'l1-invoker' : `level-invoker-l${level}`];
-    if (!(isToggleTarget && invoker)) return;
-
-    if (localContext.levelConfig.hideToggle) {
-      return;
-    }
-
-    if (level === 1) {
-      new VisibilityToggleCtrl(options.host, {
-        visuallyHidden: false,
-        initialOpen: false,
-        target: element,
-        mode: 'popover',
-        invoker,
-        level: 1,
-      });
-      return;
-    }
-
-    new VisibilityToggleCtrl(options.host, {
-      target: element,
-      visuallyHidden,
-      mode: showVia,
-      initialOpen,
-      invoker,
-      level,
-    });
-  }
-
-  static _setupLevelBackBtn({ element }, { context, localContext }) {
-    assertButton(element);
-    this.setLevel(element, localContext.level);
-    // element.setAttribute('data-part', 'level-back-btn');
-    element.setAttribute('type', 'button');
-    if (isServer) return;
-    element.addEventListener('click', ({}) => {
-      element.parentElement.hidePopover();
-    });
-    context.registerRef(`level-back-btn-l${localContext.level}`, element);
-  }
-
-  static _setupList({ element }, { context, localContext }) {
-    element.setAttribute('role', 'list');
-    assertList(element);
-    this.setLevel(element, localContext.level);
-    element.setAttribute('data-part', 'list');
-    context.registerRef(`list-${localContext.level}`, element);
-  }
-
-  static _setupListitem({ element }, { context, localContext }) {
-    assertListItem(element);
-    element.setAttribute('data-part', 'listitem');
-    this.setLevel(element, localContext.level);
-    context.registerRef(`list-item-l${localContext.level}`, element, { isPartOfCollection: true });
-  }
-
   static _updateListItem({ element }, { localContext }) {
     if (localContext.item.active) {
       element.setAttribute('data-active', '');
@@ -305,83 +368,11 @@ export class UIMainNavPartDirective extends UIPartDirective {
     }
   }
 
-  static _setupAnchor({ element }, { context, localContext }) {
-    this.setLevel(element, localContext.level);
-    assertAnchor(element);
-    element.setAttribute('data-part', 'anchor');
-    element.setAttribute('href', localContext.item.url);
-    if (localContext.item.target) {
-      element.setAttribute('target', localContext.item.target);
-    }
-    if (localContext.item.rel) {
-      element.setAttribute('rel', localContext.item.rel);
-    }
-    context.registerRef(`anchor-l${localContext.level}`, element, { isPartOfCollection: true });
-    if (localContext.item.active) {
-      element.setAttribute('aria-current', 'page');
-    }
-    if (isServer) return;
-
-    // element.addEventListener('focus', () => {
-    //   // Every state update should change navData and trigger a re-render
-    //   updateNavData(context.data.navData, localContext.item.url, { shouldReset: true });
-    //   setTimeout(() => {
-    //     context.set('navData', context.data.navData);
-    //     context.set('hasL1Open', hasL1Open(context.data.navData));
-    //   }, 100);
-    // });
-  }
-
-  static _setupInvokerForLevel({ element }, { context, localContext }) {
-    assertButton(element);
-    this.setLevel(element, localContext.level);
-    element.setAttribute('data-part', 'level-invoker');
-    element.setAttribute('popovertarget', `level-${localContext.level + 1}`);
-    element.setAttribute('type', 'button');
-    context.registerRef(`level-invoker-l${localContext.level + 1}`, element);
-    if (isServer) return;
-
-    // For invokers >= l1 we want to set them to get `active` state.
-    element.addEventListener('click', async event => {
-      const isLeftMouseClick = event.button === 0;
-      if (!isLeftMouseClick) return;
-      // Every state update should change navData and trigger a re-render
-      updateNavData(context.data.navData, {
-        // activePath: localContext.item.nextLevel.items[0].url,
-        activeItem: localContext.item,
-        shouldReset: true,
-      });
-
-      event.stopPropagation();
-      // await context.host.updateComplete;
-      // context.set('navData', context.data.navData);
-    });
-  }
-
-  static _setupIcon({ element }, { context, localContext }) {
-    this.setLevel(element, localContext.level);
-    // assertLionIcon(element);
-    element.setAttribute('data-part', 'icon');
-    context.registerRef(`icon-l${localContext.level}`, element);
-  }
-
   static _updateIcon({ element }, { localContext: { item } }) {
     element.setAttribute(
       'icon-id',
       item.active || item.hasActiveChild ? item.iconActiveId || item.iconId : item.iconId,
     );
-  }
-
-  static _setupCommandInvoker({ element, options }, { localContext }) {
-    assertButton(element);
-    this.setLevel(element, localContext.level);
-    if (isServer) return;
-
-    // TODO: explore https://developer.mozilla.org/en-US/docs/Web/API/Popover_API/Using_interest_invokers
-    // Find out browser compatibility and cross shadow root support
-    element.addEventListener('click', () => {
-      options.host.dispatchEvent(new CustomEvent(localContext.item.command));
-    });
   }
 }
 
@@ -393,7 +384,7 @@ export class UIMainNav extends UIBaseElement {
     navData: { type: Array, attribute: 'nav-data' },
   };
 
-  static _partDirective = UIMainNavPartDirective;
+  _partDirective = UIMainNavPartDirective;
 
   static tagName = 'ui-main-nav';
 
@@ -476,6 +467,10 @@ export class UIMainNav extends UIBaseElement {
    *
    */
   static templates = {
+    /**
+     * @param {TemplateContext} context
+     * @returns {TemplateResult}
+     */
     root(context) {
       const { data, templates, part } = context;
 
@@ -492,39 +487,45 @@ export class UIMainNav extends UIBaseElement {
         </div>
       `;
     },
+    /**
+     * @param {TemplateContext} context
+     * @param {{ levelConfig: NavLevel, level: number, isToggleTarget: boolean, hasActiveChild: boolean }} param1
+     * @returns {TemplateResult}
+     */
     navLevel(context, { levelConfig, level, isToggleTarget, hasActiveChild }) {
       const { templates, part, translations } = context;
       const hasBackButton = isToggleTarget && level > 1;
 
-      return html` <div ${part('level', { levelConfig, level, isToggleTarget, hasActiveChild })}>
-        ${hasBackButton
-          ? html`<!-- -->
-              <button ${part('level-back-btn', { level })}>
-                ${templates.icon(context, {
-                  item: { iconId: 'lion:portal:chevronLeft' },
-                  level: 0,
-                })}
-                ${translations.levelBackBtn}
-              </button>`
-          : nothing}
-        <ul ${part('list', { level })}>
-          ${levelConfig.items.map(
-            item =>
-              html`<!-- -->
-                <li ${part('listitem', { item, level })}>
-                  ${templates.navItem(context, { item, level })}
-                  ${item.nextLevel
-                    ? templates.navLevel(context, {
-                        hasActiveChild: item.hasActiveChild,
-                        levelConfig: item.nextLevel,
-                        isToggleTarget: !item.url,
-                        level: level + 1,
-                      })
-                    : nothing}
-                </li>`,
-          )}
-        </ul>
-      </div>`;
+      return html`<!-- -->
+        <div ${part('level', { levelConfig, level, isToggleTarget, hasActiveChild })}>
+          ${hasBackButton
+            ? html`<!-- -->
+                <button ${part('level-back-btn', { level })}>
+                  ${templates.icon(context, {
+                    item: { iconId: 'lion:portal:chevronLeft' },
+                    level: 0,
+                  })}
+                  ${translations.levelBackBtn}
+                </button>`
+            : nothing}
+          <ul ${part('list', { level })}>
+            ${levelConfig.items.map(
+              item =>
+                html`<!-- -->
+                  <li ${part('listitem', { item, level })}>
+                    ${templates.navItem(context, { item, level })}
+                    ${item.nextLevel
+                      ? templates.navLevel(context, {
+                          hasActiveChild: item.hasActiveChild,
+                          levelConfig: item.nextLevel,
+                          isToggleTarget: !item.url,
+                          level: level + 1,
+                        })
+                      : nothing}
+                  </li>`,
+            )}
+          </ul>
+        </div>`;
     },
     navItem(context, { item, level }) {
       const { part, templates } = context;
@@ -532,9 +533,10 @@ export class UIMainNav extends UIBaseElement {
       if (item.url) {
         // N.B. taken care of by directive
         // eslint-disable-next-line lit-a11y/anchor-is-valid
-        return html` <a ${part('anchor', { item, level })}>
-          ${templates.icon(context, { item, level })}<span>${item.name}</span>
-        </a>`;
+        return html`<!-- -->
+          <a ${part('anchor', { item, level })}>
+            ${templates.icon(context, { item, level })}<span>${item.name}</span>
+          </a>`;
       }
 
       if (item.nextLevel) {
