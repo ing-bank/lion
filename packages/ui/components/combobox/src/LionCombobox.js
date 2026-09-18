@@ -4,9 +4,9 @@ import { LionListbox } from '@lion/ui/listbox.js';
 import { LocalizeMixin } from '@lion/ui/localize-no-side-effects.js';
 import { OverlayMixin, withDropdownConfig } from '@lion/ui/overlays.js';
 import { css, html } from 'lit';
+import { CustomChoiceGroupMixin } from '../../form-core/src/choice-group/CustomChoiceGroupMixin.js';
 import { makeMatchingTextBold, unmakeMatchingTextBold } from './utils/makeMatchingTextBold.js';
 import { MatchesOption } from './validators.js';
-import { CustomChoiceGroupMixin } from '../../form-core/src/choice-group/CustomChoiceGroupMixin.js';
 
 const matchA11ySpanReverseFns = new WeakMap();
 
@@ -474,6 +474,12 @@ export class LionCombobox extends LocalizeMixin(OverlayMixin(CustomChoiceGroupMi
      */
     this.__prevCboxValue = '';
     /**
+     * Tracks modelValue across autocompletion cycles so a manual model-value-changed event can be
+     * dispatched for custom (unmatched) values, independent of autocomplete mode.
+     * @private
+     */
+    this.__prevModelValueForCustomEvent = '';
+    /**
      * @type {boolean}
      * @private
      */
@@ -909,6 +915,11 @@ export class LionCombobox extends LocalizeMixin(OverlayMixin(CustomChoiceGroupMi
    * @protected
    */
   _handleAutocompletion() {
+    // Captured before any mutation in this cycle, so we can detect check-state transitions
+    // (which already fire an event via child repropagation) vs. a value change while staying unmatched.
+    const prevCheckedIndexForCustomEvent = this.checkedIndex;
+    const prevModelValueForCustomEvent = this.__prevModelValueForCustomEvent;
+
     const isSelectionEmpty = this._inputNode.selectionStart === this._inputNode.selectionEnd;
     const hasSelection =
       !isSelectionEmpty && this._inputNode.value.length !== this._inputNode.selectionStart;
@@ -1016,12 +1027,31 @@ export class LionCombobox extends LocalizeMixin(OverlayMixin(CustomChoiceGroupMi
     // [7]. If no autofill took place, we are left with the previously matched option; correct this
     if (autoselect && !hasAutoFilled && !this.multipleChoice) {
       // This means there is no match for checkedIndex
-      this.setCheckedIndex(-1);
+      this.setCheckedIndex(-1); // This causes modelValue to update
       if (prevValue !== curValue) {
         this.activeIndex = -1;
       }
       this.modelValue = this.parser(inputValue);
     }
+
+    // [7b]. Fire model-value-changed for custom (unmatched) values, regardless of autocomplete mode.
+    // Only when checkedIndex stayed -1 throughout this cycle: a transition into -1 already fires an
+    // event via child repropagation, so we avoid dispatching a duplicate here.
+    if (
+      !this.multipleChoice &&
+      !this.requireOptionMatch &&
+      this.checkedIndex === -1 &&
+      prevCheckedIndexForCustomEvent === -1 &&
+      this.modelValue !== prevModelValueForCustomEvent
+    ) {
+      this.dispatchEvent(
+        new CustomEvent('model-value-changed', {
+          bubbles: true,
+          detail: { formPath: [this], isTriggeredByUser: true },
+        }),
+      );
+    }
+    this.__prevModelValueForCustomEvent = this.modelValue;
 
     // [8]. These values will help computing autofill intentions next autocomplete cycle
     this.__prevCboxValueNonSelected = curValue;
