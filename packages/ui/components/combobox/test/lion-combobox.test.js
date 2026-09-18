@@ -812,10 +812,10 @@ describe('lion-combobox', () => {
       expect(_inputNode.value).to.equal('Foo');
     });
 
-    it('fires "model-value-changed" on every textbox change when requireOptionMatch is false', async () => {
+    it('fires "model-value-changed" on every textbox change when requireOptionMatch is false and autocomplete is both', async () => {
       const el = /** @type {LionCombobox} */ (
         await fixture(html`
-          <lion-combobox name="foo" autocomplete="none">
+          <lion-combobox name="foo" autocomplete="both" .requireOptionMatch="${false}">
             <lion-option checked .choiceValue="${'Artichoke'}">Artichoke</lion-option>
             <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
             <lion-option .choiceValue="${'Chicory'}">Chicory</lion-option>
@@ -823,22 +823,41 @@ describe('lion-combobox', () => {
           </lion-combobox>
         `)
       );
-      el.requireOptionMatch = false;
-      await el.updateComplete;
 
-      const spy = sinon.spy();
-      el.addEventListener('model-value-changed', spy);
+      const fake = sinon.fake(ev => ev.target.modelValue);
+      el.addEventListener('model-value-changed', fake);
 
       await mimicUserTyping(el, 'Foo');
       await el.updateComplete;
-      expect(spy).to.have.been.calledOnce;
+      expect(fake).to.have.been.calledThrice;
+      expect(fake.firstCall.returnValue).to.equal('F');
+      expect(fake.secondCall.returnValue).to.equal('Fo');
+      expect(fake.thirdCall.returnValue).to.equal('Foo');
       expect(el.modelValue).to.equal('Foo');
+    });
 
-      spy.resetHistory();
-      await mimicUserTyping(el, 'Foobar');
+    it('fires "model-value-changed" on every textbox change when requireOptionMatch is false and autocomplete is none', async () => {
+      const el = /** @type {LionCombobox} */ (
+        await fixture(html`
+          <lion-combobox name="foo" autocomplete="none" .requireOptionMatch="${false}">
+            <lion-option checked .choiceValue="${'Artichoke'}">Artichoke</lion-option>
+            <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
+            <lion-option .choiceValue="${'Chicory'}">Chicory</lion-option>
+            <lion-option .choiceValue="${'Victoria Plum'}">Victoria Plum</lion-option>
+          </lion-combobox>
+        `)
+      );
+
+      const fake = sinon.fake(ev => ev.target.modelValue);
+      el.addEventListener('model-value-changed', fake);
+
+      await mimicUserTyping(el, 'Foo');
       await el.updateComplete;
-      expect(spy).to.have.been.calledOnce;
-      expect(el.modelValue).to.equal('Foobar');
+      expect(fake).to.have.been.calledThrice;
+      expect(fake.firstCall.returnValue).to.equal('F');
+      expect(fake.secondCall.returnValue).to.equal('Fo');
+      expect(fake.thirdCall.returnValue).to.equal('Foo');
+      expect(el.modelValue).to.equal('Foo');
     });
 
     it('does not fire "model-value-changed" when requireOptionMatch is false but the textbox value did not change', async () => {
@@ -911,19 +930,13 @@ describe('lion-combobox', () => {
       const spy = sinon.spy();
       el.addEventListener('model-value-changed', spy);
 
-      await mimicUserTyping(el, 'Chard');
-      await el.updateComplete;
-      expect(el.modelValue).to.equal('Chard');
-      expect(spy).to.have.been.calledOnce;
-
-      spy.resetHistory();
       // No option matches "Chards", so checkedIndex becomes -1 and requireOptionMatch is false:
       // no event should be manually dispatched (normal Unparseable flow, no double event)
-      await mimicUserTyping(el, 'Chards');
+      await mimicUserTyping(el, 'Chicorys');
       await el.updateComplete;
       expect(el.checkedIndex).to.equal(-1);
-      expect(el.modelValue instanceof Unparseable).to.be.true;
-      expect(spy).to.have.been.calledOnce;
+      expect(spy.args.length).to.equal(3);
+      expect(spy.args[2][0].target.modelValue).to.equal('Chicorys');
     });
 
     it("doesn't select any similar options after using delete when requireOptionMatch is false", async () => {
