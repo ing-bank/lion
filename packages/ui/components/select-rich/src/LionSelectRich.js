@@ -11,6 +11,7 @@ import { LionSelectInvoker } from './LionSelectInvoker.js';
  * @typedef {import('../../form-core/types/registration/FormRegisteringMixinTypes.js').FormRegisteringHost} FormRegisteringHost
  * @typedef {import('../../form-core/types/FormControlMixinTypes.js').FormControlHost} FormControlHost
  * @typedef {import('../../core/types/SlotMixinTypes.js').SlotsMap} SlotsMap
+ * @typedef {import('@lion/ui/overlays.js').OverlayController} OverlayController
  */
 
 function detectInteractionMode() {
@@ -127,6 +128,12 @@ export class LionSelectRich extends SlotMixin(ScopedElementsMixin(OverlayMixin(L
     this.singleOption = false;
     /** @protected */
     this._arrowWidth = 28;
+    /** @private */
+    this.__invokerWidthResizeObserver = undefined;
+    /** @private */
+    this.__invokerWidthRequestAnimationFrame = undefined;
+    /** @private */
+    this.__restoreInvokerWidthMeasurement = undefined;
 
     /** @private */
     this.__onKeyUp = this.__onKeyUp.bind(this);
@@ -354,13 +361,17 @@ export class LionSelectRich extends SlotMixin(ScopedElementsMixin(OverlayMixin(L
    * @configure OverlayMixin
    * @protected
    */
-  // eslint-disable-next-line class-methods-use-this
   _defineOverlayConfig() {
-    return {
+    return /** @type {import('@lion/ui/types/overlays.js').OverlayConfig} */ ({
       ...withDropdownConfig(),
+      inheritsReferenceWidth: {
+        mode: 'full',
+        source: 'content',
+        widthOffset: this._arrowWidth,
+      },
       // Needs more advanced behavior (see `__invokerOnClick`)
       visibilityTriggerFunction: undefined,
-    };
+    });
   }
 
   /**
@@ -413,7 +424,6 @@ export class LionSelectRich extends SlotMixin(ScopedElementsMixin(OverlayMixin(L
   _setupOverlayCtrl() {
     super._setupOverlayCtrl();
     this._initialInheritsReferenceWidth = this._overlayCtrl.inheritsReferenceWidth;
-    this._alignInvokerWidth();
 
     this._overlayCtrl.addEventListener('before-show', this.__overlayBeforeShow);
     this._overlayCtrl.addEventListener('show', this.__overlayOnShow);
@@ -428,41 +438,32 @@ export class LionSelectRich extends SlotMixin(ScopedElementsMixin(OverlayMixin(L
   _teardownOverlayCtrl() {
     super._teardownOverlayCtrl();
 
+    if (this.__alignInvokerWidthFrame !== undefined) {
+      cancelAnimationFrame(this.__alignInvokerWidthFrame);
+      this.__alignInvokerWidthFrame = undefined;
+    }
+
     this._overlayCtrl.removeEventListener('show', this.__overlayOnShow);
     this._overlayCtrl.removeEventListener('before-show', this.__overlayBeforeShow);
     this._overlayCtrl.removeEventListener('hide', this.__overlayOnHide);
   }
 
   /**
-   * Align invoker width with content width
-   * Make sure display is not set to "none" while calculating the content width
+   * Align invoker width with content width.
+   * Only triggered when its child option list changes the width of invoker.
+   * Batched via requestAnimationFrame to coalesce multiple option updates into a single frame.
+   * Delegates to OverlayController.
    * @protected
    */
   async _alignInvokerWidth() {
     await this.updateComplete;
-
-    if (!this._overlayCtrl?.content) {
-      return;
+    if (this.__alignInvokerWidthFrame !== undefined) {
+      cancelAnimationFrame(this.__alignInvokerWidthFrame);
     }
-
-    const initContentDisplay = this._overlayCtrl.content.style.display;
-    const initContentMinWidth = this._overlayCtrl.contentWrapperNode.style.minWidth;
-    const initContentWidth = this._overlayCtrl.contentWrapperNode.style.width;
-    this._overlayCtrl.content.style.display = '';
-    this._overlayCtrl.contentWrapperNode.style.minWidth = 'auto';
-    this._overlayCtrl.contentWrapperNode.style.width = 'auto';
-    const contentWidth = this._overlayCtrl.contentWrapperNode.getBoundingClientRect().width;
-    /**
-     * TODO when inside an overlay the current solution doesn't work.
-     * Since that dialog is still hidden, open and close the select-rich
-     * doesn't have any effect so the contentWidth returns 0
-     */
-    if (contentWidth > 0) {
-      this._invokerNode.style.width = `${contentWidth + this._arrowWidth}px`;
-    }
-    this._overlayCtrl.content.style.display = initContentDisplay;
-    this._overlayCtrl.contentWrapperNode.style.minWidth = initContentMinWidth;
-    this._overlayCtrl.contentWrapperNode.style.width = initContentWidth;
+    this.__alignInvokerWidthFrame = requestAnimationFrame(() => {
+      this.__alignInvokerWidthFrame = undefined;
+      /** @type {any} */ (this._overlayCtrl)?._handleInheritsReferenceWidth();
+    });
   }
 
   /**

@@ -137,6 +137,7 @@ export class LionTextarea extends NativeTextFieldMixin(LionFieldWithTextArea) {
     this._inputNode.value = '';
     this.resizeTextarea();
 
+    // eslint-disable-next-line lion/no-forced-layout-reads
     const cs = window.getComputedStyle(this._inputNode, null);
     const lineHeight = parseFloat(cs.lineHeight) || parseFloat(cs.height) / this.rows;
     const paddingOffset = parseFloat(cs.paddingTop) + parseFloat(cs.paddingBottom);

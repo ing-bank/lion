@@ -2,11 +2,14 @@ import { litSsrPlugin } from '@lit-labs/testing/web-test-runner-ssr-plugin.js';
 // @ts-expect-error
 import { playwrightLauncher } from '@web/test-runner-playwright';
 import { glob } from 'node:fs/promises';
+import { advancedPerfPlugin } from './packages-node/web-test-runner-advanced-perf/src/index.js';
 
 const config = {
   shouldLoadPolyfill: !process.argv.includes('--no-scoped-registries-polyfill'),
   shouldRunDevMode: process.argv.includes('--dev-mode'),
   files: process.argv.includes('--files'),
+  shouldRunStatisticalBench: process.argv.includes('--statisticalBench'),
+  shouldReportStatisticalBench: process.argv.includes('--statisticalBenchReport'),
 };
 
 async function getTestGroups() {
@@ -61,5 +64,11 @@ export default {
   filterBrowserLogs(/** @type {{ type: 'error'|'warn'|'debug'; args: string[] }} */ log) {
     return log.type === 'error' || log.type === 'debug';
   },
-  plugins: [litSsrPlugin()],
+  plugins: [
+    litSsrPlugin(),
+    advancedPerfPlugin({
+      report: config.shouldReportStatisticalBench,
+      statisticalBench: config.shouldRunStatisticalBench,
+    }),
+  ],
 };
