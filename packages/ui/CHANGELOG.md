@@ -1,5 +1,17 @@
 # @lion/ui
 
+## 0.22.0
+
+### Minor Changes
+
+- b20f8f7: Combobox will correctly fire model-value-changed when text box value is leading
+
+### Patch Changes
+
+- 20a718a: [validate] guard ValidateMixin's `showsFeedbackFor` custom converters
+
+  Fixes a crash (`Uncaught TypeError: can't access property "split", value is null`) in `ValidateMixin` when the reflected `shows-feedback-for` attribute is removed from the host element by external code (e.g. Storybook), instead of being set to the empty string. The `fromAttribute` custom converter now falls back to `[]`.
+
 ## 0.21.1
 
 ### Patch Changes
