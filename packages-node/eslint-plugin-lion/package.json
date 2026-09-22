@@ -13,7 +13,10 @@
   },
   "type": "module",
   "exports": {
-    ".": "./src/index.js"
+    ".": {
+      "import": "./src/index.js",
+      "require": "./src/index.cjs"
+    }
   },
   "main": "src/index.js",
   "files": [
