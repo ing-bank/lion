@@ -6,9 +6,9 @@ Not ported
   1. `expect(ctrl.isShown).to.be.true;` is different. The opposit behaviour
   2. relies on `_mockable`. Let's not use yet the it in this PR
 
-- `elementToFocusOnShow` (was `focusContentOnOpen`)
+- `elementToFocusOnShow` (was `elementToFocusOnShow`)
 
-  The `describe('focusContentOnOpen', ...)` block was renamed to `describe('elementToFocusOnShow', ...)`
+  The `describe('elementToFocusOnShow', ...)` block was renamed to `describe('elementToFocusOnShow', ...)`
   and a new config test uses `elementToFocusOnShow: cfg.contentNode`.
 
   Test is the same, but the naming is different.

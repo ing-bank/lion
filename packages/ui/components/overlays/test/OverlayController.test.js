@@ -1737,12 +1737,12 @@ describe('OverlayController', () => {
       });
     });
 
-    describe('focusContentOnOpen', () => {
-      it('adds tabindex="-1" to the content node when focusContentOnOpen is true', async () => {
+    describe('elementToFocusOnShow', () => {
+      it('adds tabindex="-1" to the content node when elementToFocusOnShow is true', async () => {
         const ctrl = new OverlayController({
           ...withGlobalTestConfig(),
           isBlocking: false,
-          focusContentOnOpen: true,
+          elementToFocusOnShow: true,
         });
         const contentNode = /** @type {HTMLElement} */ (await fixture('<div>Content</div>'));
         ctrl.updateConfig({ contentNode });
@@ -1754,7 +1754,7 @@ describe('OverlayController', () => {
         const ctrl = new OverlayController({
           ...withGlobalTestConfig(),
           isBlocking: false,
-          focusContentOnOpen: true,
+          elementToFocusOnShow: true,
         });
         const contentNode = /** @type {HTMLElement} */ (
           await fixture('<div><button>Button</button></div>')
