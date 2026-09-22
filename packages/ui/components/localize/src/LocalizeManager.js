@@ -269,8 +269,26 @@ export class LocalizeManager extends EventTarget {
     if (!message) {
       return '';
     }
-    const formatter = new MessageFormat(message, locale);
+    // Ensure we convert to string for backwards compatibility
+    const messageStr = typeof message === 'string' ? message : String(message);
+    const formatter = new MessageFormat(messageStr, locale);
     return formatter.format(vars);
+  }
+
+  /**
+   * Gets a message value that can be of any type (string, array, object).
+   * Use this when you need to access structured translation data like arrays or objects.
+   * For simple string messages with variable interpolation, use msg() instead.
+   *
+   * @param {string | string[]} keys
+   * @param {Object} [opts]
+   * @param {string} [opts.locale]
+   * @returns {any}
+   */
+  msgList(keys, opts = {}) {
+    const locale = opts.locale ? opts.locale : this.locale;
+    const message = this._getMessageForKeys(keys, locale);
+    return message !== undefined ? message : '';
   }
 
   teardown() {
@@ -568,7 +586,7 @@ export class LocalizeManager extends EventTarget {
   /**
    * @param {string | string[]} keys
    * @param {string} locale
-   * @returns {string | undefined}
+   * @returns {any}
    * @protected
    */
   _getMessageForKeys(keys, locale) {
@@ -581,7 +599,7 @@ export class LocalizeManager extends EventTarget {
     while (reversedKeys.length) {
       key = reversedKeys.pop();
       message = this._getMessageForKey(key, locale);
-      if (message) {
+      if (message !== undefined && message !== null && message !== '') {
         return message;
       }
     }
@@ -591,7 +609,7 @@ export class LocalizeManager extends EventTarget {
   /**
    * @param {string | undefined} key
    * @param {string} locale
-   * @returns {string}
+   * @returns {any}
    * @throws {Error} `key`is missing namespace. The format for `key` is "namespace:name"
    * @protected
    *
@@ -608,15 +626,20 @@ export class LocalizeManager extends EventTarget {
     const names = namesString.split('.');
     const result = names.reduce(
       /**
-       * @param {Object<string, any> | string} message
+       * @param {Object<string, any> | string | any[]} message
        * @param {string} name
-       * @returns {string}
+       * @returns {any}
        */
-      (message, name) => (typeof message === 'object' ? message[name] : message),
+      (message, name) =>
+        typeof message === 'object' && !Array.isArray(message) ? message[name] : message,
       messages,
     );
 
-    return String(result || (this._showKeyAsFallback ? key : ''));
+    if (result !== undefined && result !== null && result !== '') {
+      return result;
+    }
+
+    return this._showKeyAsFallback ? key : '';
   }
 
   /**
