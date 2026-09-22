@@ -8,6 +8,8 @@ export { withBottomSheetConfig } from '../components/overlays/src/configurations
 export { withModalDialogConfig } from '../components/overlays/src/configurations/withModalDialogConfig.js';
 export { withDropdownConfig } from '../components/overlays/src/configurations/withDropdownConfig.js';
 export { withTooltipConfig } from '../components/overlays/src/configurations/withTooltipConfig.js';
+export { withClickInteraction } from '../components/overlays/src/configurations/visibility-trigger-partials/withClickInteraction.js';
+export { withHoverInteraction } from '../components/overlays/src/configurations/visibility-trigger-partials/withHoverInteraction.js';
 
 export { deepContains } from '../components/overlays/src/utils/deep-contains.js';
 // re-export via this entrypoint for backwards compatibility
