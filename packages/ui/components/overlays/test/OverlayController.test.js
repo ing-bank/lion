@@ -1821,6 +1821,40 @@ describe('OverlayController', () => {
         expect(ctrl.__hasSetup).to.be.true;
       });
     });
+
+    describe('hideVisually', () => {
+      it('defaults to false and is exposed on the config for extensions (like menus) that need visually-hidden/sr-only content', async () => {
+        const ctrl = new OverlayController({
+          ...withGlobalTestConfig(),
+        });
+        await ctrl.show();
+        expect(ctrl.config.hideVisually).to.be.false;
+
+        const ctrlWithHideVisually = new OverlayController({
+          ...withGlobalTestConfig(),
+          hideVisually: true,
+        });
+        await ctrlWithHideVisually.show();
+        expect(ctrlWithHideVisually.config.hideVisually).to.be.true;
+      });
+    });
+
+    describe('requireConnectedNodes', () => {
+      it('defaults to true and is exposed on the config', async () => {
+        const ctrl = new OverlayController({
+          ...withGlobalTestConfig(),
+        });
+        await ctrl.show();
+        expect(ctrl.config.requireConnectedNodes).to.be.true;
+
+        const ctrlWithoutRequireConnectedNodes = new OverlayController({
+          ...withGlobalTestConfig(),
+          requireConnectedNodes: false,
+        });
+        await ctrlWithoutRequireConnectedNodes.show();
+        expect(ctrlWithoutRequireConnectedNodes.config.requireConnectedNodes).to.be.false;
+      });
+    });
   });
 
   describe('Show / Hide / Toggle', () => {
