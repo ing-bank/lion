@@ -1,12 +1,13 @@
 /**
  * CLI entry point.
  *
- *   node src/cli.ts --models deepseek-chat --samples 1
- *   node src/cli.ts --list
- *   node src/cli.ts --kind component --scenario button --models deepseek-chat
+ * The provider is chosen explicitly; no model is assumed:
  *
- * Configuration (base URL / API key) is resolved per model by `src/config.ts` — e.g.
- * `DEEPSEEK_API_KEY` for `deepseek-*`, `OPENAI_API_KEY` for everything else.
+ *   # OpenAI-compatible endpoint (default), e.g. DeepSeek or a local server
+ *   node src/cli.ts --models deepseek-chat --base-url https://api.deepseek.com/v1 --api-key "$DEEPSEEK_API_KEY"
+ *   # GitHub Copilot (requires the optional @github/copilot-sdk)
+ *   node src/cli.ts --provider copilot --models <model>
+ *   node src/cli.ts --list
  */
 
 import path from 'node:path';
@@ -15,12 +16,14 @@ import { green, red, yellow } from 'nanocolors';
 import { runSkillTester, defaultLionUiSkillLocation, createAgentConfig } from './skillTester.ts';
 import { loadLionUiScenarios, manualScenarios } from './scenarios/index.ts';
 import type { TestScenario } from './scenarios/types.ts';
+import type { Provider } from './config.ts';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const repoRoot = path.resolve(__dirname, '../../..');
 
 type CliOptions = {
+  provider?: Provider;
   models: string[];
   samples: number;
   maxTurns: number;
@@ -37,7 +40,11 @@ type CliOptions = {
 
 function parseArgs(argv: string[]): CliOptions {
   const options: CliOptions = {
-    models: (process.env.SKILL_TESTER_MODELS ?? 'deepseek-chat').split(',').map(m => m.trim()).filter(Boolean),
+    // No default model: the caller must say which model to evaluate.
+    models: (process.env.SKILL_TESTER_MODELS ?? '')
+      .split(',')
+      .map(m => m.trim())
+      .filter(Boolean),
     samples: 1,
     maxTurns: 25,
     passThreshold: 100,
@@ -51,8 +58,14 @@ function parseArgs(argv: string[]): CliOptions {
     const arg = argv[i];
     const next = () => argv[++i];
     switch (arg) {
+      case '--provider':
+        options.provider = next() as Provider;
+        break;
       case '--models':
-        options.models = (next() ?? '').split(',').map(m => m.trim()).filter(Boolean);
+        options.models = (next() ?? '')
+          .split(',')
+          .map(m => m.trim())
+          .filter(Boolean);
         break;
       case '--samples':
         options.samples = Number(next());
@@ -102,29 +115,37 @@ function parseArgs(argv: string[]): CliOptions {
 }
 
 function printHelp(): void {
-  console.log(`skill-tester — evaluate a skill/agent on isolated scenarios via an OpenAI-compatible model
+  console.log(`skill-tester — evaluate a skill/agent on isolated scenarios
 
 Usage: node src/cli.ts [options]
 
 Options:
-  --models <m1,m2>        Models to test (default: $SKILL_TESTER_MODELS or deepseek-chat)
+  --provider <p>          "openai" (any OpenAI-compatible endpoint, default) or "copilot"
+  --models <m1,m2>        Models to test. No default: pass --models or set $SKILL_TESTER_MODELS
   --samples <n>           Runs per (scenario, model) pair (default: 1)
-  --max-turns <n>         Max model round-trips per run (default: 25)
+  --max-turns <n>         Max model round-trips per run, "openai" provider only (default: 25)
   --pass-threshold <n>    Pass threshold percentage (default: 100)
-  --base-url <url>        OpenAI-compatible base URL (overrides per-model default)
-  --api-key <key>         API key (overrides env; prefer env vars to avoid shell history)
+  --base-url <url>        OpenAI-compatible base URL (default: $SKILL_TESTER_BASE_URL, $OPENAI_BASE_URL)
+  --api-key <key>         API key (prefer env vars so it stays out of your shell history)
   --skill <dir>           Skill directory under test (default: packages/ui/skills/lion-ui)
-  --mock-agent            Test the mock-repo Copilot agent instead of the lion-ui skill
+  --mock-agent            Test the mock-repo agent instead of the lion-ui skill
   --kind <k>              Only scenarios of this kind (component|system|integration)
   --scenario <substring>  Only scenarios whose name contains this substring
   --limit <n>             Run at most n scenarios
   --list                  List the scenarios that would run, then exit
   -h, --help              Show this help
 
+Examples:
+  # Any OpenAI-compatible endpoint, e.g. DeepSeek or a local server
+  node src/cli.ts --models deepseek-chat --base-url https://api.deepseek.com/v1 --api-key "$DEEPSEEK_API_KEY"
+  node src/cli.ts --models my-local-model --base-url http://localhost:8080/v1
+  # GitHub Copilot (install the optional SDK first)
+  npm install @github/copilot-sdk && node src/cli.ts --provider copilot --models <model>
+
 Environment:
-  DEEPSEEK_API_KEY / OPENAI_API_KEY / SKILL_TESTER_API_KEY
-  SKILL_TESTER_BASE_URL / DEEPSEEK_BASE_URL / OPENAI_BASE_URL
-  SKILL_TESTER_MODELS
+  SKILL_TESTER_PROVIDER (openai | copilot)
+  SKILL_TESTER_MODELS, SKILL_TESTER_API_KEY, SKILL_TESTER_BASE_URL
+  OPENAI_API_KEY, OPENAI_BASE_URL
 `);
 }
 
@@ -160,6 +181,15 @@ async function main(): Promise<void> {
     return;
   }
 
+  if (options.models.length === 0) {
+    console.error(
+      red('No model specified. Pass --models <model> (or set SKILL_TESTER_MODELS).') +
+        '\nskill-tester deliberately does not default to a model.',
+    );
+    process.exitCode = 1;
+    return;
+  }
+
   if (scenarios.length === 0) {
     console.error(red('No scenarios selected.'));
     process.exitCode = 1;
@@ -191,10 +221,11 @@ async function main(): Promise<void> {
     sampleSize: options.samples,
     maxTurns: options.maxTurns,
     passThreshold: options.passThreshold,
-    llm: { baseUrl: options.baseUrl, apiKey: options.apiKey },
+    llm: { provider: options.provider, baseUrl: options.baseUrl, apiKey: options.apiKey },
   });
 
   console.log('');
+  console.log(`Provider: ${report.provider}${report.baseUrl ? ` (${report.baseUrl})` : ''}`);
   console.log(`Overall quality score: ${(report.overall.mean * 100).toFixed(1)}%`);
   for (const entry of report.perModel) {
     console.log(
@@ -217,4 +248,7 @@ async function main(): Promise<void> {
   process.exitCode = report.overall.mean * 100 >= options.passThreshold ? 0 : 1;
 }
 
-await main();
+await main().catch(error => {
+  console.error(red(error instanceof Error ? error.message : String(error)));
+  process.exitCode = 1;
+});

@@ -30,6 +30,14 @@
     "diff": "^9.0.0",
     "nanocolors": "^0.2.13"
   },
+  "peerDependencies": {
+    "@github/copilot-sdk": "^0.2.2"
+  },
+  "peerDependenciesMeta": {
+    "@github/copilot-sdk": {
+      "optional": true
+    }
+  },
   "keywords": [
     "agent",
     "ai",
