@@ -15,6 +15,12 @@ turning evidence into a correctly-placed skill edit (see
 [references/improvement-process.md](references/improvement-process.md) for the
 detailed edit workflow).
 
+> **In this repository:** `packages-node/skill-tester` is a ready-made harness for that loop. It
+> runs a skill against small, isolated scenarios on any OpenAI-compatible model, scores each run,
+> and writes a run record in the shape of [references/run-record.md](references/run-record.md)
+> (including the failing checks as evidence) — use it so the reader does not have to assemble the
+> benchmark by hand.
+
 ## Campaign contract
 
 Before the first run, establish these inputs with the user. Use the defaults
