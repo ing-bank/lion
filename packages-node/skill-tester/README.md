@@ -3,8 +3,9 @@
 Scientifically sound evaluation of your AI skills and agents.
 
 skill-tester runs a skill or agent against a set of **small, isolated scenarios**, on **any
-OpenAI-compatible model** (OpenAI, DeepSeek, Azure OpenAI, Ollama, llama.cpp, vLLM, ...), and
-scores every run with a single **quality score**. GitHub Copilot is not required.
+OpenAI-compatible model** (OpenAI, DeepSeek, Azure OpenAI, Ollama, llama.cpp, vLLM, ...) **or on
+GitHub Copilot**, and scores every run with a single **quality score**. The provider is chosen
+explicitly and no model is assumed.
 
 It closes the loop with [`recursive-skill-improver`](../../packages/ui/skills/recursive-skill-improver/SKILL.md):
 each run writes a markdown **run record** that lists failing checks as evidence, ready to be
@@ -13,7 +14,10 @@ turned into the next minimal skill improvement.
 ## Requirements
 
 - Node.js 22.6+ (uses native TypeScript type stripping — no build step, no `tsx`).
-- An OpenAI-compatible chat endpoint and an API key.
+- One of:
+  - an OpenAI-compatible chat endpoint (and an API key, if the endpoint requires one); or
+  - GitHub Copilot, which additionally needs the optional
+    `@github/copilot-sdk` (`npm install @github/copilot-sdk`).
 
 ## Start
 
@@ -23,38 +27,47 @@ cd packages-node/skill-tester
 # What would run?
 npm run eval:list
 
-# Run every lion-ui component + system scenario against DeepSeek
-DEEPSEEK_API_KEY=... npm run eval -- --models deepseek-chat --samples 3
+# Every lion-ui component + system scenario on any OpenAI-compatible endpoint (e.g. DeepSeek)
+npm run eval -- --models deepseek-chat --base-url https://api.deepseek.com/v1 \
+  --api-key "$DEEPSEEK_API_KEY" --samples 3
 
-# A single component, against a local OpenAI-compatible server
-npm run eval -- --models local-model --base-url http://localhost:8080/v1 \
-  --api-key whatever --scenario button --kind component
+# A local OpenAI-compatible server, one component
+npm run eval -- --models my-local-model --base-url http://localhost:8080/v1 \
+  --scenario button --kind component
+
+# GitHub Copilot instead of an HTTP endpoint
+npm install @github/copilot-sdk
+npm run eval -- --provider copilot --models <copilot-model>
 ```
 
 Anything after `--` is passed to the CLI; `node src/cli.ts --help` shows every option.
+`--models` (or `SKILL_TESTER_MODELS`) is required — skill-tester never picks a model for you.
 
-## Provider configuration
+## Providers
 
-The endpoint and credential are resolved **per model name**, so a run can mix providers.
+Selected explicitly with `--provider` / `SKILL_TESTER_PROVIDER`; never guessed from the model name.
 
-| Model name    | Base URL (default)            | API key (default)  |
-| ------------- | ----------------------------- | ------------------ |
-| `deepseek-*`  | `https://api.deepseek.com/v1` | `DEEPSEEK_API_KEY` |
-| anything else | `https://api.openai.com/v1`   | `OPENAI_API_KEY`   |
+| Provider  | What it talks to                                        | Needs                                     |
+| --------- | ------------------------------------------------------- | ----------------------------------------- |
+| `openai`  | Any OpenAI-compatible `POST {baseUrl}/chat/completions` | a base URL (has a default) and a key      |
+| `copilot` | GitHub Copilot, via `@github/copilot-sdk`               | the optional SDK installed + Copilot auth |
 
-Overrides (highest precedence first): CLI flags → `SKILL_TESTER_*` → provider defaults.
+`openai` is the default. Endpoint and credential resolution (first match wins):
 
-| Variable                                 | Purpose                               |
-| ---------------------------------------- | ------------------------------------- |
-| `SKILL_TESTER_BASE_URL`                  | Base URL for every model (e.g. local) |
-| `SKILL_TESTER_API_KEY`                   | API key for every model               |
-| `DEEPSEEK_BASE_URL` / `DEEPSEEK_API_KEY` | DeepSeek-specific                     |
-| `OPENAI_BASE_URL` / `OPENAI_API_KEY`     | OpenAI-specific / generic fallback    |
-| `SKILL_TESTER_MODELS`                    | Comma-separated default model list    |
+| Setting             | CLI          | Environment                                                                       |
+| ------------------- | ------------ | --------------------------------------------------------------------------------- |
+| Provider            | `--provider` | `SKILL_TESTER_PROVIDER`                                                           |
+| Base URL (`openai`) | `--base-url` | `SKILL_TESTER_BASE_URL`, then `OPENAI_BASE_URL`, then `https://api.openai.com/v1` |
+| API key (`openai`)  | `--api-key`  | `SKILL_TESTER_API_KEY`, then `OPENAI_API_KEY`                                     |
+| Models              | `--models`   | `SKILL_TESTER_MODELS`                                                             |
 
-Run `--models deepseek-chat` (or set `SKILL_TESTER_MODELS`) to evaluate a DeepSeek model; the
-harness posts to `POST {baseUrl}/chat/completions` with tool calling, exactly as the OpenAI API
-specifies.
+The model is passed through untouched — nothing is inferred from its name, and there is no default
+model. Point `--base-url` at DeepSeek, a local llama.cpp/Ollama/vLLM server, a gateway, or anything
+else that speaks the OpenAI API.
+
+GitHub Copilot is optional by design: `@github/copilot-sdk` is declared as an **optional peer
+dependency**, so the `openai` path needs no Copilot install. Selecting `--provider copilot` without
+it fails with an actionable message naming the install command.
 
 ## How a run works
 
@@ -63,13 +76,16 @@ specifies.
 2. The skill (`SKILL.md` body) or agent (markdown body) becomes the **system prompt**; a skill's
    whole directory is also copied into the sandbox under `.skill/<name>/` so its `references/`
    links resolve.
-3. The model runs an OpenAI-style **tool-calling loop** with sandboxed file tools — `read_file`,
-   `write_file`, `edit_file`, `list_files`, `glob`, `search_files` — until it stops requesting
-   tools or hits `--max-turns`.
+3. Depending on the provider: **`openai`** runs an OpenAI-style tool-calling loop with sandboxed
+   file tools — `read_file`, `write_file`, `edit_file`, `list_files`, `glob`, `search_files` —
+   until the model stops requesting tools or hits `--max-turns`; **`copilot`** hands the same
+   system prompt and sandbox (as its working directory) to a GitHub Copilot custom agent, which
+   uses its own tools and loop.
 4. The resulting sandbox is scored.
 
 A failed tool call, an unknown tool, or a path escaping the sandbox is reported back to the model
-as an error (and counted as an avoidable retry), never a crash.
+as an error (and counted as an avoidable retry), never a crash. The `copilot` provider counts
+avoidable retries from its post-tool-use hook.
 
 ## Quality score
 
@@ -136,11 +152,12 @@ scoring, and failure reporting — without network access or credentials.
 src/
   cli.ts                     CLI entry point
   index.ts                   public API
-  config.ts                  per-model endpoint/credential resolution
+  config.ts                  provider + endpoint/credential resolution
   skillTester.ts             orchestrator: sandboxes, runs, aggregation, reporting
   llm/openaiClient.ts        dependency-free OpenAI-compatible chat client
   llm/tools.ts               sandboxed file tools + JSON schemas
-  llm/agentRunner.ts         provider-agnostic tool-calling agent loop
+  llm/agentRunner.ts         OpenAI-compatible tool-calling agent loop
+  llm/copilotRunner.ts       GitHub Copilot provider (lazy, optional dependency)
   scoring/qualityScore.ts    exact / normalized / similarity / check scoring
   scenarios/                 scenario model, lion-ui generators, manual scenarios
   report/runRecord.ts        markdown run record + JSON sidecar
