@@ -1,327 +1,358 @@
+/**
+ * skill-tester — orchestrator.
+ *
+ * Runs one or more skills/agents against a set of isolated scenarios, on any OpenAI-compatible
+ * model (OpenAI, DeepSeek, local servers, ...), and produces a quality score per run plus a
+ * markdown run record that feeds the `recursive-skill-improver` workflow.
+ *
+ * GitHub Copilot is not required: the skill/agent definition becomes the system prompt and the
+ * model edits files in a sandbox through OpenAI-style tool calling (see `llm/agentRunner.ts`).
+ */
+
+import fs from 'node:fs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+import { blue, gray, green, red, yellow } from 'nanocolors';
 import { createProjectSandbox, type ProjectMock } from './createProjectSandbox.ts';
 import { parseMarkdownFile } from './parseFrontmatter.ts';
-import { gray, green, red } from 'nanocolors';
-import * as diff from 'diff';
-import { CopilotClient, approveAll } from '@github/copilot-sdk';
-import fs from 'fs';
 import fsGlob from './fsGlob.ts';
-import { fileURLToPath } from 'url';
-import { dirname, join } from 'path';
+import { resolveLlmConfig, describeCredentialSource } from './config.ts';
+import { runAgent } from './llm/agentRunner.ts';
+import {
+  aggregate,
+  scoreScenario,
+  type AggregateStats,
+  type ScenarioScore,
+} from './scoring/qualityScore.ts';
+import { writeRunRecord } from './report/runRecord.ts';
+import type { TestScenario } from './scenarios/types.ts';
 
 const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
+const __dirname = path.dirname(__filename);
 
-// Filter out CLI subprocess warning messages
-function shouldFilterMessage(message: string): boolean {
-  if (typeof message !== 'string') return false;
-  return message.includes('[CLI subprocess]') || message.includes('ExperimentalWarning');
-}
-
-// Override process.stderr.write and process.stdout.write to filter warnings
-const originalStderrWrite = process.stderr.write;
-const originalStdoutWrite = process.stdout.write;
-
-process.stderr.write = function (chunk: any, ...args: any[]) {
-  const message = chunk?.toString() || '';
-  if (!shouldFilterMessage(message)) {
-    return originalStderrWrite.call(process.stderr, chunk, ...args);
-  }
-  return true;
-};
-
-process.stdout.write = function (chunk: any, ...args: any[]) {
-  const message = chunk?.toString() || '';
-  if (!shouldFilterMessage(message)) {
-    return originalStdoutWrite.call(process.stdout, chunk, ...args);
-  }
-  return true;
-};
-
-type SkillConfig = {
-  /* This is the skill or agent that we want to test */
-  skillOrAgent: {
-    name: string;
-    location: string; // e.g., "@lion/ui" or "./skills/my-skill"
-    type: 'agent' | 'skill';
-    extraFiles?: ProjectMock; // Optional extra files to add to the sandbox, on top of the ones defined in the project
-  };
-  /* This is the prompt we want to test our agent or skill with */
-  prompt: string;
-  /* A virtual file system structure to which a code transformation is applied. This can be one or more projects. */
-  projects: TestProject[];
-  /* Optionally, we can run extra skills. For instance, we test the public api of a component library (@lion/ui) and we want to accompany this with best practices wrt tech stack (lit + scoped elements). Provide the directory to these skills */
-  skills?: string[];
-  /* A list of models like "gpt-4.1", "claude-sonnet-4.5" */
-  models: string[];
-  /* How many times we run the same prompt */
-  sampleSize?: number;
-};
-
-type TestProject = {
+export type SkillOrAgent = {
   name: string;
-  description?: string;
-  files: ProjectMock; // virtual file system structure before transformation
-  expectedTransformedFiles: ProjectMock;
+  /** A `skill` is a directory containing `SKILL.md` (+ `references/`). An `agent` is a single markdown file. */
+  type: 'skill' | 'agent';
+  location: string;
+  /** Extra files copied into every sandbox on top of the scenario's own files. */
+  extraFiles?: ProjectMock;
 };
 
-function reportDiffMismatch(actualContent: string, expectedContent: string): string {
-  function cleanUp(line: string) {
-    if (line[0] === '+') {
-      return green(line);
-    }
-    if (line[0] === '-') {
-      return red(line);
-    }
-    if (line.match(/@@/)) {
-      return null;
-    }
-    if (line.match(/\\ No newline/)) {
-      return null;
-    }
-    return line;
-  }
+export type SkillTesterConfig = {
+  skillOrAgent: SkillOrAgent;
+  scenarios: TestScenario[];
+  models: string[];
+  /** How many times each (scenario, model) pair is run. */
+  sampleSize?: number;
+  /** Max model round-trips per run. */
+  maxTurns?: number;
+  /** Score percentage at or above which a run counts as passing (default 100). */
+  passThreshold?: number;
+  llm?: { baseUrl?: string; apiKey?: string };
+  /** Base directory for sandboxes. Defaults to `<cwd>/.tmp/projectSandbox`. */
+  sandboxBaseDir?: string;
+  /** Where the markdown run record is written. Pass `false` to skip. */
+  reportDir?: string | false;
+  /** Campaign metadata recorded in the run record. */
+  campaign?: RunRecordMetadata;
+  onProgress?: (message: string) => void;
+};
 
-  const diffMsg = diff
-    .createPatch('string', actualContent, expectedContent)
-    .split('\n')
-    .splice(4)
-    .map(cleanUp)
-    .filter(l => !!l)
-    .join('\n');
+export type RunRecordMetadata = {
+  runNumber?: number;
+  task?: string;
+  targetRepositoryRevision?: string;
+  skillSourceRevision?: string;
+  agent?: string;
+};
 
-  return `${green('+ expected')} ${red('- actual')}\n\n${diffMsg}`;
-}
+export type ScenarioRunResult = {
+  model: string;
+  scenario: string;
+  sample: number;
+  sandboxRoot: string;
+  durationMs: number;
+  score: ScenarioScore;
+  agentRun: {
+    turns: number;
+    toolCalls: number;
+    toolErrors: number;
+    finished: boolean;
+    stopReason: 'completed' | 'max_turns';
+    totalTokens: number;
+  };
+};
 
-async function skillTester({
-  sampleSize = 5,
-  skillOrAgent,
-  projects,
-  prompt,
-  models,
-  skills,
-}: SkillConfig) {
-  const results = [];
+export type ModelScenarioSummary = {
+  model: string;
+  scenario: string;
+  stats: AggregateStats;
+};
 
-  let mainSkillDir;
-  let agentFile;
+export type SkillTesterReport = {
+  skillOrAgent: { name: string; type: 'skill' | 'agent' };
+  models: string[];
+  scenarios: string[];
+  sampleSize: number;
+  startedAt: string;
+  finishedAt: string;
+  durationMs: number;
+  runs: ScenarioRunResult[];
+  perModelScenario: ModelScenarioSummary[];
+  perModel: { model: string; stats: AggregateStats }[];
+  overall: AggregateStats;
+};
+
+/**
+ * Read a skill directory or agent markdown file and turn it into a system prompt plus the files
+ * that must be present in the sandbox for the model to consult.
+ *
+ * - `skill`: `SKILL.md` body becomes the system prompt; the whole skill directory is copied to
+ *   `.skill/<name>/` in the sandbox so its `references/...` links resolve.
+ * - `agent`: the markdown body becomes the system prompt; `extraFiles` (already collected) are
+ *   used as-is.
+ */
+export async function loadSkillOrAgent(
+  skillOrAgent: SkillOrAgent,
+): Promise<{ systemPrompt: string; extraFiles: ProjectMock }> {
   if (skillOrAgent.type === 'agent') {
     const fileContent = await fs.promises.readFile(skillOrAgent.location, 'utf-8');
-    // Extract prompt content (everything after the frontmatter)
-    agentFile = parseMarkdownFile(fileContent);
-
-    // read extra content and add to project sandbox. (N.B. do we need to add the ?)
+    const parsed = parseMarkdownFile(fileContent);
+    return { systemPrompt: parsed.body, extraFiles: skillOrAgent.extraFiles ?? {} };
   }
 
-  for (const project of projects) {
-    for (const model of models) {
-      const resultsForSample = [];
+  const skillDir = skillOrAgent.location;
+  const fileContent = await fs.promises.readFile(path.join(skillDir, 'SKILL.md'), 'utf-8');
+  const parsed = parseMarkdownFile(fileContent);
 
-      for (let i = 0; i < sampleSize; i++) {
-        console.log(
-          `Testing ${skillOrAgent.type} "${
-            skillOrAgent.name
-          }" with prompt "${prompt}" and model "${model}" (sample ${i + 1} of ${sampleSize})`,
-        );
-
-        // Create a sandbox for the project files
-        const sandboxRoot = await createProjectSandbox({
-          ...project.files,
-          ...(skillOrAgent.extraFiles || {}),
-        });
-
-        // Create and start client
-        const client = new CopilotClient({ cwd: sandboxRoot });
-        await client.start();
-
-        // Create a session (onPermissionRequest is required)
-        const session = await client.createSession({
-          model,
-          onPermissionRequest: approveAll,
-          customAgents: [
-            {
-              name: '@lion/ui',
-              displayName: '@lion/ui',
-              prompt: agentFile.body,
-              tools: agentFile.frontmatter.tools as string[],
-            },
-          ],
-          hooks: {
-            // onSessionStart: async (input, invocation) => {
-            //   /* ... */
-            // },
-            onPreToolUse: async (input, invocation) => {
-              console.log(gray(`- tool "${input.toolName}", ${input.toolArgs}`));
-            },
-            // onPostToolUse: async (input, invocation) => {
-            //   /* ... */
-            // },
-          },
-          agent: skillOrAgent.name,
-          // TODO: skills
-        });
-
-        // Wait for response using typed event handlers
-        const done = new Promise<void>(resolve => {
-          session.on('assistant.message', event => {
-            console.log(event.data.content);
-          });
-          session.on('session.idle', () => {
-            resolve();
-          });
-        });
-
-        // Send a message and wait for completion
-        await session.send({
-          prompt,
-          // attachments: [{ type: 'file', path: '../test-input/test-input-1.js' }],
-        });
-        await done;
-
-        const amountOfFiles = new Set([
-          ...Object.keys(project.files),
-          ...Object.keys(project.expectedTransformedFiles),
-        ]).size;
-        let amountOfSuccessfulTransformations = 0;
-
-        // TODO: take deleted files into account as well
-        for (const [filePath, expectedContent] of Object.entries(
-          project.expectedTransformedFiles,
-        )) {
-          const fullPath = join(sandboxRoot, filePath);
-          const actualContent = await fs.promises.readFile(fullPath, 'utf-8');
-          if (actualContent.trim() === expectedContent.trim()) {
-            // console.log(`✅ ${filePath} transformed as expected.`);
-            amountOfSuccessfulTransformations++;
-          } else {
-            reportDiffMismatch(actualContent, expectedContent);
-          }
-        }
-
-        resultsForSample.push({
-          successRate: amountOfSuccessfulTransformations / amountOfFiles,
-          project: project.name,
-          sample: i + 1,
-          model,
-        });
-
-        // Clean up
-        await session.disconnect();
-        await client.stop();
+  const skillSandboxDir = `.skill/${skillOrAgent.name}`;
+  const extraFiles: ProjectMock = {};
+  const collect = async (dir: string): Promise<void> => {
+    const entries = await fs.promises.readdir(dir, { withFileTypes: true });
+    for (const entry of entries) {
+      const full = path.join(dir, entry.name);
+      if (entry.isDirectory()) {
+        await collect(full);
+      } else if (entry.isFile()) {
+        const relative = path.relative(skillDir, full).split(path.sep).join('/');
+        extraFiles[`${skillSandboxDir}/${relative}`] = await fs.promises.readFile(full, 'utf-8');
       }
-
-      results.push({
-        model,
-        project: project.name,
-        averageSuccessRate:
-          resultsForSample.reduce((acc, r) => acc + r.successRate, 0) / resultsForSample.length,
-      });
     }
-  }
+  };
+  await collect(skillDir);
 
-  console.log('\nFinal results:', results);
+  const preamble = [
+    `The reference files for this skill are available in the project under \`${skillSandboxDir}/\`.`,
+    'When the skill mentions a path such as `references/components/button.md`,',
+    `read \`${skillSandboxDir}/references/components/button.md\` with the read_file tool.`,
+    '',
+  ].join('\n');
 
-  // return results;
-  process.exit(0);
+  return { systemPrompt: `${preamble}${parsed.body}`, extraFiles };
 }
 
-// N.B. we keep the examples clean and small.
-// Later we add extra options to generate 'noise', larger repos etc.
-
-async function createAgentConfig({
+/**
+ * Collect an agent markdown file plus glob-matched supporting files into a `SkillOrAgent`.
+ * Kept for parity with the original proof of concept.
+ */
+export async function createAgentConfig({
   name,
   projectRoot,
   relativePathToAgentFile,
-  globsToExtraFiles,
+  globsToExtraFiles = [],
 }: {
   name: string;
   projectRoot: string;
   relativePathToAgentFile: string;
-  globsToExtraFiles: string[];
-}) {
-  const files = await fsGlob(globsToExtraFiles, {
-    cwd: projectRoot,
-    absolute: true,
-    onlyFiles: true,
-  });
-  // console.debug(`Found ${files.length} extra files for agent config:`, files);
-
+  globsToExtraFiles?: string[];
+}): Promise<SkillOrAgent> {
   const extraFiles: ProjectMock = {};
-  for (const filePath of files) {
-    const relativePath = filePath.replace(projectRoot, '').replace(/\\/g, '/');
-    extraFiles[relativePath] = await fs.promises.readFile(filePath, 'utf-8');
+  if (globsToExtraFiles.length > 0) {
+    const files = await fsGlob(globsToExtraFiles, {
+      cwd: projectRoot,
+      absolute: true,
+      onlyFiles: true,
+    });
+    for (const filePath of files) {
+      const relativePath = filePath.replace(projectRoot, '').replace(/\\/g, '/');
+      extraFiles[relativePath] = await fs.promises.readFile(filePath, 'utf-8');
+    }
   }
-
   return {
     name,
-    location: join(projectRoot, relativePathToAgentFile),
-    type: 'agent' as 'agent' | 'skill',
+    location: path.join(projectRoot, relativePathToAgentFile),
+    type: 'agent',
     extraFiles,
   };
 }
 
-const testProjectsIncludingExpectedTransforms: TestProject[] = [
-  {
-    name: 'example-project-with-a-button',
-    files: {
-      'src/MyButtonApp.js': `
-      import { LionButton } from '@lion/ui/button.js';
-      import { LitElement, ScopedElementsMixin } from '@lion/ui/core.js';
+export async function runSkillTester(config: SkillTesterConfig): Promise<SkillTesterReport> {
+  const {
+    skillOrAgent,
+    scenarios,
+    models,
+    sampleSize = 5,
+    maxTurns = 25,
+    llm = {},
+    sandboxBaseDir,
+    reportDir,
+    campaign = {},
+    onProgress = message => console.log(message),
+  } = config;
 
-      export class MyButtonApp extends ScopedElementsMixin(LitElement) {
-        scopedElements = {
-          'lion-button': LionButton,
-        };
+  const { systemPrompt, extraFiles } = await loadSkillOrAgent(skillOrAgent);
+  const startedAt = new Date();
+  const runs: ScenarioRunResult[] = [];
 
-        render() {
-          return html\`
-            <lion-button variation="primary-medium">Click me</lion-button>
-          \`;
-        }
-          
-        handleClick() {
-          console.log('Button clicked!');
-        }
+  let sandboxCounter = 0;
+  for (const model of models) {
+    const llmConfig = resolveLlmConfig(model, llm);
+
+    for (const scenario of scenarios) {
+      for (let sample = 1; sample <= sampleSize; sample++) {
+        const outputPath = sandboxBaseDir
+          ? path.join(
+              sandboxBaseDir,
+              `${slug(model)}-${slug(scenario.name)}-${sample}`,
+            )
+          : path.join(process.cwd(), '.tmp', 'projectSandbox', `${sandboxCounter++}`);
+        const sandboxRoot = await createProjectSandbox(
+          { ...scenario.files, ...extraFiles },
+          { outputPath },
+        );
+
+        onProgress(
+          gray(
+            `▸ ${model} · ${scenario.name} · sample ${sample}/${sampleSize} · ${path.relative(
+              process.cwd(),
+              sandboxRoot,
+            )}`,
+          ),
+        );
+
+        const start = Date.now();
+        let toolErrors = 0;
+        const agentRun = await runAgent({
+          llmConfig,
+          systemPrompt,
+          userPrompt: scenario.prompt,
+          sandboxRoot,
+          maxTurns,
+          onEvent: event => {
+            if (event.type === 'tool_call') {
+              onProgress(gray(`    ↳ ${event.name} ${truncate(event.arguments, 120)}`));
+            } else if (event.type === 'tool_result' && event.result.startsWith('Error:')) {
+              toolErrors++;
+              onProgress(red(`    ✗ ${event.result.split('\n')[0]}`));
+            } else if (event.type === 'assistant_message' && event.content.trim()) {
+              onProgress(gray(`    💬 ${truncate(event.content.trim(), 160)}`));
+            }
+          },
+        });
+        const durationMs = Date.now() - start;
+
+        const score = scoreScenario({
+          sandboxRoot,
+          expectedTransformedFiles: scenario.expectedTransformedFiles,
+          checks: scenario.checks,
+        });
+
+        onProgress(
+          `${score.percent >= 100 ? green('✔') : score.percent >= 50 ? yellow('~') : red('✘')} ` +
+            `${scenario.name} → ${score.percent}% ` +
+            gray(`(${agentRun.turns} turns, ${agentRun.toolCalls} tool calls)`),
+        );
+
+        runs.push({
+          model,
+          scenario: scenario.name,
+          sample,
+          sandboxRoot,
+          durationMs,
+          score,
+          agentRun: {
+            turns: agentRun.turns,
+            toolCalls: agentRun.toolCalls,
+            toolErrors,
+            finished: agentRun.finished,
+            stopReason: agentRun.stopReason,
+            totalTokens: agentRun.usage.total_tokens ?? 0,
+          },
+        });
       }
-      `,
-    },
-    expectedTransformedFiles: {
-      'src/MyButtonApp.js': `
-      import { LionBlob } from '@lion/ui/blob.js';
-      import { LitElement, ScopedElementsMixin } from '@lion/ui/core.js';
+    }
+  }
 
-      export class MyButtonApp extends ScopedElementsMixin(LitElement) {
-        scopedElements = {
-          'lion-blob': LionBlob,
-        };
+  const finishedAt = new Date();
+  const report: SkillTesterReport = {
+    skillOrAgent: { name: skillOrAgent.name, type: skillOrAgent.type },
+    models,
+    scenarios: scenarios.map(scenario => scenario.name),
+    sampleSize,
+    startedAt: startedAt.toISOString(),
+    finishedAt: finishedAt.toISOString(),
+    durationMs: finishedAt.getTime() - startedAt.getTime(),
+    runs,
+    perModelScenario: buildPerModelScenario(runs),
+    perModel: models.map(model => ({
+      model,
+      stats: aggregate(runs.filter(run => run.model === model).map(run => run.score.score)),
+    })),
+    overall: aggregate(runs.map(run => run.score.score)),
+  };
 
-        render() {
-          return html\`
-            <lion-blob><button>Click me</button></lion-blob>
-          \`;
-        }
-          
-        handleClick() {
-          console.log('Button clicked!');
-        }
-      }
-      `,
-    },
-  },
-];
+  const missingCredentials = models.filter(model => !resolveLlmConfig(model, llm).apiKey);
+  if (missingCredentials.length > 0) {
+    onProgress(
+      yellow(
+        `! No API key resolved for: ${missingCredentials
+          .map(model => `${model} (${describeCredentialSource(model)})`)
+          .join(', ')}`,
+      ),
+    );
+  }
 
-skillTester({
-  skillOrAgent: await createAgentConfig({
-    name: '@lion/ui',
-    projectRoot: join(__dirname, '../mock-repo'),
-    relativePathToAgentFile: '.github/agents/lion.agent.md',
-    globsToExtraFiles: ['.github/agents/docs/**/*'],
-  }),
-  prompt: 'Convert button component to blob component',
-  models: [
-    // 'gpt-4.1',
-    // 'claude-haiku-4.5',
-    'claude-sonnet-4.5',
-  ],
-  sampleSize: 5,
-  projects: testProjectsIncludingExpectedTransforms,
-});
+  if (reportDir !== false) {
+    const { markdownPath } = writeRunRecord({
+      report,
+      campaign,
+      scenarios,
+      passThreshold: config.passThreshold ?? 100,
+      outputDir: reportDir,
+    });
+    onProgress(blue(`Run record written to ${path.relative(process.cwd(), markdownPath)}`));
+  }
+
+  return report;
+}
+
+function buildPerModelScenario(runs: ScenarioRunResult[]): ModelScenarioSummary[] {
+  const grouped = new Map<string, number[]>();
+  for (const run of runs) {
+    const key = `${run.model}\u0000${run.scenario}`;
+    const bucket = grouped.get(key) ?? [];
+    bucket.push(run.score.score);
+    grouped.set(key, bucket);
+  }
+  return [...grouped.entries()].map(([key, scores]) => {
+    const [model, scenario] = key.split('\u0000');
+    return { model, scenario, stats: aggregate(scores) };
+  });
+}
+
+function slug(value: string): string {
+  return value.replace(/[^a-zA-Z0-9._-]/g, '_');
+}
+
+function truncate(value: string, max: number): string {
+  const singleLine = value.replace(/\s+/g, ' ');
+  return singleLine.length > max ? `${singleLine.slice(0, max)}…` : singleLine;
+}
+
+/** Absolute path to the default `lion-ui` skill shipped on this branch. */
+export function defaultLionUiSkillLocation(
+  repoRoot: string = path.resolve(__dirname, '../../../..'),
+): string {
+  return path.join(repoRoot, 'packages/ui/skills/lion-ui');
+}
