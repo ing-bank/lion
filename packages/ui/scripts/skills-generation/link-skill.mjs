@@ -4,15 +4,16 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 
 /**
- * Symlinks `packages/ui/skills/lion-ui` (the committed source of truth) into `~/.copilot/skills`
- * so the GitHub Copilot CLI discovers it as a personal skill without needing a separate copy.
+ * Symlinks every skill under `packages/ui/skills/*` (the committed source of truth) into
+ * `~/.copilot/skills` so the GitHub Copilot CLI discovers them as personal skills without
+ * needing a separate copy.
  *
  * This is opt-in (never run automatically from `postinstall`): writing into a developer's home
  * directory as an install side effect would be surprising. Run it manually:
  *
  *   npm run skills:link
  *
- * Safe to re-run: if the target is already the correct symlink, it's a no-op. If something else
+ * Safe to re-run: if a target is already the correct symlink, it's a no-op. If something else
  * (a stale directory/file from before this tooling existed, or a symlink pointing elsewhere)
  * occupies that path, it is replaced.
  */
@@ -20,18 +21,12 @@ import { fileURLToPath } from 'url';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const repoRoot = path.resolve(__dirname, '../../../../');
 
-const skillSourceDir = path.join(repoRoot, 'packages/ui/skills/lion-ui');
+const skillsSourceDir = path.join(repoRoot, 'packages/ui/skills');
 const copilotSkillsDir = path.join(os.homedir(), '.copilot/skills');
-const skillLinkPath = path.join(copilotSkillsDir, 'lion-ui');
 
-function main() {
-  if (!fs.existsSync(skillSourceDir)) {
-    throw new Error(
-      `${path.relative(repoRoot, skillSourceDir)} does not exist. Run "npm run skills:generate" first.`,
-    );
-  }
-
-  fs.mkdirSync(copilotSkillsDir, { recursive: true });
+function linkSkill(name) {
+  const skillSourceDir = path.join(skillsSourceDir, name);
+  const skillLinkPath = path.join(copilotSkillsDir, name);
 
   const existingStat = fs.lstatSync(skillLinkPath, { throwIfNoEntry: false });
   if (existingStat) {
@@ -54,6 +49,31 @@ function main() {
 
   fs.symlinkSync(skillSourceDir, skillLinkPath, 'dir');
   console.log(`Linked ${skillLinkPath} -> ${skillSourceDir}`);
+}
+
+function main() {
+  if (!fs.existsSync(skillsSourceDir)) {
+    throw new Error(
+      `${path.relative(repoRoot, skillsSourceDir)} does not exist. Run "npm run skills:generate" first.`,
+    );
+  }
+
+  const skillNames = fs
+    .readdirSync(skillsSourceDir, { withFileTypes: true })
+    .filter(
+      entry =>
+        entry.isDirectory() && fs.existsSync(path.join(skillsSourceDir, entry.name, 'SKILL.md')),
+    )
+    .map(entry => entry.name);
+
+  if (skillNames.length === 0) {
+    throw new Error(
+      `No skills with a SKILL.md found under ${path.relative(repoRoot, skillsSourceDir)}.`,
+    );
+  }
+
+  fs.mkdirSync(copilotSkillsDir, { recursive: true });
+  skillNames.forEach(linkSkill);
 }
 
 main();
