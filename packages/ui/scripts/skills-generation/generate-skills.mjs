@@ -1,0 +1,232 @@
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import matter from 'gray-matter';
+import { computeApiTablesByDocGroup } from '../../../../scripts/lib/api-tables.mjs';
+
+/**
+ * Generates the `lion-ui` agent skill (`packages/ui/skills/lion-ui`) from lion's own
+ * documentation sources:
+ *
+ * - `docs/components/<name>/*.md`  -> `references/components/<name>.md`
+ * - `docs/fundamentals/systems/<name>/*.md` -> `references/systems/<name>.md`
+ * - `packages/ui/custom-elements.json` -> inlined "API Reference" section in each file above
+ *
+ * The generated reference files are committed (they are the skill's source of truth), so this
+ * script does not depend on any gitignored build output (`docs/**\/api-table.md`) and recomputes
+ * the API tables itself via the shared `scripts/lib/api-tables.mjs`.
+ *
+ * `SKILL.md` itself is hand-written; only the component/system index between the
+ * `<!-- lion-ui:*:start/end -->` marker comments is rewritten here.
+ *
+ * Usage: `npm run skills:generate` (delegates to this script via `packages/ui/package.json`).
+ */
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const repoRoot = path.resolve(__dirname, '../../../../');
+
+const docsRoot = path.join(repoRoot, 'docs');
+const uiComponentsDir = path.join(repoRoot, 'packages/ui/components');
+const customElementsJsonPath = path.join(repoRoot, 'packages/ui/custom-elements.json');
+const skillDir = path.join(repoRoot, 'packages/ui/skills/lion-ui');
+const referencesDir = path.join(skillDir, 'references');
+const skillMdPath = path.join(skillDir, 'SKILL.md');
+
+/** `docs/fundamentals/systems` folders that document cross-cutting `@lion/ui` APIs. */
+const SYSTEM_DOC_DIRS = ['core', 'form', 'icon', 'localize', 'overlays'];
+
+/**
+ * @param {string} text kebab-case directory name, e.g. `input-amount`
+ * @returns {string} Title Case, e.g. `Input Amount`
+ */
+function toTitleCase(text) {
+  return text.replace(
+    /(^|-)(\w)/g,
+    (_m, sep, letter) => `${sep === '-' ? ' ' : ''}${letter.toUpperCase()}`,
+  );
+}
+
+/**
+ * Shifts the level of every ATX heading (`#`...`######`) in Markdown down by `levels`, skipping
+ * headings that appear inside fenced code blocks. Used so merged/inlined content (which has its
+ * own `# Title` headings) nests correctly under this file's single top-level `# <Component>`
+ * heading — required by this repo's `single-h1`/`MD025` markdownlint rule.
+ * @param {string} markdown
+ * @param {number} levels
+ * @returns {string}
+ */
+function shiftHeadings(markdown, levels) {
+  let inFence = false;
+  return markdown
+    .split('\n')
+    .map(line => {
+      if (/^\s*(```|~~~)/.test(line)) {
+        inFence = !inFence;
+        return line;
+      }
+      if (!inFence && /^#{1,6}(\s|$)/.test(line)) {
+        return '#'.repeat(levels) + line;
+      }
+      return line;
+    })
+    .join('\n');
+}
+
+/**
+ * Reads every doc page in a `docs/components/<name>` or `docs/fundamentals/systems/<name>`
+ * directory (skipping `index.md`, which is just an Eleventy nav redirect, and the
+ * build-generated `api-table.md`, which is recomputed from the CEM instead), and concatenates
+ * their bodies in the order defined by each page's `eleventyNavigation.order` frontmatter.
+ * @param {string} dirPath
+ * @returns {string}
+ */
+function mergeDocPages(dirPath) {
+  const files = fs
+    .readdirSync(dirPath)
+    .filter(f => f.endsWith('.md') && f !== 'index.md' && f !== 'api-table.md');
+
+  const pages = files.map(file => {
+    const raw = fs.readFileSync(path.join(dirPath, file), 'utf8');
+    const parsed = matter(raw);
+    const order = parsed.data?.eleventyNavigation?.order ?? 999;
+    return { order, content: parsed.content.trim() };
+  });
+
+  pages.sort((a, b) => a.order - b.order);
+
+  // Each page's own `# Title` heading is shifted to `## Title` so it nests under this file's
+  // single `# <Component>` heading instead of introducing additional top-level headings.
+  return pages.map(p => shiftHeadings(p.content, 1)).join('\n\n---\n\n');
+}
+
+/**
+ * @param {object} options
+ * @param {'components' | 'systems'} options.kind
+ * @param {string} options.name
+ * @param {string} options.sourceDirPath absolute path to the `docs/...` source directory
+ * @param {string | undefined} options.apiTableMd
+ * @returns {string} the relative reference file path, e.g. `references/components/button.md`
+ */
+function writeReferenceFile({ kind, name, sourceDirPath, apiTableMd }) {
+  const outDir = path.join(referencesDir, kind);
+  fs.mkdirSync(outDir, { recursive: true });
+  const outPath = path.join(outDir, `${name}.md`);
+
+  const relativeSource = path.relative(repoRoot, sourceDirPath);
+  const body = mergeDocPages(sourceDirPath);
+  const apiSection = apiTableMd ? `\n\n## API Reference\n\n${shiftHeadings(apiTableMd, 1)}\n` : '';
+
+  const fileContent = [
+    `# ${toTitleCase(name)}`,
+    '',
+    `> Generated by \`npm run skills:generate\` from \`${relativeSource}\` and \`packages/ui/custom-elements.json\`. Do not edit by hand — edit the source docs instead.`,
+    '',
+    body,
+    apiSection,
+  ].join('\n');
+
+  // Merging independent doc pages/API tables (each already ending in their own trailing
+  // whitespace) can introduce 3+ consecutive newlines; collapse to a single blank line so the
+  // output satisfies this repo's `MD012/no-multiple-blanks` markdownlint rule.
+  const normalizedContent = `${fileContent.replace(/\n{3,}/g, '\n\n').trimEnd()}\n`;
+
+  fs.writeFileSync(outPath, normalizedContent);
+  return path.relative(skillDir, outPath);
+}
+
+/**
+ * Rewrites the auto-generated index section of `SKILL.md` between a pair of marker comments,
+ * leaving the hand-written rest of the file untouched.
+ * @param {string} markerName e.g. `components` or `systems`
+ * @param {{ name: string, refPath: string }[]} entries
+ */
+function updateSkillMdIndex(markerName, entries) {
+  const startMarker = `<!-- lion-ui:${markerName}:start -->`;
+  const endMarker = `<!-- lion-ui:${markerName}:end -->`;
+
+  const skillMd = fs.readFileSync(skillMdPath, 'utf8');
+  const startIndex = skillMd.indexOf(startMarker);
+  const endIndex = skillMd.indexOf(endMarker);
+
+  if (startIndex === -1 || endIndex === -1 || endIndex < startIndex) {
+    throw new Error(
+      `SKILL.md is missing the "${startMarker}" / "${endMarker}" marker comments. ` +
+        'These must exist (even if empty between them) for generation to update the index.',
+    );
+  }
+
+  const listMd = entries
+    .sort((a, b) => a.name.localeCompare(b.name))
+    .map(e => `- [\`${toTitleCase(e.name)}\`](${e.refPath})`)
+    .join('\n');
+
+  const before = skillMd.slice(0, startIndex + startMarker.length);
+  const after = skillMd.slice(endIndex);
+  fs.writeFileSync(skillMdPath, `${before}\n\n${listMd}\n\n${after}`);
+}
+
+function main() {
+  if (!fs.existsSync(customElementsJsonPath)) {
+    throw new Error(
+      `Missing ${path.relative(repoRoot, customElementsJsonPath)}. Run ` +
+        '"npm run custom-elements-manifest" first (this also runs automatically on install).',
+    );
+  }
+  if (!fs.existsSync(skillMdPath)) {
+    throw new Error(
+      `Missing ${path.relative(repoRoot, skillMdPath)}. SKILL.md is hand-written and must exist ` +
+        'before generation can update its component/system index.',
+    );
+  }
+
+  const customElementsJson = JSON.parse(fs.readFileSync(customElementsJsonPath, 'utf8'));
+  const tablesByGroup = computeApiTablesByDocGroup({ uiComponentsDir, customElementsJson });
+
+  // Clear previously generated reference files so removed components/systems don't linger.
+  fs.rmSync(referencesDir, { recursive: true, force: true });
+
+  const componentEntries = [];
+  const componentsDocsDir = path.join(docsRoot, 'components');
+  for (const name of fs.readdirSync(componentsDocsDir)) {
+    const sourceDirPath = path.join(componentsDocsDir, name);
+    if (!fs.statSync(sourceDirPath).isDirectory()) continue;
+
+    const refPath = writeReferenceFile({
+      kind: 'components',
+      name,
+      sourceDirPath,
+      apiTableMd: tablesByGroup.get(`components/${name}`),
+    });
+    componentEntries.push({ name, refPath });
+  }
+
+  const systemEntries = [];
+  const systemsDocsDir = path.join(docsRoot, 'fundamentals/systems');
+  for (const name of SYSTEM_DOC_DIRS) {
+    const sourceDirPath = path.join(systemsDocsDir, name);
+    if (!fs.existsSync(sourceDirPath)) {
+      console.warn(
+        `Skipping system "${name}": ${path.relative(repoRoot, sourceDirPath)} not found.`,
+      );
+      continue;
+    }
+
+    const refPath = writeReferenceFile({
+      kind: 'systems',
+      name,
+      sourceDirPath,
+      apiTableMd: tablesByGroup.get(`fundamentals/systems/${name}`),
+    });
+    systemEntries.push({ name, refPath });
+  }
+
+  updateSkillMdIndex('components', componentEntries);
+  updateSkillMdIndex('systems', systemEntries);
+
+  console.log(
+    `Generated ${componentEntries.length} component reference(s) and ${systemEntries.length} ` +
+      `system reference(s) under ${path.relative(repoRoot, referencesDir)}.`,
+  );
+}
+
+main();

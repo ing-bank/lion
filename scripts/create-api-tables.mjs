@@ -1,6 +1,6 @@
 import fs from 'fs';
-import { customElementsManifestToMarkdown } from '@custom-elements-manifest/to-markdown';
 import matter from 'gray-matter';
+import { computeApiTablesByDocGroup, resolveDocGroup } from './lib/api-tables.mjs';
 
 /**
  * @param {string} text
@@ -16,37 +16,33 @@ function clearAndUpper(text) {
   return text.replace(/-/, ' ').toUpperCase();
 }
 
-const systemsTable = ['core', 'form-core', 'localize', 'overlays'];
-const mappingTable = [{ componentDir: 'validate-messages', portalDir: 'form' }];
+const customElementsJson = JSON.parse(
+  fs.readFileSync('./packages/ui/custom-elements.json', 'utf8'),
+);
+
+const tablesByGroup = computeApiTablesByDocGroup({
+  uiComponentsDir: './packages/ui/components',
+  customElementsJson,
+});
 
 const componentDirs = fs
   .readdirSync('./packages/ui/components')
   .filter(d => !d.startsWith('_') && !d.startsWith('form-integrations'));
 
-const customElementsJson = JSON.parse(
-  fs.readFileSync('./packages/ui/custom-elements.json', 'utf8'),
-);
+const writtenGroups = new Set();
 
-for (let dir of componentDirs) {
-  const isSystem = systemsTable.includes(dir);
-  const classes = fs
-    .readdirSync(`./packages/ui/components/${dir}/src/`)
-    .filter(f => {
-      if (isSystem) {
-        return f.endsWith('.js')
-      }
-      return f.endsWith('.js') && !f.endsWith('Manager.js') && !f.endsWith('Mixin.js')
-    })
-    .map(f => f.replace('.js', ''));
+for (const componentDir of componentDirs) {
+  const { dir, isSystem } = resolveDocGroup(componentDir);
+  const folder = isSystem ? 'fundamentals/systems' : 'components';
+  const groupKey = `${folder}/${dir}`;
 
-  for (const component of mappingTable) {
-    if (dir === component.componentDir) {
-      dir = component.portalDir;
-    }
-  }
-  if (dir === 'form-core') {
-    dir = 'form';
-  }
+  // Several `packages/ui/components` dirs are remapped onto the same doc dir (e.g. `form-core`
+  // and `validate-messages` both feed into `form`); only write each output file once.
+  if (writtenGroups.has(groupKey)) continue;
+  writtenGroups.add(groupKey);
+
+  const apiTablesMd = tablesByGroup.get(groupKey);
+  if (!apiTablesMd) continue;
 
   const titleFromDir = toSplitAndUpperCase(dir);
   const parts = ['API Table', titleFromDir];
@@ -58,46 +54,15 @@ for (let dir of componentDirs) {
     key: parts.join(' >> '),
     title: 'API Table',
     order: 90,
-    parent: parts.slice(1).reverse().join(' >> ')
-  }
+    parent: parts.slice(1).reverse().join(' >> '),
+  };
 
-  let dirApiTableMd = matter.stringify(`# ${title}`, {
+  const dirApiTableMd = matter.stringify(`# ${title}\n\n${apiTablesMd}`, {
     parts,
     title,
     eleventyNavigation,
   });
 
-  for (const c of classes) {
-    for (const mod of customElementsJson.modules) {
-      for (const declaration of mod.declarations) {
-        if (declaration.name === c && declaration.kind === 'class') {
-          const md = customElementsManifestToMarkdown(
-            {
-              modules: [
-                {
-                  declarations: [declaration],
-                },
-              ],
-            },
-            {
-              private: 'hidden',
-              headingOffset: 0,
-              omitSections: [
-                'main-heading',
-                'super-class',
-                'static-fields',
-                'static-methods',
-                'mixins',
-              ],
-            },
-          );
-          dirApiTableMd = `${dirApiTableMd} \n\n${md}`;
-        }
-      }
-    }
-  }
-
-  const folder = isSystem ? 'fundamentals/systems' : 'components';
   try {
     fs.writeFileSync(`./docs/${folder}/${dir}/api-table.md`, dirApiTableMd);
   } catch (e) {
