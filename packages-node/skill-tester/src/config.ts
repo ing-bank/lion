@@ -1,69 +1,89 @@
 /**
- * Resolves the endpoint/model configuration for the OpenAI-compatible chat client.
+ * Provider configuration for skill-tester.
  *
- * The tester talks to any OpenAI-compatible `/chat/completions` endpoint (OpenAI, DeepSeek,
- * Azure OpenAI, a local llama.cpp/Ollama server, ...). GitHub Copilot is not required.
+ * Two providers are supported, chosen explicitly (never guessed from the model name):
  *
- * Precedence (first match wins):
- *   1. explicit per-call overrides (passed from the run config)
- *   2. `SKILL_TESTER_*` environment variables
- *   3. provider-specific defaults derived from the model name
+ *   - `openai`  — any OpenAI-compatible `/chat/completions` endpoint: OpenAI, DeepSeek,
+ *                 Azure OpenAI, Ollama, llama.cpp, vLLM, a gateway, ...
+ *   - `copilot` — GitHub Copilot, via the optional `@github/copilot-sdk`.
+ *
+ * Precedence (first match wins): explicit per-call overrides → `SKILL_TESTER_*` environment
+ * variables → generic `OPENAI_*` variables → documented defaults.
+ *
+ * No model is pinned: the model is whatever the caller passes.
  */
 
+export type Provider = 'openai' | 'copilot';
+
 export type LlmConfig = {
-  /** Base URL *including* the API version prefix, e.g. `https://api.deepseek.com/v1`. */
+  provider: Provider;
+  /** Base URL for the `openai` provider (ignored by `copilot`). */
   baseUrl: string;
+  /** API key for the `openai` provider (may be empty for local servers). */
   apiKey: string;
   model: string;
 };
 
 export type LlmConfigOverrides = {
+  provider?: Provider;
   baseUrl?: string;
   apiKey?: string;
 };
 
-const DEFAULT_OPENAI_BASE_URL = 'https://api.openai.com/v1';
-const DEFAULT_DEEPSEEK_BASE_URL = 'https://api.deepseek.com/v1';
+export const DEFAULT_OPENAI_BASE_URL = 'https://api.openai.com/v1';
 
-/** DeepSeek model ids look like `deepseek-chat` / `deepseek-reasoner`. */
-export function isDeepSeekModel(model: string): boolean {
-  return /^deepseek/i.test(model);
-}
+/** Aliases accepted for each provider, so `--provider openai-compatible` works too. */
+const PROVIDER_ALIASES: Record<string, Provider> = {
+  openai: 'openai',
+  'openai-compatible': 'openai',
+  compatible: 'openai',
+  copilot: 'copilot',
+  'github-copilot': 'copilot',
+};
+
+const PROVIDER_ALIAS_LIST = '"openai" (any OpenAI-compatible endpoint) or "copilot"';
 
 function firstDefined(...values: (string | undefined)[]): string | undefined {
   return values.find(value => typeof value === 'string' && value.length > 0);
 }
 
+export function resolveProvider(overrides: LlmConfigOverrides = {}): Provider {
+  const raw = firstDefined(overrides.provider, process.env.SKILL_TESTER_PROVIDER) ?? 'openai';
+  const provider = PROVIDER_ALIASES[raw.toLowerCase()];
+  if (!provider) {
+    throw new Error(`Unknown provider "${raw}". Expected ${PROVIDER_ALIAS_LIST}.`);
+  }
+  return provider;
+}
+
 /**
- * Resolve the endpoint + credential to use for a given model name.
- * Model names are matched case-insensitively against known providers so a run can mix
- * e.g. `['gpt-4.1', 'deepseek-chat']` and still route each one correctly.
+ * Resolve the provider, endpoint and credential to use for a given model.
+ * The model name is passed through untouched — no vendor-specific defaults are derived from it.
  */
 export function resolveLlmConfig(model: string, overrides: LlmConfigOverrides = {}): LlmConfig {
-  const deepseek = isDeepSeekModel(model);
-
   const baseUrl = firstDefined(
     overrides.baseUrl,
     process.env.SKILL_TESTER_BASE_URL,
-    deepseek ? process.env.DEEPSEEK_BASE_URL : undefined,
     process.env.OPENAI_BASE_URL,
-    deepseek ? DEFAULT_DEEPSEEK_BASE_URL : DEFAULT_OPENAI_BASE_URL,
+    DEFAULT_OPENAI_BASE_URL,
   )!;
 
   const apiKey = firstDefined(
     overrides.apiKey,
     process.env.SKILL_TESTER_API_KEY,
-    deepseek ? process.env.DEEPSEEK_API_KEY : undefined,
     process.env.OPENAI_API_KEY,
     '',
   )!;
 
-  return { baseUrl: baseUrl.replace(/\/+$/, ''), apiKey, model };
+  return {
+    provider: resolveProvider(overrides),
+    baseUrl: baseUrl.replace(/\/+$/, ''),
+    apiKey,
+    model,
+  };
 }
 
-/** Human-readable description of where a credential for `model` is expected to come from. */
-export function describeCredentialSource(model: string): string {
-  return isDeepSeekModel(model)
-    ? 'DEEPSEEK_API_KEY (or SKILL_TESTER_API_KEY / OPENAI_API_KEY)'
-    : 'OPENAI_API_KEY (or SKILL_TESTER_API_KEY)';
+/** Where the credential for the `openai` provider is expected to come from (for messages/docs). */
+export function describeOpenAiCredentialSource(): string {
+  return 'SKILL_TESTER_API_KEY or OPENAI_API_KEY';
 }

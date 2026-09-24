@@ -61,9 +61,18 @@ export {
 
 export { writeRunRecord, renderRunRecord } from './report/runRecord.ts';
 
-export { resolveLlmConfig, isDeepSeekModel, describeCredentialSource, type LlmConfig } from './config.ts';
+export {
+  resolveLlmConfig,
+  resolveProvider,
+  describeOpenAiCredentialSource,
+  DEFAULT_OPENAI_BASE_URL,
+  type Provider,
+  type LlmConfig,
+} from './config.ts';
 
-export { runAgent, type AgentRunResult, type AgentEvent } from './llm/agentRunner.ts';
+export { runAgent as runOpenAiCompatibleAgent, type AgentRunResult, type AgentEvent } from './llm/agentRunner.ts';
+
+export { runCopilotAgent, isCopilotSdkAvailable, type CopilotAgentOptions } from './llm/copilotRunner.ts';
 
 export { createFileToolset } from './llm/tools.ts';
 
