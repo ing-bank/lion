@@ -1,0 +1,44 @@
+name: Regenerate lion-ui skill
+
+# Regenerates the `packages/ui/skills/lion-ui` agent skill from `docs/components/**`,
+# `docs/fundamentals/systems/**` and `packages/ui/custom-elements.json`, and opens a PR with the
+# result for review (nothing is pushed directly to master).
+#
+# Manual (`workflow_dispatch`) only for now, while this is validated. Once proven reliable, the
+# plan is to also trigger this automatically after every release, by adding a job here (or a
+# `workflow_run` trigger watching `release.yml`) gated on the changesets `published` output from
+# release.yml, so the skill is refreshed once per published release rather than on every push.
+on:
+  workflow_dispatch:
+
+jobs:
+  regenerate-skills:
+    name: Regenerate lion-ui skill
+    runs-on: ubuntu-latest
+    steps:
+      - uses: google/wireit@setup-github-actions-caching/v2
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js 22.x
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22.x
+          cache: npm
+
+      - name: Install Dependencies
+        run: npm install --ci
+
+      - name: Generate lion-ui skill
+        run: npm run skills:generate
+
+      - name: Open pull request
+        uses: peter-evans/create-pull-request@v6
+        with:
+          commit-message: 'chore: regenerate lion-ui skill'
+          title: 'chore: regenerate lion-ui skill'
+          body: >
+            Automated regeneration of `packages/ui/skills/lion-ui` from `docs/components/**`,
+            `docs/fundamentals/systems/**` and `packages/ui/custom-elements.json`.
+          branch: skills/lion-ui-update
+          delete-branch: true
+          add-paths: packages/ui/skills/lion-ui/**
