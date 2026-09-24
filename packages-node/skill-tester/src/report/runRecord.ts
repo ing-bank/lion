@@ -61,7 +61,15 @@ export function renderRunRecord({
   lines.push('| --- | --- |');
   lines.push(`| Run number | ${campaign?.runNumber ?? 'n/a'} |`);
   lines.push(`| Task | ${campaign?.task ?? `${report.scenarios.length} isolated lion-ui scenarios`} |`);
-  lines.push(`| Agent | ${campaign?.agent ?? 'OpenAI-compatible chat model + file tools'} |`);
+  const defaultAgent =
+    report.provider === 'copilot'
+      ? 'GitHub Copilot (custom agent)'
+      : 'OpenAI-compatible chat model + file tools';
+  lines.push(`| Agent | ${campaign?.agent ?? defaultAgent} |`);
+  lines.push(`| Provider | ${report.provider} |`);
+  if (report.provider === 'openai' && report.baseUrl) {
+    lines.push(`| Endpoint | ${report.baseUrl} |`);
+  }
   lines.push(`| Target repository revision | ${campaign?.targetRepositoryRevision ?? 'n/a'} |`);
   lines.push(`| Skill-source revision | ${campaign?.skillSourceRevision ?? 'n/a'} |`);
   lines.push(`| Skill under test | \`${report.skillOrAgent.type}\` ${report.skillOrAgent.name} |`);

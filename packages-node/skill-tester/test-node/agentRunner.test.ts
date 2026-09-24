@@ -64,6 +64,8 @@ test('runs a scenario end to end against an OpenAI-compatible endpoint', async (
     assert.equal(report.overall.mean, 1, 'expected a perfect score');
     assert.equal(report.runs[0].agentRun.toolCalls, 1);
     assert.equal(report.runs[0].agentRun.finished, true);
+    assert.equal(report.provider, 'openai');
+    assert.equal(report.baseUrl, server.baseUrl);
 
     // The mock endpoint must have received our tool definitions and the bearer token.
     assert.equal(server.requests.length, 2);
@@ -129,6 +131,20 @@ test('reports a low score and evidence when the model produces the wrong output'
   } finally {
     await server.close();
   }
+});
+
+test('refuses to run without a model, because no model is pinned', async () => {
+  await assert.rejects(
+    runSkillTester({
+      skillOrAgent: { name: 'test-skill', type: 'agent', location: writeAgentFile() },
+      scenarios: [scenario()],
+      models: [],
+      sandboxBaseDir: tempDir(),
+      reportDir: false,
+      onProgress: () => {},
+    }),
+    /does not default to a model/,
+  );
 });
 
 test('an unknown tool name is reported back to the model instead of crashing', async () => {

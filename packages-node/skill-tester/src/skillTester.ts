@@ -16,8 +16,10 @@ import { blue, gray, green, red, yellow } from 'nanocolors';
 import { createProjectSandbox, type ProjectMock } from './createProjectSandbox.ts';
 import { parseMarkdownFile } from './parseFrontmatter.ts';
 import fsGlob from './fsGlob.ts';
-import { resolveLlmConfig, describeCredentialSource } from './config.ts';
-import { runAgent } from './llm/agentRunner.ts';
+import { resolveLlmConfig, resolveProvider, describeOpenAiCredentialSource } from './config.ts';
+import { runAgent as runOpenAiCompatibleAgent } from './llm/agentRunner.ts';
+import type { AgentEvent } from './llm/agentRunner.ts';
+import { runCopilotAgent } from './llm/copilotRunner.ts';
 import {
   aggregate,
   scoreScenario,
@@ -37,6 +39,8 @@ export type SkillOrAgent = {
   location: string;
   /** Extra files copied into every sandbox on top of the scenario's own files. */
   extraFiles?: ProjectMock;
+  /** Copilot tool names the agent may use (only meaningful for the `copilot` provider). */
+  tools?: string[];
 };
 
 export type SkillTesterConfig = {
@@ -92,6 +96,9 @@ export type ModelScenarioSummary = {
 
 export type SkillTesterReport = {
   skillOrAgent: { name: string; type: 'skill' | 'agent' };
+  provider: 'openai' | 'copilot';
+  /** Endpoint used for the `openai` provider (omitted for `copilot`). */
+  baseUrl?: string;
   models: string[];
   scenarios: string[];
   sampleSize: number;
@@ -201,6 +208,13 @@ export async function runSkillTester(config: SkillTesterConfig): Promise<SkillTe
     onProgress = message => console.log(message),
   } = config;
 
+  if (!models || models.length === 0) {
+    throw new Error(
+      'No model specified. Pass --models <model> (or set SKILL_TESTER_MODELS): ' +
+        'skill-tester deliberately does not default to a model.',
+    );
+  }
+
   const { systemPrompt, extraFiles } = await loadSkillOrAgent(skillOrAgent);
   const startedAt = new Date();
   const runs: ScenarioRunResult[] = [];
@@ -233,23 +247,38 @@ export async function runSkillTester(config: SkillTesterConfig): Promise<SkillTe
 
         const start = Date.now();
         let toolErrors = 0;
-        const agentRun = await runAgent({
-          llmConfig,
-          systemPrompt,
-          userPrompt: scenario.prompt,
-          sandboxRoot,
-          maxTurns,
-          onEvent: event => {
-            if (event.type === 'tool_call') {
-              onProgress(gray(`    ↳ ${event.name} ${truncate(event.arguments, 120)}`));
-            } else if (event.type === 'tool_result' && event.result.startsWith('Error:')) {
-              toolErrors++;
-              onProgress(red(`    ✗ ${event.result.split('\n')[0]}`));
-            } else if (event.type === 'assistant_message' && event.content.trim()) {
-              onProgress(gray(`    💬 ${truncate(event.content.trim(), 160)}`));
-            }
-          },
-        });
+        const onAgentEvent = (event: AgentEvent) => {
+          if (event.type === 'tool_call') {
+            onProgress(gray(`    ↳ ${event.name} ${truncate(event.arguments, 120)}`));
+          } else if (event.type === 'tool_result' && event.result.startsWith('Error')) {
+            toolErrors++;
+            onProgress(red(`    ✗ ${event.result.split('\n')[0]}`));
+          } else if (event.type === 'assistant_message' && event.content.trim()) {
+            onProgress(gray(`    💬 ${truncate(event.content.trim(), 160)}`));
+          }
+        };
+
+        // The Copilot provider manages its own agent loop and needs the agent registered by name
+        // (and optionally restricted to a tool list); the OpenAI-compatible one runs our loop.
+        const agentRun =
+          llmConfig.provider === 'copilot'
+            ? await runCopilotAgent({
+                llmConfig,
+                systemPrompt,
+                userPrompt: scenario.prompt,
+                sandboxRoot,
+                agentName: skillOrAgent.name,
+                tools: skillOrAgent.tools,
+                onEvent: onAgentEvent,
+              })
+            : await runOpenAiCompatibleAgent({
+                llmConfig,
+                systemPrompt,
+                userPrompt: scenario.prompt,
+                sandboxRoot,
+                maxTurns,
+                onEvent: onAgentEvent,
+              });
         const durationMs = Date.now() - start;
 
         const score = scoreScenario({
@@ -285,8 +314,11 @@ export async function runSkillTester(config: SkillTesterConfig): Promise<SkillTe
   }
 
   const finishedAt = new Date();
+  const provider = resolveProvider(llm);
   const report: SkillTesterReport = {
     skillOrAgent: { name: skillOrAgent.name, type: skillOrAgent.type },
+    provider,
+    ...(provider === 'openai' ? { baseUrl: resolveLlmConfig(models[0], llm).baseUrl } : {}),
     models,
     scenarios: scenarios.map(scenario => scenario.name),
     sampleSize,
@@ -302,15 +334,16 @@ export async function runSkillTester(config: SkillTesterConfig): Promise<SkillTe
     overall: aggregate(runs.map(run => run.score.score)),
   };
 
-  const missingCredentials = models.filter(model => !resolveLlmConfig(model, llm).apiKey);
-  if (missingCredentials.length > 0) {
-    onProgress(
-      yellow(
-        `! No API key resolved for: ${missingCredentials
-          .map(model => `${model} (${describeCredentialSource(model)})`)
-          .join(', ')}`,
-      ),
-    );
+  if (resolveProvider(llm) === 'openai') {
+    const missingCredentials = models.filter(model => !resolveLlmConfig(model, llm).apiKey);
+    if (missingCredentials.length > 0) {
+      onProgress(
+        yellow(
+          `! No API key resolved for: ${missingCredentials.join(', ')} ` +
+            `(set ${describeOpenAiCredentialSource()}, or pass --api-key for a local endpoint)`,
+        ),
+      );
+    }
   }
 
   if (reportDir !== false) {
