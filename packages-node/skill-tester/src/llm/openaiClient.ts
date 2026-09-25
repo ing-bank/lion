@@ -45,6 +45,10 @@ export type ChatCompletionOptions = {
   config: LlmConfig;
   messages: ChatMessage[];
   tools?: ToolDefinition[];
+  /**
+   * Omitted by default. Several models (the GPT-5 family, some reasoning models) reject any
+   * value other than their own default, so not sending it is the portable choice.
+   */
   temperature?: number;
   maxTokens?: number;
   signal?: AbortSignal;
@@ -71,7 +75,7 @@ export async function createChatCompletion({
   config,
   messages,
   tools,
-  temperature = 0,
+  temperature,
   maxTokens,
   signal,
 }: ChatCompletionOptions): Promise<ChatCompletionResult> {
@@ -79,8 +83,11 @@ export async function createChatCompletion({
   const body: Record<string, unknown> = {
     model: config.model,
     messages,
-    temperature,
   };
+  // Only send temperature when explicitly asked for; see ChatCompletionOptions.temperature.
+  if (typeof temperature === 'number') {
+    body.temperature = temperature;
+  }
   if (tools && tools.length > 0) {
     body.tools = tools;
     body.tool_choice = 'auto';
