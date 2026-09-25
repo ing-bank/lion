@@ -714,6 +714,7 @@ export function runValidateMixinFeedbackPart() {
             const results = {
               'a-string-instead-of-bool': 'Msg based on enum output',
             };
+            // @ts-ignore [dynamic-key-access-in-test]
             return results[/** @type {string} */ (outcome)];
           }
         }

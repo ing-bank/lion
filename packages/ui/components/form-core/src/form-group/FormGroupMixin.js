@@ -343,6 +343,7 @@ const FormGroupMixinImplementation = superclass =>
      * @returns {{[name:string]: any}}
      */
     _getFromAllFormElements(property, filterFn) {
+      /** @type {{[name:string]: any}} */
       const result = {};
 
       // Prioritizes imperatively passed filter function over the protected method
@@ -386,6 +387,7 @@ const FormGroupMixinImplementation = superclass =>
           if (Array.isArray(this.formElements[name])) {
             this.formElements[name].forEach(
               (/** @type {FormControl} */ el, /** @type {number} */ index) => {
+                // @ts-ignore [dynamic-property-access]
                 el[property] = values[name][index]; // eslint-disable-line no-param-reassign
               },
             );
@@ -393,6 +395,7 @@ const FormGroupMixinImplementation = superclass =>
           if (this.formElements[name]) {
             this.formElements[name][property] = values[name];
           } else {
+            // @ts-ignore [dynamic-property-access]
             this.__pendingValues[property][name] = values[name];
           }
         });
@@ -406,6 +409,7 @@ const FormGroupMixinImplementation = superclass =>
     _anyFormElementHas(property) {
       return Object.keys(this.formElements).some(name => {
         if (Array.isArray(this.formElements[name])) {
+          // @ts-ignore [dynamic-property-access]
           return this.formElements[name].some((/** @type {FormControl} */ el) => !!el[property]);
         }
         return !!this.formElements[name][property];
@@ -436,6 +440,7 @@ const FormGroupMixinImplementation = superclass =>
     _everyFormElementHas(property) {
       return Object.keys(this.formElements).every(name => {
         if (Array.isArray(this.formElements[name])) {
+          // @ts-ignore [dynamic-property-access]
           return this.formElements[name].every((/** @type {FormControl} */ el) => !!el[property]);
         }
         return !!this.formElements[name][property];
