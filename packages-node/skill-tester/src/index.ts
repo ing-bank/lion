@@ -7,7 +7,7 @@
  * const report = await runSkillTester({
  *   skillOrAgent: { name: 'lion-ui', type: 'skill', location: defaultLionUiSkillLocation() },
  *   scenarios: loadLionUiScenarios({ repoRoot: process.cwd() }),
- *   models: ['deepseek-chat'],
+ *   models: ['gpt-5-mini'],
  *   sampleSize: 1,
  * });
  * console.log(report.overall.mean);
@@ -32,11 +32,14 @@ export {
   discoverComponentNames,
   discoverSystemNames,
   discoverKnownTags,
+  discoverDefineEntrypoints,
   manualScenarios,
   NON_VISUAL_COMPONENT_DIRS,
   SYSTEM_NAMES,
+  defineEntrypointFor,
   type TestScenario,
   type ScenarioCheck,
+  type LionUiScenarioContext,
 } from './scenarios/index.ts';
 
 export {
