@@ -3,9 +3,9 @@
 Scientifically sound evaluation of your AI skills and agents.
 
 skill-tester runs a skill or agent against a set of **small, isolated scenarios**, on **any
-OpenAI-compatible model** (OpenAI, DeepSeek, Azure OpenAI, Ollama, llama.cpp, vLLM, ...) **or on
-GitHub Copilot**, and scores every run with a single **quality score**. The provider is chosen
-explicitly and no model is assumed.
+OpenAI-compatible model** (OpenAI, Azure OpenAI, Anthropic or Google models behind a gateway,
+Ollama, llama.cpp, vLLM, ...) **or on GitHub Copilot**, and scores every run with a single
+**quality score**. The provider is chosen explicitly and no model is assumed.
 
 It closes the loop with [`recursive-skill-improver`](../../packages/ui/skills/recursive-skill-improver/SKILL.md):
 each run writes a markdown **run record** that lists failing checks as evidence, ready to be
@@ -27,9 +27,8 @@ cd packages-node/skill-tester
 # What would run?
 npm run eval:list
 
-# Every lion-ui component + system scenario on any OpenAI-compatible endpoint (e.g. DeepSeek)
-npm run eval -- --models deepseek-chat --base-url https://api.deepseek.com/v1 \
-  --api-key "$DEEPSEEK_API_KEY" --samples 3
+# Every lion-ui component + system, on any OpenAI-compatible endpoint (OpenAI shown here)
+npm run eval -- --models gpt-5-mini --api-key "$OPENAI_API_KEY" --samples 3
 
 # A local OpenAI-compatible server, one component
 npm run eval -- --models my-local-model --base-url http://localhost:8080/v1 \
@@ -39,6 +38,9 @@ npm run eval -- --models my-local-model --base-url http://localhost:8080/v1 \
 npm install @github/copilot-sdk
 npm run eval -- --provider copilot --models <copilot-model>
 ```
+
+See [`examples/`](examples/README.md) for ready-made presets (`openai`, `runware`, `local`,
+`copilot`) and a worked example of the library API.
 
 Anything after `--` is passed to the CLI; `node src/cli.ts --help` shows every option.
 `--models` (or `SKILL_TESTER_MODELS`) is required — skill-tester never picks a model for you.
@@ -62,8 +64,8 @@ Selected explicitly with `--provider` / `SKILL_TESTER_PROVIDER`; never guessed f
 | Models              | `--models`   | `SKILL_TESTER_MODELS`                                                             |
 
 The model is passed through untouched — nothing is inferred from its name, and there is no default
-model. Point `--base-url` at DeepSeek, a local llama.cpp/Ollama/vLLM server, a gateway, or anything
-else that speaks the OpenAI API.
+model. Point `--base-url` at anything that speaks the OpenAI API: OpenAI, Azure OpenAI, a gateway
+serving Anthropic/Google models, Runware, a local llama.cpp/Ollama/vLLM server, ...
 
 GitHub Copilot is optional by design: `@github/copilot-sdk` is declared as an **optional peer
 dependency**, so the `openai` path needs no Copilot install. Selecting `--provider copilot` without

@@ -3,8 +3,9 @@
  *
  * The provider is chosen explicitly; no model is assumed:
  *
- *   # OpenAI-compatible endpoint (default), e.g. DeepSeek or a local server
- *   node src/cli.ts --models deepseek-chat --base-url https://api.deepseek.com/v1 --api-key "$DEEPSEEK_API_KEY"
+ *   # OpenAI-compatible endpoint (default), e.g. OpenAI or a local server
+ *   node src/cli.ts --models gpt-5-mini --api-key "$OPENAI_API_KEY"
+ *   node src/cli.ts --models my-model --base-url http://localhost:8080/v1
  *   # GitHub Copilot (requires the optional @github/copilot-sdk)
  *   node src/cli.ts --provider copilot --models <model>
  *   node src/cli.ts --list
@@ -136,9 +137,9 @@ Options:
   -h, --help              Show this help
 
 Examples:
-  # Any OpenAI-compatible endpoint, e.g. DeepSeek or a local server
-  node src/cli.ts --models deepseek-chat --base-url https://api.deepseek.com/v1 --api-key "$DEEPSEEK_API_KEY"
-  node src/cli.ts --models my-local-model --base-url http://localhost:8080/v1
+  # Any OpenAI-compatible endpoint (the default base URL is https://api.openai.com/v1)
+  node src/cli.ts --models gpt-5-mini --api-key "$OPENAI_API_KEY"
+  node src/cli.ts --models my-model --base-url http://localhost:8080/v1
   # GitHub Copilot (install the optional SDK first)
   npm install @github/copilot-sdk && node src/cli.ts --provider copilot --models <model>
 
