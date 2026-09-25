@@ -43,7 +43,7 @@ export function runValidateMixinFeedbackPart() {
       }
 
       /**
-       * @param {?} modelValue
+       * @param {any} modelValue
        */
       execute(modelValue) {
         const hasError = !modelValue.includes('a');
@@ -57,7 +57,7 @@ export function runValidateMixinFeedbackPart() {
       }
 
       /**
-       * @param {?} modelValue
+       * @param {any} modelValue
        */
       execute(modelValue) {
         const hasError = !modelValue.includes('cat');

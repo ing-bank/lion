@@ -2735,8 +2735,8 @@ describe('lion-combobox', () => {
           }
 
           /**
-           * @param {?} modelValue
-           * @param {?} oldModelValue
+           * @param {any} modelValue
+           * @param {any} oldModelValue
            */
           // eslint-disable-next-line no-unused-vars
           _syncToTextboxMultiple(modelValue, oldModelValue) {
@@ -2787,7 +2787,7 @@ describe('lion-combobox', () => {
             /**
              * Return the value to be used for the input value
              * @overridable
-             * @param {?} option
+             * @param {any} option
              * @returns {string}
              */
             // eslint-disable-next-line class-methods-use-this
@@ -2837,7 +2837,7 @@ describe('lion-combobox', () => {
             /**
              * Return the value to be used for the input value
              * @overridable
-             * @param {?} option
+             * @param {any} option
              * @returns {string}
              */
             // eslint-disable-next-line class-methods-use-this
@@ -2887,7 +2887,7 @@ describe('lion-combobox', () => {
             /**
              * Return the value to be used for the input value
              * @overridable
-             * @param {?} option
+             * @param {any} option
              * @returns {string}
              */
             // eslint-disable-next-line class-methods-use-this
@@ -2937,7 +2937,7 @@ describe('lion-combobox', () => {
             /**
              * Return the value to be used for the input value
              * @overridable
-             * @param {?} option
+             * @param {any} option
              * @returns {string}
              */
             // eslint-disable-next-line class-methods-use-this

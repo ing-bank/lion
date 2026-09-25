@@ -182,7 +182,7 @@ const FormatMixinImplementation = superclass =>
     /**
      * Converts `.modelValue` to `.serializedValue`
      * For instance, a Date object to an iso formatted date string
-     * @param {?} v - modelValue: can be an Object, Number, String depending on the
+     * @param {any} v - modelValue: can be an Object, Number, String depending on the
      * input type(date, number, email etc)
      * @returns {string} serializedValue
      */
@@ -193,9 +193,9 @@ const FormatMixinImplementation = superclass =>
     /**
      * Converts `.serializedValue` to `.modelValue`
      * For instance, an iso formatted date string to a Date object
-     * @param {?} v - modelValue: can be an Object, Number, String depending on the
+     * @param {any} v - modelValue: can be an Object, Number, String depending on the
      * input type(date, number, email etc)
-     * @returns {?} modelValue
+     * @returns {any} modelValue
      */
     deserializer(v) {
       return v === undefined ? '' : v;
@@ -220,7 +220,7 @@ const FormatMixinImplementation = superclass =>
       this.__preventRecursiveTrigger = true;
       if (source !== 'model') {
         if (source === 'serialized') {
-          /** @type {?} */
+          /** @type {any} */
           this.modelValue = this.deserializer(this.serializedValue);
         } else if (source === 'formatted') {
           this.modelValue = this._callParser();
@@ -239,7 +239,7 @@ const FormatMixinImplementation = superclass =>
 
     /**
      * @param {string|undefined} value
-     * @return {?}
+     * @return {any}
      * @private
      */
     _callParser(value = this.formattedValue) {

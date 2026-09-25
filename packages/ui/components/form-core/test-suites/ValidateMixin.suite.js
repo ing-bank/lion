@@ -1477,7 +1477,7 @@ export function runValidateMixinSuite(customConfig) {
 
               /**
                * @param {string} name
-               * @param {?} oldValue
+               * @param {any} oldValue
                */
               updateSync(name, oldValue) {
                 super.updateSync(name, oldValue);

@@ -389,7 +389,7 @@ export class LionInputDatepicker extends ScopedElementsMixin(
   /**
    * The LionCalendar shouldn't know anything about the modelValue;
    * it can't handle Unparseable dates, but does handle 'undefined'
-   * @param {?} modelValue
+   * @param {any} modelValue
    * @returns {Date | undefined} a 'guarded' modelValue
    */
   static __getSyncDownValue(modelValue) {

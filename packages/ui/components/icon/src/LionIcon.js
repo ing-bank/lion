@@ -8,7 +8,7 @@ import { icons } from './icons.js';
  */
 
 /**
- * @param {?} wrappedSvgObject
+ * @param {any} wrappedSvgObject
  */
 function unwrapSvg(wrappedSvgObject) {
   const svgObject =

@@ -807,7 +807,7 @@ export function runFormGroupMixinSuite(cfg = {}) {
             return 'Input1IsTen';
           }
 
-          /** @param {?} value */
+          /** @param {any} value */
           execute(value) {
             const hasError = value.input1 !== 10;
             return hasError;
@@ -863,7 +863,7 @@ export function runFormGroupMixinSuite(cfg = {}) {
         const fieldset = /**  @type {FormGroup} */ (
           await fixture(html`<${tag}>${inputSlots}</${tag}>`)
         );
-        fieldset.formElements['hobbies[]'][0].serializer = /** @param {?} v */ v =>
+        fieldset.formElements['hobbies[]'][0].serializer = /** @param {any} v */ v =>
           `${v.value}-serialized`;
         fieldset.formElements['hobbies[]'][0].modelValue = { checked: false, value: 'Bar' };
         fieldset.formElements['hobbies[]'][1].modelValue = { checked: false, value: 'rugby' };
