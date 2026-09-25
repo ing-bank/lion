@@ -40,9 +40,9 @@ const FormRegistrarMixinImplementation = superclass =>
       /**
        * Closely mimics the natively supported HTMLFormControlsCollection. It can be accessed
        * both like an array and an object (based on control/element names).
-       * @type {FormControlsCollection}
+       * @type {FormControlsCollection & { [name: string]: any }}
        */
-      this.formElements = new FormControlsCollection();
+      this.formElements = /** @type {any} */ (new FormControlsCollection());
 
       /**
        * Flag that determines how ".formElements" should behave.
