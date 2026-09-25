@@ -2,7 +2,7 @@
  * Minimal, dependency-free OpenAI-compatible chat client.
  *
  * Uses the global `fetch` (Node >= 18) so the tester can talk to any OpenAI-compatible
- * `/chat/completions` endpoint: OpenAI, DeepSeek, Azure OpenAI, Ollama, llama.cpp, vLLM, ...
+ * `/chat/completions` endpoint: OpenAI, Azure OpenAI, Ollama, llama.cpp, vLLM, ...
  * No vendor SDK is required.
  */
 
