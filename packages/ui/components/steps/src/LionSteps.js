@@ -50,7 +50,7 @@ export class LionSteps extends LitElement {
 
   constructor() {
     super();
-    /** @type {{[key: string]: ?}} */
+    /** @type {{[key: string]: any}} */
     this.data = {};
     this._internalCurrentSync = true; // necessary for preventing side effects on initialization
     /** @type {number} */

@@ -96,7 +96,7 @@ describe('model value event', () => {
   });
 
   describe('signature', () => {
-    /** @type {?} */
+    /** @type {any} */
     let e;
     beforeEach(async () => {
       const spy = sinon.spy();

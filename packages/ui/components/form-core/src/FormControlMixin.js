@@ -37,7 +37,7 @@ import { FormRegisteringMixin } from './registration/FormRegisteringMixin.js';
  * @param {import('@open-wc/dedupe-mixin').Constructor<import('lit').LitElement>} superclass
  * @type {FormControlMixin}
  */
-const FormControlMixinImplementation = superclass =>
+const FormControlMixinImplementation = /** @type {FormControlMixin} */ (superclass =>
   // eslint-disable-next-line no-shadow, no-unused-vars
   // @ts-ignore https://github.com/microsoft/TypeScript/issues/36821#issuecomment-588375051
   class FormControlMixin extends FormRegisteringMixin(DisabledMixin(SlotMixin(superclass))) {
@@ -166,7 +166,7 @@ const FormControlMixinImplementation = superclass =>
      * TODO: check if this is a false positive or if we can improve
      * @configure ReactiveElement
      */
-    static enabledWarnings = super.enabledWarnings?.filter(w => w !== 'change-in-update') || [];
+    static enabledWarnings = super['enabledWarnings']?.filter(w => w !== 'change-in-update') || [];
 
     // N.B. add these label/helpText props for types + ce manifest output
     // (explicity setting them to undefined does not have desired result)
@@ -541,7 +541,7 @@ const FormControlMixinImplementation = superclass =>
     }
 
     /**
-     * @return {TemplateResult | nothing}
+     * @return {TemplateResult | typeof nothing}
      * @protected
      */
     _inputGroupPrefixTemplate() {
@@ -568,7 +568,7 @@ const FormControlMixinImplementation = superclass =>
     }
 
     /**
-     * @return {TemplateResult | nothing}
+     * @return {TemplateResult | typeof nothing}
      * @protected
      */
     _inputGroupSuffixTemplate() {
@@ -986,6 +986,6 @@ const FormControlMixinImplementation = superclass =>
      */
     // eslint-disable-next-line class-methods-use-this
     _onLabelClick() {}
-  };
+  });
 
 export const FormControlMixin = dedupeMixin(FormControlMixinImplementation);

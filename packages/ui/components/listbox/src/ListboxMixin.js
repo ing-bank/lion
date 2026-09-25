@@ -26,7 +26,7 @@ import { moveUserProvidedDefaultSlottablesToTarget } from '../../core/src/SlotMi
  * @type {ListboxMixin}
  * @param {import('@open-wc/dedupe-mixin').Constructor<import('lit').LitElement>} superclass
  */
-const ListboxMixinImplementation = superclass =>
+const ListboxMixinImplementation = /** @type {ListboxMixin} */ (superclass =>
   // @ts-ignore https://github.com/microsoft/TypeScript/issues/36821#issuecomment-588375051
   class ListboxMixin extends FormControlMixin(
     ScopedElementsMixin(ChoiceGroupMixin(SlotMixin(FormRegistrarMixin(superclass)))),
@@ -56,7 +56,7 @@ const ListboxMixinImplementation = superclass =>
 
     static get styles() {
       return [
-        ...(super.styles || []),
+        ...(super['styles'] || []),
         css`
           :host {
             display: block;
@@ -931,6 +931,6 @@ const ListboxMixinImplementation = superclass =>
     __initInteractionStates() {
       this.initInteractionState();
     }
-  };
+  });
 
 export const ListboxMixin = dedupeMixin(ListboxMixinImplementation);

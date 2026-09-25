@@ -362,7 +362,7 @@ describe('<lion-input-datepicker>', () => {
             tagName,
             class CustomInputDatepicker extends LionInputDatepicker {
               static get validationTypes() {
-                return [...super.validationTypes, 'warning'];
+                return [...super['validationTypes'], 'warning'];
               }
             },
           );

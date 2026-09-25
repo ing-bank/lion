@@ -12,16 +12,26 @@ const matchesFunc = 'matches' in Element.prototype ? 'matches' : 'msMatchesSelec
 
 /**
  * @param {HTMLElement} element
+ * @param {string} selector
+ * @returns {boolean}
+ */
+function elementMatches(element, selector) {
+  // @ts-ignore [dynamic-method-name]: 'matches', or its legacy 'msMatchesSelector' alias
+  return element[matchesFunc](selector);
+}
+
+/**
+ * @param {HTMLElement} element
  * @returns {boolean} Whether the element matches
  */
 function isFocusable(element) {
   // Elements that cannot be focused if they have [disabled] attribute.
-  if (element[matchesFunc]('input, select, textarea, button, object')) {
-    return element[matchesFunc](':not([disabled])');
+  if (elementMatches(element, 'input, select, textarea, button, object')) {
+    return elementMatches(element, ':not([disabled])');
   }
 
   // Elements that can be focused even if they have [disabled] attribute.
-  return element[matchesFunc]('a[href], area[href], iframe, [tabindex], [contentEditable]');
+  return elementMatches(element, 'a[href], area[href], iframe, [tabindex], [contentEditable]');
 }
 
 /**

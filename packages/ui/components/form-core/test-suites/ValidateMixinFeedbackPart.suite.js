@@ -43,7 +43,7 @@ export function runValidateMixinFeedbackPart() {
       }
 
       /**
-       * @param {?} modelValue
+       * @param {any} modelValue
        */
       execute(modelValue) {
         const hasError = !modelValue.includes('a');
@@ -57,7 +57,7 @@ export function runValidateMixinFeedbackPart() {
       }
 
       /**
-       * @param {?} modelValue
+       * @param {any} modelValue
        */
       execute(modelValue) {
         const hasError = !modelValue.includes('cat');
@@ -96,7 +96,7 @@ export function runValidateMixinFeedbackPart() {
     it('reflects .showsFeedbackFor as attribute joined with "," to be used as a style hook', async () => {
       class ValidateElementCustomTypes extends ValidateMixin(LitElement) {
         static get validationTypes() {
-          return [...super.validationTypes, 'x'];
+          return [...super['validationTypes'], 'x'];
         }
       }
       const elTagString = defineCE(ValidateElementCustomTypes);
@@ -714,6 +714,7 @@ export function runValidateMixinFeedbackPart() {
             const results = {
               'a-string-instead-of-bool': 'Msg based on enum output',
             };
+            // @ts-ignore [dynamic-key-access-in-test]
             return results[/** @type {string} */ (outcome)];
           }
         }

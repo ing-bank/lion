@@ -175,7 +175,7 @@ export class LionInputAmountDropdown extends LionInputAmount {
     return {
       refs,
       data: {
-        // @ts-expect-error - cannot cast string to CurrencyCode outside a TS file
+        // @ts-ignore - cannot cast string to CurrencyCode outside a TS file
         currency: this.currency,
         regionMetaList: this.__regionMetaList,
         regionMetaListPreferred: this.__regionMetaListPreferred,
@@ -401,7 +401,7 @@ export class LionInputAmountDropdown extends LionInputAmount {
 
   /**
    * @lifecycle LitElement
-   * @param {import('lit-element').PropertyValues } changedProperties
+   * @param {import('lit').PropertyValues } changedProperties
    */
   willUpdate(changedProperties) {
     super.willUpdate(changedProperties);
@@ -412,7 +412,7 @@ export class LionInputAmountDropdown extends LionInputAmount {
   }
 
   /**
-   * @param {import('lit-element').PropertyValues } changedProperties
+   * @param {import('lit').PropertyValues } changedProperties
    */
   updated(changedProperties) {
     super.updated(changedProperties);
@@ -434,7 +434,7 @@ export class LionInputAmountDropdown extends LionInputAmount {
 
   /**
    * @lifecycle LitElement
-   * @param {import('lit-element').PropertyValues } changedProperties
+   * @param {import('lit').PropertyValues } changedProperties
    */
   firstUpdated(changedProperties) {
     super.firstUpdated?.(changedProperties);
@@ -596,12 +596,12 @@ export class LionInputAmountDropdown extends LionInputAmount {
         this._currencyUtil?.countryToCurrencyMap.get(this._langIso),
       )
     ) {
-      this.currency = this._currencyUtil?.countryToCurrencyMap.get(this._langIso);
+      this.currency = /** @type {any} */ (this._currencyUtil?.countryToCurrencyMap.get(this._langIso));
       return;
     }
 
     // 5. Not derivable
-    this.currency = undefined;
+    this.currency = /** @type {any} */ (undefined);
   }
 
   /**
