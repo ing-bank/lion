@@ -366,13 +366,16 @@ export function runOverlayMixinSuite({ tagString, tag, suffix = '' }) {
       `)
       );
       await OverlayController.popperModule;
+      // @ts-ignore [popper-instance-access-in-test]
       sinon.spy(el._overlayCtrl._popper, 'update');
       el.repositionOverlay();
+      // @ts-ignore [popper-instance-access-in-test]
       expect(el._overlayCtrl._popper.update).to.have.been.been.calledOnce;
 
       if (!el._overlayCtrl.isTooltip) {
         el.config = { ...el.config, placementMode: 'global' };
         el.repositionOverlay();
+        // @ts-ignore [popper-instance-access-in-test]
         expect(el._overlayCtrl._popper.update).to.have.been.been.calledOnce;
       }
     });

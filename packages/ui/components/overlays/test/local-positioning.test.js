@@ -61,8 +61,10 @@ describe('Local Positioning', () => {
         ...withLocalTestConfig(),
       });
       await ctrl.show();
+      // @ts-ignore [popper-instance-access-in-test]
       expect(ctrl._popper.state.modifiersData).to.exist;
       await ctrl.hide();
+      // @ts-ignore [popper-instance-access-in-test]
       expect(ctrl._popper.state.modifiersData).to.exist;
     });
 
@@ -203,6 +205,7 @@ describe('Local Positioning', () => {
       `);
 
       await ctrl.show();
+      // @ts-ignore [popper-instance-access-in-test]
       expect(ctrl._popper.state.modifiersData.offset.auto).to.eql({ x: 0, y: 16 });
     });
 
@@ -296,6 +299,7 @@ describe('Local Positioning', () => {
         },
       });
       await ctrl.show();
+      // @ts-ignore [popper-instance-access-in-test]
       expect(ctrl._popper.options.modifiers.offset.offset).to.equal('0, 20px');
       expect(normalizeTransformStyle(ctrl.contentWrapperNode.style.transform)).to.equal(
         'translate3d(10px, -40px, 0px)',

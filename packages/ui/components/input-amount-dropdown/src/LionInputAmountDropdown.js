@@ -401,7 +401,7 @@ export class LionInputAmountDropdown extends LionInputAmount {
 
   /**
    * @lifecycle LitElement
-   * @param {import('lit-element').PropertyValues } changedProperties
+   * @param {import('lit').PropertyValues } changedProperties
    */
   willUpdate(changedProperties) {
     super.willUpdate(changedProperties);
@@ -412,7 +412,7 @@ export class LionInputAmountDropdown extends LionInputAmount {
   }
 
   /**
-   * @param {import('lit-element').PropertyValues } changedProperties
+   * @param {import('lit').PropertyValues } changedProperties
    */
   updated(changedProperties) {
     super.updated(changedProperties);
@@ -434,7 +434,7 @@ export class LionInputAmountDropdown extends LionInputAmount {
 
   /**
    * @lifecycle LitElement
-   * @param {import('lit-element').PropertyValues } changedProperties
+   * @param {import('lit').PropertyValues } changedProperties
    */
   firstUpdated(changedProperties) {
     super.firstUpdated?.(changedProperties);

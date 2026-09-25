@@ -160,7 +160,7 @@ const SlotMixinImplementation = superclass =>
 
     /**
      * Here we rerender slots defined with a `SlotRerenderObject`
-     * @param {import('lit-element').PropertyValues } changedProperties
+     * @param {import('lit').PropertyValues } changedProperties
      */
     update(changedProperties) {
       super.update(changedProperties);
