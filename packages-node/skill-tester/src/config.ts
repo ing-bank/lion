@@ -3,8 +3,8 @@
  *
  * Two providers are supported, chosen explicitly (never guessed from the model name):
  *
- *   - `openai`  — any OpenAI-compatible `/chat/completions` endpoint: OpenAI, DeepSeek,
- *                 Azure OpenAI, Ollama, llama.cpp, vLLM, a gateway, ...
+ *   - `openai`  — any OpenAI-compatible `/chat/completions` endpoint: OpenAI, Azure OpenAI,
+ *                 Anthropic or Google models behind a gateway, a local server, ...
  *   - `copilot` — GitHub Copilot, via the optional `@github/copilot-sdk`.
  *
  * Precedence (first match wins): explicit per-call overrides → `SKILL_TESTER_*` environment
