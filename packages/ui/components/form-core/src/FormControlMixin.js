@@ -541,7 +541,7 @@ const FormControlMixinImplementation = superclass =>
     }
 
     /**
-     * @return {TemplateResult | nothing}
+     * @return {TemplateResult | typeof nothing}
      * @protected
      */
     _inputGroupPrefixTemplate() {
@@ -568,7 +568,7 @@ const FormControlMixinImplementation = superclass =>
     }
 
     /**
-     * @return {TemplateResult | nothing}
+     * @return {TemplateResult | typeof nothing}
      * @protected
      */
     _inputGroupSuffixTemplate() {

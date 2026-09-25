@@ -31,7 +31,7 @@ describe('IconManager', () => {
     /**
      * @param {string} iconset
      * @param {string} icon
-     * @return {TemplateResult | Promise<TemplateResult> | nothing | Promise<nothing>}
+     * @return {TemplateResult | Promise<TemplateResult> | typeof nothing | Promise<typeof nothing>}
      */
     // eslint-disable-next-line no-unused-vars
     const resolver = (iconset, icon) => nothing;

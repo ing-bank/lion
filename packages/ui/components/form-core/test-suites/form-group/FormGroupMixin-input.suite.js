@@ -47,7 +47,7 @@ export function runFormGroupMixinInputSuite(cfg = {}) {
 
   describe('FormGroupMixin with LionField', () => {
     it('serializes undefined values as "" (nb radios/checkboxes are always serialized)', async () => {
-      const fieldset = /**  @type {FormGroup} */ (
+      const fieldset = /**  @type {InstanceType<typeof FormGroup>} */ (
         await fixture(html`
         <${tag}>
           <${childTag} name="custom[]"></${childTag}>
@@ -81,7 +81,7 @@ export function runFormGroupMixinInputSuite(cfg = {}) {
       childAriaFixture = async (
         msgSlotType = 'feedback', // eslint-disable-line no-shadow
       ) => {
-        const dom = /**  @type {FormGroup} */ (
+        const dom = /**  @type {InstanceType<typeof FormGroup>} */ (
           await fixture(html`
         <${tag} name="l1_g">
           <${childTag} name="l1_fa">
@@ -123,17 +123,29 @@ export function runFormGroupMixinInputSuite(cfg = {}) {
 
       childAriaTest = async (
         // eslint-disable-next-line no-shadow
-        /** @type {FormGroup} */ childAriaFixture,
+        /** @type {InstanceType<typeof FormGroup>} */ childAriaFixture,
         { cleanupPhase = false } = {},
       ) => {
         /* eslint-disable camelcase */
         // Message elements: all elements pointed at by inputs
-        const msg_l1_g = /** @type {FormGroup} */ (childAriaFixture.querySelector('#msg_l1_g'));
-        const msg_l1_fa = /** @type {FormChild} */ (childAriaFixture.querySelector('#msg_l1_fa'));
-        const msg_l1_fb = /** @type {FormChild} */ (childAriaFixture.querySelector('#msg_l1_fb'));
-        const msg_l2_g = /** @type {FormGroup} */ (childAriaFixture.querySelector('#msg_l2_g'));
-        const msg_l2_fa = /** @type {FormChild} */ (childAriaFixture.querySelector('#msg_l2_fa'));
-        const msg_l2_fb = /** @type {FormChild} */ (childAriaFixture.querySelector('#msg_l2_fb'));
+        const msg_l1_g = /** @type {InstanceType<typeof FormGroup>} */ (
+          childAriaFixture.querySelector('#msg_l1_g')
+        );
+        const msg_l1_fa = /** @type {InstanceType<typeof FormChild>} */ (
+          childAriaFixture.querySelector('#msg_l1_fa')
+        );
+        const msg_l1_fb = /** @type {InstanceType<typeof FormChild>} */ (
+          childAriaFixture.querySelector('#msg_l1_fb')
+        );
+        const msg_l2_g = /** @type {InstanceType<typeof FormGroup>} */ (
+          childAriaFixture.querySelector('#msg_l2_g')
+        );
+        const msg_l2_fa = /** @type {InstanceType<typeof FormChild>} */ (
+          childAriaFixture.querySelector('#msg_l2_fa')
+        );
+        const msg_l2_fb = /** @type {InstanceType<typeof FormChild>} */ (
+          childAriaFixture.querySelector('#msg_l2_fb')
+        );
 
         // Field elements: all inputs pointing to message elements
         const input_l1_fa = /** @type {HTMLInputElement} */ (
@@ -253,7 +265,9 @@ export function runFormGroupMixinInputSuite(cfg = {}) {
           );
 
           // Check cleanup of FormGroup on disconnect
-          const l2_g = /** @type {FormGroup} */ (childAriaFixture.querySelector('[name=l2_g]'));
+          const l2_g = /** @type {InstanceType<typeof FormGroup>} */ (
+            childAriaFixture.querySelector('[name=l2_g]')
+          );
           // @ts-ignore [allow-private] in test
           expect(l2_g.__descriptionElementsInParentChain.size).to.not.equal(0);
           // @ts-expect-error removeChild should always be inherited via LitElement?
