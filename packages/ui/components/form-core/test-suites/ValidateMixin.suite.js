@@ -829,7 +829,7 @@ export function runValidateMixinSuite(customConfig) {
       const withSuccessTagString = defineCE(
         class extends ValidateMixin(LitElement) {
           static get validationTypes() {
-            return [...super.validationTypes, 'success'];
+            return [...super['validationTypes'], 'success'];
           }
         },
       );
@@ -1306,7 +1306,7 @@ export function runValidateMixinSuite(customConfig) {
       const customTypeTagString = defineCE(
         class extends ValidateMixin(LitElement) {
           static get validationTypes() {
-            return [...super.validationTypes, 'x', 'y'];
+            return [...super['validationTypes'], 'x', 'y'];
           }
         },
       );
@@ -1423,7 +1423,7 @@ export function runValidateMixinSuite(customConfig) {
         it('can add helpers for validation types', async () => {
           class ValidateHasX extends ValidateMixin(LitElement) {
             static get validationTypes() {
-              return [...super.validationTypes, 'x'];
+              return [...super['validationTypes'], 'x'];
             }
 
             get hasX() {
@@ -1472,12 +1472,12 @@ export function runValidateMixinSuite(customConfig) {
           const elTagString = defineCE(
             class extends ValidateMixin(LitElement) {
               static get validationTypes() {
-                return [...super.validationTypes, 'x'];
+                return [...super['validationTypes'], 'x'];
               }
 
               /**
                * @param {string} name
-               * @param {?} oldValue
+               * @param {any} oldValue
                */
               updateSync(name, oldValue) {
                 super.updateSync(name, oldValue);
@@ -1554,11 +1554,13 @@ export function runValidateMixinSuite(customConfig) {
           // eslint-disable-next-line no-restricted-syntax
           for (const state of ['dirty', 'touched', 'prefilled', 'submitted']) {
             counter += 1;
+            // @ts-ignore [dynamic-key-access-in-test]
             el[state] = false;
             // eslint-disable-next-line no-await-in-loop
             await el.updateComplete;
             expect(spy.callCount).to.equal(counter);
             counter += 1;
+            // @ts-ignore [dynamic-key-access-in-test]
             el[state] = true;
             // eslint-disable-next-line no-await-in-loop
             await el.updateComplete;

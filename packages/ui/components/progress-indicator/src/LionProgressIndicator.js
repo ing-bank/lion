@@ -90,7 +90,6 @@ export class LionProgressIndicator extends LocalizeMixin(LitElement) {
   }
 
   /**
-   * @readonly
    * @type {boolean}
    */
   get indeterminate() {

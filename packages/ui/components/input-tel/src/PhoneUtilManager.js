@@ -2,7 +2,7 @@
 let resolveLoaded;
 
 /**
- * @typedef {* & import('awesome-phonenumber')} AwesomePhoneNumber
+ * @typedef {* & typeof import('awesome-phonenumber')} AwesomePhoneNumber
  */
 
 /**

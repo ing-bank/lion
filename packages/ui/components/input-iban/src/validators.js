@@ -109,7 +109,7 @@ export class IsIBAN extends Validator {
    * @param {string} [data.fieldName]
    * @param {*} [data.params]
    * @param {string} [data.type]
-   * @param {Object.<string,?>} [data.config]
+   * @param {Object.<string,any>} [data.config]
    * @param {string} [data.name]
    * @returns {Promise<string|Element>}
    */
@@ -153,7 +153,7 @@ export class IsCountryIBAN extends IsIBAN {
    * @param {string} [data.fieldName]
    * @param {*} [data.params]
    * @param {string} [data.type]
-   * @param {Object.<string,?>} [data.config]
+   * @param {Object.<string,any>} [data.config]
    * @param {string} [data.name]
    * @returns {Promise<string|Element>}
    */
@@ -202,7 +202,7 @@ export class IsNotCountryIBAN extends IsIBAN {
    * @param {string} [data.fieldName]
    * @param {*} [data.params]
    * @param {string} [data.type]
-   * @param {Object.<string,?>} [data.config]
+   * @param {Object.<string,any>} [data.config]
    * @param {string} [data.name]
    * @returns {Promise<string|Element>}
    */

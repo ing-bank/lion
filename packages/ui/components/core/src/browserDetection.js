@@ -25,7 +25,7 @@ function checkChrome(flavor = 'google-chrome') {
   const winNav = globalThis.navigator;
   const vendorName = winNav?.vendor;
   const isOpera =
-    typeof (/** @type {window & { opr?: boolean}} */ (globalThis).opr) !== 'undefined';
+    typeof (/** @type {typeof window & { opr?: boolean}} */ (globalThis).opr) !== 'undefined';
   // @ts-ignore
   const isIEedge = globalThis.userAgent?.indexOf('Edge') > -1;
   // @ts-ignore

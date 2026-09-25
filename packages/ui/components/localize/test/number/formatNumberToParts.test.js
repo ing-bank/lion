@@ -98,7 +98,7 @@ describe('formatNumberToParts', () => {
 
   describe("style: 'decimal'", () => {
     describe('no minimumFractionDigits', () => {
-      /** @type {Array.<Array.<?>>} */
+      /** @type {Array.<Array.<any>>} */
       const specs = [
         ['en-GB', 3500, [i('3'), g(','), i('500')]],
         ['en-GB', -3500, [m, i('3'), g(','), i('500')]],
@@ -127,7 +127,7 @@ describe('formatNumberToParts', () => {
     });
 
     describe('minimumFractionDigits: 2', () => {
-      /** @type {Array.<Array.<?>>} */
+      /** @type {Array.<Array.<any>>} */
       const specs = [
         ['en-GB', 3500, [i('3'), g(','), i('500'), d('.'), f('00')]],
         ['en-GB', -3500, [m, i('3'), g(','), i('500'), d('.'), f('00')]],

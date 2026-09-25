@@ -19,7 +19,7 @@ function applyFocusVisiblePolyfillWhenNeeded(node) {
  * @type {FocusMixin}
  * @param {import('@open-wc/dedupe-mixin').Constructor<import('lit').LitElement>} superclass
  */
-const FocusMixinImplementation = superclass =>
+const FocusMixinImplementation = /** @type {FocusMixin} */ (superclass =>
   // @ts-ignore https://github.com/microsoft/TypeScript/issues/36821#issuecomment-588375051
   class FocusMixin extends superclass {
     /** @type {any} */
@@ -216,7 +216,7 @@ const FocusMixinImplementation = superclass =>
         /** @type {EventListenerOrEventListenerObject} */ (this.__redispatchFocusout),
       );
     }
-  };
+  });
 
 /**
  * For browsers that not support the [spec](https://developer.mozilla.org/en-US/docs/Web/CSS/:focus-visible),

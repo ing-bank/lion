@@ -43,7 +43,7 @@ function formatBytes(bytes, decimals = 2) {
 export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField)) {
   static get scopedElements() {
     return {
-      ...super.scopedElements,
+      ...super['scopedElements'],
       'lion-selected-file-list': LionSelectedFileList,
     };
   }

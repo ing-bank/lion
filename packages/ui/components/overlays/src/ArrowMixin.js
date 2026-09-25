@@ -14,7 +14,7 @@ import { OverlayMixin } from './OverlayMixin.js';
  * @type {ArrowMixin}
  * @param {import('@open-wc/dedupe-mixin').Constructor<import('lit').LitElement>} superclass
  */
-export const ArrowMixinImplementation = superclass =>
+export const ArrowMixinImplementation = /** @type {ArrowMixin} */ (superclass =>
   // @ts-ignore https://github.com/microsoft/TypeScript/issues/36821#issuecomment-588375051
   class ArrowMixin extends OverlayMixin(superclass) {
     static get properties() {
@@ -29,7 +29,7 @@ export const ArrowMixinImplementation = superclass =>
 
     static get styles() {
       return [
-        .../** @type {CSSResultArray} */ (super.styles || []),
+        .../** @type {CSSResultArray} */ (super['styles'] || []),
         css`
           :host {
             --tooltip-arrow-width: 12px;
@@ -219,6 +219,6 @@ export const ArrowMixinImplementation = superclass =>
         this.__setupRepositionCompletePromise();
       }
     }
-  };
+  });
 
 export const ArrowMixin = dedupeMixin(ArrowMixinImplementation);

@@ -165,7 +165,7 @@ const normalizeExportMap = (exports, ignoredExportMapKeys = []) => {
     .reduce((accumulator, [key, value]) => {
       accumulator[removeFirstStar(key)] = removeFirstStar(stringifyExportValue(value));
       return accumulator;
-    }, {});
+    }, /** @type {Record<string, string>} */ ({}));
 };
 
 /**

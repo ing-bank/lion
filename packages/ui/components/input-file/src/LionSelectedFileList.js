@@ -104,7 +104,7 @@ export class LionSelectedFileList extends LocalizeMixin(ScopedElementsMixin(LitE
   /**
    * @protected
    * @param {InputFile} file
-   * @return {TemplateResult|nothing}
+   * @return {TemplateResult|typeof nothing}
    */
   // eslint-disable-next-line class-methods-use-this, no-unused-vars
   _listItemBeforeTemplate(file) {

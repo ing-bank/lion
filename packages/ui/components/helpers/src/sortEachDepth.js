@@ -15,7 +15,7 @@
  * @param {Array.<[]>} orderPerDepth array of arrays giving the order of each level
  */
 export function sortEachDepth(orderPerDepth) {
-  return (/** @type {Array.<?>} */ a, /** @type {Array.<?>} */ b) => {
+  return (/** @type {Array.<any>} */ a, /** @type {Array.<any>} */ b) => {
     // If the two stories have the same story kind, then use the default
     // ordering, which is the order they are defined in the story file.
     if (a[1].kind === b[1].kind) {
@@ -28,7 +28,7 @@ export function sortEachDepth(orderPerDepth) {
     let nameB;
     let indexA;
     let indexB;
-    /** @type {Array.<?>} */
+    /** @type {Array.<any>} */
     let ordering = orderPerDepth[0] || [];
     if (ordering.indexOf('...') !== -1 && ordering.indexOf('...abc') !== -1) {
       throw new Error(

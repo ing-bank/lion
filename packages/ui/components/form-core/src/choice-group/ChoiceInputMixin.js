@@ -21,7 +21,7 @@ const hasChanged = (nw, old = {}) => nw.value !== old.value || nw.checked !== ol
  * @type {ChoiceInputMixin}
  * @param {import('@open-wc/dedupe-mixin').Constructor<import('lit').LitElement>} superclass
  */
-const ChoiceInputMixinImplementation = superclass =>
+const ChoiceInputMixinImplementation = /** @type {ChoiceInputMixin} */ (superclass =>
   // @ts-ignore https://github.com/microsoft/TypeScript/issues/36821#issuecomment-588375051
   class ChoiceInputMixin extends FormatMixin(superclass) {
     /** @type {any} */
@@ -142,7 +142,7 @@ const ChoiceInputMixinImplementation = superclass =>
      */
     static get styles() {
       return [
-        ...(super.styles || []),
+        ...(super['styles'] || []),
         css`
           :host {
             display: flex;
@@ -286,7 +286,7 @@ const ChoiceInputMixinImplementation = superclass =>
       // or at all (no reliance on platform construct, in case of [role=option])
       if (this._inputNode) {
         /** @type {HTMLInputElement} */
-        (this._inputNode).checked = this.checked;
+        (this._inputNode).checked = this.checked ?? false;
       }
     }
 
@@ -361,6 +361,6 @@ const ChoiceInputMixinImplementation = superclass =>
      * @protected
      */
     _syncValueUpwards() {}
-  };
+  });
 
 export const ChoiceInputMixin = dedupeMixin(ChoiceInputMixinImplementation);

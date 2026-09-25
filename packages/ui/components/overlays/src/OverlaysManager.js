@@ -12,6 +12,9 @@ import { overlayDocumentStyle } from './overlayDocumentStyle.js';
  * `OverlaysManager` which manages overlays which are rendered into the body
  */
 export class OverlaysManager {
+  /** @type {HTMLStyleElement | undefined} */
+  static __globalStyleNode = undefined;
+
   static __createGlobalStyleNode() {
     const styleTag = document.createElement('style');
     styleTag.setAttribute('data-overlays', '');
@@ -296,6 +299,3 @@ export class OverlaysManager {
     }
   }
 }
-
-/** @type {HTMLStyleElement | undefined} */
-OverlaysManager.__globalStyleNode = undefined;

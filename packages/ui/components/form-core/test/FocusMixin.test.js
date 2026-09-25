@@ -28,8 +28,10 @@ function mockFocusVisible(focusableEl, { phase, hasKeyboardInteraction }) {
   const originalMatches = focusableEl.matches;
   if (typeof windowWithOptionalPolyfill.applyFocusVisiblePolyfill !== 'function') {
     // eslint-disable-next-line no-param-reassign
-    focusableEl.matches = selector =>
-      selector === ':focus-visible' || originalMatches.call(focusableEl, selector);
+    focusableEl.matches = /** @type {typeof focusableEl.matches} */ (
+      /** @param {string} selector */
+      selector => selector === ':focus-visible' || originalMatches.call(focusableEl, selector)
+    );
     return () => {
       // eslint-disable-next-line no-param-reassign
       focusableEl.matches = originalMatches;

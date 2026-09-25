@@ -98,6 +98,18 @@ export class LionAccordion extends LitElement {
     return this.__expanded;
   }
 
+  /**
+   * @type {number}
+   * @private
+   */
+  __focusedIndex = -1;
+
+  /**
+   * @type {number[]}
+   * @private
+   */
+  __expanded = [];
+
   constructor() {
     super();
     this.styles = {};
@@ -113,17 +125,6 @@ export class LionAccordion extends LitElement {
      */
     this.__store = [];
 
-    /**
-     * @type {number}
-     * @private
-     */
-    this.__focusedIndex = -1;
-
-    /**
-     * @type {number[]}
-     * @private
-     */
-    this.__expanded = [];
   }
 
   /** @param {import('lit').PropertyValues } changedProperties */

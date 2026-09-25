@@ -22,7 +22,7 @@ import { ValidateMixin } from '../validate/ValidateMixin.js';
  * @type {ChoiceGroupMixin}
  * @param {import('@open-wc/dedupe-mixin').Constructor<import('lit').LitElement>} superclass
  */
-const ChoiceGroupMixinImplementation = superclass =>
+const ChoiceGroupMixinImplementation = /** @type {ChoiceGroupMixin} */ (superclass =>
   // @ts-ignore https://github.com/microsoft/TypeScript/issues/36821#issuecomment-588375051
   class ChoiceGroupMixin extends FormRegistrarMixin(
     ValidateMixin(InteractionStateMixin(superclass)),
@@ -234,7 +234,7 @@ const ChoiceGroupMixinImplementation = superclass =>
     }
 
     /**
-     * Implicit :( @override for FormGroupMixin, as choice fields "fieldsets"
+     * Implicit :( override for FormGroupMixin, as choice fields "fieldsets"
      * will always implement both mixins
      *
      * TODO: Consider making this explicit by extracting this method to its own mixin and
@@ -415,6 +415,6 @@ const ChoiceGroupMixinImplementation = superclass =>
         !target.checked
       );
     }
-  };
+  });
 
 export const ChoiceGroupMixin = dedupeMixin(ChoiceGroupMixinImplementation);

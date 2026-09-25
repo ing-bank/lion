@@ -23,7 +23,7 @@ import { FormRegisteringMixin } from './FormRegisteringMixin.js';
  * @type {FormRegistrarMixin}
  * @param {import('@open-wc/dedupe-mixin').Constructor<import('lit').LitElement>} superclass
  */
-const FormRegistrarMixinImplementation = superclass =>
+const FormRegistrarMixinImplementation = /** @type {FormRegistrarMixin} */ (superclass =>
   // eslint-disable-next-line no-shadow, no-unused-vars
   // @ts-ignore https://github.com/microsoft/TypeScript/issues/36821#issuecomment-588375051
   class extends FormRegisteringMixin(superclass) {
@@ -40,9 +40,9 @@ const FormRegistrarMixinImplementation = superclass =>
       /**
        * Closely mimics the natively supported HTMLFormControlsCollection. It can be accessed
        * both like an array and an object (based on control/element names).
-       * @type {FormControlsCollection}
+       * @type {FormControlsCollection & { [name: string]: any }}
        */
-      this.formElements = new FormControlsCollection();
+      this.formElements = /** @type {any} */ (new FormControlsCollection());
 
       /**
        * Flag that determines how ".formElements" should behave.
@@ -272,6 +272,6 @@ const FormRegistrarMixinImplementation = superclass =>
 
       this.removeFormElement(child);
     }
-  };
+  });
 
 export const FormRegistrarMixin = dedupeMixin(FormRegistrarMixinImplementation);
