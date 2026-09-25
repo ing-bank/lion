@@ -18,8 +18,8 @@ describe('Form Validation Integrations', () => {
       class WarnValidator extends Validator {
         /**
          *
-         * @param {?} [param]
-         * @param {Object.<string,?>} [config]
+         * @param {any} [param]
+         * @param {Object.<string,any>} [config]
          */
         constructor(param, config) {
           super(param, config);

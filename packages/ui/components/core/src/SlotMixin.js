@@ -96,7 +96,7 @@ function determineSlotFunctionResultType(slotFunctionResult) {
  * @type {SlotMixin}
  * @param {import('@open-wc/dedupe-mixin').Constructor<LitElement>} superclass
  */
-const SlotMixinImplementation = superclass =>
+const SlotMixinImplementation = /** @type {SlotMixin} */ (superclass =>
   // @ts-ignore https://github.com/microsoft/TypeScript/issues/36821#issuecomment-588375051
   class SlotMixin extends superclass {
     /**
@@ -160,7 +160,7 @@ const SlotMixinImplementation = superclass =>
 
     /**
      * Here we rerender slots defined with a `SlotRerenderObject`
-     * @param {import('lit-element').PropertyValues } changedProperties
+     * @param {import('lit').PropertyValues } changedProperties
      */
     update(changedProperties) {
       super.update(changedProperties);
@@ -360,6 +360,6 @@ const SlotMixinImplementation = superclass =>
     _isPrivateSlot(slotName) {
       return this.__privateSlots.has(slotName);
     }
-  };
+  });
 
 export const SlotMixin = dedupeMixin(SlotMixinImplementation);

@@ -14,11 +14,13 @@ export function isEqualConfig(a, b) {
   if (typeof a !== 'object' || typeof b !== 'object' || a === null || b === null) {
     return a === b;
   }
-  const aProps = Object.keys(a);
-  const bProps = Object.keys(b);
+  const aObj = /** @type {Record<string, any>} */ (a);
+  const bObj = /** @type {Record<string, any>} */ (b);
+  const aProps = Object.keys(aObj);
+  const bProps = Object.keys(bObj);
   if (aProps.length !== bProps.length) {
     return false;
   }
-  const isEqual = /** @param {string} prop */ prop => isEqualConfig(a[prop], b[prop]);
+  const isEqual = /** @param {string} prop */ prop => isEqualConfig(aObj[prop], bObj[prop]);
   return aProps.every(isEqual);
 }

@@ -98,7 +98,9 @@ export class LionSelect extends LionFieldWithSelect {
     }
 
     if (changedProperties.has('autocomplete')) {
-      this._inputNode.autocomplete = /** @type {string} */ (this.autocomplete);
+      // the DOM lib types `autocomplete` as `AutoFill` only in newer TypeScript;
+      // cast keeps this valid on both compilers without widening the public type
+      this._inputNode.autocomplete = /** @type {any} */ (this.autocomplete);
     }
   }
 

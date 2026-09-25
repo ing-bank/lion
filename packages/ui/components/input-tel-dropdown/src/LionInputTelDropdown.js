@@ -248,7 +248,7 @@ export class LionInputTelDropdown extends LionInputTel {
 
   /**
    * @lifecycle LitElement
-   * @param {import('lit-element').PropertyValues } changedProperties
+   * @param {import('lit').PropertyValues } changedProperties
    */
   willUpdate(changedProperties) {
     super.willUpdate(changedProperties);
@@ -259,7 +259,7 @@ export class LionInputTelDropdown extends LionInputTel {
   }
 
   /**
-   * @param {import('lit-element').PropertyValues } changedProperties
+   * @param {import('lit').PropertyValues } changedProperties
    */
   updated(changedProperties) {
     super.updated(changedProperties);

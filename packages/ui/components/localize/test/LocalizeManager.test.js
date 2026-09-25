@@ -724,7 +724,7 @@ describe('When supporting external translation tools like Google Translate', () 
   }
 
   /**
-   *  @param {...*} [cfg]
+   *  @param {*} [cfg]
    *  @returns {LocalizeManager}
    */
   function getInstance(cfg) {

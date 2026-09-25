@@ -279,9 +279,9 @@ export function runFormatMixinSuite(customConfig) {
       const nonFormat = /** @type {FormatClass} */ (
         await fixture(html`
           <${tag}
-            .formatter="${/** @param {?} v */ v => v}"
+            .formatter="${/** @param {any} v */ v => v}"
             .parser="${/** @param {string} v */ v => v}"
-            .serializer="${/** @param {?} v */ v => v}"
+            .serializer="${/** @param {any} v */ v => v}"
             .deserializer="${/** @param {string} v */ v => v}"
           >
             <input slot="input">
@@ -594,9 +594,9 @@ export function runFormatMixinSuite(customConfig) {
           const formatterSpy = sinon.spy(value => `foo: ${value}`);
 
           const generatedModelValue = generateValueBasedOnType();
-          /** @type {?} */
+          /** @type {any} */
           const generatedViewValue = generateValueBasedOnType({ viewValue: true });
-          /** @type {?} */
+          /** @type {any} */
           const generatedViewValueAlt = generateValueBasedOnType({
             viewValue: true,
             toggleValue: true,
@@ -800,7 +800,7 @@ export function runFormatMixinSuite(customConfig) {
 
       describe('Parser', () => {
         it('only calls the parser for defined values', async () => {
-          /** @type {?} */
+          /** @type {any} */
           const generatedValue = generateValueBasedOnType();
           const parserSpy = sinon.spy();
           const el = /** @type {FormatClass} */ (

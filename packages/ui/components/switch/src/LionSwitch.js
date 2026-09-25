@@ -24,7 +24,7 @@ export class LionSwitch extends ScopedElementsMixin(ChoiceInputMixin(LionField))
 
   static get scopedElements() {
     return {
-      ...super.scopedElements,
+      ...super['scopedElements'],
       'lion-switch-button': LionSwitchButton,
     };
   }

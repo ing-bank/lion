@@ -187,7 +187,7 @@ describe('lion-switch', () => {
         tagName,
         class CustomSwitch extends LionSwitch {
           static get validationTypes() {
-            return [...super.validationTypes, 'info'];
+            return [...super['validationTypes'], 'info'];
           }
 
           /**

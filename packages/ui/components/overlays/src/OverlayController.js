@@ -10,7 +10,7 @@ import { getFocusableElements } from './utils/get-focusable-elements.js';
  * @typedef {import('@lion/ui/types/overlays.js').OverlayConfig} OverlayConfig
  * @typedef {import('@popperjs/core').Options} PopperOptions
  * @typedef {import('@popperjs/core').Placement} Placement
- * @typedef {import('@popperjs/core').createPopper} Popper
+ * @typedef {typeof import('@popperjs/core').createPopper} Popper
  * @typedef {{ createPopper: Popper }} PopperModule
  */
 
@@ -113,6 +113,9 @@ const childDialogsClosedInEventLoopWeakmap = new WeakMap();
  *
  */
 export class OverlayController extends EventTarget {
+  /** @type {Promise<PopperModule> | undefined} */
+  static popperModule = undefined;
+
   /**
    * 'True' when Shift key is pressed, 'false' otherwise
    */
@@ -649,7 +652,7 @@ export class OverlayController extends EventTarget {
     // on the native dialog for all browsers: https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/dialog#closedby
     const hasClosedBySupport = HTMLDialogElement && 'closedBy' in HTMLDialogElement.prototype;
     if (hasClosedBySupport) {
-      // @ts-expect-error
+      // @ts-ignore [closedBy is feature-detected above]
       wrappingDialogElement.closedBy = 'none';
     } else {
       wrappingDialogElement.addEventListener(
@@ -742,6 +745,7 @@ export class OverlayController extends EventTarget {
    * @private
    */
   __storeOriginalAttrs(node, attrs) {
+    /** @type {Record<string, any>} */
     const attrMap = {};
     attrs.forEach(attrName => {
       attrMap[attrName] = node.getAttribute(attrName);
@@ -841,7 +845,7 @@ export class OverlayController extends EventTarget {
        * This is however necessary for initial placement.
        */
       await this.__createPopperInstance();
-      this._popper.forceUpdate();
+      /** @type {import('@popperjs/core').Instance} */ (this._popper).forceUpdate();
     }
   }
 
@@ -1456,9 +1460,13 @@ export class OverlayController extends EventTarget {
 
     if (OverlayController.popperModule !== undefined) {
       const { createPopper } = await OverlayController.popperModule;
-      this._popper = createPopper(this._referenceNode, this.contentWrapperNode, {
-        ...this.config?.popperConfig,
-      });
+      this._popper = createPopper(
+        /** @type {HTMLElement} */ (this._referenceNode),
+        this.contentWrapperNode,
+        {
+          ...this.config?.popperConfig,
+        },
+      );
     }
   }
 
@@ -1472,5 +1480,3 @@ export class OverlayController extends EventTarget {
     return false;
   }
 }
-/** @type {Promise<PopperModule> | undefined} */
-OverlayController.popperModule = undefined;

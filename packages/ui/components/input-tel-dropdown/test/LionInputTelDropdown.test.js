@@ -28,7 +28,7 @@ class WithFormControlInputTelDropdown extends ScopedElementsMixin(LionInputTelDr
    * @configure ScopedElementsMixin
    */
   static scopedElements = {
-    ...super.scopedElements,
+    ...super['scopedElements'],
     'lion-select-rich': LionSelectRich,
     'lion-option': LionOption,
   };

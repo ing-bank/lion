@@ -194,10 +194,10 @@ export class Ajax {
   async fetchJson(info, init) {
     const lionInit = {
       ...init,
-      headers: {
+      headers: /** @type {Record<string, string>} */ ({
         ...init?.headers,
         accept: 'application/json',
-      },
+      }),
     };
 
     if (lionInit?.body) {

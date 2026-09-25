@@ -59,7 +59,7 @@ const isResponseSizeSupported = (responseSize, maxResponseSize) => {
 
 /**
  * Request interceptor to return relevant cached requests
- * @param {function(): string|Promise<string>} getCacheId used to invalidate cache if identifier is changed
+ * @param {() => string|Promise<string>} getCacheId used to invalidate cache if identifier is changed
  * @param {CacheOptions} globalCacheOptions
  * @returns {RequestInterceptor}
  */
@@ -167,7 +167,7 @@ const createCacheResponseInterceptor = globalCacheOptions => async responseParam
 
 /**
  * Response interceptor to cache relevant requests
- * @param {function(): string|Promise<string>} getCacheId used to invalidate cache if identifier is changed
+ * @param {() => string|Promise<string>} getCacheId used to invalidate cache if identifier is changed
  * @param {CacheOptions} globalCacheOptions
  * @returns {{cacheRequestInterceptor: RequestInterceptor, cacheResponseInterceptor: ResponseInterceptor}}
  */

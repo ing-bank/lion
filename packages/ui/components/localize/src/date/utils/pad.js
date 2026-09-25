@@ -7,5 +7,5 @@
 export function pad(n) {
   const digitRegex = /^\d+$/;
   const v = digitRegex.test(String(n)) ? Math.abs(Number(n)) : n;
-  return String(v < 10 ? `0${v}` : v);
+  return String(Number(v) < 10 ? `0${v}` : v);
 }

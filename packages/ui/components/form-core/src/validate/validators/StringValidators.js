@@ -2,7 +2,7 @@
 import { Validator } from '../Validator.js';
 
 /**
- * @param {?} value
+ * @param {any} value
  */
 const isString = value => typeof value === 'string';
 
@@ -12,7 +12,7 @@ export class IsString extends Validator {
   }
 
   /**
-   * @param {?} value
+   * @param {any} value
    */
   // eslint-disable-next-line class-methods-use-this
   execute(value) {
@@ -30,7 +30,7 @@ export class EqualsLength extends Validator {
   }
 
   /**
-   * @param {?} value
+   * @param {any} value
    */
   execute(value, length = this.param) {
     let hasError = false;
@@ -47,7 +47,7 @@ export class MinLength extends Validator {
   }
 
   /**
-   * @param {?} value
+   * @param {any} value
    */
   execute(value, min = this.param) {
     let hasError = false;
@@ -64,7 +64,7 @@ export class MaxLength extends Validator {
   }
 
   /**
-   * @param {?} value
+   * @param {any} value
    */
   execute(value, max = this.param) {
     let hasError = false;
@@ -81,7 +81,7 @@ export class MinMaxLength extends Validator {
   }
 
   /**
-   * @param {?} value
+   * @param {any} value
    */
   execute(value, { min = 0, max = 0 } = this.param) {
     let hasError = false;
@@ -100,7 +100,7 @@ export class IsEmail extends Validator {
   }
 
   /**
-   * @param {?} value
+   * @param {any} value
    */
   // eslint-disable-next-line class-methods-use-this
   execute(value) {
@@ -113,7 +113,7 @@ export class IsEmail extends Validator {
 }
 
 /**
- * @param {?} value
+ * @param {any} value
  * @param {RegExp} pattern
  */
 const hasPattern = (value, pattern) => pattern.test(value);
@@ -123,7 +123,7 @@ export class Pattern extends Validator {
   }
 
   /**
-   * @param {?} value
+   * @param {any} value
    */
   // eslint-disable-next-line class-methods-use-this
   execute(value, pattern = this.param) {

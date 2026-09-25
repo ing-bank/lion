@@ -26,7 +26,7 @@ class WithFormControlInputAmountDropdown extends ScopedElementsMixin(LionInputAm
    * @configure ScopedElementsMixin
    */
   static scopedElements = {
-    ...super.scopedElements,
+    ...super['scopedElements'],
     'lion-select-rich': LionSelectRich,
     'lion-option': LionOption,
   };

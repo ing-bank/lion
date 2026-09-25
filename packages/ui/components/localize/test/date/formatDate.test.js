@@ -210,6 +210,7 @@ describe('formatDate', () => {
           locale,
         };
         const parsedDate = /** @type {Date} */ (parseDate('12.10.2019'));
+        // @ts-ignore [dynamic-key-access-in-test]
         expect(formatDate(parsedDate, options)).to.equal(LOCALE_FORMATTED_DATE_MAP[locale]);
       });
     });

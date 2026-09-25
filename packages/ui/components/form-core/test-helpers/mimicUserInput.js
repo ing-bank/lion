@@ -1,7 +1,7 @@
 // @ts-nocheck
 /**
  * @param {HTMLElement} formControl
- * @param {?} newViewValue
+ * @param {any} newViewValue
  * @param {{caretIndex?:number}} config
  */
 export function mimicUserInput(formControl, newViewValue, { caretIndex } = {}) {
