@@ -2,8 +2,8 @@
 /**
  * Runnable example: evaluate the `lion-ui` skill against a real model using the library API.
  *
- *   node examples/run.mjs deepseek --models deepseek-chat --limit 3
- *   node examples/run.mjs runware  --models deepseek-v4-flash --kind component --limit 2
+ *   node examples/run.mjs openai   --models gpt-5-mini --limit 3
+ *   node examples/run.mjs runware  --models openai-gpt-5-mini --kind component --limit 2
  *   node examples/run.mjs local    --models my-model --base-url http://localhost:8080/v1
  *   node examples/run.mjs copilot  --models <copilot-model> --limit 1
  *

@@ -2,7 +2,7 @@
  * skill-tester — orchestrator.
  *
  * Runs one or more skills/agents against a set of isolated scenarios, on any OpenAI-compatible
- * model (OpenAI, DeepSeek, local servers, ...), and produces a quality score per run plus a
+ * model (OpenAI, Azure OpenAI, local servers, ...), and produces a quality score per run plus a
  * markdown run record that feeds the `recursive-skill-improver` workflow.
  *
  * GitHub Copilot is not required: the skill/agent definition becomes the system prompt and the
