@@ -1,8 +1,4 @@
 /**
- * @license
- * Copyright 2026 ING Bank N.V.
- * SPDX-License-Identifier: MIT
- *
  * Shared fixtures for the lit-ssr unit tests.
  *
  * These fixtures model the pattern that `@lion/ui` (and the Lion website

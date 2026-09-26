@@ -1,8 +1,4 @@
 /**
- * @license
- * Copyright 2026 ING Bank N.V.
- * SPDX-License-Identifier: MIT
- *
  * Proves that `@lit-labs/ssr` renders *element directives* (directives bound to
  * an element part, e.g. `<div ${myDirective()}>`) during server rendering, and
  * that the attributes they set on the (light) DOM are serialized.

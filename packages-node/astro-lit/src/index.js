@@ -1,8 +1,4 @@
 /**
- * @license
- * Copyright 2026 ING Bank N.V.
- * SPDX-License-Identifier: MIT
- *
  * Astro integration that renders Lit components on the server (via
  * `@lit-labs/ssr`) and hydrates them in the browser.
  *

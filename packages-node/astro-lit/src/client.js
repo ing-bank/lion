@@ -1,8 +1,4 @@
 /**
- * @license
- * Copyright 2026 ING Bank N.V.
- * SPDX-License-Identifier: MIT
- *
  * Client entrypoint for the Astro + Lit integration. Astro calls the default
  * export for every hydrated (`client:*`) Lit island it encounters.
  */

@@ -1,8 +1,4 @@
 /**
- * @license
- * Copyright 2026 ING Bank N.V.
- * SPDX-License-Identifier: MIT
- *
  * Declarative Shadow DOM ponyfill, injected into `<head>` of every page.
  *
  * Browsers that already support declarative shadow DOM parsing do nothing here
