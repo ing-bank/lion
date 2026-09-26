@@ -1,0 +1,31 @@
+{
+  "name": "@lion/lit-ssr-patch-tests",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Tests for the element-directive patch this repo applies to @lit-labs/ssr. Written against @lit-labs/ssr itself (no Lion imports) so they can move upstream together with the patch.",
+  "license": "MIT",
+  "author": "ing-bank",
+  "homepage": "https://github.com/ing-bank/lion/",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ing-bank/lion.git",
+    "directory": "packages-node/lit-ssr-patch-tests"
+  },
+  "type": "module",
+  "scripts": {
+    "test": "npm run test:node",
+    "test:node": "mocha 'test-node/**/*.test.js'"
+  },
+  "dependencies": {
+    "@lit-labs/ssr": "^4.1.0"
+  },
+  "devDependencies": {
+    "@lit-labs/ssr-client": "^1.1.7",
+    "lit": "^3.3.2"
+  },
+  "keywords": [
+    "lion-tools",
+    "lit",
+    "ssr"
+  ]
+}

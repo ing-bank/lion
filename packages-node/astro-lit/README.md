@@ -61,17 +61,15 @@ props that exist on `Component.prototype` as properties).
 npm run test:node -w packages-node/astro-lit
 ```
 
-`test-node/` covers the container renderer (declarative shadow root, reactive
-props, named slots, container renderer, element directives) and the lit-labs/ssr
-element-directive behaviour this integration depends on:
+`test-node/` covers the container renderer — declarative shadow root, reactive
+props, named slots, and that element directives run through it:
 
 - `astro-lit.test.js` — the container renderer
-- `directives.test.js` — element directives run during SSR, their attributes are
-  serialized, `part.options.host`, light DOM via `renderLight()`, server-only
-  templates
-- `fallback-renderer.test.js` — `FallbackRenderer` attribute stringification /
-  `getAttribute`
-- `fixtures.js` — shared directives and components
+- `fixtures.js` — the `part` directive it renders
 
-With a pristine (unpatched) `@lit-labs/ssr` these tests fail — which is exactly
-what they are there to catch.
+The lit-labs/ssr element-directive behaviour itself is not tested here: those
+tests live in `@lion/lit-ssr-patch-tests`, where they target `@lit-labs/ssr`
+directly instead of a Lion package, so they can move upstream with the patch
+(see [`patches/README.md`](../../patches/README.md)). With a pristine
+(unpatched) `@lit-labs/ssr` the test here that renders a `part` fails — which is
+exactly what it is there to catch.
