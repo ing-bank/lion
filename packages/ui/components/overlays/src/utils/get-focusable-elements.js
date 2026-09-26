@@ -8,6 +8,7 @@ import { isVisible } from './is-visible.js';
 import { sortByTabIndex } from './sort-by-tabindex.js';
 
 // IE11 supports matches as 'msMatchesSelector'
+/** @type {'matches' | 'msMatchesSelector'} */
 const matchesFunc = 'matches' in Element.prototype ? 'matches' : 'msMatchesSelector';
 
 /**
@@ -16,11 +17,14 @@ const matchesFunc = 'matches' in Element.prototype ? 'matches' : 'msMatchesSelec
  */
 function isFocusable(element) {
   // Elements that cannot be focused if they have [disabled] attribute.
+  // @ts-ignore - msMatchesSelector is legacy
   if (element[matchesFunc]('input, select, textarea, button, object')) {
+    // @ts-ignore
     return element[matchesFunc](':not([disabled])');
   }
 
   // Elements that can be focused even if they have [disabled] attribute.
+  // @ts-ignore
   return element[matchesFunc]('a[href], area[href], iframe, [tabindex], [contentEditable]');
 }
 

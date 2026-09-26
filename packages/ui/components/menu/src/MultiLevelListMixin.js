@@ -1,0 +1,311 @@
+/* eslint-disable import/no-extraneous-dependencies */
+import { html } from 'lit';
+import { dedupeMixin } from '@open-wc/dedupe-mixin';
+// import { DisclosureMixin } from '@lion/ui/collapsible.js';
+import { InteractiveListMixin } from './InteractiveListMixin.js';
+import { isChecked, setChecked } from './utils/listItemInteractions.js';
+/**
+ * @typedef {import('./InteractiveListMixin.js').LionItem} LionItem
+ * @typedef {import('../types/InteractiveListMixinTypes.js').InteractiveListHost} InteractiveList
+ * @typedef {typeof import('../../overlays/types/OverlayMixinTypes.js').OverlayHost} OverlayHost
+ * @typedef {import('./LionMenuOverlay.js').LionMenuOverlay} LionMenuOverlay
+ */
+
+/**
+ * All logic that is needed for interactive lists that are allowed to have multiple nested, collapsible levels
+ * Applies to [role=menu] and [role=tree]
+ */
+// @ts-ignore - mixin implementation
+const MultiLevelListMixinImplementation = superclass =>
+  // @ts-ignore - mixin class extension
+  class extends InteractiveListMixin(superclass) {
+    render() {
+      return html`
+        <slot name="invoker"></slot>
+        <slot name="list"></slot>
+        <slot id="list-items-outlet"></slot>
+      `;
+    }
+
+    static get properties() {
+      return {
+        invokerNode: Object,
+        behaveAsAccordion: { type: Boolean, attribute: 'behave-as-accordion' },
+        level: { type: Number, reflect: true },
+      };
+    }
+
+    /**
+     * @configure DisclosureMixin
+     */
+    get _invokerNode() {
+      const ctor = /** @type {OverlayHost} */ (this.constructor);
+      if (ctor._getFocusableInvokerEl && this.invokerNode) {
+        // @ts-ignore - accessing static method and super property
+        return ctor._getFocusableInvokerEl(this.invokerNode);
+      }
+      // @ts-ignore
+      return super._invokerNode;
+    }
+
+    /**
+     * @configure DisclosureMixin
+     * This will be compatible with DisclosureMixin and OverlayMixin. It contains the invoked
+     * InteractiveList widget (like menu|tree).
+     */
+    get _contentNode() {
+      return this._listNode;
+    }
+
+    constructor() {
+      super();
+
+      /**
+       * When an invokerNode is supplied (usually by a parent level menu), it will take precedence
+       * over [slot=invoker] and previousElementSibling with [data-invoker] attribute
+       * @type {HTMLElement}
+       */
+      // @ts-ignore - can be undefined initially
+      this.invokerNode = undefined;
+      /**
+       * @configure DisclosureMixin
+       */
+      this.handleFocus = true;
+      /**
+       * The parent list if level > 1
+       * @type {InteractiveList}
+       */
+      // @ts-ignore - can be undefined initially
+      this.parentList = undefined;
+      /**
+       * When true, will have a maximum of one submenu open at a time
+       */
+      this.behaveAsAccordion = false;
+      /**
+       * The level of nested menus. Will be reflected as attribute for styling purposes
+       */
+      this.level = 1;
+      /**
+       * @configure InteractiveListMixin
+       */
+      this.noPreselect = true;
+      /**
+       * @configure InteractiveListMixin
+       * @type {'activedescendant'|'roving-tabindex'|'tabbable-disclosure'}
+       */
+      this._activeMode = 'roving-tabindex';
+      /**
+       * @type {Map<HTMLElement|LionItem,InteractiveList>}
+       */
+      this._subListMap = new Map();
+    }
+
+    // /**
+    //  * @param {import('lit-element').PropertyValues } changedProperties
+    //  */
+    // updated(changedProperties) {
+    //   super.updated(changedProperties);
+
+    //   if (changedProperties.has('invokerNode')) {
+    //     // TODO: update openableCtrl invokerNode once we make this a ctrl as well
+    //   }
+    // }
+
+    /**
+     * Gets the child InteractiveList, based on item
+     * @param {LionItem|HTMLElement} item can be sibling of or parent of InteractiveList
+     */
+    static _getSubInteractiveList(item) {
+      /**
+       * Note that, according to W3C spec, the sub level element with [role=menu|menubar|tree]
+       * needs to be a sibling of the invoker element with
+       * [role=menuitem|menuitemchecbox|menuitemradio|treeitem] (and not the parent)
+       *
+       * In the example below <lion-menu> is considered as item
+       * @example
+       * <lion-menuitem>
+       *   <button slot="invoker"></button>
+       *   <lion-menu> ... </lion-menu>
+       * </lion-menuitem>
+       */
+      // @ts-ignore - isInteractiveList property check
+      const siblingOfInvoker = item.nextElementSibling?.isInteractiveList;
+      if (siblingOfInvoker) {
+        return item.nextElementSibling;
+      }
+      /**
+       * In the example below div[role=listitem] | [data-item] is considered as item
+       * @example
+       * <div role="listitem" data-item>
+       *   <button slot="invoker"></button>
+       *   <lion-menu> ... </lion-menu>
+       * </div>
+       */
+      const childOfInvoker =
+        item.getAttribute?.('role') === 'listitem' || item.hasAttribute?.('data-item');
+      if (childOfInvoker) {
+        // @ts-ignore - isInteractiveList check
+        return Array.from(item.children).find(child => child.isInteractiveList);
+      }
+      return undefined;
+    }
+
+    /**
+     * @param {*} newItems
+     */
+    _initListItems(newItems) {
+      super._initListItems(newItems);
+
+      const ctor = this.constructor;
+      // @ts-ignore - forEach parameter types
+      newItems.forEach(item => {
+        // @ts-ignore - static method access
+        const subList = ctor._getSubInteractiveList(item);
+        if (subList) {
+          this._subListMap.set(item, subList);
+          subList.level = this.level + 1;
+          subList.parentList = this;
+          subList.invokerNode = item;
+          // @ts-ignore - invokerInteraction property
+          subList.invokerInteraction = this.invokerInteraction;
+          subList._activeMode = this._activeMode;
+        }
+      });
+    }
+
+    /**
+     * @enhance DisclosureMixin
+     * @param {Event} [ev]
+     */
+    toggle(ev) {
+      // @ts-ignore - target property
+      if (ev && this._listNode.contains(ev.target)) {
+        // prevent nested menus (inside invokers) from triggering invoker
+        return;
+      }
+      // @ts-ignore - super.toggle method
+      super.toggle();
+    }
+
+    /**
+     * @enhance InteractiveListMixin
+     * @param {*} ev
+     */
+    _onListKeyDown(ev) {
+      const targetFromSubList = Array.from(this._subListMap).find(
+        // @ts-ignore - contains method on InteractiveListHost
+        ([, s]) => s === ev.target || s.contains(ev.target),
+      );
+
+      if (targetFromSubList) {
+        return;
+      }
+
+      super._onListKeyDown(ev);
+
+      const subListOfActiveItem = this._subListMap.get(this.activeItem);
+      const parentListOfActiveItem = this.parentList;
+      const { key } = ev;
+
+      if (key === 'Escape' && parentListOfActiveItem) {
+        // We need to stop here, or else we affect parent menu (handled by OverlayController)
+        ev.stopPropagation();
+      }
+
+      switch (key) {
+        case 'Enter':
+        case ' ':
+          // make it work like a button
+          this.activeItem?.click();
+          break;
+        case 'ArrowDown':
+          if (
+            this.orientation === 'horizontal' &&
+            subListOfActiveItem &&
+            this._activeMode !== 'tabbable-disclosure'
+          ) {
+            this.activeItem.click();
+          }
+          break;
+        case 'ArrowRight':
+          if (this.orientation === 'vertical' && subListOfActiveItem) {
+            this.activeItem.click();
+          }
+          break;
+        case 'ArrowUp':
+          if (this.orientation === 'horizontal' && parentListOfActiveItem) {
+            // @ts-ignore - close method
+            this.close();
+            if (
+              /** @type {InteractiveList & LionMenuOverlay} */ (parentListOfActiveItem)
+                ._onOverlayShow
+            ) {
+              // @ts-ignore - _onOverlayShow method
+              /** @type {OverlayHost} */ (parentListOfActiveItem)._onOverlayShow();
+            }
+          }
+          break;
+        case 'ArrowLeft':
+          if (this.orientation === 'vertical' && parentListOfActiveItem) {
+            // @ts-ignore - close method
+            this.close();
+            if (
+              /** @type {InteractiveList & LionMenuOverlay} */ (parentListOfActiveItem)
+                ._onOverlayShow
+            ) {
+              // @ts-ignore - _onOverlayShow method
+              /** @type {OverlayHost} */ (parentListOfActiveItem)._onOverlayShow();
+            }
+          }
+          break;
+        /* no default */
+      }
+    }
+
+    /**
+     * @param {Location} location
+     */
+    _syncCurrentPageWithLocationHref(location) {
+      super._syncCurrentPageWithLocationHref(location);
+
+      this._subListMap.forEach(subList => {
+        subList.listItems.forEach(
+          /** @param {LionItem|HTMLElement} item */ item => {
+            // @ts-ignore
+            if (isChecked(item) && subList._invokerNode) {
+              // @ts-ignore
+              setChecked(subList._invokerNode);
+            }
+          },
+        );
+      });
+    }
+
+    // /**
+    //  * @enhance DisclosureMixin
+    //  */
+    // _setupDisclosure() {
+    //   if (!this._invokerNode) return;
+
+    //   super._setupDisclosure();
+    // }
+
+    // /**
+    //  * @enhance DisclosureMixin
+    //  */
+    // _teardownDisclosure() {
+    //   if (!this._invokerNode) return;
+
+    //   super._teardownDisclosure();
+    // }
+
+    // /**
+    //  * @enhance DisclosureMixin
+    //  */
+    // async _onOpenedChanged() {
+    //   if (!this._invokerNode) return;
+
+    //   await super._onOpenedChanged();
+    // }
+  };
+export const MultiLevelListMixin = dedupeMixin(MultiLevelListMixinImplementation);

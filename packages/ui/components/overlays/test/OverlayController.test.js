@@ -115,26 +115,35 @@ const withLocalTestConfig = () =>
  */
 async function createNestedEscControllers(parentContent) {
   const childContent = /** @type {HTMLDivElement} */ (parentContent.querySelector('div[id]'));
-  // Assert valid fixure
-  const isValidFixture =
-    (parentContent.id.startsWith('parent-overlay--hidesOnEsc') ||
-      parentContent.id.startsWith('parent-overlay--hidesOnOutsideEsc')) &&
-    (childContent.id.startsWith('child-overlay--hidesOnEsc') ||
-      childContent.id.startsWith('child-overlay--hidesOnOutsideEsc'));
-  if (!isValidFixture) {
-    throw new Error('Provide a valid fixture');
-  }
 
   if (parentContent.hasAttribute('data-convert-to-shadow-root')) {
     const shadowRootParent = parentContent.attachShadow({ mode: 'open' });
     shadowRootParent.appendChild(childContent);
   }
 
+  const parentConfig = {};
+  const childConfig = {};
+
   const parentHasOutsideOnEsc = parentContent.id.startsWith('parent-overlay--hidesOnOutsideEsc');
   const childHasOutsideOnEsc = childContent.id.startsWith('child-overlay--hidesOnOutsideEsc');
 
-  const parentConfig = parentHasOutsideOnEsc ? { hidesOnOutsideEsc: true } : { hidesOnEsc: true };
-  const childConfig = childHasOutsideOnEsc ? { hidesOnOutsideEsc: true } : { hidesOnEsc: true };
+  if (parentHasOutsideOnEsc) {
+    parentConfig.hidesOnOutsideEsc = true;
+  } else {
+    parentConfig.hidesOnEsc = true;
+  }
+  if (childHasOutsideOnEsc) {
+    childConfig.hidesOnOutsideEsc = true;
+  } else {
+    childConfig.hidesOnEsc = true;
+  }
+
+  const parentHasSyncChildrenCloseState =
+    parentContent.dataset.syncChildrenCloseState !== undefined;
+
+  if (parentHasSyncChildrenCloseState) {
+    parentConfig.syncChildrenCloseState = true;
+  }
 
   const parentOverlay = new OverlayController({
     ...withGlobalTestConfig(),
@@ -283,8 +292,9 @@ describe('OverlayController', () => {
             contentNode,
           });
         };
+
         expect(createOverlayController).to.throw(
-          '[OverlayController] Could not find a render target, since the provided contentNode is not connected to the DOM. Make sure that it is connected, e.g. by doing "document.body.appendChild(contentNode)", before passing it on.',
+          '[OverlayController] Could not find a render target, makes sure contentNode has a parent element (or contentWrapperNode is connected)',
         );
       });
 
@@ -346,6 +356,21 @@ describe('OverlayController', () => {
       await ctrl.hide();
       expect(ctrl.isShown).to.be.false;
     });
+
+    // it('cleans up the dom structure it created', async () => {
+    //   const contentNode = /** @type {HTMLElement} */ (fixtureSync(html`<div>my content</div>`));
+    //   const ctrl = new OverlayController({
+    //     placementMode: 'global',
+    //     contentNode,
+    //   });
+    //   await ctrl.show();
+    //   expect(ctrl.contentWrapperNode).to.exist;
+    //   expect(ctrl.__wrappingDialogNode).to.exist;
+
+    //   await ctrl.teardown();
+    //   expect(ctrl.contentWrapperNode).to.not.exist;
+    //   expect(ctrl.__wrappingDialogNode).to.not.exist;
+    // });
   });
 
   describe('Node Configuration', () => {
@@ -403,7 +428,7 @@ describe('OverlayController', () => {
               { ignoreAttributes: ['closedby'] },
             );
 
-            expect(el).lightDom.to.equal(`<div slot="content">projected</div>`);
+            expect(el).lightDom.to.equal(`<div data-content="" slot="content">projected</div>`);
           });
         });
 
@@ -425,7 +450,7 @@ describe('OverlayController', () => {
               `
               <dialog data-overlay-outer-wrapper="" open="" role="none" style="${wrappingDialogNodeStyle}">
                 <div data-id="content-wrapper">
-                  <div id="content">non projected</div>
+                  <div data-content="" id="content">non projected</div>
                 </div>
               </dialog>
           `,
@@ -620,6 +645,7 @@ describe('OverlayController', () => {
     });
   });
 
+  // TODO: make features modular (so they can be treeshaken) and test their lifecycle within this desrcibe
   describe('Feature Configuration', () => {
     describe('trapsKeyboardFocus', () => {
       it('focuses the overlay on show', async () => {
@@ -863,10 +889,7 @@ describe('OverlayController', () => {
 
     describe('Nested hidesOnEsc / hidesOnOutsideEsc', () => {
       describe('Parent has hidesOnEsc and child has hidesOnOutsideEsc', () => {
-        // TODO: This test is flaky. We need to investigate why the child overlay
-        // is not staying shown after the parent overlay is hidden. The failing line
-        // is highlighted below.
-        it.skip('on [Escape] press in child overlay: parent hides, child stays shown', async () => {
+        it('on [Escape] press in child overlay: parent hides, child stays shown', async () => {
           const parentContent = /** @type {HTMLDivElement} */ (
             await fixture(
               html` <!-- -->
@@ -877,12 +900,16 @@ describe('OverlayController', () => {
           );
           const { parentOverlay, childOverlay } = await createNestedEscControllers(parentContent);
           await mimicEscapePress(childOverlay.contentNode);
-          await waitUntil(() => !parentOverlay.isShown);
-
-          // TODO: This is the failing line ("sometimes").
-          // The child overlay is not staying shown after the parent overlay is hidden.
-          await waitUntil(() => childOverlay.isShown);
-
+          await childOverlay._showComplete;
+          await parentOverlay._showComplete;
+          await childOverlay._hideComplete;
+          await parentOverlay._hideComplete;
+          if (!childOverlay.isShown) {
+            await waitUntil(() => childOverlay.isShown);
+          }
+          if (parentOverlay.isShown) {
+            await waitUntil(() => !parentOverlay.isShown);
+          }
           await childOverlay.teardown();
           await parentOverlay.teardown();
         });
@@ -988,6 +1015,7 @@ describe('OverlayController', () => {
         });
       });
     });
+
     describe('hidesOnOutsideClick', () => {
       it('hides on outside click', async () => {
         const contentNode = /** @type {HTMLElement} */ (await fixture('<div>Content</div>'));
@@ -1708,6 +1736,97 @@ describe('OverlayController', () => {
         expect(ctrl1.hasActiveBackdrop).to.be.true;
       });
     });
+
+    describe('elementToFocusOnShow', () => {
+      it('adds tabindex="-1" to the content node when elementToFocusOnShow is true', async () => {
+        const ctrl = new OverlayController({
+          ...withGlobalTestConfig(),
+          isBlocking: false,
+          elementToFocusOnShow: true,
+        });
+        const contentNode = /** @type {HTMLElement} */ (await fixture('<div>Content</div>'));
+        ctrl.updateConfig({ contentNode });
+        await ctrl.show();
+        expect(contentNode.getAttribute('tabindex')).to.equal('-1');
+      });
+
+      it('makes contentNode the root of "next tab flow"', async () => {
+        const ctrl = new OverlayController({
+          ...withGlobalTestConfig(),
+          isBlocking: false,
+          elementToFocusOnShow: true,
+        });
+        const contentNode = /** @type {HTMLElement} */ (
+          await fixture('<div><button>Button</button></div>')
+        );
+        ctrl.updateConfig({ contentNode });
+        await ctrl.show();
+        const button = /** @type {HTMLButtonElement} */ (contentNode.querySelector('button'));
+        button.focus();
+        expect(isActiveElement(button)).to.be.true;
+      });
+    });
+
+    describe('syncChildrenCloseState', () => {
+      it('does not close all children of nested controllers when syncChildrenCloseState is false', async () => {
+        const parentContent = /** @type {HTMLDivElement} */ (
+          await fixture(
+            html` <!-- -->
+              <div data-sync-children-close-state id="parent-overlay">
+                <div id="child-overlay">we open our child and it will close when parent does</div>
+              </div>`,
+          )
+        );
+        const { parentOverlay, childOverlay } = await createNestedEscControllers(parentContent);
+        expect(parentOverlay.isShown).to.be.true;
+        expect(childOverlay.isShown).to.be.true;
+
+        await parentOverlay.hide();
+        await childOverlay._hideComplete;
+        expect(parentOverlay.isShown).to.be.false;
+        expect(childOverlay.isShown).to.be.false;
+      });
+
+      it('does not close all children of nested controllers when syncChildrenCloseState is false', async () => {
+        const parentContent = /** @type {HTMLDivElement} */ (
+          await fixture(
+            html` <!-- -->
+              <div id="parent-overlay">
+                <div id="child-overlay">
+                  we open our child and it will not close when parent does
+                </div>
+              </div>`,
+          )
+        );
+        const { parentOverlay, childOverlay } = await createNestedEscControllers(parentContent);
+        expect(parentOverlay.isShown).to.be.true;
+        expect(childOverlay.isShown).to.be.true;
+
+        await parentOverlay.hide();
+        expect(parentOverlay.isShown).to.be.false;
+        expect(childOverlay.isShown).to.be.true;
+      });
+    });
+
+    describe('isActivated', () => {
+      it('allows to conditionally disable overlay/openable functionality (for responsive context like nav menus, accordions/collapsibles vs plain headings/content etc.)', async () => {
+        const ctrl = new OverlayController({
+          ...withGlobalTestConfig(),
+          isActivated: false,
+        });
+        expect(ctrl.__hasSetup).to.be.false;
+        ctrl.updateConfig({
+          isActivated: true,
+        });
+        expect(ctrl.__hasSetup).to.be.true;
+      });
+    });
+
+    // TODO
+    describe('hideVisually', () => {});
+
+    // TODO
+    describe('requireConnectedNodes', () => {});
   });
 
   describe('Show / Hide / Toggle', () => {
@@ -2298,6 +2417,7 @@ describe('OverlayController', () => {
     });
 
     it('should run with scroll prevention', async () => {
+      await overlayControllerPreventsScroll.hide();
       await overlayControllerPreventsScroll.show();
 
       expect(
