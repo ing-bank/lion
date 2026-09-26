@@ -1,0 +1,40 @@
+{
+  "name": "@lion/astro-lit",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Astro integration that server-renders and hydrates Lit components. In-repo so it can follow this repo's lit-labs/ssr version and patch.",
+  "license": "MIT",
+  "author": "ing-bank",
+  "homepage": "https://github.com/ing-bank/lion/",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ing-bank/lion.git",
+    "directory": "packages-node/astro-lit"
+  },
+  "type": "module",
+  "exports": {
+    ".": "./src/index.js",
+    "./server.js": "./src/server.js",
+    "./client.js": "./src/client.js",
+    "./client-shim.js": "./src/client-shim.js"
+  },
+  "files": [
+    "src"
+  ],
+  "dependencies": {
+    "@lit-labs/ssr": "^4.1.0",
+    "@lit-labs/ssr-dom-shim": "^1.6.0",
+    "@webcomponents/template-shadowroot": "^0.2.1",
+    "parse5": "^8.0.0"
+  },
+  "devDependencies": {
+    "@lit-labs/ssr-client": "^1.1.7",
+    "lit": "^3.3.2"
+  },
+  "keywords": [
+    "lion-tools",
+    "astro",
+    "lit",
+    "ssr"
+  ]
+}
