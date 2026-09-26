@@ -1,0 +1,102 @@
+diff --git a/node_modules/@lit-labs/ssr/lib/element-renderer.js b/node_modules/@lit-labs/ssr/lib/element-renderer.js
+index f090271..b4ddae3 100644
+--- a/node_modules/@lit-labs/ssr/lib/element-renderer.js
++++ b/node_modules/@lit-labs/ssr/lib/element-renderer.js
+@@ -171,7 +171,11 @@ export class FallbackRenderer extends ElementRenderer {
+     }
+     setAttribute(name, value) {
+         // Browser turns all HTML attributes to lowercase.
+-        this._attributes[name.toLowerCase()] = value;
++        this._attributes[name.toLowerCase()] = `${value}`;
++    }
++    getAttribute(name) {
++        // Browser turns all HTML attributes to lowercase.
++        return this._attributes[name.toLowerCase()];
+     }
+     renderAttributes() {
+         const result = [];
+diff --git a/node_modules/@lit-labs/ssr/lib/render-value.js b/node_modules/@lit-labs/ssr/lib/render-value.js
+index 0ad6d65..3bc2fa9 100644
+--- a/node_modules/@lit-labs/ssr/lib/render-value.js
++++ b/node_modules/@lit-labs/ssr/lib/render-value.js
+@@ -3,7 +3,7 @@ import { nothing, noChange } from 'lit';
+ import { PartType } from 'lit/directive.js';
+ import { isPrimitive, isTemplateResult, getDirectiveClass, TemplateResultType, isCompiledTemplateResult, } from 'lit/directive-helpers.js';
+ import { _$LH } from 'lit-html/private-ssr-support.js';
+-const { getTemplateHtml, marker, markerMatch, boundAttributeSuffix, patchDirectiveResolve, getAttributePartCommittedValue, resolveDirective, AttributePart, PropertyPart, BooleanAttributePart, EventPart, connectedDisconnectable, isIterable, } = _$LH;
++const { getTemplateHtml, marker, markerMatch, boundAttributeSuffix, patchDirectiveResolve, getAttributePartCommittedValue, resolveDirective, AttributePart, PropertyPart, BooleanAttributePart, EventPart, connectedDisconnectable, isIterable, ElementPart } = _$LH;
+ import { digestForTemplateResult } from '@lit-labs/ssr-client';
+ import { HTMLSlotElement } from '@lit-labs/ssr-dom-shim';
+ import { getElementRenderer, } from './element-renderer.js';
+@@ -312,13 +312,18 @@ const getTemplateOpcodes = (result) => {
+                             });
+                         }
+                         else {
+-                            if (!hydratable) {
+-                                throw new Error(`Server-only templates don't support element parts, as their API does not currently give them any way to render anything on the server. Found in template:
+-    ${displayTemplateResult(result)}`);
+-                            }
++                            // [lion patch] Element parts (a directive bound to an
++                            // element, e.g. `<div ${myDirective()}>`) are supported on
++                            // the server: the directive's `update()` is run and the
++                            // attributes it sets on the element are rendered. Upstream
++                            // lit-ssr skips element parts entirely and throws for
++                            // server-only templates.
+                             ops.push({
+                                 type: 'element-part',
+                                 index: nodeIndex,
++                                ctor: ElementPart,
++                                tagName: tagName.toUpperCase(),
++                                useCustomElementInstance: node.isDefinedCustomElement,
+                             });
+                         }
+                         skipTo(attrEndOffset);
+@@ -574,11 +579,45 @@ And the inner template was:
+                 break;
+             }
+             case 'element-part': {
+-                // We don't emit anything for element parts (since we only support
+-                // directives for now; since they can't render, we don't even bother
+-                // running them), but we still need to advance the part index
++                // [lion patch] ElementPart directives are run instead of being
++                // skipped, and the attributes they set on their element are
++                // rendered. Upstream lit-ssr only advances the part index here.
+                 renderResult.push(() => {
++                    // 1: create an ElementPart for the directive to attach to.
++                    // Only an object with a `tagName` is needed: a directive only
++                    // receives a PartInfo (without the node) in its constructor.
++                    const part = new op.ctor(
++                        { tagName: op.tagName },
++                        connectedDisconnectable(),
++                        {},
++                    );
++
++                    // 2: create a renderer for the element the directive is attached
++                    // to, so that `part.element.setAttribute()` (light DOM) ends up
++                    // in the server-rendered markup.
++                    const instance = getElementRenderer(
++                        renderInfo,
++                        op.tagName,
++                        op.ctor,
++                        op.staticAttributes,
++                    );
++                    part.element = instance;
++
++                    // Expose the host element, so element directives can reach the
++                    // component they belong to through `part.options.host`.
++                    const host = renderInfo.customElementHostStack.at(-1);
++                    part.options =
++                        host === undefined ? part.options : { ...part.options, host: host.element };
++
++                    // 3: instantiate the directive and run its `update()` callback
++                    const value = part.strings === undefined ? result.values[partIndex] : result.values;
++                    const elementDirectiveInstance = new value['_$litDirective$']();
++                    elementDirectiveInstance.update(part, value.values);
++
+                     partIndex++;
++
++                    // 4: serialize the attributes the directive just set
++                    return instance.renderAttributes();
+                 });
+                 break;
+             }
