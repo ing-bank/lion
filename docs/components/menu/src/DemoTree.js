@@ -1,9 +1,10 @@
 /* eslint-disable import/no-extraneous-dependencies */
+/* eslint-disable import/no-relative-packages */
 import { LitElement } from 'lit';
-import { MultiLevelListMixin } from './MultiLevelListMixin.js';
+import { MultiLevelListMixin } from '../../../../packages/ui/components/menu/src/MultiLevelListMixin.js';
 
 // @ts-ignore - class extension with mixin
-export class LionTree extends MultiLevelListMixin(LitElement) {
+export class DemoTree extends MultiLevelListMixin(LitElement) {
   constructor() {
     super();
 
@@ -50,3 +51,5 @@ export class LionTree extends MultiLevelListMixin(LitElement) {
     });
   }
 }
+
+customElements.define('demo-tree', DemoTree);

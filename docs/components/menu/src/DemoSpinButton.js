@@ -1,7 +1,7 @@
 /* eslint-disable import/no-extraneous-dependencies */
 import { LitElement, html, css } from 'lit';
 
-export class LionSpinbutton extends LitElement {
+export class DemoSpinButton extends LitElement {
   static get properties() {
     return {
       now: { type: Number },
@@ -211,3 +211,5 @@ export class LionSpinbutton extends LitElement {
     }
   }
 }
+
+customElements.define('demo-spin-button', DemoSpinButton);

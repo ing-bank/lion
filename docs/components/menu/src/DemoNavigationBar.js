@@ -1,18 +1,19 @@
 // @ts-nocheck
 /* eslint-disable class-methods-use-this */
+/* eslint-disable import/no-relative-packages */
 import { LitElement, html, css, nothing } from 'lit';
 import { LionMenu } from '@lion/ui/menu.js';
-import { ScopedElementsMixin } from '../../core/src/ScopedElementsMixin.js';
+import { ScopedElementsMixin } from '../../../../packages/ui/components/core/src/ScopedElementsMixin.js';
 
 /**
- * @typedef {import('./types.js').NavBarResponsiveMode} NavBarResponsiveMode
- * @typedef {import('./types.js').MenuItem} MenuItem
- * @typedef {import('./types.js').CtaLink} CtaLink
- * @typedef {import('./types.js').Logo} Logo
- * @typedef {import('./types.js').LevelConfig} LevelConfig
+ * @typedef {import('./navigation-bar-types.js').NavBarResponsiveMode} NavBarResponsiveMode
+ * @typedef {import('./navigation-bar-types.js').MenuItem} MenuItem
+ * @typedef {import('./navigation-bar-types.js').CtaLink} CtaLink
+ * @typedef {import('./navigation-bar-types.js').Logo} Logo
+ * @typedef {import('./navigation-bar-types.js').LevelConfig} LevelConfig
  */
 
-export class LionNavigationBar extends ScopedElementsMixin(LitElement) {
+export class DemoNavigationBar extends ScopedElementsMixin(LitElement) {
   static get properties() {
     return {
       responsiveMode: { type: String, reflect: true, attribute: 'responsive-mode' },
@@ -436,3 +437,5 @@ export class LionNavigationBar extends ScopedElementsMixin(LitElement) {
     </lion-menu> `;
   }
 }
+
+customElements.define('demo-navigation-bar', DemoNavigationBar);

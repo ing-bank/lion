@@ -11,9 +11,9 @@ A common convention for indicating that a menu item launches a dialog box is to 
 ```js script
 import { html } from 'lit-html';
 import './lion-menu.js';
-import './lion-tree.js';
-import './lion-toolbar.js';
-import './lion-spinbutton.js';
+import '../../../../docs/components/menu/src/DemoTree.js';
+import '../../../../docs/components/menu/src/DemoToolbar.js';
+import '../../../../docs/components/menu/src/DemoSpinButton.js';
 import { applyMenuDemoStyles } from './applyMenuDemoStyles.js';
 
 applyMenuDemoStyles();
@@ -112,35 +112,35 @@ export const groups = () => html`
 
 ```js preview-story
 export const tree = () => html`
-  <lion-tree>
+  <demo-tree>
     <div>
       <div role="treeitem">Fruits</div>
-      <lion-tree>
+      <demo-tree>
         <div role="treeitem">Peek Call Hierarchy</div>
         <div role="treeitem">Peek Definition</div>
-      </lion-tree>
+      </demo-tree>
     </div>
     <div>
       <div role="treeitem">Vegetables</div>
-      <lion-tree>
+      <demo-tree>
         <div role="treeitem">Peek Call Hierarchy</div>
         <div>
           <div role="treeitem">Peek</div>
-          <lion-tree>
+          <demo-tree>
             <div role="treeitem">Peek Call Hierarchy</div>
             <div role="treeitem">Peek Definition</div>
-          </lion-tree>
+          </demo-tree>
         </div>
-      </lion-tree>
+      </demo-tree>
     </div>
     <div>
       <div role="treeitem">Grains</div>
-      <lion-tree>
+      <demo-tree>
         <div role="treeitem">Peek Call Hierarchy</div>
         <div role="treeitem">Peek Definition</div>
-      </lion-tree>
+      </demo-tree>
     </div>
-  </lion-tree>
+  </demo-tree>
 `;
 ```
 
@@ -234,7 +234,7 @@ From [wai aria toolbar](https://www.w3.org/TR/wai-aria-practices-1.2/examples/to
 
 ```js preview-story
 export const toolbar = () => html`
-  <lion-toolbar>
+  <demo-toolbar>
     <div>
       <button data-item title="bold" aria-label="Bold">
         <span class="fas fa-bold" aria-hidden="true"></span>
@@ -260,7 +260,7 @@ export const toolbar = () => html`
     </div>
     <div role="separator"></div>
 
-    <lion-spinbutton data-item now="20" min="12" max="40" unit="px"></lion-spinbutton>
+    <demo-spin-button data-item now="20" min="12" max="40" unit="px"></demo-spin-button>
     <div role="separator"></div>
 
     <div>
@@ -293,7 +293,7 @@ export const toolbar = () => html`
         </div>
       </lion-menu>
     </div>
-  </lion-toolbar>
+  </demo-toolbar>
 `;
 ```
 
@@ -301,34 +301,34 @@ export const toolbar = () => html`
 
 ```js preview-storyb
 export const tree = () => html`
-  <lion-tree>
+  <demo-tree>
     <lion-item>
       <div>Fruits</div>
-      <lion-tree>
+      <demo-tree>
         <lion-item>Peek Call Hierarchy</lion-item>
         <lion-item>Peek Definition</lion-item>
-      </lion-tree>
+      </demo-tree>
     </lion-item>
     <lion-item>
       <div>Vegetables</div>
-      <lion-tree>
+      <demo-tree>
         <lion-item>Peek Call Hierarchy</lion-item>
         <lion-item>
           <div>Peek</div>
-          <lion-tree>
+          <demo-tree>
             <lion-item>Peek Call Hierarchy</lion-item>
             <lion-item>Peek Definition</lion-item>
-          </lion-tree>
+          </demo-tree>
         </lion-item>
-      </lion-tree>
+      </demo-tree>
     </lion-item>
     <lion-item>
       <div>Grains</div>
-      <lion-tree>
+      <demo-tree>
         <lion-item>Peek Call Hierarchy</lion-item>
         <lion-item>Peek Definition</lion-item>
-      </lion-tree>
+      </demo-tree>
     </lion-item>
-  </lion-tree>
+  </demo-tree>
 `;
 ```

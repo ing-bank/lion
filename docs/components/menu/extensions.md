@@ -14,7 +14,7 @@ eleventyNavigation:
 
 ```js script
 import { html } from 'lit';
-import '@lion/ui/define/lion-navigation-bar.js';
+import './src/DemoNavigationBar.js';
 
 // N.B. data structure designed to be compatible with existing extension layer
 // TODO: maybe refactor api and bridge
@@ -249,14 +249,14 @@ const suggestions = ['A', 'B', 'C', 'D'];
 
 ```js preview-story
 export const navigationBar = () => {
-  return html`<lion-navigation-bar
+  return html`<demo-navigation-bar
     .menuItems="${menuData}"
     .menuSupportItems="${secondaryMenu}"
     .ctaPrimary="${ctaPrimary}"
     .ctaSecondary="${ctaSecondary}"
     .suggestions="${suggestions}"
   >
-    .prefilledSuggestion="${suggestions[0]}"</lion-navigation-bar
+    .prefilledSuggestion="${suggestions[0]}"</demo-navigation-bar
   >`;
 };
 ```
