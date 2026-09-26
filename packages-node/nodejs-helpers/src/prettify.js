@@ -37,7 +37,6 @@ const getPrettierParser = fileExtension => {
     yaml: 'yaml',
     yml: 'yaml',
   };
-  // @ts-ignore
   const parser = FILE_EXTENSION_TO_PARSER[fileExtension];
   if (!parser) {
     throw new Error(ERROR_UNSUPPORTED_FILE_EXTENSION);

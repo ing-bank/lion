@@ -928,7 +928,6 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
     if (type !== 'Date') {
       tmpDate.setDate(1);
     }
-    // @ts-ignore - dynamic method access
     tmpDate[`set${type}`](tmpDate[`get${type}`]() + modify);
     // if we've reset the day count,
     // restore day count as best we can
@@ -936,7 +935,6 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
       const maxDays = new Date(tmpDate.getFullYear(), tmpDate.getMonth() + 1, 0).getDate();
       tmpDate.setDate(Math.min(this.centralDate.getDate(), maxDays));
     }
-    // @ts-ignore - dynamic property access
     this[dateType] = tmpDate;
   }
 

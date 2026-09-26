@@ -832,7 +832,6 @@ describe('lion-select-rich', () => {
         await waitUntil(isSelectRichRendered);
         getInvoker()?.click();
         await waitUntil(isDialogVisible);
-        // @ts-ignore - NodeList array access
         const optionBlue = /** @type { HTMLElement | undefined } */ (
           wrapperElementShadowRoot?.querySelectorAll('lion-option')
         )?.[1];
@@ -956,7 +955,6 @@ describe('lion-select-rich', () => {
         await waitUntil(isSelectRichRendered);
         getInvoker()?.click();
         await waitUntil(isDialogVisible);
-        // @ts-ignore - NodeList array access
         const optionBlue = /** @type { HTMLElement | undefined } */ (
           wrapperElementShadowRoot?.querySelectorAll('lion-option')
         )?.[1];
@@ -1084,7 +1082,6 @@ describe('lion-select-rich', () => {
         await waitUntil(isSelectRichRendered);
         getInvoker()?.click();
         await waitUntil(isDialogVisible);
-        // @ts-ignore - NodeList array access
         const optionBlue = /** @type { HTMLElement | undefined } */ (
           wrapperElementShadowRoot?.querySelectorAll('lion-option')
         )?.[1];
