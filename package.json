@@ -59,13 +59,13 @@
     "playwright": "^1.61.0"
   },
   "devDependencies": {
-    "@astrojs/lit": "^4.3.0",
     "@astrojs/mdx": "^5.0.0",
     "@babel/core": "^7.29.6",
     "@bundled-es-modules/fetch-mock": "^6.5.2",
     "@changesets/cli": "^2.30.0",
     "@custom-elements-manifest/analyzer": "^0.10.10",
     "@custom-elements-manifest/to-markdown": "^0.1.0",
+    "@lion/astro-lit": "0.1.0",
     "@lit-labs/ssr": "4.1.0",
     "@lit-labs/testing": "^0.2.8",
     "@lit/reactive-element": "^2.1.2",
