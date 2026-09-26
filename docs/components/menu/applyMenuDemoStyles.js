@@ -117,8 +117,8 @@ export function applyMenuDemoStyles() {
       content: '+';
     }
 
-    lion-tree[level='1'] [role='treeitem']:not([aria-expanded]),
-    lion-tree[level='1'] [role='treeitem'][aria-expanded] {
+    demo-tree[level='1'] [role='treeitem']:not([aria-expanded]),
+    demo-tree[level='1'] [role='treeitem'][aria-expanded] {
       padding-left: 24px;
     }
 
@@ -127,8 +127,8 @@ export function applyMenuDemoStyles() {
       padding-left: 16px;
     }
 
-    lion-tree[level='2'] [role='treeitem']:not([aria-expanded]),
-    lion-tree[level='2'] [role='treeitem'][aria-expanded] {
+    demo-tree[level='2'] [role='treeitem']:not([aria-expanded]),
+    demo-tree[level='2'] [role='treeitem'][aria-expanded] {
       padding-left: 32px;
     }
     lion-menu[level='2'] [role^='menuitem']:not([aria-expanded]),

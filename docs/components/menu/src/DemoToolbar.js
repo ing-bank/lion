@@ -1,13 +1,17 @@
 /* eslint-disable import/no-extraneous-dependencies */
-import { LionMenu } from './LionMenu.js';
-import { setChecked, toggleChecked } from './utils/listItemInteractions.js';
+/* eslint-disable import/no-relative-packages */
+import { LionMenu } from '@lion/ui/menu.js';
+import {
+  setChecked,
+  toggleChecked,
+} from '../../../../packages/ui/components/menu/src/utils/listItemInteractions.js';
 
 /**
- * @typedef {import('../types/InteractiveListMixinTypes.js').InteractiveListItemRole} InteractiveListItemRole
+ * @typedef {import('../../../../packages/ui/components/menu/types/InteractiveListMixinTypes.js').InteractiveListItemRole} InteractiveListItemRole
  */
 
 // @ts-ignore - class extension properties mismatch at the OverlayWithListInvokerMixin boundary
-export class LionToolbar extends LionMenu {
+export class DemoToolbar extends LionMenu {
   constructor() {
     super();
 
@@ -32,7 +36,7 @@ export class LionToolbar extends LionMenu {
         /**
          * If index = 1 (radio 'Red'), closest group will be div[role=radiogroup]
          * @example
-         * <lion-toolbar>
+         * <demo-toolbar>
          *   <div role="radiogroup" aria-label="Text Color">
          *     <button role="radio" aria-checked="false">Blue</button>
          *     <button role="radio" aria-checked="true">Red</button>
@@ -44,7 +48,7 @@ export class LionToolbar extends LionMenu {
          *     <button role="checkbox" aria-checked="true">Red</button>
          *     <button role="checkbox" aria-checked="false">Green</button>
          *   </div>
-         * </lion-toolbar>
+         * </demo-toolbar>
          */
         let closestGroup;
         if (role === 'radio') {
@@ -93,3 +97,5 @@ export class LionToolbar extends LionMenu {
     });
   }
 }
+
+customElements.define('demo-toolbar', DemoToolbar);
