@@ -166,7 +166,8 @@ const FormControlMixinImplementation = /** @type {FormControlMixin} */ (supercla
      * TODO: check if this is a false positive or if we can improve
      * @configure ReactiveElement
      */
-    static enabledWarnings = super['enabledWarnings']?.filter(w => w !== 'change-in-update') || [];
+    // @ts-ignore [ts7-2855] TS7 rejects field access via super (the parent declares this as a field). Dot form kept deliberately: bracket access is exempt from property mangling (terser keep_quoted), which could split this property into two names. Upstream fix: declare an accessor in the parent type
+    static enabledWarnings = super.enabledWarnings?.filter(w => w !== 'change-in-update') || [];
 
     // N.B. add these label/helpText props for types + ce manifest output
     // (explicity setting them to undefined does not have desired result)

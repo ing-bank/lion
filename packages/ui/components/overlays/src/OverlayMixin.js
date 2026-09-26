@@ -267,6 +267,7 @@ export const OverlayMixinImplementation = superclass => {
         backdropNode: this._overlayBackdropNode,
       };
 
+      // @ts-ignore [ts7-2565] TS7 checks definite assignment on this inferred field; assigned from another method: declare the field with an explicit `| undefined` in its JSDoc type
       if (this._overlayCtrl) {
         // when `lit` `cache` attaches node to the DOM, register the controller back in the OverlaysManager
         this._overlayCtrl.updateConfig(config);

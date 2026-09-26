@@ -829,7 +829,8 @@ export function runValidateMixinSuite(customConfig) {
       const withSuccessTagString = defineCE(
         class extends ValidateMixin(LitElement) {
           static get validationTypes() {
-            return [...super['validationTypes'], 'success'];
+            // @ts-ignore [ts7-2855] TS7 rejects field access via super (the parent declares this as a field). Dot form kept deliberately: bracket access is exempt from property mangling (terser keep_quoted), which could split this property into two names. Upstream fix: declare an accessor in the parent type
+            return [...super.validationTypes, 'success'];
           }
         },
       );
@@ -1306,7 +1307,8 @@ export function runValidateMixinSuite(customConfig) {
       const customTypeTagString = defineCE(
         class extends ValidateMixin(LitElement) {
           static get validationTypes() {
-            return [...super['validationTypes'], 'x', 'y'];
+            // @ts-ignore [ts7-2855] TS7 rejects field access via super (the parent declares this as a field). Dot form kept deliberately: bracket access is exempt from property mangling (terser keep_quoted), which could split this property into two names. Upstream fix: declare an accessor in the parent type
+            return [...super.validationTypes, 'x', 'y'];
           }
         },
       );
@@ -1423,7 +1425,8 @@ export function runValidateMixinSuite(customConfig) {
         it('can add helpers for validation types', async () => {
           class ValidateHasX extends ValidateMixin(LitElement) {
             static get validationTypes() {
-              return [...super['validationTypes'], 'x'];
+              // @ts-ignore [ts7-2855] TS7 rejects field access via super (the parent declares this as a field). Dot form kept deliberately: bracket access is exempt from property mangling (terser keep_quoted), which could split this property into two names. Upstream fix: declare an accessor in the parent type
+              return [...super.validationTypes, 'x'];
             }
 
             get hasX() {
@@ -1472,7 +1475,8 @@ export function runValidateMixinSuite(customConfig) {
           const elTagString = defineCE(
             class extends ValidateMixin(LitElement) {
               static get validationTypes() {
-                return [...super['validationTypes'], 'x'];
+                // @ts-ignore [ts7-2855] TS7 rejects field access via super (the parent declares this as a field). Dot form kept deliberately: bracket access is exempt from property mangling (terser keep_quoted), which could split this property into two names. Upstream fix: declare an accessor in the parent type
+                return [...super.validationTypes, 'x'];
               }
 
               /**

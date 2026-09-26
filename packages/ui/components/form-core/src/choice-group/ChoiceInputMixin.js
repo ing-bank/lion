@@ -45,8 +45,10 @@ const ChoiceInputMixinImplementation = /** @type {ChoiceInputMixin} */ (supercla
 
     set choiceValue(value) {
       this.requestUpdate('choiceValue', this.choiceValue);
+      // @ts-ignore [ts7-2565] TS7 checks definite assignment on this inferred field; Lit reactive property: read through a typed local instead (e.g. const next = this.x ?? DEFAULT) - a class field would shadow the accessor Lit creates from static properties
       if (this.modelValue.value !== value) {
         /** @type {ChoiceInputModelValue} */
+        // @ts-ignore [ts7-2565] TS7 checks definite assignment on this inferred field; Lit reactive property: read through a typed local instead (e.g. const next = this.x ?? DEFAULT) - a class field would shadow the accessor Lit creates from static properties
         this.modelValue = { value, checked: this.modelValue.checked };
       }
     }
@@ -142,7 +144,8 @@ const ChoiceInputMixinImplementation = /** @type {ChoiceInputMixin} */ (supercla
      */
     static get styles() {
       return [
-        ...(super['styles'] || []),
+        // @ts-ignore [ts7-2855] TS7 rejects field access via super (the parent declares this as a field). Dot form kept deliberately: bracket access is exempt from property mangling (terser keep_quoted), which could split this property into two names. Upstream fix: declare an accessor in the parent type
+        ...(super.styles || []),
         css`
           :host {
             display: flex;

@@ -29,7 +29,8 @@ export const ArrowMixinImplementation = /** @type {ArrowMixin} */ (superclass =>
 
     static get styles() {
       return [
-        .../** @type {CSSResultArray} */ (super['styles'] || []),
+        // @ts-ignore [ts7-2855] TS7 rejects field access via super (the parent declares this as a field). Dot form kept deliberately: bracket access is exempt from property mangling (terser keep_quoted), which could split this property into two names. Upstream fix: declare an accessor in the parent type
+        .../** @type {CSSResultArray} */ (super.styles || []),
         css`
           :host {
             --tooltip-arrow-width: 12px;
