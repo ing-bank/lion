@@ -258,7 +258,7 @@ export class LocalizeManager extends EventTarget {
 
   /**
    * @param {string | string[]} keys
-   * @param {Object<string,?>} [vars]
+   * @param {Object<string,any>} [vars]
    * @param {Object} [opts]
    * @param {string} [opts.locale]
    * @returns {string}

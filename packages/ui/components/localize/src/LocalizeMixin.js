@@ -97,7 +97,7 @@ const LocalizeMixinImplementation = superclass =>
 
     /**
      * @param {string | string[]} keys
-     * @param {Object.<string,?>} [variables]
+     * @param {Object.<string,any>} [variables]
      * @param {Object} [options]
      * @param {string} [options.locale]
      * @returns {string | DirectiveResult}

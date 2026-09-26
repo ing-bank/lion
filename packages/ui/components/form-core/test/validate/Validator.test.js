@@ -108,7 +108,7 @@ describe('Validator', () => {
       }
 
       /**
-       * @param {Object.<string,?>} _data
+       * @param {Object.<string,any>} _data
        */
       static async getMessage(_data) {
         data = _data;

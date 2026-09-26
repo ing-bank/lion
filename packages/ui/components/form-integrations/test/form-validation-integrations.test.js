@@ -19,7 +19,7 @@ describe('Form Validation Integrations', () => {
         /**
          *
          * @param {any} [param]
-         * @param {Object.<string,?>} [config]
+         * @param {Object.<string,any>} [config]
          */
         constructor(param, config) {
           super(param, config);
