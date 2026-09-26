@@ -21,8 +21,15 @@ export function isEqualConfig(a, b) {
     return a === b;
   }
 
-  return Array.from(new Set([...Object.keys(a), ...Object.keys(b)])).every(prop =>
-    // @ts-ignore - dynamic property access
-    isEqualConfig(a[prop], b[prop], prop),
+  const aProps = Object.keys(a);
+  const bProps = Object.keys(b);
+  if (aProps.length !== bProps.length) {
+    return false;
+  }
+  return aProps.every(
+    prop =>
+      Object.prototype.hasOwnProperty.call(b, prop) &&
+      // @ts-ignore - dynamic property access
+      isEqualConfig(a[prop], b[prop]),
   );
 }
