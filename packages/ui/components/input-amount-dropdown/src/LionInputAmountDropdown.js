@@ -598,7 +598,9 @@ export class LionInputAmountDropdown extends LionInputAmount {
         this._currencyUtil?.countryToCurrencyMap.get(this._langIso),
       )
     ) {
-      this.currency = /** @type {any} */ (this._currencyUtil?.countryToCurrencyMap.get(this._langIso));
+      this.currency = /** @type {any} */ (
+        this._currencyUtil?.countryToCurrencyMap.get(this._langIso)
+      );
       return;
     }
 

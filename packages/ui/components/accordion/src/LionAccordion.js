@@ -124,7 +124,6 @@ export class LionAccordion extends LitElement {
      * @private
      */
     this.__store = [];
-
   }
 
   /** @param {import('lit').PropertyValues } changedProperties */

@@ -23,6 +23,7 @@ import { dedupeMixin } from '@open-wc/dedupe-mixin';
  * @type {SyncUpdatableMixin}
  * @param {import('@open-wc/dedupe-mixin').Constructor<import('lit').LitElement>} superclass
  */
+// prettier-ignore
 const SyncUpdatableMixinImplementation = /** @type {SyncUpdatableMixin} */ (superclass =>
   // @ts-ignore https://github.com/microsoft/TypeScript/issues/36821#issuecomment-588375051
   class extends superclass {

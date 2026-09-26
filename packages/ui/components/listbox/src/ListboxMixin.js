@@ -26,6 +26,7 @@ import { moveUserProvidedDefaultSlottablesToTarget } from '../../core/src/SlotMi
  * @type {ListboxMixin}
  * @param {import('@open-wc/dedupe-mixin').Constructor<import('lit').LitElement>} superclass
  */
+// prettier-ignore
 const ListboxMixinImplementation = /** @type {ListboxMixin} */ (superclass =>
   // @ts-ignore https://github.com/microsoft/TypeScript/issues/36821#issuecomment-588375051
   class ListboxMixin extends FormControlMixin(

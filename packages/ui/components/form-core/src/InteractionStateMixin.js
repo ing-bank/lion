@@ -18,6 +18,7 @@ import { FormControlMixin } from './FormControlMixin.js';
  * @type {InteractionStateMixin}
  * @param {import('@open-wc/dedupe-mixin').Constructor<import('lit').LitElement>} superclass
  */
+// prettier-ignore
 const InteractionStateMixinImplementation = /** @type {InteractionStateMixin} */ (superclass =>
   // @ts-ignore https://github.com/microsoft/TypeScript/issues/36821#issuecomment-588375051
   class InteractionStateMixin extends FormControlMixin(superclass) {
