@@ -352,14 +352,11 @@ const FormGroupMixinImplementation = superclass =>
       this.formElements._keys().forEach(name => {
         const elem = this.formElements[name];
         if (elem instanceof FormControlsCollection) {
-          // @ts-ignore - dynamic property access
           result[name] = elem.filter(el => _filterFn(el, property)).map(el => el[property]);
         } else if (_filterFn(elem, property)) {
           if (typeof elem._getFromAllFormElements === 'function') {
-            // @ts-ignore - dynamic property access
             result[name] = elem._getFromAllFormElements(property);
           } else {
-            // @ts-ignore - dynamic property access
             result[name] = elem[property];
           }
         }
@@ -389,7 +386,6 @@ const FormGroupMixinImplementation = superclass =>
           if (Array.isArray(this.formElements[name])) {
             this.formElements[name].forEach(
               (/** @type {FormControl} */ el, /** @type {number} */ index) => {
-                // @ts-ignore - dynamic property access
                 el[property] = values[name][index]; // eslint-disable-line no-param-reassign
               },
             );
@@ -397,7 +393,6 @@ const FormGroupMixinImplementation = superclass =>
           if (this.formElements[name]) {
             this.formElements[name][property] = values[name];
           } else {
-            // @ts-ignore - dynamic property access
             this.__pendingValues[property][name] = values[name];
           }
         });
@@ -411,7 +406,6 @@ const FormGroupMixinImplementation = superclass =>
     _anyFormElementHas(property) {
       return Object.keys(this.formElements).some(name => {
         if (Array.isArray(this.formElements[name])) {
-          // @ts-ignore - dynamic property access
           return this.formElements[name].some((/** @type {FormControl} */ el) => !!el[property]);
         }
         return !!this.formElements[name][property];
@@ -442,7 +436,6 @@ const FormGroupMixinImplementation = superclass =>
     _everyFormElementHas(property) {
       return Object.keys(this.formElements).every(name => {
         if (Array.isArray(this.formElements[name])) {
-          // @ts-ignore - dynamic property access
           return this.formElements[name].every((/** @type {FormControl} */ el) => !!el[property]);
         }
         return !!this.formElements[name][property];

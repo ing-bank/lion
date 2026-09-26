@@ -13,6 +13,7 @@
     "alwaysStrict": true,
     "types": ["node", "mocha", "chai", "sinon"],
     "esModuleInterop": true,
+    "suppressImplicitAnyIndexErrors": true,
     "skipLibCheck": true,
     "incremental": true,
     "declaration": true,
