@@ -1,6 +1,5 @@
 import { dedupeMixin } from '@open-wc/dedupe-mixin';
 import { OverlayController } from './OverlayController.js';
-import { isEqualConfig } from './utils/is-equal-config.js';
 
 /**
  * @typedef {<T>(ingOverlayHost:T) => void} PostProcessor
@@ -58,17 +57,6 @@ export const OverlayMixinImplementation = superclass => {
       this.open = this.open.bind(this);
       /** @type {EventListener} */
       this.close = this.close.bind(this);
-
-      // // By default, we go for disclosure behavior
-      // // TODO: in the future, bring disclosure behavior to a controller (and therefore directive).
-      // // Take inspiration from VisibilityToggleCtrl of portal elements
-      // /**
-      //  * Terminology aligned with https://open-ui.org/components/openable.explainer/
-      //  * @type {'disclosure'|'overlay'}
-      //  */
-      // this.openableMode = 'disclosure';
-
-      // allow hybrid disclosure/overlay components
     }
 
     get config() {
@@ -77,14 +65,13 @@ export const OverlayMixinImplementation = superclass => {
 
     /** @param {OverlayConfig} value */
     set config(value) {
-      // TODO: built-in in overlayCtrl now... delete here
-      const shouldUpdate = !isEqualConfig(this.config, value);
-
-      if (this._overlayCtrl && shouldUpdate) {
+      // The OverlayController already guards against redundant updates
+      // (see OverlayController#updateConfig), so we delegate unconditionally here.
+      if (this._overlayCtrl) {
         this._overlayCtrl.updateConfig(value);
       }
       this.__config = value;
-      if (this._overlayCtrl && shouldUpdate) {
+      if (this._overlayCtrl) {
         this.__syncToOverlayController();
       }
     }
@@ -228,12 +215,6 @@ export const OverlayMixinImplementation = superclass => {
     // @ts-expect-error
     static enabledWarnings = super.enabledWarnings?.filter(w => w !== 'change-in-update') || [];
 
-    // get _overlayInvokerNode() {
-    //   return /** @type {HTMLElement | undefined} */ (
-    //     Array.from(this.children).find(child => child.slot === 'invoker')
-    //   );
-    // }
-
     /**
      * @overridable
      */
@@ -267,33 +248,64 @@ export const OverlayMixinImplementation = superclass => {
     }
 
     /**
-     * @param {Element} focusableElOrWrapper
+     * Returns the element that can actually receive focus inside the passed
+     * invoker (wrapper) element: the element itself when it is focusable,
+     * otherwise the first focusable descendant.
+     * @param {Element|null|undefined} focusableElOrWrapper
      * @returns {Element|null}
      */
     static _getFocusableInvokerEl(focusableElOrWrapper) {
-      // return focusableElOrWrapper;
-      return (
-        focusableElOrWrapper &&
-        (focusableElOrWrapper.hasAttribute('tabindex') || focusableElOrWrapper.tagName === 'BUTTON'
-          ? focusableElOrWrapper
-          : focusableElOrWrapper.querySelector('[role=button], button'))
-      );
+      if (!focusableElOrWrapper) return null;
+      const focusableSelector = '[tabindex], button, a[href], [role=button]';
+      return focusableElOrWrapper.matches(focusableSelector)
+        ? focusableElOrWrapper
+        : focusableElOrWrapper.querySelector(focusableSelector);
     }
 
+    /**
+     * The node that opens/closes this overlay.
+     *
+     * Resolved in a stable, declarative way (independent of the exact DOM order)
+     * by looking, in order, for:
+     * 1. a child with `[slot="invoker"]`
+     * 2. any element in the same root that opts in via `[data-invoker]` and
+     *    references this host by id (`for="<id>"`)
+     * 3. a preceding sibling that opts in via `[data-invoker]`
+     * @protected
+     */
     get _overlayInvokerNode() {
-      const ctor = /** @type {typeof OverlayMixin} */ (this.constructor);
       if (!this.__invokerNode) {
-        const slottedNode = Array.from(this.children).find(child => child.slot === 'invoker');
-        if (slottedNode) {
-          this.__invokerNode = ctor._getFocusableInvokerEl(slottedNode);
-        } else {
-          // Look for preceeding sibling with [data-invoker] attribute, and try to find a focusable element in it (either itself or a child)
-          this.__invokerNode =
-            this.previousElementSibling?.hasAttribute('data-invoker') &&
-            ctor._getFocusableInvokerEl(this.previousElementSibling);
-        }
+        this.__invokerNode = this._getInvokerNode();
       }
       return this.__invokerNode;
+    }
+
+    /**
+     * @protected
+     * @returns {Element|null}
+     */
+    _getInvokerNode() {
+      const ctor = /** @type {typeof OverlayMixin} */ (this.constructor);
+
+      const slottedNode = Array.from(this.children).find(child => child.slot === 'invoker');
+      if (slottedNode) {
+        return ctor._getFocusableInvokerEl(slottedNode);
+      }
+
+      if (this.id) {
+        // Reference the invoker declaratively: `<button data-invoker for="my-menu">`
+        const root = /** @type {Document|ShadowRoot} */ (this.getRootNode());
+        const explicitInvoker = root.querySelector?.(`[data-invoker][for="${this.id}"]`);
+        if (explicitInvoker) {
+          return ctor._getFocusableInvokerEl(explicitInvoker);
+        }
+      }
+
+      // Fall back to a preceding sibling that opted in via [data-invoker]
+      const { previousElementSibling } = this;
+      return previousElementSibling && previousElementSibling.hasAttribute('data-invoker')
+        ? ctor._getFocusableInvokerEl(previousElementSibling)
+        : null;
     }
 
     /** @protected */
