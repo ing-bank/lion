@@ -214,6 +214,7 @@ const FormatMixinImplementation = /** @type {FormatMixin} */ (superclass =>
      * @protected
      */
     _calculateValues({ source } = { source: null }) {
+      // @ts-ignore [ts7-2565] TS7 checks definite assignment on this inferred field; private field: hoist to a class field with an initializer (the fix proven on LionAccordion)
       if (this.__preventRecursiveTrigger) return; // prevent infinite loops
 
       /** @type {boolean} */
