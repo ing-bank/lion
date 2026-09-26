@@ -906,7 +906,7 @@ export class OverlayController extends EventTarget {
   }
 
   get isShown() {
-    return Boolean(this.__wrappingDialogNode?.style.display !== 'none');
+    return Boolean(this.__wrappingDialogNode && this.__wrappingDialogNode.style.display !== 'none');
   }
 
   /**
@@ -923,6 +923,13 @@ export class OverlayController extends EventTarget {
     this._showComplete = new Promise(resolve => {
       this._showResolve = resolve;
     });
+
+    // Teardown() removes the content dom structure we created (contentWrapperNode +
+    // wrapping <dialog>). Make sure it exists again before the manager (which sets
+    // our elevation on the wrapping node) and the show logic below touch it.
+    if (!this.__wrappingDialogNode) {
+      this._init();
+    }
 
     if (this.manager) {
       this.manager.show(this);
@@ -1641,8 +1648,20 @@ export class OverlayController extends EventTarget {
 
     // if (this.config._shouldTeardownDomStructure) {
     this.__rearrangeNodesCleanup?.();
+    this.__rearrangeNodesCleanup = undefined;
     // }
     this.__teardownVisibility();
+
+    // When we created the contentWrapperNode/wrapping <dialog> ourselves, restore the
+    // original dom structure and drop the (now detached) references, so that a
+    // subsequent setup recreates them and `contentWrapperNode`/`content` no longer
+    // expose stale nodes.
+    if (this.contentWrapperNode !== this.contentNode) {
+      this.contentWrapperNode?.removeAttribute('style');
+      this.contentWrapperNode?.removeAttribute('class');
+      this.__contentWrapperNode = undefined;
+      this.__wrappingDialogNode = undefined;
+    }
 
     this.__hasSetup = false;
   }
