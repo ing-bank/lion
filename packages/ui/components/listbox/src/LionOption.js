@@ -140,6 +140,7 @@ export class LionOption extends DisabledMixin(
     const parentForm = /** @type {unknown} */ (this._parentFormGroup);
     this._isHandlingUserInput = true;
     if (parentForm && /** @type {ChoiceGroupHost} */ (parentForm).multipleChoice) {
+      // @ts-ignore [ts7-2565] TS7 checks definite assignment on this inferred field; Lit reactive property: read through a typed local instead (e.g. const next = this.x ?? DEFAULT) - a class field would shadow the accessor Lit creates from static properties
       this.checked = !this.checked;
       this.active = !this.active;
     } else {
