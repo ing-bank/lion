@@ -69,6 +69,7 @@ export function runLionMenuSuite(customConfig) {
       el._listRole = 'menu';
       expect(el._listRole).to.equal('menu');
       expect(el.orientation).to.equal('vertical');
+      // @ts-ignore - bar property of LionMenu
       el.bar = true;
       await el.updateComplete;
       expect(el._listRole).to.equal('menubar');

@@ -8,7 +8,7 @@ import { isChecked, setChecked } from './utils/listItemInteractions.js';
  * @typedef {import('./InteractiveListMixin.js').LionItem} LionItem
  * @typedef {import('../types/InteractiveListMixinTypes.js').InteractiveListHost} InteractiveList
  * @typedef {typeof import('../../overlays/types/OverlayMixinTypes.js').OverlayHost} OverlayHost
- * @typedef {import('./LionMenuOverlay.js').LionMenuOverlay} LionMenuOverlay
+ * @typedef {import('./LionMenu.js').LionMenu} LionMenu
  */
 
 /**
@@ -237,7 +237,7 @@ const MultiLevelListMixinImplementation = superclass =>
             // @ts-ignore - close method
             this.close();
             if (
-              /** @type {InteractiveList & LionMenuOverlay} */ (parentListOfActiveItem)
+              /** @type {InteractiveList & LionMenu} */ (parentListOfActiveItem)
                 ._onOverlayShow
             ) {
               // @ts-ignore - _onOverlayShow method
@@ -250,7 +250,7 @@ const MultiLevelListMixinImplementation = superclass =>
             // @ts-ignore - close method
             this.close();
             if (
-              /** @type {InteractiveList & LionMenuOverlay} */ (parentListOfActiveItem)
+              /** @type {InteractiveList & LionMenu} */ (parentListOfActiveItem)
                 ._onOverlayShow
             ) {
               // @ts-ignore - _onOverlayShow method

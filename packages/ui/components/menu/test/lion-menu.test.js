@@ -3,9 +3,12 @@ import { runMultiLevelListMixinSuite } from '../test-suites/MultiLevelListMixin.
 import { runMoreButtonMenuMixinSuite } from '../test-suites/MoreButtonMenuMixin.suite.js';
 import { runLionMenuSuite } from '../test-suites/LionMenu.suite.js';
 import '@lion/ui/define/lion-menu.js';
-import '@lion/ui/define/lion-menu-overlay.js';
 
-runInteractiveListMixinSuite({ tagString: 'lion-menu' });
-runMultiLevelListMixinSuite({ tagString: 'lion-menu', tagChildString: 'lion-menu-overlay' });
+// The Mixin suites run against plain mixin hosts (their defaults) on purpose:
+// LionMenu composes InteractiveListMixin + MultiLevelListMixin with the
+// overlay/disclosure behavior, and the composite is covered by the LionMenu
+// suites.
+runInteractiveListMixinSuite();
+runMultiLevelListMixinSuite();
 runMoreButtonMenuMixinSuite({ tagString: 'lion-menu' });
 runLionMenuSuite({ tagString: 'lion-menu' });

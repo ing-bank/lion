@@ -1,8 +1,11 @@
 /* eslint-disable max-classes-per-file */
 /* eslint-disable import/no-extraneous-dependencies */
-import { LitElement } from 'lit';
-// import { dedupeMixin } from '@open-wc/dedupe-mixin';
+import { LitElement, html } from 'lit';
+import { dedupeMixin } from '@open-wc/dedupe-mixin';
+
+import { OverlayMixin, withDropdownConfig } from '@lion/ui/overlays.js';
 import { MultiLevelListMixin } from './MultiLevelListMixin.js';
+import { InteractiveListMixin } from './InteractiveListMixin.js';
 import { setChecked, toggleChecked } from './utils/listItemInteractions.js';
 
 // /**
@@ -84,6 +87,10 @@ import { setChecked, toggleChecked } from './utils/listItemInteractions.js';
 // export const AnimateMixin = dedupeMixin(AnimateMixinImplementation);
 
 /**
+ * The interactive (multi level) list behavior of a menu.
+ *
+ * Not exported on its own: consumers use `LionMenu`, which adds the
+ * disclosure/overlay behavior on top of this.
  *
  * Api explanation:
  * - No [slot="invoker"], because adding it inside the lion-menu would:
@@ -141,7 +148,7 @@ import { setChecked, toggleChecked } from './utils/listItemInteractions.js';
  * </lion-menu>
  */
 // @ts-ignore - _listRole property type compatibility
-export class LionMenu extends MultiLevelListMixin(LitElement) {
+class LionMenuCore extends MultiLevelListMixin(LitElement) {
   static get properties() {
     return {
       /**
@@ -245,6 +252,170 @@ export class LionMenu extends MultiLevelListMixin(LitElement) {
           this._listRole = 'menu';
         }
       }
+    }
+  }
+}
+
+/**
+ * Handles integration of InteractiveListMixin and OverlayMixin
+ * Will be used by:
+ * - LionMenu
+ * - LionCombobox
+ * - LionSelectRich
+ *
+ * @param {import('@open-wc/dedupe-mixin').Constructor<LionMenuCore>} superclass
+ */
+const OverlayWithListInvokerMixinImplementation = superclass =>
+  class OverlayWithListInvokerMixin extends OverlayMixin(InteractiveListMixin(superclass)) {
+    _onOverlayShow = () => {
+      if (this.checkedIndex != null) {
+        // @ts-ignore - activeIndex can be number or array
+        this.activeIndex = this.checkedIndex;
+      }
+    };
+
+    /**
+     * @enhance OverlayMixin
+     */
+    _setupOverlayCtrl() {
+      super._setupOverlayCtrl();
+
+      if (!this._overlayCtrl) return;
+
+      this._overlayCtrl.addEventListener('show', this._onOverlayShow);
+    }
+
+    /**
+     * @enhance OverlayMixin
+     */
+    _teardownOverlayCtrl() {
+      super._teardownOverlayCtrl();
+
+      if (!this._overlayCtrl) return;
+
+      this._overlayCtrl.removeEventListener('show', this._onOverlayShow);
+    }
+
+    /**
+     * make sure OverlayMixin gets the contentNode defined by DisclosureMixin
+     */
+    get _overlayContentNode() {
+      // @ts-ignore - _contentNode property
+      return this._contentNode;
+    }
+
+    /**
+     * make sure OverlayMixin gets the invokerNode defined by DisclosureMixin
+     */
+    get _overlayInvokerNode() {
+      // @ts-ignore - _invokerNode property
+      return this._invokerNode;
+    }
+  };
+export const OverlayWithListInvokerMixin = dedupeMixin(OverlayWithListInvokerMixinImplementation);
+
+/**
+ * LionMenu is a list of choices. Whether it opens as an overlay or as a regular
+ * collapsible (disclosure) is configurable via `openable-mode`.
+ *
+ * N.B. the actual switching will be delegated to the disclosure system (see the
+ * visibility-toggle controller); for now `disclosure` is the default.
+ */
+export class LionMenu extends OverlayWithListInvokerMixin(LionMenuCore) {
+  static get properties() {
+    return {
+      openableMode: { type: String, attribute: 'openable-mode' },
+    };
+  }
+
+  constructor() {
+    super();
+
+    // By default, we go for disclosure behavior
+    // a TODO: in the future, bring disclosure behavior to a controller (and therefore directive).
+    // Take inspiration from VisibilityToggleCtrl of portal elements
+    /**
+     * Terminology aligned with https://open-ui.org/components/openable.explainer/
+     * @type {'disclosure'|'overlay'}
+     */
+    this.openableMode = 'disclosure';
+
+    this._shouldSetupOverlay = false;
+  }
+
+  /**
+   * @param {import('lit').PropertyValues} changedProperties
+   */
+  updated(changedProperties) {
+    super.updated(changedProperties);
+
+    if (changedProperties.has('openableMode')) {
+      if (this.openableMode === 'overlay') {
+        this._shouldSetupOverlay = true;
+        this._setupOverlayCtrl();
+      } else {
+        this._teardownOverlayCtrl();
+      }
+    }
+  }
+
+  // TODO: this was created 5 years ago, do we still need id="overlay-content-node-wrapper" after the "dialog refactor"?
+  render() {
+    return html`
+      <slot name="invoker"></slot>
+      <div id="overlay-content-node-wrapper">
+        <slot name="list"></slot>
+      </div>
+      <slot id="list-items-outlet"></slot>
+    `;
+  }
+
+  // @ts-ignore - overlay config return type
+  _defineOverlayConfig() {
+    // @ts-ignore - parentList property
+    const { parentList } = this;
+    let placement = 'bottom-start';
+    if (parentList?.orientation !== 'horizontal') {
+      placement = 'right-start';
+    }
+
+    const dropdownCfg = withDropdownConfig();
+
+    return {
+      ...dropdownCfg,
+      hidesOnEsc: true,
+      popperConfig: {
+        ...dropdownCfg.popperConfig,
+        placement,
+        strategy: 'absolute',
+        modifiers: [
+          {
+            name: 'offset',
+            enabled: true,
+            options: {
+              offset: [0, 0],
+            },
+          },
+        ],
+      },
+    };
+  }
+
+  /**
+   * @enhance InteractiveListMixin
+   * @param {*} ev
+   */
+  _onListKeyUp(ev) {
+    super._onListKeyUp(ev);
+
+    const { key } = ev;
+
+    switch (key) {
+      case 'Escape':
+        // We need to stop here, or else we affect parent menu (handled by OverlayController)
+        ev.stopPropagation();
+        break;
+      /* no default */
     }
   }
 }
