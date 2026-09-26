@@ -21,6 +21,10 @@
   "files": [
     "src"
   ],
+  "scripts": {
+    "test": "npm run test:node",
+    "test:node": "mocha 'test-node/**/*.test.js'"
+  },
   "dependencies": {
     "@lit-labs/ssr": "^4.1.0",
     "@lit-labs/ssr-dom-shim": "^1.6.0",
