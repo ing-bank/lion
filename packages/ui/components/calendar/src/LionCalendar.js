@@ -237,10 +237,12 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
 
   goToNextYear() {
     this.__modifyDate(1, { dateType: 'centralDate', type: 'FullYear' });
+    this.__adjustMonthForYearNavigation('next');
   }
 
   goToPreviousYear() {
     this.__modifyDate(-1, { dateType: 'centralDate', type: 'FullYear' });
+    this.__adjustMonthForYearNavigation('previous');
   }
 
   /**
@@ -936,6 +938,45 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
       tmpDate.setDate(Math.min(this.centralDate.getDate(), maxDays));
     }
     this[dateType] = tmpDate;
+  }
+
+  /**
+   * @param {string} direction - 'previous' or 'next'
+   * @private
+   */
+  __adjustMonthForYearNavigation(direction) {
+    const currentYear = this.centralDate.getFullYear();
+    const currentMonth = this.centralDate.getMonth();
+
+    if (direction === 'previous' && this.minDate) {
+      const minYear = this.minDate.getFullYear();
+      const minMonth = this.minDate.getMonth();
+
+      // If we navigated to the minDate's year and current month is before minDate's month
+      if (currentYear === minYear && currentMonth < minMonth) {
+        const adjustedDate = new Date(this.centralDate);
+        // Calculate max days for the target month to prevent overflow
+        const maxDays = new Date(adjustedDate.getFullYear(), minMonth + 1, 0).getDate();
+        // Set the day first to prevent overflow when setting month
+        adjustedDate.setDate(Math.min(this.centralDate.getDate(), maxDays));
+        adjustedDate.setMonth(minMonth);
+        this.centralDate = adjustedDate;
+      }
+    } else if (direction === 'next' && this.maxDate) {
+      const maxYear = this.maxDate.getFullYear();
+      const maxMonth = this.maxDate.getMonth();
+
+      // If we navigated to the maxDate's year and current month is after maxDate's month
+      if (currentYear === maxYear && currentMonth > maxMonth) {
+        const adjustedDate = new Date(this.centralDate);
+        // Calculate max days for the target month to prevent overflow
+        const maxDays = new Date(adjustedDate.getFullYear(), maxMonth + 1, 0).getDate();
+        // Set the day first to prevent overflow when setting month
+        adjustedDate.setDate(Math.min(this.centralDate.getDate(), maxDays));
+        adjustedDate.setMonth(maxMonth);
+        this.centralDate = adjustedDate;
+      }
+    }
   }
 
   /**
