@@ -51,6 +51,7 @@ function getValueForValidators(modelValue) {
  * @type {ValidateMixin}
  * @param {import('@open-wc/dedupe-mixin').Constructor<import('lit').LitElement>} superclass
  */
+// prettier-ignore
 export const ValidateMixinImplementation = /** @type {ValidateMixin} */ (superclass =>
   // @ts-ignore https://github.com/microsoft/TypeScript/issues/36821#issuecomment-588375051
   class extends FormControlMixin(

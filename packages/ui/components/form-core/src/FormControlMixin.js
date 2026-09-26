@@ -37,6 +37,7 @@ import { FormRegisteringMixin } from './registration/FormRegisteringMixin.js';
  * @param {import('@open-wc/dedupe-mixin').Constructor<import('lit').LitElement>} superclass
  * @type {FormControlMixin}
  */
+// prettier-ignore
 const FormControlMixinImplementation = /** @type {FormControlMixin} */ (superclass =>
   // eslint-disable-next-line no-shadow, no-unused-vars
   // @ts-ignore https://github.com/microsoft/TypeScript/issues/36821#issuecomment-588375051

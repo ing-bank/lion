@@ -22,6 +22,7 @@ import { ValidateMixin } from '../validate/ValidateMixin.js';
  * @type {ChoiceGroupMixin}
  * @param {import('@open-wc/dedupe-mixin').Constructor<import('lit').LitElement>} superclass
  */
+// prettier-ignore
 const ChoiceGroupMixinImplementation = /** @type {ChoiceGroupMixin} */ (superclass =>
   // @ts-ignore https://github.com/microsoft/TypeScript/issues/36821#issuecomment-588375051
   class ChoiceGroupMixin extends FormRegistrarMixin(
