@@ -24,7 +24,6 @@ A common convention for indicating that a menu item launches a dialog box is to 
 import { html } from 'lit';
 import '@lion/ui/define/lion-item.js';
 import '@lion/ui/define/lion-menu.js';
-import '@lion/ui/define/lion-menu-overlay.js';
 import '@lion/ui/define/lion-tree.js';
 import '@lion/ui/define/lion-toolbar.js';
 import { applyMenuDemoStyles } from './applyMenuDemoStyles.js';
@@ -36,20 +35,20 @@ applyMenuDemoStyles();
 export const menuButton = () => html`
   <nav>
     <button data-invoker>Open menu</button>
-    <lion-menu-overlay>
+    <lion-menu>
       <div role="menuitem">Go to Definition</div>
       <div role="menuitem">Go to Type Definition</div>
       <div>
         <button role="menuitem" data-invoker>Peek</button>
-        <lion-menu-overlay>
+        <lion-menu>
           <div role="menuitem">Peek Call Hierarchy</div>
           <div role="separator"></div>
           <div role="menuitem">Peek Definition</div>
-        </lion-menu-overlay>
+        </lion-menu>
       </div>
       <div role="separator"></div>
       <div role="menuitem">Find all References</div>
-    </lion-menu-overlay>
+    </lion-menu>
   </nav>
 `;
 ```
@@ -85,16 +84,16 @@ export const groups = () => html`
   <lion-menu bar invoker-interaction="hover">
     <div>
       <div role="menuitem">Font</div>
-      <lion-menu-overlay aria-label="Font">
+      <lion-menu aria-label="Font">
         <div role="menuitemradio">Sans-serif</div>
         <div role="menuitemradio">Serif</div>
         <div role="menuitemradio">Monospace</div>
         <div role="menuitemradio">Fantasy</div>
-      </lion-menu-overlay>
+      </lion-menu>
     </div>
     <div>
       <div role="menuitem">Style/Color</div>
-      <lion-menu-overlay aria-label="Style/Color">
+      <lion-menu aria-label="Style/Color">
         <div role="menuitemcheckbox" aria-checked="true">Bold</div>
         <div role="menuitemcheckbox" aria-checked="true">Italic</div>
         <div role="separator"></div>
@@ -111,7 +110,7 @@ export const groups = () => html`
           <div role="menuitemradio" aria-checked="false">Line-through</div>
           <div role="menuitemradio" aria-checked="false">Underline</div>
         </div>
-      </lion-menu-overlay>
+      </lion-menu>
     </div>
   </lion-menu>
 `;
@@ -157,7 +156,7 @@ export const disclosureMenu = () => html`
     <lion-menu bar ._activeMode="${'tabbable-disclosure'}">
       <div role="listitem">
         <button data-invoker>About</button>
-        <lion-menu-overlay>
+        <lion-menu>
           <div role="listitem">
             <a href="/about/overview">Overview</a>
           </div>
@@ -170,11 +169,11 @@ export const disclosureMenu = () => html`
           <div role="listitem">
             <a href="/about/campus-tours">Campus Tours</a>
           </div>
-        </lion-menu-overlay>
+        </lion-menu>
       </div>
       <div role="listitem">
         <button data-invoker>Admissions</button>
-        <lion-menu-overlay id="id_admissions_menu">
+        <lion-menu id="id_admissions_menu">
           <div role="listitem">
             <a href="/admissions/apply">Apply</a>
           </div>
@@ -193,11 +192,11 @@ export const disclosureMenu = () => html`
           <div role="listitem">
             <a href="/admissions/connect">Connect</a>
           </div>
-        </lion-menu-overlay>
+        </lion-menu>
       </div>
       <div role="listitem">
         <button data-invoker>Academics</button>
-        <lion-menu-overlay>
+        <lion-menu>
           <div role="listitem">
             <a href="/academics/colleges-and-schools">Colleges & Schools</a>
           </div>
@@ -222,7 +221,7 @@ export const disclosureMenu = () => html`
           <div role="listitem">
             <a href="/academics/transcripts">Transcripts</a>
           </div>
-        </lion-menu-overlay>
+        </lion-menu>
       </div>
     </lion-menu>
   </nav>
@@ -240,7 +239,7 @@ export const disclosureMenuWithAnchorsOnL1 = () => html`
     <div role="listitem">
       <a href="/about">About</a>
       <button data-invoker aria-label="More About Pages">▼</button>
-      <lion-menu-overlay>
+      <lion-menu>
         <div role="listitem">
           <a href="/about/overview">Overview</a>
         </div>
@@ -253,14 +252,14 @@ export const disclosureMenuWithAnchorsOnL1 = () => html`
         <div role="listitem">
           <a href="/about/campus-tours">Campus Tours</a>
         </div>
-      </lion-menu-overlay>
+      </lion-menu>
     </div>
     <div role="listitem">
       <a href="/admissions">Admissions</a>
       <button data-invoker aria-label="More Admissions Pages">
         ▼
       </button>
-      <lion-menu-overlay id="id_admissions_menu">
+      <lion-menu id="id_admissions_menu">
         <div role="listitem">
           <a href="/admissions/apply">Apply</a>
         </div>
@@ -279,12 +278,12 @@ export const disclosureMenuWithAnchorsOnL1 = () => html`
         <div role="listitem">
           <a href="/admissions/connect">Connect</a>
         </div>
-      </lion-menu-overlay>
+      </lion-menu>
     </div>
     <div role="listitem">
       <a href="/academics">Academics</a>
       <button data-invoker aria-label="More Academics Pages">▼</button>
-      <lion-menu-overlay>
+      <lion-menu>
         <div role="listitem">
           <a href="/academics/colleges-and-schools">Colleges & Schools</a>
         </div>
@@ -309,7 +308,7 @@ export const disclosureMenuWithAnchorsOnL1 = () => html`
         <div role="listitem">
           <a href="/academics/transcripts">Transcripts</a>
         </div>
-      </lion-menu-overlay>
+      </lion-menu>
     </div>
   </ul>
 </nav>
@@ -353,16 +352,16 @@ export const toolbar = () => html`
 
     <div>
       <div role="menuitem">Font</div>
-      <lion-menu-overlay aria-label="Font">
+      <lion-menu aria-label="Font">
         <div role="menuitemradio">Sans-serif</div>
         <div role="menuitemradio">Serif</div>
         <div role="menuitemradio">Monospace</div>
         <div role="menuitemradio">Fantasy</div>
-      </lion-menu-overlay>
+      </lion-menu>
     </div>
     <div>
       <div role="menuitem">Style/Color</div>
-      <lion-menu-overlay aria-label="Style/Color">
+      <lion-menu aria-label="Style/Color">
         <div role="menuitemcheckbox" aria-checked="true">Bold</div>
         <div role="menuitemcheckbox" aria-checked="true">Italic</div>
         <div role="separator"></div>
@@ -379,7 +378,7 @@ export const toolbar = () => html`
           <div role="menuitemradio" aria-checked="false">Line-through</div>
           <div role="menuitemradio" aria-checked="false">Underline</div>
         </div>
-      </lion-menu-overlay>
+      </lion-menu>
     </div>
   </lion-toolbar>
 `;

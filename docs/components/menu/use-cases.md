@@ -16,7 +16,6 @@ eleventyNavigation:
 import { html } from 'lit';
 import '@lion/ui/define/lion-item.js';
 import '@lion/ui/define/lion-menu.js';
-import '@lion/ui/define/lion-menu-overlay.js';
 import '@lion/ui/define/lion-tree.js';
 import '@lion/ui/define/lion-toolbar.js';
 import { applyMenuDemoStyles } from './applyMenuDemoStyles.js';
@@ -29,20 +28,20 @@ applyMenuDemoStyles();
 ```html preview-story
 <nav>
   <button data-invoker>Open menu</button>
-  <lion-menu-overlay>
+  <lion-menu>
     <div role="menuitem">Go to Definition</div>
     <div role="menuitem">Go to Type Definition</div>
     <div>
       <button role="menuitem" data-invoker>Peek</button>
-      <lion-menu-overlay>
+      <lion-menu>
         <div role="menuitem">Peek Call Hierarchy</div>
         <div role="separator"></div>
         <div role="menuitem">Peek Definition</div>
-      </lion-menu-overlay>
+      </lion-menu>
     </div>
     <div role="separator"></div>
     <div role="menuitem">Find all References</div>
-  </lion-menu-overlay>
+  </lion-menu>
 </nav>
 ```
 
@@ -64,11 +63,11 @@ By adding the `bar` attribute the orientation will be set to horizontal and the 
     <div role="menuitem">Go to Type Definition</div>
     <div>
       <button role="menuitem" data-invoker>Details</button>
-      <lion-menu-overlay>
+      <lion-menu>
         <div role="menuitem">Peek Call Hierarchy</div>
         <div role="separator"></div>
         <div role="menuitem">Peek Definition</div>
-      </lion-menu-overlay>
+      </lion-menu>
     </div>
     <div role="separator"></div>
     <div role="menuitem">Find all References</div>

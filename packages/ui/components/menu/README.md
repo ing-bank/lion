@@ -11,7 +11,6 @@ A common convention for indicating that a menu item launches a dialog box is to 
 ```js script
 import { html } from 'lit-html';
 import './lion-menu.js';
-import './lion-menu-overlay.js';
 import './lion-tree.js';
 import './lion-toolbar.js';
 import './lion-spinbutton.js';
@@ -77,16 +76,16 @@ export const groups = () => html`
   <lion-menu bar invoker-interaction="hover">
     <div>
       <div role="menuitem">Font</div>
-      <lion-menu-overlay aria-label="Font">
+      <lion-menu aria-label="Font">
         <div role="menuitemradio">Sans-serif</div>
         <div role="menuitemradio">Serif</div>
         <div role="menuitemradio">Monospace</div>
         <div role="menuitemradio">Fantasy</div>
-      </lion-menu-overlay>
+      </lion-menu>
     </div>
     <div>
       <div role="menuitem">Style/Color</div>
-      <lion-menu-overlay aria-label="Style/Color">
+      <lion-menu aria-label="Style/Color">
         <div role="menuitemcheckbox" aria-checked="true">Bold</div>
         <div role="menuitemcheckbox" aria-checked="true">Italic</div>
         <div role="separator"></div>
@@ -103,7 +102,7 @@ export const groups = () => html`
           <div role="menuitemradio" aria-checked="false">Line-through</div>
           <div role="menuitemradio" aria-checked="false">Underline</div>
         </div>
-      </lion-menu-overlay>
+      </lion-menu>
     </div>
   </lion-menu>
 `;
@@ -266,16 +265,16 @@ export const toolbar = () => html`
 
     <div>
       <div role="menuitem">Font</div>
-      <lion-menu-overlay aria-label="Font">
+      <lion-menu aria-label="Font">
         <div role="menuitemradio">Sans-serif</div>
         <div role="menuitemradio">Serif</div>
         <div role="menuitemradio">Monospace</div>
         <div role="menuitemradio">Fantasy</div>
-      </lion-menu-overlay>
+      </lion-menu>
     </div>
     <div>
       <div role="menuitem">Style/Color</div>
-      <lion-menu-overlay aria-label="Style/Color">
+      <lion-menu aria-label="Style/Color">
         <div role="menuitemcheckbox" aria-checked="true">Bold</div>
         <div role="menuitemcheckbox" aria-checked="true">Italic</div>
         <div role="separator"></div>
@@ -292,7 +291,7 @@ export const toolbar = () => html`
           <div role="menuitemradio" aria-checked="false">Line-through</div>
           <div role="menuitemradio" aria-checked="false">Underline</div>
         </div>
-      </lion-menu-overlay>
+      </lion-menu>
     </div>
   </lion-toolbar>
 `;
