@@ -1,5 +1,5 @@
 {
-  "//": "this runs after 'scripts/types-correct-after-build.js' has been applied",
+  "//": "type-check only (no emit); tsc emits valid declarations on its own since TypeScript 7",
   "extends": "./tsconfig.json",
   "compilerOptions": {
     "emitDeclarationOnly": false,

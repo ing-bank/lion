@@ -51,26 +51,13 @@ Lion uses [package.json export maps](https://nodejs.org/api/packages.html#export
 
 The export map works by defining explicit entry points for each package, mapping import paths to their actual file locations. For types, this means that when you import `@lion/ui/button.js`, TypeScript knows to look for the corresponding type definitions in the `dist-types` directory.
 
-## Type Correction for JSDoc
+## Type correction for JSDoc (no longer needed)
 
-Since we use JSDoc for typing instead of native TypeScript files, we encounter some challenges during the type definition generation process. The TypeScript compiler sometimes produces inconsistent import statements when processing JSDoc annotations, particularly for Lit imports.
+Because Lion types its JavaScript with JSDoc rather than `.ts` files, older TypeScript
+versions emitted declaration paths that were not portable: `lit-element/lit-element.js`
+where the declaration really came from `lit`, and internal `node_modules/@open-wc/...`
+references that no consumer could resolve.
 
-We have a post-build script (`types-correct-after-build.js`) that addresses these issues:
-
-### Import Normalization
-
-The script ensures consistency in Lit imports by converting:
-
-- JSDoc-generated imports: `import { LitElement } from "lit-element/lit-element.js"`
-- To standardized imports: `import { LitElement } from "lit"`
-
-This prevents type incompatibility issues where the same class imported through different paths isn't recognized as the same type by TypeScript (see [TypeScript issue #51622](https://github.com/microsoft/TypeScript/issues/51622)).
-
-### External Dependency Path Correction
-
-The script also "unresolves" paths that reference external node_modules, particularly for scoped elements:
-
-- From: `"../../../node_modules/@open-wc/scoped-elements/types.js"`
-- To: `"@open-wc/scoped-elements/lit-element.js"`
-
-These corrections ensure that generated type definitions work correctly in consuming projects, where the resolved local paths would break since they reference locations outside the bundled package.
+A post-build script (`scripts/types-correct-after-build.js`) rewrote those paths after
+every build. **TypeScript 7 emits the correct specifiers itself**, so that script has been
+deleted: the `types` target in `packages/ui` is now a plain `tsc --build`.
