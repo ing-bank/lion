@@ -4,7 +4,7 @@ import { sendMouse, resetMouse, sendKeys } from '@web/test-runner-commands';
 import { useFakeTimers } from 'sinon';
 import { css } from 'lit';
 import { getDeepActiveElement } from '@lion/ui/overlays.js';
-import { LionMenuHybrid } from '../src/LionMenuHybrid.js';
+import { LionMenu } from '../src/LionMenu.js';
 
 const l2Style = css`
   [level='2'] > [slot='list'] {
@@ -45,29 +45,29 @@ const config = {
   },
 };
 
-export function runLionMenuHybridSuite({ klass = LionMenuHybrid } = {}) {
+export function runLionMenuInteractionsSuite({ klass = LionMenu } = {}) {
   const tagString = defineCE(class extends klass {});
   const tag = unsafeStatic(tagString);
 
-  describe('LionMenuHybrid', () => {
+  describe('LionMenu interactions', () => {
     /** @type {import('sinon').SinonFakeTimers | null} */
     let clock = null;
 
-    /** @param {LionMenuHybrid} el */
+    /** @param {LionMenu} el */
     const isMoreButtonMenuShown = el => {
       const menu = el.querySelector('[data-more-button-menu]');
       return menu ? getComputedStyle(menu).width !== '0px' : false;
     };
 
-    /** @param {LionMenuHybrid} el */
+    /** @param {LionMenu} el */
     const getMoreButton = el =>
       /** @type {HTMLElement | null} */ (el.querySelector('[data-more-button]'));
 
-    /** @param {LionMenuHybrid} el */
+    /** @param {LionMenu} el */
     const isAnyL2MenuShown = el =>
       Array.from(el.querySelectorAll('[level="2"]')).some(menu => menu.hasAttribute('opened'));
 
-    /** @param {LionMenuHybrid} el */
+    /** @param {LionMenu} el */
     const focusLastVisibleItemInMainMenu = async el => {
       const moreButton = el.querySelector('[data-more-button]');
       const previousElement = moreButton?.parentElement?.previousElementSibling;
@@ -107,7 +107,7 @@ export function runLionMenuHybridSuite({ klass = LionMenuHybrid } = {}) {
      * We use native click in many of the tests here because
      * the source code uses the `mousedown`, `focusin`, `focusout`, `click`
      * events and otherwise we need to emit those events programmatically
-     * @param {LionMenuHybrid} el
+     * @param {LionMenu} el
      */
     const clickOnMoreButton = async el => {
       const moreButton = getMoreButton(el);
@@ -120,7 +120,7 @@ export function runLionMenuHybridSuite({ klass = LionMenuHybrid } = {}) {
       await aTimeout(0);
     };
 
-    /** @param {LionMenuHybrid} el */
+    /** @param {LionMenu} el */
     const waitResizeEventDebounce = async el => {
       await el.updateComplete;
       // wait for resize event debouncer
@@ -136,12 +136,12 @@ export function runLionMenuHybridSuite({ klass = LionMenuHybrid } = {}) {
       await aTimeout(120);
     };
 
-    /** @param {LionMenuHybrid} el */
+    /** @param {LionMenu} el */
     const getDirectListItemsUnderMoreButtonMenu = el => [
       ...Array.from(el.querySelectorAll('[data-more-button-menu] > [role="listitem"]')),
     ];
 
-    /** @returns {Promise<LionMenuHybrid>} */
+    /** @returns {Promise<LionMenu>} */
     const getFixture = async () => {
       const el = await fixture(html`        
         <${tag} 
@@ -195,7 +195,7 @@ export function runLionMenuHybridSuite({ klass = LionMenuHybrid } = {}) {
         </style>    
       `);
 
-      const hybridEl = /** @type {LionMenuHybrid} */ (el);
+      const hybridEl = /** @type {LionMenu} */ (el);
       await waitResizeEventDebounce(hybridEl);
       return hybridEl;
     };

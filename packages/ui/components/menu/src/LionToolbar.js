@@ -6,6 +6,7 @@ import { setChecked, toggleChecked } from './utils/listItemInteractions.js';
  * @typedef {import('../types/InteractiveListMixinTypes.js').InteractiveListItemRole} InteractiveListItemRole
  */
 
+// @ts-ignore - class extension properties mismatch at the OverlayWithListInvokerMixin boundary
 export class LionToolbar extends LionMenu {
   constructor() {
     super();

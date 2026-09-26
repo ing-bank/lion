@@ -1,7 +1,7 @@
 // @ts-nocheck
 /* eslint-disable class-methods-use-this */
 import { LitElement, html, css, nothing } from 'lit';
-import { LionMenuHybrid } from '@lion/ui/menu.js';
+import { LionMenu } from '@lion/ui/menu.js';
 import { ScopedElementsMixin } from '../../core/src/ScopedElementsMixin.js';
 
 /**
@@ -30,8 +30,7 @@ export class LionNavigationBar extends ScopedElementsMixin(LitElement) {
 
   static get scopedElements() {
     return {
-      // 'lion-menu-overlay': LionMenuOverlay,
-      'lion-menu-hybrid': LionMenuHybrid,
+      'lion-menu': LionMenu,
     };
   }
 
@@ -189,8 +188,8 @@ export class LionNavigationBar extends ScopedElementsMixin(LitElement) {
    * @param {NavBarResponsiveMode} responsiveMode
    */
   _getLevelCfg(responsiveMode) {
-    // N.B. we're fighting some of the overlay configs provided by LionMenuOverlay here,
-    // the idea is to take over all of that when depending on LionMenu, after removing LonMenuOverlay and LionMenuHybrid components altogether.
+    // N.B. we're fighting some of the overlay configs provided by LionMenu here,
+    // the idea is to take over all of that when depending on LionMenu.
 
     if (responsiveMode === 'mobile') {
       return {
@@ -403,7 +402,7 @@ export class LionNavigationBar extends ScopedElementsMixin(LitElement) {
     // @ts-ignore
     const cfgForLevel = this._levelCfg[`l${level}`];
 
-    return html`<lion-menu-hybrid
+    return html`<lion-menu
       ?item-wrap=${itemWrap}
       .config="${cfgForLevel.openableConfig || {}}"
       .bar="${cfgForLevel.isBar}"
@@ -434,6 +433,6 @@ export class LionNavigationBar extends ScopedElementsMixin(LitElement) {
             <button>More</button>
           </div>`
         : nothing}
-    </lion-menu-hybrid> `;
+    </lion-menu> `;
   }
 }
