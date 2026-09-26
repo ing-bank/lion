@@ -4,7 +4,7 @@ import { normalizeDateTime } from '@lion/ui/localize-no-side-effects.js';
 import { Validator } from '../Validator.js';
 
 /**
- * @param {?} value
+ * @param {any} value
  */
 function isDate(value) {
   return (
@@ -18,7 +18,7 @@ export class IsDate extends Validator {
   }
 
   /**
-   * @param {?} value
+   * @param {any} value
    */
   // eslint-disable-next-line class-methods-use-this
   execute(value) {
@@ -36,7 +36,7 @@ export class MinDate extends Validator {
   }
 
   /**
-   * @param {?} value
+   * @param {any} value
    */
   execute(value, min = this.param) {
     let hasError = false;
@@ -53,7 +53,7 @@ export class MaxDate extends Validator {
   }
 
   /**
-   * @param {?} value
+   * @param {any} value
    */
   execute(value, max = this.param) {
     let hasError = false;
@@ -70,7 +70,7 @@ export class MinMaxDate extends Validator {
   }
 
   /**
-   * @param {?} value
+   * @param {any} value
    */
   execute(value, { min = 0, max = 0 } = this.param) {
     let hasError = false;
@@ -91,7 +91,7 @@ export class IsDateDisabled extends Validator {
   }
 
   /**
-   * @param {?} value
+   * @param {any} value
    */
   execute(value, isDisabledFn = this.param) {
     let hasError = false;

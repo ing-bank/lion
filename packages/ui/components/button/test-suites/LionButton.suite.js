@@ -279,6 +279,7 @@ export function LionButtonSuite({ klass = LionButton } = {}) {
 
         sameProperties.forEach(property => {
           it(`has same value of the property "${property}" as in native button event`, () => {
+            // @ts-ignore [dynamic-key-access-in-test]
             expect(lionButtonEvent[property]).to.equal(nativeButtonEvent[property]);
           });
         });

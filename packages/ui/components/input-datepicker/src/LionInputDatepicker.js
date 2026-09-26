@@ -28,6 +28,7 @@ export class LionInputDatepicker extends ScopedElementsMixin(
 ) {
   static get scopedElements() {
     return {
+      // @ts-ignore [ts7-2855] TS7 rejects field access via super (the parent declares this as a field). Dot form kept deliberately: bracket access is exempt from property mangling (terser keep_quoted), which could split this property into two names. Upstream fix: declare an accessor in the parent type
       ...super.scopedElements,
       'lion-calendar': LionCalendar,
     };
@@ -389,7 +390,7 @@ export class LionInputDatepicker extends ScopedElementsMixin(
   /**
    * The LionCalendar shouldn't know anything about the modelValue;
    * it can't handle Unparseable dates, but does handle 'undefined'
-   * @param {?} modelValue
+   * @param {any} modelValue
    * @returns {Date | undefined} a 'guarded' modelValue
    */
   static __getSyncDownValue(modelValue) {

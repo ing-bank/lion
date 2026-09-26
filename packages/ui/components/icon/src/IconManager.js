@@ -1,5 +1,5 @@
 /**
- * @typedef {import('lit-html').nothing} nothing
+ * @typedef {typeof import('lit').nothing} nothing
  * @typedef {import('lit').TemplateResult} TemplateResult
  */
 

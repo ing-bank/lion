@@ -20,7 +20,8 @@ function ensureArray(value) {
  * @type {CustomChoiceGroupMixin}
  * @param {import('@open-wc/dedupe-mixin').Constructor<import('lit').LitElement>} superclass
  */
-const CustomChoiceGroupMixinImplementation = superclass =>
+// prettier-ignore
+const CustomChoiceGroupMixinImplementation = /** @type {CustomChoiceGroupMixin} */ (superclass =>
   // @ts-ignore https://github.com/microsoft/TypeScript/issues/36821#issuecomment-588375051
   class CustomChoiceGroupMixin extends ChoiceGroupMixin(superclass) {
     static get properties() {
@@ -168,6 +169,6 @@ const CustomChoiceGroupMixinImplementation = superclass =>
 
       return value;
     }
-  };
+  });
 
 export const CustomChoiceGroupMixin = dedupeMixin(CustomChoiceGroupMixinImplementation);

@@ -58,7 +58,8 @@ import { ValidateMixin } from './validate/ValidateMixin.js';
  * @type {FormatMixin}
  * @param {import('@open-wc/dedupe-mixin').Constructor<import('lit').LitElement>} superclass
  */
-const FormatMixinImplementation = superclass =>
+// prettier-ignore
+const FormatMixinImplementation = /** @type {FormatMixin} */ (superclass =>
   // @ts-ignore https://github.com/microsoft/TypeScript/issues/36821#issuecomment-588375051
   class FormatMixin extends ValidateMixin(FormControlMixin(superclass)) {
     /** @type {any} */
@@ -144,12 +145,12 @@ const FormatMixinImplementation = superclass =>
      *   // only use digits
      *   return viewValue.replace(/\D/g, '');
      * }
+     * ```
      * @param {string} v - the raw value from the <input> after keyUp/Down event
      * @param {FormatOptions & { prevViewValue: string; currentCaretIndex: number }} opts - the raw value from the <input> after keyUp/Down event
      * @returns {{ viewValue:string; caretIndex:number; }|string|undefined} preprocessedValue: the result of preprocessing for invalid input
      */
-    // eslint-disable-next-line no-unused-vars
-    preprocessor(v, opts) {
+    preprocessor(v, opts) { // eslint-disable-line no-unused-vars
       return undefined;
     }
 
@@ -182,7 +183,7 @@ const FormatMixinImplementation = superclass =>
     /**
      * Converts `.modelValue` to `.serializedValue`
      * For instance, a Date object to an iso formatted date string
-     * @param {?} v - modelValue: can be an Object, Number, String depending on the
+     * @param {any} v - modelValue: can be an Object, Number, String depending on the
      * input type(date, number, email etc)
      * @returns {string} serializedValue
      */
@@ -193,9 +194,9 @@ const FormatMixinImplementation = superclass =>
     /**
      * Converts `.serializedValue` to `.modelValue`
      * For instance, an iso formatted date string to a Date object
-     * @param {?} v - modelValue: can be an Object, Number, String depending on the
+     * @param {any} v - modelValue: can be an Object, Number, String depending on the
      * input type(date, number, email etc)
-     * @returns {?} modelValue
+     * @returns {any} modelValue
      */
     deserializer(v) {
       return v === undefined ? '' : v;
@@ -214,13 +215,14 @@ const FormatMixinImplementation = superclass =>
      * @protected
      */
     _calculateValues({ source } = { source: null }) {
+      // @ts-ignore [ts7-2565] TS7 checks definite assignment on this inferred field; private field: hoist to a class field with an initializer (the fix proven on LionAccordion)
       if (this.__preventRecursiveTrigger) return; // prevent infinite loops
 
       /** @type {boolean} */
       this.__preventRecursiveTrigger = true;
       if (source !== 'model') {
         if (source === 'serialized') {
-          /** @type {?} */
+          /** @type {any} */
           this.modelValue = this.deserializer(this.serializedValue);
         } else if (source === 'formatted') {
           this.modelValue = this._callParser();
@@ -239,7 +241,7 @@ const FormatMixinImplementation = superclass =>
 
     /**
      * @param {string|undefined} value
-     * @return {?}
+     * @return {any}
      * @private
      */
     _callParser(value = this.formattedValue) {
@@ -646,6 +648,6 @@ const FormatMixinImplementation = superclass =>
       }
       return states;
     }
-  };
+  });
 
 export const FormatMixin = dedupeMixin(FormatMixinImplementation);

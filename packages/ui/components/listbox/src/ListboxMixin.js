@@ -26,7 +26,8 @@ import { moveUserProvidedDefaultSlottablesToTarget } from '../../core/src/SlotMi
  * @type {ListboxMixin}
  * @param {import('@open-wc/dedupe-mixin').Constructor<import('lit').LitElement>} superclass
  */
-const ListboxMixinImplementation = superclass =>
+// prettier-ignore
+const ListboxMixinImplementation = /** @type {ListboxMixin} */ (superclass =>
   // @ts-ignore https://github.com/microsoft/TypeScript/issues/36821#issuecomment-588375051
   class ListboxMixin extends FormControlMixin(
     ScopedElementsMixin(ChoiceGroupMixin(SlotMixin(FormRegistrarMixin(superclass)))),
@@ -56,6 +57,7 @@ const ListboxMixinImplementation = superclass =>
 
     static get styles() {
       return [
+        // @ts-ignore [ts7-2855] TS7 rejects field access via super (the parent declares this as a field). Dot form kept deliberately: bracket access is exempt from property mangling (terser keep_quoted), which could split this property into two names. Upstream fix: declare an accessor in the parent type
         ...(super.styles || []),
         css`
           :host {
@@ -931,6 +933,6 @@ const ListboxMixinImplementation = superclass =>
     __initInteractionStates() {
       this.initInteractionState();
     }
-  };
+  });
 
 export const ListboxMixin = dedupeMixin(ListboxMixinImplementation);

@@ -16,7 +16,7 @@ export class IsNumber extends Validator {
   }
 
   /**
-   * @param {?} value
+   * @param {any} value
    */
   // eslint-disable-next-line class-methods-use-this
   execute(value) {
@@ -34,7 +34,7 @@ export class MinNumber extends Validator {
   }
 
   /**
-   * @param {?} value
+   * @param {any} value
    */
   execute(value, min = this.param) {
     let isEnabled = false;
@@ -51,7 +51,7 @@ export class MaxNumber extends Validator {
   }
 
   /**
-   * @param {?} value
+   * @param {any} value
    */
   execute(value, max = this.param) {
     let isEnabled = false;
@@ -68,7 +68,7 @@ export class MinMaxNumber extends Validator {
   }
 
   /**
-   * @param {?} value
+   * @param {any} value
    */
   execute(value, { min = 0, max = 0 } = this.param) {
     let isEnabled = false;

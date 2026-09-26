@@ -21,7 +21,8 @@ const hasChanged = (nw, old = {}) => nw.value !== old.value || nw.checked !== ol
  * @type {ChoiceInputMixin}
  * @param {import('@open-wc/dedupe-mixin').Constructor<import('lit').LitElement>} superclass
  */
-const ChoiceInputMixinImplementation = superclass =>
+// prettier-ignore
+const ChoiceInputMixinImplementation = /** @type {ChoiceInputMixin} */ (superclass =>
   // @ts-ignore https://github.com/microsoft/TypeScript/issues/36821#issuecomment-588375051
   class ChoiceInputMixin extends FormatMixin(superclass) {
     /** @type {any} */
@@ -45,8 +46,10 @@ const ChoiceInputMixinImplementation = superclass =>
 
     set choiceValue(value) {
       this.requestUpdate('choiceValue', this.choiceValue);
+      // @ts-ignore [ts7-2565] TS7 checks definite assignment on this inferred field; Lit reactive property: read through a typed local instead (e.g. const next = this.x ?? DEFAULT) - a class field would shadow the accessor Lit creates from static properties
       if (this.modelValue.value !== value) {
         /** @type {ChoiceInputModelValue} */
+        // @ts-ignore [ts7-2565] TS7 checks definite assignment on this inferred field; Lit reactive property: read through a typed local instead (e.g. const next = this.x ?? DEFAULT) - a class field would shadow the accessor Lit creates from static properties
         this.modelValue = { value, checked: this.modelValue.checked };
       }
     }
@@ -142,6 +145,7 @@ const ChoiceInputMixinImplementation = superclass =>
      */
     static get styles() {
       return [
+        // @ts-ignore [ts7-2855] TS7 rejects field access via super (the parent declares this as a field). Dot form kept deliberately: bracket access is exempt from property mangling (terser keep_quoted), which could split this property into two names. Upstream fix: declare an accessor in the parent type
         ...(super.styles || []),
         css`
           :host {
@@ -286,7 +290,7 @@ const ChoiceInputMixinImplementation = superclass =>
       // or at all (no reliance on platform construct, in case of [role=option])
       if (this._inputNode) {
         /** @type {HTMLInputElement} */
-        (this._inputNode).checked = this.checked;
+        (this._inputNode).checked = this.checked ?? false;
       }
     }
 
@@ -361,6 +365,6 @@ const ChoiceInputMixinImplementation = superclass =>
      * @protected
      */
     _syncValueUpwards() {}
-  };
+  });
 
 export const ChoiceInputMixin = dedupeMixin(ChoiceInputMixinImplementation);

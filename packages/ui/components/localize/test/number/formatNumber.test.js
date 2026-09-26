@@ -2,12 +2,20 @@ import { expect } from '@open-wc/testing';
 import { getLocalizeManager, formatNumber } from '@lion/ui/localize-no-side-effects.js';
 import { localizeTearDown } from '@lion/ui/localize-test-helpers.js';
 
-const currencyCode = /** @param {string} currency */ currency => ({
+/**
+ * @param {string} currency
+ * @returns {Intl.NumberFormatOptions}
+ */
+const currencyCode = currency => ({
   style: 'currency',
   currencyDisplay: 'code',
   currency,
 });
-const currencySymbol = /** @param {string} currency */ currency => ({
+/**
+ * @param {string} currency
+ * @returns {Intl.NumberFormatOptions}
+ */
+const currencySymbol = currency => ({
   style: 'currency',
   currencyDisplay: 'symbol',
   currency,

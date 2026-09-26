@@ -4,7 +4,7 @@ import { PhoneNumber, PhoneUtilManager } from '@lion/ui/input-tel.js';
 import { mockPhoneUtilManager, restorePhoneUtilManager } from '@lion/ui/input-tel-test-helpers.js';
 
 /**
- * @typedef {* & import('awesome-phonenumber')} AwesomePhoneNumber
+ * @typedef {* & typeof import('awesome-phonenumber')} AwesomePhoneNumber
  */
 
 // For enum output, see: https://www.npmjs.com/package/awesome-phonenumber

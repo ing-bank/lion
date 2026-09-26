@@ -1,5 +1,5 @@
 /**
- * @param {Promise<{default:object}>[]} importPromises
+ * @param {Promise<{default: Record<string, any>}>[]} importPromises
  */
 async function combineLocalizeImports(importPromises) {
   const localizeObjects = await Promise.all(importPromises);

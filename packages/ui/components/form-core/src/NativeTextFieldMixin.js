@@ -8,7 +8,8 @@ import { FormatMixin } from './FormatMixin.js';
  * @type {NativeTextFieldMixin}
  * @param {import('@open-wc/dedupe-mixin').Constructor<import('lit').LitElement>} superclass} superclass
  */
-const NativeTextFieldMixinImplementation = superclass =>
+// prettier-ignore
+const NativeTextFieldMixinImplementation = /** @type {NativeTextFieldMixin} */ (superclass =>
   // @ts-ignore https://github.com/microsoft/TypeScript/issues/36821#issuecomment-588375051
   class NativeTextFieldMixin extends FormatMixin(FocusMixin(FormControlMixin(superclass))) {
     /** @type {any} */
@@ -145,6 +146,6 @@ const NativeTextFieldMixinImplementation = superclass =>
     get _focusableNode() {
       return this._inputNode;
     }
-  };
+  });
 
 export const NativeTextFieldMixin = dedupeMixin(NativeTextFieldMixinImplementation);

@@ -8,7 +8,7 @@ import { icons } from './icons.js';
  */
 
 /**
- * @param {?} wrappedSvgObject
+ * @param {any} wrappedSvgObject
  */
 function unwrapSvg(wrappedSvgObject) {
   const svgObject =
@@ -17,7 +17,7 @@ function unwrapSvg(wrappedSvgObject) {
 }
 
 /**
- * @param {TemplateResult|nothing} svg
+ * @param {TemplateResult|typeof import('lit').nothing} svg
  */
 function validateSvg(svg) {
   if (!(svg === nothing || isTemplateResult(svg))) {
@@ -99,7 +99,7 @@ export class LionIcon extends LitElement {
     this.iconId = '';
     /**
      * @private
-     * @type {TemplateResult|nothing|TagFunction}
+     * @type {TemplateResult|typeof nothing|TagFunction}
      */
     this.__svg = nothing;
   }
@@ -136,7 +136,7 @@ export class LionIcon extends LitElement {
   /**
    * On IE11, svgs without focusable false appear in the tab order
    * so make sure to have <svg focusable="false"> in svg files
-   * @param {TemplateResult|nothing|TagFunction} svg
+   * @param {TemplateResult|typeof nothing|TagFunction} svg
    */
   set svg(svg) {
     this.__svg = svg;
@@ -148,7 +148,7 @@ export class LionIcon extends LitElement {
   }
 
   /**
-   * @type {TemplateResult|nothing|TagFunction}
+   * @type {TemplateResult|typeof nothing|TagFunction}
    */
   get svg() {
     return this.__svg;
@@ -165,7 +165,7 @@ export class LionIcon extends LitElement {
   }
 
   /**
-   * @param {TemplateResult | nothing} svgObject
+   * @param {TemplateResult | typeof nothing} svgObject
    * @protected
    */
   _renderSvg(svgObject) {

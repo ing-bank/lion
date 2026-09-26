@@ -29,7 +29,8 @@ import { FormElementsHaveNoError } from './FormElementsHaveNoError.js';
  * @type {FormGroupMixin}
  * @param {import('@open-wc/dedupe-mixin').Constructor<import('lit').LitElement>} superclass
  */
-const FormGroupMixinImplementation = superclass =>
+// prettier-ignore
+const FormGroupMixinImplementation = /** @type {FormGroupMixin} */ (superclass =>
   // @ts-ignore https://github.com/microsoft/TypeScript/issues/36821#issuecomment-588375051
   class FormGroupMixin extends FormRegistrarMixin(
     FormControlMixin(ValidateMixin(DisabledMixin(SlotMixin(superclass)))),
@@ -61,6 +62,7 @@ const FormGroupMixinImplementation = superclass =>
     }
 
     set modelValue(values) {
+      // @ts-ignore [ts7-2565] TS7 checks definite assignment on this inferred field; private field: hoist to a class field with an initializer (the fix proven on LionAccordion)
       if (this.__isInitialModelValue) {
         this.__isInitialModelValue = false;
         this.registrationComplete.then(() => {
@@ -79,6 +81,7 @@ const FormGroupMixinImplementation = superclass =>
     }
 
     set serializedValue(values) {
+      // @ts-ignore [ts7-2565] TS7 checks definite assignment on this inferred field; private field: hoist to a class field with an initializer (the fix proven on LionAccordion)
       if (this.__isInitialSerializedValue) {
         this.__isInitialSerializedValue = false;
         this.registrationComplete.then(() => {
@@ -343,6 +346,7 @@ const FormGroupMixinImplementation = superclass =>
      * @returns {{[name:string]: any}}
      */
     _getFromAllFormElements(property, filterFn) {
+      /** @type {{[name:string]: any}} */
       const result = {};
 
       // Prioritizes imperatively passed filter function over the protected method
@@ -386,6 +390,7 @@ const FormGroupMixinImplementation = superclass =>
           if (Array.isArray(this.formElements[name])) {
             this.formElements[name].forEach(
               (/** @type {FormControl} */ el, /** @type {number} */ index) => {
+                // @ts-ignore [dynamic-property-access]
                 el[property] = values[name][index]; // eslint-disable-line no-param-reassign
               },
             );
@@ -393,6 +398,7 @@ const FormGroupMixinImplementation = superclass =>
           if (this.formElements[name]) {
             this.formElements[name][property] = values[name];
           } else {
+            // @ts-ignore [dynamic-property-access]
             this.__pendingValues[property][name] = values[name];
           }
         });
@@ -406,6 +412,7 @@ const FormGroupMixinImplementation = superclass =>
     _anyFormElementHas(property) {
       return Object.keys(this.formElements).some(name => {
         if (Array.isArray(this.formElements[name])) {
+          // @ts-ignore [dynamic-property-access]
           return this.formElements[name].some((/** @type {FormControl} */ el) => !!el[property]);
         }
         return !!this.formElements[name][property];
@@ -436,6 +443,7 @@ const FormGroupMixinImplementation = superclass =>
     _everyFormElementHas(property) {
       return Object.keys(this.formElements).every(name => {
         if (Array.isArray(this.formElements[name])) {
+          // @ts-ignore [dynamic-property-access]
           return this.formElements[name].every((/** @type {FormControl} */ el) => !!el[property]);
         }
         return !!this.formElements[name][property];
@@ -590,6 +598,6 @@ const FormGroupMixinImplementation = superclass =>
     _isEmpty() {
       return this.formElements.every(el => el._isEmpty?.());
     }
-  };
+  });
 
 export const FormGroupMixin = dedupeMixin(FormGroupMixinImplementation);

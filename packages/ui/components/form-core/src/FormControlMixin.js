@@ -37,7 +37,8 @@ import { FormRegisteringMixin } from './registration/FormRegisteringMixin.js';
  * @param {import('@open-wc/dedupe-mixin').Constructor<import('lit').LitElement>} superclass
  * @type {FormControlMixin}
  */
-const FormControlMixinImplementation = superclass =>
+// prettier-ignore
+const FormControlMixinImplementation = /** @type {FormControlMixin} */ (superclass =>
   // eslint-disable-next-line no-shadow, no-unused-vars
   // @ts-ignore https://github.com/microsoft/TypeScript/issues/36821#issuecomment-588375051
   class FormControlMixin extends FormRegisteringMixin(DisabledMixin(SlotMixin(superclass))) {
@@ -166,6 +167,7 @@ const FormControlMixinImplementation = superclass =>
      * TODO: check if this is a false positive or if we can improve
      * @configure ReactiveElement
      */
+    // @ts-ignore [ts7-2855] TS7 rejects field access via super (the parent declares this as a field). Dot form kept deliberately: bracket access is exempt from property mangling (terser keep_quoted), which could split this property into two names. Upstream fix: declare an accessor in the parent type
     static enabledWarnings = super.enabledWarnings?.filter(w => w !== 'change-in-update') || [];
 
     // N.B. add these label/helpText props for types + ce manifest output
@@ -541,7 +543,7 @@ const FormControlMixinImplementation = superclass =>
     }
 
     /**
-     * @return {TemplateResult | nothing}
+     * @return {TemplateResult | typeof nothing}
      * @protected
      */
     _inputGroupPrefixTemplate() {
@@ -568,7 +570,7 @@ const FormControlMixinImplementation = superclass =>
     }
 
     /**
-     * @return {TemplateResult | nothing}
+     * @return {TemplateResult | typeof nothing}
      * @protected
      */
     _inputGroupSuffixTemplate() {
@@ -986,6 +988,6 @@ const FormControlMixinImplementation = superclass =>
      */
     // eslint-disable-next-line class-methods-use-this
     _onLabelClick() {}
-  };
+  });
 
 export const FormControlMixin = dedupeMixin(FormControlMixinImplementation);

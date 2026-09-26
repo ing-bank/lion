@@ -23,7 +23,8 @@ import { dedupeMixin } from '@open-wc/dedupe-mixin';
  * @type {SyncUpdatableMixin}
  * @param {import('@open-wc/dedupe-mixin').Constructor<import('lit').LitElement>} superclass
  */
-const SyncUpdatableMixinImplementation = superclass =>
+// prettier-ignore
+const SyncUpdatableMixinImplementation = /** @type {SyncUpdatableMixin} */ (superclass =>
   // @ts-ignore https://github.com/microsoft/TypeScript/issues/36821#issuecomment-588375051
   class extends superclass {
     constructor() {
@@ -39,7 +40,7 @@ const SyncUpdatableMixinImplementation = superclass =>
     /**
      * Empty pending queue in order to guarantee order independence
      *
-     * @param {import('lit-element').PropertyValues } changedProperties
+     * @param {import('lit').PropertyValues } changedProperties
      */
     firstUpdated(changedProperties) {
       super.firstUpdated(changedProperties);
@@ -68,6 +69,7 @@ const SyncUpdatableMixinImplementation = superclass =>
      * @param {string} name
      * @param {*} newValue
      * @param {*} oldValue
+     * @returns {boolean}
      * @private
      */
     static __syncUpdatableHasChanged(name, newValue, oldValue) {
@@ -144,6 +146,6 @@ const SyncUpdatableMixinImplementation = superclass =>
      * @param {*} oldValue
      */
     updateSync(name, oldValue) {} // eslint-disable-line class-methods-use-this, no-unused-vars
-  };
+  });
 
 export const SyncUpdatableMixin = dedupeMixin(SyncUpdatableMixinImplementation);

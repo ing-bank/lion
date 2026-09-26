@@ -14,7 +14,8 @@ import { OverlayMixin } from './OverlayMixin.js';
  * @type {ArrowMixin}
  * @param {import('@open-wc/dedupe-mixin').Constructor<import('lit').LitElement>} superclass
  */
-export const ArrowMixinImplementation = superclass =>
+// prettier-ignore
+export const ArrowMixinImplementation = /** @type {ArrowMixin} */ (superclass =>
   // @ts-ignore https://github.com/microsoft/TypeScript/issues/36821#issuecomment-588375051
   class ArrowMixin extends OverlayMixin(superclass) {
     static get properties() {
@@ -29,6 +30,7 @@ export const ArrowMixinImplementation = superclass =>
 
     static get styles() {
       return [
+        // @ts-ignore [ts7-2855] TS7 rejects field access via super (the parent declares this as a field). Dot form kept deliberately: bracket access is exempt from property mangling (terser keep_quoted), which could split this property into two names. Upstream fix: declare an accessor in the parent type
         .../** @type {CSSResultArray} */ (super.styles || []),
         css`
           :host {
@@ -219,6 +221,6 @@ export const ArrowMixinImplementation = superclass =>
         this.__setupRepositionCompletePromise();
       }
     }
-  };
+  });
 
 export const ArrowMixin = dedupeMixin(ArrowMixinImplementation);

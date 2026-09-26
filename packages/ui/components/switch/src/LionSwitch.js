@@ -24,6 +24,7 @@ export class LionSwitch extends ScopedElementsMixin(ChoiceInputMixin(LionField))
 
   static get scopedElements() {
     return {
+      // @ts-ignore [ts7-2855] TS7 rejects field access via super (the parent declares this as a field). Dot form kept deliberately: bracket access is exempt from property mangling (terser keep_quoted), which could split this property into two names. Upstream fix: declare an accessor in the parent type
       ...super.scopedElements,
       'lion-switch-button': LionSwitchButton,
     };

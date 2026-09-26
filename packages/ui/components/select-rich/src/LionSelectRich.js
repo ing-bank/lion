@@ -28,6 +28,7 @@ function detectInteractionMode() {
 export class LionSelectRich extends SlotMixin(ScopedElementsMixin(OverlayMixin(LionListbox))) {
   static get scopedElements() {
     return {
+      // @ts-ignore [ts7-2855] TS7 rejects field access via super (the parent declares this as a field). Dot form kept deliberately: bracket access is exempt from property mangling (terser keep_quoted), which could split this property into two names. Upstream fix: declare an accessor in the parent type
       ...super.scopedElements,
       'lion-select-invoker': LionSelectInvoker,
     };
@@ -499,6 +500,7 @@ export class LionSelectRich extends SlotMixin(ScopedElementsMixin(OverlayMixin(L
       return;
     }
 
+    // @ts-ignore [ts7-2565] TS7 checks definite assignment on this inferred field; Lit reactive property: read through a typed local instead (e.g. const next = this.x ?? DEFAULT) - a class field would shadow the accessor Lit creates from static properties
     if (this.opened) {
       return;
     }

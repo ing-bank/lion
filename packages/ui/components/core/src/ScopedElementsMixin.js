@@ -66,7 +66,7 @@ const ScopedElementsMixinImplementation = superclass =>
         // with the same name. (like multiple versions of lion extension layers).
         // If we want to support this, we must re-introduce the shim-behavior of ScopedElementsMixin v1
         // to make this work with ssr as well.
-        // @ts-expect-error
+        // @ts-ignore [registry is provided by the scoped-elements polyfill]
         this.registry = customElements;
         // @ts-expect-error
         for (const [name, klass] of Object.entries(this.constructor.scopedElements || {})) {
@@ -88,7 +88,8 @@ const ScopedElementsMixinImplementation = superclass =>
      * @param {typeof HTMLElement} classToBeRegistered
      */
     defineScopedElement(tagName, classToBeRegistered) {
-      const registeredClass = this.registry.get(tagName);
+      const { registry } = /** @type {{ registry: CustomElementRegistry }} */ (this);
+      const registeredClass = registry.get(tagName);
       const isNewClassWithSameName = registeredClass && registeredClass !== classToBeRegistered;
       if (!supportsScopedRegistry() && isNewClassWithSameName) {
         // eslint-disable-next-line no-console
@@ -104,9 +105,9 @@ const ScopedElementsMixinImplementation = superclass =>
         );
       }
       if (!registeredClass) {
-        return this.registry.define(tagName, classToBeRegistered);
+        return registry.define(tagName, classToBeRegistered);
       }
-      return this.registry.get(tagName);
+      return registry.get(tagName);
     }
 
     /**

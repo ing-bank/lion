@@ -17,7 +17,8 @@ import { dedupeMixin } from '@open-wc/dedupe-mixin';
  * @type {FormRegisteringMixin}
  * @param {import('@open-wc/dedupe-mixin').Constructor<LitElement>} superclass
  */
-const FormRegisteringMixinImplementation = superclass =>
+// prettier-ignore
+const FormRegisteringMixinImplementation = /** @type {FormRegisteringMixin} */ (superclass =>
   // @ts-ignore https://github.com/microsoft/TypeScript/issues/36821#issuecomment-588375051
   class extends superclass {
     constructor() {
@@ -96,6 +97,6 @@ const FormRegisteringMixinImplementation = superclass =>
         this._parentFormGroup.removeFormElement(/** @type {* & FormRegisteringHost} */ (this));
       }
     }
-  };
+  });
 
 export const FormRegisteringMixin = dedupeMixin(FormRegisteringMixinImplementation);
