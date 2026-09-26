@@ -46,3 +46,61 @@ The solution is to add the parent directory name to the each <H> id as a prefix.
 ## lit
 
 The patch is required to make `astro build` work correctly. `lit` is added as an `external` library for the build option in `astro.config.mjs`. And without the patch the build throws errors.
+
+## @lit-labs/ssr
+
+### Why this patch exists
+
+Upstream `lit-labs/ssr` deliberately does not run *element directives* while
+rendering on the server. A directive bound to an element part
+(`<div ${myDirective()}>`) is skipped entirely: its `update()` callback is never
+called, and nothing is emitted for it. Server-only (non-hydratable) templates
+even throw:
+
+> Server-only templates don't support element parts, as their API does not
+> currently give them any way to render anything on the server.
+
+Lion renders parts through element directives (see
+`src/components/shared/UIPartDirective.js`) in both shadow DOM and light DOM.
+Skipping them on the server means attributes/refs that a directive sets are
+missing from the server-rendered markup, which breaks (and de-hydrates wrongly)
+anything that relies on them.
+
+### What the patch changes
+
+- `lib/render-value.js`
+  - the `element-part` opcode now carries the `ElementPart` constructor and the
+    tag name, and no longer throws for server-only templates
+  - the `element-part` render step creates an `ElementPart`, instantiates the
+    directive, calls its `update()` and serializes the attributes the directive
+    set on the element (its "light DOM" node)
+  - `ElementPart` is destructured from `lit-html`'s `private-ssr-support`
+    (it is not used by upstream `lit-labs/ssr` 4.x anymore)
+- `lib/element-renderer.js`
+  - `FallbackRenderer#setAttribute()` coerces values to strings, like a browser
+  - `FallbackRenderer#getAttribute()` is added, so a directive can read back an
+    attribute off the element renderer it is attached to
+
+### Tests
+
+`packages-node/astro-lit/test-node/` covers this (`npm run test:node -w
+packages-node/astro-lit`, or `npm run test:node` for the whole monorepo): it
+renders templates containing element directives with `render()` and asserts on
+the produced HTML. Removing the patch makes those tests fail.
+
+### Updating
+
+The patch is tied to an exact `@lit-labs/ssr` version (the filename carries it,
+and the root `package.json` `overrides` pin it). When bumping `@lit-labs/ssr`:
+
+1. bump the version in `package.json` (`devDependencies` + `overrides`)
+2. reapply the change above to the new `node_modules/@lit-labs/ssr` sources
+   (the code around it moved between 3.x and 4.x)
+3. run `npx patch-package @lit-labs/ssr` to regenerate the patch file
+4. run `npm run test:ssr` to confirm it still does the right thing
+
+## @astrojs/lit
+
+No longer used. The integration is inlined in `src/integrations/lit/` so it can
+track this repo's `@lit-labs/ssr` version and its patch instead of being pinned
+to whatever lit-labs/ssr range `@astrojs/lit` supports.

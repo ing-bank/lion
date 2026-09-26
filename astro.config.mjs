@@ -1,4 +1,4 @@
-import lit from '@astrojs/lit';
+import lit from '@lion/astro-lit';
 import { defineConfig } from 'astro/config';
 import { mdjsParse, mdjsStoryParse, mdjsSetupCode } from '@mdjs/core';
 import pagefind from 'astro-pagefind';
