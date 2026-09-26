@@ -1,8 +1,4 @@
 /**
- * @license
- * Copyright 2026 ING Bank N.V.
- * SPDX-License-Identifier: MIT
- *
  * Server-side DOM shim for the Astro + Lit integration.
  *
  * Astro runs server rendering in a Node environment that either has no DOM

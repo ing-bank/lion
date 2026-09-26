@@ -1,8 +1,4 @@
 /**
- * @license
- * Copyright 2026 ING Bank N.V.
- * SPDX-License-Identifier: MIT
- *
  * Unit tests for `FallbackRenderer`, the element renderer lit-ssr uses for
  * plain (non-custom) elements. Element directives receive a `FallbackRenderer`
  * as `part.element` on the server, so they can only read/write attributes if

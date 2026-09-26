@@ -1,8 +1,4 @@
 /**
- * @license
- * Copyright 2026 ING Bank N.V.
- * SPDX-License-Identifier: MIT
- *
  * Shared fixtures for the Astro integration tests.
  *
  * Only what `astro-lit.test.js` needs: an element directive, so one test can

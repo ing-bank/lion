@@ -1,8 +1,4 @@
 /**
- * @license
- * Copyright 2026 ING Bank N.V.
- * SPDX-License-Identifier: MIT
- *
  * Unit tests for the in-repo Astro + Lit container renderer
  * (`@lion/astro-lit/server.js`).
  *

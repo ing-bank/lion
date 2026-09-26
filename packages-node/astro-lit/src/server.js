@@ -1,8 +1,4 @@
 /**
- * @license
- * Copyright 2026 ING Bank N.V.
- * SPDX-License-Identifier: MIT
- *
  * Astro server entrypoint (container renderer) for Lit.
  *
  * This is an in-repo replacement for `@astrojs/lit/server.js`. It is written
