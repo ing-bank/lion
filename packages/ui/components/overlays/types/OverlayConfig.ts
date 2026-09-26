@@ -105,7 +105,7 @@ export interface OverlayConfig {
   /**
    * Whether the overlay content should receive focus when shown.
    */
-  focusContentOnOpen?: boolean;
+  elementToFocusOnShow?: boolean;
 
   /*
    * By default, we function either as overlay or disclosure. In some cases, this should be dynamically set (think of responsive changes).

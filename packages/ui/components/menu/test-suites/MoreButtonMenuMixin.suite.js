@@ -30,7 +30,7 @@ const l1Config = {
     // N.B. we don't have an invoker...
     isActivated: false,
     inheritsReferenceWidth: 'none',
-    focusContentOnOpen: true,
+    elementToFocusOnShow: true,
   },
 };
 
