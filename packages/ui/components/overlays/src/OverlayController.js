@@ -1388,6 +1388,7 @@ export class OverlayController extends EventTarget {
     this.contentWrapperNode[addOrRemoveListener](
       'mousedown',
       /** @type {EventListenerOrEventListenerObject} */
+      // @ts-ignore [ts7-2565] TS7 checks definite assignment on this inferred field; handler created inside a branch but read outside it: create the handlers unconditionally, moving the was*Inside locals with them
       (this.__onInsideMouseDown),
       true,
     );
@@ -1403,6 +1404,7 @@ export class OverlayController extends EventTarget {
       this.invokerNode[addOrRemoveListener](
         'mousedown',
         /** @type {EventListenerOrEventListenerObject} */
+        // @ts-ignore [ts7-2565] TS7 checks definite assignment on this inferred field; handler created inside a branch but read outside it: create the handlers unconditionally, moving the was*Inside locals with them
         (this.__onInsideMouseDown),
         true,
       );
@@ -1416,12 +1418,14 @@ export class OverlayController extends EventTarget {
     document.documentElement[addOrRemoveListener](
       'mouseup',
       /** @type {EventListenerOrEventListenerObject} */
+      // @ts-ignore [ts7-2565] TS7 checks definite assignment on this inferred field; handler created inside a branch but read outside it: create the handlers unconditionally, moving the was*Inside locals with them
       (this.__onDocumentMouseUp),
       true,
     );
     window[addOrRemoveListener](
       'blur',
       /** @type {EventListenerOrEventListenerObject} */
+      // @ts-ignore [ts7-2565] TS7 checks definite assignment on this inferred field; handler created inside a branch but read outside it: create the handlers unconditionally, moving the was*Inside locals with them
       (this.__onWindowBlur),
     );
   }

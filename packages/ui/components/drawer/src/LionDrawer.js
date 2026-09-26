@@ -39,6 +39,7 @@ export class LionDrawer extends LionCollapsible {
 
     /** @private */
     this.__toggle = () => {
+      // @ts-ignore [ts7-2565] TS7 checks definite assignment on this inferred field; Lit reactive property: read through a typed local instead (e.g. const next = this.x ?? DEFAULT) - a class field would shadow the accessor Lit creates from static properties
       this.opened = !this.opened;
     };
   }

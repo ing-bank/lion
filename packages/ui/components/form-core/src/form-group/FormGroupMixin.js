@@ -61,6 +61,7 @@ const FormGroupMixinImplementation = /** @type {FormGroupMixin} */ (superclass =
     }
 
     set modelValue(values) {
+      // @ts-ignore [ts7-2565] TS7 checks definite assignment on this inferred field; private field: hoist to a class field with an initializer (the fix proven on LionAccordion)
       if (this.__isInitialModelValue) {
         this.__isInitialModelValue = false;
         this.registrationComplete.then(() => {
@@ -79,6 +80,7 @@ const FormGroupMixinImplementation = /** @type {FormGroupMixin} */ (superclass =
     }
 
     set serializedValue(values) {
+      // @ts-ignore [ts7-2565] TS7 checks definite assignment on this inferred field; private field: hoist to a class field with an initializer (the fix proven on LionAccordion)
       if (this.__isInitialSerializedValue) {
         this.__isInitialSerializedValue = false;
         this.registrationComplete.then(() => {

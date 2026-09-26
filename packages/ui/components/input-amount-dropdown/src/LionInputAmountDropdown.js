@@ -478,10 +478,12 @@ export class LionInputAmountDropdown extends LionInputAmount {
     const dropdownValue = /** @type {RegionCode} */ (
       dropdownElement.modelValue || dropdownElement.value
     );
+    // @ts-ignore [ts7-2565] TS7 checks definite assignment on this inferred field; declared `string` but legitimately reset to undefined: widen the type in the types file (API change) or guard the read with a local
     if (isInitializing || this.currency === dropdownValue) {
       return;
     }
 
+    // @ts-ignore [ts7-2565] TS7 checks definite assignment on this inferred field; declared `string` but legitimately reset to undefined: widen the type in the types file (API change) or guard the read with a local
     const prevCurrency = this.currency;
 
     /** @type {RegionCode | string} */
