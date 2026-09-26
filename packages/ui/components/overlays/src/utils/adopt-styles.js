@@ -124,7 +124,7 @@ export function adoptStyle(renderRoot, style, { teardown = false } = {}) {
   if (!teardown) {
     // @ts-ignore
     // eslint-disable-next-line no-param-reassign
-    renderRoot.adoptedStyleSheets = [...renderRoot.adoptedStyleSheets, sheet];
+    renderRoot.adoptedStyleSheets = [...(renderRoot.adoptedStyleSheets || []), sheet];
   } else if (renderRoot.adoptedStyleSheets.includes(sheet)) {
     // @ts-ignore
     // eslint-disable-next-line no-param-reassign
