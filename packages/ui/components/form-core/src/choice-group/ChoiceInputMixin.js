@@ -21,6 +21,7 @@ const hasChanged = (nw, old = {}) => nw.value !== old.value || nw.checked !== ol
  * @type {ChoiceInputMixin}
  * @param {import('@open-wc/dedupe-mixin').Constructor<import('lit').LitElement>} superclass
  */
+// prettier-ignore
 const ChoiceInputMixinImplementation = /** @type {ChoiceInputMixin} */ (superclass =>
   // @ts-ignore https://github.com/microsoft/TypeScript/issues/36821#issuecomment-588375051
   class ChoiceInputMixin extends FormatMixin(superclass) {

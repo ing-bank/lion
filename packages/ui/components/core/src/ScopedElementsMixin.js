@@ -88,7 +88,7 @@ const ScopedElementsMixinImplementation = superclass =>
      * @param {typeof HTMLElement} classToBeRegistered
      */
     defineScopedElement(tagName, classToBeRegistered) {
-      const registry = /** @type {CustomElementRegistry} */ (this.registry);
+      const { registry } = /** @type {{ registry: CustomElementRegistry }} */ (this);
       const registeredClass = registry.get(tagName);
       const isNewClassWithSameName = registeredClass && registeredClass !== classToBeRegistered;
       if (!supportsScopedRegistry() && isNewClassWithSameName) {

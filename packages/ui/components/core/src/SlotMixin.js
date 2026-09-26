@@ -96,6 +96,7 @@ function determineSlotFunctionResultType(slotFunctionResult) {
  * @type {SlotMixin}
  * @param {import('@open-wc/dedupe-mixin').Constructor<LitElement>} superclass
  */
+// prettier-ignore
 const SlotMixinImplementation = /** @type {SlotMixin} */ (superclass =>
   // @ts-ignore https://github.com/microsoft/TypeScript/issues/36821#issuecomment-588375051
   class SlotMixin extends superclass {
