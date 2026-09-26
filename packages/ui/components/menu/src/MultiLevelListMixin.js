@@ -236,10 +236,7 @@ const MultiLevelListMixinImplementation = superclass =>
           if (this.orientation === 'horizontal' && parentListOfActiveItem) {
             // @ts-ignore - close method
             this.close();
-            if (
-              /** @type {InteractiveList & LionMenu} */ (parentListOfActiveItem)
-                ._onOverlayShow
-            ) {
+            if (/** @type {InteractiveList & LionMenu} */ (parentListOfActiveItem)._onOverlayShow) {
               // @ts-ignore - _onOverlayShow method
               /** @type {OverlayHost} */ (parentListOfActiveItem)._onOverlayShow();
             }
@@ -249,10 +246,7 @@ const MultiLevelListMixinImplementation = superclass =>
           if (this.orientation === 'vertical' && parentListOfActiveItem) {
             // @ts-ignore - close method
             this.close();
-            if (
-              /** @type {InteractiveList & LionMenu} */ (parentListOfActiveItem)
-                ._onOverlayShow
-            ) {
+            if (/** @type {InteractiveList & LionMenu} */ (parentListOfActiveItem)._onOverlayShow) {
               // @ts-ignore - _onOverlayShow method
               /** @type {OverlayHost} */ (parentListOfActiveItem)._onOverlayShow();
             }

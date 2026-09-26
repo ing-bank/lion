@@ -16,8 +16,8 @@ eleventyNavigation:
 import { html } from 'lit';
 import '@lion/ui/define/lion-item.js';
 import '@lion/ui/define/lion-menu.js';
-import '@lion/ui/define/lion-tree.js';
-import '@lion/ui/define/lion-toolbar.js';
+import './src/DemoTree.js';
+import './src/DemoToolbar.js';
 import { applyMenuDemoStyles } from './applyMenuDemoStyles.js';
 
 applyMenuDemoStyles();
