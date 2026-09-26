@@ -46,6 +46,7 @@ export {
 export { DefaultSuccess } from '../components/form-core/src/validate/resultValidators/DefaultSuccess.js';
 
 export { LionValidationFeedback } from '../components/form-core/src/validate/LionValidationFeedback.js';
+export { FileLastModifiedDateValidator } from '../components/form-core/src/validate/FileLastModifiedDateValidator.js';
 
 export { ChoiceGroupMixin } from '../components/form-core/src/choice-group/ChoiceGroupMixin.js';
 export { ChoiceInputMixin } from '../components/form-core/src/choice-group/ChoiceInputMixin.js';
