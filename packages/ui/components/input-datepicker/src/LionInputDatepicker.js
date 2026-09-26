@@ -28,7 +28,7 @@ export class LionInputDatepicker extends ScopedElementsMixin(
 ) {
   static get scopedElements() {
     return {
-      ...super.scopedElements,
+      ...super['scopedElements'],
       'lion-calendar': LionCalendar,
     };
   }

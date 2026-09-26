@@ -96,7 +96,7 @@ export function runValidateMixinFeedbackPart() {
     it('reflects .showsFeedbackFor as attribute joined with "," to be used as a style hook', async () => {
       class ValidateElementCustomTypes extends ValidateMixin(LitElement) {
         static get validationTypes() {
-          return [...super.validationTypes, 'x'];
+          return [...super['validationTypes'], 'x'];
         }
       }
       const elTagString = defineCE(ValidateElementCustomTypes);

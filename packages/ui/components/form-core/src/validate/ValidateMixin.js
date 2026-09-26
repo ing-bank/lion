@@ -51,7 +51,7 @@ function getValueForValidators(modelValue) {
  * @type {ValidateMixin}
  * @param {import('@open-wc/dedupe-mixin').Constructor<import('lit').LitElement>} superclass
  */
-export const ValidateMixinImplementation = superclass =>
+export const ValidateMixinImplementation = /** @type {ValidateMixin} */ (superclass =>
   // @ts-ignore https://github.com/microsoft/TypeScript/issues/36821#issuecomment-588375051
   class extends FormControlMixin(
     SyncUpdatableMixin(DisabledMixin(SlotMixin(ScopedElementsMixin(superclass)))),
@@ -1022,6 +1022,6 @@ export const ValidateMixinImplementation = superclass =>
         .sort((a, b) => types.indexOf(a.type) - types.indexOf(b.type));
       return res.slice(0, this._visibleMessagesAmount);
     }
-  };
+  });
 
 export const ValidateMixin = dedupeMixin(ValidateMixinImplementation);

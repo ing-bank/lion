@@ -19,7 +19,7 @@ import { dedupeMixin } from '@open-wc/dedupe-mixin';
  * @type {FormRegistrarPortalMixin}
  * @param {import('@open-wc/dedupe-mixin').Constructor<HTMLElement>} superclass
  */
-const FormRegistrarPortalMixinImplementation = superclass =>
+const FormRegistrarPortalMixinImplementation = /** @type {FormRegistrarPortalMixin} */ (superclass =>
   // eslint-disable-next-line no-shadow, no-unused-vars
   // @ts-ignore https://github.com/microsoft/TypeScript/issues/36821#issuecomment-588375051
   class extends superclass {
@@ -58,6 +58,6 @@ const FormRegistrarPortalMixinImplementation = superclass =>
         }),
       );
     }
-  };
+  });
 
 export const FormRegistrarPortalMixin = dedupeMixin(FormRegistrarPortalMixinImplementation);

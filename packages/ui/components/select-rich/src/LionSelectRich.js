@@ -28,7 +28,7 @@ function detectInteractionMode() {
 export class LionSelectRich extends SlotMixin(ScopedElementsMixin(OverlayMixin(LionListbox))) {
   static get scopedElements() {
     return {
-      ...super.scopedElements,
+      ...super['scopedElements'],
       'lion-select-invoker': LionSelectInvoker,
     };
   }

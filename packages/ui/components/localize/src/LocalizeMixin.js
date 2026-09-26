@@ -14,7 +14,7 @@ import { getLocalizeManager } from './getLocalizeManager.js';
  * @type {LocalizeMixin}
  * @param {import('@open-wc/dedupe-mixin').Constructor<import('lit').LitElement>} superclass
  */
-const LocalizeMixinImplementation = superclass =>
+const LocalizeMixinImplementation = /** @type {LocalizeMixin} */ (superclass =>
   // @ts-ignore https://github.com/microsoft/TypeScript/issues/36821#issuecomment-588375051
   class LocalizeMixin extends superclass {
     /**
@@ -176,6 +176,6 @@ const LocalizeMixinImplementation = superclass =>
 
     // eslint-disable-next-line class-methods-use-this
     onLocaleUpdated() {}
-  };
+  });
 
 export const LocalizeMixin = dedupeMixin(LocalizeMixinImplementation);

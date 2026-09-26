@@ -243,6 +243,7 @@ export class Validator extends EventTarget {
    *     inputNode.removeAttribute('aria-required');
    *   }
    * }
+   * ```
    * @configurable
    * @param {FormControlHost} formControl
    */

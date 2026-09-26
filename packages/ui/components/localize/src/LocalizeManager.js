@@ -135,7 +135,6 @@ export class LocalizeManager extends EventTarget {
   }
 
   /**
-   * @readonly
    * @returns {Promise<Object|void>}
    */
   get loadingComplete() {

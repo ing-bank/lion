@@ -29,7 +29,7 @@ import { FormElementsHaveNoError } from './FormElementsHaveNoError.js';
  * @type {FormGroupMixin}
  * @param {import('@open-wc/dedupe-mixin').Constructor<import('lit').LitElement>} superclass
  */
-const FormGroupMixinImplementation = superclass =>
+const FormGroupMixinImplementation = /** @type {FormGroupMixin} */ (superclass =>
   // @ts-ignore https://github.com/microsoft/TypeScript/issues/36821#issuecomment-588375051
   class FormGroupMixin extends FormRegistrarMixin(
     FormControlMixin(ValidateMixin(DisabledMixin(SlotMixin(superclass)))),
@@ -595,6 +595,6 @@ const FormGroupMixinImplementation = superclass =>
     _isEmpty() {
       return this.formElements.every(el => el._isEmpty?.());
     }
-  };
+  });
 
 export const FormGroupMixin = dedupeMixin(FormGroupMixinImplementation);

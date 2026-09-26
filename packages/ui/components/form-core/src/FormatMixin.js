@@ -58,7 +58,7 @@ import { ValidateMixin } from './validate/ValidateMixin.js';
  * @type {FormatMixin}
  * @param {import('@open-wc/dedupe-mixin').Constructor<import('lit').LitElement>} superclass
  */
-const FormatMixinImplementation = superclass =>
+const FormatMixinImplementation = /** @type {FormatMixin} */ (superclass =>
   // @ts-ignore https://github.com/microsoft/TypeScript/issues/36821#issuecomment-588375051
   class FormatMixin extends ValidateMixin(FormControlMixin(superclass)) {
     /** @type {any} */
@@ -144,12 +144,12 @@ const FormatMixinImplementation = superclass =>
      *   // only use digits
      *   return viewValue.replace(/\D/g, '');
      * }
+     * ```
      * @param {string} v - the raw value from the <input> after keyUp/Down event
      * @param {FormatOptions & { prevViewValue: string; currentCaretIndex: number }} opts - the raw value from the <input> after keyUp/Down event
      * @returns {{ viewValue:string; caretIndex:number; }|string|undefined} preprocessedValue: the result of preprocessing for invalid input
      */
-    // eslint-disable-next-line no-unused-vars
-    preprocessor(v, opts) {
+    preprocessor(v, opts) { // eslint-disable-line no-unused-vars
       return undefined;
     }
 
@@ -646,6 +646,6 @@ const FormatMixinImplementation = superclass =>
       }
       return states;
     }
-  };
+  });
 
 export const FormatMixin = dedupeMixin(FormatMixinImplementation);

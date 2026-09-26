@@ -652,7 +652,7 @@ export class OverlayController extends EventTarget {
     // on the native dialog for all browsers: https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/dialog#closedby
     const hasClosedBySupport = HTMLDialogElement && 'closedBy' in HTMLDialogElement.prototype;
     if (hasClosedBySupport) {
-      // @ts-expect-error
+      // @ts-ignore [closedBy is feature-detected above]
       wrappingDialogElement.closedBy = 'none';
     } else {
       wrappingDialogElement.addEventListener(

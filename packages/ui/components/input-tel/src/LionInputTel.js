@@ -13,7 +13,7 @@ import { localizeNamespaceLoader } from './localizeNamespaceLoader.js';
  * @typedef {import('awesome-phonenumber').PhoneNumberFormat} PhoneNumberFormat
  * @typedef {import('awesome-phonenumber').PhoneNumberTypes} PhoneNumberTypes
  * @typedef {import('../../form-core/types/FormatMixinTypes.js').FormatOptions} FormatOptions
- * @typedef {* & import('awesome-phonenumber')} AwesomePhoneNumber
+ * @typedef {* & typeof import('awesome-phonenumber')} AwesomePhoneNumber
  * @typedef {FormatOptions & {regionCode: RegionCode; formatStrategy: PhoneNumberFormat; formatCountryCodeStyle: string;}} FormatOptionsTel
  */
 
@@ -43,7 +43,6 @@ export class LionInputTel extends LocalizeMixin(LionInput) {
    * 1. allowed regions: get the region from configured allowed regions (if one entry)
    * 2. user input: try to derive active region from user input
    * 3. locale: try to get the region from locale (`html[lang]` attribute)
-   * @readonly
    * @property {RegionCode|undefined}activeRegion
    */
   get activeRegion() {
@@ -68,7 +67,6 @@ export class LionInputTel extends LocalizeMixin(LionInput) {
    * -'voip'
    * -'unknown'
    * See https://www.npmjs.com/package/awesome-phonenumber
-   * @readonly
    * @property {PhoneNumberTypes|undefined} activePhoneNumberTypes
    */
   get activePhoneNumberType() {

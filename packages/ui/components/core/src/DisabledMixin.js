@@ -8,7 +8,7 @@ import { dedupeMixin } from '@open-wc/dedupe-mixin';
  * @type {DisabledMixin}
  * @param {import('@open-wc/dedupe-mixin').Constructor<import('lit').LitElement>} superclass
  */
-const DisabledMixinImplementation = superclass =>
+const DisabledMixinImplementation = /** @type {DisabledMixin} */ (superclass =>
   // eslint-disable-next-line no-shadow
   // @ts-ignore https://github.com/microsoft/TypeScript/issues/36821#issuecomment-588375051
   class extends superclass {
@@ -80,6 +80,6 @@ const DisabledMixinImplementation = superclass =>
 
       super.click();
     }
-  };
+  });
 
 export const DisabledMixin = dedupeMixin(DisabledMixinImplementation);

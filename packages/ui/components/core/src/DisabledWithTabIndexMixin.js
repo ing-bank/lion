@@ -9,7 +9,7 @@ import { DisabledMixin } from './DisabledMixin.js';
  * @type {DisabledWithTabIndexMixin}
  * @param {import('@open-wc/dedupe-mixin').Constructor<import('lit').LitElement>} superclass
  */
-const DisabledWithTabIndexMixinImplementation = superclass =>
+const DisabledWithTabIndexMixinImplementation = /** @type {DisabledWithTabIndexMixin} */ (superclass =>
   // eslint-disable-next-line no-shadow
   // @ts-ignore https://github.com/microsoft/TypeScript/issues/36821#issuecomment-588375051
   class extends DisabledMixin(superclass) {
@@ -103,6 +103,6 @@ const DisabledWithTabIndexMixinImplementation = superclass =>
         this.__internalSetTabIndex(-1);
       }
     }
-  };
+  });
 
 export const DisabledWithTabIndexMixin = dedupeMixin(DisabledWithTabIndexMixinImplementation);
