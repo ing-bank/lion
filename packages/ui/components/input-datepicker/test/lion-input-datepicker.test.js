@@ -666,11 +666,12 @@ describe('<lion-input-datepicker>', () => {
         <lion-input-datepicker label="End date" name="endDate"></lion-input-datepicker>
       `);
 
-      const elements = el.parentElement?.children;
-      // @ts-ignore - accessing by name property
-      const startLabel = elements?.startDate?.querySelector('button')?.ariaLabel;
-      // @ts-ignore - accessing by name property
-      const endLabel = elements?.endDate?.querySelector('button')?.ariaLabel;
+      // @ts-expect-error
+      const elements = el.parentElement.children;
+      // @ts-expect-error
+      const startLabel = elements.startDate.querySelector('button').ariaLabel;
+      // @ts-expect-error
+      const endLabel = elements.endDate.querySelector('button').ariaLabel;
 
       expect(startLabel).to.not.equal(endLabel);
     });
