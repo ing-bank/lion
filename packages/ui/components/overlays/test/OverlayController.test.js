@@ -357,20 +357,20 @@ describe('OverlayController', () => {
       expect(ctrl.isShown).to.be.false;
     });
 
-    // it('cleans up the dom structure it created', async () => {
-    //   const contentNode = /** @type {HTMLElement} */ (fixtureSync(html`<div>my content</div>`));
-    //   const ctrl = new OverlayController({
-    //     placementMode: 'global',
-    //     contentNode,
-    //   });
-    //   await ctrl.show();
-    //   expect(ctrl.contentWrapperNode).to.exist;
-    //   expect(ctrl.__wrappingDialogNode).to.exist;
+    it('cleans up the dom structure it created', async () => {
+      const contentNode = /** @type {HTMLElement} */ (fixtureSync(html`<div>my content</div>`));
+      const ctrl = new OverlayController({
+        placementMode: 'global',
+        contentNode,
+      });
+      await ctrl.show();
+      expect(ctrl.contentWrapperNode).to.exist;
+      expect(ctrl.__wrappingDialogNode).to.exist;
 
-    //   await ctrl.teardown();
-    //   expect(ctrl.contentWrapperNode).to.not.exist;
-    //   expect(ctrl.__wrappingDialogNode).to.not.exist;
-    // });
+      await ctrl.teardown();
+      expect(ctrl.contentWrapperNode).to.not.exist;
+      expect(ctrl.__wrappingDialogNode).to.not.exist;
+    });
   });
 
   describe('Node Configuration', () => {
