@@ -238,7 +238,7 @@ export class OverlayController extends EventTarget {
       },
       zIndex: 9999,
       isActivated: true,
-      focusContentOnOpen: false,
+      elementToFocusOnShow: false,
       // This means that content will have visually-hidden / sr-only styles. This is handy for:
       // - hidden menus that should be "indexable" by screen readers (like the Links list in VO: https://support.apple.com/en-gb/guide/voiceover/mchlp2719/mac)
       // - "more" menus that put content in a dropdown that do not fit in the current row
@@ -930,7 +930,7 @@ export class OverlayController extends EventTarget {
     // a styling/debug hook for open state
     this.contentNode.setAttribute('data-open', '');
 
-    if (this.config.focusContentOnOpen) {
+    if (this.config.elementToFocusOnShow) {
       this.contentNode.focus({ preventScroll: true });
     }
 
@@ -1142,8 +1142,8 @@ export class OverlayController extends EventTarget {
     if (this.config.syncChildrenCloseState) {
       this._handleSyncChildrenCloseState({ phase });
     }
-    if (this.config.focusContentOnOpen) {
-      this._handleFocusContentOnOpen({ phase });
+    if (this.config.elementToFocusOnShow) {
+      this._handleElementToFocusOnShow({ phase });
     }
   }
 
@@ -1151,7 +1151,7 @@ export class OverlayController extends EventTarget {
    * @param {{phase: OverlayPhase}} opts
    * @returns {void}
    */
-  _handleFocusContentOnOpen({ phase }) {
+  _handleElementToFocusOnShow({ phase }) {
     if (phase === 'init') {
       this.contentNode?.setAttribute('tabindex', '-1');
     } else if (phase === 'teardown') {

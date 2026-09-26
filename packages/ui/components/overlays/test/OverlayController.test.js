@@ -889,10 +889,7 @@ describe('OverlayController', () => {
 
     describe('Nested hidesOnEsc / hidesOnOutsideEsc', () => {
       describe('Parent has hidesOnEsc and child has hidesOnOutsideEsc', () => {
-        // TODO: This test is flaky. We need to investigate why the child overlay
-        // is not staying shown after the parent overlay is hidden. The failing line
-        // is highlighted below.
-        it.skip('on [Escape] press in child overlay: parent hides, child stays shown', async () => {
+        it('on [Escape] press in child overlay: parent hides, child stays shown', async () => {
           const parentContent = /** @type {HTMLDivElement} */ (
             await fixture(
               html` <!-- -->
@@ -903,12 +900,16 @@ describe('OverlayController', () => {
           );
           const { parentOverlay, childOverlay } = await createNestedEscControllers(parentContent);
           await mimicEscapePress(childOverlay.contentNode);
-          await waitUntil(() => !parentOverlay.isShown);
-
-          // TODO: This is the failing line ("sometimes").
-          // The child overlay is not staying shown after the parent overlay is hidden.
-          await waitUntil(() => childOverlay.isShown);
-
+          await childOverlay._showComplete;
+          await parentOverlay._showComplete;
+          await childOverlay._hideComplete;
+          await parentOverlay._hideComplete;
+          if (!childOverlay.isShown) {
+            await waitUntil(() => childOverlay.isShown);
+          }
+          if (parentOverlay.isShown) {
+            await waitUntil(() => !parentOverlay.isShown);
+          }
           await childOverlay.teardown();
           await parentOverlay.teardown();
         });
@@ -1736,12 +1737,12 @@ describe('OverlayController', () => {
       });
     });
 
-    describe('focusContentOnOpen', () => {
-      it('adds tabindex="-1" to the content node when focusContentOnOpen is true', async () => {
+    describe('elementToFocusOnShow', () => {
+      it('adds tabindex="-1" to the content node when elementToFocusOnShow is true', async () => {
         const ctrl = new OverlayController({
           ...withGlobalTestConfig(),
           isBlocking: false,
-          focusContentOnOpen: true,
+          elementToFocusOnShow: true,
         });
         const contentNode = /** @type {HTMLElement} */ (await fixture('<div>Content</div>'));
         ctrl.updateConfig({ contentNode });
@@ -1753,7 +1754,7 @@ describe('OverlayController', () => {
         const ctrl = new OverlayController({
           ...withGlobalTestConfig(),
           isBlocking: false,
-          focusContentOnOpen: true,
+          elementToFocusOnShow: true,
         });
         const contentNode = /** @type {HTMLElement} */ (
           await fixture('<div><button>Button</button></div>')
@@ -1820,6 +1821,12 @@ describe('OverlayController', () => {
         expect(ctrl.__hasSetup).to.be.true;
       });
     });
+
+    // TODO
+    describe('hideVisually', () => {});
+
+    // TODO
+    describe('requireConnectedNodes', () => {});
   });
 
   describe('Show / Hide / Toggle', () => {
