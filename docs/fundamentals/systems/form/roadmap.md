@@ -28,11 +28,43 @@ submission (`FormData`), native constraint validation (`setValidity` / `validati
 **Direction — two tiers, both additive.**
 - **Tier 1 (no `ElementInternals`):** decorate the inner native element with
   `setCustomValidity` / `reportValidity` and drive show-timing from `:user-invalid`. The
-  standalone `enhanceForm` reference proves this end to end; it needs no shadow root and no
-  form association.
+  standalone [`enhanceForm`](#reference-implementation-enhanceform) reference proves this end
+  to end; it needs no shadow root and no form association.
 - **Tier 2 (opt-in FACE):** `formAssociated` + `attachInternals()` for controls not backed by
   a native element — enabled per control, disabled by default, guarded for SSR.
   `ElementInternals` does **not** require a shadow root.
+
+### Reference implementation: `enhanceForm`
+
+The Tier-1 direction is not speculative — it already exists as a standalone, framework-free
+function: [`enhanceForm`](https://github.com/tlouisse/wp-jet-to-grib-plugin/tree/master/js/enhancedForms)
+(a private repo; ~400 LOC, with tests). Its signature is
+`enhanceForm(formControlConfigList, { formEl, messageMapObj, customMessageReporter })`, and it
+takes a plain `<form>` and enriches the **native controls inside it** — no components, no shadow
+root, no form association. It demonstrates the whole feature set on the platform:
+
+- **Validity through the Constraint Validation API.** `setCustomValidity` for custom rules, an
+  *extended* `ValidityState` (native + custom keys) taken from `checkValidity`, and the standard
+  `invalid` event — instead of a re-implemented validity model.
+- **Show-timing delegated to the platform.** `:user-invalid` / `:user-valid` decide *when* a
+  message may appear; validation itself runs on every `input` (debounced, ~100 ms) but only
+  surfaces when the interaction state allows it.
+- **Cancellable async validators.** Each control keeps an `AbortController`; a new run aborts
+  the previous one and passes `{ signal }` to the validator, so a stale API response can never
+  win a race.
+- **Formatting on blur, only once valid** (`formatWhenValid`) — the value is never rewritten
+  under a user who is still typing.
+- **A `MessageReporter` seam for a11y.** Messages are wired with `aria-describedby`; `aria-live`
+  is switched *polite* on `focusin` and *assertive* on `focusout`, so a message appearing on blur
+  is announced before the next field's.
+- **A `restore()` inverse** (it unregisters its listeners), mirroring the platform's
+  state-restore story. It runs client-side **and** server-side.
+
+We do **not** intend to vendor this module. It is the **source of the patterns** we will adopt
+behind our existing API — and the evidence that Tier 1 is reachable without `ElementInternals`
+and without regressing the ARIA wiring we already ship. (Its own docblock anticipates splitting
+it into `@enhanceform/validate`, `/format`, `/custom-type-validators` and
+`/form-associated-custom-control`.)
 
 **Open constraint.** Multi-shadow-root ARIA reference resolution is unresolved at the spec
 level (Accessibility Object Model / "reference target" work). Tier 2 must not regress the ARIA

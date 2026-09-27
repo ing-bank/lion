@@ -49,17 +49,17 @@ problem it solves), then [Roadmap and Known Limitations](./roadmap.md) (our hone
 
 ## Building Blocks
 
-Our Form System is built from a set of very fundamental building blocks: `form control`s,
-`field`s and `fieldset`s.
+The system is three nesting levels, and each level is a `FormControl` in its own right:
+`form control`s, `field`s and `fieldset`s.
 
 ### Form Controls
 
-`Form control`s are the most fundamental building blocks of our Form System.
-They are the fundament of both `field`s and `fieldset`s and provide a normalized, predictable
-API throughout the whole form. Every form element inherits from `FormControlMixin`.
+A `form control` is the smallest unit — and the level everything else builds on: fields and
+fieldsets are form controls too. `FormControlMixin` gives them all the same normalized,
+predictable API, so an entire form speaks one language.
 
-`FormControlMixin` creates the default HTML structure, and its accessibility is designed to be
-used in conjunction with the `ValidateMixin` and the `FormatMixin`.
+`FormControlMixin` creates the default HTML structure. Its accessibility is designed to be used
+together with `ValidateMixin` and `FormatMixin`.
 
 ### Fields
 
