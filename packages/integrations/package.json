@@ -1,0 +1,23 @@
+{
+  "name": "@lion/integrations",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Framework interop matrix for Lion form components (Angular / React / Vue / vanilla). Private, not published.",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "test": "cd ../../ && web-test-runner --config web-test-runner.config.mjs"
+  },
+  "dependencies": {
+    "@lion/ui": "*"
+  },
+  "devDependencies": {
+    "@open-wc/testing": "^4.0.0",
+    "@web/test-runner": "^0.20.0",
+    "@web/test-runner-playwright": "^0.11.1",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "vue": "^3.5.0",
+    "preact": "^10.24.0"
+  }
+}
