@@ -14,30 +14,38 @@ eleventyNavigation:
 # Form: Overview
 
 The Form System is a set of building blocks — `form control`s, `field`s and `fieldset`s —
-that give every form element in the application **one normalized, accessible, typed contract**,
-independent of the framework that renders it.
+that give every form element in the application **one normalized, accessible, typed contract**.
+Build a form once, the same way in every app, and fix it in one place.
 
-New here? Read [Rationale and Provenance](./rationale.md) first (why it exists and where it
-came from), then [Roadmap and Known Limitations](./roadmap.md) (our honest gaps).
+New here? Read [Rationale and Provenance](./rationale.md) first (why it exists and the
+problem it solves), then [Roadmap and Known Limitations](./roadmap.md) (our honest gaps).
 
 ## Why you would use it
 
-- **`modelValue` as a single source of truth.** A typed value (a `Date`, a `Number`), not a
-  string — plus a full `preprocessor → parser → modelValue → formatter → serializer`
-  pipeline and a first-class [Unparseable](./formatting-and-parsing.md) for input the user
+- **One contract, every control.** A `my-checkbox` and a `my-input` no longer have different
+  value semantics, events or error shapes. Everything shares one API, so forming and
+  composing is predictable instead of copy-paste.
+- **Typed values, not strings.** `modelValue` is a real `Date`, `Number`, `Boolean` — not a
+  stringly-typed string. A full `preprocessor → parser → modelValue → formatter → serializer`
+  pipeline, plus a first-class [Unparseable](./formatting-and-parsing.md) for what the user
   typed but we cannot interpret. See [Model Value](./model-value.md).
-- **A normalized API across everything.** Fields, fieldsets, choice groups and the form share
-  one contract, so groups can be validated, reset and serialized as a unit and composed
-  recursively. See [Formatting and Parsing](./formatting-and-parsing.md) and
+- **A group *is* a field.** Fields, fieldsets, choice groups and the form share the same
+  surface, so a group can be validated, reset and serialized as a unit — and composed
+  recursively. Deeply nested forms need no per-component special-casing. See
+  [Formatting and Parsing](./formatting-and-parsing.md) and
   [Interaction States](./interaction-states.md).
 - **Validation built for real UX.** `error` / `warning` / `info` / `success`, sync and async,
   localized out of the box in ~20 locales. See [Validate](./validate.md).
-- **Accessibility at the DOM layer.** Label, help text and feedback are wired
+- **Accessibility built in, not bolted on.** Labels, help text and feedback are wired
   (`aria-labelledby` / `aria-describedby`, with DOM-order correction), `aria-invalid` /
-  `aria-required` are maintained, and feedback announces politely/assertively with focus.
+  `aria-required` are maintained, and feedback announces politely/assertively with focus —
+  inside shadow roots too.
 - **Framework-free consumers.** `<lion-input>` is usable from Angular, React, Vue, Svelte or
-  plain HTML via tag name, properties and DOM events. See the scope note in
+  plain HTML via tag name, properties and DOM events. The element base is Lit; you inherit it
+  with `LionField` and never wire it up yourself. See the scope note in
   [Rationale](./rationale.md).
+- **Composable by design.** The logic mixins carry no rendering, so you can adopt the value
+  pipeline, the validation, or the grouping — without taking the rest.
 
 ## Building Blocks
 
