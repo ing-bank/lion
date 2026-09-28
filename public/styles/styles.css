@@ -1,13 +1,15 @@
 /* @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap'); */
 
 :root {
-    --bg-color: #000000;
-    --text-primary: #ffffff;
-    --text-secondary: #888888;
-    /* --highlight-color: #FFC107;  */
-    --highlight-color: #CCCCCC; 
-    --border-color: #222222;
-    --card-bg: #0a0a0a;
+    --bg-color: light-dark(#ffffff, #000000);
+    --text-primary: light-dark(#111111, #ffffff);
+    --text-secondary: light-dark(#5a5a5a, #888888);
+    /* Warm-yellow lineage; the light value is darkened so it passes AA on white. */
+    --highlight-color: light-dark(#7a5c00, #CCCCCC);
+    --highlight-color-hover: light-dark(#6b4d00, #ffca2c);
+    --on-highlight: light-dark(#ffffff, #000000); 
+    --border-color: light-dark(#dcdcdc, #222222);
+    --card-bg: light-dark(#f6f6f6, #0a0a0a);
     --font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     
     /* Spacing */
@@ -25,13 +27,25 @@
     --border-width-default: 1px;
     
     /* Focus states */
-    --focus-border-color-inner: #ffffff;
-    --focus-border-color-outer: #FFC107;
+    --focus-border-color-inner: light-dark(#111111, #ffffff);
+    --focus-border-color-outer: light-dark(#7a5c00, #FFC107);
     
     /* Additional backgrounds */
-    --bg-subtle: #111111;
-    --bg-surface: #000000;
-    --bg-default: #ffffff;
+    --bg-subtle: light-dark(#f2f2f2, #111111);
+    --bg-surface: light-dark(#ffffff, #000000);
+    --bg-default: light-dark(#111111, #ffffff);
+
+    /*
+     * Translucent surfaces. These have no light-dark() equivalent in the shapes above, but the dark
+     * values are the ones that shipped and they must not drift: a 30%-black header on a white page
+     * would put dark text on a dark bar.
+     */
+    --header-bg: light-dark(rgba(255, 255, 255, 0.6), rgba(0, 0, 0, 0.3));
+    --header-border: light-dark(rgba(0, 0, 0, 0.08), rgba(255, 255, 255, 0.08));
+    --overlay-subtle: light-dark(rgba(0, 0, 0, 0.04), rgba(255, 255, 255, 0.05));
+    --overlay-border: light-dark(rgba(0, 0, 0, 0.12), rgba(255, 255, 255, 0.1));
+    --diagram-line: light-dark(rgba(0, 0, 0, 0.2), rgba(255, 255, 255, 0.2));
+    --diagram-line-strong: light-dark(rgba(0, 0, 0, 0.5), rgba(255, 255, 255, 0.5));
 }
 
 * {
@@ -73,8 +87,8 @@ body {
     width: 100%;
     height: 100%;
     background-image: 
-        linear-gradient(to right, #111 1px, transparent 1px),
-        linear-gradient(to bottom, #111 1px, transparent 1px);
+        linear-gradient(to right, var(--grid-line-color) 1px, transparent 1px),
+        linear-gradient(to bottom, var(--grid-line-color) 1px, transparent 1px);
     background-size: 40px 40px;
     z-index: -1;
     mask-image: radial-gradient(circle at center, black 40%, transparent 100%);
@@ -94,10 +108,10 @@ body {
     top: 0;
     width: 100%;
     z-index: 100;
-    background: rgba(0, 0, 0, 0.3);
+    background: var(--header-bg);
     backdrop-filter: blur(20px) saturate(180%);
     -webkit-backdrop-filter: blur(20px) saturate(180%);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    border-bottom: 1px solid var(--header-border);
     min-height: 85px;
 }
 
@@ -126,16 +140,27 @@ main {
     display: block;
 }
 
-/* N.B. fix in design later and align edges properly */
-.logo img:first-child {
-    transform: rotate(-45deg);
-    margin-right: -4px;
+/*
+ * public/logo.svg and public/lionui-text.svg are hard-coded white, so both disappear on a light
+ * background. Inverting a monochrome *asset* is what an asset-level filter is for; inverting the
+ * root element is not (it creates a containing block for position:fixed descendants — .site-header
+ * is fixed — plus a stacking context, and it regressed --text-secondary below WCAG AA).
+ * hue-rotate keeps the dandelion accent in the wordmark instead of flipping it to blue.
+ * Follow-up: ship the wordmark as inline SVG so it can use currentColor and this filter can go.
+ */
+@media (prefers-color-scheme: light) {
+    :root:not(:has(#theme-dark:checked)) .logo img {
+        filter: invert(1) hue-rotate(180deg);
+    }
+}
+
+:root:has(#theme-light:checked) .logo img {
+    filter: invert(1) hue-rotate(180deg);
 }
 
 .logo-text-svg {
     height: 36px;
     width: auto;
-    filter: grayscale(1); /* TODO: use inline svg with highlight-color */
 }
 
 .highlight-text {
@@ -333,7 +358,7 @@ main {
     font-weight: 600;
     letter-spacing: -0.04em;
     margin-bottom: 24px;
-    background: linear-gradient(180deg, #ffffff 0%, #888888 100%);
+    background: linear-gradient(180deg, var(--hero-gradient-from) 0%, var(--hero-gradient-to) 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -368,18 +393,18 @@ main {
 
 .btn-primary {
     background-color: var(--highlight-color);
-    color: #000000;
+    color: var(--on-highlight);
 }
 
 .btn-primary:hover {
-    background-color: #ffca2c;
+    background-color: var(--highlight-color-hover);
     box-shadow: 0 0 20px rgba(255, 193, 7, 0.3);
 }
 
 .btn-secondary {
     background-color: transparent;
     color: var(--text-primary);
-    border: 1px solid #333;
+    border: 1px solid var(--border-color);
 }
 
 .btn-secondary:hover {
@@ -468,7 +493,7 @@ main {
 }
 
 .copyright {
-    color: #444;
+    color: var(--text-secondary);
     font-size: 0.85rem;
 }
 
@@ -551,10 +576,10 @@ main {
 .layer-mid { transform: translateZ(0px); }
 .layer-front { transform: translateZ(50px); }
 
-.grid-line { stroke: rgba(255, 255, 255, 0.2); stroke-width: 0.5; }
-.construction-line { stroke: rgba(255, 255, 255, 0.2); stroke-width: 1; stroke-dasharray: 4 4; }
-.dimension-line { stroke: rgba(255, 255, 255, 0.5); stroke-width: 1; marker-end: url(#arrow); marker-start: url(#arrow); }
-.dimension-text { fill: rgba(255, 255, 255, 0.5); font-size: 12px; text-anchor: middle; }
+.grid-line { stroke: var(--diagram-line); stroke-width: 0.5; }
+.construction-line { stroke: var(--diagram-line); stroke-width: 1; stroke-dasharray: 4 4; }
+.dimension-line { stroke: var(--diagram-line-strong); stroke-width: 1; marker-end: url(#arrow); marker-start: url(#arrow); }
+.dimension-text { fill: var(--diagram-line-strong); font-size: 12px; text-anchor: middle; }
 
 .logo-part { 
     stroke: white; 
@@ -613,8 +638,7 @@ main {
     line-height: 1.2;
     margin-top: 3rem;
     margin-bottom: 1.5rem;
-    /* background: linear-gradient(180deg, #ffffff 0%, #d4d4d4 100%); */
-    background: linear-gradient(180deg, #ffffff 0%, #777 100%);
+    background: linear-gradient(180deg, var(--heading-gradient-from) 0%, var(--heading-gradient-to) 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -669,7 +693,7 @@ main {
 .docs-content a:hover {
     text-decoration: none;
     background-color: var(--highlight-color);
-    color: #000;
+    color: var(--on-highlight);
     padding: 2px 4px;
     margin: -2px -4px;
     border-radius: 2px;
@@ -689,8 +713,8 @@ main {
 }
 
 .docs-content code {
-    background-color: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    background-color: var(--overlay-subtle);
+    border: 1px solid var(--overlay-border);
     border-radius: 4px;
     padding: 2px 6px;
     font-family: 'Menlo', 'Monaco', 'Courier New', monospace;
@@ -699,7 +723,7 @@ main {
 }
 
 .docs-content pre {
-    background: #111;
+    background: var(--bg-subtle);
     border: 1px solid var(--border-color);
     border-radius: 8px;
     padding: 16px;
@@ -711,7 +735,7 @@ main {
     background: none;
     border: none;
     padding: 0;
-    color: #e6e6e6;
+    color: var(--text-primary);
 }
 
 .docs-content blockquote {
@@ -737,7 +761,7 @@ main {
 }
 
 .docs-content table th {
-    background-color: rgba(255, 255, 255, 0.03);
+    background-color: var(--overlay-subtle);
     border: 1px solid var(--border-color);
     padding: 12px;
     text-align: left;
@@ -791,8 +815,3 @@ main {
     color: #777 !important;
 }
 
-@media (prefers-color-scheme: light) {
-    html {
-        filter: invert(1);
-    }
-}
