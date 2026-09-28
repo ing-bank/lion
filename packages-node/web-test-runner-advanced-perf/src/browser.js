@@ -1,7 +1,9 @@
 import { executeServerCommand } from '@web/test-runner-commands';
 
 const benchmarkRuns = new Map();
-globalThis.__lionAdvancedPerfBenchmarks = benchmarkRuns;
+/** @type {Record<string, unknown>} */
+const globalScope = globalThis;
+globalScope.__lionAdvancedPerfBenchmarks = benchmarkRuns;
 
 /**
  * @typedef {{
