@@ -211,6 +211,8 @@ export class OverlayController extends EventTarget {
     this.__referenceWidthAnimationFrame = undefined;
     /** @type {HTMLElement | undefined} */
     this.__observedSourceNode = undefined;
+    /** @type {number | undefined} */
+    this.__appliedReferenceWidth = undefined;
     /** @type {HTMLElement | undefined} */
     this.__observedTargetNode = undefined;
     /** @private */
@@ -1389,6 +1391,7 @@ export class OverlayController extends EventTarget {
       this.__referenceWidthResizeObserver?.disconnect();
       this.__referenceWidthResizeObserver = undefined;
       this.__observedSourceNode = undefined;
+      this.__appliedReferenceWidth = undefined;
       this.__observedTargetNode = undefined;
       if (this.__referenceWidthAnimationFrame !== undefined) {
         cancelAnimationFrame(this.__referenceWidthAnimationFrame);
@@ -1405,6 +1408,7 @@ export class OverlayController extends EventTarget {
       this.__referenceWidthResizeObserver?.disconnect();
       this.__referenceWidthResizeObserver = undefined;
       this.__observedSourceNode = undefined;
+      this.__appliedReferenceWidth = undefined;
       this.__observedTargetNode = undefined;
       if (this.__referenceWidthAnimationFrame !== undefined) {
         cancelAnimationFrame(this.__referenceWidthAnimationFrame);
@@ -1414,23 +1418,45 @@ export class OverlayController extends EventTarget {
     }
 
     /**
+     * Maps the configured mode onto the matching CSS property of `node`.
+     * @param {HTMLElement} node
+     * @param {string} widthValue
+     */
+    const applyWidth = (node, widthValue) => {
+      const { style } = node;
+      switch (norm.mode) {
+        case 'max':
+          style.maxWidth = widthValue;
+          break;
+        case 'full':
+          style.width = widthValue;
+          break;
+        case 'min':
+          style.minWidth = widthValue;
+          style.width = 'auto';
+          break;
+        /* no default */
+      }
+    };
+
+    /**
      * @param {number} width
      */
     const updateWidth = width => {
       if (width <= 0) return;
       const finalWidth = `${width + norm.widthOffset}px`;
-      switch (norm.mode) {
-        case 'max':
-          targetNode.style.maxWidth = finalWidth;
-          break;
-        case 'full':
-          targetNode.style.width = finalWidth;
-          break;
-        case 'min':
-          targetNode.style.minWidth = finalWidth;
-          targetNode.style.width = 'auto';
-          break;
-        /* no default */
+      applyWidth(targetNode, finalWidth);
+      this.__appliedReferenceWidth = width + norm.widthOffset;
+      /**
+       * When the content is the source, the wrapper it was measured on has to be sized along with
+       * the reference node, otherwise the dropdown drifts away from its invoker by `widthOffset`
+       * (28px for select-rich). A min-width is used here: the resolved width is derived from the
+       * wrapper itself, so it can only be a lower bound, and it keeps the rendered box identical
+       * to an auto-width wrapper grown to the invoker width.
+       */
+      if (norm.source === 'content' && norm.mode !== 'max' && sourceNode !== targetNode) {
+        sourceNode.style.minWidth = finalWidth;
+        sourceNode.style.width = 'auto';
       }
     };
 
@@ -1443,21 +1469,38 @@ export class OverlayController extends EventTarget {
 
     updateWidth(getSourceWidth());
 
+    /**
+     * For a content source the wrapper is sized by us, so the observed node is the (untouched)
+     * content node: a resize of the styled wrapper would only ever report our own write back.
+     */
+    const observedNode = norm.source === 'content' ? this.contentNode || sourceNode : sourceNode;
+
     if (
       !this.__referenceWidthResizeObserver ||
-      this.__observedSourceNode !== sourceNode ||
+      this.__observedSourceNode !== observedNode ||
       this.__observedTargetNode !== targetNode
     ) {
       this.__referenceWidthResizeObserver?.disconnect();
-      this.__observedSourceNode = sourceNode;
+      this.__observedSourceNode = observedNode;
       this.__observedTargetNode = targetNode;
       this.__referenceWidthResizeObserver = new ResizeObserver(([entry]) => {
         const borderBox = Array.isArray(entry.borderBoxSize)
           ? entry.borderBoxSize[0]
           : entry.borderBoxSize;
         let width = borderBox?.inlineSize ?? entry.contentRect.width;
-        if (width <= 0 && norm.source === 'content') {
+        if (norm.source === 'content') {
+          // The content fills the wrapper we size, so a resize that matches the width we applied
+          // is our own write and not a change of the content itself.
+          if (
+            this.__appliedReferenceWidth !== undefined &&
+            Math.abs(width - this.__appliedReferenceWidth) < 0.5
+          ) {
+            return;
+          }
           width = this._measureContentWrapperWidth();
+        }
+        if (width <= 0) {
+          return;
         }
         if (this.__referenceWidthAnimationFrame !== undefined) {
           cancelAnimationFrame(this.__referenceWidthAnimationFrame);
