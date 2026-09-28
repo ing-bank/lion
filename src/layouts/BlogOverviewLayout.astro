@@ -78,10 +78,12 @@ const {
     <meta charset="UTF-8">
     <meta name="view-transition" content="same-origin" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="color-scheme" content="light dark" />
     <title>{title}</title>
     <link rel="icon" type="image/svg+xml" href=`${import.meta.env.BASE_URL}/favicon.svg` />
     <meta name="generator" content={Astro.generator} />
     
+    <link rel="stylesheet" href={`${import.meta.env.BASE_URL}/styles/theme.css`} />
     <link rel="stylesheet" href=`${import.meta.env.BASE_URL}/styles/styles.css`>
     <link rel="stylesheet" href=`${import.meta.env.BASE_URL}/styles/components.css`>
     <link rel="stylesheet" href=`${import.meta.env.BASE_URL}/styles/blog.css`>
