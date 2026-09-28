@@ -1,0 +1,154 @@
+/**
+ * Lion portal theme system — CSS only, no JavaScript.
+ *
+ * Model: three states, one source of truth.
+ *
+ *   system (default) → :root { color-scheme: light dark }   follows the OS / browser preference
+ *   dark             → :root:has(#theme-dark:checked)       explicit choice, pinned
+ *   light            → :root:has(#theme-light:checked)      explicit choice, pinned
+ *
+ * Every colour token in styles.css is declared once, with light-dark(). light-dark() resolves
+ * against the *computed* color-scheme, so selecting a theme flips a single declaration per state
+ * and no colour value is duplicated anywhere. That is also why this file must be loaded before
+ * styles.css.
+ *
+ * Image values are the one exception: light-dark() accepts <color> only. Image values (gradients)
+ * land in Safari 27 (2026-09-14, WebKit bug 309689) and are not available in Safari 26.x, which is
+ * still inside the "latest four Safari versions" support window. Safari 26.x drops the declaration
+ * instead of ignoring it, and on a `background-clip: text` element that combination
+ * (background-image: none + `-webkit-text-fill-color: transparent`) renders the text invisible.
+ * The gradient/grid tokens below are therefore declared per state rather than via light-dark().
+ */
+
+:root {
+  color-scheme: light dark;
+
+  /* Gradient + grid tokens: fallback path for Safari 26.x (see note above).
+   * The two heading pairs are kept separate because the shipped dark theme ends .hero h1 at #888
+   * and .docs-content h1 at #777; collapsing them would be a silent design change. */
+  --heading-gradient-from: #111111;
+  --heading-gradient-to: #777777;
+  --hero-gradient-from: #111111;
+  --hero-gradient-to: #777777;
+  --grid-line-color: #ececec;
+}
+
+/*
+ * System-resolved dark. The :not(:has(#theme-light:checked)) guard keeps an explicit light choice
+ * authoritative even while the OS is dark. Complex :not() needs Safari 16.4+, well below the
+ * oldest supported version here.
+ */
+@media (prefers-color-scheme: dark) {
+  :root:not(:has(#theme-light:checked)) {
+    --heading-gradient-from: #ffffff;
+    --heading-gradient-to: #777777;
+    --hero-gradient-from: #ffffff;
+    --hero-gradient-to: #888888;
+    --grid-line-color: #111111;
+  }
+}
+
+/*
+ * Explicit choices. Same specificity as the system block above, declared after it, so an explicit
+ * choice always wins regardless of what the OS says.
+ */
+:root:has(#theme-dark:checked) {
+  color-scheme: dark;
+
+  --heading-gradient-from: #ffffff;
+  --heading-gradient-to: #777777;
+  --hero-gradient-from: #ffffff;
+  --hero-gradient-to: #888888;
+  --grid-line-color: #111111;
+}
+
+:root:has(#theme-light:checked) {
+  color-scheme: light;
+}
+
+/* ----------------------------------------------------------------------------------------------
+ * Theme switch (rendered by src/components/TopNav.astro)
+ *
+ * Two icon labels (light / dark) plus an "Auto" reset. The reset only exists visually while an
+ * override is active and is the only way back to the system preference — without it the first
+ * click would silently turn a temporary adjustment into a permanent pin.
+ * -------------------------------------------------------------------------------------------- */
+
+.theme-switch {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-left: 16px;
+}
+
+/* Visually hidden but focusable: the labels carry the affordance. */
+.theme-switch input[type='radio'] {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.theme-switch label,
+.theme-switch input[type='reset'] {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 32px;
+  padding: 0;
+  width: 32px;
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius-circle, 50%);
+  background: transparent;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: color 0.2s, border-color 0.2s;
+}
+
+.theme-switch label:hover,
+.theme-switch input[type='reset']:hover {
+  color: var(--text-primary);
+}
+
+.theme-switch input[type='radio']:checked + label {
+  color: var(--text-primary);
+  border-color: var(--highlight-color);
+}
+
+.theme-switch input[type='radio']:focus-visible + label,
+.theme-switch input[type='reset']:focus-visible {
+  outline: 2px solid var(--focus-border-color-outer, currentColor);
+  outline-offset: 2px;
+}
+
+.theme-switch input[type='reset'] {
+  display: none;
+  width: auto;
+  padding: 0 10px;
+  border-radius: 999px;
+  font: inherit;
+  font-size: 0.75rem;
+}
+
+.theme-switch:has(input:checked) input[type='reset'] {
+  display: inline-flex;
+}
+
+/* Contrast themes replace the palette; hand the switch over to the system colours. */
+@media (forced-colors: active) {
+  .theme-switch label,
+  .theme-switch input[type='reset'] {
+    border-color: ButtonText;
+  }
+
+  .theme-switch input[type='radio']:checked + label {
+    border-color: Highlight;
+    color: Highlight;
+  }
+
+  .theme-switch input[type='radio']:focus-visible + label,
+  .theme-switch input[type='reset']:focus-visible {
+    outline-color: Highlight;
+  }
+}
