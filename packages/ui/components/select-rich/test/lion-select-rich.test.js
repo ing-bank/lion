@@ -213,7 +213,7 @@ describe('lion-select-rich', () => {
       expect(firstChild.textContent).to.equal('30');
     });
 
-    it('syncs invoker width to match content width plus arrow width', async () => {
+    it('keeps the invoker and the dropdown on the same width: content width plus arrow width', async () => {
       const el = await fixture(html`
         <lion-select-rich>
           <lion-option .choiceValue=${10}>Item 1</lion-option>
@@ -228,9 +228,13 @@ describe('lion-select-rich', () => {
       });
 
       const contentWidth = _overlayCtrl.contentWrapperNode.getBoundingClientRect().width;
-      expect(contentWidth).to.be.above(0);
+      const naturalContentWidth = /** @type {any} */ (_overlayCtrl)._measureContentWrapperWidth();
       const arrowWidth = /** @type {any} */ (el)._arrowWidth;
-      expect(parseFloat(_invokerNode.style.width)).to.be.closeTo(contentWidth + arrowWidth, 0.1);
+      expect(contentWidth).to.be.above(0);
+      // the dropdown and the invoker are the same width...
+      expect(parseFloat(_invokerNode.style.width)).to.be.closeTo(contentWidth, 0.1);
+      // ...and that width is the content width plus the room the invoker needs for its arrow
+      expect(contentWidth).to.be.closeTo(naturalContentWidth + arrowWidth, 0.1);
     });
 
     // FIXME: wrong values in safari/webkit even though this passes in the "real" debug browsers
