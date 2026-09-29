@@ -9,6 +9,8 @@ import { create, ts } from '@custom-elements-manifest/analyzer';
 import { litPlugin } from '@custom-elements-manifest/analyzer/src/features/framework-plugins/lit/lit.js';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { generateCustomData } from 'cem-plugin-vs-code-custom-data-generator';
+// eslint-disable-next-line import/no-extraneous-dependencies
+import { customElementJetBrainsPlugin } from 'custom-element-jet-brains-integration';
 
 /**
  * Find all entrypoints for lion to create the CEM from
@@ -68,7 +70,6 @@ const cem = create({
   modules,
   plugins: [
     ...litPlugin(),
-    generateCustomData(),
     {
       packageLinkPhase({ customElementsManifest }) {
         for (const definition of customElementsManifest.modules) {
@@ -100,6 +101,8 @@ const cem = create({
         }
       },
     },
+    generateCustomData(),
+    customElementJetBrainsPlugin(),
   ],
 });
 

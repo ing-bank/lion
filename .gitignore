@@ -32,6 +32,7 @@ yarn-error.log
 /build/
 /bundlesize/dist/
 **/custom-elements.json
+**/web-types.json
 dist
 dist-types
 *.tsbuildinfo
