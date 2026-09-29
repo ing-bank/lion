@@ -61,6 +61,7 @@
     "exports/localize.js",
     "exports/overlays.js"
   ],
+  "types": "./dist-types/exports/types/custom-elements.d.ts",
   "dependencies": {
     "@bundled-es-modules/message-format": "^6.2.4",
     "@open-wc/dedupe-mixin": "^2.0.1",
@@ -88,7 +89,7 @@
         "../singleton-manager:types"
       ],
       "files": [
-        "exports/**/*.js",
+        "exports/**/*",
         "components/**/*",
         "tsconfig.json"
       ],
