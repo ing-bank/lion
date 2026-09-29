@@ -1100,6 +1100,13 @@ describe('lion-select-rich', () => {
   });
 
   describe('Teardown', () => {
+    it('does not throw when tearing down before the overlay controller is set up', () => {
+      const el = /** @type {LionSelectRich} */ (document.createElement('lion-select-rich'));
+
+      // @ts-expect-error [allow-private] in tests
+      expect(() => el._teardownOverlayCtrl()).not.to.throw();
+    });
+
     it('correctly removes event listeners when disconnected from dom', async () => {
       const el = await fixture(html`
         <lion-select-rich label="age">
