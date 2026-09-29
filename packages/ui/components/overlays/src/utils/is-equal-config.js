@@ -12,13 +12,24 @@
  */
 export function isEqualConfig(a, b) {
   if (typeof a !== 'object' || typeof b !== 'object' || a === null || b === null) {
+    if (typeof a === 'function' && typeof b === 'function') {
+      return /** @type {Function} */ (a).toString() === /** @type {Function} */ (b).toString();
+    }
     return a === b;
   }
+  if (a instanceof Node && b instanceof Node) {
+    return a === b;
+  }
+
   const aProps = Object.keys(a);
   const bProps = Object.keys(b);
   if (aProps.length !== bProps.length) {
     return false;
   }
-  const isEqual = /** @param {string} prop */ prop => isEqualConfig(a[prop], b[prop]);
-  return aProps.every(isEqual);
+  return aProps.every(
+    prop =>
+      Object.prototype.hasOwnProperty.call(b, prop) &&
+      // @ts-ignore - dynamic property access
+      isEqualConfig(a[prop], b[prop]),
+  );
 }
