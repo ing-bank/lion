@@ -428,6 +428,10 @@ export class LionSelectRich extends SlotMixin(ScopedElementsMixin(OverlayMixin(L
   _teardownOverlayCtrl() {
     super._teardownOverlayCtrl();
 
+    if (!this._overlayCtrl) {
+      return;
+    }
+
     this._overlayCtrl.removeEventListener('show', this.__overlayOnShow);
     this._overlayCtrl.removeEventListener('before-show', this.__overlayBeforeShow);
     this._overlayCtrl.removeEventListener('hide', this.__overlayOnHide);
