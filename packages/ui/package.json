@@ -81,6 +81,9 @@
     "dist-types",
     "docs",
     "exports",
+    "vscode.css-custom-data.json",
+    "vscode.html-custom-data.json",
+    "web-types.json",
     "!custom-elements-manifest.config.js"
   ],
   "scripts": {
@@ -124,6 +127,7 @@
     "access": "public"
   },
   "customElements": "custom-elements.json",
+  "web-types": "./web-types.json",
   "wireit": {
     "types": {
       "command": "tsc --build --pretty && npm run types-restore-visibility",
