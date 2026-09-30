@@ -264,6 +264,19 @@ const { variant } = Astro.props;
             variant={variant || ''}
           />
         </div>
+
+        <!--
+          Theme switch. CSS only: the radios set `color-scheme` on :root via :has(), which is the
+          only thing light-dark() in styles.css reads. No JavaScript, no stored preference, and
+          `type="reset"` is the one way back to the system setting (see public/styles/theme.css).
+        -->
+        <form class="theme-switch" aria-label="Colour theme">
+            <input type="radio" name="theme" id="theme-light" value="light" />
+            <label for="theme-light" title="Light theme"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><circle cx="12" cy="12" r="4.2" fill="currentColor"/><g stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M12 2.4v2.6M12 19v2.6M2.4 12h2.6M19 12h2.6M5.2 5.2l1.9 1.9M16.9 16.9l1.9 1.9M18.8 5.2l-1.9 1.9M7.1 16.9l-1.9 1.9"/></g></svg></label>
+            <input type="radio" name="theme" id="theme-dark" value="dark" />
+            <label for="theme-dark" title="Dark theme"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M20.5 14.6A8.5 8.5 0 1 1 9.4 3.5a7 7 0 0 0 11.1 11.1Z" fill="currentColor"/></svg></label>
+            <input type="reset" value="Auto" title="Follow the system theme" />
+        </form>
     </div>
 </header>
 
