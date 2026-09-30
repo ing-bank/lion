@@ -128,7 +128,7 @@
     "sinon": "^19.0.2",
     "typescript": "^7.0.2",
     "unist-util-visit": "^5.0.0",
-    "wireit": "^0.14.12"
+    "wireit": "^0.14.13"
   },
   "bundlesize": [
     {
