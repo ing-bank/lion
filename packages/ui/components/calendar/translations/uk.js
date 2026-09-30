@@ -6,4 +6,11 @@ export default {
   defaultDisabledDate: 'Ця дата недоступна. Виберіть іншу дату.',
   beforeDisabledDate: 'Ця дата недоступна. Найближча доступна дата {params}. Виберіть іншу дату.',
   afterDisabledDate: 'Ця дата недоступна. Остання доступна дата {params}. Виберіть іншу дату.',
+  selectMonth: 'Виберіть місяць',
+  selectYear: 'Виберіть рік',
+  monthSelectionOpened: 'Вибір місяця, доступно 12 місяців',
+  yearSelectionOpened: 'Вибір року, доступні роки з {startYear} по {endYear}',
+  previousYearRange: 'Попередній діапазон років',
+  nextYearRange: 'Наступний діапазон років',
+  yearsRange: 'Роки з {startYear} по {endYear}',
 };
