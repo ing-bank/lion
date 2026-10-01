@@ -205,6 +205,16 @@ export class OverlayController extends EventTarget {
     this._contentId = `overlay-content--${Math.random().toString(36).slice(2, 10)}`;
     /** @private */
     this.__originalAttrs = new Map();
+    /** @type {ResizeObserver | undefined} */
+    this.__referenceWidthResizeObserver = undefined;
+    /** @type {number | undefined} */
+    this.__referenceWidthAnimationFrame = undefined;
+    /** @type {HTMLElement | undefined} */
+    this.__observedSourceNode = undefined;
+    /** @type {number | undefined} */
+    this.__appliedReferenceWidth = undefined;
+    /** @type {HTMLElement | undefined} */
+    this.__observedTargetNode = undefined;
     /** @private */
     this.__escKeyHandler = this.__escKeyHandler.bind(this);
     this.updateConfig(config);
@@ -362,11 +372,11 @@ export class OverlayController extends EventTarget {
   }
 
   /**
-   * Will align contentNode with referenceNode (invokerNode by default) for local overlays.
-   * Usually needed for dropdowns. 'max' will prevent contentNode from exceeding width of
-   * referenceNode, 'min' guarantees that contentNode will be at least as wide as referenceNode.
-   * 'full' will make sure that the invoker width always is the same.
-   * @type {'max' | 'full' | 'min' | 'none' | undefined }
+   * Will align contentNode with referenceNode (invokerNode by default) or vice versa for local overlays.
+   * Usually needed for dropdowns or select-rich. 'max' will prevent target from exceeding width of
+   * source, 'min' guarantees target is at least as wide as source.
+   * 'full' will make sure width matches source width + widthOffset.
+   * @type {import('../types/OverlayConfig.js').ReferenceWidthInheritance | undefined }
    */
   get inheritsReferenceWidth() {
     return this.config?.inheritsReferenceWidth;
@@ -638,22 +648,24 @@ export class OverlayController extends EventTarget {
       wrappingDialogElement.setAttribute('tabindex', '-1');
     }
 
-    this.__wrappingDialogNode.style.display = 'none';
-    this.contentWrapperNode.style.zIndex = '1';
-
+    // eslint-disable-next-line lion/no-forced-layout-reads
     if (getComputedStyle(this.contentNode).position === 'absolute') {
       // Having a _contWrapperNode and a contentNode with 'position:absolute' results in
       // computed height of 0...
       this.contentNode.style.position = 'static';
     }
 
+    this.__wrappingDialogNode.style.display = 'none';
+    this.contentWrapperNode.style.zIndex = '1';
+
     // Here we prevent any interference of the native <dialog> element with the keyboard behavior
     // as defined by the OverlayController. This is needed until we can configure `closedby="none"`
     // on the native dialog for all browsers: https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/dialog#closedby
     const hasClosedBySupport = HTMLDialogElement && 'closedBy' in HTMLDialogElement.prototype;
     if (hasClosedBySupport) {
-      // @ts-ignore [closedBy is feature-detected above]
-      wrappingDialogElement.closedBy = 'none';
+      /** @type {HTMLDialogElement & { closedBy?: string }} */
+      const dialogElement = wrappingDialogElement;
+      dialogElement.closedBy = 'none';
     } else {
       wrappingDialogElement.addEventListener(
         'keydown',
@@ -745,7 +757,7 @@ export class OverlayController extends EventTarget {
    * @private
    */
   __storeOriginalAttrs(node, attrs) {
-    /** @type {Record<string, any>} */
+    /** @type {Record<string, string | null>} */
     const attrMap = {};
     attrs.forEach(attrName => {
       attrMap[attrName] = node.getAttribute(attrName);
@@ -799,6 +811,9 @@ export class OverlayController extends EventTarget {
     const event = new CustomEvent('before-show', { cancelable: true });
     this.dispatchEvent(event);
     if (!event.defaultPrevented) {
+      if (this.inheritsReferenceWidth) {
+        this._handleInheritsReferenceWidth({ phase: 'before-show' });
+      }
       if ('HTMLDialogElement' in window && this.__wrappingDialogNode instanceof HTMLDialogElement) {
         this.__wrappingDialogNode.open = true;
       }
@@ -1012,7 +1027,7 @@ export class OverlayController extends EventTarget {
       this._handleAccessibility({ phase });
     }
     if (this.inheritsReferenceWidth) {
-      this._handleInheritsReferenceWidth();
+      this._handleInheritsReferenceWidth({ phase });
     }
     if (this.visibilityTriggerFunction) {
       this._handleVisibilityTriggers({ phase });
@@ -1300,24 +1315,202 @@ export class OverlayController extends EventTarget {
     }
   }
 
-  /** @protected */
-  _handleInheritsReferenceWidth() {
-    if (!this._referenceNode || this.placementMode === 'global') {
+  /**
+   * Helper to measure the natural content width of `contentWrapperNode`,
+   * unhiding the dialog wrapper temporarily if necessary.
+   * @protected
+   * @returns {number}
+   */
+  _measureContentWrapperWidth() {
+    const wrapper = this.contentWrapperNode;
+    if (!wrapper || !wrapper.isConnected) return 0;
+
+    const dialog = this.__wrappingDialogNode;
+    const isHidden = !this.isShown;
+
+    const prevDialogDisplay = dialog ? dialog.style.display : '';
+    const prevDialogVisibility = dialog ? dialog.style.visibility : '';
+    const prevDialogPosition = dialog ? dialog.style.position : '';
+    const prevWrapperMinWidth = wrapper.style.minWidth;
+    const prevWrapperWidth = wrapper.style.width;
+
+    if (isHidden && dialog) {
+      dialog.style.visibility = 'hidden';
+      dialog.style.position = 'absolute';
+      dialog.style.display = 'block';
+    }
+    wrapper.style.minWidth = 'auto';
+    wrapper.style.width = 'auto';
+
+    // eslint-disable-next-line lion/no-forced-layout-reads
+    const { width } = wrapper.getBoundingClientRect();
+
+    if (isHidden && dialog) {
+      dialog.style.display = prevDialogDisplay;
+      dialog.style.position = prevDialogPosition;
+      dialog.style.visibility = prevDialogVisibility;
+    }
+    wrapper.style.minWidth = prevWrapperMinWidth;
+    wrapper.style.width = prevWrapperWidth;
+
+    return width;
+  }
+
+  /**
+   * Helper to normalize `inheritsReferenceWidth` config into a structured object.
+   * @protected
+   * @returns {{ mode: 'max' | 'full' | 'min' | 'none', source?: 'reference' | 'content', widthOffset: number }}
+   */
+  _getNormalizedReferenceWidthConfig() {
+    const raw = this.config?.inheritsReferenceWidth;
+    if (!raw || raw === 'none') {
+      return { mode: 'none', widthOffset: 0 };
+    }
+    if (typeof raw === 'string') {
+      return { mode: raw, widthOffset: 0 };
+    }
+    if (typeof raw === 'object') {
+      return /** @type {{ mode: 'max' | 'full' | 'min' | 'none', source?: 'reference' | 'content', widthOffset: number }} */ ({
+        mode: raw.mode || 'full',
+        source: raw.source,
+        widthOffset: raw.widthOffset ?? raw.offset ?? 0,
+      });
+    }
+    return { mode: 'none', widthOffset: 0 };
+  }
+
+  /**
+   * @param {{ phase?: OverlayPhase }} [options]
+   * @protected
+   */
+  _handleInheritsReferenceWidth(options = {}) {
+    const { phase } = options;
+    const norm = this._getNormalizedReferenceWidthConfig();
+
+    if (phase === 'teardown' || norm.mode === 'none' || this.placementMode === 'global') {
+      this.__referenceWidthResizeObserver?.disconnect();
+      this.__referenceWidthResizeObserver = undefined;
+      this.__observedSourceNode = undefined;
+      this.__appliedReferenceWidth = undefined;
+      this.__observedTargetNode = undefined;
+      if (this.__referenceWidthAnimationFrame !== undefined) {
+        cancelAnimationFrame(this.__referenceWidthAnimationFrame);
+        this.__referenceWidthAnimationFrame = undefined;
+      }
       return;
     }
-    const referenceWidth = `${this._referenceNode.getBoundingClientRect().width}px`;
-    switch (this.inheritsReferenceWidth) {
-      case 'max':
-        this.contentWrapperNode.style.maxWidth = referenceWidth;
-        break;
-      case 'full':
-        this.contentWrapperNode.style.width = referenceWidth;
-        break;
-      case 'min':
-        this.contentWrapperNode.style.minWidth = referenceWidth;
-        this.contentWrapperNode.style.width = 'auto';
-        break;
-      /* no default */
+
+    const sourceNode = norm.source === 'content' ? this.contentWrapperNode : this._referenceNode;
+    const targetNode =
+      norm.source === 'content' ? this._referenceNode || this.invokerNode : this.contentWrapperNode;
+
+    if (!sourceNode || !targetNode) {
+      this.__referenceWidthResizeObserver?.disconnect();
+      this.__referenceWidthResizeObserver = undefined;
+      this.__observedSourceNode = undefined;
+      this.__appliedReferenceWidth = undefined;
+      this.__observedTargetNode = undefined;
+      if (this.__referenceWidthAnimationFrame !== undefined) {
+        cancelAnimationFrame(this.__referenceWidthAnimationFrame);
+        this.__referenceWidthAnimationFrame = undefined;
+      }
+      return;
+    }
+
+    /**
+     * Maps the configured mode onto the matching CSS property of `node`.
+     * @param {HTMLElement} node
+     * @param {string} widthValue
+     */
+    const applyWidth = (node, widthValue) => {
+      const { style } = node;
+      switch (norm.mode) {
+        case 'max':
+          style.maxWidth = widthValue;
+          break;
+        case 'full':
+          style.width = widthValue;
+          break;
+        case 'min':
+          style.minWidth = widthValue;
+          style.width = 'auto';
+          break;
+        /* no default */
+      }
+    };
+
+    /**
+     * @param {number} width
+     */
+    const updateWidth = width => {
+      if (width <= 0) return;
+      const finalWidth = `${width + norm.widthOffset}px`;
+      applyWidth(targetNode, finalWidth);
+      this.__appliedReferenceWidth = width + norm.widthOffset;
+      /**
+       * When the content is the source, the wrapper it was measured on has to be sized along with
+       * the reference node, otherwise the dropdown drifts away from its invoker by `widthOffset`
+       * (28px for select-rich). A min-width is used here: the resolved width is derived from the
+       * wrapper itself, so it can only be a lower bound, and it keeps the rendered box identical
+       * to an auto-width wrapper grown to the invoker width.
+       */
+      if (norm.source === 'content' && norm.mode !== 'max' && sourceNode !== targetNode) {
+        sourceNode.style.minWidth = finalWidth;
+        sourceNode.style.width = 'auto';
+      }
+    };
+
+    const getSourceWidth = () => {
+      if (norm.source === 'content') {
+        return this._measureContentWrapperWidth();
+      }
+      return sourceNode.getBoundingClientRect().width;
+    };
+
+    updateWidth(getSourceWidth());
+
+    /**
+     * For a content source the wrapper is sized by us, so the observed node is the (untouched)
+     * content node: a resize of the styled wrapper would only ever report our own write back.
+     */
+    const observedNode = norm.source === 'content' ? this.contentNode || sourceNode : sourceNode;
+
+    if (
+      !this.__referenceWidthResizeObserver ||
+      this.__observedSourceNode !== observedNode ||
+      this.__observedTargetNode !== targetNode
+    ) {
+      this.__referenceWidthResizeObserver?.disconnect();
+      this.__observedSourceNode = observedNode;
+      this.__observedTargetNode = targetNode;
+      this.__referenceWidthResizeObserver = new ResizeObserver(([entry]) => {
+        const borderBox = Array.isArray(entry.borderBoxSize)
+          ? entry.borderBoxSize[0]
+          : entry.borderBoxSize;
+        let width = borderBox?.inlineSize ?? entry.contentRect.width;
+        if (norm.source === 'content') {
+          // The content fills the wrapper we size, so a resize that matches the width we applied
+          // is our own write and not a change of the content itself.
+          if (
+            this.__appliedReferenceWidth !== undefined &&
+            Math.abs(width - this.__appliedReferenceWidth) < 0.5
+          ) {
+            return;
+          }
+          width = this._measureContentWrapperWidth();
+        }
+        if (width <= 0) {
+          return;
+        }
+        if (this.__referenceWidthAnimationFrame !== undefined) {
+          cancelAnimationFrame(this.__referenceWidthAnimationFrame);
+        }
+        this.__referenceWidthAnimationFrame = requestAnimationFrame(() => {
+          this.__referenceWidthAnimationFrame = undefined;
+          updateWidth(width);
+        });
+      });
+      this.__referenceWidthResizeObserver.observe(sourceNode);
     }
   }
 

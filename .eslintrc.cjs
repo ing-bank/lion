@@ -2,6 +2,12 @@ const path = require('path');
 
 module.exports = {
   extends: ['@open-wc/eslint-config', 'eslint-config-prettier'].map(require.resolve),
+  plugins: ['lion'],
+  rules: {
+    'lion/no-forced-layout-reads': 'error',
+    'lion/prefer-check-visibility': 'warn',
+    'lion/prefer-css-containment': 'warn',
+  },
   overrides: [
     {
       files: ['**/*.js', '**/*.mjs'],
@@ -27,6 +33,9 @@ module.exports = {
         'scripts/**/*.js',
       ],
       rules: {
+        'lion/no-forced-layout-reads': 'off',
+        'lion/prefer-check-visibility': 'off',
+        'lion/prefer-css-containment': 'off',
         'lit/binding-positions': 'off',
         'lit/no-invalid-html': 'off',
         'lit/no-useless-template-literals': 'off',

@@ -2,11 +2,15 @@ import { litSsrPlugin } from '@lit-labs/testing/web-test-runner-ssr-plugin.js';
 // @ts-expect-error
 import { playwrightLauncher } from '@web/test-runner-playwright';
 import { glob } from 'node:fs/promises';
+import { globby } from 'globby';
+import { advancedPerfPlugin } from './packages-node/web-test-runner-advanced-perf/src/index.js';
 
 const config = {
   shouldLoadPolyfill: !process.argv.includes('--no-scoped-registries-polyfill'),
   shouldRunDevMode: process.argv.includes('--dev-mode'),
   files: process.argv.includes('--files'),
+  shouldRunStatisticalBench: process.argv.includes('--statisticalBench'),
+  shouldReportStatisticalBench: process.argv.includes('--statisticalBenchReport'),
 };
 
 async function getTestGroups() {
@@ -19,11 +23,14 @@ async function getTestGroups() {
     return all;
   });
 
-  return allDirs.map(dir => ({
-    // @ts-expect-error
-    name: dir.split('/').at(-2),
-    files: `${dir}/**/*.test.js`,
-  }));
+  return Promise.all(
+    allDirs.map(async dir => ({
+      // @ts-expect-error
+      name: dir.split('/').at(-2),
+      // Visual tests need the visualRegressionPlugin, which only the visual config provides.
+      files: await globby(`${dir}/**/*.test.js`, { ignore: ['**/*.visual.test.js'] }),
+    })),
+  );
 }
 
 const groups = await getTestGroups();
@@ -61,5 +68,11 @@ export default {
   filterBrowserLogs(/** @type {{ type: 'error'|'warn'|'debug'; args: string[] }} */ log) {
     return log.type === 'error' || log.type === 'debug';
   },
-  plugins: [litSsrPlugin()],
+  plugins: [
+    litSsrPlugin(),
+    advancedPerfPlugin({
+      report: config.shouldReportStatisticalBench,
+      statisticalBench: config.shouldRunStatisticalBench,
+    }),
+  ],
 };
