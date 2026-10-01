@@ -44,3 +44,14 @@ export type TemplateDataForDropdownInputTel = {
     regionMetaListPreferred: RegionMeta[];
   };
 };
+
+import { LionInputTelDropdown } from '../src/LionInputTelDropdown.js';
+
+declare global {
+  interface HTMLElementTagNameMap {
+    'lion-input-tel-dropdown': LionInputTelDropdown;
+  }
+}
+
+export { LionInputTelDropdown };
+
