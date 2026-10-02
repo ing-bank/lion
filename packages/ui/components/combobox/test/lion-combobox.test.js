@@ -1392,6 +1392,37 @@ describe('lion-combobox', () => {
       expect(el.opened).to.equal(true);
     });
 
+    it('syncs a manually checked selection on overlay close while the input remains focused', async () => {
+      const el = /** @type {LionCombobox} */ (
+        await fixture(html`
+          <lion-combobox name="foo" autocomplete="list">
+            <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
+            <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
+          </lion-combobox>
+        `)
+      );
+      const { _inputNode } = getComboboxMembers(el);
+
+      _inputNode.focus();
+      el.opened = true;
+      await el.updateComplete;
+      expect(el.opened).to.equal(true);
+      expect(isActiveElement(_inputNode)).to.be.true;
+
+      el.setCheckedIndex(0);
+      await el.updateComplete;
+
+      expect(el.modelValue).to.equal('Artichoke');
+      expect(el.checkedIndex).to.equal(0);
+      expect(_inputNode.value).to.equal('');
+
+      el.opened = false;
+      await el.updateComplete;
+
+      expect(_inputNode.value).to.equal('Artichoke');
+      expect(isActiveElement(_inputNode)).to.be.true;
+    });
+
     it('hides (and clears) overlay on [Escape]', async () => {
       const el = /** @type {LionCombobox} */ (
         await fixture(html`
