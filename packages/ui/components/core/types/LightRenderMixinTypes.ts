@@ -1,13 +1,57 @@
 import { Constructor } from '@open-wc/dedupe-mixin';
-import { TemplateResult, LitElement } from 'lit';
+import { LitElement, TemplateResult } from 'lit';
+import {
+  SlotFunctionResult as SlotMixinFunctionResult,
+  SlotRerenderObject as SlotMixinRerenderObject,
+  SlotsMap as SlotMixinSlotsMap,
+} from './SlotMixinTypes.js';
 
-export type SlotItem = { name: string; template: () => TemplateResult; host?: HTMLElement };
+/**
+ * What a slot template may return: a `TemplateResult`, a raw `Element` (the legacy SlotMixin
+ * convention, which lit renders as a node), a `SlotRerenderObject` or `undefined` to skip the slot.
+ * Identical to the union `SlotMixin` accepts, so a legacy slot function type-checks unchanged.
+ */
+export type SlotFunctionResult = SlotMixinFunctionResult;
 
-export declare class LightRenderHost {
+/**
+ * Legacy SlotMixin rerender object; only its template is used by LightRenderMixin (its
+ * `afterRender` / `firstRenderOnConnected` options are not).
+ */
+export type SlotRerenderObject = SlotMixinRerenderObject;
+
+/**
+ * What the mixin actually renders into the light dom: the slot template result after a legacy
+ * `SlotRerenderObject` has been unwrapped. Both a `TemplateResult` and a raw `Element` are valid lit
+ * child values (lit commits a node as-is), and `undefined` skips the slot.
+ */
+export type SlotTemplateOutput = TemplateResult | Element | undefined;
+
+export type SlotItem = {
+  name: string;
+  template: () => SlotFunctionResult;
+  host?: HTMLElement;
+};
+
+/**
+ * The legacy SlotMixin shape: slot name -> slot function. This is `SlotMixin`'s own `SlotsMap`, so
+ * an existing map type-checks against `LightRenderMixin` without a cast.
+ */
+export type SlotsMap = SlotMixinSlotsMap;
+
+export declare class LightRenderHost extends HTMLElement {
   /**
-   * All slots that should be rendered to light dom instead of shadow dom
+   * All slots that should be rendered to light dom instead of shadow dom.
+   *
+   * Declared as an **accessor** on purpose. A subclass may return the array shape
+   * (`get slots() { return [{ name, template }] }`) or the legacy SlotMixin map
+   * (`get slots() { return { name: fn } }`), and an accessor is the only declaration under which
+   * both are allowed: a property here would make the legacy `get slots()` an error (TS2611), and
+   * leaving it undeclared would make the `...super.slots` composition that the legacy shape uses
+   * untyped (TS2551). A subclass that declares `slots` as a class field is rejected by the type
+   * checker (TS2610) and reported at runtime, because a field shadows an accessor and thereby
+   * breaks that composition.
    */
-  public slots: SlotItem[];
+  public get slots(): SlotItem[] | SlotsMap;
 
   /**
    * Useful to decide if a given slot should be manipulated depending on if it was auto generated
@@ -85,8 +129,17 @@ export declare class LightRenderHost {
  * - creating a button that allows for implicit form submission
  * - as soon as you start to use composition (nested web components), you need to be able to lay relations between the different components
  *
- * Note that at some point in the future, there will be a spec for cross-root aria relations. By that time, this mixin will be obsolete.
- * This mixin is designed in such a way that it can be removed with minimial effort and without breaking changes.
+ * Note that the alternatives that did land in browsers do not remove the need for this mixin:
+ * element reflection is a JavaScript only api (no declarative rendering, no crawler visibility, needs
+ * hydration) and reference target only forwards references *into* a shadow tree, is limited to one
+ * target per host and is not available by default in every engine. Light dom is the only place where
+ * an accessible relation can live that is authorable in markup, indexable and present without
+ * hydration. See docs/fundamentals/rationales/accessibility.md#do-not-wait-for-cross-root-aria.
+ * This mixin is designed in such a way that it can be removed with minimal effort and without
+ * breaking changes.
+ *
+ * Note: do not combine this mixin with SlotMixin in one class; both would render the same slot.
+ * The legacy SlotMixin `slots` map is accepted as a compatibility layer.
  *
  * ## How to use
  * In order to use the mixin, just render like you would to shadow dom:
@@ -120,7 +173,9 @@ export declare class LightRenderHost {
  * ```js
  * class MyInput extends LightDomRenderMixin(LitElement) {
  *
- *   slots = [{ name: 'input', template: this.renderInput }];
+ *   get slots() {
+ *     return [{ name: 'input', template: this.renderInput }];
+ *   }
  *
  *   render() {
  *     return html`
@@ -161,11 +216,8 @@ export declare class LightRenderHost {
  * it gives us in creating aria relations, we still want to scope elements to the shadow root. LightDomRenderMixin takes care of this.
  *
  */
-declare function LightRenderMixinImplementation<T extends Constructor<LitElement>>(
+export declare function LightRenderMixinImplementation<T extends Constructor<LitElement>>(
   superclass: T,
-): T &
-  Constructor<LightRenderHost> &
-  Pick<typeof LightRenderHost, keyof typeof LightRenderHost> &
-  Pick<typeof LitElement, keyof typeof LitElement>;
+): T & Constructor<LightRenderHost> & Pick<typeof LightRenderHost, keyof typeof LightRenderHost>;
 
 export type LightRenderMixin = typeof LightRenderMixinImplementation;
