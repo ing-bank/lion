@@ -363,4 +363,13 @@ const SlotMixinImplementation = /** @type {SlotMixin} */ (superclass =>
     }
   });
 
+/**
+ * @deprecated Use `LightRenderMixin` from the same package instead. `SlotMixin` renders the light
+ * dom once, on `connectedCallback`, and cannot render it on the server; `LightRenderMixin` renders
+ * it on every update and serializes it into the server response with `@lit-labs/ssr`. Both accept
+ * the same `get slots()` map, so migration can be done one slot at a time. `SlotMixin` keeps
+ * working; it is not scheduled for removal.
+ *
+ * See `docs/fundamentals/systems/core/LightRenderMixin.md`.
+ */
 export const SlotMixin = dedupeMixin(SlotMixinImplementation);

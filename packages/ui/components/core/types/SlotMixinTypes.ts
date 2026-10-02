@@ -69,6 +69,12 @@ export declare class SlotHost {
  * The purpose is to have the default content in the Light DOM rather than hidden in Shadow DOM
  * like default slot content works natively.
  *
+ * @deprecated Use `LightRenderMixin` instead, it renders the slot templates to the light dom on
+ * every update (which makes the light dom reactive, the way shadow dom rendering is), it types
+ * `slots` without the `...super.slots` requirement and it renders the light dom on the server with
+ * `@lit-labs/ssr`. `SlotMixin` keeps working and stays published; existing components can migrate
+ * one slot at a time, see `docs/fundamentals/systems/core/LightRenderMixin.md`.
+ *
  * @example
  * get slots() {
  *   return {
