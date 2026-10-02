@@ -1,6 +1,6 @@
 /* eslint-disable class-methods-use-this */
 import { dedupeMixin } from '@open-wc/dedupe-mixin';
-import { render } from 'lit';
+import { html, render } from 'lit';
 
 /**
  * @typedef {{renderBefore:Comment; renderTargetThatRespectsShadowRootScoping: HTMLDivElement}} RenderMetaObj
@@ -519,6 +519,33 @@ const LightRenderMixinImplementation = /** @type {LightRenderMixin} */ (
         }
 
         /**
+         * Server side rendering protocol of `@lit-labs/ssr`: its `LitElementRenderer` calls this and
+         * serializes the result as the light dom of the host element, so the light dom is in the
+         * initial response without hydration.
+         *
+         * Every slot is wrapped in an element that carries the `slot` attribute, which is the only
+         * node this mixin controls. `data-light-render="ssr"` marks the wrappers: the client render
+         * replaces them on connect (see #initLightRenderMixin), so the light dom shape after
+         * hydration is the same as it is without server rendering.
+         *
+         * @returns {TemplateResult}
+         */
+        renderLight() {
+          const slots = normalizeSlots(this.slots, this);
+          const parts = [];
+          for (const slot of slots) {
+            const slotFunctionResult = callTemplate(slot, this);
+            if (slotFunctionResult === undefined) {
+              continue; // eslint-disable-line no-continue
+            }
+            parts.push(
+              html`<div slot="${slot.name}" data-light-render="ssr">${slotFunctionResult}</div>`,
+            );
+          }
+          return html`${parts}`;
+        }
+
+        /**
          * Helper function that Subclassers can use to check if a slot is private
          * @protected
          * @param {string} slotName Name of the slot
@@ -534,6 +561,15 @@ const LightRenderMixinImplementation = /** @type {LightRenderMixin} */ (
         #initLightRenderMixin() {
           // This is called on connected, so avoid that it is called twice when the host element is moved...
           if (this.#lightRenderState.isInitialized) return;
+
+          // Light dom that was server rendered (see renderLight) is taken over by the client render
+          // below, so that the light dom shape does not differ between a server rendered and a client
+          // rendered element (and the slots are not rendered twice).
+          for (const child of Array.from(this.children)) {
+            if (child.getAttribute('data-light-render') === 'ssr') {
+              child.remove();
+            }
+          }
 
           const slots = normalizeSlots(this.slots, this);
           this.#lightRenderState.slots = slots;

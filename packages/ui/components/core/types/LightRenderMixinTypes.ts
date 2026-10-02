@@ -54,6 +54,14 @@ export declare class LightRenderHost extends HTMLElement {
   public get slots(): SlotItem[] | SlotsMap;
 
   /**
+   * Light dom protocol of `@lit-labs/ssr`: returns the slot templates that should be serialized as
+   * the light dom of this element. lit-ssr calls this when the server template asks for it with the
+   * `renderLight()` directive from `@lit-labs/ssr-client/directives/render-light.js`, so the light
+   * dom is in the initial response.
+   */
+  public renderLight(): TemplateResult;
+
+  /**
    * Useful to decide if a given slot should be manipulated depending on if it was auto generated
    * or not.
    *
