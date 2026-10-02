@@ -97,7 +97,25 @@ and the root `package.json` `overrides` pin it). When bumping `@lit-labs/ssr`:
 2. reapply the change above to the new `node_modules/@lit-labs/ssr` sources
    (the code around it moved between 3.x and 4.x)
 3. run `npx patch-package @lit-labs/ssr` to regenerate the patch file
-4. run `npm run test:ssr` to confirm it still does the right thing
+4. run `npm run test:node -w packages-node/astro-lit` to confirm it still does the right thing
+
+### Applying the patches locally
+
+A plain `npm install` / `npm ci` runs the root `postinstall`, which applies everything in
+`patches/`. Two ways to end up with a *pristine* `node_modules` (the patch silently missing, which
+shows up as failing element-directive tests, not as an install error):
+
+- an install with `--ignore-scripts`, which skips the `postinstall` entirely — run
+  `npx patch-package` afterwards (or `npm run postinstall`, which also regenerates the CEM)
+- a failed patch: `patch-package` exits **0** when a patch does not apply, so the install looks
+  fine. On CI `--error-on-fail` is on by default, locally it is not, which is why the root
+  `postinstall` now passes the flag explicitly.
+
+Verify the patch is in place with:
+
+```bash
+grep -c '[lion patch]' node_modules/@lit-labs/ssr/lib/render-value.js   # 2 = applied, 0 = missing
+```
 
 ## @astrojs/lit
 
