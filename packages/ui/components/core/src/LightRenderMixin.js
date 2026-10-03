@@ -108,6 +108,37 @@ function findShadowedSlotsAccessor(host) {
   return undefined;
 }
 
+const noopSlotMixinConnect = () => {};
+
+/**
+ * SlotMixin renders the light dom from `connectedCallback`, via `this._connectSlotMixin()`, while
+ * LightRenderMixin renders it on every update (and on the server). A class hierarchy that ends up
+ * with both would therefore render every slot twice, so when both are present LightRenderMixin
+ * takes over and SlotMixin does not render at all.
+ *
+ * The neutralisation is an own property on the instance, which beats the prototype in **both**
+ * application orders (`LightRenderMixin(SlotMixin(X))` and `SlotMixin(LightRenderMixin(X))`). It is
+ * installed from this mixin's `connectedCallback` *before* `super.connectedCallback()`, which is
+ * what makes it reliable: SlotMixin calls `_connectSlotMixin()` *after* its own `super` call, so the
+ * no-op is already in place by the time either order reaches SlotMixin's render.
+ *
+ * SlotMixin's `update()` path needs no neutralisation: it iterates `__slotsThatNeedRerender`, which
+ * is only filled while connecting.
+ *
+ * Consequence to know about: a component that *overrides* `_connectSlotMixin()` (LionInputAmount
+ * does, to run its currency-change flow when the slot is private) does not get that connect-time
+ * hook anymore. Such logic belongs in the reactive cycle when the component is migrated.
+ *
+ * @param {HTMLElement} host
+ * @returns {void}
+ */
+function neutralizeSlotMixin(host) {
+  const slotHost = /** @type {{_connectSlotMixin?: Function}} */ (host);
+  if (typeof slotHost._connectSlotMixin === 'function') {
+    slotHost._connectSlotMixin = noopSlotMixinConnect;
+  }
+}
+
 /**
  * Minimal compatibility layer for the legacy SlotMixin shape
  * (`get slots() { return { slotName: () => SlotFunctionResult } }`).
@@ -158,6 +189,58 @@ function appendNodes({ nodes, renderParent, slotName }) {
     }
     renderParent.appendChild(node);
   }
+}
+
+/**
+ * Sometimes, we want to provide best DX (direct slottables) and be accessible
+ * at the same time.
+ * In the first example below, we need to wrap our options in light dom in an element with
+ * [role=listbox]. We could achieve this via the second example, but it would affect our
+ * public api negatively. not allowing us to be forward compatible with the AOM spec:
+ * https://wicg.github.io/aom/explainer.html
+ * With this method, it's possible to watch elements in the default slot and move them
+ * to the desired target (the element with [role=listbox]) in light dom.
+ *
+ * @example
+ * # desired api
+ * <sel-ect>
+ *  <opt-ion></opt-ion>
+ * </sel-ect>
+ * # desired end state
+ * <sel-ect>
+ *  <div role="listbox" slot="lisbox">
+ *    <opt-ion></opt-ion>
+ *  </div>
+ * </sel-ect>
+ *
+ * Note, the function does not move the nodes specified by a subclasser in the `slots` getter
+ * @param {HTMLElement} source host of ShadowRoot with default <slot>
+ * @param {HTMLElement} target the desired target in light dom
+ */
+export function moveUserProvidedDefaultSlottablesToTarget(source, target) {
+  /**
+   * Nodes injected via `slots` getter are going to be added as host's children
+   * starting by a comment node like <!--_start_slot_*-->
+   * and ending by a comment node like <!--_end_slot_*-->
+   * So we ignore everything that comes between those `start_slot` and `end_slot` comments
+   */
+  let isInsideSlotSection = false;
+  Array.from(source.childNodes).forEach((/** @type {* & Element} */ c) => {
+    const isNamedSlottable = c.hasAttribute && c.hasAttribute('slot');
+    const isComment = c.nodeType === Node.COMMENT_NODE;
+    if (isComment && !isInsideSlotSection) {
+      isInsideSlotSection = c.textContent.includes('_start_slot_');
+    }
+    if (isInsideSlotSection) {
+      if (c.textContent.includes('_end_slot_')) {
+        isInsideSlotSection = false;
+      }
+      return;
+    }
+    if (!isNamedSlottable) {
+      target.appendChild(c);
+    }
+  });
 }
 
 /**
@@ -447,6 +530,8 @@ const LightRenderMixinImplementation = /** @type {LightRenderMixin} */ (
          * Private state
          */
         #lightRenderState = {
+          // set once SlotMixin has been neutralised (see neutralizeSlotMixin)
+          slotMixinNeutralized: false,
           /**
            * @type {'shadow-dom'|'light-dom'}
            */
@@ -479,6 +564,11 @@ const LightRenderMixinImplementation = /** @type {LightRenderMixin} */ (
         };
 
         connectedCallback() {
+          // must happen before super.connectedCallback() reaches SlotMixin (see neutralizeSlotMixin)
+          if (!this.#lightRenderState.slotMixinNeutralized) {
+            neutralizeSlotMixin(this);
+            this.#lightRenderState.slotMixinNeutralized = true;
+          }
           super.connectedCallback();
           this.#initLightRenderMixin();
         }

@@ -1,6 +1,13 @@
 import { expect, fixture, html } from '@open-wc/testing';
 import { LitElement } from 'lit';
-import { LightRenderMixin } from '../src/LightRenderMixin.js';
+import {
+  LightRenderMixin,
+  moveUserProvidedDefaultSlottablesToTarget,
+} from '../src/LightRenderMixin.js';
+import {
+  SlotMixin,
+  moveUserProvidedDefaultSlottablesToTarget as fromSlotMixin,
+} from '../src/SlotMixin.js';
 
 /**
  * Host with slot templates declared as prototype methods: the style documented by
@@ -374,5 +381,184 @@ describe('LightRenderMixin', () => {
     expect(shadowHtml).to.contain('<slot name="input">');
     expect(shadowHtml).to.contain('<slot name="label">');
     expect(shadowHtml).to.not.contain('<label');
+  });
+});
+
+describe('moveUserProvidedDefaultSlottablesToTarget', () => {
+  // raw markup on purpose: comment nodes only survive when they are parsed as html, and a lit
+  // template interpolation of '<!--x-->' renders as *text*
+  /**
+   * @param {string} kind
+   * @param {string} name
+   */
+  const marker = (kind, name) => `<!--_${kind}_slot_${name}_-->`;
+
+  /**
+   * @param {string} rawHtml
+   * @returns {Promise<{source: HTMLElement, target: HTMLElement}>}
+   */
+  async function setup(rawHtml) {
+    const source = await /** @type {Promise<HTMLElement>} */ (fixture('<div></div>'));
+    source.innerHTML = rawHtml;
+    const target = await /** @type {Promise<HTMLElement>} */ (fixture('<div></div>'));
+    return { source, target };
+  }
+
+  it('moves unnamed slottables and skips the nodes a slots getter injected', async () => {
+    const { source, target } = await setup(`
+      <div class="before"></div>
+      ${marker('start', 'input')}
+      <div class="injected"></div>
+      ${marker('end', 'input')}
+      <div class="after"></div>
+    `);
+    moveUserProvidedDefaultSlottablesToTarget(source, target);
+    expect(target.querySelector('.before')).to.exist;
+    expect(target.querySelector('.after')).to.exist;
+    expect(target.querySelector('.injected')).to.not.exist;
+    expect(source.querySelector('.injected')).to.exist;
+  });
+
+  it('keeps named slottables in place, including an empty slot attribute', async () => {
+    const { source, target } = await setup(`
+      <div slot="input" class="named"></div>
+      <div slot="" class="empty-slot-attr"></div>
+      <div class="unnamed"></div>
+    `);
+    moveUserProvidedDefaultSlottablesToTarget(source, target);
+    expect(target.querySelector('.unnamed')).to.exist;
+    expect(source.querySelector('.named')).to.exist;
+    expect(source.querySelector('.empty-slot-attr')).to.exist;
+  });
+
+  it('skips every injected section when there are several', async () => {
+    const { source, target } = await setup(`
+      <div class="a"></div>
+      ${marker('start', 'input')}<div class="injected-1"></div>${marker('end', 'input')}
+      <div class="b"></div>
+      ${marker('start', 'label')}<div class="injected-2"></div>${marker('end', 'label')}
+      <div class="c"></div>
+    `);
+    moveUserProvidedDefaultSlottablesToTarget(source, target);
+    expect(Array.from(target.children).map(c => c.className)).to.deep.equal(['a', 'b', 'c']);
+    expect(source.querySelectorAll('.injected-1, .injected-2').length).to.equal(2);
+  });
+
+  it('moves text nodes, which cannot carry a slot attribute', async () => {
+    const { source, target } = await setup(`
+      text-next-to-slottables
+      <div class="unnamed"></div>
+    `);
+    moveUserProvidedDefaultSlottablesToTarget(source, target);
+    expect(target.textContent).to.contain('text-next-to-slottables');
+    expect(target.querySelector('.unnamed')).to.exist;
+  });
+
+  it('leaves existing children of the target alone and appends after them', async () => {
+    const { source, target } = await setup('<div class="unnamed"></div>');
+    target.innerHTML = '<div class="already-there"></div>';
+    moveUserProvidedDefaultSlottablesToTarget(source, target);
+    expect(Array.from(target.children).map(c => c.className)).to.deep.equal([
+      'already-there',
+      'unnamed',
+    ]);
+  });
+
+  it('is a no-op for an empty source', async () => {
+    const { source, target } = await setup('');
+    moveUserProvidedDefaultSlottablesToTarget(source, target);
+    expect(target.childNodes.length).to.equal(0);
+    expect(source.childNodes.length).to.equal(0);
+  });
+
+  it('is still exported from SlotMixin as the very same function', () => {
+    // backwards compatibility: the old import path has to stay valid and has to be the same
+    // implementation, not a copy that could drift
+    expect(fromSlotMixin).to.equal(moveUserProvidedDefaultSlottablesToTarget);
+  });
+});
+
+describe('takeover when SlotMixin is in the same hierarchy', () => {
+  /** Classic SlotMixin component, so both mixins are in one hierarchy. */
+  class LegacyBase extends SlotMixin(LitElement) {
+    get slots() {
+      return { input: () => html`<input />` };
+    }
+  }
+
+  class LightOnTop extends LightRenderMixin(LegacyBase) {
+    get slots() {
+      return { input: () => html`<input />` };
+    }
+
+    render() {
+      return html`<div class="wrapper"><slot name="input"></slot></div>`;
+    }
+  }
+
+  class SlotOnTop extends SlotMixin(LightRenderMixin(LitElement)) {
+    get slots() {
+      return { input: () => html`<input />` };
+    }
+
+    render() {
+      return html`<div class="wrapper"><slot name="input"></slot></div>`;
+    }
+  }
+
+  /** A component that overrides the connect hook SlotMixin provides. */
+  class WithConnectOverride extends LightRenderMixin(LegacyBase) {
+    connectHookCalls = 0;
+
+    get slots() {
+      return { input: () => html`<input />` };
+    }
+
+    _connectSlotMixin() {
+      this.connectHookCalls += 1;
+      super._connectSlotMixin();
+    }
+
+    render() {
+      return html`<div class="wrapper"><slot name="input"></slot></div>`;
+    }
+  }
+
+  /** @type {Array<[string, any, string]>} */
+  const variants = [
+    ['LightRenderMixin above SlotMixin', LightOnTop, 'light-render-mixed-top'],
+    ['SlotMixin above LightRenderMixin', SlotOnTop, 'light-render-mixed-bottom'],
+  ];
+
+  for (const [name, ctor, tag] of variants) {
+    it(`renders every slot exactly once with ${name}`, async () => {
+      if (!customElements.get(tag)) customElements.define(tag, ctor);
+      const el = await mount(tag);
+      expect(el.querySelectorAll('[slot="input"]').length).to.equal(1);
+      expect(el.innerHTML.match(/_start_slot_input_/g)?.length).to.equal(1);
+      expect(el.innerHTML.match(/_end_slot_input_/g)?.length).to.equal(1);
+      expect(el.shadowRoot.querySelector('slot[name="input"]')).to.exist;
+      // SlotMixin's own private-slot bookkeeping stays empty: it never rendered
+      expect(el.__privateSlots.size).to.equal(0);
+    });
+
+    it(`leaves a consumer provided slot alone with ${name}`, async () => {
+      if (!customElements.get(tag)) customElements.define(tag, ctor);
+      const el = await mountWithUserContent(tag, '<span slot="input">own</span>');
+      const own = el.querySelectorAll('[slot="input"]');
+      expect(own.length).to.equal(1);
+      expect(own[0].textContent).to.equal('own');
+    });
+  }
+
+  it('does not call a subclass override of SlotMixin its connect hook', async () => {
+    if (!customElements.get('light-render-mixed-hook')) {
+      customElements.define('light-render-mixed-hook', WithConnectOverride);
+    }
+    const el = await mount('light-render-mixed-hook');
+    // documented behaviour: the connect-time hook of SlotMixin is gone by design, its logic has to
+    // move to the reactive cycle of the migrated component
+    expect(el.connectHookCalls).to.equal(0);
+    expect(el.querySelectorAll('[slot="input"]').length).to.equal(1);
   });
 });
