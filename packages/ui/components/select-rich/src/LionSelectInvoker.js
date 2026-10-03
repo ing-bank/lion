@@ -1,6 +1,6 @@
 import { LionButton } from '@lion/ui/button.js';
 import { css, html } from 'lit';
-import { SlotMixin } from '@lion/ui/core.js';
+import { LightRenderMixin } from '@lion/ui/core.js';
 
 /**
  * @typedef {import('lit').CSSResult} CSSResult
@@ -14,7 +14,7 @@ import { SlotMixin } from '@lion/ui/core.js';
  *
  * @customElement lion-select-invoker
  */
-export class LionSelectInvoker extends SlotMixin(LionButton) {
+export class LionSelectInvoker extends LightRenderMixin(LionButton) {
   static get styles() {
     return [
       ...super.styles,

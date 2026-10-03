@@ -4,7 +4,7 @@ import { dedupeMixin } from '@open-wc/dedupe-mixin';
 import { ChoiceGroupMixin, FormControlMixin, FormRegistrarMixin } from '@lion/ui/form-core.js';
 import { ScopedElementsMixin } from '../../core/src/ScopedElementsMixin.js';
 import { LionOptions } from './LionOptions.js';
-import { moveUserProvidedDefaultSlottablesToTarget } from '../../core/src/SlotMixin.js';
+import { moveUserProvidedDefaultSlottablesToTarget } from '../../core/src/LightRenderMixin.js';
 
 // TODO: extract ListNavigationWithActiveDescendantMixin that can be reused in [role="menu"]
 // having children with [role="menuitem|menuitemcheckbox|menuitemradio|option"] and

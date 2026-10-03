@@ -13,6 +13,14 @@ eleventyNavigation:
 
 # Core: SlotMixin
 
+> **Deprecated — use [LightRenderMixin](./LightRenderMixin.md) for new components.**
+>
+> SlotMixin renders the light dom once, in `connectedCallback`, so its light dom is not reactive and
+> it cannot be rendered on the server. LightRenderMixin renders it on every update (the same
+> ergonomics as shadow dom rendering) and serializes it into the server response with
+> `@lit-labs/ssr`. Both accept the same `get slots()` map, so migration can happen one slot at a
+> time. SlotMixin keeps working and is not scheduled for removal.
+
 The SlotMixin is made for solving accessibility challenges that inherently come with the usage of shadow dom.
 Until [AOM](https://wicg.github.io/aom/explainer.html) is in place, it is not possible to create relations between different shadow doms.
 The need for this can occur in the following situations:
