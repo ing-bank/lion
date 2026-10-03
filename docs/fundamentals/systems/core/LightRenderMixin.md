@@ -213,6 +213,26 @@ The components that compose their map with `...super.slots` inherit `SlotMixin` 
 they cannot be migrated one by one: the form-core class they chain into has to be migrated first, or
 both mixins end up rendering the same slot.
 
+### The legacy options we do not honour yet
+
+`firstRenderOnConnected`, `afterRender` and `renderAsDirectHostChild` are not implemented. That is a
+deliberate "not yet" rather than a decision: dropping an option is only safe when we know what it is
+used for, and today we do not have that knowledge in this repo.
+
+An internal consumer survey of Lion usage exists (anonymized: per option, how many components and call
+sites use it and with what timing expectations, without product, team or customer names). It belongs
+in this repo before those options are declared gone, because it decides:
+
+- whether `firstRenderOnConnected` semantics have to survive as an option (content available before the
+  first paint, and therefore a *write outside* the update cycle that the new mixin does not have), and
+- whether `renderAsDirectHostChild: false` (keep the wrapper element in the light dom) still has to be
+  reachable, which is the one case where the mixin's "content is always a direct host child" rule would
+  have to become configurable,
+- and it turns "we believe nobody uses this" into a reviewable claim instead of an assumption.
+
+Until that data lands, migrating a component that relies on one of these options is a behaviour change,
+not a refactor — say so in the PR that migrates it.
+
 ## Scoped elements
 
 Per the spec, scoped elements are bound to the shadow root of their host. Because the content is
