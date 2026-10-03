@@ -4,9 +4,9 @@ title: Backwards compatibility
 
 # Rationale: modernizing without breaking consumers
 
-**Status: proposal**, to be decided with the review of
-[#2890](https://github.com/ing-bank/lion/pull/2890). It records the options and the recommendation
-rather than a decision that has been made.
+**Status: decided in outline, design open.** The compatibility layer is wanted (see
+[Decisions](#decisions)), its _shape_ is still open. [#2890](https://github.com/ing-bank/lion/pull/2890)
+is held as a branch until the usage data is in.
 
 ## The philosophy
 
@@ -36,52 +36,50 @@ Inside `@lion/ui` itself, in `packages/ui/components/core`:
 | `neutralizeSlotMixin()`                       | when both mixins are in one hierarchy, `LightRenderMixin` takes over and `SlotMixin` does not render |
 | `SlotMixin` (deprecated)                      | unchanged behaviour, still exported                                                                  |
 
-## Should this be a separate package (`@lion/ui-compat-layer`)?
+## Decisions
 
-Recommendation: **no, not for the parts above.** Reasons, in order of how hard they are to work around:
+**A compatibility layer is needed, and its scope is the full package** — not the slot API alone. It
+exists to modernize `@lion/ui` while consumers keep working, which is what makes it possible to adhere
+to semver: the modern implementation can move, the old surface stays available. Codemods are
+_additional_ (they help consumers move faster), never a substitute for the layer.
 
-1. **Mixin identity.** `dedupeMixin` keys on function identity. If a compat package re-exports or
-   re-declares `LightRenderMixin`, a consumer can end up with two distinct mixin functions for the same
-   concept, dedupe no longer recognises the second application, and the class renders its slots twice.
-   Any compat package would therefore have to import the _installed_ `@lion/ui` and add nothing to the
-   class hierarchy that `@lion/ui` does not already have — at which point it is a folder, not a package.
-2. **A package that only wraps imports adds a release artefact, not a boundary.** It would need its own
-   version, changesets, CI matrix and peer-range policy, while its contents can only change in lockstep
-   with `@lion/ui` (it is tested against the same mixins).
-3. **The opt-in would be invisible.** A consumer that forgets to install or apply the compat package
-   gets the _breaking_ behaviour, which is the worst default for a migration path.
-4. **The parts that must compose cannot be moved out.** Accepting the legacy map, the takeover and the
-   guards are all decisions inside the mixin's own lifecycle; only _shims that constrain_ the mixin
-   (the legacy slot options) can be applied from outside, as a mixin stacked above it.
+**How long it lives:** until the majority is migrated, or until the extension layer
+(`my-ui`) takes a breaking change — whichever comes first. That is the retirement trigger; it is a
+condition, not a date.
 
-**When a separate package does make sense:** for opt-in behaviour shims that keep the modern mixin
-untouched — the legacy slot options (`firstRenderOnConnected`, `afterRender`,
-`renderAsDirectHostChild`) are the natural candidate, because they are the only part that is neither
-mixin identity nor lifecycle. Shape would be a mixin applied _above_ the modern one:
+**Sequencing:** internals first. `LightRenderMixin` is applied throughout this codebase, and only then
+do we collect consumer data about the _protected_ surface (methods subclasses override, e.g.
+`_connectSlotMixin`). Protected-method compatibility is a consumer question that needs evidence, not a
+guess.
 
-```js
-class LionInput extends LegacySlotOptions(LightRenderMixin(LionField)) {
-  get slots() {
-    /* unchanged legacy map */
-  }
-}
-```
+**Takeover loudness:** undecided on purpose. It waits for the same usage data; the branch stays open
+until then.
 
-It has to be applied above, because a shim below the modern mixin cannot influence the mixin's own
-rendering; and it must import `LightRenderMixin` from the installed `@lion/ui` rather than shipping its
-own copy (see 1.).
+## Constraint any compat layer has to respect
 
-### Naming, if it is ever created
+`dedupeMixin` keys on function identity, so a compat layer must build on the _installed_ `@lion/ui` and
+must not ship a second copy of a mixin: two distinct functions for one concept end up both applied to
+one class, dedupe stops recognising the second, and the class renders its light dom twice. That is a
+fact about the mechanism, not a preference — it constrains the shape of the layer (a re-export shell
+around `@lion/ui` plus shims that compose _above_ the modern mixin), not whether it should exist.
 
-| candidate                                 | reads as                                    | verdict                                                          |
-| :---------------------------------------- | :------------------------------------------ | :--------------------------------------------------------------- |
-| `@lion/ui-compat-layer`                   | a layer around the whole package            | too broad for slot behaviour                                     |
-| `@lion/ui-slot-compat`                    | compat for slot rendering specifically      | accurate, but slot rendering _is_ core, so it re-asks question 1 |
-| `@lion/ui-legacy-slots`                   | "the old slots API", opt-in by name         | clearest of the three                                            |
-| no package (`@lion/ui/core.js` submodule) | a folder in the package that owns the mixin | recommended while the shim is small                              |
+## The legacy options: what the repo itself does
+
+Worth knowing before the options are called unused: three components in this repo pass
+`renderAsDirectHostChild: true` — `LionInputFile`, `LionInputAmountDropdown`,
+`LionInputTelDropdown`. That value is exactly what `LightRenderMixin` does unconditionally (content is
+always a direct host child), so those three are migration-equivalent without the option being
+implemented. `false` (keep the wrapper element) and `firstRenderOnConnected` /
+`afterRender` have no usage in this repo at all, which is why the consumer data decides whether they
+have to exist.
 
 ## Open questions
 
-- Does the option shim belong to `@lion/ui` until the usage data says the options can be dropped?
-- Is an opt-in shim acceptable at all, or should the options be implemented on `LightRenderMixin`
-  directly once the usage data is in?
+- Naming and shape of the layer once its scope is the full package: a package that re-exports the old
+  surface, a submodule entry point (`@lion/ui/compat`), or a sibling package (`my-ui`-facing) that
+  depends on the installed `@lion/ui`.
+- Does the layer carry the _deprecated_ surface only (SlotMixin, legacy maps) or the whole pre-change
+  API of `@lion/ui`?
+- Where do the internal migrations land: one branch per package, or one branch for the codebase?
+- Do `firstRenderOnConnected` / `renderAsDirectHostChild: false` become per-slot options once the
+  consumer data is in, or stay unsupported with a documented workaround?

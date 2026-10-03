@@ -233,6 +233,17 @@ in this repo before those options are declared gone, because it decides:
 Until that data lands, migrating a component that relies on one of these options is a behaviour change,
 not a refactor — say so in the PR that migrates it.
 
+Inside this repo the option that does appear is `renderAsDirectHostChild: true`
+(`LionInputFile`, `LionInputAmountDropdown`, `LionInputTelDropdown`). That value is what the mixin
+always does, so those components migrate without the option existing; only `false` and
+`firstRenderOnConnected` are unaccounted for.
+
+The order of work is decided: `LightRenderMixin` is applied throughout this codebase first, and the
+consumer data about the _protected_ surface (methods that subclasses override, like
+`_connectSlotMixin`) is collected after that — protected-method compatibility is a consumer question
+that needs evidence rather than a guess. See
+[backwards compatibility](../rationales/backwards-compatibility.md).
+
 ## Scoped elements
 
 Per the spec, scoped elements are bound to the shadow root of their host. Because the content is
