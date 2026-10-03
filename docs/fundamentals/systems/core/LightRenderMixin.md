@@ -224,7 +224,7 @@ sites use it and with what timing expectations, without product, team or custome
 in this repo before those options are declared gone, because it decides:
 
 - whether `firstRenderOnConnected` semantics have to survive as an option (content available before the
-  first paint, and therefore a *write outside* the update cycle that the new mixin does not have), and
+  first paint, and therefore a _write outside_ the update cycle that the new mixin does not have), and
 - whether `renderAsDirectHostChild: false` (keep the wrapper element in the light dom) still has to be
   reachable, which is the one case where the mixin's "content is always a direct host child" rule would
   have to become configurable,

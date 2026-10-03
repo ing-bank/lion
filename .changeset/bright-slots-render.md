@@ -15,3 +15,14 @@ Server side rendering is supported: the mixin implements the light dom protocol 
 (`renderLight()`), so with the `renderLight()` directive in the server template the light dom is
 serialized into the initial response as plain markup, without hydration. On connect the client
 render takes over that markup, so nothing is rendered twice.
+
+Migration support in this release:
+
+- `LightRenderMixin` takes over when a class hierarchy carries both mixins, so a component can be
+  migrated class by class instead of whole-chain. SlotMixin then does not render at all. Known
+  consequence: a subclass override of `_connectSlotMixin()` (the connect-time hook SlotMixin calls) is
+  not called anymore; move that logic to the reactive cycle when you migrate the component.
+- `moveUserProvidedDefaultSlottablesToTarget` now lives in `LightRenderMixin.js` and is re-exported
+  from `SlotMixin.js`, so existing imports keep working. Same function, one implementation.
+- The legacy slot options (`firstRenderOnConnected`, `afterRender`, `renderAsDirectHostChild`) are
+  still not implemented; see `docs/fundamentals/systems/core/LightRenderMixin.md`.
