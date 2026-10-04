@@ -1,5 +1,6 @@
 export { runChoiceGroupMixinSuite } from '../components/form-core/test-suites/choice-group/ChoiceGroupMixin.suite.js';
 export { runChoiceInputMixinSuite } from '../components/form-core/test-suites/choice-group/ChoiceInputMixin.suite.js';
+export { runCustomChoiceInputMixinSuite } from '../components/form-core/test-suites/choice-group/CustomChoiceInputMixin.suite.js';
 export { runFormGroupMixinInputSuite } from '../components/form-core/test-suites/form-group/FormGroupMixin-input.suite.js';
 export { runFormGroupMixinSuite } from '../components/form-core/test-suites/form-group/FormGroupMixin.suite.js';
 export { runFormatMixinSuite } from '../components/form-core/test-suites/FormatMixin.suite.js';
