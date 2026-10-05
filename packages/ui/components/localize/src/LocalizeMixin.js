@@ -16,7 +16,6 @@ import { getLocalizeManager } from './getLocalizeManager.js';
  */
 // prettier-ignore
 const LocalizeMixinImplementation = /** @type {LocalizeMixin} */ (superclass =>
-  // @ts-ignore https://github.com/microsoft/TypeScript/issues/36821#issuecomment-588375051
   class LocalizeMixin extends superclass {
     /**
      * @returns {NamespaceObject[]}
@@ -32,8 +31,9 @@ const LocalizeMixinImplementation = /** @type {LocalizeMixin} */ (superclass =>
       return true;
     }
 
-    constructor() {
-      super();
+    /** @param {...any} restArgs */
+    constructor(...restArgs) {
+      super(...restArgs);
 
       this._localizeManager = getLocalizeManager();
 

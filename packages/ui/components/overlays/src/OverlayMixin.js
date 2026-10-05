@@ -29,7 +29,6 @@ export function _addOverlayMixinPostProcessor(postProcessor) {
  * @param {import('@open-wc/dedupe-mixin').Constructor<import('lit').LitElement>} superclass
  */
 export const OverlayMixinImplementation = superclass => {
-  // @ts-ignore https://github.com/microsoft/TypeScript/issues/36821#issuecomment-588375051
   class OverlayMixin extends superclass {
     static get properties() {
       return {

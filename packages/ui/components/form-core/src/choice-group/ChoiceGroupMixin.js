@@ -24,7 +24,6 @@ import { ValidateMixin } from '../validate/ValidateMixin.js';
  */
 // prettier-ignore
 const ChoiceGroupMixinImplementation = /** @type {ChoiceGroupMixin} */ (superclass =>
-  // @ts-ignore https://github.com/microsoft/TypeScript/issues/36821#issuecomment-588375051
   class ChoiceGroupMixin extends FormRegistrarMixin(
     ValidateMixin(InteractionStateMixin(superclass)),
   ) {

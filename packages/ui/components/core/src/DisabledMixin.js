@@ -11,7 +11,6 @@ import { dedupeMixin } from '@open-wc/dedupe-mixin';
 // prettier-ignore
 const DisabledMixinImplementation = /** @type {DisabledMixin} */ (superclass =>
   // eslint-disable-next-line no-shadow
-  // @ts-ignore https://github.com/microsoft/TypeScript/issues/36821#issuecomment-588375051
   class extends superclass {
     static get properties() {
       return {
@@ -22,8 +21,9 @@ const DisabledMixinImplementation = /** @type {DisabledMixin} */ (superclass =>
       };
     }
 
-    constructor() {
-      super();
+    /** @param {...any} args */
+    constructor(...args) {
+      super(...args);
       /** @protected */
       this._requestedToBeDisabled = false;
       /** @private */

@@ -21,7 +21,6 @@ function applyFocusVisiblePolyfillWhenNeeded(node) {
  */
 // prettier-ignore
 const FocusMixinImplementation = /** @type {FocusMixin} */ (superclass =>
-  // @ts-ignore https://github.com/microsoft/TypeScript/issues/36821#issuecomment-588375051
   class FocusMixin extends superclass {
     /** @type {any} */
     static get properties() {
@@ -33,8 +32,9 @@ const FocusMixinImplementation = /** @type {FocusMixin} */ (superclass =>
       };
     }
 
-    constructor() {
-      super();
+    /** @param {...any} args */
+    constructor(...args) {
+      super(...args);
 
       /**
        * Whether the focusable element within (`._focusableNode`) is focused.

@@ -16,7 +16,6 @@ import { OverlayMixin } from './OverlayMixin.js';
  */
 // prettier-ignore
 export const ArrowMixinImplementation = /** @type {ArrowMixin} */ (superclass =>
-  // @ts-ignore https://github.com/microsoft/TypeScript/issues/36821#issuecomment-588375051
   class ArrowMixin extends OverlayMixin(superclass) {
     static get properties() {
       return {

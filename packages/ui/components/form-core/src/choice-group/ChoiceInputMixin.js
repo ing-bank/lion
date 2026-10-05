@@ -23,7 +23,6 @@ const hasChanged = (nw, old = {}) => nw.value !== old.value || nw.checked !== ol
  */
 // prettier-ignore
 const ChoiceInputMixinImplementation = /** @type {ChoiceInputMixin} */ (superclass =>
-  // @ts-ignore https://github.com/microsoft/TypeScript/issues/36821#issuecomment-588375051
   class ChoiceInputMixin extends FormatMixin(superclass) {
     /** @type {any} */
     static get properties() {
