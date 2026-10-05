@@ -123,7 +123,6 @@ export class LionInputTel extends LocalizeMixin(LionInput) {
    * accessible and linguistically correct
    * @configure FormControlMixin
    */
-  // @ts-expect-error
   // eslint-disable-next-line class-methods-use-this
   get fieldName() {
     return this._localizeManager.msg('lion-input-tel:phoneNumber');

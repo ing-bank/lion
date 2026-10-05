@@ -14,7 +14,7 @@ export declare class DisabledHost {
    */
   public retractRequestToBeDisabled(): void;
 
-  private __internalSetDisabled(value: boolean): void;
+  protected __internalSetDisabled(value: boolean): void;
   protected _requestedToBeDisabled: boolean;
 }
 

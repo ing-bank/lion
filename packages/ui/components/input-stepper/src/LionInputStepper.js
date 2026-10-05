@@ -75,6 +75,15 @@ export class LionInputStepper extends LocalizeMixin(LionInput) {
     return /** @type {HTMLInputElement} */ (super._inputNode);
   }
 
+  /**
+   * Id of the timeout that clears the visually hidden value text again.
+   * Declared as `ReturnType<typeof setTimeout>` rather than left to inference: with `@types/node` in
+   * the type build, inference puts `NodeJS.Timeout` in the declarations, which consumers that do not
+   * load node types cannot resolve.
+   * @type {ReturnType<typeof setTimeout> | undefined}
+   */
+  timer = undefined;
+
   constructor() {
     super();
     /** @param {string} modelValue */

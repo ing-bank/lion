@@ -232,19 +232,19 @@ export declare class FormControlHost {
   protected _onBeforeRepropagateChildrenValues(ev: CustomEvent): void;
   protected _repropagationCondition(target: FormControlHost): boolean;
 
-  private __helpText: string | undefined;
-  private __label: string;
-  private __fieldName: string | undefined;
-  private __reorderAriaLabelledNodes: boolean | undefined;
-  private __reflectAriaAttr(
+  protected __helpText: string | undefined;
+  protected __label: string;
+  protected __fieldName: string | undefined;
+  protected __reorderAriaLabelledNodes: boolean | undefined;
+  protected __reflectAriaAttr(
     attrName: string,
     nodes: HTMLElement[],
     reorder: boolean | undefined,
   ): void;
-  private __reorderAriaDescribedNodes: boolean | undefined;
-  private __getDirectSlotChild(slotName: string): HTMLElement | undefined;
-  private __repropagateChildrenInitialized: boolean | undefined;
-  private __repropagateChildrenValues(ev: CustomEvent): void;
+  protected __reorderAriaDescribedNodes: boolean | undefined;
+  protected __getDirectSlotChild(slotName: string): HTMLElement | undefined;
+  protected __repropagateChildrenInitialized: boolean | undefined;
+  protected __repropagateChildrenValues(ev: CustomEvent): void;
 }
 
 export declare function FormControlImplementation<T extends Constructor<LitElement>>(

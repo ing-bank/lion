@@ -23,6 +23,9 @@ function ensureArray(value) {
 // prettier-ignore
 const CustomChoiceGroupMixinImplementation = /** @type {CustomChoiceGroupMixin} */ (superclass =>
   class CustomChoiceGroupMixin extends ChoiceGroupMixin(superclass) {
+    /**
+     * @type {any}
+     */
     static get properties() {
       return {
         allowCustomChoice: {

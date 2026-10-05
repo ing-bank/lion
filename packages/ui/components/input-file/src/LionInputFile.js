@@ -51,6 +51,7 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
 
   static get properties() {
     return {
+      ...super.properties,
       accept: { type: String },
       multiple: { type: Boolean, reflect: true },
       buttonLabel: { type: String, attribute: 'button-label' },
@@ -134,12 +135,37 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
   }
 
   /**
+   * Overrides the inherited accessor with a typed pair instead of a class field: a field would be
+   * emitted as a property and every consumer that type-checks the declarations reports
+   * "TS2610: 'modelValue' is defined as an accessor ... but is overridden here as an instance
+   * property". Keeps the published InputFile[] type and adds no runtime behaviour.
+   *
+   * @returns {InputFile[]}
+   */
+  // @ts-ignore [ts7-2611] TS7 resolves the inherited member as a field (its inference, see the
+  // ts7-2855 notes), so a typed accessor override is rejected here; the emitted declaration is the
+  // accessor, which is what consumers see. Retire with ts7-2855.
+  get modelValue() {
+    // @ts-ignore [ts7-2855] TS7 rejects field access via super (the parent declares this as a field).
+    // Dot form kept deliberately. Retire when TS stops inferring fields from method assignments.
+    return super.modelValue;
+  }
+
+  /** @param {InputFile[]} value */
+  set modelValue(value) {
+    // @ts-ignore [ts7-2855] see the getter above.
+    super.modelValue = value;
+  }
+
+  /**
    * @protected
    * @configure FocusMixin
+   * @returns {import('../../form-core/types/FormControlMixinTypes.js').HTMLElementWithValue & HTMLButtonElement}
    */
-  // @ts-ignore
   get _focusableNode() {
-    return this._buttonNode;
+    return /** @type {import('../../form-core/types/FormControlMixinTypes.js').HTMLElementWithValue & HTMLButtonElement} */ (
+      this._buttonNode
+    );
   }
 
   /**
@@ -187,9 +213,6 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
     this.accept = '';
     this.buttonLabel = '';
     this._initialButtonLabel = '';
-    /**
-     * @type {InputFile[]}
-     */
     this.modelValue = [];
     /**
      * @protected
