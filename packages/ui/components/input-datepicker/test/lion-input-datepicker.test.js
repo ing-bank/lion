@@ -471,13 +471,17 @@ describe('<lion-input-datepicker>', () => {
         expect(el.hasFeedbackFor).to.include('error');
         expect(el.validationStates).to.have.property('error');
         expect(el.validationStates.error).to.have.property('AlwaysInvalid');
-        expect(isSameDate(/** @type {Date} */ (parseDate(el.value)), elObj.calendarEl.selectedDate))
-          .to.be.true;
+        expect(
+          isSameDate(
+            /** @type {Date} */ (parseDate(el.value)),
+            /** @type {Date} */ (elObj.calendarEl.selectedDate),
+          ),
+        ).to.be.true;
         expect(
           isSameDate(
             // @ts-ignore [allow-protected] in test
             /** @type {Date} */ (parseDate(el._inputNode.value)),
-            elObj.calendarEl.selectedDate,
+            /** @type {Date} */ (elObj.calendarEl.selectedDate),
           ),
         ).to.be.true;
       });
@@ -500,13 +504,17 @@ describe('<lion-input-datepicker>', () => {
         expect(el.hasFeedbackFor).to.include('error');
         expect(el.validationStates).to.have.property('error');
         expect(el.validationStates.error).to.have.property('AlwaysInvalid');
-        expect(isSameDate(/** @type {Date} */ (parseDate(el.value)), elObj.calendarEl.selectedDate))
-          .to.be.true;
+        expect(
+          isSameDate(
+            /** @type {Date} */ (parseDate(el.value)),
+            /** @type {Date} */ (elObj.calendarEl.selectedDate),
+          ),
+        ).to.be.true;
         expect(
           isSameDate(
             // @ts-ignore [allow-protected] in test
             /** @type {Date} */ (parseDate(el._inputNode.value)),
-            elObj.calendarEl.selectedDate,
+            /** @type {Date} */ (elObj.calendarEl.selectedDate),
           ),
         ).to.be.true;
       });

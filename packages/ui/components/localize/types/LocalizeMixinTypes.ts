@@ -80,13 +80,13 @@ export declare class LocalizeMixinHost {
 
   protected _localizeManager: LocalizeManager;
 
-  private __boundLocalizeOnLocaleChanged(...args: Object[]): void;
-  private __boundLocalizeOnLocaleChanging(...args: Object[]): void;
-  private __getUniqueNamespaces(): string[];
-  private __localizeOnLocaleChanged(event: CustomEvent): void;
-  private __localizeMessageSync: boolean;
-  private __localizeStartLoadingNamespaces(): void;
-  private __localizeOnLocaleChanging(): void;
+  protected __boundLocalizeOnLocaleChanged(...args: Object[]): void;
+  protected __boundLocalizeOnLocaleChanging(...args: Object[]): void;
+  protected __getUniqueNamespaces(): string[];
+  protected __localizeOnLocaleChanged(event: CustomEvent): void;
+  protected __localizeMessageSync: boolean;
+  protected __localizeStartLoadingNamespaces(): void;
+  protected __localizeOnLocaleChanging(): void;
 }
 
 declare function LocalizeMixinImplementation<T extends Constructor<LitElement>>(

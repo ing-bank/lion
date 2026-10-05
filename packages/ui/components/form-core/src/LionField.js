@@ -90,6 +90,7 @@ export class LionField extends FormControlMixin(
 
   /**
    * @configure FocusMixin
+   * @protected
    */
   get _focusableNode() {
     return this._inputNode;

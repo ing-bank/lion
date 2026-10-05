@@ -64,9 +64,9 @@ export declare class OverlayHost {
    */
   protected _setOpenedWithoutPropertyEffects(newOpened: Boolean): Promise<undefined>;
 
-  private __setupSyncFromOverlayController(): void;
-  private __teardownSyncFromOverlayController(): void;
-  private __syncToOverlayController(): void;
+  protected __setupSyncFromOverlayController(): void;
+  protected __teardownSyncFromOverlayController(): void;
+  protected __syncToOverlayController(): void;
 }
 
 export declare function OverlayImplementation<T extends Constructor<LitElement>>(

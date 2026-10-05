@@ -45,9 +45,10 @@ export class Required extends Validator {
   /**
    * @param {FormControlHost & HTMLElement} formControl
    */
-  // @ts-ignore [allow-protected] we are allowed to know FormControl protected props in form-core
   // eslint-disable-next-line class-methods-use-this
-  onFormControlConnect({ _inputNode: inputNode }) {
+  onFormControlConnect(formControl) {
+    // @ts-ignore [allow-protected] we are allowed to know FormControl protected props in form-core
+    const inputNode = formControl._inputNode;
     if (inputNode) {
       const role = inputNode.getAttribute('role') || '';
       const elementTagName = inputNode.tagName.toLowerCase();
@@ -61,9 +62,10 @@ export class Required extends Validator {
   /**
    * @param {FormControlHost & HTMLElement} formControl
    */
-  // @ts-ignore [allow-protected] we are allowed to know FormControl protected props in form-core
   // eslint-disable-next-line class-methods-use-this
-  onFormControlDisconnect({ _inputNode: inputNode }) {
+  onFormControlDisconnect(formControl) {
+    // @ts-ignore [allow-protected] we are allowed to know FormControl protected props in form-core
+    const inputNode = formControl._inputNode;
     if (inputNode) {
       inputNode.removeAttribute('aria-required');
     }

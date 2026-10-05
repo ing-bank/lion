@@ -53,7 +53,7 @@ export class DatepickerInputObject {
 
   get overlayEl() {
     // @ts-expect-error not supposed to call _overlayCtrl publicly here on this.el
-    return /** @type {LitElement} */ (this.el._overlayCtrl.contentNode);
+    return /** @type {import('lit').LitElement} */ (this.el._overlayCtrl.contentNode);
   }
 
   get overlayHeadingEl() {
@@ -69,8 +69,10 @@ export class DatepickerInputObject {
   }
 
   get calendarEl() {
-    // @ts-ignore [allow-protected] in test
-    return /** @type {import('@lion/calendar').LionCalendar} */ (this.el && this.el._calendarNode);
+    return /** @type {import('../../calendar/src/LionCalendar.js').LionCalendar} */ (
+      // @ts-ignore [allow-protected] in test
+      this.el && this.el._calendarNode
+    );
   }
 
   /**

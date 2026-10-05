@@ -158,7 +158,7 @@ export declare class FormatHost {
    */
   protected _syncValueUpwards(): void;
   protected _reflectBackFormattedValueToUser(): void;
-  private _reflectBackFormattedValueDebounced(): void;
+  protected _reflectBackFormattedValueDebounced(): void;
 
   /**
    * Every time .formattedValue is attempted to sync to the view value (on change/blur and on
@@ -182,8 +182,8 @@ export declare class FormatHost {
   protected _callParser(value: string | undefined): object;
   protected _callFormatter(): string;
 
-  private __preventRecursiveTrigger: boolean;
-  private __prevViewValue: string;
+  protected __preventRecursiveTrigger: boolean;
+  protected __prevViewValue: string;
 }
 
 export declare function FormatImplementation<T extends Constructor<LitElement>>(
