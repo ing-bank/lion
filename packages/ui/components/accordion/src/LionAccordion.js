@@ -110,6 +110,12 @@ export class LionAccordion extends LitElement {
    */
   __expanded = [];
 
+  /**
+   * @type {StoreEntry[]}
+   * @private
+   */
+  __store;
+
   constructor() {
     super();
     this.styles = {};
@@ -119,10 +125,6 @@ export class LionAccordion extends LitElement {
      */
     this.exclusive = false;
 
-    /**
-     * @type {StoreEntry[]}
-     * @private
-     */
     this.__store = [];
   }
 

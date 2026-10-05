@@ -93,14 +93,16 @@ export class LionIcon extends LitElement {
     ];
   }
 
+  /**
+   * @private
+   * @type {TemplateResult|typeof nothing|TagFunction}
+   */
+  __svg;
+
   constructor() {
     super();
     this.ariaLabel = '';
     this.iconId = '';
-    /**
-     * @private
-     * @type {TemplateResult|typeof nothing|TagFunction}
-     */
     this.__svg = nothing;
   }
 

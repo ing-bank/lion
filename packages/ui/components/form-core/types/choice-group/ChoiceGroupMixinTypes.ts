@@ -6,10 +6,8 @@ import { InteractionStateHost } from '../InteractionStateMixinTypes.js';
 import { FormRegistrarHost } from '../registration/FormRegistrarMixinTypes.js';
 import { ChoiceInputHost } from './ChoiceInputMixinTypes.js';
 
-export declare class ChoiceGroupHost {
+export declare class ChoiceGroupHost extends FormControlHost {
   multipleChoice: boolean;
-  get modelValue(): any;
-  set modelValue(value: any);
   get serializedValue(): string;
   set serializedValue(value: string);
   get formattedValue(): string;

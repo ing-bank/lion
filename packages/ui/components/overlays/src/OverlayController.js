@@ -121,6 +121,49 @@ export class OverlayController extends EventTarget {
    */
   #isShiftPressed = false;
 
+  /** @private */
+  __sharedConfig;
+
+  /** @type {Element | null} @private */
+  __activeElementRightBeforeHide;
+
+  /**
+   * @type {OverlayConfig}
+   * @protected
+   */
+  _defaultConfig;
+
+  /** @protected */
+  _contentId;
+
+  /** @private */
+  __originalAttrs;
+
+  /** @private */
+  __hasActiveBackdrop;
+
+  /**
+   * The property is used to skip `__escKeyHandler` handler for overlays that have been closed
+   * by `__escKeyHandlerCalled` previously.
+   * `__escKeyHandlerCalled` is set to `false` right before overlay show up
+   * `__escKeyHandlerCalled` is set to `true` when `__escKeyHandler` is called at least one time
+   * after each 'show' phase
+   * @private
+   */
+  __escKeyHandlerCalled;
+
+  /**
+   * @type {OverlayConfig | undefined}
+   * @private
+   */
+  __prevConfig = undefined;
+
+  /**
+   * @type {HTMLElement | undefined}
+   * @private
+   */
+  __elementToFocusAfterHide = undefined;
+
   /**
    * @constructor
    * @param {OverlayConfig} config initial config. Will be remembered as shared config
@@ -129,19 +172,13 @@ export class OverlayController extends EventTarget {
   constructor(config = {}, manager = overlays) {
     super();
     this.manager = manager;
-    /** @private */
     this.__sharedConfig = config;
 
-    /** @private */
     this.__activeElementRightBeforeHide = null;
 
     /** @type {OverlayConfig} */
     this.config = {};
 
-    /**
-     * @type {OverlayConfig}
-     * @protected
-     */
     this._defaultConfig = {
       placementMode: undefined,
       contentNode: config.contentNode,
@@ -201,25 +238,14 @@ export class OverlayController extends EventTarget {
       zIndex: 9999,
     };
 
-    /** @protected */
     this._contentId = `overlay-content--${Math.random().toString(36).slice(2, 10)}`;
-    /** @private */
     this.__originalAttrs = new Map();
     /** @private */
     this.__escKeyHandler = this.__escKeyHandler.bind(this);
     this.updateConfig(config);
-    /** @private */
     this.__hasActiveBackdrop = true;
     /** @private */
     this.__cancelHandler = this.__cancelHandler.bind(this);
-    /**
-     * The property is used to skip `__escKeyHandler` handler for overlays that have been closed
-     * by `__escKeyHandlerCalled` previously.
-     * `__escKeyHandlerCalled` is set to `false` right before overlay show up
-     * `__escKeyHandlerCalled` is set to `true` when `__escKeyHandler` is called at least one time
-     * after each 'show' phase
-     * @private
-     */
     this.__escKeyHandlerCalled = false;
   }
 

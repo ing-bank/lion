@@ -169,6 +169,27 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
     };
   }
 
+  /** @private */
+  __today;
+
+  /** @private */
+  __connectedCallbackDone;
+
+  /** @private */
+  __eventsAdded;
+
+  /** @private */
+  __boundKeyboardNavigationEvent;
+
+  /** @private */
+  __boundClickDateDelegation;
+
+  /** @private */
+  __boundFocusDateDelegation;
+
+  /** @private */
+  __boundBlurDateDelegation;
+
   constructor() {
     super();
     /** @type {{months: Month[]}}
@@ -187,7 +208,6 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
 
     this.firstDayOfWeek = 0;
     this.weekdayHeaderNotation = 'short';
-    /** @private */
     this.__today = normalizeDateTime(new Date());
     /** @type {Date} */
     this.centralDate = this.__today;
@@ -196,18 +216,12 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
      * @private
      */
     this.__focusedDate = null;
-    /** @private */
     this.__connectedCallbackDone = false;
-    /** @private */
     this.__eventsAdded = false;
     this.locale = '';
-    /** @private */
     this.__boundKeyboardNavigationEvent = this.__keyboardNavigationEvent.bind(this);
-    /** @private */
     this.__boundClickDateDelegation = this.__clickDateDelegation.bind(this);
-    /** @private */
     this.__boundFocusDateDelegation = this.__focusDateDelegation.bind(this);
-    /** @private */
     this.__boundBlurDateDelegation = this.__focusDateDelegation.bind(this);
   }
 

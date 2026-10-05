@@ -203,35 +203,43 @@ export class LionInputTelDropdown extends LionInputTel {
   }
 
   /**
+   * Group label for all countries, when preferredCountries are shown
+   * @protected
+   */
+  _allCountriesLabel;
+
+  /**
+   * Group label for preferred countries, when preferredCountries are shown
+   * @protected
+   */
+  _preferredCountriesLabel;
+
+  /**
+   * Contains everything needed for rendering region options:
+   * region code, country code, display name according to locale, display name
+   * @private
+   * @type {RegionMeta[]}
+   */
+  __regionMetaList;
+
+  /**
+   * A filtered `this.__regionMetaList`, containing all regions provided in `preferredRegions`
+   * @private
+   * @type {RegionMeta[]}
+   */
+  __regionMetaListPreferred;
+
+  /**
    * @lifecycle platform
    */
   constructor() {
     super();
 
-    /**
-     * Group label for all countries, when preferredCountries are shown
-     * @protected
-     */
     this._allCountriesLabel = '';
-    /**
-     * Group label for preferred countries, when preferredCountries are shown
-     * @protected
-     */
     this._preferredCountriesLabel = '';
 
-    /**
-     * Contains everything needed for rendering region options:
-     * region code, country code, display name according to locale, display name
-     * @private
-     * @type {RegionMeta[]}
-     */
     this.__regionMetaList = [];
 
-    /**
-     * A filtered `this.__regionMetaList`, containing all regions provided in `preferredRegions`
-     * @private
-     * @type {RegionMeta[]}
-     */
     this.__regionMetaListPreferred = [];
 
     /**

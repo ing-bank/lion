@@ -39,36 +39,46 @@ export class OverlaysManager {
     return this.__shownList;
   }
 
+  /**
+   * @type {OverlayController[]}
+   * @private
+   */
+  __list;
+
+  /**
+   * @type {OverlayController[]}
+   * @private
+   */
+  __shownList;
+
+  /** @protected */
+  _siblingsInert;
+
+  /**
+   * @type {WeakMap<OverlayController, OverlayController[]>}
+   * @private
+   */
+  __blockingMap;
+
+  /**
+   * @private
+   * @type {{
+   *   preventScrollCount: number;
+   *   clientWidth: number | undefined;
+   *   clientHeight: number | undefined;
+   *   marginRightInline: string | undefined;
+   *   marginBottomInline: string | undefined;
+   *   marginRight: number | undefined;
+   *   marginBottom: number | undefined;
+   * }}
+   */
+  __bodySizeVars;
+
   constructor() {
-    /**
-     * @type {OverlayController[]}
-     * @private
-     */
     this.__list = [];
-    /**
-     * @type {OverlayController[]}
-     * @private
-     */
     this.__shownList = [];
-    /** @protected */
     this._siblingsInert = false;
-    /**
-     * @type {WeakMap<OverlayController, OverlayController[]>}
-     * @private
-     */
     this.__blockingMap = new WeakMap();
-    /**
-     * @private
-     * @type {{
-     *   preventScrollCount: number;
-     *   clientWidth: number | undefined;
-     *   clientHeight: number | undefined;
-     *   marginRightInline: string | undefined;
-     *   marginBottomInline: string | undefined;
-     *   marginRight: number | undefined;
-     *   marginBottom: number | undefined;
-     * }}
-     */
     this.__bodySizeVars = {
       preventScrollCount: 0,
       clientWidth: undefined,

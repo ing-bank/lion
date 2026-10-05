@@ -146,6 +146,18 @@ export class LocalizeManager extends EventTarget {
       : Promise.all(Object.values(this.__namespaceLoaderPromisesCache[this.locale]));
   }
 
+  /** @private */
+  __allowOverridesForExistingNamespaces;
+
+  /** @protected */
+  _autoLoadOnLocaleChange;
+
+  /** @protected */
+  _showKeyAsFallback;
+
+  /** @protected */
+  _fallbackLocale;
+
   constructor({
     allowOverridesForExistingNamespaces = false,
     autoLoadOnLocaleChange = false,
@@ -154,13 +166,9 @@ export class LocalizeManager extends EventTarget {
   } = {}) {
     super();
 
-    /** @private */
     this.__allowOverridesForExistingNamespaces = allowOverridesForExistingNamespaces;
-    /** @protected */
     this._autoLoadOnLocaleChange = !!autoLoadOnLocaleChange;
-    /** @protected */
     this._showKeyAsFallback = showKeyAsFallback;
-    /** @protected */
     this._fallbackLocale = fallbackLocale;
 
     const localeProvidedViaDataLangAttr = documentElement.getAttribute('data-localize-lang');
