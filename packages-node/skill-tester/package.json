@@ -33,7 +33,8 @@
   },
   "dependencies": {
     "diff": "^9.0.0",
-    "nanocolors": "^0.2.13"
+    "nanocolors": "^0.2.13",
+    "oxc-parser": "0.137.0"
   },
   "peerDependencies": {
     "@github/copilot-sdk": "^0.2.2"

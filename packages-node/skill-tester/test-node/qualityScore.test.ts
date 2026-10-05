@@ -43,26 +43,36 @@ test('scoreFile gives full credit for an exact match', () => {
   assert.equal(score.score, 1);
 });
 
-test('scoreFile gives normalized credit when only formatting differs', () => {
+test('scoreFile treats a normalized match as a full match (formatting is not the spec)', () => {
   const root = tempSandbox({ 'src/a.js': 'const   a = 1;\n\n' });
   const score = scoreFile({
     sandboxRoot: root,
     relativePath: 'src/a.js',
     expectedContent: 'const a = 1;',
   });
-  assert.equal(score.exact, false);
+  assert.equal(score.exact, false, 'not byte-identical');
   assert.equal(score.normalizedMatch, true);
-  assert.equal(score.score, 0.95);
+  // Regression: this used to score 0.95, so identical correct code scored 100% or 95% purely on
+  // indentation — noise proportional to the model's formatting style.
+  assert.equal(score.score, 1);
 });
 
-test('scoreFile gives partial credit for near-correct content', () => {
-  const root = tempSandbox({ 'src/a.js': 'const a = 1;\nconst b = 2;\n' });
-  const score = scoreFile({
-    sandboxRoot: root,
+test('partial credit is a gradient between a mismatch and a full match', () => {
+  const near = scoreFile({
+    sandboxRoot: tempSandbox({ 'src/a.js': 'const a = 1;\nconst b = 2;\n' }),
     relativePath: 'src/a.js',
     expectedContent: 'const a = 1;\nconst c = 3;\n',
   });
-  assert.ok(score.score > 0 && score.score < 0.95, `unexpected score ${score.score}`);
+  const unrelated = scoreFile({
+    sandboxRoot: tempSandbox({ 'src/a.js': 'x\ny\n' }),
+    relativePath: 'src/a.js',
+    expectedContent: 'const a = 1;\nconst c = 3;\n',
+  });
+  assert.ok(near.score > 0 && near.score <= 0.9, `unexpected score ${near.score}`);
+  assert.ok(
+    near.score > unrelated.score,
+    `a one-line change (${near.score}) should score above an unrelated file (${unrelated.score})`,
+  );
 });
 
 test('scoreFile scores zero for a missing file', () => {
