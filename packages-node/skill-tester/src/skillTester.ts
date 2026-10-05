@@ -28,6 +28,12 @@ import {
   type ScenarioScore,
 } from './scoring/qualityScore.ts';
 import { runGates } from './scoring/gates.ts';
+import {
+  runBehaviourSuite,
+  defaultRepoRoot,
+  type BehaviourCase,
+  type BehaviourFailure,
+} from './behaviour/runner.ts';
 import { writeRunRecord } from './report/runRecord.ts';
 import type { TestScenario } from './scenarios/types.ts';
 
@@ -58,6 +64,14 @@ export type SkillTesterConfig = {
   llm?: { baseUrl?: string; apiKey?: string };
   /** Base directory for sandboxes. Defaults to `<cwd>/.tmp/projectSandbox`. */
   sandboxBaseDir?: string;
+  /**
+   * Run the behaviour tier: execute the produced code in a real browser. Opt-in, because it is the
+   * expensive oracle (~24s for every component, one harness invocation) and it requires sandboxes
+   * to live inside the repository so `@lion/ui` resolves.
+   */
+  behaviour?: boolean;
+  /** Repository root used by the behaviour tier. Defaults to this package's repository. */
+  repoRoot?: string;
   /** Where the markdown run record is written. Pass `false` to skip. */
   reportDir?: string | false;
   /** Campaign metadata recorded in the run record. */
@@ -80,6 +94,13 @@ export type ScenarioRunResult = {
   sandboxRoot: string;
   durationMs: number;
   score: ScenarioScore;
+  /** Behaviour tier result, when enabled and the scenario ships a behaviour test. */
+  behaviour?: {
+    passed: boolean;
+    ran: boolean;
+    summary: string;
+    failures: BehaviourFailure[];
+  };
   agentRun: {
     turns: number;
     toolCalls: number;
@@ -111,6 +132,18 @@ export type SkillTesterReport = {
   perModelScenario: ModelScenarioSummary[];
   perModel: { model: string; stats: AggregateStats }[];
   overall: AggregateStats;
+  /**
+   * Behaviour tier aggregate. Reported separately from the conformance score on purpose: a run can
+   * score 100% on convention checks and goldens while the code does not work at all, and that gap
+   * is the finding worth surfacing rather than blending away.
+   */
+  behaviour?: {
+    ran: boolean;
+    total: number;
+    passed: number;
+    failed: number;
+    durationMs: number;
+  };
 };
 
 /**
@@ -205,10 +238,18 @@ export async function runSkillTester(config: SkillTesterConfig): Promise<SkillTe
     maxTurns = 25,
     llm = {},
     sandboxBaseDir,
+    behaviour = false,
     reportDir,
     campaign = {},
     onProgress = message => console.log(message),
   } = config;
+
+  const repoRoot = config.repoRoot ?? defaultRepoRoot();
+  // The behaviour tier needs the sandboxes inside the repo so that `@lion/ui` (a workspace symlink)
+  // resolves; without this an opt-in behaviour run would silently fail every case from outside.
+  const sandboxBase =
+    sandboxBaseDir ?? (behaviour ? path.join(repoRoot, '.tmp', 'skill-tester-sandbox') : undefined);
+  const behaviourCases: BehaviourCase[] = [];
 
   if (!models || models.length === 0) {
     throw new Error(
@@ -227,11 +268,8 @@ export async function runSkillTester(config: SkillTesterConfig): Promise<SkillTe
 
     for (const scenario of scenarios) {
       for (let sample = 1; sample <= sampleSize; sample++) {
-        const outputPath = sandboxBaseDir
-          ? path.join(
-              sandboxBaseDir,
-              `${slug(model)}-${slug(scenario.name)}-${sample}`,
-            )
+        const outputPath = sandboxBase
+          ? path.join(sandboxBase, `${slug(model)}-${slug(scenario.name)}-${sample}`)
           : path.join(process.cwd(), '.tmp', 'projectSandbox', `${sandboxCounter++}`);
         const sandboxRoot = await createProjectSandbox(
           { ...scenario.files, ...extraFiles },
@@ -303,6 +341,14 @@ export async function runSkillTester(config: SkillTesterConfig): Promise<SkillTe
             gray(`(${agentRun.turns} turns, ${agentRun.toolCalls} tool calls)`),
         );
 
+        if (behaviour && scenario.behaviour) {
+          behaviourCases.push({
+            id: runKey(model, scenario.name, sample),
+            sandboxRoot,
+            testSource: scenario.behaviour.testSource,
+          });
+        }
+
         runs.push({
           model,
           scenario: scenario.name,
@@ -321,6 +367,41 @@ export async function runSkillTester(config: SkillTesterConfig): Promise<SkillTe
         });
       }
     }
+  }
+
+  // Behaviour runs last and batched: one harness invocation covers every run in the campaign.
+  let behaviourSummary: SkillTesterReport['behaviour'];
+  if (behaviourCases.length > 0) {
+    onProgress(
+      blue(`▸ behaviour tier: ${behaviourCases.length} run(s) in a real browser (batched)…`),
+    );
+    const suite = runBehaviourSuite({ cases: behaviourCases, repoRoot });
+    for (const run of runs) {
+      const result = suite.results[runKey(run.model, run.scenario, run.sample)];
+      if (!result) continue;
+      run.behaviour = {
+        passed: result.passed,
+        ran: result.ran,
+        summary: result.summary,
+        failures: result.failures,
+      };
+      if (!result.passed) {
+        onProgress(red(`    ⛔ behaviour · ${run.scenario}: ${result.summary}`));
+      }
+    }
+    const results = Object.values(suite.results);
+    behaviourSummary = {
+      ran: suite.ran,
+      total: results.length,
+      passed: results.filter(result => result.passed).length,
+      failed: results.filter(result => !result.passed).length,
+      durationMs: suite.durationMs,
+    };
+    onProgress(
+      behaviourSummary.failed === 0
+        ? green(`  ✔ behaviour: ${behaviourSummary.passed}/${behaviourSummary.total} passed`)
+        : red(`  ✘ behaviour: ${behaviourSummary.failed}/${behaviourSummary.total} failed`),
+    );
   }
 
   const finishedAt = new Date();
@@ -342,6 +423,7 @@ export async function runSkillTester(config: SkillTesterConfig): Promise<SkillTe
       stats: aggregate(runs.filter(run => run.model === model).map(run => run.score.score)),
     })),
     overall: aggregate(runs.map(run => run.score.score)),
+    ...(behaviourSummary ? { behaviour: behaviourSummary } : {}),
   };
 
   if (resolveProvider(llm) === 'openai') {
@@ -368,6 +450,13 @@ export async function runSkillTester(config: SkillTesterConfig): Promise<SkillTe
   }
 
   return report;
+}
+
+/** NUL-separated key for a single (model, scenario, sample) run. */
+const RUN_KEY_SEPARATOR = String.fromCharCode(0);
+
+function runKey(model: string, scenario: string, sample: number): string {
+  return [model, scenario, sample].join(RUN_KEY_SEPARATOR);
 }
 
 function buildPerModelScenario(runs: ScenarioRunResult[]): ModelScenarioSummary[] {
