@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
-import { runGates, syntaxGate } from '../src/scoring/gates.ts';
+import { importPolicyGate, runGates, syntaxGate } from '../src/scoring/gates.ts';
 import { applyGates, scoreFile } from '../src/scoring/qualityScore.ts';
 import { createProjectSandbox } from '../src/createProjectSandbox.ts';
 
@@ -55,10 +55,58 @@ test('the syntax gate ignores skill references and node_modules', () => {
   assert.equal(result.checked, 1, 'only the produced source file should be inspected');
 });
 
-test('runGates returns the syntax gate', () => {
+test('runGates returns both gates', () => {
   const gates = runGates(writeSandbox({ 'src/example.js': VALID }));
-  assert.deepEqual(gates.map(gate => gate.name), ['syntax']);
+  assert.deepEqual(gates.map(gate => gate.name), ['syntax', 'import-policy']);
   assert.equal(gates[0].passed, true);
+  assert.equal(gates[1].passed, true);
+});
+
+test('the import-policy gate rejects bare lit and lit-family packages', () => {
+  for (const specifier of ['lit', 'lit-html', 'lit-element', '@lit/context']) {
+    const result = importPolicyGate(
+      writeSandbox({ 'src/example.js': `import { html } from '${specifier}';\n` }),
+    );
+    assert.equal(result.passed, false, `${specifier} should be rejected`);
+    assert.match(result.failures[0].message, /@lion\/ui\/core\.js/);
+  }
+});
+
+test('the import-policy gate rejects @lion/* but accepts @lion/ui/*', () => {
+  const bad = importPolicyGate(
+    writeSandbox({ 'src/example.js': "import x from '@lion/button';\n" }),
+  );
+  assert.equal(bad.passed, false);
+  assert.match(bad.failures[0].message, /@lion\/ui\/\*/);
+
+  // Every documented valid form must pass — no false positives on the correct answer.
+  const good = importPolicyGate(
+    writeSandbox({
+      'src/example.js': [
+        "import { LitElement, html } from '@lion/ui/core.js';",
+        "import { LionButton } from '@lion/ui/button.js';",
+        "import '@lion/ui/define/lion-button.js';",
+        "import '@lion/ui/localize.js';",
+      ].join('\n'),
+    }),
+  );
+  assert.equal(good.passed, true, JSON.stringify(good.failures));
+});
+
+test('the import-policy gate also inspects dynamic imports', () => {
+  const result = importPolicyGate(
+    writeSandbox({ 'src/example.js': "export const load = () => import('@lion/legacy');\n" }),
+  );
+  assert.equal(result.passed, false, 'dynamic imports must be covered');
+  assert.match(result.failures[0].message, /@lion\/legacy/);
+});
+
+test('a failed import-policy gate zeroes the scenario too', () => {
+  const root = writeSandbox({ 'src/example.js': "import { html } from 'lit';\n" });
+  const gates = runGates(root);
+  assert.equal(gates.find(gate => gate.name === 'import-policy').passed, false);
+  const scored = applyGates({ score: 1, percent: 100, files: [], checks: [], gates: [] }, gates);
+  assert.equal(scored.score, 0);
 });
 
 test('a failed gate zeroes an otherwise perfect score', () => {
