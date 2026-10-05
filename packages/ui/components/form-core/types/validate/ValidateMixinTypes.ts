@@ -92,7 +92,8 @@ export declare class ValidateHost {
    * ```
    */
   defaultValidators: Validator[];
-  fieldName: string;
+  get fieldName(): string;
+  set fieldName(arg: string);
   validateComplete: Promise<void>;
   feedbackComplete: Promise<void>;
 

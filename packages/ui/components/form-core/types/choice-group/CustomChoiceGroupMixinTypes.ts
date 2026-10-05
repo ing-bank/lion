@@ -3,14 +3,8 @@ import { LitElement } from 'lit';
 
 import { ChoiceGroupHost } from './ChoiceGroupMixinTypes.js';
 
-export declare class CustomChoiceGroupHost {
+export declare class CustomChoiceGroupHost extends ChoiceGroupHost {
   allowCustomChoice: boolean;
-  get modelValue(): any;
-  set modelValue(value: any);
-  get serializedValue(): string;
-  set serializedValue(value: string);
-  get formattedValue(): string;
-  set formattedValue(value: string);
 
   clear(): void;
   parser(value: string | string[]): string | string[];

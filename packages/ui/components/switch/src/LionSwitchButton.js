@@ -73,6 +73,12 @@ export class LionSwitchButton extends DisabledWithTabIndexMixin(LitElement) {
     `;
   }
 
+  /** @private */
+  __handleKeydown;
+
+  /** @private */
+  __handleKeyup;
+
   constructor() {
     super();
     // inputNode = this, which always requires a value prop
@@ -82,9 +88,7 @@ export class LionSwitchButton extends DisabledWithTabIndexMixin(LitElement) {
     this.__initialized = false;
     /** @protected */
     this._toggleChecked = this._toggleChecked.bind(this);
-    /** @private */
     this.__handleKeydown = this._handleKeydown.bind(this);
-    /** @private */
     this.__handleKeyup = this._handleKeyup.bind(this);
   }
 

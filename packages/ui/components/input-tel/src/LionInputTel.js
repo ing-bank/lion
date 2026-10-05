@@ -129,6 +129,15 @@ export class LionInputTel extends LocalizeMixin(LionInput) {
     return this._localizeManager.msg('lion-input-tel:phoneNumber');
   }
 
+  /** @private */
+  __isPhoneNumberValidatorInstance;
+
+  /**
+   * @protected
+   * @type {RegionCode | undefined}
+   */
+  _langIso = undefined;
+
   /**
    * @lifecycle platform
    */
@@ -164,7 +173,6 @@ export class LionInputTel extends LocalizeMixin(LionInput) {
      */
     this.preferredRegions = [];
 
-    /** @private */
     this.__isPhoneNumberValidatorInstance = new PhoneNumber();
     /**  @configures ValidateMixin */
     this.defaultValidators.push(this.__isPhoneNumberValidatorInstance);

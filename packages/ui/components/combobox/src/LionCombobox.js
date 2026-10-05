@@ -413,6 +413,42 @@ export class LionCombobox extends LocalizeMixin(OverlayMixin(CustomChoiceGroupMi
     this.allowCustomChoice = !value;
   }
 
+  /**
+   * For optimal support, we allow aria v1.1 on newer browsers
+   * @type {'1.1'|'1.0'}
+   * @protected
+   */
+  _ariaVersion;
+
+  /**
+   * @private
+   */
+  __prevCboxValueNonSelected;
+
+  /**
+   * @private
+   */
+  __prevCboxValue;
+
+  /**
+   * Tracks modelValue across autocompletion cycles so a manual model-value-changed event can be
+   * dispatched for custom (unmatched) values, independent of autocomplete mode.
+   * @private
+   */
+  __prevModelValueForCustomEvent;
+
+  /**
+   * @type {boolean}
+   * @private
+   */
+  __hadUserIntendsInlineAutoFill;
+
+  /**
+   * @type {boolean}
+   * @private
+   */
+  __listboxContentChanged;
+
   constructor() {
     super();
     /**
@@ -449,11 +485,6 @@ export class LionCombobox extends LocalizeMixin(OverlayMixin(CustomChoiceGroupMi
      */
     this.selectionFollowsFocus = true;
     this.defaultValidators.push(new MatchesOption());
-    /**
-     * For optimal support, we allow aria v1.1 on newer browsers
-     * @type {'1.1'|'1.0'}
-     * @protected
-     */
     this._ariaVersion = browserDetection.isChromium ? '1.1' : '1.0';
     /**
      * @configure ListboxMixin
@@ -465,29 +496,10 @@ export class LionCombobox extends LocalizeMixin(OverlayMixin(CustomChoiceGroupMi
      * @protected
      */
     this._noTypeAhead = true;
-    /**
-     * @private
-     */
     this.__prevCboxValueNonSelected = '';
-    /**
-     * @private
-     */
     this.__prevCboxValue = '';
-    /**
-     * Tracks modelValue across autocompletion cycles so a manual model-value-changed event can be
-     * dispatched for custom (unmatched) values, independent of autocomplete mode.
-     * @private
-     */
     this.__prevModelValueForCustomEvent = '';
-    /**
-     * @type {boolean}
-     * @private
-     */
     this.__hadUserIntendsInlineAutoFill = false;
-    /**
-     * @type {boolean}
-     * @private
-     */
     this.__listboxContentChanged = false;
 
     /** @type {EventListener}

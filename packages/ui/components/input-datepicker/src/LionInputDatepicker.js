@@ -135,21 +135,31 @@ export class LionInputDatepicker extends ScopedElementsMixin(
     return this.focused && this._isHandlingUserInput;
   }
 
+  /** @private */
+  __invokerId;
+
+  /** @protected */
+  _focusCentralDateOnCalendarOpen;
+
+  /** @protected */
+  _hideOnUserSelect;
+
+  /** @protected */
+  _syncOnUserSelect;
+
+  /** @protected */
+  _isHandlingCalendarUserInput;
+
   constructor() {
     super();
-    /** @private */
     this.__invokerId = uuid(this.localName);
     /** @protected */
     this._calendarInvokerSlot = 'suffix';
 
     // Configuration flags for subclassers
-    /** @protected */
     this._focusCentralDateOnCalendarOpen = true;
-    /** @protected */
     this._hideOnUserSelect = true;
-    /** @protected */
     this._syncOnUserSelect = true;
-    /** @protected */
     this._isHandlingCalendarUserInput = false;
 
     /** @private */

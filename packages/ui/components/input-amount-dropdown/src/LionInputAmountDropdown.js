@@ -321,6 +321,39 @@ export class LionInputAmountDropdown extends LionInputAmount {
   }
 
   /**
+   * Group label for all countries, when preferredCountries are shown
+   * @protected
+   */
+  _allCurrenciesLabel;
+
+  /**
+   * Group label for preferred countries, when preferredCountries are shown
+   * @protected
+   */
+  _preferredCurrenciesLabel;
+
+  /**
+   * Contains everything needed for rendering region options:
+   * region code, currency code, display name according to locale, display name
+   * @private
+   * @type {RegionMeta[]}
+   */
+  __regionMetaList;
+
+  /**
+   * A filtered `this.__regionMetaList`, containing all regions provided in `preferredCurrencies`
+   * @private
+   * @type {RegionMeta[]}
+   */
+  __regionMetaListPreferred;
+
+  /**
+   * @protected
+   * @type {RegionCode | undefined}
+   */
+  _langIso = undefined;
+
+  /**
    * @lifecycle platform
    */
   constructor() {
@@ -359,30 +392,11 @@ export class LionInputAmountDropdown extends LionInputAmount {
      */
     this.allowedCurrencies = [];
 
-    /**
-     * Group label for all countries, when preferredCountries are shown
-     * @protected
-     */
     this._allCurrenciesLabel = '';
-    /**
-     * Group label for preferred countries, when preferredCountries are shown
-     * @protected
-     */
     this._preferredCurrenciesLabel = '';
 
-    /**
-     * Contains everything needed for rendering region options:
-     * region code, currency code, display name according to locale, display name
-     * @private
-     * @type {RegionMeta[]}
-     */
     this.__regionMetaList = [];
 
-    /**
-     * A filtered `this.__regionMetaList`, containing all regions provided in `preferredCurrencies`
-     * @private
-     * @type {RegionMeta[]}
-     */
     this.__regionMetaListPreferred = [];
 
     /**

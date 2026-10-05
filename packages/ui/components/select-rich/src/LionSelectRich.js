@@ -109,6 +109,9 @@ export class LionSelectRich extends SlotMixin(ScopedElementsMixin(OverlayMixin(L
     );
   }
 
+  /** @protected */
+  _arrowWidth;
+
   constructor() {
     super();
 
@@ -126,7 +129,6 @@ export class LionSelectRich extends SlotMixin(ScopedElementsMixin(OverlayMixin(L
     this.interactionMode = 'auto';
 
     this.singleOption = false;
-    /** @protected */
     this._arrowWidth = 28;
 
     /** @private */

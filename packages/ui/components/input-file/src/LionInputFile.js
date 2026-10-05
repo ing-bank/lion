@@ -151,6 +151,20 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
     return 'draggable' in document.createElement('div');
   }
 
+  /**
+   * @private
+   */
+  __initialUploadResponse;
+
+  /** @private */
+  __duplicateFileNamesValidator;
+
+  /**
+   * @private
+   * @type {FileList | null}
+   */
+  __previouslyParsedFiles;
+
   constructor() {
     super();
     this.type = 'file';
@@ -164,9 +178,6 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
      */
     // TODO: make readonly?
     this.uploadResponse = [];
-    /**
-     * @private
-     */
     this.__initialUploadResponse = this.uploadResponse;
     // TODO: public default booleans are always false
     this.uploadOnSelect = false;
@@ -186,12 +197,7 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
      */
     this._onRemoveFile = this._onRemoveFile.bind(this);
 
-    /** @private */
     this.__duplicateFileNamesValidator = new DuplicateFileNames({ show: false });
-    /**
-     * @private
-     * @type {FileList | null}
-     */
     this.__previouslyParsedFiles = null;
   }
 

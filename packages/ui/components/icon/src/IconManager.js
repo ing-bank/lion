@@ -4,8 +4,10 @@
  */
 
 export class IconManager {
+  /** @private */
+  __iconResolvers;
+
   constructor() {
-    /** @private */
     this.__iconResolvers = new Map();
   }
 
