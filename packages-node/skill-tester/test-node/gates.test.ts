@@ -21,7 +21,7 @@ function writeSandbox(files: Record<string, string>): string {
   return root;
 }
 
-const VALID = "import { LionBlob } from '@lion/ui/blob.js';\nexport class A extends B {}\n";
+const VALID = "import { LionButton } from '@lion/ui/button.js';\nexport class A extends B {}\n";
 // An unterminated template literal. `node --check` ACCEPTS this when the sandbox has no declared
 // module type; oxc rejects it, which is why the gate is built on oxc.
 const UNPARSEABLE = 'export const example = () => html`<lion-button>x</lion-button>;\n';
@@ -62,13 +62,36 @@ test('runGates returns both gates', () => {
   assert.equal(gates[1].passed, true);
 });
 
-test('the import-policy gate rejects bare lit and lit-family packages', () => {
+test('the import-policy gate allows bare lit, because core.js does not export it', () => {
+  // Measured: `@lion/ui/core.js` exports only DisabledMixin, DisabledWithTabIndexMixin,
+  // ScopedStylesController, SlotMixin, browserDetection, EventTargetShim and uuid — none of
+  // `LitElement`, `html` or `css`. The skill's canonical example is `import { html } from 'lit';`
+  // and a headless-Chromium run of the "corrected" core.js import fails with
+  // "does not provide an export named 'LitElement'". So bare `lit` must NOT be a violation.
   for (const specifier of ['lit', 'lit-html', 'lit-element', '@lit/context']) {
     const result = importPolicyGate(
       writeSandbox({ 'src/example.js': `import { html } from '${specifier}';\n` }),
     );
+    assert.equal(
+      result.passed,
+      true,
+      `${specifier} should be allowed: ${JSON.stringify(result.failures)}`,
+    );
+  }
+});
+
+test('the import-policy gate rejects deep imports into @lion/ui internals', () => {
+  // The skill's rules say: "Never deep-import from `@lion/ui/components/<x>/src/*`". That — not
+  // bare `lit` — is the documented, enforceable import policy.
+  for (const specifier of [
+    '@lion/ui/components/input-iban/src/LionInputIban.js',
+    '@lion/ui/src/core.js',
+  ]) {
+    const result = importPolicyGate(
+      writeSandbox({ 'src/example.js': `import x from '${specifier}';\n` }),
+    );
     assert.equal(result.passed, false, `${specifier} should be rejected`);
-    assert.match(result.failures[0].message, /@lion\/ui\/core\.js/);
+    assert.match(result.failures[0].message, /deep import/);
   }
 });
 
@@ -83,7 +106,7 @@ test('the import-policy gate rejects @lion/* but accepts @lion/ui/*', () => {
   const good = importPolicyGate(
     writeSandbox({
       'src/example.js': [
-        "import { LitElement, html } from '@lion/ui/core.js';",
+        "import { html } from 'lit';",
         "import { LionButton } from '@lion/ui/button.js';",
         "import '@lion/ui/define/lion-button.js';",
         "import '@lion/ui/localize.js';",
@@ -102,7 +125,9 @@ test('the import-policy gate also inspects dynamic imports', () => {
 });
 
 test('a failed import-policy gate zeroes the scenario too', () => {
-  const root = writeSandbox({ 'src/example.js': "import { html } from 'lit';\n" });
+  const root = writeSandbox({
+    'src/example.js': "import x from '@lion/ui/components/core/src/x.js';\n",
+  });
   const gates = runGates(root);
   assert.equal(gates.find(gate => gate.name === 'import-policy').passed, false);
   const scored = applyGates({ score: 1, percent: 100, files: [], checks: [], gates: [] }, gates);
@@ -160,7 +185,7 @@ test('a scenario that provides its own package.json keeps it', async () => {
 });
 
 test('the golden-file path is formatting-insensitive but gate-sensitive', () => {
-  // The two reliability defects measured on the blob example, as one assertion:
+  // The two reliability defects measured on the (since deleted) fictional blob example, as one:
   const golden = "\n      const a = 1;\n      const b = 2;\n";
   const reindented = 'const a = 1;\nconst b = 2;\n';
   const root = writeSandbox({ 'src/a.js': reindented });

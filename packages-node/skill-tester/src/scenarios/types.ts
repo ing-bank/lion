@@ -27,18 +27,33 @@ export type ScenarioCheck = {
 };
 
 export type TestScenario = {
-  /** Unique id, e.g. `component/button` or `system/form`. */
+  /** Unique id, e.g. `component/button` or `repair/iban-field`. */
   name: string;
-  kind: 'component' | 'system' | 'integration';
+  kind: 'component' | 'system' | 'integration' | 'repair';
   description: string;
   /** The task given to the model under test. */
   prompt: string;
   /** Starting virtual file system for the sandbox. */
   files: ProjectMock;
-  /** Optional golden output, scored by exact / normalized / similarity. */
+  /** Optional golden output, scored by normalized-match / similarity. Must be derived or executed. */
   expectedTransformedFiles?: ProjectMock;
+  /**
+   * How the golden was verified. A golden that nobody executed is the authoritative way to make a
+   * benchmark measure fiction, so the provenance is recorded with it.
+   */
+  goldenProvenance?: string;
   /** Objective assertions, used when a golden file would be over-specific. */
   checks?: ScenarioCheck[];
+  /**
+   * Behaviour axis: source of a test file that exercises the *produced* code in a real browser
+   * (see `behaviour/runner.ts`). Opt-in per run; assertions should be borrowed from the repo's own
+   * component tests rather than invented.
+   */
+  behaviour?: {
+    /** Generated test file content, placed in the sandbox beside the produced code. */
+    testSource: string;
+    description?: string;
+  };
   /** The file the task is expected to edit (informational; also the default check target). */
   targetFile: string;
 };
