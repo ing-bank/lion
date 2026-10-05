@@ -5,20 +5,31 @@
  * single number is meaningful without pretending an LLM's output matches a golden file
  * byte-for-byte:
  *
- *   1. exact match        — the transformed file equals the expectation after trimming
- *   2. normalized match   — equal once formatting (whitespace, blank lines) is ignored
- *   3. similarity         — line-level similarity (partial credit for near-correct output)
+ * The layers, in order:
+ *
+ *   0. gates              — deterministic prerequisites (does the output parse at all?); a failure
+ *                           zeroes the scenario regardless of the text
+ *   1. normalized match   — equal once formatting (indentation, blank lines, spacing) is ignored.
+ *                           Formatting is not the specification, so this is a FULL match.
+ *   2. similarity         — line-level similarity of the *normalized* text, for partial credit
+ *   3. exact match        — kept as a diagnostic flag only, never as a score component
+ *
+ * Why normalized equals full: measured on the golden-file scenario, identical correct code scored
+ * 100% or 95% purely because the model indented it differently — noise proportional to the model's
+ * formatting style. Likewise, line-similarity over raw text collapsed to 6% for code that is
+ * identical after re-indenting, so similarity is computed over normalized text.
  *
  * Scenarios can additionally declare objective `checks` (contains / notContains / matches) for
  * properties that must hold but cannot be pinned to one golden file (e.g. "imports from
  * `@lion/ui/*`, never from `@lion/*`"). File scores and check outcomes are averaged into a
- * single 0..100 quality score, with a full breakdown kept for reporting.
+ * single 0..100 score, with a full breakdown kept for reporting.
  */
 
 import fs from 'node:fs';
 import path from 'node:path';
 import { diffLines } from 'diff';
 import type { ScenarioCheck } from '../scenarios/types.ts';
+import type { GateResult } from './gates.ts';
 
 export type FileScore = {
   path: string;
@@ -44,6 +55,8 @@ export type ScenarioScore = {
   percent: number;
   files: FileScore[];
   checks: CheckOutcome[];
+  /** Deterministic prerequisites. Any failure zeroes `score`/`percent`. */
+  gates: GateResult[];
 };
 
 export type AggregateStats = {
@@ -77,7 +90,6 @@ export function lineSimilarity(expected: string, actual: string): number {
 }
 
 const PARTIAL_CREDIT_CAP = 0.9;
-const NORMALIZED_SCORE = 0.95;
 
 export function scoreFile({
   sandboxRoot,
@@ -103,11 +115,13 @@ export function scoreFile({
     };
   }
 
+  const normalizedExpected = normalizeContent(expectedContent);
+  const normalizedActual = normalizeContent(actualContent);
   const exact = actualContent.trim() === expectedContent.trim();
-  const normalizedMatch =
-    !exact && normalizeContent(actualContent) === normalizeContent(expectedContent);
-  const similarity = lineSimilarity(expectedContent.trim(), actualContent.trim());
-  const score = exact ? 1 : normalizedMatch ? NORMALIZED_SCORE : Math.min(similarity, PARTIAL_CREDIT_CAP);
+  const normalizedMatch = normalizedExpected === normalizedActual;
+  // Similarity over the normalized text, so indentation changes cannot dominate the gradient.
+  const similarity = lineSimilarity(normalizedExpected, normalizedActual);
+  const score = normalizedMatch ? 1 : Math.min(similarity, PARTIAL_CREDIT_CAP);
 
   return { path: relativePath, exists: true, exact, normalizedMatch, similarity, score };
 }
@@ -178,7 +192,23 @@ export function scoreScenario({
   const score =
     totalWeight === 0 ? 1 : items.reduce((sum, item) => sum + item.score * item.weight, 0) / totalWeight;
 
-  return { score, percent: Math.round(score * 1000) / 10, files, checks: checkOutcomes };
+  return { score, percent: Math.round(score * 1000) / 10, files, checks: checkOutcomes, gates: [] };
+}
+
+/**
+ * Apply deterministic gates to a score.
+ *
+ * A failed gate zeroes the scenario: textual similarity to a golden file is not evidence when the
+ * output does not parse. Passed gates are attached for the report either way.
+ */
+export function applyGates(score: ScenarioScore, gates: GateResult[]): ScenarioScore {
+  const failed = gates.filter(gate => !gate.passed);
+  return {
+    ...score,
+    score: failed.length > 0 ? 0 : score.score,
+    percent: failed.length > 0 ? 0 : score.percent,
+    gates,
+  };
 }
 
 export function aggregate(scores: number[]): AggregateStats {

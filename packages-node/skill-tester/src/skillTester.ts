@@ -22,10 +22,12 @@ import type { AgentEvent } from './llm/agentRunner.ts';
 import { runCopilotAgent } from './llm/copilotRunner.ts';
 import {
   aggregate,
+  applyGates,
   scoreScenario,
   type AggregateStats,
   type ScenarioScore,
 } from './scoring/qualityScore.ts';
+import { runGates } from './scoring/gates.ts';
 import { writeRunRecord } from './report/runRecord.ts';
 import type { TestScenario } from './scenarios/types.ts';
 
@@ -281,11 +283,19 @@ export async function runSkillTester(config: SkillTesterConfig): Promise<SkillTe
               });
         const durationMs = Date.now() - start;
 
-        const score = scoreScenario({
-          sandboxRoot,
-          expectedTransformedFiles: scenario.expectedTransformedFiles,
-          checks: scenario.checks,
-        });
+        const gates = runGates(sandboxRoot);
+        const score = applyGates(
+          scoreScenario({
+            sandboxRoot,
+            expectedTransformedFiles: scenario.expectedTransformedFiles,
+            checks: scenario.checks,
+          }),
+          gates,
+        );
+
+        for (const gate of gates.filter(g => !g.passed)) {
+          onProgress(red(`    ⛔ ${gate.name} gate: ${gate.summary}`));
+        }
 
         onProgress(
           `${score.percent >= 100 ? green('✔') : score.percent >= 50 ? yellow('~') : red('✘')} ` +
