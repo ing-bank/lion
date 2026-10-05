@@ -108,6 +108,35 @@ export function renderRunRecord({
   }
   lines.push('');
 
+  if (report.behaviour) {
+    // Reported separately from the conformance score on purpose: a scenario can reach 100% on the
+    // convention checks and the goldens while the produced code does not work at all, and that gap
+    // is the finding worth surfacing rather than averaging away.
+    lines.push('## Behaviour (real browser)');
+    lines.push('');
+    lines.push(
+      `Produced code executed in a headless browser: **${report.behaviour.passed}/${report.behaviour.total} passed**` +
+        (report.behaviour.failed > 0 ? `, ${report.behaviour.failed} failed` : '') +
+        ` (${(report.behaviour.durationMs / 1000).toFixed(1)}s).`,
+    );
+    lines.push('');
+    lines.push('| Model | Scenario | Behaviour | Evidence |');
+    lines.push('| --- | --- | --- | --- |');
+    for (const run of report.runs) {
+      if (!run.behaviour) continue;
+      const evidence = run.behaviour.passed
+        ? 'passed'
+        : run.behaviour.failures
+            .map(failure => `${failure.test}: ${failure.message}`)
+            .join('; ')
+            .slice(0, 200);
+      lines.push(
+        `| ${run.model} | ${run.scenario} | ${run.behaviour.passed ? 'pass' : 'FAIL'} | ${evidence} |`,
+      );
+    }
+    lines.push('');
+  }
+
   lines.push('## Measured milestones');
   lines.push('');
   lines.push('| Metric | Value |');
