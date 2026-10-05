@@ -13,7 +13,7 @@ export declare class DisabledWithTabIndexHost {
    */
   public retractRequestToBeDisabled(): void;
 
-  protected __internalSetTabIndex(value: boolean): void;
+  private __internalSetTabIndex(value: boolean): void;
 
   firstUpdated(changedProperties: import('lit').PropertyValues): void;
 }
