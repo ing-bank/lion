@@ -98,7 +98,6 @@ function determineSlotFunctionResultType(slotFunctionResult) {
  */
 // prettier-ignore
 const SlotMixinImplementation = /** @type {SlotMixin} */ (superclass =>
-  // @ts-ignore https://github.com/microsoft/TypeScript/issues/36821#issuecomment-588375051
   class SlotMixin extends superclass {
     /**
      * @return {SlotsMap}
@@ -107,8 +106,9 @@ const SlotMixinImplementation = /** @type {SlotMixin} */ (superclass =>
       return {};
     }
 
-    constructor() {
-      super();
+    /** @param {...any} args */
+    constructor(...args) {
+      super(...args);
 
       /**
        * The roots that are used to do a rerender in.

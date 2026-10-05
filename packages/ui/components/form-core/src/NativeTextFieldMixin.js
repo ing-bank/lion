@@ -10,7 +10,6 @@ import { FormatMixin } from './FormatMixin.js';
  */
 // prettier-ignore
 const NativeTextFieldMixinImplementation = /** @type {NativeTextFieldMixin} */ (superclass =>
-  // @ts-ignore https://github.com/microsoft/TypeScript/issues/36821#issuecomment-588375051
   class NativeTextFieldMixin extends FormatMixin(FocusMixin(FormControlMixin(superclass))) {
     /** @type {any} */
     static get properties() {

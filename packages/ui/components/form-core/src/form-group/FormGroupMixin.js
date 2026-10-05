@@ -31,7 +31,6 @@ import { FormElementsHaveNoError } from './FormElementsHaveNoError.js';
  */
 // prettier-ignore
 const FormGroupMixinImplementation = /** @type {FormGroupMixin} */ (superclass =>
-  // @ts-ignore https://github.com/microsoft/TypeScript/issues/36821#issuecomment-588375051
   class FormGroupMixin extends FormRegistrarMixin(
     FormControlMixin(ValidateMixin(DisabledMixin(SlotMixin(superclass)))),
   ) {

@@ -26,7 +26,6 @@ import { FormRegisteringMixin } from './FormRegisteringMixin.js';
 // prettier-ignore
 const FormRegistrarMixinImplementation = /** @type {FormRegistrarMixin} */ (superclass =>
   // eslint-disable-next-line no-shadow, no-unused-vars
-  // @ts-ignore https://github.com/microsoft/TypeScript/issues/36821#issuecomment-588375051
   class extends FormRegisteringMixin(superclass) {
     /** @type {any} */
     static get properties() {

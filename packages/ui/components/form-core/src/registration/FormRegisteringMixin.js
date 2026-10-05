@@ -19,10 +19,10 @@ import { dedupeMixin } from '@open-wc/dedupe-mixin';
  */
 // prettier-ignore
 const FormRegisteringMixinImplementation = /** @type {FormRegisteringMixin} */ (superclass =>
-  // @ts-ignore https://github.com/microsoft/TypeScript/issues/36821#issuecomment-588375051
   class extends superclass {
-    constructor() {
-      super();
+    /** @param {...any} args */
+    constructor(...args) {
+      super(...args);
       /**
        * The name the element will be registered with to the .formElements collection
        * of the parent. Also, it serves as the key of key/value pairs in

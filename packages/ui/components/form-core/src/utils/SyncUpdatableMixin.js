@@ -25,10 +25,10 @@ import { dedupeMixin } from '@open-wc/dedupe-mixin';
  */
 // prettier-ignore
 const SyncUpdatableMixinImplementation = /** @type {SyncUpdatableMixin} */ (superclass =>
-  // @ts-ignore https://github.com/microsoft/TypeScript/issues/36821#issuecomment-588375051
   class extends superclass {
-    constructor() {
-      super();
+    /** @param {...any} args */
+    constructor(...args) {
+      super(...args);
 
       /**
        * Namespace for this mixin that guarantees naming clashes will not occur...

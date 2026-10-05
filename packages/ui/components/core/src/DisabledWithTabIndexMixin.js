@@ -12,7 +12,6 @@ import { DisabledMixin } from './DisabledMixin.js';
 // prettier-ignore
 const DisabledWithTabIndexMixinImplementation = /** @type {DisabledWithTabIndexMixin} */ (superclass =>
   // eslint-disable-next-line no-shadow
-  // @ts-ignore https://github.com/microsoft/TypeScript/issues/36821#issuecomment-588375051
   class extends DisabledMixin(superclass) {
     static get properties() {
       return {
