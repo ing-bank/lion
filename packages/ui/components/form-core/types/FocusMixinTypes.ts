@@ -31,10 +31,10 @@ export declare class FocusHost {
    */
   protected get _focusableNode(): HTMLElement;
 
-  protected __onFocus(): void;
-  protected __onBlur(): void;
-  protected __registerEventsForFocusMixin(): void;
-  protected __teardownEventsForFocusMixin(): void;
+  private __onFocus(): void;
+  private __onBlur(): void;
+  private __registerEventsForFocusMixin(): void;
+  private __teardownEventsForFocusMixin(): void;
 }
 
 export declare function FocusImplementation<T extends Constructor<LitElement>>(

@@ -52,7 +52,7 @@ export declare class ListboxHost {
 
   protected _uncheckChildren(): void;
 
-  protected __setupListboxNode(): void;
+  private __setupListboxNode(): void;
 
   protected _handleTypeAhead(ev: KeyboardEvent, params: { setAsChecked: boolean }): void;
 
@@ -80,7 +80,7 @@ export declare class ListboxHost {
 
   protected _onListboxContentChanged(): void;
 
-  protected __pendingTypeAheadTimeout: number | undefined;
+  private __pendingTypeAheadTimeout: number | undefined;
 }
 
 export declare function ListboxImplementation<T extends Constructor<LitElement>>(
