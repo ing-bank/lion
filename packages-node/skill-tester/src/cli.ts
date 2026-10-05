@@ -33,6 +33,7 @@ type CliOptions = {
   apiKey?: string;
   skillDir?: string;
   useMockAgent: boolean;
+  behaviour: boolean;
   list: boolean;
   help: boolean;
   filters: { kind?: string; name?: string };
@@ -50,6 +51,7 @@ function parseArgs(argv: string[]): CliOptions {
     maxTurns: 25,
     passThreshold: 100,
     useMockAgent: false,
+    behaviour: false,
     list: false,
     help: false,
     filters: {},
@@ -88,6 +90,9 @@ function parseArgs(argv: string[]): CliOptions {
         break;
       case '--mock-agent':
         options.useMockAgent = true;
+        break;
+      case '--behaviour':
+        options.behaviour = true;
         break;
       case '--kind':
         options.filters.kind = next();
@@ -130,6 +135,8 @@ Options:
   --api-key <key>         API key (prefer env vars so it stays out of your shell history)
   --skill <dir>           Skill directory under test (default: packages/ui/skills/lion-ui)
   --mock-agent            Test the mock-repo agent instead of the lion-ui skill
+  --behaviour             Also run the behaviour tier: execute the produced code in a real
+                          browser (headless Chromium) and report it as a separate axis
   --kind <k>              Only scenarios of this kind (component|system|integration)
   --scenario <substring>  Only scenarios whose name contains this substring
   --limit <n>             Run at most n scenarios
@@ -223,11 +230,19 @@ async function main(): Promise<void> {
     maxTurns: options.maxTurns,
     passThreshold: options.passThreshold,
     llm: { provider: options.provider, baseUrl: options.baseUrl, apiKey: options.apiKey },
+    behaviour: options.behaviour,
   });
 
   console.log('');
   console.log(`Provider: ${report.provider}${report.baseUrl ? ` (${report.baseUrl})` : ''}`);
   console.log(`Overall quality score: ${(report.overall.mean * 100).toFixed(1)}%`);
+  if (report.behaviour) {
+    const { passed, total, failed } = report.behaviour;
+    console.log(
+      `Behaviour (real browser): ${passed}/${total} passed` +
+        (failed > 0 ? red(` (${failed} failed)`) : ''),
+    );
+  }
   for (const entry of report.perModel) {
     console.log(
       `  ${entry.model}: mean ${(entry.stats.mean * 100).toFixed(1)}%, ` +
