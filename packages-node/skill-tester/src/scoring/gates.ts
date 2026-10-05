@@ -4,22 +4,29 @@
  * A gate is a pass/fail prerequisite checked *before* a sandbox is scored, not a scored
  * dimension: if a produced file does not even parse, textual similarity to a golden file is
  * meaningless (an unparseable file can otherwise score 100%, because the convention checks are
- * substring assertions). When a gate fails the scenario scores zero and the reason is recorded
- * as evidence.
+ * substring assertions). A failed gate zeroes the scenario and the reason is recorded as evidence.
  *
- * The parser is `oxc-parser` — already a dependency of this repo
- * (`packages-node/providence-analytics` pins it). It is used here rather than `node --check`
- * because it does not depend on module-type inference: on a sandbox without a declared module
- * type, `node --check` accepts a file with an unterminated template literal that oxc rejects.
- * The sandbox declares `"type": "module"` (see `createProjectSandbox`) so both agree, but the
- * gate must not depend on that.
+ * Both gates are derived from a single oxc parse per file:
+ *
+ *   - `syntax`        — does every produced source file parse at all?
+ *   - `import-policy` — does it import only through the entrypoints the skill documents?
+ *                       (no bare `lit`/`lit-html`/`@lit/*`; no `@lion/*` other than `@lion/ui/*`)
+ *
+ * The parser is `oxc-parser` — already a dependency of this repo (pinned by
+ * `packages-node/providence-analytics`). It is used rather than `node --check` because the latter
+ * ACCEPTS an unterminated template literal when the sandbox declares no module type. The sandbox
+ * does declare `"type": "module"` (see `createProjectSandbox`), but the gate must not depend on it.
+ *
+ * The import policy is enforced here rather than with ESLint because ESLint 8.57 cannot express it:
+ * `patterns[].regex` is rejected as invalid config, and `!@lion/ui/*` negation flags the valid
+ * import as a violation (both measured). oxc already gives us the specifiers, exactly and for free.
  */
 
 import fs from 'node:fs';
 import path from 'node:path';
 import { parseSync } from 'oxc-parser';
 
-export type GateName = 'syntax';
+export type GateName = 'syntax' | 'import-policy';
 
 export type GateFailure = {
   file: string;
@@ -37,61 +44,106 @@ export type GateResult = {
   summary: string;
 };
 
-/** Extensions the syntax gate attempts to parse. */
+/** Extensions the gates attempt to parse. */
 const PARSEABLE_EXTENSIONS = new Set(['.js', '.mjs', '.cjs', '.jsx', '.ts', '.tsx', '.mts', '.cts']);
 
 /** Directories that are never produced by the model under test. */
 const IGNORED_DIRS = new Set(['node_modules', '.git', '.skill', '.tmp']);
 
-function walk(dir: string, out: string[] = []): string[] {
-  let entries: fs.Dirent[];
-  try {
-    entries = fs.readdirSync(dir, { withFileTypes: true });
-  } catch {
-    return out;
-  }
-  for (const entry of entries) {
-    const full = path.join(dir, entry.name);
-    if (entry.isDirectory()) {
-      if (!IGNORED_DIRS.has(entry.name)) walk(full, out);
-    } else if (entry.isFile() && PARSEABLE_EXTENSIONS.has(path.extname(entry.name))) {
-      out.push(full);
-    }
-  }
-  return out;
-}
+type ParsedFile = {
+  relative: string;
+  source: string;
+  errors: { message: string; start: number }[];
+  specifiers: { value: string; start: number }[];
+};
 
 /** Convert a byte offset into 1-based line/column for a readable failure message. */
 function offsetToLineColumn(source: string, offset: number): { line: number; column: number } {
   const before = source.slice(0, offset);
-  const line = before.split('\n').length;
-  const lastNewline = before.lastIndexOf('\n');
-  return { line, column: offset - lastNewline };
+  return { line: before.split('\n').length, column: offset - before.lastIndexOf('\n') };
 }
 
-/**
- * Parse every produced source file in the sandbox; any syntax error fails the gate.
- */
-export function syntaxGate(sandboxRoot: string): GateResult {
-  const files = walk(sandboxRoot);
+/** The module specifier of an import; dynamic imports expose only a span, not a value. */
+function specifierOf(moduleRequest: unknown, source: string): string | undefined {
+  const request = moduleRequest as { value?: unknown; start?: number; end?: number } | undefined;
+  if (!request) return undefined;
+  if (typeof request.value === 'string') return request.value;
+  if (typeof request.start === 'number' && typeof request.end === 'number') {
+    return source.slice(request.start, request.end).replace(/^['"]|['"]$/g, '');
+  }
+  return undefined;
+}
+
+type ModuleSpecifier = { value: string; start: number };
+
+type OxcParseResult = {
+  module?: {
+    staticImports?: { moduleRequest?: unknown }[];
+    dynamicImports?: { moduleRequest?: unknown }[];
+  };
+  errors?: { message?: string; labels?: { start?: number }[] }[];
+};
+
+/** Parse every produced source file once, collecting syntax errors and import specifiers. */
+function parseSandbox(sandboxRoot: string): ParsedFile[] {
+  const files: ParsedFile[] = [];
+
+  const walk = (dir: string): void => {
+    let entries: fs.Dirent[];
+    try {
+      entries = fs.readdirSync(dir, { withFileTypes: true });
+    } catch {
+      return;
+    }
+    for (const entry of entries) {
+      const full = path.join(dir, entry.name);
+      if (entry.isDirectory()) {
+        if (!IGNORED_DIRS.has(entry.name)) walk(full);
+        continue;
+      }
+      if (!entry.isFile() || !PARSEABLE_EXTENSIONS.has(path.extname(entry.name))) continue;
+
+      const source = fs.readFileSync(full, 'utf-8');
+      const result = parseSync(full, source) as OxcParseResult;
+
+      const specifiers: ModuleSpecifier[] = [];
+      for (const node of [
+        ...(result.module?.staticImports ?? []),
+        ...(result.module?.dynamicImports ?? []),
+      ]) {
+        const value = specifierOf(node.moduleRequest, source);
+        if (!value) continue;
+        const request = node.moduleRequest as { start?: number } | undefined;
+        specifiers.push({ value, start: request?.start ?? 0 });
+      }
+
+      files.push({
+        relative: path.relative(sandboxRoot, full).split(path.sep).join('/'),
+        source,
+        errors: (result.errors ?? []).map(error => ({
+          message: error.message ?? 'syntax error',
+          start: error.labels?.[0]?.start ?? 0,
+        })),
+        specifiers,
+      });
+    }
+  };
+
+  walk(sandboxRoot);
+  return files;
+}
+
+function syntaxGateFor(files: ParsedFile[]): GateResult {
   const failures: GateFailure[] = [];
-
-  for (const absolute of files) {
-    const source = fs.readFileSync(absolute, 'utf-8');
-    const result = parseSync(absolute, source);
-    const first = result.errors?.[0];
+  for (const file of files) {
+    const first = file.errors[0];
     if (!first) continue;
-
-    const start = first.labels?.[0]?.start ?? 0;
-    const { line, column } = offsetToLineColumn(source, start);
     failures.push({
-      file: path.relative(sandboxRoot, absolute).split(path.sep).join('/'),
-      message: first.message ?? 'syntax error',
-      line,
-      column,
+      file: file.relative,
+      message: first.message,
+      ...offsetToLineColumn(file.source, first.start),
     });
   }
-
   const passed = failures.length === 0;
   return {
     name: 'syntax',
@@ -105,7 +157,59 @@ export function syntaxGate(sandboxRoot: string): GateResult {
   };
 }
 
-/** Run every gate. */
+/** Bare specifiers for core Lit utilities, which must come from `@lion/ui/core.js` instead. */
+const LIT_SPECIFIER = /^(lit|lit-html|lit-element|@lit\/.+)$/;
+
+function policyViolation(specifier: string): string | undefined {
+  if (LIT_SPECIFIER.test(specifier)) {
+    return `imports '${specifier}': import core Lit utilities from '@lion/ui/core.js' instead`;
+  }
+  if (specifier === '@lion' || (specifier.startsWith('@lion/') && !specifier.startsWith('@lion/ui'))) {
+    return `imports '${specifier}': use the '@lion/ui/*' entrypoints ('@lion/*' is not a dependency)`;
+  }
+  return undefined;
+}
+
+function importPolicyGateFor(files: ParsedFile[]): GateResult {
+  const failures: GateFailure[] = [];
+  let checked = 0;
+
+  for (const file of files) {
+    // A file that does not parse cannot yield reliable imports; the syntax gate owns that failure.
+    if (file.errors.length > 0) continue;
+    checked++;
+    for (const { value, start } of file.specifiers) {
+      const message = policyViolation(value);
+      if (!message) continue;
+      failures.push({ file: file.relative, message, ...offsetToLineColumn(file.source, start) });
+    }
+  }
+
+  const passed = failures.length === 0;
+  return {
+    name: 'import-policy',
+    passed,
+    checked,
+    failures,
+    summary: passed
+      ? `${checked} file(s) import through allowed entrypoints`
+      : `${failures.length} import violation(s): ` +
+        failures.map(f => `${f.file}:${f.line} ${f.message}`).join('; '),
+  };
+}
+
+/** Run every gate over a sandbox, parsing each file exactly once. */
 export function runGates(sandboxRoot: string): GateResult[] {
-  return [syntaxGate(sandboxRoot)];
+  const files = parseSandbox(sandboxRoot);
+  return [syntaxGateFor(files), importPolicyGateFor(files)];
+}
+
+/** The syntax gate on its own. */
+export function syntaxGate(sandboxRoot: string): GateResult {
+  return syntaxGateFor(parseSandbox(sandboxRoot));
+}
+
+/** The import-policy gate on its own. */
+export function importPolicyGate(sandboxRoot: string): GateResult {
+  return importPolicyGateFor(parseSandbox(sandboxRoot));
 }

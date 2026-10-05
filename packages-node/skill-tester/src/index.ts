@@ -63,7 +63,13 @@ export {
   type AggregateStats,
 } from './scoring/qualityScore.ts';
 
-export { runGates, syntaxGate, type GateResult, type GateFailure } from './scoring/gates.ts';
+export {
+  runGates,
+  syntaxGate,
+  importPolicyGate,
+  type GateResult,
+  type GateFailure,
+} from './scoring/gates.ts';
 
 export { writeRunRecord, renderRunRecord } from './report/runRecord.ts';
 
