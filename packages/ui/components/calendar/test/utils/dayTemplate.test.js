@@ -20,7 +20,7 @@ describe('dayTemplate', () => {
         >
           <span class="calendar__day-button__text">19</span>
           <span class="u-sr-only">
-            April 2019 Friday
+            April 2019.
           </span>
         </div>
       </td>
