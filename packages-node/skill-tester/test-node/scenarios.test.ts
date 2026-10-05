@@ -147,6 +147,6 @@ test('the tag check accepts markup and createElement, but not a different elemen
   const created = `${classImport}const el = document.createElement('lion-button');\n`;
   assert.equal(scoreExample(created, scenario).score, 1, 'createElement should be accepted');
 
-  const wrongTag = `${classImport}const el = document.createElement('lion-blob');\n`;
+  const wrongTag = `${classImport}const el = document.createElement('lion-not-this-component');\n`;
   assert.ok(scoreExample(wrongTag, scenario).score < 1, 'a different element name must fail');
 });

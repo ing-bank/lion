@@ -28,8 +28,8 @@
     "eval:local": "node examples/run.mjs local",
     "eval:openai": "node examples/run.mjs openai",
     "eval:runware": "node examples/run.mjs runware",
-    "test": "node --test \"test-node/*.test.ts\"",
-    "test:node": "node --test \"test-node/*.test.ts\""
+    "test": "node --test --test-concurrency=1 \"test-node/*.test.ts\"",
+    "test:node": "node --test --test-concurrency=1 \"test-node/*.test.ts\""
   },
   "dependencies": {
     "diff": "^9.0.0",
