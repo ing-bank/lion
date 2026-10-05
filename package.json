@@ -26,7 +26,7 @@
     "lint:eslint": "eslint --ext .js,.html .",
     "lint:markdownlint": "git ls-files '*.md' | xargs markdownlint --ignore '{.github/**/*.md,.changeset/*.md,**/CHANGELOG.md,packages/ui/_legacy-changelogs/*.md}'",
     "lint:phone-number-up-to-date": "node ./scripts/lint-phone-number-lib.js",
-    "lint:prettier": "prettier \"**/*.js\" --list-different || (echo '\u2191\u2191 these files are not prettier formatted \u2191\u2191' && exit 1)",
+    "lint:prettier": "prettier \"**/*.js\" --list-different || (echo '↑↑ these files are not prettier formatted ↑↑' && exit 1)",
     "lint:types": "npm run types",
     "lint:versions": "node ./scripts/lint-versions.js",
     "prepare": "husky install",
@@ -141,6 +141,10 @@
       "//": [
         "For best compatibility, we sometimes need to override a package version depended upon by multiple packages."
       ],
+      "//@open-wc/semantic-dom-diff": [
+        "Transitive dep of @open-wc/testing. 0.20.1 ships chai-dom-diff-plugin.d.ts with an extensionless",
+        "relative import (TS2835 under --moduleResolution nodenext); 0.21.0 emits the .js extension."
+      ],
       "sharp": [
         "Version of 'sharp' package we get via '@rocket/cli' is too old to be built on a Mac.",
         "But updating package '@rocket-cli' causes our portal to break. Reason unknown.",
@@ -212,6 +216,7 @@
     "unist-util-visit": "^5.0.0"
   },
   "overrides": {
+    "@open-wc/semantic-dom-diff": "^0.21.0",
     "sharp": "^0.29.x",
     "@mdjs/core": "^0.21.1",
     "@mdjs/mdjs-story": "^0.4.0",
