@@ -10,7 +10,8 @@
  *
  *   - `syntax`        — does every produced source file parse at all?
  *   - `import-policy` — does it import only through the entrypoints the skill documents?
- *                       (no bare `lit`/`lit-html`/`@lit/*`; no `@lion/*` other than `@lion/ui/*`)
+ *                       (no deep imports into `@lion/ui/components/**` or `@lion/ui/src/**`;
+ *                        no `@lion/*` other than `@lion/ui/*`; bare `lit` is allowed, see below)
  *
  * The parser is `oxc-parser` — already a dependency of this repo (pinned by
  * `packages-node/providence-analytics`). It is used rather than `node --check` because the latter
@@ -157,12 +158,24 @@ function syntaxGateFor(files: ParsedFile[]): GateResult {
   };
 }
 
-/** Bare specifiers for core Lit utilities, which must come from `@lion/ui/core.js` instead. */
-const LIT_SPECIFIER = /^(lit|lit-html|lit-element|@lit\/.+)$/;
+/**
+ * Deep imports into `@lion/ui` internals.
+ *
+ * The skill's Rules say "Never deep-import from `@lion/ui/components/<x>/src/*`", so that — not
+ * bare `lit` — is what this gate enforces.
+ *
+ * Bare `lit` is deliberately ALLOWED. `@lion/ui/core.js` exports only mixins and utilities
+ * (DisabledMixin, SlotMixin, uuid, ...) and does NOT export `LitElement`, `html` or `css`; the
+ * skill's own canonical example is `import { html } from 'lit';`. Requiring core.js here made the
+ * gate zero the skill's documented output while "fixing" it produced code that throws in the
+ * browser (`does not provide an export named 'LitElement'`). Measured in headless Chromium, not
+ * assumed.
+ */
+const DEEP_LION_IMPORT = /^@lion\/ui\/(components|src)\//;
 
 function policyViolation(specifier: string): string | undefined {
-  if (LIT_SPECIFIER.test(specifier)) {
-    return `imports '${specifier}': import core Lit utilities from '@lion/ui/core.js' instead`;
+  if (DEEP_LION_IMPORT.test(specifier)) {
+    return `imports '${specifier}': deep imports are not documented, use the '@lion/ui/*' entrypoints`;
   }
   if (specifier === '@lion' || (specifier.startsWith('@lion/') && !specifier.startsWith('@lion/ui'))) {
     return `imports '${specifier}': use the '@lion/ui/*' entrypoints ('@lion/*' is not a dependency)`;

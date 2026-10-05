@@ -2,67 +2,14 @@
  * Hand-authored scenarios.
  *
  * These complement the generated per-component/system scenarios with tasks that exercise the
- * golden-file scoring path (exact / normalized / similarity) and slightly richer integrations.
+ * golden-file and behaviour paths on concrete, bounded repairs.
+ *
+ * A note on goldens: a golden that nobody executed is the most reliable way to make a benchmark
+ * measure fiction, so `expectedTransformedFiles` is always paired with `goldenProvenance` and
+ * pinned by a test that runs it through the gates, its checks *and* the behaviour tier.
  */
 
 import type { TestScenario } from './types.ts';
-
-/**
- * Harness smoke test carried over from the original proof of concept. Deliberately tiny and
- * paired with a golden file so the exact/normalized/similarity scoring path can be verified
- * without an LLM: pair it with a mock endpoint to assert the whole loop end to end.
- */
-export const buttonToBlobScenario: TestScenario = {
-  name: 'integration/poc-button-to-blob',
-  kind: 'integration',
-  description: 'Golden-file smoke test: rename a button usage to the blob component.',
-  prompt: 'Convert the button component to the blob component.',
-  targetFile: 'src/MyButtonApp.js',
-  files: {
-    'src/MyButtonApp.js': `
-      import { LionButton } from '@lion/ui/button.js';
-      import { LitElement, ScopedElementsMixin } from '@lion/ui/core.js';
-
-      export class MyButtonApp extends ScopedElementsMixin(LitElement) {
-        scopedElements = {
-          'lion-button': LionButton,
-        };
-
-        render() {
-          return html\`
-            <lion-button variation="primary-medium">Click me</lion-button>
-          \`;
-        }
-
-        handleClick() {
-          console.log('Button clicked!');
-        }
-      }
-      `,
-  },
-  expectedTransformedFiles: {
-    'src/MyButtonApp.js': `
-      import { LionBlob } from '@lion/ui/blob.js';
-      import { LitElement, ScopedElementsMixin } from '@lion/ui/core.js';
-
-      export class MyButtonApp extends ScopedElementsMixin(LitElement) {
-        scopedElements = {
-          'lion-blob': LionBlob,
-        };
-
-        render() {
-          return html\`
-            <lion-blob><button>Click me</button></lion-blob>
-          \`;
-        }
-
-        handleClick() {
-          console.log('Button clicked!');
-        }
-      }
-      `,
-  },
-};
 
 /**
  * Replace a native `<form>` (and its native submit handling) with `lion-form`, the way the
@@ -81,7 +28,7 @@ export const nativeFormToLionFormScenario: TestScenario = {
   files: {
     'src/login-form.js': [
       'export function LoginForm() {',
-      "  return html`",
+      '  return html`',
       '    <form @submit=${onSubmit}>',
       '      <input name="email" label="Email" />',
       '      <input name="password" type="password" label="Password" />',
@@ -97,7 +44,7 @@ export const nativeFormToLionFormScenario: TestScenario = {
     {
       type: 'matches',
       file: 'src/login-form.js',
-      pattern: `from\\s+['"]${'@lion/ui/form.js'}['"]`,
+      pattern: `from\\s+['\"]@lion/ui/form.js['\"]`,
       description: "imports LionForm from '@lion/ui/form.js'",
     },
     {
@@ -121,7 +68,145 @@ export const nativeFormToLionFormScenario: TestScenario = {
   ],
 };
 
+/**
+ * Repair a near-miss IBAN field.
+ *
+ * The starting file is a plausible wrong answer rather than an empty one: it renders a native
+ * `<input>` (no validation, not a lion form control) and reaches into `@lion/ui` internals with a
+ * deep import — the exact thing the skill's rules forbid ("Never deep-import from
+ * `@lion/ui/components/<x>/src/*`"), so the import-policy gate has real teeth here.
+ *
+ * The prompt is bounded: the class name, the export and the field name are invariants. The golden
+ * follows the skill's canonical structure, including the native `<form>` that `lion-form` slots.
+ */
+export const ibanFieldScenario: TestScenario = {
+  name: 'repair/iban-field',
+  kind: 'repair',
+  description: 'Repair an IBAN field: deep import, native input, no form registration.',
+  prompt: [
+    'Repair `src/iban-field.js`. It renders a native `<input>` and reaches into `@lion/ui`',
+    'internals with a deep import. Make it render a `lion-input-iban` inside a `lion-form` that has',
+    'a native `<form>` slotted into it, registering the field on the form under the name `account`.',
+    'Keep the class name `IbanField` and its named export, and import only through the documented',
+    '`@lion/ui` entrypoints.',
+  ].join(' '),
+  targetFile: 'src/iban-field.js',
+  files: {
+    'src/iban-field.js': [
+      "import { LitElement, html } from 'lit';",
+      "import { LionInputIban } from '@lion/ui/components/input-iban/src/LionInputIban.js';",
+      '',
+      'export class IbanField extends LitElement {',
+      '  render() {',
+      "    return html`<input name=\"account\" />`;",
+      '  }',
+      '}',
+      '',
+    ].join('\n'),
+  },
+  expectedTransformedFiles: {
+    'src/iban-field.js': [
+      "import { LitElement, html } from 'lit';",
+      "import '@lion/ui/define/lion-form.js';",
+      "import '@lion/ui/define/lion-input-iban.js';",
+      '',
+      'export class IbanField extends LitElement {',
+      '  render() {',
+      '    return html`',
+      '      <lion-form>',
+      '        <form>',
+      '          <lion-input-iban name="account" label="Account"></lion-input-iban>',
+      '        </form>',
+      '      </lion-form>',
+      '    `;',
+      '  }',
+      '}',
+      '',
+    ].join('\n'),
+  },
+  goldenProvenance: [
+    'Authored by us and executed, not merely reviewed: the golden passes both gates, every check',
+    'below, and the behaviour test file in headless Chromium.',
+    '`test-node/scenarios.test.ts` ("the repair/iban-field golden passes the gates, its checks and',
+    'the behaviour tier") pins this, so the golden cannot silently rot.',
+  ].join(' '),
+  checks: [
+    { type: 'exists', file: 'src/iban-field.js' },
+    {
+      type: 'matches',
+      file: 'src/iban-field.js',
+      pattern: '@lion/ui/(define/lion-input-iban|input-iban)\\.js',
+      description: 'imports the IBAN field through a documented @lion/ui entrypoint',
+    },
+    {
+      type: 'notMatches',
+      file: 'src/iban-field.js',
+      pattern: '@lion/ui/components/',
+      description: 'no longer deep-imports from @lion/ui internals',
+    },
+    {
+      type: 'matches',
+      file: 'src/iban-field.js',
+      pattern: '<lion-form',
+      description: 'renders a <lion-form>',
+    },
+    {
+      type: 'matches',
+      file: 'src/iban-field.js',
+      pattern: '<lion-input-iban',
+      description: 'renders a <lion-input-iban>',
+    },
+    {
+      type: 'matches',
+      file: 'src/iban-field.js',
+      pattern: 'name="account"',
+      description: 'keeps the field name "account"',
+    },
+    {
+      type: 'matches',
+      file: 'src/iban-field.js',
+      pattern: 'export class IbanField',
+      description: 'keeps the `IbanField` export',
+    },
+  ],
+  behaviour: {
+    description: 'the produced component upgrades and registers the field on a lion-form',
+    testSource: [
+      "import { expect } from '@open-wc/testing';",
+      "import { IbanField } from './src/iban-field.js';",
+      '',
+      "describe('iban-field', () => {",
+      "  it('upgrades and registers the field on a lion-form', async () => {",
+      '    // The exported class is not self-registering, and the scenario only requires the',
+      '    // `IbanField` export as an invariant, so register it before instantiating it.',
+      "    if (!customElements.get('iban-field')) {",
+      "      customElements.define('iban-field', IbanField);",
+      '    }',
+      "    const el = document.createElement('iban-field');",
+      '    document.body.appendChild(el);',
+      '    await el.updateComplete;',
+      '',
+      "    const form = el.shadowRoot.querySelector('lion-form');",
+      "    expect(form, 'renders a <lion-form>').to.not.equal(null);",
+      '',
+      "    const field = el.shadowRoot.querySelector('lion-input-iban');",
+      "    expect(field, 'renders a <lion-input-iban>').to.not.equal(null);",
+      '',
+      '    await form.updateComplete;',
+      "    // Borrowed from the repository's own lion-form tests, which assert registration through",
+      '    // `form.formElements.<name>` rather than a `.form` property on the field.',
+      '    expect(',
+      '      form.formElements.account,',
+      `      'field is registered on the form under the name "account"',`,
+      '    ).to.not.equal(undefined);',
+      '  });',
+      '});',
+      '',
+    ].join('\n'),
+  },
+};
+
 export const manualScenarios: TestScenario[] = [
-  buttonToBlobScenario,
   nativeFormToLionFormScenario,
+  ibanFieldScenario,
 ];
