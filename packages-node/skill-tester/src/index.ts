@@ -71,6 +71,14 @@ export {
   type GateFailure,
 } from './scoring/gates.ts';
 
+export {
+  runBehaviour,
+  defaultRepoRoot,
+  type BehaviourResult,
+  type BehaviourFailure,
+  type RunBehaviourOptions,
+} from './behaviour/runner.ts';
+
 export { writeRunRecord, renderRunRecord } from './report/runRecord.ts';
 
 export {
