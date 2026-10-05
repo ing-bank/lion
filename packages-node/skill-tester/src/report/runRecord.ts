@@ -138,9 +138,9 @@ export function renderRunRecord({
           `| ${check.description} | ${run.scenario}:${run.sample} | ${run.model} | check failed | knowledge / navigation |`,
         );
       }
-      for (const file of run.score.files.filter(file => !file.exact)) {
+      for (const file of run.score.files.filter(file => !file.normalizedMatch)) {
         lines.push(
-          `| ${file.path} not an exact match (similarity ${(file.similarity * 100).toFixed(0)}%) | ` +
+          `| ${file.path} differs beyond formatting (similarity ${(file.similarity * 100).toFixed(0)}%) | ` +
             `${run.scenario}:${run.sample} | ${run.model} | golden mismatch | knowledge |`,
         );
       }
@@ -150,6 +150,13 @@ export function renderRunRecord({
         `| ${run.agentRun.toolErrors} tool error(s) | ${run.scenario}:${run.sample} | ${run.model} | avoidable retries | navigation / adherence |`,
       );
     }
+    for (const run of report.runs) {
+      for (const gate of run.score.gates.filter(gate => !gate.passed)) {
+        lines.push(
+          `| ${gate.name} gate failed (score zeroed): ${gate.summary} | ${run.scenario}:${run.sample} | ${run.model} | output does not parse | correctness (deterministic) |`,
+        );
+      }
+    }
   }
   lines.push('');
 
@@ -157,6 +164,9 @@ export function renderRunRecord({
   lines.push('');
   const clean = failingRuns.length === 0 && totalToolErrors === 0;
   lines.push(`- [${passMark(report.overall.mean * 100 >= passThreshold)}] Every scenario reached the pass threshold.`);
+  lines.push(
+    `- [${passMark(report.runs.every(run => run.score.gates.every(gate => gate.passed)))}] Every scenario passed its deterministic gates.`,
+  );
   lines.push(`- [${passMark(totalToolErrors === 0)}] No avoidable tool-call retries.`);
   lines.push(`- [${passMark(maxTurnsHits === 0)}] Every run finished within the turn budget.`);
   lines.push(`- [${passMark(clean)}] No actionable knowledge or navigation gap remains.`);
