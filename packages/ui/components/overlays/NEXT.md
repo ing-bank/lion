@@ -1,0 +1,49 @@
+- Redesign goals OverlayController
+  - Simplicity
+    - One primitive to (controller to) rule them all
+      - Aligned api with all disclosure mechanisms (openables: <https://open-ui.org/components/openable.explainer/>)
+      - Aligned with platform overlay primitives (popover, dialog and tooltip)
+    - Controller will be elegantly aligned with host
+      - Controller props will be mapped to a host via a mixin, w/o requiring lots of boilerplate
+      - No race conditions due to unaligned heart beats: both hook in to the same "tick": the reactive update cycle of lit (which can theoretically be swapped by other cycles, see <https://lit.dev/docs/frameworks/react/#usecontroller>)
+        - In general, all property effects / events / reactivity should be aligned as much as possible with the update cycle (for predictability and perf. We only need
+    - All components will just be configuration (no need to redefine a lot of logic)
+    - OverlayController (or OpenableController, or DisclosureController, or VisitibilityToggleController) will be the biggest common denominator. Having all logic in one place, makes it a lot easier to erase about then having it scattered across many mixin and/or controller levels
+    - Even though the amount of logic is large (and might feel a bit monolithic), this is just needed when we want to have a stable, battle tested abstraction around all edge cases that building accessible disclosures should handle
+      - However, this does not come at an extra performance cost (see performance, you will only load what you need)
+    - The current OverlayController is a long file that can benefit from some modularity and cleanup
+      - Every overlay feature can be provided in a separate file with knowledge about the overlay lifecycle
+      - We can provide/reuse some utils like Resettable from VisibilityToggleCtrl ()
+  - Flexibility
+    - Re-use your markup for different screen sizes and/or devices (that may have different appearances, but the same functionality/semantics)
+      - Think of:
+        - a datepicker that opens as dropdown on desktop and as centered modal dialog on mobile
+        - a menubutton that opens as dropdown on desktop and as bottomsheet
+        - A menu that opens as dropdown on desktop and a collapsible (or even a plain list) on mobile
+    - As explained above, controllers are the most re-usable primitives, as a web component/mixin does not always provide the flexibility we need
+      - Controllers can be easliy mapped to directives (giving the same flexibility as "platform attributes" like popover). Forward compatible with <https://github.com/WICG/webcomponents/issues/1029>
+      - Controllers can be easily mapped to web components or mixins
+      - Contrary to mixins, it’s easy to conditionally load a controller
+      - Contrary to mixins, it’s easy to “undo” a controller (which is helpful in edge cases)
+  - Performance
+    - Will leverage the platform where possible:
+      - Use popover
+  - Forward compatibility
+    - Aligns as much as possible with (future) platform apis
+      - This leverages existing dev knowledge (api familiarity)
+      - This allows to build drop in replacements
+      - This allows to rely on the platform (reducing maintenance costs, increasing performance)
+  - Completeness
+    - Supports all use cases to build every UI thinkable:
+      - Will have optional dependency to menu controllers and interactive list controllers
+      - Supports visually hidden scenarios, hides
+  - Backward compatibility
+    - Since the amount of consumers of our overlay system (directly or indirectly) is large, we should provide a compatibility mechanism where possible. At the same time, we want to create an api as clean/aligned/forward compatible as possible. We could consider an optional compat-layer (a global import at the top of an app extending OverlayController prototype). Think of:
+      - Mapping popper api to popover concepts
+      -
+
+# Why start with OverlayController?
+
+- there is a lot of value in cleaning it up as there are many platform improvements
+- it's used by many
+- It is already a controller (we created it before Lit controllers existed) and therefore impact is minimal
