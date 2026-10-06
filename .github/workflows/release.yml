@@ -3,7 +3,7 @@ name: Release
 on:
   push:
     branches:
-      - master
+      - feat/menu-system-rebased--release-0.21.1-menu-system.0
 
 jobs:
   release:
