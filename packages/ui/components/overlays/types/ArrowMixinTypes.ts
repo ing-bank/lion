@@ -26,9 +26,7 @@ export declare class ArrowHost {
 
   protected _defineOverlayConfig(): OverlayConfig;
 
-  protected _getPopperArrowConfig(
-    popperConfigToExtendFrom: Partial<PopperOptions>,
-  ): Partial<PopperOptions>;
+  protected _getPopperArrowConfig(popperConfigToExtendFrom: Partial<PopperOptions>): Partial<PopperOptions>;
 
   private __setupRepositionCompletePromise(): void;
 
