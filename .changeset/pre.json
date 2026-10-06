@@ -10,16 +10,15 @@
     "rocket-preset-extend-lion-docs": "0.4.2",
     "@lion/ajax": "2.1.0",
     "singleton-manager": "1.8.0",
-    "@lion/ui": "0.16.1"
+    "@lion/ui": "0.16.1",
+    "@lion/astro-lit": "0.1.0",
+    "@lion/lit-ssr-patch-tests": "0.1.0"
   },
   "changesets": [
-    "bright-lions-fold",
-    "fluffy-apes-juggle",
-    "hot-planets-kick",
-    "smooth-pants-occur",
-    "tender-paws-trade",
-    "true-rules-hide",
-    "warm-monkeys-play",
-    "yellow-rocks-drum"
+    "clever-mails-help",
+    "quiet-donuts-listen",
+    "three-dogs-bark",
+    "tidy-members-return",
+    "ts7-migration"
   ]
 }
