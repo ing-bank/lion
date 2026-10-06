@@ -14,6 +14,8 @@ import { moveUserProvidedDefaultSlottablesToTarget } from '../../core/src/SlotMi
 //   - rename the api to the focusgroup/platform vocabulary the menu already speaks:
 //     `orientation` ('vertical'/'horizontal') -> `axis` ('block'/'inline'),
 //     `rotateKeyboardNavigation` -> `wrap`, `multipleChoice` -> `multiple`
+//   - map the new axis values to the ARIA ones where `aria-orientation` is set (block -> vertical,
+//     inline -> horizontal); ARIA does not know the focusgroup tokens
 //   - keep the old properties and attributes working in the same release: add the new property with
 //     its own attribute, turn the old one into a deprecated alias that delegates to it (with a
 //     dev-only deprecation warning) and mark it `@deprecated` in ListboxMixinTypes, then remove the

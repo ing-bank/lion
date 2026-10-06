@@ -13,6 +13,10 @@ const matchA11ySpanReverseFns = new WeakMap();
 // TODO: make ListboxOverlayMixin that is shared between SelectRich and Combobox
 // TODO: extract option matching based on 'typed character cache' and share that logic
 // on Listbox or ListNavigationWithActiveDescendantMixin
+// TODO: this component inherits `multipleChoice` (ChoiceGroupMixin) and `rotateKeyboardNavigation`
+// (ListboxMixin) and reads both in many places. When those are renamed to `multiple` and `wrap`, move
+// these usages to the new names in the same release; the deprecated aliases only exist for consumers.
+// See the TODO at the top of ../../listbox/src/ListboxMixin.js.
 
 /**
  * @typedef {import('@lion/ui/listbox.js').LionOption} LionOption
