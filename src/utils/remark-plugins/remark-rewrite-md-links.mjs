@@ -4,9 +4,6 @@ import path from 'path';
 export function remarkRewriteMdLinks({ hasTrailingSlash = false } = {}) {
   return function (tree, file) {
     const currentDir = path.dirname(file.path);
-    if (currentDir.includes('guides')) {
-      console.debug({ currentDir });
-    }
 
     visit(tree, 'link', node => {
       if (node.url && node.url.endsWith('.md')) {
