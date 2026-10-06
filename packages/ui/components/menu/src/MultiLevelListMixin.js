@@ -95,7 +95,7 @@ const MultiLevelListMixinImplementation = /** @type {MultiLevelListMixinType} */
       /**
        * @configure InteractiveListMixin
        */
-      this.noPreselect = true;
+      this.hasNoDefaultSelected = true;
       /**
        * @configure InteractiveListMixin
        * @type {'activedescendant'|'roving-tabindex'|'tabbable-disclosure'}

@@ -435,7 +435,7 @@ vocabulary, so an implementation that follows the platform proposal finds the sa
 | `wrap` | modifier: `wrap` | arrow keys wrap around at the first/last item |
 | `multiple` | `multiple` in `<select multiple>` | whether more than one item can be checked; selection is not part of the focusgroup api |
 | `selectionFollowsFocus` | - | ARIA/APG vocabulary; selection is out of scope for focusgroup |
-| `noPreselect` | - | selection semantics, so without a focusgroup term |
+| `hasNoDefaultSelected` | default selected (`HTMLOptionElement.defaultSelected`) | opt-out of the automatic selection of the first item; same property and attribute as `ListboxMixin` |
 
 ```html
 <lion-menu axis="inline" wrap>

@@ -24,5 +24,6 @@ The interactive-list api speaks the [focusgroup](https://open-ui.org/components/
 vocabulary, so implementations that follow the platform proposal recognise the names: `axis`
 (`'block'` default / `'inline'`) replaces `orientation` (`vertical`/`horizontal`),
 `wrap` replaces `rotateKeyboardNavigation` and `multiple` replaces `multipleChoice`.
-`selectionFollowsFocus` and `noPreselect` stay: they are ARIA/APG terms and selection is not part of
-the focusgroup api.
+`hasNoDefaultSelected` (the initial selectedness the platform calls "default selected", and the same
+property `ListboxMixin` exposes) replaces `noPreselect`; `selectionFollowsFocus` stays, it is the
+ARIA APG term for exactly that behaviour.

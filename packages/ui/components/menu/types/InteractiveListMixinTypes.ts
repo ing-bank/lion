@@ -18,7 +18,9 @@ export declare class InteractiveListHost extends LitElement {
    * arrow key navigation.
    * This behavior can usually be seen on <select> on the Windows platform.
    * Note that this behavior cannot be used when `multiple` is true.
-   * See: https://www.w3.org/TR/wai-aria-practices/#kbd_selection_follows_focus
+   * "Selection follows focus" is the ARIA APG term for this behaviour, see
+   * https://www.w3.org/WAI/ARIA/apg/practices/keyboard-interface/ (the same property exists on
+   * `ListboxMixin`).
    */
   public selectionFollowsFocus: Boolean;
   /**
@@ -40,9 +42,10 @@ export declare class InteractiveListHost extends LitElement {
   /** Whether items that do not fit are moved into a 'more' menu (see MoreButtonMenuMixin) */
   public itemWrap: Boolean;
 
-  /** Whether an item is checked by default (checkedIndex 0) */
-  public noPreselect: boolean;
-
+  /**
+   * When true, no option is selected on initial render (`checkedIndex` stays -1). Named the same as
+   * on `ListboxMixin`; the platform calls the initial selectedness "default selected".
+   */
   /** The item that currently has the active state */
   public get activeItem(): HTMLElement;
 

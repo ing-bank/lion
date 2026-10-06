@@ -193,10 +193,13 @@ const InteractiveListMixinImplementation = /** @type {InteractiveListMixinType} 
          */
         wrap: { type: Boolean, attribute: 'wrap' },
         /**
-         * Whether an item is checked by default (checkedIndex 0). Selection semantics, so without a
-         * focusgroup counterpart.
+         * Whether no item is selected on initial render (`checkedIndex` stays -1). The platform name
+         * for the initial selectedness is "default selected" (`HTMLOptionElement.defaultSelected`,
+         * `HTMLInputElement.defaultChecked`, the HTML selectedness-setting algorithm); the opt-out is
+         * named the way the platform names its own opt-outs (`novalidate`, `nomodule`). Same property
+         * as `ListboxMixin` has, so a listbox and a menu can be configured alike.
          */
-        noPreselect: { type: Boolean, attribute: 'no-preselect' },
+        hasNoDefaultSelected: { type: Boolean, reflect: true, attribute: 'has-no-default-selected' },
 
         // TODO: implement, for now we start with only more-menu. See instructions in code about more menu.
         // Values:
@@ -393,11 +396,11 @@ const InteractiveListMixinImplementation = /** @type {InteractiveListMixinType} 
       this.wrap = false;
 
       /**
-       * By default, checkedIndex is set to 0. When noPreselect is true,
+       * By default, checkedIndex is set to 0. When hasNoDefaultSelected is true,
        * checkedIndex will not be set
        * @type {boolean}
        */
-      this.noPreselect = false;
+      this.hasNoDefaultSelected = false;
 
       /**
        * Whenever possible (for [role="listbox|menu"], usually with one level) we use an
@@ -601,7 +604,7 @@ const InteractiveListMixinImplementation = /** @type {InteractiveListMixinType} 
         });
       } // for 'tabbable-disclosure', we assume items are already focusable and part of tab sequence
 
-      if (!this.noPreselect && this.checkedIndex === -1) {
+      if (!this.hasNoDefaultSelected && this.checkedIndex === -1) {
         this.checkedIndex = 0;
       }
       newItems.forEach(item => {

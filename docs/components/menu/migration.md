@@ -62,9 +62,9 @@ configure the mixin yourself (`_listRole`, `_activeMode`, `bar`).
 ## 4. Api that did not change
 
 `LionMenu`, `LionItem` and `LionMenuitem` keep their tag names and the following properties, so
-implementations that only read or set those keep working: `selectionFollowsFocus`, `noPreselect`,
-`itemWrap`, `activeIndex`, `checkedIndex`, `listItems`, `_activeMode`, `_listRole` (all from
-`InteractiveListMixin`), plus `bar` and `openableMode` on `LionMenu`.
+implementations that only read or set those keep working: `selectionFollowsFocus` (the ARIA APG
+term, as on `ListboxMixin`), `itemWrap`, `activeIndex`, `checkedIndex`, `listItems`, `_activeMode`,
+`_listRole` (all from `InteractiveListMixin`), plus `bar` and `openableMode` on `LionMenu`.
 
 ## 5. Renamed api: this component now speaks the focusgroup vocabulary
 
@@ -78,6 +78,7 @@ gone.
 | `orientation="vertical"` / `orientation="horizontal"` | `axis="block"` / `axis="inline"` | `block` is the default; the attribute reflects |
 | `rotateKeyboardNavigation` | `wrap` | the focusgroup axis/wrap modifiers |
 | `multipleChoice` | `multiple` | the platform name (`<select multiple>`) |
+| `noPreselect` | `hasNoDefaultSelected` | the initial selectedness the platform calls "default selected" (`HTMLOptionElement.defaultSelected`); the same property and attribute exist on `ListboxMixin` |
 
 ```html
 <lion-menu axis="inline" wrap multiple>

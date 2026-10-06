@@ -128,21 +128,21 @@ export function runInteractiveListMixinSuite(customConfig) {
       });
     });
 
-    describe('preselect', () => {
-      it('sets the checkedIndex to 0 by default when noPreselect is false', async () => {
+    describe('default selected', () => {
+      it('sets the checkedIndex to 0 by default when hasNoDefaultSelected is false', async () => {
         const el = await fixture(html`
           <${tag}>
             <div role="menuitem" id="item1">Item 1</div>
           </${tag}>
         `);
-        if (!el.noPreselect) {
+        if (!el.hasNoDefaultSelected) {
           expect(el.checkedIndex).to.equal(0);
         }
       });
 
-      it('sets the checkedIndex to -1 when noPreselect is true', async () => {
+      it('sets the checkedIndex to -1 when hasNoDefaultSelected is true', async () => {
         const el = await fixture(html`
-          <${tag} no-preselect>
+          <${tag} has-no-default-selected>
             <div role="menuitem" id="item1">Item 1</div>
           </${tag}>
         `);
@@ -278,7 +278,7 @@ export function runInteractiveListMixinSuite(customConfig) {
 
       it('does not allow to set checkedIndex or activeIndex to be out of bound', async () => {
         const el = await fixture(html`
-          <${tag} no-preselect>
+          <${tag} has-no-default-selected>
             <div role="menuitem" id="item1">Item 1</div>
           </${tag}>
         `);
