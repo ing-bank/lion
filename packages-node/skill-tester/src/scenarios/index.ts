@@ -56,6 +56,29 @@ export function discoverKnownTags(repoRoot: string): string[] {
 }
 
 /**
+ * Tag -> class name, from the same manifest. The generated behaviour test registers the class in
+ * the host's `scopedElements` mapping, so it needs the class name, not just the tag.
+ */
+export function discoverTagClasses(repoRoot: string): Record<string, string> {
+  const manifestPath = path.join(repoRoot, 'packages/ui/custom-elements.json');
+  if (!fs.existsSync(manifestPath)) return {};
+  const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf-8')) as {
+    modules?: {
+      declarations?: { customElement?: boolean; tagName?: string; name?: string }[];
+    }[];
+  };
+  const map: Record<string, string> = {};
+  for (const module of manifest.modules ?? []) {
+    for (const declaration of module.declarations ?? []) {
+      // Some entries carry a backtick/quoted tag (e.g. "`lion-input-range`"), so normalize.
+      const tagName = (declaration.tagName ?? '').replace(/^[`'"]+|[`'"]+$/g, '').trim();
+      if (tagName && declaration.name) map[tagName] = declaration.name;
+    }
+  }
+  return map;
+}
+
+/**
  * Names that ship a side-effect `define` entrypoint (`@lion/ui/define/lion-<name>.js`), which the
  * `lion-ui` skill tells you to prefer when you only need the custom element registered.
  */
@@ -85,6 +108,7 @@ export function loadLionUiScenarios({
     systems,
     knownTags: discoverKnownTags(repoRoot),
     defineEntrypoints: discoverDefineEntrypoints(repoRoot),
+    tagClasses: discoverTagClasses(repoRoot),
   });
   return includeManual ? [...generated, ...manualScenarios] : generated;
 }

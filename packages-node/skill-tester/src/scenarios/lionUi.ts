@@ -4,9 +4,9 @@
  * Each scenario asks for a minimal, self-contained usage example in a single file and asserts
  * the conventions the `lion-ui` skill exists to teach:
  *
- *   - register/import through a real `@lion/ui` entrypoint — either the class entrypoint
+ *   - import through a real `@lion/ui` entrypoint — either the class entrypoint
  *     (`@lion/ui/<name>.js`) or the side-effect `define/*` entrypoint
- *     (`@lion/ui/define/lion-<name>.js`) the skill tells you to prefer;
+ *     (`@lion/ui/define/lion-<name>.js`);
  *   - never import a component from `@lion/*` directly;
  *   - never deep-import into `@lion/ui` internals (`@lion/ui/components/**`, `@lion/ui/src/**`),
  *     which is the import rule the skill actually states. Bare `lit` is NOT a violation:
@@ -15,16 +15,17 @@
  *   - use the component's real custom-element tag, in markup or via `createElement` (only
  *     asserted when the custom elements manifest confirms the tag exists).
  *
- * For components that ship a `define/*` entrypoint and a confirmed tag, a **behaviour** test is
- * attached as well. It is written against the *produced file*, never against the library: it
- * imports the produced module, so a registration can only be observed if the produced code is what
- * registered it. The `example` export is a stated invariant of the task precisely so the example
- * can be executed.
+ * For components with a confirmed tag and a known class, a **behaviour** test is attached as well.
+ * It is written against the *produced file* — it imports `./src/example.js` — and it renders the
+ * example in the context the skill assumes: a host `LitElement` that applies `ScopedElementsMixin`
+ * and registers the component in its `scopedElements`. The element therefore lives in the host's
+ * scoped registry, NOT in the global one, so `customElements.get('<tag>')` is the wrong probe.
+ * Asserting on the global registry was measured to reject a correct class-entrypoint answer; see
+ * `references/systems/core.md` in the skill for the documented best practices.
  *
- * The accepted entrypoints are derived from the repository (`packages/ui/exports/*`), so the
- * checks assert what this codebase actually ships rather than a hand-maintained list. A real run
- * against a live model showed that asserting only the class entrypoint penalises a correct answer
- * that follows the skill's own "prefer the `define/*` entrypoints" guidance — hence the OR.
+ * The accepted entrypoints and the tag/class facts are derived from the repository
+ * (`packages/ui/exports/*`, `custom-elements.json`), so the checks assert what this codebase
+ * actually ships rather than a hand-maintained list.
  */
 
 import type { TestScenario, ScenarioCheck } from './types.ts';
@@ -59,6 +60,8 @@ export type LionUiScenarioContext = {
   knownTags?: string[];
   /** Names that ship a `@lion/ui/define/lion-<name>.js` entrypoint. */
   defineEntrypoints?: string[];
+  /** Custom-element tag -> class name, from the custom elements manifest (e.g. `lion-button`). */
+  tagClasses?: Record<string, string>;
 };
 
 function escapeRegExp(value: string): string {
@@ -120,42 +123,61 @@ function starterFile(description: string): string {
 }
 
 /**
- * A behaviour test for a component, written against the **produced file**.
+ * A behaviour test for a component, written against the **produced file** and rendered in the
+ * context the skill assumes.
  *
- * It imports `./src/example.js` rather than the library entrypoint, which is what makes it a test
- * of the model's output: the element can only be registered if the produced code imported an
- * entrypoint itself. Importing `@lion/ui/define/lion-x.js` here instead would make the assertion a
- * tautology that passes for every possible answer — measured, and the reason this is written the
- * way it is.
+ * The host applies `ScopedElementsMixin` and registers the component in `scopedElements`, exactly
+ * as the skill's rule requires. Two consequences, both deliberate:
+ *
+ *   - the element is resolved from the host's scoped registry, so the test must NOT probe the
+ *     global registry (`customElements.get` is legitimately undefined there — measured to reject a
+ *     correct answer);
+ *   - the host tag is unique per component, because batching runs many test files in one browser
+ *     and a shared host tag would let the first component's `scopedElements` win.
  */
-function componentBehaviour(name: string, tagName: string): NonNullable<TestScenario['behaviour']> {
+function componentBehaviour(
+  name: string,
+  tagName: string,
+  className: string,
+): NonNullable<TestScenario['behaviour']> {
+  const hostTag = `behaviour-host-${name}`;
+
   return {
-    description: `the produced example registers <${tagName}> and renders it`,
+    description: `the produced example renders <${tagName}> inside a scoped-elements host`,
     testSource: [
       "import { expect, fixture } from '@open-wc/testing';",
+      "import { LitElement } from 'lit';",
+      "import { ScopedElementsMixin } from '@open-wc/scoped-elements/lit-element.js';",
+      `import { ${className} } from '${entrypointFor(name)}';`,
       `import { ${EXAMPLE_EXPORT} } from './${TARGET_FILE}';`,
       '',
+      '// The assumed context: the example is rendered inside a host LitElement that applies',
+      '// ScopedElementsMixin and registers the components it renders. The component therefore',
+      '// lives in the scoped registry of this host, NOT in the global one.',
+      `class BehaviourHost extends ScopedElementsMixin(LitElement) {`,
+      `  static scopedElements = { '${tagName}': ${className} };`,
+      '',
+      '  render() {',
+      `    return ${EXAMPLE_EXPORT}();`,
+      '  }',
+      '}',
+      '',
+      `if (!customElements.get('${hostTag}')) {`,
+      `  customElements.define('${hostTag}', BehaviourHost);`,
+      '}',
+      '',
       `describe('component/${name}', () => {`,
-      `  it('registers <${tagName}> by virtue of the produced file and renders it', async () => {`,
-      `    expect(`,
-      `      customElements.get('${tagName}'),`,
-      `      'the produced file registered the element (so it imports a real @lion/ui entrypoint)',`,
-      `    ).to.not.equal(undefined);`,
+      `  it('renders <${tagName}> from the produced example inside a scoped host', async () => {`,
+      `    expect(typeof ${EXAMPLE_EXPORT}, 'the produced file keeps the "example" export').to.equal(`,
+      "      'function',",
+      '    );',
       '',
-      `    expect(`,
-      `      typeof ${EXAMPLE_EXPORT},`,
-      `      'the produced file keeps the "${EXAMPLE_EXPORT}" export',`,
-      `    ).to.equal('function');`,
-      '',
-      `    const rendered = await fixture(${EXAMPLE_EXPORT}());`,
-      `    const el =`,
-      `      rendered.localName === '${tagName}'`,
-      `        ? rendered`,
-      `        : (rendered.querySelector?.('${tagName}') ??`,
-      `          rendered.shadowRoot?.querySelector?.('${tagName}'));`,
-      `    expect(el, 'the rendered example contains <${tagName}>').to.not.equal(undefined);`,
-      `  });`,
-      `});`,
+      `    const host = await fixture('<${hostTag}></${hostTag}>');`,
+      `    const el = host.shadowRoot.querySelector('${tagName}');`,
+      `    expect(el, 'the example renders <${tagName}>').to.not.equal(null);`,
+      `    expect(el, 'the scoped registry upgraded the element').to.be.instanceOf(${className});`,
+      '  });',
+      '});',
       '',
     ].join('\n'),
   };
@@ -163,13 +185,13 @@ function componentBehaviour(name: string, tagName: string): NonNullable<TestScen
 
 /**
  * @param componentName folder name under `packages/ui/components`, e.g. `button`
- * @param context repository facts (known tags, available define entrypoints)
+ * @param context repository facts (known tags, available define entrypoints, tag -> class)
  */
 export function createComponentScenario(
   componentName: string,
   context: LionUiScenarioContext = {},
 ): TestScenario {
-  const { knownTags = [], defineEntrypoints = [] } = context;
+  const { knownTags = [], defineEntrypoints = [], tagClasses = {} } = context;
   const tagName = `lion-${componentName}`;
   const checks = entrypointChecks(componentName, defineEntrypoints);
   const tagConfirmed = knownTags.includes(tagName);
@@ -202,9 +224,10 @@ export function createComponentScenario(
     checks,
   };
 
-  // Only meaningful when the tag exists and there is an entrypoint that registers it.
-  if (tagConfirmed && defineEntrypoints.includes(componentName)) {
-    scenario.behaviour = componentBehaviour(componentName, tagName);
+  // The behaviour test needs the class to register in `scopedElements`.
+  const className = tagClasses[tagName];
+  if (tagConfirmed && className) {
+    scenario.behaviour = componentBehaviour(componentName, tagName, className);
   }
 
   return scenario;
@@ -240,19 +263,22 @@ export function createSystemScenario(
  * @param options.systems system names to cover (defaults to `SYSTEM_NAMES`)
  * @param options.knownTags custom-element tags confirmed by the CEM (enables tag assertions)
  * @param options.defineEntrypoints names shipping a `define/lion-<name>.js` entrypoint
+ * @param options.tagClasses tag -> class name from the CEM (enables behaviour tests)
  */
 export function createLionUiScenarios({
   components,
   systems = SYSTEM_NAMES,
   knownTags = [],
   defineEntrypoints = [],
+  tagClasses = {},
 }: {
   components: string[];
   systems?: string[];
   knownTags?: string[];
   defineEntrypoints?: string[];
+  tagClasses?: Record<string, string>;
 }): TestScenario[] {
-  const context: LionUiScenarioContext = { knownTags, defineEntrypoints };
+  const context: LionUiScenarioContext = { knownTags, defineEntrypoints, tagClasses };
 
   const componentScenarios = components
     .filter(name => !NON_VISUAL_COMPONENT_DIRS.includes(name))

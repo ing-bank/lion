@@ -169,6 +169,13 @@ html`
 ## Rules
 
 - Always read the component's reference doc before using it.
+- **Assume a scoped-elements host.** Usage examples are rendered inside a host `LitElement` that
+  applies `ScopedElementsMixin` and registers every component it renders, e.g.
+  `static scopedElements = { 'lion-input-iban': LionInputIban }`. Import the component **class**
+  from its `@lion/ui/<name>.js` entrypoint and map that class to the tag, so the element is
+  resolved from the host's scoped registry. It is deliberately **not** registered globally, so
+  `customElements.get('<tag>')` returns `undefined` and must not be used to detect it. See
+  [`references/systems/core.md`](references/systems/core.md) for ScopedElementsMixin best practices.
 - Never deep-import from `@lion/ui/components/<x>/src/*`.
 - Use validator classes for validation, not hand-rolled checks.
 - Use `.modelValue`, not the native `.value`, for form controls.

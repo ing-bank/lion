@@ -38,11 +38,14 @@ const GOOD_EXAMPLE = [
   '',
 ].join('\n');
 
-/** Renders the right tag but imports no entrypoint, so nothing registers the element. */
-const UNREGISTERED_EXAMPLE = [
+/**
+ * Renders a tag the host does not register. The host supplies the scoped registry (the assumed
+ * context), so a missing entrypoint no longer fails behaviour — an unregistered TAG does.
+ */
+const WRONG_TAG_EXAMPLE = [
   "import { html } from 'lit';",
   '',
-  'export const example = () => html`<lion-button>Click me</lion-button>`;',
+  'export const example = () => html`<not-a-lion-button>Click me</not-a-lion-button>`;',
   '',
 ].join('\n');
 
@@ -105,14 +108,14 @@ test('behaviour is reported as its own axis, end to end', { skip, timeout: 240_0
   assert.match(record, /\*\*1\/1 passed\*\*/, 'the record states how many cases passed');
 });
 
-test('behaviour catches output that never registers the element', { skip, timeout: 240_000 }, async () => {
-  const report = await runAgainst(UNREGISTERED_EXAMPLE);
+test('behaviour catches output that renders an unregistered element', { skip, timeout: 240_000 }, async () => {
+  const report = await runAgainst(WRONG_TAG_EXAMPLE);
 
   const run = report.runs[0];
   assert.ok(run.behaviour, 'the run carries a behaviour result');
-  assert.equal(run.behaviour.passed, false, 'behaviour must fail when nothing registers the element');
+  assert.equal(run.behaviour.passed, false, 'behaviour must fail when the wrong tag is rendered');
   assert.ok(
-    run.behaviour.failures.some(failure => /registered the element/.test(failure.message)),
+    run.behaviour.failures.some(failure => /renders <lion-button>/.test(failure.message)),
     `the failure should name what is missing, got: ${JSON.stringify(run.behaviour.failures)}`,
   );
   assert.equal(report.behaviour?.failed, 1);
