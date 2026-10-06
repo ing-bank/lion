@@ -17,23 +17,25 @@ export declare class InteractiveListHost extends LitElement {
    * When true, will synchronize activedescendant and selected element on
    * arrow key navigation.
    * This behavior can usually be seen on <select> on the Windows platform.
-   * Note that this behavior cannot be used when multiple-choice is true.
+   * Note that this behavior cannot be used when `multiple` is true.
    * See: https://www.w3.org/TR/wai-aria-practices/#kbd_selection_follows_focus
    */
   public selectionFollowsFocus: Boolean;
   /**
-   * Will give first option active state when navigated to the next option from
-   * last option.
+   * Whether arrow key navigation wraps around at the first/last item: the `wrap` modifier of the
+   * [focusgroup](https://open-ui.org/components/focusgroup.explainer/) api.
    */
-  public rotateKeyboardNavigation: Boolean;
+  public wrap: Boolean;
   /**
-   * Informs screen reader and affects keyboard navigation.
-   * By default 'vertical'
+   * The axis arrow keys navigate along, in the vocabulary of the
+   * [focusgroup](https://open-ui.org/components/focusgroup.explainer/) api: `'block'`
+   * (default: up/down) or `'inline'` (left/right). Informs screen reader and affects keyboard
+   * navigation.
    */
-  public orientation: 'vertical' | 'horizontal';
+  public axis: 'inline' | 'block';
 
-  /** Whether more than one item can be checked (the name `LionListbox`/`LionCombobox` use) */
-  public multipleChoice: Boolean;
+  /** Whether more than one item can be checked (the platform name in `<select multiple>`) */
+  public multiple: Boolean;
 
   /** Whether items that do not fit are moved into a 'more' menu (see MoreButtonMenuMixin) */
   public itemWrap: Boolean;

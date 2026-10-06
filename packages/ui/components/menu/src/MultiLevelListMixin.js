@@ -227,7 +227,7 @@ const MultiLevelListMixinImplementation = /** @type {MultiLevelListMixinType} */
           break;
         case 'ArrowDown':
           if (
-            this.orientation === 'horizontal' &&
+            this.axis === 'inline' &&
             subListOfActiveItem &&
             this._activeMode !== 'tabbable-disclosure'
           ) {
@@ -235,12 +235,12 @@ const MultiLevelListMixinImplementation = /** @type {MultiLevelListMixinType} */
           }
           break;
         case 'ArrowRight':
-          if (this.orientation === 'vertical' && subListOfActiveItem) {
+          if (this.axis === 'block' && subListOfActiveItem) {
             this.activeItem.click();
           }
           break;
         case 'ArrowUp':
-          if (this.orientation === 'horizontal' && parentListOfActiveItem) {
+          if (this.axis === 'inline' && parentListOfActiveItem) {
             // @ts-ignore - close method
             this.close();
             if (/** @type {InteractiveList & LionMenu} */ (parentListOfActiveItem)._onOverlayShow) {
@@ -250,7 +250,7 @@ const MultiLevelListMixinImplementation = /** @type {MultiLevelListMixinType} */
           }
           break;
         case 'ArrowLeft':
-          if (this.orientation === 'vertical' && parentListOfActiveItem) {
+          if (this.axis === 'block' && parentListOfActiveItem) {
             // @ts-ignore - close method
             this.close();
             if (/** @type {InteractiveList & LionMenu} */ (parentListOfActiveItem)._onOverlayShow) {

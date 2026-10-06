@@ -49,7 +49,7 @@ applyMenuDemoStyles();
 
 ### Bar
 
-By adding the `bar` attribute the orientation will be set to horizontal and the role will be set to menubar.
+By adding the `bar` attribute the axis will be set to `inline` and the role will be set to menubar.
 
 ```html preview-story
 <nav>

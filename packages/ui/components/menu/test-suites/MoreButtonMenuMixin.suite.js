@@ -128,7 +128,7 @@ export function runMoreButtonMenuMixinSuite(customConfig) {
       it('should show no More button when all items fit', async () => {
         const el = await fixture(html`
           <${tag} name="foo" ._activeMode="${'tabbable-disclosure'}" .itemWrap="${true}" 
-            data-has-full-width-flyout orientation="horizontal" style="min-width: 170px; max-width: 170px;">
+            data-has-full-width-flyout axis="inline" style="min-width: 170px; max-width: 170px;">
             <div role="listitem" id="item1" style="min-width: 50px; max-width: 50px;">
               <a href="#">Item 1</a>
             </div>
@@ -175,7 +175,7 @@ export function runMoreButtonMenuMixinSuite(customConfig) {
             </div>
           </${tag}>
           <style>
-            [orientation='horizontal'] ::slotted([slot='list']) {
+            [axis='inline'] ::slotted([slot='list']) {
               display: flex;
             }
           </style>
@@ -298,7 +298,7 @@ export function runMoreButtonMenuMixinSuite(customConfig) {
       it('should remove `More` button when making font smaller', async () => {
         const el = await fixture(html`
           <${tag} name="foo" ._activeMode="${'tabbable-disclosure'}" .itemWrap="${true}" 
-            data-has-full-width-flyout orientation="horizontal" style="min-width: 170px; max-width: 170px;">
+            data-has-full-width-flyout axis="inline" style="min-width: 170px; max-width: 170px;">
             <div role="listitem" id="item1" style="min-width: 50px; max-width: 50px;">
               <a href="#">Item 1</a>
             </div>

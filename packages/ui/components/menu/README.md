@@ -333,3 +333,28 @@ export const tree = () => html`
   </demo-tree>
 `;
 ```
+
+## Platform vocabulary (focusgroup)
+
+Arrow key navigation inside a composite widget (menu, menubar, toolbar, tree, listbox) is what the
+[focusgroup attribute](https://open-ui.org/components/focusgroup.explainer/) does on the platform
+(Open UI; shipping in Chrome 150, not part of the HTML spec yet). This component uses the same
+vocabulary, so an implementation that follows the platform proposal finds the same names here:
+
+| api | focusgroup term | note |
+| --- | --- | --- |
+| `axis` | axis: `inline` / `block` | `'block'` (default, up/down) or `'inline'` (left/right) |
+| `wrap` | modifier: `wrap` | arrow keys wrap around at the first/last item |
+| `multiple` | `multiple` in `<select multiple>` | whether more than one item can be checked; selection is not part of the focusgroup api |
+| `selectionFollowsFocus` | - | ARIA/APG vocabulary; selection is out of scope for focusgroup |
+| `noPreselect` | - | selection semantics, so without a focusgroup term |
+
+```html
+<lion-menu axis="inline" wrap>
+  <lion-menuitem>Item 1</lion-menuitem>
+  <lion-menuitem>Item 2</lion-menuitem>
+</lion-menu>
+```
+
+The focusgroup behavior token (`menu`, `menubar`, `toolbar`, `listbox`, `tablist`, ...) is not an api
+here: the role and active mode stay the component's own configuration (`_listRole`/`_activeMode`).

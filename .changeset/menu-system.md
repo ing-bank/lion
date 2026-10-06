@@ -19,3 +19,10 @@ Overlays gained the pieces the menu builds on:
   `_noDialogEl` flag is gone.
 - `withClickInteraction` and `withHoverInteraction` are exported from
   `@lion/ui/exports/overlays.js` (they were internal visibility-trigger partials).
+
+The interactive-list api speaks the [focusgroup](https://open-ui.org/components/focusgroup.explainer/)
+vocabulary, so implementations that follow the platform proposal recognise the names: `axis`
+(`'block'` default / `'inline'`) replaces `orientation` (`vertical`/`horizontal`),
+`wrap` replaces `rotateKeyboardNavigation` and `multiple` replaces `multipleChoice`.
+`selectionFollowsFocus` and `noPreselect` stay: they are ARIA/APG terms and selection is not part of
+the focusgroup api.

@@ -233,7 +233,7 @@ export function runInteractiveListMixinSuite(customConfig) {
 
       it('set checked state sets aria-checked attribute with role="menuitemcheckbox"', async () => {
         const el = await fixture(html`
-          <${tag} multiple-choice>
+          <${tag} multiple>
             ${item(1, 'menuitemcheckbox')}
             ${item(2, 'menuitemcheckbox')}
           </${tag}>
@@ -262,7 +262,7 @@ export function runInteractiveListMixinSuite(customConfig) {
 
       it('can set checked state to "mixed" for role="menuitemcheckbox"', async () => {
         const el = await fixture(html`
-          <${tag} multiple-choice>
+          <${tag} multiple>
             ${item(1, 'menuitemcheckbox')}
             ${item(2, 'menuitemcheckbox')}
           </${tag}>
@@ -323,11 +323,89 @@ export function runInteractiveListMixinSuite(customConfig) {
 
     // Copy tests from ListboxMixin. Later, make this mixin a fundament of the ListboxMixin
 
-    // orientation
-    // multipleChoice
+    // axis
+    // multiple
     // selectionFollowsFocus
-    // rotateKeyboardNavigation
+    // wrap
     // _scrollTargetNode
+
+    describe('api vocabulary (focusgroup)', () => {
+      const itemTemplate = html`
+        <div role="listitem" id="item-0">
+          <button data-invoker>Item 0</button>
+        </div>
+        <div role="listitem" id="item-1">
+          <a href="#baz">Item 1</a>
+        </div>
+        <div role="listitem" id="item-2">
+          <a href="#foobar">Item 2</a>
+        </div>
+      `;
+
+      it('uses "block" as the default axis and navigates vertically', async () => {
+        const el = await fixture(html`<${tag}>${itemTemplate}</${tag}>`);
+        expect(el.axis).to.equal('block');
+
+        // @ts-expect-error [allow-protected-in-tests]
+        const { _listNode } = el;
+        el.activeIndex = 0;
+        mimicKeyPress(_listNode, 'ArrowDown');
+        expect(el.activeIndex).to.equal(1);
+        mimicKeyPress(_listNode, 'ArrowRight');
+        expect(el.activeIndex).to.equal(1);
+      });
+
+      it('navigates horizontally on axis="inline"', async () => {
+        const el = await fixture(html`<${tag} axis="inline">${itemTemplate}</${tag}>`);
+        expect(el.axis).to.equal('inline');
+        expect(el.getAttribute('axis')).to.equal('inline');
+
+        // @ts-expect-error [allow-protected-in-tests]
+        const { _listNode } = el;
+        el.activeIndex = 0;
+        mimicKeyPress(_listNode, 'ArrowRight');
+        expect(el.activeIndex).to.equal(1);
+        mimicKeyPress(_listNode, 'ArrowDown');
+        expect(el.activeIndex).to.equal(1);
+      });
+
+      it('reflects the axis property to the attribute', async () => {
+        const el = await fixture(html`<${tag}>${itemTemplate}</${tag}>`);
+        el.axis = 'inline';
+        await el.updateComplete;
+        expect(el.getAttribute('axis')).to.equal('inline');
+      });
+
+      it('wraps around at the first/last item when "wrap" is set', async () => {
+        const el = await fixture(html`<${tag} wrap>${itemTemplate}</${tag}>`);
+        expect(el.wrap).to.be.true;
+
+        // @ts-expect-error [allow-protected-in-tests]
+        const { _listNode } = el;
+        el.activeIndex = 2;
+        mimicKeyPress(_listNode, 'ArrowDown');
+        expect(el.activeIndex).to.equal(0);
+      });
+
+      it('does not wrap around when "wrap" is not set', async () => {
+        const el = await fixture(html`<${tag}>${itemTemplate}</${tag}>`);
+        expect(el.wrap).to.be.false;
+
+        // @ts-expect-error [allow-protected-in-tests]
+        const { _listNode } = el;
+        el.activeIndex = 2;
+        mimicKeyPress(_listNode, 'ArrowDown');
+        expect(el.activeIndex).to.equal(2);
+      });
+
+      it('applies "wrap" when it changes after the first render', async () => {
+        const el = await fixture(html`<${tag}>${itemTemplate}</${tag}>`);
+        expect(el.wrap).to.be.false;
+        el.wrap = true;
+        await el.updateComplete;
+        expect(el.wrap).to.be.true;
+      });
+    });
 
     describe('Interactions', () => {
       describe('Keyboard navigation', () => {
@@ -360,9 +438,9 @@ export function runInteractiveListMixinSuite(customConfig) {
           expect(el.activeIndex).to.be.equal(1);
         });
 
-        it('navigates between items on [ArrowRight] [ArrowLeft] keys when orientation is "horizontal" and _activeMode="tabbable-disclosure"', async () => {
+        it('navigates between items on [ArrowRight] [ArrowLeft] keys when axis is "inline" and _activeMode="tabbable-disclosure"', async () => {
           const el = await fixture(html`
-            <${tag} orientation="horizontal">
+            <${tag} axis="inline">
               <div role="listitem" id="item-0">
                 <button data-invoker>Item 0</button>
               </div>
@@ -421,7 +499,7 @@ export function runInteractiveListMixinSuite(customConfig) {
 
         it('navigates to first and last option with [Home] and [End] keys', async () => {
           const el = await fixture(html`
-            <${tag} orientation="horizontal">
+            <${tag} axis="inline">
               <div role="listitem" id="item-0">
                 <button data-invoker>Item 0</button>
               </div>
