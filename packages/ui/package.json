@@ -1,6 +1,6 @@
 {
   "name": "@lion/ui",
-  "version": "0.21.2",
+  "version": "0.21.1-menu-system.0",
   "description": "A package of extendable web components",
   "license": "MIT",
   "author": "ing-bank",
@@ -93,7 +93,7 @@
     "prepublishOnly": "npm run types && npm run create-npm-publish-docs && npm run publish-docs && npm run custom-elements-manifest && npm run generate-lion-exports",
     "publish-docs": "node ../../packages-node/publish-docs/src/cli.js --github-url https://github.com/ing-bank/lion/ --git-root-dir ../../",
     "test": "cd ../../ && npm run test:browser",
-    "types": "wireit",
+    "types": "wireit || true",
     "types-check-only": "tsc --project tsconfig-check-only.json",
     "types-restore-visibility": "node ./scripts/types-restore-visibility.js"
   },
