@@ -53,7 +53,7 @@ class LegacyContractHost extends LitElement {
       registry.define('lion-input', LionInput);
     }
     const root = Element.prototype.attachShadow.call(this, {
-      ...this.constructor.shadowRootOptions,
+      .../** @type {any} */ (this.constructor).shadowRootOptions,
       // The 0.x spelling, and the intermediate one the shipped mixin also sends.
       customElements: registry,
       registry,
@@ -84,6 +84,7 @@ class CompatContractHost extends ScopedElementsMixin(LitElement) {
 /**
  * @param {string} tagName
  */
+/** @type {Record<string, CustomElementConstructor>} */
 const HOSTS = {
   'poc-legacy-contract-host': LegacyContractHost,
   'poc-compat-contract-host': CompatContractHost,
@@ -107,7 +108,8 @@ async function renderHost(tagName) {
     document.body.append(host);
     await /** @type {any} */ (host).updateComplete;
   } catch (thrown) {
-    error = `${thrown.name}: ${thrown.message.slice(0, 90)}`;
+    const thrownError = /** @type {any} */ (thrown);
+    error = `${thrownError.name}: ${thrownError.message.slice(0, 90)}`;
   }
   if (!host) {
     return { rendered: false, child: null, upgraded: false, hasZeroXCreationApi: false, error };
@@ -118,7 +120,7 @@ async function renderHost(tagName) {
     child: child ? child.constructor.name : null,
     upgraded: child ? child instanceof LionInput : false,
     hasZeroXCreationApi: Boolean(
-      host.shadowRoot && typeof host.shadowRoot.createElement === 'function',
+      host.shadowRoot && typeof (/** @type {any} */ (host.shadowRoot).createElement) === 'function',
     ),
     error,
   };

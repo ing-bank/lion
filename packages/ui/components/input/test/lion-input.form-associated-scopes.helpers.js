@@ -36,7 +36,8 @@ export class LionInputFormAssociated extends LionInput {
       this.attachInternals().setFormValue(value);
       this.__publishOutcome = { ok: true };
     } catch (error) {
-      this.__publishOutcome = { ok: false, error: `${error.name}: ${error.message}` };
+      const err = /** @type {any} */ (error);
+      this.__publishOutcome = { ok: false, error: `${err.name}: ${err.message}` };
     }
     return this.__publishOutcome;
   }
@@ -60,7 +61,8 @@ export class LionInputFormAssociatedWithBridge extends LionInputFormAssociated {
         this.attachInternals().setFormValue(value);
         return { ok: true };
       } catch (error) {
-        return { ok: false, error: `${error.name}: ${error.message.slice(0, 60)}` };
+        const err = /** @type {any} */ (error);
+        return { ok: false, error: `${err.name}: ${err.message.slice(0, 60)}` };
       }
     })();
     // The mechanism today's version already has in place: the native input the form submits.
@@ -84,7 +86,8 @@ export function formAssociationOf(el) {
     const internals = el.attachInternals();
     return { associated: true, form: internals.form ? internals.form.localName : null };
   } catch (error) {
-    return { associated: false, error: `${error.name}: ${error.message}` };
+    const err = /** @type {any} */ (error);
+    return { associated: false, error: `${err.name}: ${err.message}` };
   }
 }
 
@@ -133,6 +136,7 @@ export async function runStory(order, AdoptingClass = LionInputFormAssociated) {
   if (scoped) {
     // Declare the tag by hand, in the requested order: the mixin only declares its `scopedElements`
     // when it creates the registry itself.
+    /** @type {Array<[CustomElementRegistry, typeof HTMLElement]>} */
     const definitions =
       order === 'current-first'
         ? [
@@ -156,14 +160,14 @@ export async function runStory(order, AdoptingClass = LionInputFormAssociated) {
   document.body.append(currentHost, futureHost);
   await Promise.all([currentHost.updateComplete, futureHost.updateComplete]);
 
-  const currentInput = /** @type {LionInput} */ (
-    currentHost.shadowRoot.querySelector('lion-input')
-  );
+  const currentRoot = /** @type {ShadowRoot} */ (currentHost.shadowRoot);
+  const futureRoot = /** @type {ShadowRoot} */ (futureHost.shadowRoot);
+  const currentInput = /** @type {LionInput} */ (currentRoot.querySelector('lion-input'));
   const futureInput = /** @type {LionInputFormAssociated} */ (
-    futureHost.shadowRoot.querySelector('lion-input')
+    futureRoot.querySelector('lion-input')
   );
-  const futureForm = /** @type {HTMLFormElement} */ (futureHost.shadowRoot.querySelector('form'));
-  const currentForm = /** @type {HTMLFormElement} */ (currentHost.shadowRoot.querySelector('form'));
+  const futureForm = /** @type {HTMLFormElement} */ (futureRoot.querySelector('form'));
+  const currentForm = /** @type {HTMLFormElement} */ (currentRoot.querySelector('form'));
 
   const story = {
     scoped,

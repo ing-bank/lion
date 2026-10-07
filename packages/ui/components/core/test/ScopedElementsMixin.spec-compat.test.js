@@ -38,15 +38,17 @@ describe('public surface (kept compatible with the 0.x era)', () => {
 
   it('keeps the scopedElementsVersion marker the previous mixin exposed', () => {
     // the marker is reached through an element class, in the mixin we replace as well as in ours
-    expect(OpenWcSurfaceHost.scopedElementsVersion).to.equal('3.0.0');
-    expect(MixinSurfaceHost.scopedElementsVersion).to.match(/^\d+\.\d+\.\d+$/);
-    expect(MixinSurfaceHost.scopedElementsVersion).to.not.equal(undefined);
+    const openWcVersion = /** @type {any} */ (OpenWcSurfaceHost).scopedElementsVersion;
+    const ourVersion = /** @type {any} */ (MixinSurfaceHost).scopedElementsVersion;
+    expect(openWcVersion).to.equal('3.0.0');
+    expect(ourVersion).to.match(/^\d+\.\d+\.\d+$/);
+    expect(ourVersion).to.not.equal(undefined);
     // neither implementation exposes it on the mixin function itself
     expect(/** @type {any} */ (ScopedElementsMixin).scopedElementsVersion).to.equal(undefined);
     // the global registry of mixin versions, which both write on import (same mechanism, same page)
     const versions = /** @type {any} */ (globalThis).scopedElementsVersions;
     expect(versions).to.include('3.0.0');
-    expect(versions).to.include(MixinSurfaceHost.scopedElementsVersion);
+    expect(versions).to.include(ourVersion);
   });
 
   it('answers supportsScopedRegistry() for this mode', () => {

@@ -20,9 +20,9 @@ import { adoptStyles, isServer } from 'lit';
  * marker is for: this is the v4 candidate, and it is the one that talks to both contracts.
  */
 const version = '4.0.0';
+const globalObject = /** @type {any} */ (globalThis);
 const versions = /** @type {string[]} */ (
-  /** @type {any} */ (globalThis).scopedElementsVersions ||
-    /** @type {any} */ (globalThis.scopedElementsVersions = [])
+  globalObject.scopedElementsVersions || (globalObject.scopedElementsVersions = [])
 );
 if (!versions.includes(version)) {
   versions.push(version);
