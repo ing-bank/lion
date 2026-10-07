@@ -6,4 +6,11 @@ export default {
   defaultDisabledDate: '此日期不可选。请选择另一个日期。',
   beforeDisabledDate: '此日期不可选。最早可选日期为 {params}。请选择另一个日期。',
   afterDisabledDate: '此日期不可选。最晚可选日期为 {params}。请选择另一个日期。',
+  selectMonth: '选择月份',
+  selectYear: '选择年份',
+  monthSelectionOpened: '选择月份，共12个月可选',
+  yearSelectionOpened: '选择年份，{startYear}年至{endYear}年可选',
+  previousYearRange: '上一年份范围',
+  nextYearRange: '下一年份范围',
+  yearsRange: '{startYear}年至{endYear}年',
 };

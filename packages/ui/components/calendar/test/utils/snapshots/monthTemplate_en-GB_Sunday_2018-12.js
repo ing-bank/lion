@@ -3,7 +3,7 @@ const html = /** @param {TemplateStringsArray} strings */ strings => strings[0];
 export default html`
   <div id="js-content-wrapper">
     <table
-      aria-labelledby="month year"
+      aria-labelledby="month-heading year-heading"
       aria-readonly="true"
       class="calendar__grid"
       data-wrap-cols=""
