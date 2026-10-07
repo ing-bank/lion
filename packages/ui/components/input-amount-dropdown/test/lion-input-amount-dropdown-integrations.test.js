@@ -15,9 +15,18 @@ describe('<lion-input-amount-dropdown> integrations', () => {
       }
       return !toggleValue ? { amount: 123, currency: 'EUR' } : { amount: 456, currency: 'EUR' };
     },
-    getExpectedInitialModelValue: el => ({ currency: /** @type {any} */ (el).currency }),
-    getExpectedInitialFormattedValue: el => ({ currency: /** @type {any} */ (el).currency }),
-    getExpectedInitialSerializedValue: el => ({ currency: /** @type {any} */ (el).currency }),
+    getExpectedInitialModelValue: el => ({
+      currency: /** @type {any} */ (el).currency,
+      amount: '',
+    }),
+    getExpectedInitialFormattedValue: el => ({
+      currency: /** @type {any} */ (el).currency,
+      amount: '',
+    }),
+    getExpectedInitialSerializedValue: el => ({
+      currency: /** @type {any} */ (el).currency,
+      amount: '',
+    }),
     getExpectedModelValueForEmptyInputNode: el => ({
       currency: /** @type {any} */ (el).currency,
       amount: '',

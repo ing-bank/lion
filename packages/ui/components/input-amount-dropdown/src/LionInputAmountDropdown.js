@@ -460,9 +460,9 @@ export class LionInputAmountDropdown extends LionInputAmount {
    */
   _initModelValueBasedOnDropdown() {
     const { currency, amount } = this._initialModelValue || {};
-    if (!currency && !amount && !this.dirty) {
+    if (!currency && !this.dirty) {
       this.__initializedCurrencyCode = this.currency;
-      this._initialModelValue = { currency: this.currency };
+      this._initialModelValue = { currency: this.currency, amount };
       this.modelValue = this._initialModelValue;
       this.initInteractionState();
     }

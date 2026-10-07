@@ -53,7 +53,7 @@ export function runInputAmountDropdownSuite({ klass } = { klass: LionInputAmount
       expect(getDropdownValue(/** @type {DropdownElement} */ (el.refs.dropdown.value))).to.equal(
         'GBP',
       );
-      expect(el.modelValue).to.eql({ currency: 'GBP' });
+      expect(el.modelValue).to.eql({ currency: 'GBP', amount: '' });
     });
 
     it('syncs value of dropdown on reset if input has no value', async () => {
@@ -62,7 +62,7 @@ export function runInputAmountDropdownSuite({ klass } = { klass: LionInputAmount
       await el.updateComplete;
       el.reset();
       await el.updateComplete;
-      expect(el.modelValue).to.eql({ currency: 'GBP' });
+      expect(el.modelValue).to.eql({ currency: 'GBP', amount: '' });
       expect(el.value).to.equal('');
     });
 
@@ -89,7 +89,13 @@ export function runInputAmountDropdownSuite({ klass } = { klass: LionInputAmount
       const el = await fixture(html` <${tag}
           .preferredCurrencies="${['JPY', 'EUR']}"
           ></${tag}> `);
-      expect(el.modelValue).to.eql({ currency: 'JPY' });
+      expect(el.modelValue).to.eql({ currency: 'JPY', amount: '' });
+    });
+
+    it('derives currency when modelValue only has an amount', async () => {
+      const el = await fixture(html` <${tag} .modelValue="${{ amount: 123 }}" ></${tag}> `);
+      expect(el.currency).to.equal('GBP');
+      expect(el.modelValue).to.eql({ currency: 'GBP', amount: 123 });
     });
 
     it('sets correct interaction states on init if input has a value', async () => {
@@ -262,6 +268,7 @@ export function runInputAmountDropdownSuite({ klass } = { klass: LionInputAmount
         );
         expect(el.modelValue).to.eql({
           currency: 'GBP',
+          amount: '',
         });
       });
 
