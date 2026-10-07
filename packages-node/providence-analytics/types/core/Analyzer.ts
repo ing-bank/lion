@@ -3,7 +3,6 @@ import {
   PathFromSystemRoot,
   QueryType,
   QueryResult,
-  AnalyzerAst,
   ImportOrExportId,
   Project,
   GatherFilesConfig,
@@ -42,14 +41,14 @@ export interface AnalyzerMeta {
   __fromCache?: boolean;
 }
 
-export interface AnalyzerQueryResult extends QueryResult {
+export interface AnalyzerQueryResult<TQueryOutput = QueryOutput> extends QueryResult<TQueryOutput> {
   /** meta info object */
   meta: Meta;
   /** array of AST traversal output, per project file */
-  queryOutput: QueryOutput;
+  queryOutput: TQueryOutput;
 }
 
-export interface FindAnalyzerQueryResult extends AnalyzerQueryResult {
+export interface FindAnalyzerQueryResult extends AnalyzerQueryResult<FindAnalyzerOutputFile[]> {
   queryOutput: FindAnalyzerOutputFile[];
 }
 

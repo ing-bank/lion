@@ -11,6 +11,9 @@ import { _cliHelpersModule } from './cli-helpers.js';
 /**
  * @typedef {import('../../types/index.js').ProvidenceCliConf} ProvidenceCliConf
  * @typedef {import('../../types/index.js').AnalyzerName} AnalyzerName
+ * @typedef {import('../../types/index.js').AnalyzerConfig} AnalyzerConfig
+ * @typedef {import('../../types/index.js').PathFromSystemRoot} PathFromSystemRoot
+ * @typedef {{ name: AnalyzerName; config: AnalyzerConfig; promptOptionalConfig: object }} AnalyzerOptions
  */
 
 const { version } = JSON.parse(
@@ -35,18 +38,19 @@ export async function cli({ cwd = process.cwd(), providenceConf, argv = process.
     rejectCli = reject;
   });
 
-  /** @type {object} */
+  /** @type {AnalyzerOptions} */
   let analyzerOptions;
 
   // TODO: change back to "InputDataService.getExternalConfig();" once full package ESM
   const externalConfig = providenceConf;
 
   /**
-   * @param {{analyzerOptions:{name:AnalyzerName; config:object;promptOptionalConfig:object}}} opts
+   * @param {{analyzerOptions:{name:AnalyzerName; config:AnalyzerConfig;promptOptionalConfig:object}}} opts
    */
   async function getQueryConfigAndMeta(opts) {
     let queryConfig = null;
-    let queryMethod = null;
+    /** @type {'ast' | 'grep'} */
+    let queryMethod = 'ast';
 
     // eslint-disable-next-line prefer-const
     let { name, config } = opts.analyzerOptions;
@@ -55,7 +59,7 @@ export async function cli({ cwd = process.cwd(), providenceConf, argv = process.
     }
     // Will get metaConfig from ./providence.conf.js
     const metaConfig = externalConfig ? externalConfig.metaConfig : {};
-    config = { ...config, metaConfig };
+    config = /** @type {AnalyzerConfig} */ ({ ...config, metaConfig });
     queryConfig = await QueryService.getQueryConfigFromAnalyzer(name, config);
     queryMethod = 'ast';
     return { queryConfig, queryMethod };
@@ -66,19 +70,25 @@ export async function cli({ cwd = process.cwd(), providenceConf, argv = process.
 
     const searchTargetPaths = commander.searchTargetCollection || commander.searchTargetPaths;
     let referencePaths;
-    if (queryConfig.analyzer.requiresReference) {
+    if (
+      /** @type {typeof import('../program/core/Analyzer.js').Analyzer} */ (
+        /** @type {unknown} */ (queryConfig.analyzer)
+      ).requiresReference
+    ) {
       referencePaths = commander.referenceCollection || commander.referencePaths;
     }
 
     /**
      * May or may not include dependencies of search target
-     * @type {string[]}
+     * @type {PathFromSystemRoot[]}
      */
     let totalSearchTargets;
     if (commander.targetDependencies !== undefined) {
-      totalSearchTargets = await _cliHelpersModule.appendProjectDependencyPaths(
-        searchTargetPaths,
-        commander.targetDependencies,
+      totalSearchTargets = /** @type {PathFromSystemRoot[]} */ (
+        await _cliHelpersModule.appendProjectDependencyPaths(
+          searchTargetPaths,
+          commander.targetDependencies,
+        )
       );
     } else {
       totalSearchTargets = searchTargetPaths;
@@ -205,7 +215,7 @@ export async function cli({ cwd = process.cwd(), providenceConf, argv = process.
     )
     .option('-c, --config [config]', 'configuration object for analyzer', c => JSON.parse(c))
     .action((analyzerName, options) => {
-      analyzerOptions = options;
+      analyzerOptions = /** @type {AnalyzerOptions} */ (options);
       analyzerOptions.name = analyzerName;
       launchProvidence().then(resolveCli).catch(rejectCli);
     });

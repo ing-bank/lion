@@ -69,14 +69,17 @@ async function resolveImportPathFn(importee, importer, opts = {}) {
   // @ts-expect-error
   rollupResolve.buildStart.call(fakePluginContext, { preserveSymlinks });
 
-  const result = await rollupResolve.resolveId.handler.call(
-    fakePluginContext,
-    importee,
-    importer,
-    {},
+  const resolveIdHook = rollupResolve.resolveId;
+  const resolveIdHandler =
+    typeof resolveIdHook === 'function' ? resolveIdHook : resolveIdHook?.handler;
+  const pluginContext = /** @type {import('rollup').PluginContext} */ (
+    /** @type {unknown} */ (fakePluginContext)
   );
+  const result = await resolveIdHandler?.call(pluginContext, importee, importer, {
+    isEntry: false,
+  });
 
-  if (!result?.id) {
+  if (!result || typeof result === 'string' || !result.id) {
     // LogService.warn(
     //   `[resolveImportPath] importee ${importee} not found in filesystem for importer '${importer}'.`,
     // );

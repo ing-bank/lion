@@ -9,7 +9,23 @@
  * @typedef {import('@swc/core').Identifier} SwcIdentifierNode
  * @typedef {import('@swc/core').Node} OxcNode
  * @typedef {import('@swc/core').Module} SwcAstModule
- * @typedef {import('@swc/core').Node} SwcNode
+ * @typedef {import('@swc/core').Node & {
+ *   value?: string;
+ *   name?: string;
+ *   imported?: SwcNode;
+ *   orig?: SwcNode;
+ *   local?: SwcNode;
+ *   exported?: SwcNode;
+ *   id?: SwcNode;
+ *   identifier?: SwcNode;
+ *   kind?: string;
+ *   source?: SwcNode;
+ *   init?: SwcNode;
+ *   declaration?: SwcNode;
+ *   expression?: SwcNode;
+ *   specifiers?: SwcNode[];
+ *   body?: SwcNode[];
+ * }} SwcNode
  */
 
 /**
@@ -95,7 +111,7 @@ function getNewScope(swcPath, currentScope, traversalContext) {
       },
       dispose() {
         this.path = null;
-        this.parentScope = null;
+        this.parentScope = undefined;
         this.bindings = {};
         this._pendingRefsWithoutBinding = [];
       },
@@ -117,15 +133,16 @@ export function getPathFromNode(node) {
 /**
  * @param {SwcNode} node
  * @param {SwcNode|null} parent
- * @param {Function} stop
+ * @param {() => void} stop
  * @param {SwcScope} [scope]
  * @returns {SwcPath}
  */
 function createSwcPath(node, parent, stop, scope) {
+  const swcParent = /** @type {SwcNode} */ (parent);
   /** @type {SwcPath} */
   const swcPath = {
     node,
-    parent,
+    parent: swcParent,
     stop,
     // TODO: "pre-traverse" the missing scope parts instead via getter that adds refs and bindings for current scope
     scope,
@@ -196,7 +213,12 @@ function isBindingRefNode(parent) {
  * @returns {void}
  */
 function addPotentialBindingOrRefToScope(swcPathForIdentifier) {
-  const { node, parent, scope, parentPath } = swcPathForIdentifier;
+  const { node: rawNode, parent: rawParent, scope, parentPath } = swcPathForIdentifier;
+  const node = /** @type {SwcNode} */ (rawNode);
+  const parent = /** @type {SwcNode} */ (rawParent);
+  const grandParentNode = /** @type {SwcNode|undefined} */ (
+    swcPathForIdentifier.parentPath?.parentPath?.node
+  );
 
   if (!scope || node.type !== 'Identifier') return;
 
@@ -204,15 +226,13 @@ function addPotentialBindingOrRefToScope(swcPathForIdentifier) {
   if (isBindingNode(parent, nameOf(node))) {
     /** @type {SwcBinding} */
     const binding = {
-      identifier: parent?.id || parent?.identifier,
+      identifier: /** @type {SwcNode} */ (parent?.id || parent?.identifier),
       // kind: 'var',
       refs: [],
       path: /** @type {SwcPath} */ (swcPathForIdentifier.parentPath || swcPathForIdentifier),
     };
     let scopeBindingBelongsTo = scope;
-    const isVarInIsolatedBlock =
-      scope._isIsolatedBlockStatement &&
-      swcPathForIdentifier.parentPath?.parentPath?.node?.kind === 'var';
+    const isVarInIsolatedBlock = scope._isIsolatedBlockStatement && grandParentNode?.kind === 'var';
     const hasNonBlockParent = nonBlockParentTypes.includes(parent.type);
 
     if (isVarInIsolatedBlock || hasNonBlockParent) {
@@ -232,7 +252,10 @@ function addPotentialBindingOrRefToScope(swcPathForIdentifier) {
         1,
       );
     }
-    const idName = nameOf(node) || nameOf(node.local) || nameOf(node.orig || node.imported);
+    const idName =
+      nameOf(node) ||
+      nameOf(/** @type {SwcNode} */ (node.local)) ||
+      nameOf(/** @type {SwcNode} */ (node.orig || node.imported));
 
     // eslint-disable-next-line no-param-reassign
     scopeBindingBelongsTo.bindings[idName] = binding;

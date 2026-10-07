@@ -1,8 +1,9 @@
+import type { Node as SwcNode } from '@swc/core';
 import { IdentifierName } from '../index.js';
 
 export type SwcScope = {
   id: number;
-  parentScope?: Scope;
+  parentScope?: SwcScope;
   bindings: { [key: string]: SwcBinding };
   path: SwcPath | null;
   getBinding: (IdentifierName: string) => SwcBinding;
@@ -22,7 +23,7 @@ export type SwcBinding = {
 export type SwcPath = {
   node: SwcNode;
   parent: SwcNode;
-  stop: function;
+  stop: () => void;
   scope?: SwcScope;
   parentPath: SwcPath | null | undefined;
   get: (id: string) => SwcPath | undefined;

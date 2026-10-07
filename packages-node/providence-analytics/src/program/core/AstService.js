@@ -2,17 +2,18 @@ import * as parse5 from 'parse5';
 import { traverseHtml } from '../utils/traverse-html.js';
 import { LogService } from './LogService.js';
 
-/** @type {import('@babel/parser')} */
+/** @type {typeof import('@babel/parser')} */
 let babelParser;
-/** @type {import('@swc/core')} */
+/** @type {typeof import('@swc/core')} */
 let swcParser;
-/** @type {import('oxc-parser')} */
+/** @type {typeof import('oxc-parser')} */
 let oxcParser;
 
 /**
  * @typedef {import('../../../types/index.js').PathFromSystemRoot} PathFromSystemRoot
  * @typedef {import('../../../types/index.js').AnalyzerAst} AnalyzerAst
  * @typedef {import("oxc-parser").ParseResult} OxcParseResult
+ * @typedef {import("oxc-parser").ParserOptions} OxcParserOptions
  * @typedef {import("@babel/parser").ParserOptions} ParserOptions
  * @typedef {import("@swc/core").Module} SwcAstModule
  * @typedef {import("@babel/types").File} File
@@ -76,7 +77,7 @@ export class AstService {
    * @param {string} code
    * @param {object} opts
    * @param {string} [opts.filePath]
-   * @param {ParserOptions} [opts.parserOptions]
+   * @param {OxcParserOptions} [opts.parserOptions]
    * @returns {Promise<OxcParseResult>}
    */
   static async _getOxcAst(code, { filePath = '', parserOptions = {} } = {}) {
@@ -99,12 +100,16 @@ export class AstService {
      * @type {string[]}
      */
     const scripts = [];
-    traverseHtml(ast, {
+    traverseHtml(/** @type {Parameters<typeof traverseHtml>[0]} */ (/** @type {unknown} */ (ast)), {
       /**
-       * @param {{ node: { childNodes: { value: any; }[]; }; }} path
+       * @param {Parameters<Parameters<typeof traverseHtml>[1]['script']>[0]} path
        */
       script(path) {
-        const code = path.node.childNodes[0] ? path.node.childNodes[0].value : '';
+        const { node } = path;
+        const textNode = /** @type {{childNodes?: {value: string}[]}} */ (
+          /** @type {unknown} */ (node)
+        );
+        const code = textNode.childNodes?.[0] ? textNode.childNodes[0].value : '';
         scripts.push(code);
       },
     });

@@ -8,6 +8,10 @@ import {
 import { resolveImportPath } from '../../../src/program/utils/resolve-import-path.js';
 import { memoize } from '../../../src/program/utils/memoize.js';
 
+/**
+ * @typedef {import('../../../test-helpers/mock-project-helpers.js').MockProject} MockProject
+ */
+
 describe('resolveImportPath', () => {
   beforeEach(() => {
     memoize.disableCaching();
@@ -41,6 +45,7 @@ describe('resolveImportPath', () => {
   });
 
   it(`resolves file in different projects`, async () => {
+    /** @type {MockProject} */
     const targetProject = {
       path: '/target/node_modules/ref',
       name: 'ref',
@@ -53,6 +58,7 @@ describe('resolveImportPath', () => {
         },
       ],
     };
+    /** @type {MockProject} */
     const referenceProject = {
       path: '/target',
       name: 'target',
@@ -74,6 +80,7 @@ describe('resolveImportPath', () => {
   });
 
   it(`resolves export maps`, async () => {
+    /** @type {MockProject} */
     const targetProject = {
       path: '/target/node_modules/ref',
       name: 'ref',
@@ -95,6 +102,7 @@ describe('resolveImportPath', () => {
         },
       ],
     };
+    /** @type {MockProject} */
     const referenceProject = {
       path: '/target',
       name: 'target',

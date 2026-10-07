@@ -14,6 +14,7 @@ import { flatten } from './cli-helpers.js';
 /**
  * @typedef {import('../../types/index.js').PathFromSystemRoot} PathFromSystemRoot
  * @typedef {import('../../types/index.js').GatherFilesConfig} GatherFilesConfig
+ * @typedef {import('../../types/index.js').AnalyzerConfig} AnalyzerConfig
  */
 
 /**
@@ -38,7 +39,12 @@ export async function getExtendDocsResults({
   const monoPkgs = await InputDataService.getMonoRepoPackages(cwd);
 
   const results = await _providenceModule.providence(
-    await QueryService.getQueryConfigFromAnalyzer(MatchPathsAnalyzer, { prefix: prefixCfg }),
+    await QueryService.getQueryConfigFromAnalyzer(
+      MatchPathsAnalyzer,
+      /** @type {AnalyzerConfig & { prefix: { from: string; to: string } }} */ ({
+        prefix: prefixCfg,
+      }),
+    ),
     {
       gatherFilesConfig: {
         extensions: extensions || /** @type {GatherFilesConfig['extensions']} */ (['.js']),
@@ -84,16 +90,22 @@ export async function getExtendDocsResults({
   if (monoPkgs) {
     queryOutputs.forEach(resultObj => {
       if (resultObj.variable) {
-        resultObj.variable.paths.forEach(pathObj => {
-          // eslint-disable-next-line no-param-reassign
-          pathObj.to = replaceToMonoRepoPath(pathObj.to, monoPkgs);
-        });
+        resultObj.variable.paths.forEach(
+          /** @param {{ to: string }} pathObj */
+          pathObj => {
+            // eslint-disable-next-line no-param-reassign
+            pathObj.to = replaceToMonoRepoPath(pathObj.to, monoPkgs);
+          },
+        );
       }
       if (resultObj.tag) {
-        resultObj.tag.paths.forEach(pathObj => {
-          // eslint-disable-next-line no-param-reassign
-          pathObj.to = replaceToMonoRepoPath(pathObj.to, monoPkgs);
-        });
+        resultObj.tag.paths.forEach(
+          /** @param {{ to: string }} pathObj */
+          pathObj => {
+            // eslint-disable-next-line no-param-reassign
+            pathObj.to = replaceToMonoRepoPath(pathObj.to, monoPkgs);
+          },
+        );
       }
     });
   }

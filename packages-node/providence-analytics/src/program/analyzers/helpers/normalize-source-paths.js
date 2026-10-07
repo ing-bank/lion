@@ -51,11 +51,14 @@ export async function normalizeSourcePath(oldSource, relativePath, rootPath = pr
 }
 
 /**
- * @param {Partial<FindImportsAnalyzerEntry>[]} queryOutput
+ * @template {{source?: string; normalizedSource?: string}} T
+ * @param {T[]} queryOutput
  * @param {string} relativePath
- * @param {string} rootPath
+ * @param {string} [rootPath]
+ * @returns {Promise<T[]>}
  */
 export async function normalizeSourcePaths(queryOutput, relativePath, rootPath = process.cwd()) {
+  /** @type {T[]} */
   const normalizedQueryOutput = [];
   for (const specifierResObj of queryOutput) {
     if (specifierResObj.source) {

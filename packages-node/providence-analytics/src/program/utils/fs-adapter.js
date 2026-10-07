@@ -10,7 +10,7 @@ class FsAdapter {
 
   /**
    * Call this for mocking or compatibility with non-node environments.
-   * @param {originalNodeFs} fs
+   * @param {typeof originalNodeFs} fs
    */
   setFs(fs) {
     this.fs = fs;

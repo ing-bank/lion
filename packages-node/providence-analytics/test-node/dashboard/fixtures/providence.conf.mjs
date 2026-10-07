@@ -7,6 +7,7 @@ export default {
         majorVersion: 1,
         // These conditions will be run on overy filePath
         categories: {
+          /** @param {string} localFilePath */
           overlays: localFilePath => {
             const names = ['dialog', 'tooltip'];
             const fromPackages = names.some(p =>

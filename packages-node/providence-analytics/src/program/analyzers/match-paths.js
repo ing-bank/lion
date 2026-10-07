@@ -6,12 +6,24 @@ import { Analyzer } from '../core/Analyzer.js';
 
 /**
  * @typedef {import('../../../types/index.js').AnalyzerName} AnalyzerName
+ * @typedef {import('../../../types/index.js').AnalyzerMeta} AnalyzerMeta
+ * @typedef {import('../../../types/index.js').AnalyzerQueryResult} AnalyzerQueryResult
  * @typedef {import('../../../types/index.js').FindExportsAnalyzerResult} FindExportsAnalyzerResult
+ * @typedef {import('../../../types/index.js').FindExportsAnalyzerEntry} FindExportsAnalyzerEntry
  * @typedef {import('../../../types/index.js').FindCustomelementsAnalyzerResult} FindCustomelementsAnalyzerResult
  * @typedef {import('../../../types/index.js').MatchSubclassesAnalyzerResult} MatchSubclassesAnalyzerResult
- * @typedef {import('../../../types/index.js').FindImportsAnalyzerResult} FindImportsAnalyzerResult
  * @typedef {import('../../../types/index.js').MatchedExportSpecifier} MatchedExportSpecifier
  * @typedef {import('../../../types/index.js').RootFile} RootFile
+ * @typedef {import('../../../types/index.js').GatherFilesConfig} GatherFilesConfig
+ * @typedef {import('../../../types/index.js').QueryOutput} QueryOutput
+ * @typedef {import('../core/Analyzer.js').AnalyzerConfigResolved} AnalyzerConfigResolved
+ * @typedef {FindExportsAnalyzerResult & { analyzerMeta: AnalyzerMeta }} FindExportsResultWithMeta
+ * @typedef {AnalyzerConfigResolved & { prefix?: { from: string; to: string } | null }} MatchClasspathsConfig
+ * @typedef {{ from: string; to: string }} PathMapping
+ * @typedef {{ name: string; variable?: { from: string; to: string; paths: PathMapping[] }; tag?: { from: string; to: string; paths: PathMapping[] } }} MatchPathsAnalyzerOutputFile
+ * @typedef {{ exportSpecifier: MatchedExportSpecifier }} MatchSubclassEntry
+ * @typedef {{ file: string; tagName: string }} TagResult
+ * @typedef {{ targetResult?: TagResult; refResult?: TagResult }} TagPathsResult
  */
 
 /**
@@ -30,7 +42,8 @@ import { Analyzer } from '../core/Analyzer.js';
  * @param {{from:string, to:string}} prefix
  */
 function filterPrefixMatches(queryOutput, prefix) {
-  const capitalize = prefix => `${prefix[0].toUpperCase()}${prefix.slice(1)}`;
+  const capitalize = (/** @type {string} */ prefixStr) =>
+    `${prefixStr[0].toUpperCase()}${prefixStr.slice(1)}`;
 
   const filteredQueryOutput = queryOutput
     .map(e => {
@@ -47,11 +60,13 @@ function filterPrefixMatches(queryOutput, prefix) {
         keepTag = fromUnprefixed === toUnprefixed;
       }
 
-      return {
+      /** @type {MatchPathsAnalyzerOutputFile} */
+      const result = {
         name: e.name,
         ...(keepVariable ? { variable: e.variable } : {}),
         ...(keepTag ? { tag: e.tag } : {}),
       };
+      return result;
     })
     .filter(e => e.tag || e.variable);
 
@@ -66,7 +81,7 @@ function filterPrefixMatches(queryOutput, prefix) {
  */
 function getExportSpecifierRootFile(matchSubclassesExportSpecifier, refFindExportsResult) {
   /* eslint-disable arrow-body-style */
-  /** @type {RootFile} */
+  /** @type {RootFile|undefined} */
   let rootFile;
   refFindExportsResult.queryOutput.some(exportEntry => {
     return exportEntry.result.some(exportEntryResult => {
@@ -96,7 +111,13 @@ function getExportSpecifierRootFile(matchSubclassesExportSpecifier, refFindExpor
   /* eslint-enable arrow-body-style */
 }
 
+/**
+ * @param {string[]} targetPaths
+ * @param {FindExportsResultWithMeta} targetExportsResult
+ * @returns {string|undefined}
+ */
 function getClosestToRootTargetPath(targetPaths, targetExportsResult) {
+  /** @type {string|undefined} */
   let targetPath;
   const { mainEntry } = targetExportsResult.analyzerMeta.targetProject;
   if (targetPaths.includes(mainEntry)) {
@@ -115,6 +136,7 @@ function getClosestToRootTargetPath(targetPaths, targetExportsResult) {
  * @param {string} fromClass Identifier exported by reference project, for instance LionCheckbox
  * @param {string} toClass Identifier exported by target project, for instance WolfCheckbox
  * @param {string} refProjectName for instance @lion/checkbox
+ * @returns {PathMapping[]|undefined}
  */
 function getVariablePaths(
   targetExportsResult,
@@ -160,7 +182,10 @@ function getVariablePaths(
     return undefined; // there would be nothing to replace
   }
 
-  const targetPath = getClosestToRootTargetPath(targetPaths, targetExportsResult);
+  const targetPath = getClosestToRootTargetPath(
+    targetPaths,
+    /** @type {FindExportsResultWithMeta} */ (/** @type {unknown} */ (targetExportsResult)),
+  );
 
   // [A3]
   /**
@@ -171,11 +196,16 @@ function getVariablePaths(
   const refPaths = [];
   refFindExportsResult.queryOutput.forEach(({ file, result }) => {
     const refPathMatch = result.find(entry => {
-      if (entry.exportSpecifiers.includes(fromClass)) {
+      const entryWithLocalMap =
+        /** @type {FindExportsAnalyzerEntry & { localMap?: { exported?: string }[] }} */ (entry);
+      if (entryWithLocalMap.exportSpecifiers.includes(fromClass)) {
         return true;
       }
       // if we're dealing with `export {x as y}`...
-      if (entry.localMap && entry.localMap.find(({ exported }) => exported === fromClass)) {
+      if (
+        entryWithLocalMap.localMap &&
+        entryWithLocalMap.localMap.find(({ exported }) => exported === fromClass)
+      ) {
         return true;
       }
       return false;
@@ -185,7 +215,7 @@ function getVariablePaths(
     }
   });
 
-  const paths = refPaths.map(refP => ({ from: refP, to: targetPath }));
+  const paths = refPaths.map(refP => ({ from: refP, to: /** @type {string} */ (targetPath) }));
 
   // Add all paths with project prefix as well.
   const projectPrefixedPaths = paths.map(({ from, to }) => {
@@ -203,6 +233,7 @@ function getVariablePaths(
  * @param {string} targetMatchedFile file where `toClass` from match-subclasses is defined
  * @param {string} toClass Identifier exported by target project, for instance `WolfCheckbox`
  * @param {MatchSubclassEntry} matchSubclassEntry
+ * @returns {TagPathsResult}
  */
 function getTagPaths(
   targetFindCustomelementsResult,
@@ -214,6 +245,7 @@ function getTagPaths(
 ) {
   /* eslint-disable arrow-body-style */
 
+  /** @type {TagResult|undefined} */
   let targetResult;
   targetFindCustomelementsResult.queryOutput.some(({ file, result }) => {
     const targetPathMatch = result.find(entry => {
@@ -228,6 +260,7 @@ function getTagPaths(
     return false;
   });
 
+  /** @type {TagResult|undefined} */
   let refResult;
   refFindCustomelementsResult.queryOutput.some(({ file, result }) => {
     const refPathMatch = result.find(entry => {
@@ -257,11 +290,12 @@ function getTagPaths(
 
 /**
  * @param {MatchSubclassesAnalyzerResult} targetMatchSubclassesResult
- * @param {FindExportsAnalyzerResult} targetExportsResult
+ * @param {FindExportsResultWithMeta} targetExportsResult
  * @param {FindCustomelementsAnalyzerResult} targetFindCustomelementsResult
  * @param {FindCustomelementsAnalyzerResult} refFindCustomelementsResult
  * @param {FindExportsAnalyzerResult} refFindExportsResult
- * @returns {AnalyzerQueryResult}
+ * @param {string} refProjectName
+ * @returns {MatchPathsAnalyzerOutputFile[]}
  */
 function matchPathsPostprocess(
   targetMatchSubclassesResult,
@@ -271,7 +305,7 @@ function matchPathsPostprocess(
   refFindExportsResult,
   refProjectName,
 ) {
-  /** @type {AnalyzerQueryResult} */
+  /** @type {MatchPathsAnalyzerOutputFile[]} */
   const resultsArray = [];
 
   for (const matchSubclassEntry of targetMatchSubclassesResult.queryOutput) {
@@ -279,6 +313,7 @@ function matchPathsPostprocess(
 
     for (const projectMatch of matchSubclassEntry.matchesPerProject) {
       for (const { identifier: toClass, file: targetMatchedFile } of projectMatch.files) {
+        /** @type {MatchPathsAnalyzerOutputFile} */
         const resultEntry = {
           name: fromClass,
         };
@@ -371,25 +406,20 @@ export default class MatchPathsAnalyzer extends Analyzer {
   static requiresReference = true;
 
   /**
-   * @param {MatchClasspathsConfig} customConfig
+   * @param {AnalyzerConfigResolved} [customConfig]
    */
   async execute(customConfig = {}) {
-    /**
-     * @typedef MatchClasspathsConfig
-     * @property {GatherFilesConfig} [gatherFilesConfig]
-     * @property {GatherFilesConfig} [gatherFilesConfigReference]
-     * @property {string} [referenceProjectPath] reference path
-     * @property {string} [targetProjectPath] search target path
-     * @property {{ from: string, to: string }} [prefix]
-     */
-    const cfg = {
-      gatherFilesConfig: {},
-      gatherFilesConfigReference: {},
-      referenceProjectPath: null,
-      targetProjectPath: null,
-      prefix: null,
+    /** @type {MatchClasspathsConfig} */
+    const cfg = /** @type {MatchClasspathsConfig} */ ({
+      ...{
+        gatherFilesConfig: {},
+        gatherFilesConfigReference: {},
+        referenceProjectPath: null,
+        targetProjectPath: null,
+        prefix: null,
+      },
       ...customConfig,
-    };
+    });
 
     /**
      * Prepare
@@ -422,34 +452,46 @@ export default class MatchPathsAnalyzer extends Analyzer {
     // [A1]
     const targetMatchSubclassesAnalyzer = new MatchSubclassesAnalyzer();
     /** @type {MatchSubclassesAnalyzerResult} */
-    const targetMatchSubclassesResult = await targetMatchSubclassesAnalyzer.execute({
-      targetProjectPath: cfg.targetProjectPath,
-      referenceProjectPath: cfg.referenceProjectPath,
-      gatherFilesConfig: cfg.gatherFilesConfig,
-      gatherFilesConfigReference: cfg.gatherFilesConfigReference,
-      skipCheckMatchCompatibility: cfg.skipCheckMatchCompatibility,
-      suppressNonCriticalLogs: true,
-    });
+    const targetMatchSubclassesResult = /** @type {MatchSubclassesAnalyzerResult} */ (
+      /** @type {unknown} */ (
+        await targetMatchSubclassesAnalyzer.execute({
+          targetProjectPath: cfg.targetProjectPath,
+          referenceProjectPath: cfg.referenceProjectPath,
+          gatherFilesConfig: cfg.gatherFilesConfig,
+          gatherFilesConfigReference: cfg.gatherFilesConfigReference,
+          skipCheckMatchCompatibility: cfg.skipCheckMatchCompatibility,
+          suppressNonCriticalLogs: true,
+        })
+      )
+    );
 
     // [A2]
     const targetFindExportsAnalyzer = new FindExportsAnalyzer();
-    /** @type {FindExportsAnalyzerResult} */
-    const targetExportsResult = await targetFindExportsAnalyzer.execute({
-      targetProjectPath: cfg.targetProjectPath,
-      gatherFilesConfig: cfg.gatherFilesConfig,
-      skipCheckMatchCompatibility: cfg.skipCheckMatchCompatibility,
-      suppressNonCriticalLogs: true,
-    });
+    /** @type {FindExportsResultWithMeta} */
+    const targetExportsResult = /** @type {FindExportsResultWithMeta} */ (
+      /** @type {unknown} */ (
+        await targetFindExportsAnalyzer.execute({
+          targetProjectPath: cfg.targetProjectPath,
+          gatherFilesConfig: cfg.gatherFilesConfig,
+          skipCheckMatchCompatibility: cfg.skipCheckMatchCompatibility,
+          suppressNonCriticalLogs: true,
+        })
+      )
+    );
 
     // [A3]
     const refFindExportsAnalyzer = new FindExportsAnalyzer();
-    /** @type {FindExportsAnalyzerResult} */
-    const refFindExportsResult = await refFindExportsAnalyzer.execute({
-      targetProjectPath: cfg.referenceProjectPath,
-      gatherFilesConfig: cfg.gatherFilesConfigReference,
-      skipCheckMatchCompatibility: cfg.skipCheckMatchCompatibility,
-      suppressNonCriticalLogs: true,
-    });
+    /** @type {FindExportsResultWithMeta} */
+    const refFindExportsResult = /** @type {FindExportsResultWithMeta} */ (
+      /** @type {unknown} */ (
+        await refFindExportsAnalyzer.execute({
+          targetProjectPath: cfg.referenceProjectPath,
+          gatherFilesConfig: cfg.gatherFilesConfigReference,
+          skipCheckMatchCompatibility: cfg.skipCheckMatchCompatibility,
+          suppressNonCriticalLogs: true,
+        })
+      )
+    );
 
     /**
      * ## Goal B: tag
@@ -473,27 +515,36 @@ export default class MatchPathsAnalyzer extends Analyzer {
     // [B1]
     const targetFindCustomelementsAnalyzer = new FindCustomelementsAnalyzer();
     /** @type {FindCustomelementsAnalyzerResult} */
-    const targetFindCustomelementsResult = await targetFindCustomelementsAnalyzer.execute({
-      targetProjectPath: cfg.targetProjectPath,
-      gatherFilesConfig: cfg.gatherFilesConfig,
-      skipCheckMatchCompatibility: cfg.skipCheckMatchCompatibility,
-      suppressNonCriticalLogs: true,
-    });
+    const targetFindCustomelementsResult = /** @type {FindCustomelementsAnalyzerResult} */ (
+      /** @type {unknown} */ (
+        await targetFindCustomelementsAnalyzer.execute({
+          targetProjectPath: cfg.targetProjectPath,
+          gatherFilesConfig: cfg.gatherFilesConfig,
+          skipCheckMatchCompatibility: cfg.skipCheckMatchCompatibility,
+          suppressNonCriticalLogs: true,
+        })
+      )
+    );
 
     // [B2]
     const refFindCustomelementsAnalyzer = new FindCustomelementsAnalyzer();
     /** @type {FindCustomelementsAnalyzerResult} */
-    const refFindCustomelementsResult = await refFindCustomelementsAnalyzer.execute({
-      targetProjectPath: cfg.referenceProjectPath,
-      gatherFilesConfig: cfg.gatherFilesConfigReference,
-      skipCheckMatchCompatibility: cfg.skipCheckMatchCompatibility,
-      suppressNonCriticalLogs: true,
-    });
+    const refFindCustomelementsResult = /** @type {FindCustomelementsAnalyzerResult} */ (
+      /** @type {unknown} */ (
+        await refFindCustomelementsAnalyzer.execute({
+          targetProjectPath: cfg.referenceProjectPath,
+          gatherFilesConfig: cfg.gatherFilesConfigReference,
+          skipCheckMatchCompatibility: cfg.skipCheckMatchCompatibility,
+          suppressNonCriticalLogs: true,
+        })
+      )
+    );
     // refFindExportsAnalyzer was already created in A3
 
     // Use one of the reference analyzer instances to get the project name
-    const refProjectName = refFindExportsAnalyzer.targetProjectMeta.name;
+    const refProjectName = /** @type {string} */ (refFindExportsAnalyzer.targetProjectMeta?.name);
 
+    /** @type {MatchPathsAnalyzerOutputFile[]} */
     let queryOutput = matchPathsPostprocess(
       targetMatchSubclassesResult,
       targetExportsResult,
@@ -510,6 +561,6 @@ export default class MatchPathsAnalyzer extends Analyzer {
     /**
      * Finalize
      */
-    return this._finalize(queryOutput, cfg);
+    return this._finalize(/** @type {QueryOutput} */ (/** @type {unknown} */ (queryOutput)), cfg);
   }
 }

@@ -7,9 +7,52 @@ import { trackDownIdentifierFromScope } from '../utils/track-down-identifier.js'
 import { Analyzer } from '../core/Analyzer.js';
 
 /**
+ * A structural representation of the AST nodes (swc/oxc/babel) that are visited by this
+ * analyzer. Every field is optional because the concrete node type depends on the parser.
+ * @typedef {object} LooseNode
+ * @property {string} [type]
+ * @property {string} [name]
+ * @property {string} [kind]
+ * @property {boolean} [static]
+ * @property {LooseNode} [id]
+ * @property {LooseNode} [key]
+ * @property {LooseNode} [callee]
+ * @property {LooseNode} [superClass]
+ * @property {LooseNode} [init]
+ * @property {LooseNode[]} [arguments]
+ * @property {LooseNode[]} [properties]
+ */
+/**
+ * @typedef {object} MemberResult
+ * @property {string} [name]
+ * @property {'public'|'protected'|'private'} [accessType]
+ * @property {string[]} [kind]
+ * @property {boolean} [static]
+ */
+/**
+ * @typedef {object} SuperClassEntry
+ * @property {string} [name]
+ * @property {boolean} [isMixin]
+ * @property {RootFile} [rootFile]
+ */
+/**
+ * @typedef {object} ClassMembers
+ * @property {MemberResult[]} props
+ * @property {MemberResult[]} methods
+ */
+/**
+ * @typedef {object} ClassResult
+ * @property {string} [name]
+ * @property {boolean} [isMixin]
+ * @property {SuperClassEntry[]} [superClasses]
+ * @property {ClassMembers} [members]
+ */
+/**
  * @typedef {import('@babel/types').File} File
  * @typedef {import('@babel/types').ClassMethod} ClassMethod
- * @typedef {import('@babel/traverse').NodePath} NodePath
+ * @typedef {import('../../../types/index.js').RootFile} RootFile
+ * @typedef {import('../../../types/index.js').PathFromSystemRoot} PathFromSystemRoot
+ * @typedef {import('../../../types/index.js').SwcPath} SwcPath
  * @typedef {import('../../../types/index.js').AnalyzerName} AnalyzerName
  * @typedef {import('../../../types/index.js').FindClassesAnalyzerResult} FindClassesAnalyzerResult
  * @typedef {import('../../../types/index.js').FindClassesAnalyzerOutputFile} FindClassesAnalyzerOutputFile
@@ -22,9 +65,11 @@ import { Analyzer } from '../core/Analyzer.js';
  * Finds import specifiers and sources
  * @param {File} babelAst
  * @param {string} fullCurrentFilePath the file being currently processed
+ * @param {PathFromSystemRoot} projectPath
  */
 async function findMembersPerAstEntry(babelAst, fullCurrentFilePath, projectPath) {
   // The transformed entry
+  /** @type {ClassResult[]} */
   const classesFound = [];
   /**
    * Detects private/publicness based on underscores. Checks '$' as well
@@ -43,11 +88,11 @@ async function findMembersPerAstEntry(babelAst, fullCurrentFilePath, projectPath
   }
 
   /**
-   * @param {{node:ClassMethod}} cfg
-   * @returns
+   * @param {{node:LooseNode}} cfg
+   * @returns {boolean}
    */
   function isStaticProperties({ node }) {
-    return node.static && node.kind === 'get' && node.key.name === 'properties';
+    return Boolean(node.static) && node.kind === 'get' && node.key?.name === 'properties';
   }
 
   // function isBlacklisted({ node }) {
@@ -87,22 +132,26 @@ async function findMembersPerAstEntry(babelAst, fullCurrentFilePath, projectPath
 
   /**
    *
-   * @param {NodePath} astPath
-   * @param {{isMixin?:boolean}} opts
+   * @param {SwcPath} astPath
+   * @param {{isMixin?:boolean}} [opts]
    */
   async function traverseClass(astPath, { isMixin = false } = {}) {
+    const { node } = /** @type {{ node: LooseNode }} */ (astPath);
+    /** @type {ClassResult} */
     const classRes = {};
-    classRes.name = astPath.node.id && astPath.node.id.name;
+    classRes.name = node.id && node.id.name;
     classRes.isMixin = Boolean(isMixin);
-    if (astPath.node.superClass) {
+    if (node.superClass) {
+      /** @type {SuperClassEntry[]} */
       const superClasses = [];
 
       // Add all Identifier names
-      let parent = astPath.node.superClass;
+      /** @type {LooseNode} */
+      let parent = node.superClass;
       while (parent.type === 'CallExpression') {
-        superClasses.push({ name: parent.callee.name, isMixin: true });
+        superClasses.push({ name: parent.callee?.name, isMixin: true });
         // As long as we are a CallExpression, we will have a parent
-        [parent] = parent.arguments;
+        [parent] = /** @type {LooseNode[]} */ (parent.arguments);
       }
       // At the end of the chain, we find type === Identifier
       superClasses.push({ name: parent.name, isMixin: false });
@@ -117,8 +166,8 @@ async function findMembersPerAstEntry(babelAst, fullCurrentFilePath, projectPath
         // Finds the file that holds the declaration of the import
         classObj.rootFile = await trackDownIdentifierFromScope(
           astPath,
-          classObj.name,
-          fullCurrentFilePath,
+          /** @type {string} */ (classObj.name),
+          /** @type {PathFromSystemRoot} */ (fullCurrentFilePath),
           projectPath,
         );
       }
@@ -132,52 +181,61 @@ async function findMembersPerAstEntry(babelAst, fullCurrentFilePath, projectPath
       methods: [],
     };
 
-    const handleMethodDefinitionOrClassMethod = astPath => {
+    const handleMethodDefinitionOrClassMethod = (/** @type {SwcPath} */ methodPath) => {
       // if (isBlacklisted(astPath)) {
       //   return;
       // }
-      if (isStaticProperties(astPath)) {
+      if (isStaticProperties(/** @type {{node:LooseNode}} */ (methodPath))) {
         let hasFoundTopLvlObjExpr = false;
-        astPath.traverse({
-          ObjectExpression(astPath) {
+        methodPath.traverse({
+          ObjectExpression(objectPath) {
             if (hasFoundTopLvlObjExpr) return;
             hasFoundTopLvlObjExpr = true;
-            astPath.node.properties.forEach(objectProperty => {
-              if (!isProperty(objectProperty)) {
+            const objectNode = /** @type {LooseNode} */ (objectPath.node);
+            (objectNode.properties || []).forEach(objectProperty => {
+              if (
+                !isProperty(
+                  /** @type {import('@swc/core').Node} */ (/** @type {unknown} */ (objectProperty)),
+                )
+              ) {
                 // we can also have a SpreadElement
                 return;
               }
+              /** @type {MemberResult} */
               const propRes = {};
-              const { name } = objectProperty.key;
+              const name = /** @type {string} */ (objectProperty.key?.name);
               propRes.name = name;
               propRes.accessType = computeAccessType(name);
-              propRes.kind = [...(propRes.kind || []), objectProperty.kind];
-              classRes.members.props.push(propRes);
+              propRes.kind = [...(propRes.kind || []), /** @type {string} */ (objectProperty.kind)];
+              /** @type {ClassMembers} */ (classRes.members).props.push(propRes);
             });
           },
         });
         return;
       }
 
+      const { node: methodNode } = /** @type {{ node: LooseNode }} */ (methodPath);
+      /** @type {MemberResult} */
       const methodRes = {};
-      const { name } = astPath.node.key;
+      const name = /** @type {string} */ (methodNode.key?.name);
       methodRes.name = name;
       methodRes.accessType = computeAccessType(name);
 
-      if (astPath.node.kind === 'set' || astPath.node.kind === 'get') {
-        if (astPath.node.static) {
+      if (methodNode.kind === 'set' || methodNode.kind === 'get') {
+        if (methodNode.static) {
           methodRes.static = true;
         }
-        methodRes.kind = [...(methodRes.kind || []), astPath.node.kind];
+        methodRes.kind = [...(methodRes.kind || []), /** @type {string} */ (methodNode.kind)];
         // Merge getter/setters into one
-        const found = classRes.members.props.find(p => p.name === name);
+        const { members } = /** @type {{ members: ClassMembers }} */ (classRes);
+        const found = members.props.find(p => p.name === name);
         if (found) {
-          found.kind = [...(found.kind || []), astPath.node.kind];
+          found.kind = [...(found.kind || []), /** @type {string} */ (methodNode.kind)];
         } else {
-          classRes.members.props.push(methodRes);
+          members.props.push(methodRes);
         }
       } else {
-        classRes.members.methods.push(methodRes);
+        /** @type {ClassMembers} */ (classRes.members).methods.push(methodRes);
       }
     };
 
@@ -189,6 +247,7 @@ async function findMembersPerAstEntry(babelAst, fullCurrentFilePath, projectPath
     classesFound.push(classRes);
   }
 
+  /** @type {{ astPath: SwcPath; isMixin: boolean }[]} */
   const classesToTraverse = [];
 
   oxcTraverse(babelAst, {
@@ -234,6 +293,10 @@ export default class FindClassesAnalyzer extends Analyzer {
   /** @type {AnalyzerAst} */
   static requiredAst = 'oxc';
 
+  /**
+   * @param {File} oxcAst
+   * @param {{ relativePath:string; analyzerCfg:{ targetProjectPath: PathFromSystemRoot } }} context
+   */
   static async analyzeFile(oxcAst, context) {
     const projectPath = context.analyzerCfg.targetProjectPath;
     const fullPath = path.resolve(projectPath, context.relativePath);

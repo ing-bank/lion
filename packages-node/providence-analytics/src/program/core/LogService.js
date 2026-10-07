@@ -23,6 +23,9 @@ function printTitle(title) {
 }
 
 export class LogService {
+  /** @type {string[]} */
+  static _logHistory = [];
+
   /**
    * @param {string} text
    * @param {string} [title]
@@ -33,7 +36,6 @@ export class LogService {
     }
 
     log(colors.bright, `  debug${printTitle(title)}`, colors.reset, text);
-    // @ts-ignore
     this._logHistory.push(`-   debug -${printTitle(title)} ${text}`);
   }
 
@@ -47,7 +49,6 @@ export class LogService {
     }
 
     log(colors.fgYellow, `warning${printTitle(title)}`, colors.reset, text);
-    // @ts-ignore
     this._logHistory.push(`- warning -${printTitle(title)} ${text}`);
   }
 
@@ -56,7 +57,6 @@ export class LogService {
    * @param {string} [title]
    */
   static error(text, title) {
-    // @ts-ignore
     this._logHistory.push(`-  error -${printTitle(title)} ${text}`);
 
     if (this.throwsOnError) {
@@ -75,7 +75,6 @@ export class LogService {
    * @param {string} [title]
    */
   static success(text, title) {
-    // @ts-ignore
     this._logHistory.push(`- success -${printTitle(title)} ${text}`);
     if (this.allMuted) {
       return;
@@ -89,7 +88,6 @@ export class LogService {
    * @param {string} [title]
    */
   static info(text, title) {
-    // @ts-ignore
     this._logHistory.push(`-    info -${printTitle(title)} ${text}`);
     if (this.allMuted) {
       return;
@@ -103,7 +101,6 @@ export class LogService {
    */
   static perf(measurement, title) {
     const text = `${this.pad(`[${measurement.name}]`)} ${measurement.duration}ms`;
-    // @ts-ignore
     this._logHistory.push(`-    perf -${printTitle(title)} ${text}`);
     if (this.allMuted || !this.perfEnabled) {
       return;
@@ -127,13 +124,11 @@ export class LogService {
   static writeLogFile() {
     const filePath = path.join(process.cwd(), 'providence.log');
     let file = `[log ${new Date()}]\n`;
-    // @ts-ignore
     this._logHistory.forEach(l => {
       file += `${l}\n`;
     });
     file += `[/log ${new Date()}]\n\n`;
     fsAdapter.fs.writeFileSync(filePath, file, { flag: 'a' });
-    // @ts-ignore
     this._logHistory = [];
   }
 }
@@ -142,6 +137,3 @@ LogService.debugEnabled = false;
 LogService.allMuted = false;
 LogService.throwsOnError = false;
 LogService.perfEnabled = false;
-
-/** @type {string[]} */
-LogService._logHistory = [];

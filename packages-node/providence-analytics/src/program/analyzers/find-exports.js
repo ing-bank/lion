@@ -11,12 +11,52 @@ import { LogService } from '../core/LogService.js';
 import { Analyzer } from '../core/Analyzer.js';
 
 /**
- * @typedef {{ exportSpecifiers:string[]; localMap: object; source:string, __tmp: { path:string } }} FindExportsSpecifierObj
+ * A structural representation of the AST nodes (swc/oxc/babel) that are visited by this
+ * analyzer. Every field is optional because the concrete node type depends on the parser.
+ * @typedef {object} LooseNode
+ * @property {string} [type]
+ * @property {string} [name]
+ * @property {string} [value]
+ * @property {LooseNode} [id]
+ * @property {LooseNode} [identifier]
+ * @property {LooseNode} [declaration]
+ * @property {LooseNode} [decl]
+ * @property {LooseNode} [expression]
+ * @property {LooseNode} [source]
+ * @property {LooseNode} [exported]
+ * @property {LooseNode} [local]
+ * @property {LooseNode} [orig]
+ * @property {LooseNode} [imported]
+ * @property {LooseNode[]} [specifiers]
+ * @property {LooseNode[]} [declarations]
+ */
+/**
+ * @typedef {{ local:string; exported:string }} LocalMapEntry
+ * @typedef {object} FindExportsSpecifierObj
+ * @property {string[]} exportSpecifiers
+ * @property {(LocalMapEntry|undefined)[]} [localMap]
+ * @property {string} [source]
+ * @property {string} [normalizedSource]
+ * @property {string} [assertionType]
+ * @property {(RootFileMapEntry|undefined)[]} [rootFileMap]
+ * @property {{ astPath: SwcPath }} [__tmp]
+ */
+/**
+ * @typedef {object} FindExportsConfig
+ * @property {PathFromSystemRoot} targetProjectPath
+ * @property {boolean} [onlyInternalSources=false]
+ * @property {boolean} [skipFileImports=false] Instead of both focusing on specifiers like
+ * [import {specifier} 'lion-based-ui/foo.js'], and [import 'lion-based-ui/foo.js'] as a result,
+ * not list file exports
+ */
+/**
+ * @typedef {import('../../../types/index.js').PathFromSystemRoot} PathFromSystemRoot
  * @typedef {import('../../../types/index.js').PathRelativeFromProjectRoot} PathRelativeFromProjectRoot
  * @typedef {import('../../../types/index.js').FindExportsAnalyzerResult} FindExportsAnalyzerResult
  * @typedef {import('../../../types/index.js').FindExportsAnalyzerEntry} FindExportsAnalyzerEntry
- * @typedef {import("@swc/core").VariableDeclaration} SwcVariableDeclaration
- * @typedef {import('../utils/track-down-identifier.js').RootFile} RootFile
+ * @typedef {import('../../../types/index.js').RootFileMapEntry} RootFileMapEntry
+ * @typedef {import('../../../types/index.js').RootFile} RootFile
+ * @typedef {import('@swc/core').VariableDeclaration} SwcVariableDeclaration
  * @typedef {import('../../../types/index.js').AnalyzerName} AnalyzerName
  * @typedef {import('../../../types/index.js').AnalyzerAst} AnalyzerAst
  * @typedef {import('../../../types/index.js').SwcBinding} SwcBinding
@@ -25,19 +65,17 @@ import { Analyzer } from '../core/Analyzer.js';
  * @typedef {import('../../../types/index.js').SwcPath} SwcPath
  * @typedef {import("@swc/core").Module} SwcAstModule
  * @typedef {import("@swc/core").Node} SwcNode
- * @typedef {RootFileMapEntry[]} RootFileMap
- * @typedef {string} currentFileSpecifier this is the local name in the file we track from
- * @typedef {object} RootFileMapEntry
- * @typedef {RootFile} rootFile contains file(filePath) and specifier
  */
 
 /**
  * @param {FindExportsSpecifierObj[]} transformedFile
+ * @param {string} relativePath
+ * @param {string} projectPath
  */
 async function trackdownRoot(transformedFile, relativePath, projectPath) {
   const fullCurrentFilePath = path.resolve(projectPath, relativePath);
   for (const specObj of transformedFile) {
-    /** @type {RootFileMap} */
+    /** @type {(RootFileMapEntry|undefined)[]} */
     const rootFileMap = [];
     if (specObj.exportSpecifiers[0] === '[file]') {
       rootFileMap.push(undefined);
@@ -56,10 +94,12 @@ async function trackdownRoot(transformedFile, relativePath, projectPath) {
        * }
        */
       for (const specifier of specObj.exportSpecifiers) {
+        /** @type {RootFile} */
         let rootFile;
+        /** @type {LocalMapEntry|undefined} */
         let localMapMatch;
         if (specObj.localMap) {
-          localMapMatch = specObj.localMap.find(m => m.exported === specifier);
+          localMapMatch = specObj.localMap.find(m => m?.exported === specifier);
         }
 
         // TODO: find out if possible to use trackDownIdentifierFromScope
@@ -70,8 +110,8 @@ async function trackdownRoot(transformedFile, relativePath, projectPath) {
           rootFile = await trackDownIdentifier(
             specObj.source,
             importedIdentifier,
-            fullCurrentFilePath,
-            projectPath,
+            /** @type {PathFromSystemRoot} */ (fullCurrentFilePath),
+            /** @type {PathFromSystemRoot} */ (projectPath),
           );
 
           /** @type {RootFileMapEntry} */
@@ -95,6 +135,9 @@ async function trackdownRoot(transformedFile, relativePath, projectPath) {
   return transformedFile;
 }
 
+/**
+ * @param {FindExportsSpecifierObj[]} transformedFile
+ */
 function cleanup(transformedFile) {
   transformedFile.forEach(specObj => {
     if (specObj.__tmp) {
@@ -105,19 +148,22 @@ function cleanup(transformedFile) {
 }
 
 /**
- * @param {*} node
+ * @param {LooseNode} node
  * @returns {string[]}
  */
 function getExportSpecifiers(node) {
   // handles default [export const g = 4];
   if (node.declaration?.declarations) {
-    return [node.declaration.declarations[0].id.value || node.declaration.declarations[0].id.name];
+    const declaration = node.declaration.declarations[0];
+    return [/** @type {string} */ (declaration.id?.value || declaration.id?.name)];
   }
   if (node.declaration?.identifier) {
-    return [node.declaration.identifier.value || node.declaration.identifier.name];
+    return [
+      /** @type {string} */ (node.declaration.identifier.value || node.declaration.identifier.name),
+    ];
   }
   if (node.declaration?.id) {
-    return [node.declaration.id.value || node.declaration.id.name];
+    return [/** @type {string} */ (node.declaration.id.value || node.declaration.id.name)];
   }
 
   // handles (re)named specifiers [export { x (as y)} from 'y'];
@@ -126,15 +172,16 @@ function getExportSpecifiers(node) {
       // { x as y }
       return (s.exported.value || s.exported.name) === 'default'
         ? '[default]'
-        : s.exported.value || s.exported.name;
+        : /** @type {string} */ (s.exported.value || s.exported.name);
     }
     // { x }
-    return s.orig.value || s.local.name;
+    return /** @type {string} */ (s.orig?.value || s.local?.name);
   });
 }
 
 /**
- * @returns {{local:string;exported:string;}|undefined[]}
+ * @param {LooseNode} node
+ * @returns {(LocalMapEntry|undefined)[]}
  */
 function getLocalNameSpecifiers(node) {
   return (node.declaration?.declarations || node.specifiers || [])
@@ -149,8 +196,8 @@ function getLocalNameSpecifiers(node) {
           local:
             (s.orig?.value || s.local?.name) === 'default'
               ? '[default]'
-              : s.orig?.value || s.local?.name,
-          exported: s.exported.value || s.exported.name,
+              : /** @type {string} */ (s.orig?.value || s.local?.name),
+          exported: /** @type {string} */ (s.exported.value || s.exported.name),
         };
       }
       return undefined;
@@ -158,6 +205,9 @@ function getLocalNameSpecifiers(node) {
     .filter(Boolean);
 }
 
+/**
+ * @param {LooseNode} pathOrNode
+ */
 const isImportingSpecifier = pathOrNode =>
   pathOrNode.type === 'ImportDefaultSpecifier' || pathOrNode.type === 'ImportSpecifier';
 
@@ -176,15 +226,23 @@ function findExportsPerAstFile(oxcAst, { skipFileImports }) {
   // Unfortunately, we cannot have async functions in babel traverse.
   // Therefore, we store a temp reference to path that we use later for
   // async post processing (tracking down original export Identifier)
-  /** @type {{[key:string]:SwcBinding}} */
+  /** @type {{[key:string]:SwcBinding}|undefined} */
   let globalScopeBindings;
 
   const exportHandler = (/** @type {SwcPath} */ astPath) => {
-    const exportSpecifiers = getExportSpecifiers(astPath.node);
-    const localMap = getLocalNameSpecifiers(astPath.node);
-    const source = astPath.node.source?.value || astPath.node.source?.name;
-    const entry = { exportSpecifiers, localMap, source, __tmp: { astPath } };
-    const assertionType = getAssertionType(astPath.node);
+    const { node } = /** @type {{ node: LooseNode }} */ (astPath);
+    const exportSpecifiers = getExportSpecifiers(node);
+    const localMap = getLocalNameSpecifiers(node);
+    const source = node.source?.value || node.source?.name;
+    const entry = /** @type {FindExportsSpecifierObj} */ ({
+      exportSpecifiers,
+      localMap,
+      source,
+      __tmp: { astPath },
+    });
+    const assertionType = getAssertionType(
+      /** @type {Parameters<typeof getAssertionType>[0]} */ (/** @type {unknown} */ (astPath.node)),
+    );
     if (assertionType) {
       entry.assertionType = assertionType;
     }
@@ -193,7 +251,8 @@ function findExportsPerAstFile(oxcAst, { skipFileImports }) {
 
   const exportDefaultHandler = (/** @type {SwcPath} */ astPath) => {
     const exportSpecifiers = ['[default]'];
-    const { node } = astPath;
+    const { node } = /** @type {{ node: LooseNode }} */ (astPath);
+    /** @type {string|undefined} */
     let source;
 
     // Is it an inline declaration like "export default class X {};" ?
@@ -203,20 +262,26 @@ function findExportsPerAstFile(oxcAst, { skipFileImports }) {
       node.declaration?.type === 'Identifier'
     ) {
       // It is a reference to an identifier like "export { x } from 'y';"
+      const bindings = /** @type {{[key:string]:SwcBinding}} */ (globalScopeBindings);
       const importOrDeclPath = getReferencedDeclaration({
-        referencedIdentifierName:
-          node.decl?.value || node.expression?.value || node.declaration?.name,
-        globalScopeBindings,
+        referencedIdentifierName: /** @type {string} */ (
+          node.decl?.value || node.expression?.value || node.declaration?.name
+        ),
+        globalScopeBindings: bindings,
       });
-      if (isImportingSpecifier(importOrDeclPath)) {
-        source = importOrDeclPath.parentPath.node.source.value;
+      const declPath = /** @type {SwcPath} */ (/** @type {unknown} */ (importOrDeclPath));
+      if (isImportingSpecifier(/** @type {LooseNode} */ (declPath))) {
+        const { parentPath } = /** @type {{ parentPath: SwcPath }} */ (
+          /** @type {unknown} */ (declPath)
+        );
+        source = /** @type {LooseNode} */ (parentPath.node).source?.value;
       }
     }
     transformedFile.push({ exportSpecifiers, source, __tmp: { astPath } });
   };
 
-  const globalScopeHandler = ({ scope }) => {
-    globalScopeBindings = scope.bindings;
+  const globalScopeHandler = (/** @type {SwcPath} */ astPath) => {
+    globalScopeBindings = /** @type {SwcScope} */ (astPath.scope).bindings;
   };
 
   /** @type {SwcVisitor} */
@@ -250,21 +315,20 @@ export default class FindExportsAnalyzer extends Analyzer {
 
   static requiredAst = /** @type {AnalyzerAst} */ ('oxc');
 
-  /**
-   * @typedef FindExportsConfig
-   * @property {boolean} [onlyInternalSources=false]
-   * @property {boolean} [skipFileImports=false] Instead of both focusing on specifiers like
-   * [import {specifier} 'lion-based-ui/foo.js'], and [import 'lion-based-ui/foo.js'] as a result,
-   * not list file exports
-   */
   get config() {
-    return {
-      targetProjectPath: null,
-      skipFileImports: false,
-      ...this._customConfig,
-    };
+    return /** @type {Analyzer['config']} */ (
+      /** @type {unknown} */ ({
+        targetProjectPath: null,
+        skipFileImports: false,
+        ...this._customConfig,
+      })
+    );
   }
 
+  /**
+   * @param {SwcAstModule} ast
+   * @param {{ relativePath:string; analyzerCfg: FindExportsConfig }} context
+   */
   static async analyzeFile(ast, { relativePath, analyzerCfg }) {
     const projectPath = analyzerCfg.targetProjectPath;
 
@@ -280,8 +344,11 @@ export default class FindExportsAnalyzer extends Analyzer {
     return { result: transformedFile };
   }
 
-  static async analyzeProject(...args) {
-    const totalResult = await super.analyzeProject(...args);
+  /**
+   * @param {Parameters<typeof Analyzer.analyzeProject>[0]} analyzeFileCfg
+   */
+  static async analyzeProject(analyzeFileCfg) {
+    const totalResult = await super.analyzeProject(analyzeFileCfg);
     // return transformIntoIterableFindExportsOutput({ queryOutput: totalResult });
     return totalResult;
   }

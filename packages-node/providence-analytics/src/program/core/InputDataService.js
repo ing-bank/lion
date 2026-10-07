@@ -58,7 +58,8 @@ const getPackageJson = memoize((/** @type {PathFromSystemRoot} */ rootPath) => {
 });
 
 /**
- * @typedef {(rootPath:PathFromSystemRoot) => object|undefined} GetLernaJsonFn
+ * @typedef {import('../../../types/index.js').LernaJson} LernaJson
+ * @typedef {(rootPath:PathFromSystemRoot) => LernaJson|undefined} GetLernaJsonFn
  * @type {GetLernaJsonFn}
  */
 const getLernaJson = memoize((/** @type {PathFromSystemRoot} */ rootPath) => {
@@ -217,11 +218,12 @@ function getStringOrObjectValOfExportMapEntry({ valObjOrStr, nodeResolveMode }) 
   if (typeof valObjOrStr !== 'object') {
     return valObjOrStr;
   }
-  if (!valObjOrStr?.[nodeResolveMode]) {
+  const valRecord = /** @type {{[key:string]: string|undefined}|null} */ (valObjOrStr);
+  if (!valRecord?.[nodeResolveMode]) {
     // This is allowed: it makes sense to have an entrypoint on the root for typescript, not for others
     return null;
   }
-  return valObjOrStr[nodeResolveMode];
+  return valRecord?.[nodeResolveMode] || null;
 }
 
 /**
@@ -345,7 +347,7 @@ export class InputDataService {
       inputData.map(projectObj => {
         // Add context obj with 'code' to files
 
-        /** @type {ProjectInputDataWithMeta['entries'][]} */
+        /** @type {{file: PathRelativeFromProjectRoot; context: {code: string}}[]} */
         const newEntries = [];
         projectObj.entries.forEach(entry => {
           let code;
@@ -368,7 +370,8 @@ export class InputDataService {
               });
             });
           } else {
-            newEntries.push({ file, context: { code } });
+            const contextCode = /** @type {string} */ (code);
+            newEntries.push({ file, context: { code: contextCode } });
           }
         });
 
@@ -594,7 +597,7 @@ export class InputDataService {
   /**
    * Gives back all monorepo package paths
    * @param {PathFromSystemRoot} rootPath
-   * @returns {ProjectNameAndPath[]|undefined}
+   * @returns {Promise<ProjectNameAndPath[]|undefined>}
    */
   static async getMonoRepoPackages(rootPath) {
     // [1] Look for npm/yarn workspaces

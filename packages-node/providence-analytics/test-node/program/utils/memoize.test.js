@@ -182,7 +182,12 @@ describe('Memoize', () => {
           sumCalled += 1;
           return { ...a, ...b };
         }
-        const sumMemoized = memoize(sum, { serializeObjects: true });
+        const sumMemoized = memoize(
+          sum,
+          /** @type {Parameters<typeof memoize>[1] & { serializeObjects: boolean }} */ ({
+            serializeObjects: true,
+          }),
+        );
 
         // Put in cache for args combination
         expect(sumMemoized({ x: 1 }, { y: 2 })).to.deep.equal({ x: 1, y: 2 });

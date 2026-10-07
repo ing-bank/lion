@@ -1,16 +1,34 @@
-const /** @type {PostProcessorOptions} */ options = {
-    optionA(transformedResult) {
-      return transformedResult;
-    },
-  };
+/**
+ * Example post processor. Copy this file into your own project and adapt it.
+ *
+ * @typedef {import('../../types/index.js').AnalyzerConfig} AnalyzerConfig
+ *
+ * @typedef {{ foo: string; bar: number }} TemplateResultEntry
+ * @typedef {{ result: TemplateResultEntry[] }} TemplateAnalyzerEntry
+ * @typedef {{ name: string }} TemplateProject
+ * @typedef {{ entries: TemplateAnalyzerEntry[]; project: TemplateProject }} TemplateQueryOutputEntry
+ * @typedef {{ transformed: string; output: number }} TemplateTransformedEntry
+ *
+ * @typedef {object} PostProcessorOptions
+ * @property {(transformedResult: TemplateTransformedEntry[][][]) => TemplateTransformedEntry[][][]} [optionA]
+ * @property {unknown} [optionFoo]
+ */
+
+/** @type {{ optionA: (transformedResult: TemplateTransformedEntry[][][]) => TemplateTransformedEntry[][][] }} */
+const options = {
+  optionA(transformedResult) {
+    return transformedResult;
+  },
+};
 
 /**
  *
- * @param {AnalyzerQueryResult} analyzerResult
- * @param {FindImportsConfig} customConfig
- * @returns {AnalyzerQueryResult}
+ * @param {TemplateQueryOutputEntry[]} analyzerResult
+ * @param {AnalyzerConfig} customConfig
+ * @returns {TemplateTransformedEntry[][][]}
  */
 function myPostProcessor(analyzerResult, customConfig) {
+  /** @type {PostProcessorOptions} */
   const cfg = {
     optionFoo: null,
     ...customConfig,
@@ -31,7 +49,7 @@ function myPostProcessor(analyzerResult, customConfig) {
     transformedResult = options.optionA(transformedResult);
   }
 
-  return /** @type {AnalyzerQueryResult} */ transformedResult;
+  return transformedResult;
 }
 
 module.exports = {

@@ -16,7 +16,7 @@ import { fsAdapter } from '../utils/fs-adapter.js';
  * Should be used to write results to and read results from the file system.
  * Creates a unique identifier based on searchP, refP (optional) and an already created
  * @param {Project} searchP search target project meta
- * @param {AnalyzerConfig} cfg configuration used for analyzer
+ * @param {object} cfg configuration used for analyzer
  * @param {Project} [refP] reference project meta
  * @returns {string} identifier
  */
@@ -76,7 +76,7 @@ export class ReportService {
   }
 
   /**
-   * @param {{ targetProject: Project; referenceProject: Project; analyzerConfig: AnalyzerConfig }} options
+   * @param {{ targetProject: Project; referenceProject?: Project; analyzerConfig: object }} options
    * @returns {string}
    */
   static createIdentifier({ targetProject, referenceProject, analyzerConfig }) {
@@ -85,7 +85,7 @@ export class ReportService {
 
   /**
    * @param {{analyzerName: AnalyzerName; identifier: string}} options
-   * @returns {QueryResult}
+   * @returns {AnalyzerQueryResult|undefined}
    */
   static getCachedResult({ analyzerName, identifier }) {
     let cachedResult;
@@ -119,6 +119,7 @@ export class ReportService {
   static writeEntryToSearchTargetDepsFile(depProj, rootProjectMeta) {
     const rootProj = `${rootProjectMeta.name}#${rootProjectMeta.version}`;
     const filePath = path.join(this.outputPath, 'search-target-deps-file.json');
+    /** @type {{[key:string]: ProjectName[]}} */
     let file = {};
     try {
       file = JSON.parse(fsAdapter.fs.readFileSync(filePath, 'utf-8'));

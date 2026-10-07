@@ -12,6 +12,28 @@ import { DecorateMixin } from './utils/DecorateMixin.js';
 import { downloadFile } from './utils/downloadFile.js';
 import { PTable } from './components/p-table/PTable.js';
 
+/**
+ * @typedef {import('../../../types/index.js').PathFromSystemRoot} PathFromSystemRoot
+ * @typedef {Record<string, unknown>} TableRow
+ * @typedef {{ project: string; filePath: string; name: string; id?: string }} ExportSpecifier
+ * @typedef {{ project: string; files: unknown[] }} MatchesPerProject
+ * @typedef {{ exportSpecifier: ExportSpecifier; matchesPerProject: MatchesPerProject[] }} SpecifierResult
+ * @typedef {{ queryOutput?: SpecifierResult[] | string }} AnalyzerContent
+ * @typedef {{ fileName: string; content: AnalyzerContent }} ResultFileEntry
+ * @typedef {{ [analyzerName: string]: ResultFileEntry[] }} ResultFiles
+ * @typedef {{
+ *   referenceCollections: { [collection: string]: string[] };
+ *   searchTargetDeps: { [rootProjectName: string]: string[] };
+ * }} MenuData
+ * @typedef {{
+ *   categoryConfig?: {
+ *     project: string;
+ *     majorVersion: number;
+ *     categories: { [category: string]: (localFilePath: string, name?: string) => unknown };
+ *   }[];
+ * }} MetaConfig
+ */
+
 // Decorate third party component styles
 GlobalDecorator.decorateStyles(globalStyles, { prepend: true });
 PTable.decorateStyles(tableDecoration);
@@ -20,11 +42,12 @@ customElements.define('p-table', PTable);
 
 /**
  *
- * @param {{ project:string, filePath:string, name:string }} specifierRes
- * @param {{ categoryConfig:object }} metaConfig
+ * @param {SpecifierResult} specifierRes
+ * @param {{ metaConfig?: MetaConfig }} providenceConf
  * @returns {string[]}
  */
 function getCategoriesForMatchedSpecifier(specifierRes, { metaConfig }) {
+  /** @type {string[]} */
   const resultCats = [];
 
   if (metaConfig && metaConfig.categoryConfig) {
@@ -43,22 +66,27 @@ function getCategoriesForMatchedSpecifier(specifierRes, { metaConfig }) {
   return resultCats;
 }
 
+/**
+ * @param {HTMLInputElement[]} checkboxOrNodeList
+ * @returns {string[]}
+ */
 function checkedValues(checkboxOrNodeList) {
   if (!checkboxOrNodeList.length) {
-    return checkboxOrNodeList.checked && checkboxOrNodeList.value;
+    return [];
   }
   return Array.from(checkboxOrNodeList)
     .filter(r => r.checked)
     .map(r => r.value);
 }
 class PBoard extends DecorateMixin(LitElement) {
+  /** @returns {import('lit').PropertyDeclarations} */
   static get properties() {
-    return {
+    return /** @type {import('lit').PropertyDeclarations} */ ({
       // Transformed data from fetch
       tableData: Object,
       __resultFiles: Array,
       __menuData: Object,
-    };
+    });
   }
 
   static get styles() {
@@ -92,9 +120,7 @@ class PBoard extends DecorateMixin(LitElement) {
   }
 
   /**
-   * @param {object} referenceCollections references defined in providence.conf.js Includes reference projects
-   * @param {object} searchTargetCollections programs defined in providence.conf.js. Includes search-target projects
-   * @param {object[]} projDeps deps retrieved by running providence, read from search-target-deps-file.json
+   * @param {MenuData | null} result data retrieved from /menu-data.json
    */
   _selectionMenuTemplate(result) {
     if (!result) {
@@ -137,16 +163,16 @@ class PBoard extends DecorateMixin(LitElement) {
                     aria-label="check all"
                     type="checkbox"
                     checked
-                    @change="${({ target }) => {
+                    @change="${(/** @type {{ target: HTMLInputElement }} */ event) => {
                       // TODO: of course, logic depending on dom is never a good idea
-                      const groupBoxes =
-                        target.parentElement.nextElementSibling.querySelectorAll(
-                          'input[type=checkbox]',
-                        );
+                      const { target } = event;
+                      const groupBoxes = /** @type {Element} */ (
+                        /** @type {HTMLElement} */ (target.parentElement).nextElementSibling
+                      ).querySelectorAll('input[type=checkbox]');
                       const { checked } = target;
                       Array.from(groupBoxes).forEach(box => {
                         // eslint-disable-next-line no-param-reassign
-                        box.checked = checked;
+                        /** @type {HTMLInputElement} */ (box).checked = checked;
                       });
                     }}"
                   />
@@ -188,25 +214,43 @@ class PBoard extends DecorateMixin(LitElement) {
     this._aggregateResults();
   }
 
+  /** @returns {HTMLFormElement} */
   get _selectionMenuFormNode() {
-    return this.shadowRoot.getElementById('selection-menu-form');
+    return /** @type {HTMLFormElement} */ (
+      /** @type {ShadowRoot} */ (this.shadowRoot).getElementById('selection-menu-form')
+    );
   }
 
+  /** @returns {HTMLSelectElement} */
   get _activeAnalyzerNode() {
-    return this.shadowRoot.getElementById('active-analyzer');
+    return /** @type {HTMLSelectElement} */ (
+      /** @type {ShadowRoot} */ (this.shadowRoot).getElementById('active-analyzer')
+    );
   }
 
+  /** @returns {PTable} */
   get _tableNode() {
-    return this.shadowRoot.querySelector('p-table');
+    return /** @type {PTable} */ (
+      /** @type {ShadowRoot} */ (this.shadowRoot).querySelector('p-table')
+    );
   }
 
-  _createCsv(headers = this._tableNode._viewDataHeaders, data = this._tableNode._viewData) {
+  /**
+   * @param {string[]} [headers]
+   * @param {TableRow[]} [data]
+   * @returns {string}
+   */
+  _createCsv(
+    headers = /** @type {string[]} */ (this._tableNode._viewDataHeaders),
+    data = /** @type {TableRow[]} */ (this._tableNode._viewData),
+  ) {
     let result = 'sep=;\n';
     result += `${headers.join(';')}\n`;
     data.forEach(row => {
       result += `${Object.values(row)
         .map(v => {
           if (Array.isArray(v)) {
+            /** @type {string[]} */
             const res = [];
             v.forEach(vv => {
               // TODO: make recursive
@@ -222,7 +266,7 @@ class PBoard extends DecorateMixin(LitElement) {
           if (typeof v === 'object') {
             // This has knowledge about specifier.
             // TODO make more generic and add toString() to this obj in generation pahse
-            return v.name;
+            return /** @type {{name: string}} */ (v).name;
           }
           return v;
         })
@@ -247,12 +291,17 @@ class PBoard extends DecorateMixin(LitElement) {
 
   constructor() {
     super();
-    this.__resultFiles = [];
+    /** @type {ResultFiles} */
+    this.__resultFiles = {};
+    /** @type {MenuData | null} */
     this.__menuData = null;
   }
 
+  /**
+   * @param {...import('lit-element').PropertyValues} args
+   */
   firstUpdated(...args) {
-    super.firstUpdated(...args);
+    super.firstUpdated(.../** @type {[import('lit-element').PropertyValues]} */ (args));
     this._tableNode.renderCellContent = this._renderCellContent.bind(this);
     this.__init();
   }
@@ -264,6 +313,9 @@ class PBoard extends DecorateMixin(LitElement) {
     this._enrichMenuData();
   }
 
+  /**
+   * @param {import('lit-element').PropertyValues} changedProperties
+   */
   updated(changedProperties) {
     super.updated(changedProperties);
 
@@ -282,7 +334,9 @@ class PBoard extends DecorateMixin(LitElement) {
     }
     // await this.__fetchResults();
 
-    const elements = Array.from(this._selectionMenuFormNode.elements);
+    const elements = /** @type {HTMLInputElement[]} */ (
+      Array.from(this._selectionMenuFormNode.elements)
+    );
     const repos = elements.filter(n => n.name === 'repos');
     const references = elements.filter(n => n.name === 'references');
 
@@ -292,6 +346,7 @@ class PBoard extends DecorateMixin(LitElement) {
     const totalQueryOutput = this.__aggregateResultData(activeRefs, activeRepos, activeAnalyzer);
 
     // Prepare viewData
+    /** @type {TableRow[]} */
     const dataResult = [];
     // When we support more analyzers than match-imports and match-subclasses, make a switch
     // here
@@ -314,7 +369,14 @@ class PBoard extends DecorateMixin(LitElement) {
     this.tableData = dataResult;
   }
 
+  /**
+   * @param {string[]} activeRefs
+   * @param {string[]} activeRepos
+   * @param {string} activeAnalyzer
+   * @returns {SpecifierResult[]}
+   */
   __aggregateResultData(activeRefs, activeRepos, activeAnalyzer) {
+    /** @type {AnalyzerContent[]} */
     const jsonResultsActiveFilter = [];
 
     activeRefs.forEach(ref => {
@@ -335,6 +397,7 @@ class PBoard extends DecorateMixin(LitElement) {
       });
     });
 
+    /** @type {SpecifierResult[]} */
     let totalQueryOutput = [];
     jsonResultsActiveFilter.forEach(json => {
       if (!Array.isArray(json.queryOutput)) {
@@ -382,8 +445,7 @@ class PBoard extends DecorateMixin(LitElement) {
   }
 
   /**
-   * @override
-   * @param {*} content
+   * @param {ExportSpecifier} content
    */
   // eslint-disable-next-line class-methods-use-this
   _renderSpecifier(content) {
@@ -402,33 +464,35 @@ class PBoard extends DecorateMixin(LitElement) {
   }
 
   /**
-   * @override
-   * @param {*} content
-   * @param {*} header
+   * @param {unknown} content
+   * @param {string} header
+   * @returns {unknown}
    */
   // eslint-disable-next-line class-methods-use-this
   _renderCellContent(content, header) {
     if (header === 'specifier') {
-      return this._renderSpecifier(content);
+      return this._renderSpecifier(/** @type {ExportSpecifier} */ (content));
     }
     if (header === 'matchedProjects') {
-      return html`${content
-        .sort((a, b) => b.files.length - a.files.length)
-        .map(
-          mpp => html`
-            <details>
-              <summary>
-                <span style="font-weight:bold;">${mpp.project}</span>
-                (${mpp.files.length})
-              </summary>
-              <ul>
-                ${mpp.files.map(
-                  f => html`<li>${typeof f === 'object' ? JSON.stringify(f) : f}</li>`,
-                )}
-              </ul>
-            </details>
-          `,
-        )}`;
+      return html`${
+        /** @type {MatchesPerProject[]} */ (content)
+          .sort((a, b) => b.files.length - a.files.length)
+          .map(
+            mpp => html`
+              <details>
+                <summary>
+                  <span style="font-weight:bold;">${mpp.project}</span>
+                  (${mpp.files.length})
+                </summary>
+                <ul>
+                  ${mpp.files.map(
+                    f => html`<li>${typeof f === 'object' ? JSON.stringify(f) : f}</li>`,
+                  )}
+                </ul>
+              </details>
+            `,
+          )
+      }`;
     }
     if (content instanceof Array) {
       return content.join(', ');
@@ -443,9 +507,9 @@ class PBoard extends DecorateMixin(LitElement) {
 
   async __fetchProvidenceConf() {
     // Gets the providence conf as defined by the end user in providence-conf.(m)js
-    // @ts-ignore
     // eslint-disable-next-line import/no-absolute-path
-    this.__providenceConf = (await import('/providence-conf.js')).default;
+    const confPath = '/providence-conf.js';
+    this.__providenceConf = (await import(confPath)).default;
   }
 
   async __fetchResults() {

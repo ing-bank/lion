@@ -1,4 +1,13 @@
 /**
+ * @typedef {{ properties: { value?: { value?: string } }[] }} SwcImportAttributes
+ * @typedef {{ withEntries: { value?: { name?: string } }[] }} OxcImportAttributes
+ * @typedef {object} SwcNode
+ * @property {SwcImportAttributes} [with]
+ * @property {SwcImportAttributes} [assertions]
+ * @property {OxcImportAttributes} [withClause]
+ */
+
+/**
  * Swc might have a `with` or `assertions` property
  * @param {SwcNode} node
  * @returns {string | undefined}

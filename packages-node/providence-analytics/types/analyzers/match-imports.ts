@@ -5,7 +5,8 @@ import {
   MatchAnalyzerConfig,
 } from '../core/Analyzer.js';
 
-export interface MatchImportsAnalyzerResult extends AnalyzerQueryResult {
+export interface MatchImportsAnalyzerResult
+  extends AnalyzerQueryResult<MatchImportsAnalyzerOutputEntry[]> {
   queryOutput: MatchImportsAnalyzerOutputEntry[];
 }
 

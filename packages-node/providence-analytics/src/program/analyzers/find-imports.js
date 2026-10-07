@@ -7,18 +7,44 @@ import { LogService } from '../core/LogService.js';
 import { Analyzer } from '../core/Analyzer.js';
 
 /**
+ * A structural representation of the AST nodes (swc/oxc/babel) that are visited by this
+ * analyzer. Every field is optional because the concrete node type depends on the parser.
+ * @typedef {object} LooseNode
+ * @property {string} [type]
+ * @property {string} [name]
+ * @property {string} [value]
+ * @property {LooseNode} [imported]
+ * @property {LooseNode} [orig]
+ * @property {LooseNode} [local]
+ * @property {LooseNode} [exported]
+ * @property {LooseNode} [source]
+ * @property {LooseNode} [callee]
+ * @property {LooseNode} [expression]
+ * @property {LooseNode[]} [specifiers]
+ * @property {LooseNode[]} [arguments]
+ */
+/**
+ * @typedef {object} FindImportsConfig
+ * @property {string} [targetProjectPath]
+ * @property {boolean} [keepInternalSources=false] by default, relative paths like '../x.js' are
+ * filtered out. This option keeps them.
+ * means that 'external-dep/file' will be resolved to 'external-dep/file.js' will both be stored
+ * as the latter
+ */
+/**
  * @typedef {import('../../../types/index.js').PathRelativeFromProjectRoot} PathRelativeFromProjectRoot
  * @typedef {import('../../../types/index.js').FindImportsAnalyzerResult} FindImportsAnalyzerResult
  * @typedef {import('../../../types/index.js').FindImportsAnalyzerEntry} FindImportsAnalyzerEntry
  * @typedef {import('../../../types/index.js').AnalyzerConfig} AnalyzerConfig
  * @typedef {import('../../../types/index.js').AnalyzerName} AnalyzerName
  * @typedef {import('../../../types/index.js').AnalyzerAst} AnalyzerAst
+ * @typedef {import("../../../types/index.js").SwcPath} SwcPath
  * @typedef {import("@swc/core").Module} oxcAstModule
  * @typedef {import("@swc/core").Node} SwcNode
  */
 
 /**
- * @param {SwcNode|undefined} node
+ * @param {LooseNode|undefined} node
  * @returns {boolean}
  */
 function isLiteral(node) {
@@ -27,7 +53,8 @@ function isLiteral(node) {
 
 /**
  * Intends to work for oxc, swc, and babel asts
- * @param {SwcNode} s
+ * @param {LooseNode} s
+ * @returns {string|undefined}
  */
 function getSpecifierValue(s) {
   return (
@@ -45,10 +72,10 @@ function getSpecifierValue(s) {
 }
 
 /**
- * @param {SwcNode} node
+ * @param {LooseNode} node
+ * @returns {string[]}
  */
 function getImportOrReexportsSpecifiers(node) {
-  // @ts-expect-error
   return (node.specifiers || []).map(s => {
     if (
       s.type === 'ImportDefaultSpecifier' ||
@@ -62,7 +89,7 @@ function getImportOrReexportsSpecifiers(node) {
       return '[*]';
     }
     const importedValue = getSpecifierValue(s);
-    return importedValue;
+    return /** @type {string} */ (importedValue);
   });
 }
 
@@ -80,42 +107,57 @@ function findImportsPerAstFile(oxcAst) {
   /** @type {Partial<FindImportsAnalyzerEntry>[]} */
   const transformedFile = [];
   oxcTraverse(oxcAst, {
-    ImportDeclaration({ node }) {
+    ImportDeclaration(astPath) {
+      const { node } = /** @type {{ node: LooseNode }} */ (astPath);
       const importSpecifiers = getImportOrReexportsSpecifiers(node);
       if (!importSpecifiers.length) {
         importSpecifiers.push('[file]'); // apparently, there was just a file import
       }
 
-      const source = node.source.value;
+      const source = node.source?.value;
       const entry = /** @type {Partial<FindImportsAnalyzerEntry>} */ ({ importSpecifiers, source });
-      const assertionType = getAssertionType(node);
+      const assertionType = getAssertionType(
+        /** @type {Parameters<typeof getAssertionType>[0]} */ (
+          /** @type {unknown} */ (astPath.node)
+        ),
+      );
       if (assertionType) {
         entry.assertionType = assertionType;
       }
       transformedFile.push(entry);
     },
-    ExportNamedDeclaration({ node }) {
+    ExportNamedDeclaration(astPath) {
+      const { node } = /** @type {{ node: LooseNode }} */ (astPath);
       // Are we dealing with a regular export, not a re-export?
       if (!node.source) return;
 
       const importSpecifiers = getImportOrReexportsSpecifiers(node);
-      const source = node.source.value;
+      const source = node.source?.value;
       const entry = /** @type {Partial<FindImportsAnalyzerEntry>} */ ({ importSpecifiers, source });
-      const assertionType = getAssertionType(node);
+      const assertionType = getAssertionType(
+        /** @type {Parameters<typeof getAssertionType>[0]} */ (
+          /** @type {unknown} */ (astPath.node)
+        ),
+      );
       if (assertionType) {
         entry.assertionType = assertionType;
       }
       transformedFile.push(entry);
     },
-    ExportAllDeclaration({ node }) {
+    ExportAllDeclaration(astPath) {
+      const { node } = /** @type {{ node: LooseNode }} */ (astPath);
       // Are we dealing with a regular export, not a re-export?
       if (!node.source) return;
 
       const importSpecifiers = ['[*]'];
 
-      const source = node.source.value;
+      const source = node.source?.value;
       const entry = /** @type {Partial<FindImportsAnalyzerEntry>} */ ({ importSpecifiers, source });
-      const assertionType = getAssertionType(node);
+      const assertionType = getAssertionType(
+        /** @type {Parameters<typeof getAssertionType>[0]} */ (
+          /** @type {unknown} */ (astPath.node)
+        ),
+      );
       if (assertionType) {
         entry.assertionType = assertionType;
       }
@@ -123,30 +165,33 @@ function findImportsPerAstFile(oxcAst) {
     },
     // Dynamic imports for swc
     // TODO: remove if swc is completely phased out
-    CallExpression({ node }) {
+    CallExpression(astPath) {
+      const { node } = /** @type {{ node: LooseNode }} */ (astPath);
       if (node.callee?.type !== 'Import') {
         return;
       }
       // TODO: check for specifiers catched via obj destructuring?
       // TODO: also check for ['file']
       const importSpecifiers = ['[default]'];
-      const dynamicImportExpression = node.arguments[0].expression;
+      const args = /** @type {LooseNode[]} */ (node.arguments);
+      const dynamicImportExpression = args[0].expression;
       const source = isLiteral(dynamicImportExpression)
-        ? dynamicImportExpression.value
+        ? /** @type {string} */ (dynamicImportExpression?.value)
         : '[variable]';
       transformedFile.push({ importSpecifiers, source });
     },
     // Dynamic imports for oxc
 
-    ExpressionStatement({ node }) {
-      if (node.expression.type !== 'ImportExpression') return;
+    ExpressionStatement(astPath) {
+      const { node } = /** @type {{ node: LooseNode }} */ (astPath);
+      if (node.expression?.type !== 'ImportExpression') return;
 
       // TODO: check for specifiers catched via obj destructuring?
       // TODO: also check for ['file']
       const importSpecifiers = ['[default]'];
       const dynamicImportExpression = node.expression;
       const source = isLiteral(dynamicImportExpression.source)
-        ? dynamicImportExpression.source.value
+        ? /** @type {string} */ (dynamicImportExpression.source?.value)
         : '[variable]';
       transformedFile.push({ importSpecifiers, source });
     },
@@ -160,22 +205,21 @@ export default class FindImportsSwcAnalyzer extends Analyzer {
 
   static requiredAst = /** @type {AnalyzerAst} */ ('oxc');
 
-  /**
-   * @typedef FindImportsConfig
-   * @property {boolean} [keepInternalSources=false] by default, relative paths like '../x.js' are
-   * filtered out. This option keeps them.
-   * means that 'external-dep/file' will be resolved to 'external-dep/file.js' will both be stored
-   * as the latter
-   */
   get config() {
-    return {
-      targetProjectPath: null,
-      // post process file
-      keepInternalSources: false,
-      ...this._customConfig,
-    };
+    return /** @type {Analyzer['config']} */ (
+      /** @type {unknown} */ ({
+        targetProjectPath: null,
+        // post process file
+        keepInternalSources: false,
+        ...this._customConfig,
+      })
+    );
   }
 
+  /**
+   * @param {oxcAstModule} oxcAst
+   * @param {{ relativePath:string; analyzerCfg: FindImportsConfig }} context
+   */
   static async analyzeFile(oxcAst, context) {
     let transformedFile = findImportsPerAstFile(oxcAst);
     // Post processing based on configuration...
@@ -186,8 +230,9 @@ export default class FindImportsSwcAnalyzer extends Analyzer {
     );
 
     if (!context.analyzerCfg.keepInternalSources) {
-      // @ts-expect-error
-      transformedFile = transformedFile.filter(entry => !isRelativeSourcePath(entry.source));
+      transformedFile = transformedFile.filter(
+        entry => !isRelativeSourcePath(/** @type {string} */ (entry.source)),
+      );
     }
 
     return { result: transformedFile };

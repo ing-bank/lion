@@ -7,11 +7,36 @@ import { trackDownIdentifierFromScope } from '../utils/track-down-identifier.js'
 import { Analyzer } from '../core/Analyzer.js';
 
 /**
+ * A structural representation of the AST nodes (swc/oxc/babel) that are visited by this
+ * analyzer. Every field is optional because the concrete node type depends on the parser.
+ * @typedef {object} LooseNode
+ * @property {string} [type]
+ * @property {string} [name]
+ * @property {string} [value]
+ * @property {LooseNode} [object]
+ * @property {LooseNode} [property]
+ * @property {LooseNode} [callee]
+ * @property {LooseNode[]} [arguments]
+ */
+/**
+ * @typedef {object} DefinitionObj
+ * @property {string} tagName
+ * @property {string} constructorIdentifier
+ * @property {RootFile} [rootFile]
+ * @property {{ astPath: SwcPath }} [__tmp]
+ */
+/**
  * @typedef {import('../../../types/index.js').AnalyzerAst} AnalyzerAst
  * @typedef {import('../../../types/index.js').AnalyzerName} AnalyzerName
+ * @typedef {import('../../../types/index.js').RootFile} RootFile
+ * @typedef {import('../../../types/index.js').PathFromSystemRoot} PathFromSystemRoot
+ * @typedef {import('../../../types/index.js').SwcPath} SwcPath
  * @typedef {import('@babel/types').File} File
  */
 
+/**
+ * @param {DefinitionObj[]} transformedEntry
+ */
 function cleanup(transformedEntry) {
   transformedEntry.forEach(definitionObj => {
     if (definitionObj.__tmp) {
@@ -22,15 +47,21 @@ function cleanup(transformedEntry) {
   return transformedEntry;
 }
 
+/**
+ * @param {DefinitionObj[]} transformedEntry
+ * @param {string} relativePath
+ * @param {string} projectPath
+ */
 async function trackdownRoot(transformedEntry, relativePath, projectPath) {
   const fullCurrentFilePath = path.resolve(projectPath, relativePath);
 
   for (const definitionObj of transformedEntry) {
+    const tmp = /** @type {{ astPath: SwcPath }} */ (definitionObj.__tmp);
     const rootFile = await trackDownIdentifierFromScope(
-      definitionObj.__tmp.astPath,
+      tmp.astPath,
       definitionObj.constructorIdentifier,
-      fullCurrentFilePath,
-      projectPath,
+      /** @type {PathFromSystemRoot} */ (fullCurrentFilePath),
+      /** @type {PathFromSystemRoot} */ (projectPath),
     );
     // eslint-disable-next-line no-param-reassign
     definitionObj.rootFile = rootFile;
@@ -43,48 +74,52 @@ async function trackdownRoot(transformedEntry, relativePath, projectPath) {
  * @param {File} oxcAst
  */
 function findCustomElementsPerAstFile(oxcAst) {
+  /** @type {DefinitionObj[]} */
   const definitions = [];
   oxcTraverse(oxcAst, {
     CallExpression(astPath) {
+      const callNode = /** @type {LooseNode} */ (astPath.node);
       let found = false;
       // Doing it like this we detect 'customElements.define()',
       // but also 'window.customElements.define()'
       astPath.traverse({
         // MemberExpression in babel
         MemberExpression(memberPath) {
-          if (memberPath.node !== astPath.node.callee) {
+          const memberNode = /** @type {LooseNode} */ (memberPath.node);
+          if (memberPath.node !== callNode.callee) {
             return;
           }
 
-          const { node } = memberPath;
-
-          if (node.object.name === 'customElements' && node.property.name === 'define') {
+          if (
+            memberNode.object?.name === 'customElements' &&
+            memberNode.property?.name === 'define'
+          ) {
             found = true;
           }
           if (
-            node.object.object?.name === 'window' &&
-            node.object.property.name === 'customElements' &&
-            node.property.name === 'define'
+            memberNode.object?.object?.name === 'window' &&
+            memberNode.object?.property?.name === 'customElements' &&
+            memberNode.property?.name === 'define'
           ) {
             found = true;
           }
         },
       });
       if (found) {
+        /** @type {string} */
         let tagName;
+        /** @type {string} */
         let constructorIdentifier;
 
-        if (
-          astPath.node.arguments[0].type === 'StringLiteral' ||
-          astPath.node.arguments[0].type === 'Literal'
-        ) {
-          tagName = astPath.node.arguments[0].value;
+        const args = /** @type {LooseNode[]} */ (callNode.arguments);
+        if (args[0].type === 'StringLiteral' || args[0].type === 'Literal') {
+          tagName = /** @type {string} */ (args[0].value);
         } else {
           // No Literal found. For now, we only mark them as '[variable]'
           tagName = '[variable]';
         }
-        if (astPath.node.arguments[1].type === 'Identifier') {
-          constructorIdentifier = astPath.node.arguments[1].name;
+        if (args[1].type === 'Identifier') {
+          constructorIdentifier = /** @type {string} */ (args[1].name);
         } else {
           // We assume customElements.define('my-el', class extends HTMLElement {...})
           constructorIdentifier = '[inline]';
@@ -104,12 +139,18 @@ export default class FindCustomelementsAnalyzer extends Analyzer {
   static requiredAst = 'oxc';
 
   get config() {
-    return {
-      targetProjectPath: null,
-      ...this._customConfig,
-    };
+    return /** @type {Analyzer['config']} */ (
+      /** @type {unknown} */ ({
+        targetProjectPath: null,
+        ...this._customConfig,
+      })
+    );
   }
 
+  /**
+   * @param {File} oxcAst
+   * @param {{ relativePath:string; projectData:{ project:{ path: PathFromSystemRoot } } }} context
+   */
   static async analyzeFile(oxcAst, context) {
     let transformedEntry = findCustomElementsPerAstFile(oxcAst);
     transformedEntry = await trackdownRoot(

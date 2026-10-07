@@ -15,7 +15,18 @@ import { AstService } from './core/AstService.js';
  * @typedef {import('../../types/index.js').GatherFilesConfig} GatherFilesConfig
  * @typedef {import('../../types/index.js').ProvidenceConfig} ProvidenceConfig
  * @typedef {import('../../types/index.js').QueryResult} QueryResult
- * @typedef {import('../../types/index.js').QueryConfig} QueryConfig
+ * @typedef {import('../../types/index.js').AnalyzerConfig} AnalyzerConfig
+ */
+
+/**
+ * ProvidenceConfig with the analyzer option that allows navigating to the
+ * source file in a code editor.
+ * @typedef {ProvidenceConfig & { addSystemPathsInResult: boolean }} ExtendedProvidenceConfig
+ */
+
+/**
+ * AnalyzerConfig extended with the option consumed by the analyzers.
+ * @typedef {AnalyzerConfig & { addSystemPathsInResult?: boolean }} ExtendedAnalyzerConfig
  */
 
 /**
@@ -44,7 +55,7 @@ function addToSearchTargetDepsFile({ queryResult, queryConfig, providenceConfig 
 
 /**
  * @param {AnalyzerQueryResult} queryResult
- * @param {{outputPath:PathFromSystemRoot;report:boolean}} cfg
+ * @param {{outputPath?:PathFromSystemRoot;report:boolean}} cfg
  */
 function report(queryResult, cfg) {
   if (cfg.report && !queryResult.meta.analyzerMeta.__fromCache) {
@@ -57,11 +68,11 @@ function report(queryResult, cfg) {
  * Creates unique QueryConfig for analyzer turn
  * @param {AnalyzerQueryConfig} queryConfig
  * @param {PathFromSystemRoot} targetProjectPath
- * @param {PathFromSystemRoot} referenceProjectPath
- * @returns {Partial<AnalyzerQueryResult>}
+ * @param {PathFromSystemRoot} [referenceProjectPath]
+ * @returns {AnalyzerQueryConfig}
  */
 function getSlicedQueryConfig(queryConfig, targetProjectPath, referenceProjectPath) {
-  return /** @type {Partial<AnalyzerQueryResult>} */ ({
+  return /** @type {AnalyzerQueryConfig} */ ({
     ...queryConfig,
     ...{
       analyzerConfig: {
@@ -78,18 +89,20 @@ function getSlicedQueryConfig(queryConfig, targetProjectPath, referenceProjectPa
 /**
  * Definition "projectCombo": referenceProject#version + searchTargetProject#version
  * @param {AnalyzerQueryConfig} slicedQConfig
- * @param {{ gatherFilesConfig:GatherFilesConfig, gatherFilesConfigReference:GatherFilesConfig, skipCheckMatchCompatibility:boolean }} cfg
+ * @param {ExtendedProvidenceConfig} cfg
  */
 async function handleAnalyzerForProjectCombo(slicedQConfig, cfg) {
   performance.mark(`${slicedQConfig.analyzerName}-start`);
 
-  const queryResult = await QueryService.astSearch(slicedQConfig, {
+  /** @type {ExtendedAnalyzerConfig} */
+  const astSearchConfig = {
     gatherFilesConfig: cfg.gatherFilesConfig,
     gatherFilesConfigReference: cfg.gatherFilesConfigReference,
     skipCheckMatchCompatibility: cfg.skipCheckMatchCompatibility,
     addSystemPathsInResult: cfg.addSystemPathsInResult,
     ...slicedQConfig.analyzerConfig,
-  });
+  };
+  const queryResult = await QueryService.astSearch(slicedQConfig, astSearchConfig);
 
   performance.mark(`${slicedQConfig.analyzerName}-end`);
   const measurement = /** @type {* & PerformanceMeasure} */ (
@@ -104,7 +117,7 @@ async function handleAnalyzerForProjectCombo(slicedQConfig, cfg) {
   if (queryResult) {
     report(queryResult, cfg);
   }
-  return queryResult;
+  return /** @type {AnalyzerQueryResult} */ (queryResult);
 }
 
 /**
@@ -124,7 +137,7 @@ async function handleAnalyzerForProjectCombo(slicedQConfig, cfg) {
  * various ways.
  *
  * @param {AnalyzerQueryConfig} queryConfig
- * @param {Partial<ProvidenceConfig>} cfg
+ * @param {ExtendedProvidenceConfig} cfg
  */
 async function handleAnalyzer(queryConfig, cfg) {
   const queryResults = [];
@@ -164,14 +177,14 @@ async function handleAnalyzer(queryConfig, cfg) {
 /**
  * Creates a report with usage metrics, based on a queryConfig.
  *
- * @param {QueryConfig} queryConfig a query configuration object containing analyzerOptions.
- * @param {Partial<ProvidenceConfig>} customConfig
+ * @param {AnalyzerQueryConfig} queryConfig a query configuration object containing analyzerOptions.
+ * @param {Partial<ExtendedProvidenceConfig>} customConfig
  * @return {Promise<QueryResult[]>}
  */
 export async function providence(queryConfig, customConfig) {
   const tStart = performance.now();
 
-  const cfg = /** @type {ProvidenceConfig} */ ({
+  const cfg = /** @type {ExtendedProvidenceConfig} */ ({
     queryMethod: 'grep',
     // This is a merge of all 'main entry projects'
     // found in search-targets, including their children

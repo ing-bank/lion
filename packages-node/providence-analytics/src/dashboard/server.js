@@ -7,14 +7,15 @@ import { getCurrentDir } from '../program/utils/get-current-dir.js';
 import { fsAdapter } from '../program/utils/fs-adapter.js';
 
 /**
- * @typedef {import('../../types/index.js').PathFromSystemRoot} PathFromSystemRoot
- * @typedef {import('../../types/index.js').GatherFilesConfig} GatherFilesConfig
- * @typedef {import('../../types/index.js').AnalyzerName} AnalyzerName
+ * @typedef {import('../../types/index.js').ProvidenceCliConf} ProvidenceCliConf
+ * @typedef {import('../../types/index.js').PackageJson} PackageJson
+ * @typedef {{ fileName: string; content: unknown }} ResultFileEntry
  */
 
 /**
  * Gets all results found in cache folder with all results
- * @param {{ supportedAnalyzers?: `match-${string}`[], resultsPath?: string }} options
+ * @param {{ supportedAnalyzers?: string[]; resultsPath?: string }} options
+ * @returns {Promise<{ searchTargetDeps: Record<string, unknown> | undefined; resultFiles: Record<string, ResultFileEntry[]> }>}
  */
 async function getCachedProvidenceResults({
   supportedAnalyzers = ['match-imports', 'match-subclasses'],
@@ -31,7 +32,9 @@ async function getCachedProvidenceResults({
     throw new Error(`Please make sure providence results can be found in ${resultsPath}`);
   }
 
+  /** @type {Record<string, ResultFileEntry[]>} */
   const resultFiles = {};
+  /** @type {Record<string, unknown> | undefined} */
   let searchTargetDeps;
   outputFilePaths.forEach(fileName => {
     const content = JSON.parse(
@@ -41,7 +44,6 @@ async function getCachedProvidenceResults({
       searchTargetDeps = content;
     } else {
       const analyzerName = fileName.split('_-_')[0];
-      // @ts-ignore
       if (!supportedAnalyzers.includes(analyzerName)) {
         return;
       }
@@ -56,12 +58,18 @@ async function getCachedProvidenceResults({
 }
 
 /**
- * @param {{ providenceConf: object; providenceConfRaw:string; searchTargetDeps: object; resultFiles: string[]; }}
+ * @param {{
+ *   providenceConf: Partial<ProvidenceCliConf>;
+ *   providenceConfRaw: string;
+ *   searchTargetDeps: Record<string, unknown> | undefined;
+ *   resultFiles: Record<string, ResultFileEntry[]>;
+ * }} options
+ * @returns {Array<(ctx: { url: string; type?: string; body?: unknown }, next: () => Promise<unknown>) => Promise<unknown> | undefined>}
  */
 function createMiddleWares({ providenceConf, providenceConfRaw, searchTargetDeps, resultFiles }) {
   /**
    * @param {string} projectPath
-   * @returns {object|null}
+   * @returns {PackageJson | null}
    */
   function getPackageJson(projectPath) {
     try {
@@ -73,10 +81,11 @@ function createMiddleWares({ providenceConf, providenceConfRaw, searchTargetDeps
   }
 
   /**
-   * @param {object[]} collections
-   * @returns {{[key as string]: }}
+   * @param {{ [key: string]: string[] }} collections
+   * @returns {{ [key: string]: (string | undefined)[] }}
    */
   function transformToProjectNames(collections) {
+    /** @type {{ [key: string]: (string | undefined)[] }} */
     const res = {};
     // eslint-disable-next-line array-callback-return
     Object.entries(collections).map(([key, val]) => {
@@ -116,18 +125,23 @@ function createMiddleWares({ providenceConf, providenceConfRaw, searchTargetDeps
         // - searchTargetDeps as found in search-target-deps-file.json
         // Also do some processing on the presentation of a project, so that it can be easily
         // outputted in frontend
+        /** @type {{ [key: string]: (string | undefined)[] } | string[] | undefined} */
         let searchTargetCollections;
         if (providenceConf.searchTargetCollections) {
           searchTargetCollections = transformToProjectNames(providenceConf.searchTargetCollections);
         } else {
-          searchTargetCollections = Object.keys(searchTargetDeps).map(d => d.split('#')[0]);
+          searchTargetCollections = Object.keys(
+            /** @type {Record<string, unknown>} */ (searchTargetDeps),
+          ).map(d => d.split('#')[0]);
         }
 
         const menuData = {
           // N.B. theoretically there can be a mismatch between basename and pkgJson.name,
           // but we assume folder names and pkgJson.names to be similar
           searchTargetCollections,
-          referenceCollections: transformToProjectNames(providenceConf.referenceCollections),
+          referenceCollections: transformToProjectNames(
+            /** @type {{ [key: string]: string[] }} */ (providenceConf.referenceCollections),
+          ),
           searchTargetDeps,
         };
 
@@ -145,7 +159,11 @@ function createMiddleWares({ providenceConf, providenceConfRaw, searchTargetDeps
 }
 
 export async function createDashboardServerConfig() {
-  const { providenceConf, providenceConfRaw } = (await providenceConfUtil.getConf()) || {};
+  const conf =
+    /** @type {{ providenceConf: Partial<ProvidenceCliConf>; providenceConfRaw: string }} */ (
+      (await providenceConfUtil.getConf()) || {}
+    );
+  const { providenceConf, providenceConfRaw } = conf;
   const { searchTargetDeps, resultFiles } = await getCachedProvidenceResults();
 
   // Needed for dev purposes (we call it from ./packages-node/providence-analytics/ instead of ./)

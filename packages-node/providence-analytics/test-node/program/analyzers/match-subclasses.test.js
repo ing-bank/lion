@@ -8,12 +8,17 @@ import MatchSubclassesAnalyzer from '../../../src/program/analyzers/match-subcla
 
 /**
  * @typedef {import('../../../types/index.js').ProvidenceConfig} ProvidenceConfig
+ * @typedef {import('../../../types/index.js').MatchSubclassesAnalyzerOutputEntry} MatchSubclassesAnalyzerOutputEntry
+ * @typedef {import('../../../types/index.js').QueryOutput} QueryOutput
+ * @typedef {import('../../../types/index.js').QueryResult<QueryOutput> & { queryOutput: MatchSubclassesAnalyzerOutputEntry[] }} MatchSubclassesQueryResult
+ * @typedef {import('../../../test-helpers/mock-project-helpers.js').MockProject} MockProject
  */
 
 setupAnalyzerTest();
 
 describe('Analyzer "match-subclasses"', async () => {
   // 1. Reference input data
+  /** @type {MockProject} */
   const referenceProject = {
     path: '/importing/target/project/node_modules/exporting-ref-project',
     name: 'exporting-ref-project',
@@ -46,6 +51,7 @@ describe('Analyzer "match-subclasses"', async () => {
     ],
   };
 
+  /** @type {MockProject} */
   const searchTargetProject = {
     path: '/importing/target/project',
     name: 'importing-target-project',
@@ -135,11 +141,13 @@ describe('Analyzer "match-subclasses"', async () => {
 
   describe('Match Features', () => {
     it(`identifies all directly imported class extensions`, async () => {
+      /** @type {MockProject} */
       const refProject = {
         path: '/target/node_modules/ref',
         name: 'ref',
         files: [{ file: './LionComp.js', code: `export class LionComp extends HTMLElement {};` }],
       };
+      /** @type {MockProject} */
       const targetProject = {
         path: '/target',
         name: 'target',
@@ -159,7 +167,7 @@ describe('Analyzer "match-subclasses"', async () => {
         targetProjectPaths: [targetProject.path],
         referenceProjectPaths: [refProject.path],
       });
-      const queryResult = queryResults[0];
+      const queryResult = /** @type {MatchSubclassesQueryResult} */ (queryResults[0]);
       expect(queryResult.queryOutput).eql([
         {
           exportSpecifier: {
@@ -181,6 +189,7 @@ describe('Analyzer "match-subclasses"', async () => {
     });
 
     it(`identifies all indirectly imported (transitive) class extensions`, async () => {
+      /** @type {MockProject} */
       const refProject = {
         path: '/target/node_modules/ref',
         name: 'ref',
@@ -192,6 +201,7 @@ describe('Analyzer "match-subclasses"', async () => {
           },
         ],
       };
+      /** @type {MockProject} */
       const targetProject = {
         path: '/target',
         name: 'target',
@@ -211,7 +221,7 @@ describe('Analyzer "match-subclasses"', async () => {
         targetProjectPaths: [targetProject.path],
         referenceProjectPaths: [refProject.path],
       });
-      const queryResult = queryResults[0];
+      const queryResult = /** @type {MatchSubclassesQueryResult} */ (queryResults[0]);
       expect(queryResult.queryOutput).eql([
         {
           exportSpecifier: {
@@ -233,6 +243,7 @@ describe('Analyzer "match-subclasses"', async () => {
     });
 
     it(`identifies Mixins`, async () => {
+      /** @type {MockProject} */
       const refProject = {
         path: '/target/node_modules/ref',
         name: 'ref',
@@ -246,6 +257,7 @@ describe('Analyzer "match-subclasses"', async () => {
           },
         ],
       };
+      /** @type {MockProject} */
       const targetProject = {
         path: '/target',
         name: 'target',
@@ -265,7 +277,7 @@ describe('Analyzer "match-subclasses"', async () => {
         targetProjectPaths: [targetProject.path],
         referenceProjectPaths: [refProject.path],
       });
-      const queryResult = queryResults[0];
+      const queryResult = /** @type {MatchSubclassesQueryResult} */ (queryResults[0]);
       expect(queryResult.queryOutput).eql([
         {
           exportSpecifier: {
@@ -296,7 +308,7 @@ describe('Analyzer "match-subclasses"', async () => {
       it(`identifies all indirect export specifiers consumed by "importing-target-project"`, async () => {
         mockTargetAndReferenceProject(searchTargetProject, referenceProject);
         const queryResults = await providence(matchSubclassesQueryConfig, _providenceCfg);
-        const queryResult = queryResults[0];
+        const queryResult = /** @type {MatchSubclassesQueryResult} */ (queryResults[0]);
         expectedExportIdsIndirect.forEach(indirectId => {
           expect(
             queryResult.queryOutput.find(
@@ -309,7 +321,7 @@ describe('Analyzer "match-subclasses"', async () => {
       it(`identifies all direct export specifiers consumed by "importing-target-project"`, async () => {
         mockTargetAndReferenceProject(searchTargetProject, referenceProject);
         const queryResults = await providence(matchSubclassesQueryConfig, _providenceCfg);
-        const queryResult = queryResults[0];
+        const queryResult = /** @type {MatchSubclassesQueryResult} */ (queryResults[0]);
         expectedExportIdsDirect.forEach(directId => {
           expect(
             queryResult.queryOutput.find(
@@ -325,9 +337,15 @@ describe('Analyzer "match-subclasses"', async () => {
     // TODO: because we intoduced an object in match-classes, we find duplicate entries in
     // our result set cretaed in macth-subclasses. Fix there...
     it.skip(`produces a list of all matches, sorted by project`, async () => {
+      /**
+       * @param {string} targetExportedId
+       * @param {MatchSubclassesQueryResult} queryResult
+       * @param {unknown[]} [importedByFiles]
+       */
       function testMatchedEntry(targetExportedId, queryResult, importedByFiles = []) {
-        const matchedEntry = queryResult.queryOutput.find(
-          r => r.exportSpecifier.id === targetExportedId,
+        /** @type {MatchSubclassesAnalyzerOutputEntry} */
+        const matchedEntry = /** @type {MatchSubclassesAnalyzerOutputEntry} */ (
+          queryResult.queryOutput.find(r => r.exportSpecifier.id === targetExportedId)
         );
 
         const [name, filePath, project] = targetExportedId.split('::');
@@ -343,7 +361,7 @@ describe('Analyzer "match-subclasses"', async () => {
 
       mockTargetAndReferenceProject(searchTargetProject, referenceProject);
       const queryResults = await providence(matchSubclassesQueryConfig, _providenceCfg);
-      const queryResult = queryResults[0];
+      const queryResult = /** @type {MatchSubclassesQueryResult} */ (queryResults[0]);
 
       expectedExportIdsDirect.forEach(targetId => {
         testMatchedEntry(targetId, queryResult, [

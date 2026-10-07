@@ -1,7 +1,10 @@
+/**
+ * @typedef {import('lit').CSSResultGroup} CSSResultGroup
+ */
 export class GlobalDecorator {
   /**
-   * @param { CssResult[] } styles
-   * @param { boolean } prepend
+   * @param { CSSResultGroup } styles
+   * @param {{ prepend?: boolean }} [opts]
    */
   static decorateStyles(styles, { prepend } = {}) {
     if (!prepend) {
@@ -11,5 +14,7 @@ export class GlobalDecorator {
     }
   }
 }
+/** @type {CSSResultGroup[]} */
 GlobalDecorator.globalDecoratedStylesPrepended = [];
+/** @type {CSSResultGroup[]} */
 GlobalDecorator.globalDecoratedStyles = [];

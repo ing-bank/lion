@@ -4,6 +4,9 @@ import { Analyzer } from '../../src/program/core/Analyzer.js';
  * @typedef {import('@babel/types').File} File
  * @typedef {import('../../types/index.js').AnalyzerName} AnalyzerName
  * @typedef {import('../../types/index.js').QueryOutputEntry} QueryOutputEntry
+ * @typedef {import('../../types/index.js').AnalyzerConfig} AnalyzerConfig
+ * @typedef {import('../../types/index.js').QueryOutput} QueryOutput
+ * @typedef {import('../../types/index.js').ProjectInputDataWithMeta} ProjectInputDataWithMeta
  */
 
 /**
@@ -16,6 +19,7 @@ import { Analyzer } from '../../src/program/core/Analyzer.js';
 /**
  * Everything that is configured via {AnalyzerConfig} [customConfig] in the execute
  * function, should be configured here
+ * @type {{ optionA: (entryResult: unknown) => unknown }}
  */
 const options = {
   optionA(entryResult) {
@@ -46,11 +50,9 @@ export class DummyAnalyzer extends Analyzer {
   static analyzerName = 'find-dummy-analyzer';
 
   /**
-   * @param {AstDataProject[]} astDataProjects
-   * @param {AnalyzerConfig} [customConfig]
-   * @returns {QueryResult}
+   * @param {AnalyzerConfig} customConfig
    */
-  async execute(customConfig = {}) {
+  async execute(customConfig) {
     const cfg = {
       targetProjectPaths: null,
       optionA: false,
@@ -69,8 +71,13 @@ export class DummyAnalyzer extends Analyzer {
     /**
      * Traverse
      */
-    const queryOutput = await this._traverse((ast, astContext) => {
+    const self =
+      /** @type {{ _traverse: (fn: (ast: File, astContext: { code: string; relativePath: string; projectData: ProjectInputDataWithMeta }) => object) => Promise<QueryOutput> }} */ (
+        /** @type {unknown} */ (this)
+      );
+    const queryOutput = await self._traverse((ast, astContext) => {
       // Run the traversel per entry
+      /** @type {unknown} */
       let transformedEntryResult = getResultPerAstFile(ast);
       const meta = {};
 

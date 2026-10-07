@@ -63,10 +63,12 @@ describe('Providence CLI', () => {
     commander.setMaxListeners(100);
 
     /** @type {sinon.SinonStub} */
-    providenceStub = sinon.stub(_providenceModule, 'providence').returns(Promise.resolve());
+    providenceStub = sinon.stub(_providenceModule, 'providence');
+    providenceStub.returns(Promise.resolve());
 
     /** @type {sinon.SinonStub} */
-    iExtConfStub = sinon.stub(InputDataService, 'getExternalConfig').returns(externalCfgMock);
+    iExtConfStub = sinon.stub(InputDataService, 'getExternalConfig');
+    iExtConfStub.returns(externalCfgMock);
 
     /** @type {sinon.SinonStub} */
     qConfStub = sinon.stub(QueryService, 'getQueryConfigFromAnalyzer').returns(
@@ -136,12 +138,10 @@ describe('Providence CLI', () => {
     let appendProjectDependencyPathsStub;
 
     before(() => {
-      pathsArrayFromCsStub = sinon
-        .stub(_cliHelpersModule, 'pathsArrayFromCs')
-        .returns(['/mocked/path/example-project']);
-      pathsArrayFromCollectionStub = sinon
-        .stub(_cliHelpersModule, 'pathsArrayFromCollectionName')
-        .returns(['/mocked/path/example-project']);
+      pathsArrayFromCsStub = sinon.stub(_cliHelpersModule, 'pathsArrayFromCs');
+      pathsArrayFromCsStub.returns(['/mocked/path/example-project']);
+      pathsArrayFromCollectionStub = sinon.stub(_cliHelpersModule, 'pathsArrayFromCollectionName');
+      pathsArrayFromCollectionStub.returns(['/mocked/path/example-project']);
       appendProjectDependencyPathsStub = sinon
         .stub(_cliHelpersModule, 'appendProjectDependencyPaths')
         .returns(

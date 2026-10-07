@@ -1,16 +1,32 @@
 /**
- * @typedef {import('parse5/dist/tree-adapters/default.js').Node} Node
+ * @typedef {object} Parse5AstNode
+ * @property {string} nodeName
+ * @property {Parse5AstNode[]} [childNodes]
+ * @property {{ childNodes: Parse5AstNode[] }} content
+ * @typedef {object} HtmlAstPath
+ * @property {Parse5AstNode} node
+ * @property {(processObject: HtmlProcessObject) => void} traverseHtml
+ * @property {() => void} stop
+ * @typedef {{ [nodeName: string]: ((astPath: HtmlAstPath) => void) }} HtmlProcessObject
  */
 
 /**
  * Creates an api similar to Babel traverse for parse5 trees
  * @param {Parse5AstNode} curNode Node to start from. Will loop over its children
- * @param {object} processObject Will be executed for every node
+ * @param {HtmlProcessObject} processObject Will be executed for every node
+ * @param {{ stopped?: boolean }} [config]
  */
 export function traverseHtml(curNode, processObject, config = {}) {
+  /**
+   * @param {Parse5AstNode} node
+   * @returns {HtmlAstPath}
+   */
   function pathify(node) {
     return {
       node,
+      /**
+       * @param {HtmlProcessObject} obj
+       */
       traverseHtml(obj) {
         traverseHtml(node, obj);
       },
