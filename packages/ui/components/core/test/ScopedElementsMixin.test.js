@@ -17,6 +17,23 @@ const originalShadowRootProps = {
   // @ts-expect-error
   importNode: globalThis.ShadowRoot?.prototype.importNode,
 };
+// Spec 1.x is detected through the `customElementRegistry` accessor on
+// `Element.prototype`; that descriptor is what we swap out for the "no support" mock.
+const originalRegistryDescriptor = Object.getOwnPropertyDescriptor(
+  globalThis.Element.prototype,
+  'customElementRegistry',
+);
+
+/**
+ * Whether the "no scoped registry support" scenario can be simulated here. It cannot
+ * when the spec 1.x polyfill is force-loaded: that polyfill needs the very DOM
+ * features (the `customElementRegistry` accessor, and its own registry bookkeeping)
+ * that the mock takes away, and it deadlocks the test run. Plain browsers, and the
+ * 0.x polyfill, are fine.
+ */
+const canSimulateNoRegistrySupport = !(
+  /** @type {any} */ (globalThis).CustomElementRegistryPolyfill?.inUse
+);
 
 // Even though the polyfill might be loaded in this test or we run it in a browser supporting these features,
 // we mock "no support", so that `supportsScopedRegistry()` returns false inside ScopedElementsMixin..
@@ -24,10 +41,19 @@ function mockNoRegistrySupport() {
   // Are we on a server or do we have no polyfill? Nothing to be done here...
   if (!hasRealScopedRegistrySupport) return;
 
-  // This will be enough to make the `supportsScopedRegistry()` check fail inside ScopedElementsMixin and bypass scoped registries
+  // This will be enough to make the spec 0.x check fail inside ScopedElementsMixin and bypass scoped registries
   globalThis.ShadowRoot = globalThis.ShadowRoot || { prototype: {} };
   // @ts-expect-error
   globalThis.ShadowRoot.prototype.createElement = null;
+
+  // And this defeats the spec 1.x check (which looks for the accessor).
+  if (originalRegistryDescriptor) {
+    Object.defineProperty(globalThis.Element.prototype, 'customElementRegistry', {
+      value: undefined,
+      configurable: true,
+      writable: true,
+    });
+  }
 }
 
 mockNoRegistrySupport.restore = () => {
@@ -38,6 +64,14 @@ mockNoRegistrySupport.restore = () => {
   globalThis.ShadowRoot.prototype.createElement = originalShadowRootProps.createElement;
   // @ts-expect-error
   globalThis.ShadowRoot.prototype.importNode = originalShadowRootProps.importNode;
+
+  if (originalRegistryDescriptor) {
+    Object.defineProperty(
+      globalThis.Element.prototype,
+      'customElementRegistry',
+      originalRegistryDescriptor,
+    );
+  }
 };
 
 class ScopedElementsChild extends LitElement {
@@ -109,7 +143,9 @@ describe('ScopedElementsMixin', () => {
         return html`<scoped-elements-child-no-reg></scoped-elements-child-no-reg>`;
       }
     }
-    before(() => {
+    before(function skipWhenUnsimulatable() {
+      // Cannot be simulated underneath a force-loaded spec 1.x polyfill (see above).
+      if (!canSimulateNoRegistrySupport) this.skip();
       mockNoRegistrySupport();
       customElements.define('scoped-elements-host-no-reg', ScopedElementsHostNoReg);
     });
@@ -118,7 +154,11 @@ describe('ScopedElementsMixin', () => {
       mockNoRegistrySupport.restore();
     });
 
-    it('registers elements', async () => {
+    it('registers elements', async function registersElements() {
+      if (!canSimulateNoRegistrySupport) {
+        this.skip();
+        return;
+      }
       const ceDefineSpy = sinon.spy(customElements, 'define');
 
       const el = /** @type {ScopedElementsHostNoReg} */ (
@@ -130,7 +170,11 @@ describe('ScopedElementsMixin', () => {
       ceDefineSpy.restore();
     });
 
-    it('fails when different classes are registered under different name', async () => {
+    it('fails when different classes are registered under different name', async function failsOnReregistration() {
+      if (!canSimulateNoRegistrySupport) {
+        this.skip();
+        return;
+      }
       class ScopedElementsHostNoReg2 extends ScopedElementsMixin(LitElement) {
         static scopedElements = { 'scoped-elements-child-no-reg': class extends HTMLElement {} };
 
