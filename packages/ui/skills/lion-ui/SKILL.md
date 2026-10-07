@@ -11,6 +11,16 @@ compatibility: Works in modern browsers. Built on Lit. Framework-agnostic (usabl
 Explore the project first, then use this skill whenever you touch an `@lion/ui` component or
 system (forms, validation, overlays, localization, icons).
 
+## Who this is for: app developers, not subclassers
+
+This skill is written for an **app developer** consuming `@lion/ui` — you compose lion's components
+into your application (and may wrap them in your own components) using the documented entrypoints,
+attributes, properties and events.
+
+It is _not_ aimed at a **subclasser** building a design system on lion's internals: subclassing
+lion base classes, extending their mixins, or overriding their rendering is out of scope here. If a
+task looks like it needs that, prefer composing the documented component instead.
+
 ## MANDATORY: read each component's reference doc before using it
 
 **Before writing markup for an `@lion/ui` component, open and read its reference doc under
@@ -150,22 +160,10 @@ interaction-states), the [`create-a-form` guide](references/guides/create-a-form
 light-dom best practices that form registration depends on, and the reference doc for every form
 control you plan to use.
 
-#### Light DOM: only when composing a control _within_ a form
+#### Use `ScopedElementsMixin`; light DOM is a narrow exception
 
-Form registration relies on light DOM by design, so a **custom form control that must register with
-an ancestor form** has to render into light DOM (no shadow root):
-
-```js
-class MyIbanField extends LionInputIban {
-  createRenderRoot() {
-    return this; // required: lets the field register with the <lion-form> around it
-  }
-}
-```
-
-A component that **contains** a form does _not_ need this. If it renders `<lion-form>` and its
-controls together, they are already in the same tree, so registration works across that shadow root
-— use `ScopedElementsMixin` and a shadow root as usual:
+The default for a component you write is a normal shadow root with `ScopedElementsMixin`, which
+registers the components it renders in its own registry:
 
 ```js
 export class MyForm extends ScopedElementsMixin(LitElement) {
@@ -183,8 +181,11 @@ export class MyForm extends ScopedElementsMixin(LitElement) {
 }
 ```
 
-In short: `createRenderRoot` is needed **only** for composition within a form. Do not reach for it
-otherwise.
+Do **not** override `createRenderRoot` on a lion component subclass to force light DOM: lion's form
+controls rely on scoped elements for their own slot rendering, and with no shadow root that breaks
+(measured — it throws inside `ScopedElementsMixin`). The one documented exception is building _form
+sub-components_, where the parent applies `ScopedElementsMixin`; that edge case is covered in the
+guides and is not the common case.
 
 #### Native element -> required `@lion/ui` replacement
 

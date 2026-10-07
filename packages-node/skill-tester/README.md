@@ -148,6 +148,13 @@ The suite includes an end-to-end run against a local mock OpenAI-compatible serv
 (`test-node/mockOpenAi.ts`) that exercises the real loop — tool calling, sandbox file writes,
 scoring, and failure reporting — without network access or credentials.
 
+## Roadmap
+
+- **Measure token usage as a first-class metric.** Run records already capture `Total tokens` per
+  run; what is missing is aggregation and reporting per scenario and per model, so a skill change
+  can be judged on cost as well as on score. (Requested but deliberately deferred — core scoring
+  correctness comes first.)
+
 ## Layout
 
 ```text
