@@ -11,11 +11,13 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { createLionUiScenarios, NON_VISUAL_COMPONENT_DIRS } from './lionUi.ts';
 import { manualScenarios } from './manual.ts';
+import { runScenarios } from './runs.ts';
 import type { TestScenario } from './types.ts';
 
 export { NON_VISUAL_COMPONENT_DIRS, SYSTEM_NAMES, defineEntrypointFor } from './lionUi.ts';
 export type { LionUiScenarioContext } from './lionUi.ts';
 export { manualScenarios } from './manual.ts';
+export { runScenarios } from './runs.ts';
 export type { TestScenario, ScenarioCheck } from './types.ts';
 
 export function discoverComponentNames(repoRoot: string): string[] {
@@ -110,5 +112,5 @@ export function loadLionUiScenarios({
     defineEntrypoints: discoverDefineEntrypoints(repoRoot),
     tagClasses: discoverTagClasses(repoRoot),
   });
-  return includeManual ? [...generated, ...manualScenarios] : generated;
+  return includeManual ? [...generated, ...manualScenarios, ...runScenarios] : generated;
 }
