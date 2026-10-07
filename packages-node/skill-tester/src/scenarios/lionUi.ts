@@ -114,12 +114,10 @@ function entrypointChecks(name: string, defineEntrypoints: string[] = []): Scena
 }
 
 function starterFile(description: string): string {
-  return [
-    `// TODO: ${description}`,
-    '// Import through @lion/ui entrypoints only (never `@lion/*`, never a deep import).',
-    `export const ${EXAMPLE_EXPORT} = () => {};`,
-    '',
-  ].join('\n');
+  // Deliberately EMPTY apart from the TODO: a stub that imports something, or states a convention,
+  // pre-answers the checks that assert that convention and makes them self-fulfilling. The
+  // scenario linter (L6) enforces this.
+  return [`// TODO: ${description}`, ''].join('\n');
 }
 
 /**
@@ -214,6 +212,7 @@ export function createComponentScenario(
     description: `Minimal usage example for the "${componentName}" component.`,
     prompt: [
       `Add a minimal, correct usage example for the "${componentName}" component to \`${TARGET_FILE}\`.`,
+      'Create that file only — nothing else.',
       'It must be a small self-contained example that imports everything it needs from the',
       'correct @lion/ui entrypoints and renders the component with its documented element name.',
       `Keep the \`${EXAMPLE_EXPORT}\` export: a function that renders the example, so it can be`,
@@ -247,6 +246,7 @@ export function createSystemScenario(
     description: `Minimal example exercising the "${systemName}" system.`,
     prompt: [
       `Add a minimal example to \`${TARGET_FILE}\` that uses the "${systemName}" system of`,
+      'Create that file only — nothing else.',
       `@lion/ui (imported from '${entrypointFor(systemName)}'). Follow the conventions in the`,
       'skill: import through the documented @lion/ui entrypoints, never from @lion/* or a deep',
       'import into @lion/ui internals.',

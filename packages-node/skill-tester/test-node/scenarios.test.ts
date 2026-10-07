@@ -45,11 +45,18 @@ test('every component and system gets exactly one small, isolated scenario', () 
 
   const components = discoverComponentNames(repoRoot);
   const systems = discoverSystemNames(repoRoot);
-  assert.equal(
-    scenarios.filter(scenario => scenario.kind === 'component').length,
-    components.length,
-  );
-  assert.equal(scenarios.filter(scenario => scenario.kind === 'system').length, systems.length);
+  // The GENERATED set covers every component and system exactly once. Hand-authored scenarios may
+  // add further scenarios of the same kind (the concrete runs do), so assert coverage by name
+  // rather than by counting scenario kinds.
+  for (const component of components) {
+    assert.ok(
+      names.includes(`component/${component}`),
+      `missing the generated scenario for component "${component}"`,
+    );
+  }
+  for (const system of systems) {
+    assert.ok(names.includes(`system/${system}`), `missing the generated scenario for system "${system}"`);
+  }
 
   for (const scenario of scenarios) {
     const hasGolden = Object.keys(scenario.expectedTransformedFiles ?? {}).length > 0;
