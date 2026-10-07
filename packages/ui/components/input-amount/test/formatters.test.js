@@ -90,12 +90,6 @@ describe('formatters', () => {
   });
 
   describe('formatCurrencyLabel()', () => {
-    const localizeManager = getLocalizeManager();
-
-    afterEach(() => {
-      localizeTearDown();
-    });
-
     it('gives back the correct currency label', async () => {
       expect(formatCurrencyLabel('EUR', 'en-GB')).to.equal('EUR');
       expect(formatCurrencyLabel('USD', 'en-GB')).to.equal('USD');
@@ -103,13 +97,6 @@ describe('formatters', () => {
 
     it('gives nothing back if no currency has been provided', async () => {
       expect(formatCurrencyLabel('', 'en-GB')).to.equal('');
-    });
-
-    it('gives back a currency symbol when asked for in different locales', async () => {
-      expect(formatCurrencyLabel('EUR', 'en-GB', { currencyDisplay: 'symbol' })).to.equal('€');
-      expect(formatCurrencyLabel('USD', 'en-GB', { currencyDisplay: 'symbol' })).to.equal('US$');
-      localizeManager.locale = 'en-US';
-      expect(formatCurrencyLabel('USD', 'en-US', { currencyDisplay: 'symbol' })).to.equal('$');
     });
   });
 });

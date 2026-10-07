@@ -255,16 +255,14 @@ describe('<lion-input-amount>', () => {
     it('displays currency symbol if provided via formatOptions', async () => {
       const el = /** @type {LionInputAmount} */ (
         await fixture(
-          html`<lion-input-amount
-            currency="EUR"
-            .formatOptions="${{ currencyDisplay: 'symbol' }}"
-          ></lion-input-amount>`,
+          html`<lion-input-amount currency="EUR" currency-label="€"></lion-input-amount>`,
         )
       );
-      expect(
-        /** @type {HTMLElement[]} */ (Array.from(el.children)).find(child => child.slot === 'after')
-          ?.innerText,
-      ).to.equal('€');
+      const currLabel = /** @type {HTMLElement[]} */ (Array.from(el.children)).find(
+        child => child.slot === 'after',
+      );
+      expect(currLabel?.innerText).to.equal('€');
+      expect(currLabel?.getAttribute('aria-label')).to.equal('€ (euros)');
     });
 
     it('can update currency', async () => {
@@ -328,7 +326,7 @@ describe('<lion-input-amount>', () => {
       child => child.slot === 'after',
     );
     expect(currLabel?.innerText).to.equal('EUR');
-    expect(currLabel?.getAttribute('aria-label')).to.equal('euros');
+    expect(currLabel?.getAttribute('aria-label')).to.equal('EUR (euros)');
   });
 
   it('sets currency label on the after element', async () => {
@@ -433,10 +431,10 @@ describe('<lion-input-amount>', () => {
       const label = /** @type {HTMLElement[]} */ (Array.from(el.children)).find(
         child => child.slot === 'after',
       );
-      expect(label?.getAttribute('aria-label')).to.equal('euros');
+      expect(label?.getAttribute('aria-label')).to.equal('EUR (euros)');
       el.currency = 'USD';
       await el.updateComplete;
-      expect(label?.getAttribute('aria-label')).to.equal('US dollars');
+      expect(label?.getAttribute('aria-label')).to.equal('USD (US dollars)');
       el.currency = 'PHP';
       await el.updateComplete;
       // TODO: Chrome Intl now thinks this should be pesos instead of pisos. They're probably right.

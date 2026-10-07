@@ -40,17 +40,15 @@ You can optionally set a currency with the `currency` attribute, which is visibl
 <lion-input-amount label="Price" currency="USD" .modelValue="${123456.78}"></lion-input-amount>
 ```
 
-### Set currency label as symbol
+### Set currency label
 
 ```js preview-story
 export const currencySymbol = () => html`
   <lion-input-amount
     label="Price"
     currency="USD"
+    currency-label="$"
     .modelValue="${123456.78}"
-    .formatOptions="${{
-      currencyDisplay: 'symbol',
-    }}"
   ></lion-input-amount>
 `;
 ```

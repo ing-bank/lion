@@ -1,6 +1,5 @@
 import {
   formatNumber,
-  formatNumberToParts,
   getFractionDigits,
   normalizeCurrencyLabel,
 } from '@lion/ui/localize-no-side-effects.js';
@@ -37,21 +36,10 @@ export function formatAmount(modelValue, givenOptions) {
  *
  * @param {string} currency
  * @param {string} locale
- * @param {FormatNumberOptions} [formatOptions]
  */
-export function formatCurrencyLabel(currency, locale, formatOptions) {
+export function formatCurrencyLabel(currency, locale) {
   if (currency === '') {
     return '';
-  }
-  if (formatOptions?.currencyDisplay === 'symbol') {
-    const formattedNumber = /** @type {FormatNumberPart[]} */ (
-      formatNumberToParts(1, { style: 'currency', locale, currencyDisplay: 'symbol', currency })
-    );
-    for (let i = 0; i < formattedNumber.length; i += 1) {
-      if (formattedNumber[i].type === 'currency') {
-        return formattedNumber[i].value;
-      }
-    }
   }
 
   return normalizeCurrencyLabel(currency, locale);
