@@ -30,6 +30,18 @@ Why esbuild and not upstream's closure toolchain: esbuild does not rename proper
 polyfill's `Object.defineProperty(<obj>, 'name', …)` string keys survive; closure at
 `ADVANCED_OPTIMIZATIONS` would need the upstream flagfile.
 
+## Running the modes
+
+The vendored build is what the `v1` mode loads. Where the polyfill matters, the modes are:
+
+```bash
+npm run test:scoped-elements:v0      # npm polyfill, spec 0.x
+npm run test:scoped-elements:v1      # this build, spec 1.x, forced
+npm run test:scoped-elements:none    # no polyfill: native support or the global fallback
+npm run test:browser:scoped-v1       # the whole @lion/ui suite in the v1 mode
+npm run test:browser:scoped-none     # the whole @lion/ui suite with no polyfill
+```
+
 The file is a _script_ (it patches the DOM on load, guarded by
 `window.CustomElementRegistryPolyfill.inUse`), which is why the test configs load it with a
 `<script src>` tag rather than importing it.
