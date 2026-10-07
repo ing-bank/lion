@@ -8,6 +8,8 @@
  *               it is exercised even in a browser that already has native support. The build is
  *               vendored in packages/ui/components/core/test/scoped-registry-v1 (see its README, and
  *               `scripts/scoped-registry-polyfill.mjs` to regenerate it)
+ *   v1-reserved like v1, with `lion-input` listed in `CustomElementRegistryPolyfill.formAssociated`
+ *               before the polyfill loads (the redesign's escape hatch for form association)
  *   none        no polyfill at all: the browser's own support
  *   no-support  no polyfill *and* no native support: Chromium is started with
  *               `--disable-blink-features=ScopedCustomElementRegistry`, which removes the registry
@@ -31,6 +33,13 @@ export const SCOPED_POLYFILL_VARIANTS = {
     '<script src="/packages/ui/components/core/test/scoped-registry-v1/scoped-custom-element-registry.min.js"></script>',
   ].join('\n    '),
   none: '',
+  // Same as v1, plus the redesign's escape hatch for form association: the tag names whose
+  // capability must be reserved *before* the polyfill loads, because form association is decided
+  // per tag name and first definition wins (see the form-associated demo).
+  'v1-reserved': [
+    '<script>window.CustomElementRegistryPolyfill = { force: true, formAssociated: new Set(["lion-input"]) };</script>',
+    '<script src="/packages/ui/components/core/test/scoped-registry-v1/scoped-custom-element-registry.min.js"></script>',
+  ].join('\n    '),
   'no-support': '',
 };
 
