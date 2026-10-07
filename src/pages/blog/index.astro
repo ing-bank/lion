@@ -8,12 +8,12 @@ const entry = await getEntry('lionBlog', 'index');
 const getUrl = (post) => {
   const baseUrl = import.meta.env.BASE_URL;
   if (post.data?.url) {
-    return `${baseUrl}/${post.data.url}`;
+    return `${baseUrl}${post.data.url}`;
   }
   if (post.url) {
-    return `${baseUrl}/${post.url}`;
+    return `${baseUrl}${post.url}`;
   }
-  return `${baseUrl}/blog/${post.id}`;
+  return `${baseUrl}blog/${post.id}`;
 };
 
 const { Content } = await render(entry);
