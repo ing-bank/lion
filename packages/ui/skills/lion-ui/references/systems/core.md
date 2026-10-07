@@ -246,6 +246,8 @@ This will make sure that the slot provided by the user always takes precedence a
 
 As can be seen in the example of [SlotFunctionResults](#slotfunctionresults), '' can be used to add content to the default slot
 
+---
+
 ## Core: ScopedElementsMixin
 
 `ScopedElementsMixin` gives a component its own custom element registry, so the elements it renders
@@ -292,7 +294,12 @@ class MyForm extends ScopedElementsMixin(LitElement) {
   `@webcomponents/scoped-custom-element-registry` polyfill otherwise. Load the polyfill once in the
   test runner for browsers without native support, as lion's own test setup does.
 
----
+### Scoped elements and forms
+
+Scoping applies to the elements a component *renders*. It does not change the light-dom requirement
+for form registration: a custom form control that must register with an ancestor form still needs to
+render into light dom (see the *create a form* guide). A component that *contains* a form needs
+neither — the form and its controls share one tree, so registration works across its shadow root.
 
 ## API Reference
 
