@@ -1,6 +1,5 @@
 /* eslint-disable no-unused-expressions */
 /* eslint-disable import/no-extraneous-dependencies */
-import commander from 'commander';
 import { expect } from 'chai';
 import { it } from 'mocha';
 import sinon from 'sinon';
@@ -59,9 +58,6 @@ describe('Providence CLI', () => {
   let qConfStub;
 
   before(() => {
-    // Prevent MaxListenersExceededWarning
-    commander.setMaxListeners(100);
-
     /** @type {sinon.SinonStub} */
     providenceStub = sinon.stub(_providenceModule, 'providence');
     providenceStub.returns(Promise.resolve());
@@ -83,8 +79,6 @@ describe('Providence CLI', () => {
   });
 
   after(() => {
-    commander.setMaxListeners(10);
-
     providenceStub.restore();
     iExtConfStub.restore();
     qConfStub.restore();
