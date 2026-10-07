@@ -26,7 +26,7 @@ import { AstService } from '../../src/index.js';
 
 const __dirname = pathLib.dirname(fileURLToPath(import.meta.url));
 
-const { pathsArrayFromCs, pathsArrayFromCollectionName, appendProjectDependencyPaths } =
+const { pathsArrayFromCs, pathsArrayFromCollectionName, appendProjectDependencyPaths, spawnProcess } =
   _cliHelpersModule;
 
 const externalCfgMock = {
@@ -185,6 +185,18 @@ describe('CLI helpers', () => {
         '/mocked/path/example-project/bower_components/dependency-b',
         '/mocked/path/example-project',
       ]);
+    });
+  });
+
+  describe('spawnProcess', () => {
+    it('resolves with exit code and output on success', async () => {
+      const result = await spawnProcess('echo hello');
+      expect(result.code).to.equal(0);
+    });
+
+    it('handles extra spaces in processArgStr without creating empty args', async () => {
+      const result = await spawnProcess('echo  hello');
+      expect(result.code).to.equal(0);
     });
   });
 

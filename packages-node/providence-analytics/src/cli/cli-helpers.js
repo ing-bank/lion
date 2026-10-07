@@ -99,9 +99,9 @@ export async function pathsArrayFromCollectionName(
  * @throws {Error}
  */
 export function spawnProcess(processArgStr, opts) {
-  const processArgs = processArgStr.split(' ');
+  const [cmd, ...args] = processArgStr.split(' ').filter(Boolean);
   // eslint-disable-next-line camelcase
-  const proc = child_process.spawn(processArgs[0], processArgs.slice(1), opts);
+  const proc = child_process.spawn(cmd, args, { ...opts, shell: false }); // nosemgrep: javascript.lang.security.detect-child-process.detect-child-process
   /** @type {string} */
   let output;
   proc.stdout.on('data', data => {
