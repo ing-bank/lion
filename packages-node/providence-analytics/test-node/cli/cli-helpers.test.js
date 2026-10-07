@@ -22,6 +22,7 @@ import { AstService } from '../../src/index.js';
 
 /**
  * @typedef {import('../../types/index.js').QueryResult} QueryResult
+ * @typedef {import('../../test-helpers/mock-project-helpers.js').MockProject} MockProject
  */
 
 const __dirname = pathLib.dirname(fileURLToPath(import.meta.url));
@@ -254,12 +255,14 @@ describe('CLI helpers', () => {
           `,
       };
 
+      /** @type {MockProject} */
       const theirProject = {
         path: '/my-components/node_modules/their-components',
         name: 'their-components',
         files: Object.entries(theirProjectFiles).map(([file, code]) => ({ file, code })),
       };
 
+      /** @type {MockProject} */
       const myProject = {
         path: '/my-components',
         name: 'my-components',
@@ -365,18 +368,21 @@ describe('CLI helpers', () => {
         }),
       };
 
+      /** @type {MockProject} */
       const theirProject = {
         path: '/their-components',
         name: 'their-components',
         files: Object.entries(theirProjectFiles).map(([file, code]) => ({ file, code })),
       };
 
+      /** @type {MockProject} */
       const monoProject = {
         path: '/mono-components',
         name: 'mono-components',
         files: Object.entries(monoProjectFiles).map(([file, code]) => ({ file, code })),
       };
 
+      /** @type {MockProject} */
       const nonMonoProject = {
         path: '/non-mono-components',
         name: 'non-mono-components',

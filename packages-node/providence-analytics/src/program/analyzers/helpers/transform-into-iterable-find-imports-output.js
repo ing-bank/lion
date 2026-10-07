@@ -3,35 +3,35 @@
  * @typedef {import('../../../../types/index.js').IterableFindImportsAnalyzerEntry} IterableFindImportsAnalyzerEntry
  */
 
-/**
+/*
  * Convert to more easily iterable object
  *
  * From:
- * ```js
  * [
  *  "file": "./file-1.js",
  *  "result": [{
  *    "importSpecifiers": [ "a", "b" ],
  *    "source": "exporting-ref-project",
  *    "normalizedSource": "exporting-ref-project"
- * }], ,
- * ```
+ * }]
+ * ]
  * To:
- * ```js
  * [{
- *   "file": ""./file-1.js",
- *   "importSpecifier": "a",,
+ *   "file": "./file-1.js",
+ *   "importSpecifier": "a",
  *   "source": "exporting-ref-project",
  *   "normalizedSource": "exporting-ref-project"
- * },
- * {{
- *   "file": ""./file-1.js",
- *   "importSpecifier": "b",,
+ * }, {
+ *   "file": "./file-1.js",
+ *   "importSpecifier": "b",
  *   "source": "exporting-ref-project",
  *   "normalizedSource": "exporting-ref-project"
- * }}],
- *
+ * }]
+ */
+
+/**
  * @param {FindImportsAnalyzerResult} importsAnalyzerResult
+ * @returns {IterableFindImportsAnalyzerEntry[]}
  */
 export function transformIntoIterableFindImportsOutput(importsAnalyzerResult) {
   /** @type {IterableFindImportsAnalyzerEntry[]} */

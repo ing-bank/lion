@@ -4,6 +4,6 @@
     "outDir": "./dist-types",
     "rootDir": "."
   },
-  "include": ["types", "src", "test-node"],
-  "exclude": ["dist-types"]
+  "include": ["types", "src", "test-node", "test-helpers"],
+  "exclude": ["dist-types", "test-helpers/project-mocks"]
 }

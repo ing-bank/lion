@@ -70,7 +70,7 @@ export async function pathsArrayFromCs(targets, cwd = process.cwd()) {
 /**
  * @param {string} name collection name found in eCfg
  * @param {'search-target'|'reference'} collectionType collection type
- * @param {{searchTargetCollections: {[repo:string]:string[]}; referenceCollections:{[repo:string]:string[]}}} [eCfg] external configuration. Usually providence.conf.js
+ * @param {{searchTargetCollections?: {[repo:string]:string[]}; referenceCollections?:{[repo:string]:string[]}}} [eCfg] external configuration. Usually providence.conf.js
  * @param {string} [cwd]
  * @returns {Promise<string[]|undefined>}
  */
@@ -95,17 +95,17 @@ export async function pathsArrayFromCollectionName(
 /**
  * @param {string} processArgStr
  * @param {object} [opts]
- * @returns {Promise<{ code:number; output:string }>}
+ * @returns {Promise<{ code:number|null; output:string|undefined }>}
  * @throws {Error}
  */
 export function spawnProcess(processArgStr, opts) {
   const processArgs = processArgStr.split(' ');
   // eslint-disable-next-line camelcase
   const proc = child_process.spawn(processArgs[0], processArgs.slice(1), opts);
-  /** @type {string} */
+  /** @type {string | undefined} */
   let output;
   proc.stdout.on('data', data => {
-    output += data;
+    output = `${output}${data}`;
     LogService.debug(data.toString());
   });
   return new Promise((resolve, reject) => {

@@ -6,7 +6,8 @@ import {
   MatchedExportSpecifier,
 } from '../core/index.js';
 
-export interface MatchSubclassesAnalyzerResult extends AnalyzerQueryResult {
+export interface MatchSubclassesAnalyzerResult
+  extends AnalyzerQueryResult<MatchSubclassesAnalyzerOutputEntry[]> {
   queryOutput: MatchSubclassesAnalyzerOutputEntry[];
 }
 

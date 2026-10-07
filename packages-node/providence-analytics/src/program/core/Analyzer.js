@@ -1,5 +1,5 @@
 /* eslint-disable no-param-reassign */
-import semver from 'semver';
+import { createRequire } from 'module';
 import path from 'path';
 
 import { getFilePathRelativeFromRoot } from '../utils/get-file-path-relative-from-root.js';
@@ -10,18 +10,66 @@ import { QueryService } from './QueryService.js';
 import { LogService } from './LogService.js';
 
 /**
- * @typedef {(ast: File, astContext: {code:string; relativePath:string; projectData: ProjectInputDataWithMeta}) => object} FileAstTraverseFn
+ * @typedef {(ast: File, astContext: {code:string; relativePath:PathRelativeFromProjectRoot; projectData: ProjectInputDataWithMeta; analyzerCfg: AnalyzerConfigResolved}) => Promise<{result: unknown[]; meta?: unknown}>} FileAstTraverseFn
  * @typedef {import('../../../types/index.js').ProjectInputDataWithMeta} ProjectInputDataWithMeta
+ * @typedef {import('../../../types/index.js').ProjectInputDataWithAstMeta} ProjectInputDataWithAstMeta
  * @typedef {import('../../../types/index.js').AnalyzerQueryResult} AnalyzerQueryResult
  * @typedef {import('../../../types/index.js').MatchAnalyzerConfig} MatchAnalyzerConfig
  * @typedef {import('../../../types/index.js').PathFromSystemRoot} PathFromSystemRoot
+ * @typedef {import('../../../types/index.js').PathRelativeFromProjectRoot} PathRelativeFromProjectRoot
  * @typedef {import('../../../types/index.js').ProjectInputData} ProjectInputData
+ * @typedef {import('../../../types/index.js').Project} Project
+ * @typedef {import('../../../types/index.js').GatherFilesConfig} GatherFilesConfig
  * @typedef {import('../../../types/index.js').AnalyzerName} AnalyzerName
  * @typedef {import('../../../types/index.js').AnalyzerAst} AnalyzerAst
  * @typedef {import('../../../types/index.js').QueryOutput} QueryOutput
  * @typedef {import("@swc/core").Module} SwcAstModule
  * @typedef {import('@babel/types').File} File
  */
+
+/**
+ * The `semver` package does not ship type declarations, so we describe the
+ * small API surface used here.
+ * @typedef {{ satisfies: (version: string, range: string) => boolean }} Semver
+ */
+
+/**
+ * Metadata returned by an analyzer, as stored on the (intermediate) result
+ * object before ReportService/QueryService wrap it in a `meta` envelope.
+ * @typedef {object} AnalyzerMetaOut
+ * @property {AnalyzerName} name
+ * @property {AnalyzerAst} requiredAst
+ * @property {string} identifier
+ * @property {Project} [targetProject]
+ * @property {Project} [referenceProject]
+ * @property {AnalyzerConfigResolved} configuration
+ * @property {boolean} [__fromCache]
+ */
+
+/**
+ * Runtime shape produced by `ensureAnalyzerResultFormat`/`unwindJsonResult`.
+ * @typedef {object} AnalyzerResult
+ * @property {QueryOutput} queryOutput
+ * @property {AnalyzerMetaOut} analyzerMeta
+ */
+
+/**
+ * Full set of configuration keys an analyzer run can receive.
+ * @typedef {object} AnalyzerConfigResolved
+ * @property {PathFromSystemRoot} [targetProjectPath]
+ * @property {PathFromSystemRoot} [referenceProjectPath]
+ * @property {GatherFilesConfig} [gatherFilesConfig]
+ * @property {GatherFilesConfig} [gatherFilesConfigReference]
+ * @property {boolean} [skipCheckMatchCompatibility]
+ * @property {boolean} [suppressNonCriticalLogs]
+ * @property {AnalyzerQueryResult|AnalyzerResult} [targetProjectResult]
+ * @property {AnalyzerQueryResult|AnalyzerResult} [referenceProjectResult]
+ * @property {PathFromSystemRoot[]} [targetFilePaths]
+ */
+
+const require = createRequire(import.meta.url);
+/** @type {Semver} */
+const semver = require('semver');
 
 /**
  * @param {string} identifier
@@ -35,14 +83,19 @@ function displayProjectsInLog(identifier) {
 
 /**
  * Analyzes one entry: the callback can traverse a given ast for each entry
- * @param {ProjectInputDataWithMeta} projectData
- * @param {function} astAnalysis
- * @param {object} analyzerCfg
+ * @param {ProjectInputDataWithAstMeta} projectData
+ * @param {FileAstTraverseFn} astAnalysis
+ * @param {AnalyzerConfigResolved} analyzerCfg
+ * @returns {Promise<{file: PathRelativeFromProjectRoot; meta: unknown; result: unknown[]}[]>}
  */
 async function analyzePerAstFile(projectData, astAnalysis, analyzerCfg) {
+  /** @type {{file: PathRelativeFromProjectRoot; meta: unknown; result: unknown[]}[]} */
   const entries = [];
   for (const { file, ast, context: astContext } of projectData.entries) {
-    const relativePath = getFilePathRelativeFromRoot(file, projectData.project.path);
+    const relativePath = getFilePathRelativeFromRoot(
+      /** @type {PathFromSystemRoot} */ (file),
+      projectData.project.path,
+    );
     const context = { code: astContext.code, relativePath, projectData, analyzerCfg };
 
     const fullPath = path.resolve(projectData.project.path, file);
@@ -62,7 +115,7 @@ async function analyzePerAstFile(projectData, astAnalysis, analyzerCfg) {
 
 /**
  * Transforms QueryResult entries to posix path notations on Windows
- * @param {object[]|object} data
+ * @param {unknown} data
  */
 function posixify(data) {
   if (!data) return;
@@ -76,7 +129,7 @@ function posixify(data) {
       }
       // TODO: detect whether filePath instead of restricting by key name?
       else if (typeof v === 'string' && k === 'file') {
-        data[k] = toPosixPath(v);
+        /** @type {Record<string, unknown>} */ (data)[k] = toPosixPath(v);
       }
     });
   }
@@ -87,27 +140,33 @@ function posixify(data) {
  * By returning the configuration for the queryOutput, it will be possible to run later queries
  * under the same circumstances
  * @param {QueryOutput} queryOutput
- * @param {object} cfg
+ * @param {AnalyzerConfigResolved} cfg
  * @param {Analyzer} analyzer
+ * @returns {AnalyzerResult}
  */
 function ensureAnalyzerResultFormat(queryOutput, cfg, analyzer) {
-  const { targetProjectMeta, identifier, referenceProjectMeta } = analyzer;
+  const { targetProjectMeta, referenceProjectMeta } = analyzer;
+  const { identifier: rawIdentifier } = analyzer;
+  const identifier = /** @type {string} */ (rawIdentifier);
+  /** @type {{targetProject?: Project; referenceProject?: Project}} */
   const optional = {};
   if (targetProjectMeta) {
     optional.targetProject = { ...targetProjectMeta };
-    delete optional.targetProject.path; // get rid of machine specific info
+    delete (/** @type {{path?: PathFromSystemRoot}} */ (optional.targetProject).path); // get rid of machine specific info
   }
   if (referenceProjectMeta) {
     optional.referenceProject = { ...referenceProjectMeta };
-    delete optional.referenceProject.path; // get rid of machine specific info
+    delete (/** @type {{path?: PathFromSystemRoot}} */ (optional.referenceProject).path); // get rid of machine specific info
   }
 
-  /** @type {AnalyzerQueryResult} */
+  const AnalyzerClass = /** @type {typeof Analyzer} */ (analyzer.constructor);
+
+  /** @type {AnalyzerResult} */
   const aResult = {
     queryOutput,
     analyzerMeta: {
-      name: analyzer.constructor.analyzerName,
-      requiredAst: analyzer.constructor.requiredAst,
+      name: AnalyzerClass.analyzerName,
+      requiredAst: AnalyzerClass.requiredAst,
       identifier,
       ...optional,
       configuration: cfg,
@@ -131,8 +190,12 @@ function ensureAnalyzerResultFormat(queryOutput, cfg, analyzer) {
 
   if (Array.isArray(aResult.queryOutput)) {
     aResult.queryOutput.forEach(projectOutput => {
-      if (projectOutput.project) {
-        delete projectOutput.project.path;
+      const entry =
+        /** @type {import('../../../types/index.js').QueryOutputEntry & {project?: Partial<Project>}} */ (
+          projectOutput
+        );
+      if (entry.project) {
+        delete entry.project.path;
       }
     });
   }
@@ -176,11 +239,22 @@ const checkForMatchCompatibility = (
 /**
  * If in json format, 'unwind' to be compatible for analysis...
  * @param {AnalyzerQueryResult} targetOrReferenceProjectResult
+ * @returns {AnalyzerResult}
  */
 function unwindJsonResult(targetOrReferenceProjectResult) {
   const { queryOutput } = targetOrReferenceProjectResult;
   const { analyzerMeta } = targetOrReferenceProjectResult.meta;
   return { queryOutput, analyzerMeta };
+}
+
+/**
+ * Reads the analyzer metadata either from the intermediate (`analyzerMeta` at
+ * the root) or from the json/cached (`meta.analyzerMeta`) shape.
+ * @param {AnalyzerQueryResult|AnalyzerResult} result
+ * @returns {AnalyzerMetaOut}
+ */
+function getAnalyzerMeta(result) {
+  return 'analyzerMeta' in result ? result.analyzerMeta : result.meta.analyzerMeta;
 }
 
 export class Analyzer {
@@ -194,7 +268,23 @@ export class Analyzer {
 
   name = /** @type  {typeof Analyzer} */ (this.constructor).analyzerName;
 
+  /** @type {AnalyzerConfigResolved} */
   _customConfig = {};
+
+  /** @type {Project|undefined} */
+  targetProjectMeta;
+
+  /** @type {Project|undefined} */
+  referenceProjectMeta;
+
+  /** @type {string|undefined} */
+  identifier;
+
+  /** @type {ProjectInputDataWithMeta[]|undefined} */
+  targetData;
+
+  /** @type {ProjectInputDataWithMeta[]|undefined} */
+  referenceData;
 
   get config() {
     return {
@@ -207,42 +297,44 @@ export class Analyzer {
    * For instance, in a MatchImportsAnalyzer, a FindExportsAnalyzer and FinImportsAnalyzer are run.
    * Their results can be provided as config params.
    * When they were stored in json format in the filesystem, 'unwind' them to be compatible for analysis...
-   * @param {MatchAnalyzerConfig} cfg
+   * @param {AnalyzerConfigResolved} cfg
    */
   static __unwindProvidedResults(cfg) {
-    if (cfg.targetProjectResult && !cfg.targetProjectResult?.analyzerMeta) {
+    if (cfg.targetProjectResult && !('analyzerMeta' in cfg.targetProjectResult)) {
       cfg.targetProjectResult = unwindJsonResult(cfg.targetProjectResult);
     }
-    if (cfg.referenceProjectResult && !cfg.referenceProjectResult?.analyzerMeta) {
+    if (cfg.referenceProjectResult && !('analyzerMeta' in cfg.referenceProjectResult)) {
       cfg.referenceProjectResult = unwindJsonResult(cfg.referenceProjectResult);
     }
   }
 
   /**
-   * @param {AnalyzerConfig} cfg
-   * @returns {CachedAnalyzerResult|undefined}
+   * @param {AnalyzerConfigResolved} cfg
+   * @returns {Promise<AnalyzerResult|undefined>}
    */
   async _prepare(cfg) {
     LogService.debug(`Analyzer "${this.name}": started _prepare method`);
     /** @type {typeof Analyzer} */ (this.constructor).__unwindProvidedResults(cfg);
 
     if (!cfg.targetProjectResult) {
-      this.targetProjectMeta = InputDataService.getProjectMeta(cfg.targetProjectPath);
+      this.targetProjectMeta = InputDataService.getProjectMeta(
+        /** @type {PathFromSystemRoot} */ (cfg.targetProjectPath),
+      );
     } else {
-      this.targetProjectMeta = cfg.targetProjectResult.analyzerMeta.targetProject;
+      this.targetProjectMeta = getAnalyzerMeta(cfg.targetProjectResult).targetProject;
     }
 
     if (cfg.referenceProjectPath && !cfg.referenceProjectResult) {
       this.referenceProjectMeta = InputDataService.getProjectMeta(cfg.referenceProjectPath);
     } else if (cfg.referenceProjectResult) {
-      this.referenceProjectMeta = cfg.referenceProjectResult.analyzerMeta.targetProject;
+      this.referenceProjectMeta = getAnalyzerMeta(cfg.referenceProjectResult).targetProject;
     }
 
     /**
      * Create a unique hash based on target, reference and configuration
      */
     this.identifier = ReportService.createIdentifier({
-      targetProject: this.targetProjectMeta,
+      targetProject: /** @type {Project} */ (this.targetProjectMeta),
       referenceProject: this.referenceProjectMeta,
       analyzerConfig: cfg,
     });
@@ -252,16 +344,18 @@ export class Analyzer {
     if (cfg.referenceProjectPath && !cfg.skipCheckMatchCompatibility) {
       const { compatible, reason } = checkForMatchCompatibility(
         cfg.referenceProjectPath,
-        cfg.targetProjectPath,
+        /** @type {PathFromSystemRoot} */ (cfg.targetProjectPath),
       );
 
       if (!compatible) {
         if (!cfg.suppressNonCriticalLogs) {
           LogService.info(
-            `${LogService.pad(`skipping  ${this.name} (${reason})`)}${displayProjectsInLog(this.identifier)}`,
+            `${LogService.pad(`skipping  ${this.name} (${reason})`)}${displayProjectsInLog(
+              /** @type {string} */ (this.identifier),
+            )}`,
           );
         }
-        return ensureAnalyzerResultFormat(`[${reason}]`, cfg, this);
+        return ensureAnalyzerResultFormat(/** @type {QueryOutput} */ (`[${reason}]`), cfg, this);
       }
     }
 
@@ -270,7 +364,7 @@ export class Analyzer {
      */
     const cachedResult = Analyzer._getCachedAnalyzerResult({
       analyzerName: this.name,
-      identifier: this.identifier,
+      identifier: /** @type {string} */ (this.identifier),
       cfg,
     });
 
@@ -280,7 +374,9 @@ export class Analyzer {
 
     if (!cfg.suppressNonCriticalLogs) {
       LogService.info(
-        `${LogService.pad(`starting ${this.name}`)}${displayProjectsInLog(this.identifier)}`,
+        `${LogService.pad(`starting ${this.name}`)}${displayProjectsInLog(
+          /** @type {string} */ (this.identifier),
+        )}`,
       );
     }
 
@@ -290,7 +386,7 @@ export class Analyzer {
     if (!cfg.targetProjectResult) {
       performance.mark('analyzer--prepare--createDTarg-start');
       this.targetData = await InputDataService.createDataObject(
-        [cfg.targetProjectPath],
+        [/** @type {PathFromSystemRoot} */ (cfg.targetProjectPath)],
         cfg.gatherFilesConfig,
       );
       performance.mark('analyzer--prepare--createDTarg-end');
@@ -323,8 +419,8 @@ export class Analyzer {
 
   /**
    * @param {QueryOutput} queryOutput
-   * @param {AnalyzerConfig} cfg
-   * @returns {AnalyzerQueryResult}
+   * @param {AnalyzerConfigResolved} cfg
+   * @returns {AnalyzerResult}
    */
   _finalize(queryOutput, cfg) {
     LogService.debug(`Analyzer "${this.name}": started _finalize method`);
@@ -333,7 +429,9 @@ export class Analyzer {
     const analyzerResult = ensureAnalyzerResultFormat(queryOutput, cfg, this);
     if (!cfg.suppressNonCriticalLogs) {
       LogService.success(
-        `${LogService.pad(`finished ${this.name}`)}${displayProjectsInLog(this.identifier)}`,
+        `${LogService.pad(`finished ${this.name}`)}${displayProjectsInLog(
+          /** @type {string} */ (this.identifier),
+        )}`,
       );
     }
     performance.mark('analyzer--finalize-end');
@@ -348,14 +446,16 @@ export class Analyzer {
   }
 
   /**
-   * @param {FileAstTraverseFn|{traverseEntryFn: FileAstTraverseFn; filePaths:string[]; projectPath: string; targetData: ProjectInputDataWithMeta}} analyzeFileCfg
+   * @param {{traverseEntryFn: FileAstTraverseFn; config: AnalyzerConfigResolved; filePaths?: PathFromSystemRoot[]; projectPath?: PathFromSystemRoot; projectName?: string; targetData?: ProjectInputDataWithMeta[]}} analyzeFileCfg
+   * @returns {Promise<{file: PathRelativeFromProjectRoot; meta: unknown; result: unknown[]}[]>}
    */
   static async analyzeProject(analyzeFileCfg) {
     LogService.debug(`Analyzer "${this.name}": started _traverse method`);
 
+    /** @type {ProjectInputDataWithMeta[]} */
     let finalTargetData;
     if (!analyzeFileCfg.filePaths) {
-      finalTargetData = analyzeFileCfg.targetData;
+      finalTargetData = /** @type {ProjectInputDataWithMeta[]} */ (analyzeFileCfg.targetData);
     } else {
       const { projectPath, projectName } = analyzeFileCfg;
       if (!projectPath) {
@@ -363,10 +463,10 @@ export class Analyzer {
       }
       finalTargetData = await InputDataService.createDataObject([
         {
-          project: {
+          project: /** @type {Project} */ ({
             name: projectName || '[n/a]',
             path: projectPath,
-          },
+          }),
           entries: analyzeFileCfg.filePaths,
         },
       ]);
@@ -388,7 +488,8 @@ export class Analyzer {
 
   /**
    * Finds export specifiers and sources
-   * @param {FindExportsConfig} customConfig
+   * @param {AnalyzerConfigResolved} customConfig
+   * @returns {Promise<AnalyzerResult|undefined>}
    */
   async execute(customConfig) {
     this._customConfig = customConfig;
@@ -405,9 +506,11 @@ export class Analyzer {
     /**
      * Traverse
      */
-    const queryOutput = await /** @type {typeof Analyzer} */ (this.constructor).analyzeProject({
-      // @ts-ignore
-      traverseEntryFn: this.constructor.analyzeFile,
+    const AnalyzerClass = /** @type {typeof Analyzer & {analyzeFile: FileAstTraverseFn}} */ (
+      this.constructor
+    );
+    const queryOutput = await AnalyzerClass.analyzeProject({
+      traverseEntryFn: AnalyzerClass.analyzeFile,
       projectPath: cfg.targetProjectPath,
       filePaths: cfg.targetFilePaths,
       targetData: this.targetData,
@@ -423,8 +526,8 @@ export class Analyzer {
   /**
    * Gets a cached result from ReportService. Since ReportService slightly modifies analyzer
    * output, we 'unwind' before we return...
-   * @param {{ analyzerName:AnalyzerName, identifier:string, cfg:AnalyzerConfig}} config
-   * @returns {AnalyzerQueryResult|undefined}
+   * @param {{ analyzerName:AnalyzerName, identifier:string, cfg:AnalyzerConfigResolved}} config
+   * @returns {AnalyzerResult|undefined}
    */
   static _getCachedAnalyzerResult({ analyzerName, identifier, cfg }) {
     const cachedResult = ReportService.getCachedResult({ analyzerName, identifier });
@@ -435,7 +538,6 @@ export class Analyzer {
       LogService.success(`cached version found for ${identifier}`);
     }
 
-    /** @type {AnalyzerQueryResult} */
     const result = unwindJsonResult(cachedResult);
     result.analyzerMeta.__fromCache = true;
     return result;

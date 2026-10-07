@@ -40,8 +40,8 @@ export interface QueryOutputEntry {
 
 export type QueryOutput = QueryOutputEntry[] | '[no-dependency]' | '[no-matched-version]';
 
-export interface QueryResult {
-  queryOutput: QueryOutput;
+export interface QueryResult<TQueryOutput = QueryOutput> {
+  queryOutput: TQueryOutput;
   meta: {
     searchType: QueryType;
   };

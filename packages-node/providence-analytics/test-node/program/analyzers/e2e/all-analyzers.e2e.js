@@ -22,16 +22,26 @@ import { fsAdapter } from '../../../../src/program/utils/fs-adapter.js';
 /**
  * @typedef {import('../../../../types/index.js').ProvidenceConfig} ProvidenceConfig
  * @typedef {import('../../../../types/index.js').QueryResult} QueryResult
+ * @typedef {string | number | boolean | null | undefined | JsonArray | JsonObject} JsonValue
+ * @typedef {JsonValue[]} JsonArray
+ * @typedef {{ [key: string]: JsonValue }} JsonObject
  */
 
 /**
  * Sorts the array with objects deeply.
  * 1) Sort all property names alphabetically for objects
  * 2) Sort array string literal values by value alphabetically
+ * @param {JsonValue} input
+ * @returns {JsonArray}
  */
 
 function deepArraySort(input) {
+  /**
+   * @param {JsonArray} arr
+   * @returns {JsonArray}
+   */
   const sortArray = arr => {
+    /** @type {JsonArray} */
     // eslint-disable-next-line no-use-before-define
     const sortedItems = arr.map(sortAny);
     if (sortedItems.every(x => typeof x === 'string')) {
@@ -40,6 +50,10 @@ function deepArraySort(input) {
     return sortedItems;
   };
 
+  /**
+   * @param {JsonValue} v
+   * @returns {JsonValue}
+   */
   const sortAny = v => {
     // eslint-disable-next-line no-use-before-define
     if (Array.isArray(v)) return sortArray(v);
@@ -48,8 +62,13 @@ function deepArraySort(input) {
     return v;
   };
 
+  /**
+   * @param {JsonObject} obj
+   * @returns {JsonObject}
+   */
   const sortObjectKeys = obj => {
     const keys = Object.keys(obj).sort();
+    /** @type {JsonObject} */
     const out = {};
     for (const k of keys) {
       out[k] = sortAny(obj[k]);
@@ -57,7 +76,7 @@ function deepArraySort(input) {
     return out;
   };
 
-  return sortAny(input);
+  return /** @type {JsonArray} */ (sortAny(input));
 }
 
 const __dirname = dirname(fileURLToPath(import.meta.url));

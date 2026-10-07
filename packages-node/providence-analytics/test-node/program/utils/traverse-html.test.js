@@ -3,8 +3,17 @@ import { it } from 'mocha';
 import * as parse5 from 'parse5';
 import { traverseHtml } from '../../../src/program/utils/traverse-html.js';
 
+/**
+ * @typedef {{ name: string; value: string }} P5Attr
+ * @typedef {import('../../../src/program/utils/traverse-html.js').HtmlAstPath} HtmlAstPath
+ */
+
+/**
+ * @param {{ node: unknown }} p5Path
+ */
 function getId(p5Path) {
-  return p5Path.node.attrs.find(a => a.name === 'id').value;
+  const { attrs } = /** @type {{ attrs: P5Attr[] }} */ (p5Path.node);
+  return /** @type {P5Attr} */ (attrs.find(a => a.name === 'id')).value;
 }
 
 describe('traverseHtml', () => {
@@ -20,20 +29,25 @@ describe('traverseHtml', () => {
       <div id="b"></div>
     `;
 
-    const ast = parse5.parseFragment(htmlCode);
+    const ast = /** @type {Parameters<typeof traverseHtml>[0]} */ (
+      /** @type {unknown} */ (parse5.parseFragment(htmlCode))
+    );
+    /** @type {string[]} */
     const foundDivs = [];
+    /** @type {string[]} */
     const foundSpans = [];
+    /** @type {string[]} */
     const foundMyTags = [];
 
     traverseHtml(ast, {
-      div(p5Path) {
+      div(/** @type {HtmlAstPath} */ p5Path) {
         foundDivs.push(getId(p5Path));
       },
-      span(p5Path) {
+      span(/** @type {HtmlAstPath} */ p5Path) {
         foundSpans.push(getId(p5Path));
       },
       // eslint-disable-next-line object-shorthand
-      'my-tag'(p5Path) {
+      'my-tag'(/** @type {HtmlAstPath} */ p5Path) {
         foundMyTags.push(getId(p5Path));
       },
     });
@@ -55,17 +69,20 @@ describe('traverseHtml', () => {
       <div id="b"></div>
     `;
 
-    const ast = parse5.parseFragment(htmlCode);
+    const ast = /** @type {Parameters<typeof traverseHtml>[0]} */ (
+      /** @type {unknown} */ (parse5.parseFragment(htmlCode))
+    );
+    /** @type {string[]} */
     const callOrder = [];
     const processObj = {
-      span(p5Path) {
+      span(/** @type {HtmlAstPath} */ p5Path) {
         callOrder.push(`span#${getId(p5Path)}`);
       },
-      div(p5Path) {
+      div(/** @type {HtmlAstPath} */ p5Path) {
         callOrder.push(`div#${getId(p5Path)}`);
       },
       // eslint-disable-next-line object-shorthand
-      'my-tag'(p5Path) {
+      'my-tag'(/** @type {HtmlAstPath} */ p5Path) {
         callOrder.push(`my-tag#${getId(p5Path)}`);
       },
     };
@@ -87,18 +104,21 @@ describe('traverseHtml', () => {
       <div id="b"></div>
     `;
 
-    const ast = parse5.parseFragment(htmlCode);
+    const ast = /** @type {Parameters<typeof traverseHtml>[0]} */ (
+      /** @type {unknown} */ (parse5.parseFragment(htmlCode))
+    );
+    /** @type {string[]} */
     const callOrder = [];
     const processObj = {
-      div(p5Path) {
+      div(/** @type {HtmlAstPath} */ p5Path) {
         callOrder.push(`div#${getId(p5Path)}`);
         p5Path.stop();
       },
-      span(p5Path) {
+      span(/** @type {HtmlAstPath} */ p5Path) {
         callOrder.push(`span#${getId(p5Path)}`);
       },
       // eslint-disable-next-line object-shorthand
-      'my-tag'(p5Path) {
+      'my-tag'(/** @type {HtmlAstPath} */ p5Path) {
         callOrder.push(`my-tag#${getId(p5Path)}`);
       },
     };
@@ -119,15 +139,18 @@ describe('traverseHtml', () => {
       <div id="b"></div>
     `;
 
-    const ast = parse5.parseFragment(htmlCode);
+    const ast = /** @type {Parameters<typeof traverseHtml>[0]} */ (
+      /** @type {unknown} */ (parse5.parseFragment(htmlCode))
+    );
+    /** @type {string[]} */
     const callOrder = [];
     const processObj = {
       // eslint-disable-next-line object-shorthand
-      'my-tag'(p5Path) {
+      'my-tag'(/** @type {HtmlAstPath} */ p5Path) {
         callOrder.push(`my-tag#${getId(p5Path)}`);
         p5Path.traverseHtml({
           // eslint-disable-next-line object-shorthand, no-shadow
-          'not-found'(p5Path) {
+          'not-found'(/** @type {HtmlAstPath} */ p5Path) {
             callOrder.push(`not-found#${getId(p5Path)}`);
           },
         });

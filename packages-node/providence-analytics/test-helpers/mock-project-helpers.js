@@ -1,20 +1,28 @@
 import module from 'module';
 import path from 'path';
+
+const mockFsRequire = module.createRequire(import.meta.url);
 // eslint-disable-next-line import/no-extraneous-dependencies
-import mockFs from 'mock-fs';
+const mockFs = mockFsRequire('mock-fs');
+
+/**
+ * @typedef {import('../types/index.js').PathFromSystemRoot} PathFromSystemRoot
+ * @typedef {import('../types/index.js').QueryOutputEntry} QueryOutputEntry
+ * @typedef {{ file: string; code: string }} MockProjectFile
+ * @typedef {{ name?: string; path: PathFromSystemRoot; version?: string; files: MockProjectFile[] }} MockProject
+ * @typedef {{ projectName?: string; projectPath?: string; filePaths?: string[]; version?: string }} MockProjectCfg
+ * @typedef {QueryOutputEntry & { meta: Record<string, unknown> }} MockQueryOutputEntry
+ */
 
 export const mock = mockFs;
 
 /**
  * Makes sure that, whenever the main program (providence) calls
  * "InputDataService.createDataObject", it gives back a mocked response.
- * @param {string[]|object} files all the code that will be run trhough AST
- * @param {object} [cfg]
- * @param {string} [cfg.projectName='fictional-project']
- * @param {string} [cfg.projectPath='/fictional/project']
- * @param {string[]} [cfg.filePaths=`[/fictional/project/test-file-${i}.js]`] The indexes of the file
- * paths match with the indexes of the files
- * @param {object} existingMock config for mock-fs, so the previous config is not overridden
+ * @param {string[] | Record<string,string>} files all the code that will be run trhough AST
+ * @param {MockProjectCfg} [cfg]
+ * @param {Record<string, unknown>} [existingMock] config for mock-fs, so the previous config is not overridden
+ * @returns {Record<string, unknown>}
  */
 function getMockObjectForProject(files, cfg = {}, existingMock = {}) {
   const projName = cfg.projectName || 'fictional-project';
@@ -22,18 +30,18 @@ function getMockObjectForProject(files, cfg = {}, existingMock = {}) {
 
   // Create obj structure for mock-fs
   /**
-   * @param {object} files
+   * @param {string[] | Record<string,string>} files
    */
   // eslint-disable-next-line no-shadow
   function createFilesObjForFolder(files) {
-    let projFilesObj = {};
+    let projFilesObj = /** @type {Record<string,string>} */ ({});
     if (Array.isArray(files)) {
       projFilesObj = files.reduce((res, code, i) => {
         const fileName = (cfg.filePaths && cfg.filePaths[i]) || `./test-file-${i}.js`;
         const localFileName = path.resolve(projPath, fileName);
         res[localFileName] = code;
         return res;
-      }, {});
+      }, /** @type {Record<string,string>} */ ({}));
     } else {
       Object.keys(files).forEach(f => {
         const localFileName = path.resolve(projPath, f);
@@ -43,9 +51,10 @@ function getMockObjectForProject(files, cfg = {}, existingMock = {}) {
     return projFilesObj;
   }
 
-  const optionalPackageJson = {};
+  const optionalPackageJson = /** @type {Record<string, unknown>} */ ({});
   const hasPackageJson =
-    (cfg.filePaths && cfg.filePaths.includes('./package.json')) || files['./package.json'];
+    (cfg.filePaths && cfg.filePaths.includes('./package.json')) ||
+    (Array.isArray(files) ? false : files['./package.json']);
   if (!hasPackageJson) {
     optionalPackageJson[projPath] = {
       'package.json': `{ "name": "${projName}" , "version": "${cfg.version || '0.1.0-mock'}" }`,
@@ -120,13 +129,10 @@ const importablePaths = resolveDynamicImportsForMockFs();
 /**
  * Makes sure that, whenever the main program (providence) calls
  * "InputDataService.createDataObject", it gives back a mocked response.
- * @param {string[]|object} files all the code that will be run trhough AST
- * @param {object} [cfg]
- * @param {string} [cfg.projectName='fictional-project']
- * @param {string} [cfg.projectPath='/fictional/project']
- * @param {string[]} [cfg.filePaths=`[/fictional/project/test-file-${i}.js]`] The indexes of the file
- * paths match with the indexes of the files
- * @param {object} existingMock config for mock-fs, so the previous config is not overridden
+ * @param {string[] | Record<string,string>} files all the code that will be run trhough AST
+ * @param {MockProjectCfg} [cfg]
+ * @param {Record<string, unknown>} [existingMock] config for mock-fs, so the previous config is not overridden
+ * @returns {Record<string, unknown>}
  */
 export function mockProject(files, cfg = {}, existingMock = {}) {
   const obj = getMockObjectForProject(files, cfg, existingMock);
@@ -138,20 +144,33 @@ export function restoreMockedProjects() {
   mockFs.restore();
 }
 
+/**
+ * @param {import('../types/index.js').QueryResult} queryResult
+ * @param {number} [index]
+ * @returns {MockQueryOutputEntry}
+ */
 export function getEntry(queryResult, index = 0) {
-  return queryResult.queryOutput[index];
+  return /** @type {MockQueryOutputEntry} */ (queryResult.queryOutput[index]);
 }
 
+/**
+ * @param {import('../types/index.js').QueryResult} queryResult
+ * @returns {MockQueryOutputEntry[]}
+ */
 export function getEntries(queryResult) {
-  return queryResult.queryOutput;
+  return /** @type {MockQueryOutputEntry[]} */ (queryResult.queryOutput);
 }
 
+/**
+ * @param {{ filePaths: string[]; codeSnippets: string[]; projectName?: string; refProjectName?: string; refVersion?: string }} cfg
+ */
 function createPackageJson({ filePaths, codeSnippets, projectName, refProjectName, refVersion }) {
   const targetHasPackageJson = filePaths.includes('./package.json');
   // Make target depend on ref
   if (targetHasPackageJson) {
     return;
   }
+  /** @type {{ name?: string; version: string; dependencies?: Record<string,string> }} */
   const pkgJson = {
     name: projectName,
     version: '1.0.0',
@@ -170,6 +189,9 @@ function createPackageJson({ filePaths, codeSnippets, projectName, refProjectNam
  * and paths will be auto generated when not specified.)
  * When a non imported ref dependency or a wrong version of a dev dependency needs to be
  * tested, please explicitly provide a ./package.json that does so.
+ *
+ * @param {MockProject} searchTargetProject
+ * @param {MockProject} referenceProject
  */
 export function mockTargetAndReferenceProject(searchTargetProject, referenceProject) {
   const targetProjectName = searchTargetProject.name || 'fictional-target-project';

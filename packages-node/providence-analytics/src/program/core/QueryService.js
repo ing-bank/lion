@@ -5,6 +5,12 @@ import { AstService } from './AstService.js';
 import { LogService } from './LogService.js';
 // import { memoize } from '../utils/memoize.js';
 
+/**
+ * Identity stand-in for the utils memoize (kept local to avoid a require cycle).
+ * @template {Function} T
+ * @param {T} fn
+ * @returns {T}
+ */
 const memoize = fn => fn;
 
 /**
@@ -19,11 +25,14 @@ const memoize = fn => fn;
  * @typedef {import('../../../types/index.js').SearchQueryConfig} SearchQueryConfig
  * @typedef {import('../../../types/index.js').ProjectInputData} ProjectInputData
  * @typedef {import('../../../types/index.js').AnalyzerConfig} AnalyzerConfig
+ * @typedef {import('../../../types/index.js').AnalyzerMeta} AnalyzerMeta
  * @typedef {import('../../../types/index.js').AnalyzerName} AnalyzerName
  * @typedef {import('../../../types/index.js').AnalyzerAst} AnalyzerAst
  * @typedef {import('../../../types/index.js').QueryConfig} QueryConfig
  * @typedef {import('../../../types/index.js').QueryResult} QueryResult
  * @typedef {import('../../../types/index.js').Feature} Feature
+ * @typedef {import('../../../types/index.js').ProjectInputDataWithMeta} ProjectInputDataWithMeta
+ * @typedef {typeof import('./Analyzer.js').Analyzer} AnalyzerClass
  * @typedef {import('./Analyzer.js').Analyzer} Analyzer
  */
 
@@ -32,18 +41,19 @@ const astProjectsDataCache = new Map();
 export class QueryService {
   /**
    * Retrieves the default export found in ./program/analyzers/find-import.js
-   * @param {typeof Analyzer} analyzerObjectOrString
+   * @param {AnalyzerClass|string} analyzerObjectOrString
    * @param {AnalyzerConfig} [analyzerConfig]
    * @returns {Promise<AnalyzerQueryConfig>}
    */
   static async getQueryConfigFromAnalyzer(analyzerObjectOrString, analyzerConfig) {
+    /** @type {AnalyzerClass} */
     let analyzer;
     if (typeof analyzerObjectOrString === 'string') {
       // Get it from our location(s) of predefined analyzers.
       // Mainly needed when this method is called via cli
       try {
         // eslint-disable-next-line import/no-dynamic-require, global-require
-        const module = /** @type {Analyzer} */ (
+        const module = /** @type {{default: AnalyzerClass}} */ (
           await import(
             path.join(
               'file:///',
@@ -56,18 +66,20 @@ export class QueryService {
         );
         analyzer = module.default;
       } catch (e) {
-        LogService.error(e.toString());
+        LogService.error(/** @type {Error} */ (e).toString());
         process.exit(1);
       }
     } else {
       // We don't need to import the analyzer, since we already have it
       analyzer = analyzerObjectOrString;
     }
+    const { analyzerName } = analyzer;
+    const analyzerInstance = /** @type {Analyzer} */ (/** @type {unknown} */ (analyzer));
     return /** @type {AnalyzerQueryConfig} */ ({
       type: 'ast-analyzer',
-      analyzerName: /** @type {AnalyzerName} */ (analyzer.analyzerName),
+      analyzerName,
       analyzerConfig,
-      analyzer,
+      analyzer: analyzerInstance,
     });
   }
 
@@ -75,7 +87,7 @@ export class QueryService {
    * Perform ast analysis
    * @param {AnalyzerQueryConfig} analyzerQueryConfig
    * @param {AnalyzerConfig} [customConfig]
-   * @returns {Promise<AnalyzerQueryResult>}
+   * @returns {Promise<AnalyzerQueryResult|undefined>}
    */
   static async astSearch(analyzerQueryConfig, customConfig) {
     LogService.debug('started astSearch method');
@@ -84,18 +96,23 @@ export class QueryService {
       process.exit(1);
     }
 
-    // @ts-ignore
+    const AnalyzerCtor = /** @type {AnalyzerClass} */ (
+      /** @type {unknown} */ (analyzerQueryConfig.analyzer)
+    );
     // eslint-disable-next-line new-cap
-    const analyzer = new analyzerQueryConfig.analyzer();
-    const analyzerResult = await analyzer.execute(customConfig);
+    const analyzer = new AnalyzerCtor();
+    const analyzerResult = await analyzer.execute(
+      /** @type {Parameters<Analyzer['execute']>[0]} */ (customConfig),
+    );
     if (!analyzerResult) {
       return analyzerResult;
     }
     const { queryOutput, analyzerMeta } = analyzerResult;
+    const analyzerResultMeta = /** @type {AnalyzerMeta} */ (analyzerMeta);
     const /** @type {AnalyzerQueryResult} */ queryResult = {
         meta: {
           searchType: 'ast-analyzer',
-          analyzerMeta,
+          analyzerMeta: analyzerResultMeta,
         },
         queryOutput,
       };
@@ -103,7 +120,7 @@ export class QueryService {
   }
 
   /**
-   * @param {ProjectInputData[]} projectsData
+   * @param {ProjectInputDataWithMeta[]} projectsData
    * @param {AnalyzerAst} requiredAst
    */
   static async addAstToProjectsData(projectsData, requiredAst) {
@@ -119,7 +136,7 @@ export class QueryService {
       const resultEntries = [];
       for (const entry of projectData.entries) {
         const ast = await AstService.getAst(entry.context.code, requiredAst, {
-          filePath: entry.file,
+          filePath: /** @type {PathFromSystemRoot} */ (entry.file),
         });
         resultEntries.push({ ...entry, ast });
       }
@@ -138,7 +155,7 @@ export class QueryService {
    * TODO: instead of storing one result in cache, use sizeof and a memory limit
    * to allow for more projects
    * @param {string} pathAndRequiredAst
-   * @param {ProjectInputData} astData
+   * @param {ProjectInputDataWithMeta} astData
    */
   static _addToProjectsDataCache(pathAndRequiredAst, astData) {
     if (this.cacheDisabled) {

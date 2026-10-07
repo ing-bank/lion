@@ -1,6 +1,6 @@
 /**
  * @typedef {{fn:MemoizedFn; count:number}} CacheStrategyItem
- * @typedef {function & {clearCache: () => void}} MemoizedFn
+ * @typedef {((...args: never[]) => unknown) & {clearCache: () => void}} MemoizedFn
  */
 
 /** @type {CacheStrategyItem[]} */
@@ -77,8 +77,10 @@ function updateCacheStrategyItem(currentCacheStrategyItem) {
 }
 
 /**
- * @template T
- * @type {<T extends Function>(functionToMemoize:T, opts?:{ cacheStorage?:object; }) => T & {clearCache:() => void}}
+ * @template {Function} T
+ * @param {T} functionToMemoize
+ * @param {{ cacheStorage?: object }} [opts]
+ * @returns {T & {clearCache:() => void}}
  */
 export function memoize(functionToMemoize, { cacheStorage = {} } = {}) {
   /** @type {CacheStrategyItem|undefined} */

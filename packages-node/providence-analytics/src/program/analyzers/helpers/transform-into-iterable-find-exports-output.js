@@ -1,13 +1,15 @@
 /**
  * @typedef {import('../../../../types/index.js').FindExportsAnalyzerResult} FindExportsAnalyzerResult
+ * @typedef {import('../../../../types/index.js').FindExportsAnalyzerEntry} FindExportsAnalyzerEntry
  * @typedef {import('../../../../types/index.js').IterableFindExportsAnalyzerEntry} IterableFindExportsAnalyzerEntry
+ * @typedef {import('../../../../types/index.js').RootFile} RootFile
+ * @typedef {FindExportsAnalyzerEntry & { localMap?: unknown[]; meta?: object }} EntryWithMeta
  */
 
-/**
+/*
  * Convert to more easily iterable object
  *
  * From:
- * ```js
  * [
  *  "file": "./file-1.js",
  *  "result": [{
@@ -15,33 +17,36 @@
  *    "localMap": [{...},{...}],
  *    "source": null,
  *    "rootFileMap": [{"currentFileSpecifier": "a", "rootFile": { "file": "[current]", "specifier": "a" }}]
- *  }, ...],
- * ```
+ *  }]
+ * ]
  * To:
- * ```js
  * [{
- *   "file": ""./file-1.js",
+ *   "file": "./file-1.js",
  *   "exportSpecifier": "a",
- *   "localMap": {...},
+ *   "localSpecifier": "a",
  *   "source": null,
- *   "rootFileMap": {...}
- * },
- * {{
- *   "file": ""./file-1.js",
+ *   "rootFile": {...}
+ * }, {
+ *   "file": "./file-1.js",
  *   "exportSpecifier": "b",
- *   "localMap": {...},
+ *   "localSpecifier": "b",
  *   "source": null,
- *   "rootFileMap": {...}
- * }}],
- *
+ *   "rootFile": {...}
+ * }]
+ */
+
+/**
  * @param {FindExportsAnalyzerResult} exportsAnalyzerResult
+ * @returns {IterableFindExportsAnalyzerEntry[]}
  */
 export function transformIntoIterableFindExportsOutput(exportsAnalyzerResult) {
   /** @type {IterableFindExportsAnalyzerEntry[]} */
   const iterableEntries = [];
 
   for (const { file, result } of exportsAnalyzerResult.queryOutput) {
-    for (const { exportSpecifiers, source, rootFileMap, localMap, meta } of result) {
+    for (const entry of result) {
+      const { exportSpecifiers, source, rootFileMap, localMap, meta } =
+        /** @type {EntryWithMeta} */ (entry);
       if (!exportSpecifiers) {
         // eslint-disable-next-line no-continue
         continue;
@@ -53,8 +58,12 @@ export function transformIntoIterableFindExportsOutput(exportsAnalyzerResult) {
           file,
           specifier: exportSpecifier,
           source,
-          rootFile: rootFileMap ? rootFileMap[i] : undefined,
-          localSpecifier: localMap ? localMap[i] : undefined,
+          rootFile: /** @type {RootFile} */ (
+            /** @type {unknown} */ (rootFileMap ? rootFileMap[i] : undefined)
+          ),
+          localSpecifier: /** @type {string} */ (
+            /** @type {unknown} */ (localMap ? localMap[i] : undefined)
+          ),
           meta,
         };
         iterableEntries.push(resultEntry);

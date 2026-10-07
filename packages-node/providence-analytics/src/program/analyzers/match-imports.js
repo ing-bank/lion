@@ -9,25 +9,40 @@ import { transformIntoIterableFindExportsOutput } from './helpers/transform-into
 import { transformIntoIterableFindImportsOutput } from './helpers/transform-into-iterable-find-imports-output.js';
 
 /**
+ * @typedef {import('../../../types/index.js').AnalyzerQueryResult} AnalyzerQueryResult
+ * @typedef {import('../../../types/index.js').AnalyzerMeta} AnalyzerMeta
+ * @typedef {import('../../../types/index.js').MatchImportsConfig} MatchImportsConfig
+ * @typedef {import('../../../types/index.js').MatchImportsAnalyzerResult} MatchImportsAnalyzerResult
+ * @typedef {import('../../../types/index.js').MatchImportsAnalyzerOutputEntry} MatchImportsAnalyzerOutputEntry
  * @typedef {import('../../../types/index.js').ConciseMatchImportsAnalyzerResult} ConciseMatchImportsAnalyzerResult
  * @typedef {import('../../../types/index.js').IterableFindExportsAnalyzerEntry} IterableFindExportsAnalyzerEntry
  * @typedef {import('../../../types/index.js').IterableFindImportsAnalyzerEntry} IterableFindImportsAnalyzerEntry
  * @typedef {import('../../../types/index.js').PathRelativeFromProjectRoot} PathRelativeFromProjectRoot
- * @typedef {import('../../../types/index.js').MatchImportsAnalyzerResult} MatchImportsAnalyzerResult
- * @typedef {import('../../../types/index.js').FindImportsAnalyzerResult} FindImportsAnalyzerResult
- * @typedef {import('../../../types/index.js').FindExportsAnalyzerResult} FindExportsAnalyzerResult
- * @typedef {import('../../../types/index.js').AnalyzerQueryResult} AnalyzerQueryResult
- * @typedef {import('../../../types/index.js').MatchImportsConfig} MatchImportsConfig
  * @typedef {import('../../../types/index.js').PathFromSystemRoot} PathFromSystemRoot
+ * @typedef {import('../../../types/index.js').ImportOrExportId} ImportOrExportId
+ * @typedef {import('../../../types/index.js').GatherFilesConfig} GatherFilesConfig
  * @typedef {import('../../../types/index.js').AnalyzerName} AnalyzerName
  * @typedef {import('../../../types/index.js').AnalyzerAst} AnalyzerAst
+ * @typedef {import('../../../types/index.js').QueryOutput} QueryOutput
+ * @typedef {import('../../../types/index.js').FindImportsAnalyzerResult} FindImportsAnalyzerResult
+ * @typedef {import('../../../types/index.js').FindExportsAnalyzerResult} FindExportsAnalyzerResult
+ * @typedef {import('../core/Analyzer.js').AnalyzerConfigResolved} AnalyzerConfigResolved
+ * @typedef {import('../core/Analyzer.js').AnalyzerResult} AnalyzerResult
+ * @typedef {FindExportsAnalyzerResult & { analyzerMeta: AnalyzerMeta }} FindExportsResultWithMeta
+ * @typedef {FindImportsAnalyzerResult & { analyzerMeta: AnalyzerMeta }} FindImportsResultWithMeta
+ * @typedef {Partial<MatchImportsConfig> & {
+ *   metaConfig?: object;
+ *   gatherFilesConfigReference?: GatherFilesConfig;
+ *   skipCheckMatchCompatibility?: boolean;
+ *   suppressNonCriticalLogs?: boolean;
+ * }} MatchImportsCfg
  */
 
 /**
  * Needed in case fromImportToExportPerspective does not have a
  * externalRootPath supplied.
  * @param {string} exportPath exportEntry.file
- * @param {PathRelativeFromProjectRoot} translatedImportPath result of fromImportToExportPerspective
+ * @param {PathRelativeFromProjectRoot|null} translatedImportPath result of fromImportToExportPerspective
  */
 function compareImportAndExportPaths(exportPath, translatedImportPath) {
   return (
@@ -42,8 +57,10 @@ function compareImportAndExportPaths(exportPath, translatedImportPath) {
  * a conciseResultsArray.
  * @param {ConciseMatchImportsAnalyzerResult} conciseResultsArray
  * @param {string} importProject
+ * @returns {MatchImportsAnalyzerResult['queryOutput']}
  */
 function createCompatibleMatchImportsResult(conciseResultsArray, importProject) {
+  /** @type {MatchImportsAnalyzerResult['queryOutput']} */
   const compatibleResult = [];
   for (const matchedExportEntry of conciseResultsArray) {
     const [name, filePath, project] = matchedExportEntry.exportSpecifier.id.split('::');
@@ -53,19 +70,25 @@ function createCompatibleMatchImportsResult(conciseResultsArray, importProject) 
       filePath,
       project,
     };
-    compatibleResult.push({
-      exportSpecifier,
-      matchesPerProject: [{ project: importProject, files: matchedExportEntry.importProjectFiles }],
-    });
+    compatibleResult.push(
+      /** @type {MatchImportsAnalyzerOutputEntry} */ (
+        /** @type {unknown} */ ({
+          exportSpecifier,
+          matchesPerProject: [
+            { project: importProject, files: matchedExportEntry.importProjectFiles },
+          ],
+        })
+      ),
+    );
   }
   return compatibleResult;
 }
 
 /**
- * @param {FindExportsAnalyzerResult} exportsAnalyzerResult
- * @param {FindImportsAnalyzerResult} importsAnalyzerResult
- * @param {MatchImportsConfig} customConfig
- * @returns {Promise<MatchImportsAnalyzerResult>}
+ * @param {FindExportsResultWithMeta} exportsAnalyzerResult
+ * @param {FindImportsResultWithMeta} importsAnalyzerResult
+ * @param {MatchImportsCfg} customConfig
+ * @returns {Promise<MatchImportsAnalyzerResult['queryOutput']>}
  */
 async function matchImportsPostprocess(exportsAnalyzerResult, importsAnalyzerResult, customConfig) {
   const cfg = {
@@ -118,9 +141,9 @@ async function matchImportsPostprocess(exportsAnalyzerResult, importsAnalyzerRes
       const fromImportToExport = await fromImportToExportPerspective({
         importee: importEntry.normalizedSource,
         importer: /** @type {PathFromSystemRoot} */ (
-          path.resolve(importProjectPath, importEntry.file)
+          path.resolve(/** @type {PathFromSystemRoot} */ (importProjectPath), importEntry.file)
         ),
-        importeeProjectPath: cfg.referenceProjectPath,
+        importeeProjectPath: /** @type {PathFromSystemRoot} */ (cfg.referenceProjectPath),
       });
       const isFromSameSource = compareImportAndExportPaths(exportEntry.file, fromImportToExport);
 
@@ -132,7 +155,9 @@ async function matchImportsPostprocess(exportsAnalyzerResult, importsAnalyzerRes
        * 3. When above checks pass, we have a match.
        * Add it to the results array
        */
-      const id = `${exportEntry.specifier}::${exportEntry.file}::${exportsAnalyzerResult.analyzerMeta.targetProject.name}`;
+      const id = /** @type {ImportOrExportId} */ (
+        `${exportEntry.specifier}::${exportEntry.file}::${exportsAnalyzerResult.analyzerMeta.targetProject.name}`
+      );
       const resultForCurrentExport = conciseResultsArray.find(
         entry => entry.exportSpecifier && entry.exportSpecifier.id === id,
       );
@@ -151,9 +176,7 @@ async function matchImportsPostprocess(exportsAnalyzerResult, importsAnalyzerRes
   }
 
   const importProject = importsAnalyzerResult.analyzerMeta.targetProject.name;
-  return /** @type {AnalyzerQueryResult} */ (
-    createCompatibleMatchImportsResult(conciseResultsArray, importProject)
-  );
+  return createCompatibleMatchImportsResult(conciseResultsArray, importProject);
 }
 
 export default class MatchImportsAnalyzer extends Analyzer {
@@ -168,28 +191,20 @@ export default class MatchImportsAnalyzer extends Analyzer {
    * Based on ExportsAnalyzerResult of reference project(s) (for instance lion-based-ui)
    * and ImportsAnalyzerResult of search-targets (for instance my-app-using-lion-based-ui),
    * an overview is returned of all matching imports and exports.
-   * @param {MatchImportsConfig} customConfig
+   * @param {AnalyzerConfigResolved} [customConfig]
    */
   async execute(customConfig = {}) {
-    /**
-     * @typedef MatchImportsConfig
-     * @property {FindExportsConfig} [exportsConfig] These will be used when no exportsAnalyzerResult
-     * is provided (recommended way)
-     * @property {FindImportsConfig} [importsConfig]
-     * @property {GatherFilesConfig} [gatherFilesConfig]
-     * @property {array} [referenceProjectPath] reference paths
-     * @property {array} [targetProjectPath] search target paths
-     * @property {FindImportsAnalyzerResult} [targetProjectResult]
-     * @property {FindExportsAnalyzerResult} [referenceProjectResult]
-     */
-    const cfg = {
-      gatherFilesConfig: {},
-      referenceProjectPath: null,
-      targetProjectPath: null,
-      targetProjectResult: null,
-      referenceProjectResult: null,
+    /** @type {MatchImportsCfg} */
+    const cfg = /** @type {MatchImportsCfg} */ ({
+      ...{
+        gatherFilesConfig: {},
+        referenceProjectPath: null,
+        targetProjectPath: null,
+        targetProjectResult: null,
+        referenceProjectResult: null,
+      },
       ...customConfig,
-    };
+    });
 
     /**
      * Prepare
@@ -200,42 +215,48 @@ export default class MatchImportsAnalyzer extends Analyzer {
       return cachedAnalyzerResult;
     }
 
-    let { referenceProjectResult } = cfg;
+    /** @type {AnalyzerQueryResult|AnalyzerResult|undefined} */
+    let referenceProjectResult;
+    ({ referenceProjectResult } = cfg);
     if (!referenceProjectResult) {
       const findExportsAnalyzer = new FindExportsAnalyzer();
-      referenceProjectResult = await findExportsAnalyzer.execute({
-        metaConfig: cfg.metaConfig,
+      const findExportsCfg = {
+        metaConfig: /** @type {{ metaConfig?: object }} */ (cfg).metaConfig,
         targetProjectPath: cfg.referenceProjectPath,
         skipCheckMatchCompatibility: cfg.skipCheckMatchCompatibility,
         suppressNonCriticalLogs: true,
         gatherFilesConfig: cfg.gatherFilesConfigReference,
-      });
+      };
+      referenceProjectResult = await findExportsAnalyzer.execute(findExportsCfg);
     }
 
-    let { targetProjectResult } = cfg;
+    /** @type {AnalyzerQueryResult|AnalyzerResult|undefined} */
+    let targetProjectResult;
+    ({ targetProjectResult } = cfg);
     if (!targetProjectResult) {
       const findImportsAnalyzer = new FindImportsAnalyzer();
-      targetProjectResult = await findImportsAnalyzer.execute({
-        metaConfig: cfg.metaConfig,
+      const findImportsCfg = {
+        metaConfig: /** @type {{ metaConfig?: object }} */ (cfg).metaConfig,
         targetProjectPath: cfg.targetProjectPath,
         skipCheckMatchCompatibility: cfg.skipCheckMatchCompatibility,
         suppressNonCriticalLogs: true,
         gatherFilesConfig: cfg.gatherFilesConfig,
-      });
+      };
+      targetProjectResult = await findImportsAnalyzer.execute(findImportsCfg);
     }
 
     /**
      * Traverse
      */
     const queryOutput = await matchImportsPostprocess(
-      referenceProjectResult,
-      targetProjectResult,
+      /** @type {FindExportsResultWithMeta} */ (referenceProjectResult),
+      /** @type {FindImportsResultWithMeta} */ (targetProjectResult),
       cfg,
     );
 
     /**
      * Finalize
      */
-    return this._finalize(queryOutput, cfg);
+    return this._finalize(/** @type {QueryOutput} */ (/** @type {unknown} */ (queryOutput)), cfg);
   }
 }

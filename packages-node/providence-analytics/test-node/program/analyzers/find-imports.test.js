@@ -9,6 +9,9 @@ import FindImportsAnalyzer from '../../../src/program/analyzers/find-imports.js'
 
 /**
  * @typedef {import('../../../types/index.js').ProvidenceConfig} ProvidenceConfig
+ * @typedef {import('../../../types/index.js').QueryOutput} QueryOutput
+ * @typedef {{ specifier: string; source: string; id: string; dependents: string[] }} FindImportsSortedEntry
+ * @typedef {import('../../../types/index.js').QueryResult<QueryOutput> & { queryOutput: FindImportsSortedEntry[] }} FindImportsSortedQueryResult
  */
 
 setupAnalyzerTest();
@@ -227,9 +230,12 @@ describe('Analyzer "find-imports"', async () => {
     });
 
     it('normalizes source paths', async () => {
-      const queryConfig = await QueryService.getQueryConfigFromAnalyzer(FindImportsAnalyzer, {
-        keepInternalSources: true,
-      });
+      const queryConfig = await QueryService.getQueryConfigFromAnalyzer(
+        FindImportsAnalyzer,
+        /** @type {import('../../../types/index.js').AnalyzerConfig & { keepInternalSources: boolean }} */ ({
+          keepInternalSources: true,
+        }),
+      );
       mockProject({
         './internal/file-imports.js': `
                                       import '@external/source';
@@ -258,9 +264,12 @@ describe('Analyzer "find-imports"', async () => {
 
   describe('Options', () => {
     it('"keepInternalSources"', async () => {
-      const queryConfig = await QueryService.getQueryConfigFromAnalyzer(FindImportsAnalyzer, {
-        keepInternalSources: true,
-      });
+      const queryConfig = await QueryService.getQueryConfigFromAnalyzer(
+        FindImportsAnalyzer,
+        /** @type {import('../../../types/index.js').AnalyzerConfig & { keepInternalSources: boolean }} */ ({
+          keepInternalSources: true,
+        }),
+      );
       mockProject([
         `
         import '@external/source';
@@ -285,9 +294,12 @@ describe('Analyzer "find-imports"', async () => {
 
     // Post processors for whole result
     it('"keepOriginalSourceExtensions"', async () => {
-      const queryConfig = await QueryService.getQueryConfigFromAnalyzer(FindImportsAnalyzer, {
-        keepOriginalSourceExtensions: true,
-      });
+      const queryConfig = await QueryService.getQueryConfigFromAnalyzer(
+        FindImportsAnalyzer,
+        /** @type {import('../../../types/index.js').AnalyzerConfig & { keepOriginalSourceExtensions: boolean }} */ ({
+          keepOriginalSourceExtensions: true,
+        }),
+      );
       mockProject([`import '@external/source.js'`, `import '@external/source';`]);
       const queryResults = await providence(queryConfig, _providenceCfg);
       const queryResult = queryResults[0];
@@ -303,9 +315,12 @@ describe('Analyzer "find-imports"', async () => {
     // but only without loss of information and once depending analyzers (match-imports and
     // match-subclasses) are made compatible.
     it.skip('"sortBySpecifier"', async () => {
-      const queryConfig = await QueryService.getQueryConfigFromAnalyzer(FindImportsAnalyzer, {
-        sortBySpecifier: true,
-      });
+      const queryConfig = await QueryService.getQueryConfigFromAnalyzer(
+        FindImportsAnalyzer,
+        /** @type {import('../../../types/index.js').AnalyzerConfig & { sortBySpecifier: boolean }} */ ({
+          sortBySpecifier: true,
+        }),
+      );
       mockProject(
         [
           `import { x, y } from '@external/source.js'`,
@@ -314,7 +329,7 @@ describe('Analyzer "find-imports"', async () => {
         { filePaths: ['./file1.js', './file2.js'] },
       );
       const queryResults = await providence(queryConfig, _providenceCfg);
-      const queryResult = queryResults[0];
+      const queryResult = /** @type {FindImportsSortedQueryResult} */ (queryResults[0]);
 
       /**
        * Output will be in the format of:

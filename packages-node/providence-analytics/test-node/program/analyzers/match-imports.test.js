@@ -10,6 +10,10 @@ import MatchImportsAnalyzer from '../../../src/program/analyzers/match-imports.j
 
 /**
  * @typedef {import('../../../types/index.js').ProvidenceConfig} ProvidenceConfig
+ * @typedef {import('../../../types/index.js').MatchImportsAnalyzerOutputEntry} MatchImportsAnalyzerOutputEntry
+ * @typedef {import('../../../types/index.js').QueryOutput} QueryOutput
+ * @typedef {import('../../../types/index.js').QueryResult<QueryOutput> & { queryOutput: MatchImportsAnalyzerOutputEntry[] }} MatchImportsQueryResult
+ * @typedef {import('../../../test-helpers/mock-project-helpers.js').MockProject} MockProject
  */
 
 setupAnalyzerTest();
@@ -24,6 +28,7 @@ describe('Analyzer "match-imports"', async () => {
   };
 
   // 1. Reference input data
+  /** @type {MockProject} */
   const referenceProject = {
     path: '/importing/target/project/node_modules/exporting-ref-project',
     name: 'exporting-ref-project',
@@ -93,6 +98,7 @@ describe('Analyzer "match-imports"', async () => {
     ],
   };
 
+  /** @type {MockProject} */
   const searchTargetProject = {
     path: '/importing/target/project',
     name: 'importing-target-project',
@@ -208,9 +214,15 @@ describe('Analyzer "match-imports"', async () => {
     },
   ];
 
+  /**
+   * @param {string} targetExportedId
+   * @param {MatchImportsQueryResult} queryResult
+   * @param {string[]} [importedByFiles]
+   */
   function testMatchedEntry(targetExportedId, queryResult, importedByFiles = []) {
-    const matchedEntry = queryResult.queryOutput.find(
-      r => r.exportSpecifier.id === targetExportedId,
+    /** @type {MatchImportsAnalyzerOutputEntry} */
+    const matchedEntry = /** @type {MatchImportsAnalyzerOutputEntry} */ (
+      queryResult.queryOutput.find(r => r.exportSpecifier.id === targetExportedId)
     );
 
     const [name, filePath, project] = targetExportedId.split('::');
@@ -226,11 +238,13 @@ describe('Analyzer "match-imports"', async () => {
 
   describe('Extracting exports', () => {
     it(`identifies all direct export specifiers consumed by target`, async () => {
+      /** @type {MockProject} */
       const refProject = {
         path: '/target/node_modules/ref',
         name: 'ref',
         files: [{ file: './direct.js', code: `export default function x() {};` }],
       };
+      /** @type {MockProject} */
       const targetProject = {
         path: '/target',
         name: 'target',
@@ -242,7 +256,7 @@ describe('Analyzer "match-imports"', async () => {
         targetProjectPaths: [targetProject.path],
         referenceProjectPaths: [refProject.path],
       });
-      const queryResult = queryResults[0];
+      const queryResult = /** @type {MatchImportsQueryResult} */ (queryResults[0]);
       expect(queryResult.queryOutput).eql([
         {
           exportSpecifier: {
@@ -257,6 +271,7 @@ describe('Analyzer "match-imports"', async () => {
     });
 
     it(`identifies all indirect (transitive) export specifiers consumed by target`, async () => {
+      /** @type {MockProject} */
       const refProject = {
         path: '/target/node_modules/ref',
         name: 'ref',
@@ -265,6 +280,7 @@ describe('Analyzer "match-imports"', async () => {
           { file: './indirect.js', code: `export { x } from './direct.js';` },
         ],
       };
+      /** @type {MockProject} */
       const targetProject = {
         path: '/target',
         name: 'target',
@@ -275,7 +291,7 @@ describe('Analyzer "match-imports"', async () => {
         targetProjectPaths: [targetProject.path],
         referenceProjectPaths: [refProject.path],
       });
-      const queryResult = queryResults[0];
+      const queryResult = /** @type {MatchImportsQueryResult} */ (queryResults[0]);
       expect(queryResult.queryOutput).eql([
         {
           exportSpecifier: {
@@ -290,6 +306,7 @@ describe('Analyzer "match-imports"', async () => {
     });
 
     it(`matches namespaced specifiers consumed by target`, async () => {
+      /** @type {MockProject} */
       const refProject = {
         path: '/target/node_modules/ref',
         name: 'ref',
@@ -297,6 +314,7 @@ describe('Analyzer "match-imports"', async () => {
           { file: './namespaced.js', code: `export function x() {}; export function y() {};` },
         ],
       };
+      /** @type {MockProject} */
       const targetProject = {
         path: '/target',
         name: 'target',
@@ -307,7 +325,7 @@ describe('Analyzer "match-imports"', async () => {
         targetProjectPaths: [targetProject.path],
         referenceProjectPaths: [refProject.path],
       });
-      const queryResult = queryResults[0];
+      const queryResult = /** @type {MatchImportsQueryResult} */ (queryResults[0]);
       expect(queryResult.queryOutput).eql([
         {
           exportSpecifier: {
@@ -343,7 +361,7 @@ describe('Analyzer "match-imports"', async () => {
       it(`identifies all direct export specifiers consumed by "importing-target-project"`, async () => {
         mockTargetAndReferenceProject(searchTargetProject, referenceProject);
         const queryResults = await providence(matchImportsQueryConfig, _providenceCfg);
-        const queryResult = queryResults[0];
+        const queryResult = /** @type {MatchImportsQueryResult} */ (queryResults[0]);
         expectedExportIdsDirect.forEach(directId => {
           expect(
             queryResult.queryOutput.find(
@@ -356,7 +374,7 @@ describe('Analyzer "match-imports"', async () => {
       it(`identifies all indirect export specifiers consumed by "importing-target-project"`, async () => {
         mockTargetAndReferenceProject(searchTargetProject, referenceProject);
         const queryResults = await providence(matchImportsQueryConfig, _providenceCfg);
-        const queryResult = queryResults[0];
+        const queryResult = /** @type {MatchImportsQueryResult} */ (queryResults[0]);
         expectedExportIdsIndirect.forEach(indirectId => {
           expect(
             queryResult.queryOutput.find(
@@ -369,7 +387,7 @@ describe('Analyzer "match-imports"', async () => {
       it(`matches namespaced specifiers consumed by "importing-target-project"`, async () => {
         mockTargetAndReferenceProject(searchTargetProject, referenceProject);
         const queryResults = await providence(matchImportsQueryConfig, _providenceCfg);
-        const queryResult = queryResults[0];
+        const queryResult = /** @type {MatchImportsQueryResult} */ (queryResults[0]);
         expectedExportIdsNamespaced.forEach(exportedSpecifierId => {
           expect(
             queryResult.queryOutput.find(
@@ -392,11 +410,13 @@ describe('Analyzer "match-imports"', async () => {
        * - simplify output for match-* analyzers
        * - adjust dashboard transfrom logic
        */
+      /** @type {MockProject} */
       const refProject = {
         path: '/target/node_modules/ref',
         name: 'ref',
         files: [{ file: './direct.js', code: `export default function x() {};` }],
       };
+      /** @type {MockProject} */
       const targetProject = {
         path: '/target',
         name: 'target',
@@ -407,18 +427,20 @@ describe('Analyzer "match-imports"', async () => {
         targetProjectPaths: [targetProject.path],
         referenceProjectPaths: [refProject.path],
       });
-      const queryResult = queryResults[0];
+      const queryResult = /** @type {MatchImportsQueryResult} */ (queryResults[0]);
       expect(queryResult.queryOutput[0].matchesPerProject).eql([
         { files: ['./index.js'], project: 'target' },
       ]);
     });
 
     it(`correctly merges/dedupes double found exports`, async () => {
+      /** @type {MockProject} */
       const refProject = {
         path: '/target/node_modules/ref',
         name: 'ref',
         files: [{ file: './index.js', code: `export default function x() {};` }],
       };
+      /** @type {MockProject} */
       const targetProject = {
         path: '/target',
         name: 'target',
@@ -432,7 +454,7 @@ describe('Analyzer "match-imports"', async () => {
         targetProjectPaths: [targetProject.path],
         referenceProjectPaths: [refProject.path],
       });
-      const queryResult = queryResults[0];
+      const queryResult = /** @type {MatchImportsQueryResult} */ (queryResults[0]);
       expect(queryResult.queryOutput[0].exportSpecifier.name).to.equal('[default]');
       expect(queryResult.queryOutput[0].matchesPerProject).to.deep.equal([
         { files: ['./importDefault1.js', './importDefault2.js'], project: 'target' },
@@ -440,6 +462,7 @@ describe('Analyzer "match-imports"', async () => {
     });
 
     it(`correctly merges/dedupes double found file matches when imported in different ways`, async () => {
+      /** @type {MockProject} */
       const refProject = {
         path: '/target/node_modules/ref',
         name: 'ref',
@@ -453,6 +476,7 @@ describe('Analyzer "match-imports"', async () => {
           },
         ],
       };
+      /** @type {MockProject} */
       const targetProject = {
         path: '/target',
         name: 'target',
@@ -473,7 +497,7 @@ describe('Analyzer "match-imports"', async () => {
         targetProjectPaths: [targetProject.path],
         referenceProjectPaths: [refProject.path],
       });
-      const queryResult = queryResults[0];
+      const queryResult = /** @type {MatchImportsQueryResult} */ (queryResults[0]);
       expect(queryResult.queryOutput[0].exportSpecifier.name).to.equal('[default]');
       expect(queryResult.queryOutput[0].matchesPerProject).to.deep.equal([
         { files: ['./deep-imports.js'], project: 'target' },
@@ -488,7 +512,7 @@ describe('Analyzer "match-imports"', async () => {
       it(`produces a list of all matches, sorted by project`, async () => {
         mockTargetAndReferenceProject(searchTargetProject, referenceProject);
         const queryResults = await providence(matchImportsQueryConfig, _providenceCfg);
-        const queryResult = queryResults[0];
+        const queryResult = /** @type {MatchImportsQueryResult} */ (queryResults[0]);
 
         expectedExportIdsDirect.forEach(targetId => {
           testMatchedEntry(targetId, queryResult, ['./target-src/direct-imports.js']);
@@ -513,13 +537,13 @@ describe('Analyzer "match-imports"', async () => {
 
       const matchImportsQueryConfigExt = await QueryService.getQueryConfigFromAnalyzer(
         MatchImportsAnalyzer,
-        {
+        /** @type {import('../../../types/index.js').AnalyzerConfig & { targetProjectResult: typeof findImportsResult; referenceProjectResult: typeof findExportsResult }} */ ({
           targetProjectResult: findImportsResult,
           referenceProjectResult: findExportsResult,
-        },
+        }),
       );
       const queryResults = await providence(matchImportsQueryConfigExt, _providenceCfg);
-      const queryResult = queryResults[0];
+      const queryResult = /** @type {MatchImportsQueryResult} */ (queryResults[0]);
 
       expectedExportIdsDirect.forEach(targetId => {
         testMatchedEntry(targetId, queryResult, ['./target-src/direct-imports.js']);

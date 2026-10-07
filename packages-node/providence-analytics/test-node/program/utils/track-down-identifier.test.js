@@ -11,7 +11,7 @@ import {
 } from '../../../src/program/utils/track-down-identifier.js';
 
 /**
- * @typedef {import('@babel/traverse').NodePath} NodePath
+ * @typedef {import('../../../types/index.js').SwcPath} NodePath
  */
 
 setupAnalyzerTest();
@@ -450,7 +450,10 @@ describe('trackDownIdentifierFromScope', () => {
       ],
     };
 
-    mockProject(targetProject, { projectName, projectPath });
+    mockProject(/** @type {Record<string, string>} */ (/** @type {unknown} */ (targetProject)), {
+      projectName,
+      projectPath,
+    });
     const ast = await AstService._getOxcAst(targetProject.files[0].code);
 
     // Let's say we want to track down 'LionComp' in the code above

@@ -1,13 +1,20 @@
 import { GlobalDecorator } from './GlobalDecorator.js';
 
+/**
+ * @typedef {import('lit').CSSResultGroup} CSSResultGroup
+ */
+
 // TODO: dedupe via @lion
+/**
+ * @type {import('./types/DecorateMixinTypes.js').DecorateMixin}
+ */
 export const DecorateMixin = superclass => {
   // eslint-disable-next-line no-shadow
   class DecorateMixin extends superclass {
     /**
      *
-     * @param {CssResult[]} styles
-     * @param {boolean} prepend
+     * @param {CSSResultGroup} styles
+     * @param {{ prepend?: boolean }} [opts]
      */
     static decorateStyles(styles, { prepend } = {}) {
       if (!prepend) {
@@ -17,24 +24,45 @@ export const DecorateMixin = superclass => {
       }
     }
 
+    /**
+     * @param {string} name
+     * @param {(...args: unknown[]) => void} fn
+     */
     static decorateMethod(name, fn) {
-      const originalMethod = this.prototype[name];
-      this.prototype[name] = (...args) => {
+      const proto = /** @type {{[key: string]: (...args: unknown[]) => unknown}} */ (
+        /** @type {unknown} */ (this.prototype)
+      );
+      const originalMethod = proto[name];
+      proto[name] = (...args) => {
         fn(originalMethod, ...args);
       };
     }
 
+    /**
+     * @returns {import('lit').CSSResultArray}
+     */
     static get styles() {
+      /**
+       * @type {import('lit').CSSResultArray}
+       */
+      let superStyles = [];
+      if (Array.isArray(super.styles)) {
+        superStyles = super.styles;
+      } else if (super.styles) {
+        superStyles = [super.styles];
+      }
       return [
         ...GlobalDecorator.globalDecoratedStylesPrepended,
         ...this.__decoratedStylesPrepended,
-        ...(super.styles || []),
+        ...superStyles,
         ...GlobalDecorator.globalDecoratedStyles,
         ...this.__decoratedStyles,
       ];
     }
   }
+  /** @type {CSSResultGroup[]} */
   DecorateMixin.__decoratedStyles = [];
+  /** @type {CSSResultGroup[]} */
   DecorateMixin.__decoratedStylesPrepended = [];
   return DecorateMixin;
 };

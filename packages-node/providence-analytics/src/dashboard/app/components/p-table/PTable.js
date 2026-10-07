@@ -2,9 +2,14 @@
 import { LitElement, html, css } from 'lit-element';
 import { DecorateMixin } from '../../utils/DecorateMixin.js';
 
+/**
+ * @typedef {Record<string, unknown>} TableRow
+ */
+
 export class PTable extends DecorateMixin(LitElement) {
+  /** @returns {import('lit').PropertyDeclarations} */
   static get properties() {
-    return {
+    return /** @type {import('lit').PropertyDeclarations} */ ({
       mobile: {
         reflect: true,
         type: Boolean,
@@ -12,7 +17,7 @@ export class PTable extends DecorateMixin(LitElement) {
       data: Object,
       // Sorted, sliced data, based on user interaction
       _viewData: Object,
-    };
+    });
   }
 
   static get styles() {
@@ -81,6 +86,12 @@ export class PTable extends DecorateMixin(LitElement) {
     return html` <span aria-label="ascending">&#x25B2;</span> `;
   }
 
+  /**
+   * @param {string[]} headers
+   * @param {{[key: string]: 'asc' | 'desc'}} sortMap
+   * @param {TableRow[]} data
+   * @param {boolean} m
+   */
   _mainTemplate(headers, sortMap, data, m) {
     if (!(headers && sortMap && data)) {
       return html``;
@@ -137,19 +148,18 @@ export class PTable extends DecorateMixin(LitElement) {
       this._viewDataHeaders,
       this.__viewDataSortMap,
       this._viewData,
-      this.mobile,
+      /** @type {boolean} */ (this.mobile),
     );
   }
 
   constructor() {
     super();
+    /** @type {{[key: string]: 'asc' | 'desc'}} */
     this.__viewDataSortMap = {};
   }
 
   connectedCallback() {
-    if (super.connectedCallback) {
-      super.connectedCallback();
-    }
+    super.connectedCallback();
     const mql = window.matchMedia('(max-width: 767px)');
     this.mobile = mql.matches;
     mql.addListener(({ matches }) => {
@@ -157,36 +167,56 @@ export class PTable extends DecorateMixin(LitElement) {
     });
   }
 
+  /**
+   * @param {Map<PropertyKey, unknown>} changedProperties
+   */
   updated(changedProperties) {
     super.updated(changedProperties);
     if (changedProperties.has('data')) {
-      this.__computeViewData(this.data);
+      this.__computeViewData(
+        /** @type {TableRow[]} */ (/** @type {Record<string, unknown>} */ (this).data),
+      );
     }
   }
 
   /**
    * @overridable
-   * @param {string} content
+   * @param {unknown} content
    * @param {string} header
+   * @returns {unknown}
    */
   // eslint-disable-next-line class-methods-use-this, no-unused-vars
   renderCellContent(content, header) {
     return content;
   }
 
+  /**
+   * @param {TableRow[]} newData
+   */
   __computeViewData(newData) {
+    /** @type {TableRow[]} */
     this._viewData = [...newData];
+    /** @type {string[]} */
     this._viewDataHeaders = Object.keys(newData[0]);
   }
 
+  /**
+   * @param {string} specifier
+   */
   _sortBy(specifier) {
     this.__setSortMapValue(specifier);
 
+    /**
+     * @param {TableRow} a
+     * @param {TableRow} b
+     */
     const comparison = (a, b) => {
+      const aValue = /** @type {string | number} */ (a[specifier]);
+      const bValue = /** @type {string | number} */ (b[specifier]);
       if (this.__viewDataSortMap[specifier] === 'desc') {
-        return b[specifier] > a[specifier];
+        return bValue > aValue;
       }
-      return b[specifier] < a[specifier];
+      return bValue < aValue;
     };
 
     this._viewData.sort((a, b) => {
@@ -201,6 +231,9 @@ export class PTable extends DecorateMixin(LitElement) {
     this.__computeViewData(this._viewData);
   }
 
+  /**
+   * @param {string} specifier
+   */
   __setSortMapValue(specifier) {
     // initialize to desc first time
     if (!this.__viewDataSortMap[specifier]) {
