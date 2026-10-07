@@ -11,6 +11,7 @@
  *   v1-reserved like v1, with `lion-input` listed in `CustomElementRegistryPolyfill.formAssociated`
  *               before the polyfill loads (the redesign's escape hatch for form association)
  *   none        no polyfill at all: the browser's own support
+ *   v0+v1       both polyfills, old one first (not supported - see the entry below)
  *   no-support  no polyfill *and* no native support: Chromium is started with
  *               `--disable-blink-features=ScopedCustomElementRegistry`, which removes the registry
  *               model entirely. This is the only way to exercise the global-registry fallback for
@@ -41,6 +42,15 @@ export const SCOPED_POLYFILL_VARIANTS = {
     '<script src="/packages/ui/components/core/test/scoped-registry-v1/scoped-custom-element-registry.min.js"></script>',
   ].join('\n    '),
   'no-support': '',
+  // The old and the new polyfill loaded on top of each other. NOT a supported configuration: both
+  // patch the same DOM API and replace `window.customElements`/`window.CustomElementRegistry`, so
+  // they contradict each other. It exists to reproduce that clash (the testing order is the one a
+  // page would use: whatever is on the page first loads first).
+  'v0+v1': [
+    '<script src="/node_modules/@webcomponents/scoped-custom-element-registry/scoped-custom-element-registry.min.js"></script>',
+    '<script>window.CustomElementRegistryPolyfill = { force: true };</script>',
+    '<script src="/packages/ui/components/core/test/scoped-registry-v1/scoped-custom-element-registry.min.js"></script>',
+  ].join('\n    '),
 };
 
 /**

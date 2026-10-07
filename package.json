@@ -17,6 +17,8 @@
     "update:scoped-registry-polyfill": "node scripts/scoped-registry-polyfill.mjs",
     "demo:form-associated-scopes": "web-test-runner --config web-test-runner.scoped-spec.config.mjs --files \"packages/ui/components/input/test/lion-input.form-associated-scopes.demo.js\"",
     "demo:form-associated-scopes:future-first": "web-test-runner --config web-test-runner.scoped-spec.config.mjs --files \"packages/ui/components/input/test/lion-input.form-associated-scopes-future-first.demo.js\"",
+    "demo:polyfill-choice": "web-test-runner --config web-test-runner.scoped-spec.config.mjs --files \"packages/ui/components/input/test/two-lion-versions-polyfill-choice.demo.js\"",
+    "demo:form-associated-bridge": "web-test-runner --config web-test-runner.scoped-spec.config.mjs --files \"packages/ui/components/input/test/lion-input.form-associated-adoption-bridge.demo.js\"",
     "test:scoped-elements:v0": "cross-env SCOPED_POLYFILL=v0 web-test-runner --config web-test-runner.scoped-spec.config.mjs --files \"packages/ui/components/core/test/*ScopedElements*.test.js\"",
     "test:scoped-elements:v1": "cross-env SCOPED_POLYFILL=v1 web-test-runner --config web-test-runner.scoped-spec.config.mjs --files \"packages/ui/components/core/test/*ScopedElements*.test.js\"",
     "test:scoped-elements:none": "cross-env SCOPED_POLYFILL=none web-test-runner --config web-test-runner.scoped-spec.config.mjs --files \"packages/ui/components/core/test/*ScopedElements*.test.js\"",

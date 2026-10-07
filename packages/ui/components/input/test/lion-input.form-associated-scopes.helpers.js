@@ -43,6 +43,38 @@ export class LionInputFormAssociated extends LionInput {
 }
 
 /**
+ * The shape of a *migration bridge*: the version that adopts `formAssociated` keeps publishing through
+ * the mechanism today's version already uses (the light-DOM `<input>` the form submits), and
+ * additionally publishes through `ElementInternals` when the page really makes it form-associated.
+ *
+ * That way the data always reaches the form, whatever the page's define order or polyfill does with
+ * the tag's capability - only the *feature* (dropping the light-DOM input) has to wait.
+ */
+export class LionInputFormAssociatedWithBridge extends LionInputFormAssociated {
+  /**
+   * @param {string} value
+   */
+  publishForMigration(value) {
+    const viaInternals = (() => {
+      try {
+        this.attachInternals().setFormValue(value);
+        return { ok: true };
+      } catch (error) {
+        return { ok: false, error: `${error.name}: ${error.message.slice(0, 60)}` };
+      }
+    })();
+    // The mechanism today's version already has in place: the native input the form submits.
+    const input = /** @type {HTMLInputElement | undefined} */ (
+      /** @type {any} */ (this)._inputNode ?? this.querySelector('input')
+    );
+    if (input) {
+      input.value = value;
+    }
+    return { viaInternals, viaInput: Boolean(input) };
+  }
+}
+
+/**
  * Whether the element is a form-associated custom element, as the browser sees it.
  *
  * @param {HTMLElement} el
@@ -83,8 +115,9 @@ let runId = 0;
  * files, and the whole point of the investigation).
  *
  * @param {'current-first' | 'future-first'} order
+ * @param {typeof LionInputFormAssociated} [AdoptingClass] the version that adopts form association
  */
-export async function runStory(order) {
+export async function runStory(order, AdoptingClass = LionInputFormAssociated) {
   const scoped = supportsScopedRegistry();
   const suffix = `poc-face-${(runId += 1)}`;
   const CurrentHost = hostFactory({ 'lion-input': LionInput }, 'current', `${suffix}-current`);
@@ -104,10 +137,10 @@ export async function runStory(order) {
       order === 'current-first'
         ? [
             [registryCurrent, LionInput],
-            [registryFuture, LionInputFormAssociated],
+            [registryFuture, AdoptingClass],
           ]
         : [
-            [registryFuture, LionInputFormAssociated],
+            [registryFuture, AdoptingClass],
             [registryCurrent, LionInput],
           ];
     for (const [registry, klass] of definitions) registry.define('lion-input', klass);
@@ -130,6 +163,7 @@ export async function runStory(order) {
     futureHost.shadowRoot.querySelector('lion-input')
   );
   const futureForm = /** @type {HTMLFormElement} */ (futureHost.shadowRoot.querySelector('form'));
+  const currentForm = /** @type {HTMLFormElement} */ (currentHost.shadowRoot.querySelector('form'));
 
   const story = {
     scoped,
@@ -151,6 +185,9 @@ export async function runStory(order) {
           },
     callbackFired: Boolean(futureInput.__associatedForm),
     formData: [...new FormData(futureForm).entries()],
+    // what the *other* (non-adopting) version ends up looking like in the current page
+    currentFormData: [...new FormData(currentForm).entries()],
+    currentFormElementCount: currentForm.elements.length,
   };
 
   currentHost.remove();
