@@ -135,6 +135,42 @@ import { Required, MinLength } from '@lion/ui/validate.js';
 Before wiring a form, read `references/systems/form.md` (validation, model-value,
 interaction-states) and the reference doc for every form control you plan to use.
 
+#### Light DOM: only when composing a control _within_ a form
+
+Form registration relies on light DOM by design, so a **custom form control that must register with
+an ancestor form** has to render into light DOM (no shadow root):
+
+```js
+class MyIbanField extends LionInputIban {
+  createRenderRoot() {
+    return this; // required: lets the field register with the <lion-form> around it
+  }
+}
+```
+
+A component that **contains** a form does _not_ need this. If it renders `<lion-form>` and its
+controls together, they are already in the same tree, so registration works across that shadow root
+— use `ScopedElementsMixin` and a shadow root as usual:
+
+```js
+export class MyForm extends ScopedElementsMixin(LitElement) {
+  static scopedElements = { 'lion-form': LionForm, 'lion-input-iban': LionInputIban };
+
+  render() {
+    return html`
+      <lion-form>
+        <form>
+          <lion-input-iban name="account" label="Account"></lion-input-iban>
+        </form>
+      </lion-form>
+    `;
+  }
+}
+```
+
+In short: `createRenderRoot` is needed **only** for composition within a form. Do not reach for it
+otherwise.
+
 #### Native element -> required `@lion/ui` replacement
 
 | Instead of...             | Use...                                 |
