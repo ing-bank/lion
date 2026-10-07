@@ -12,18 +12,23 @@ It is the code under review in [webcomponents/polyfills#668](https://github.com/
 model in the meantime; delete it (and the `SCOPED_POLYFILL=v1` entry of
 `web-test-runner.scoped-spec.config.mjs`) once the redesign ships.
 
-Provenance, so the file can be regenerated rather than trusted:
+## Regenerating it
 
 ```bash
-git clone --depth 1 --branch scoped-registry-redesign https://github.com/webcomponents/polyfills.git
-cd polyfills/packages/scoped-custom-element-registry
-# source commit at the time of copying: 8b60db656b898cc72958b531bf9a2d89d392f41a
-# The upstream build uses tsc + google-closure-compiler (see package.json "wireit").
-# esbuild produces an equivalent standalone script, without property mangling, which
-# keeps the polyfill's `Object.defineProperty(<obj>, 'name', ...)` string keys intact:
-esbuild src/scoped-custom-element-registry.ts --format=esm --target=es2020 --minify \
-  --outfile=packages/ui/components/core/test/scoped-registry-v1/scoped-custom-element-registry.min.js
+node scripts/scoped-registry-polyfill.mjs            # rebuild from the pinned commit
+node scripts/scoped-registry-polyfill.mjs --check    # verify the committed build is that commit
+node scripts/scoped-registry-polyfill.mjs --latest   # move to the tip of the PR branch
 ```
+
+The script caches a blobless clone in `.tmp/scoped-registry-polyfill` (gitignored), checks out the
+pinned commit by default — `source.json` next to this README records which one — and builds a
+standalone script with esbuild. It is pinned rather than "latest" on purpose: the PR branch moves
+(it was at `8b60db65` when the current build was made and at `f60f443a` when this was written;
+both pass the compatibility tests), and a test fixture that changes under you is not a fixture.
+
+Why esbuild and not upstream's closure toolchain: esbuild does not rename properties, so the
+polyfill's `Object.defineProperty(<obj>, 'name', …)` string keys survive; closure at
+`ADVANCED_OPTIMIZATIONS` would need the upstream flagfile.
 
 The file is a _script_ (it patches the DOM on load, guarded by
 `window.CustomElementRegistryPolyfill.inUse`), which is why the test configs load it with a

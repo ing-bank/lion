@@ -7,6 +7,7 @@ import {
   supportsScopedRegistryV0,
   supportsScopedRegistryV1,
 } from '../src/ScopedElementsMixin.js';
+import { ScopedElementsMixinV4 } from '../src/ScopedElementsMixinV4.js';
 
 /**
  * These tests are run under three polyfill configurations (see
@@ -141,5 +142,14 @@ describe(`ScopedElementsMixin compatibility (scoped registry spec ${specVersion}
     );
     // @ts-expect-error registry is added by the mixin
     expect(el.registry.get('compat-scoped-child')).to.equal(ScopedChildA);
+  });
+
+  it('exposes the v4 implementation under both names, as one deduped mixin', () => {
+    // `ScopedElementsMixin` re-exports `ScopedElementsMixinV4`, so Lion (which uses the v4
+    // name internally) and its consumers (which use the established name) apply the same mixin.
+    expect(ScopedElementsMixin).to.equal(ScopedElementsMixinV4);
+
+    const once = ScopedElementsMixinV4(LitElement);
+    expect(ScopedElementsMixin(once)).to.equal(once);
   });
 });

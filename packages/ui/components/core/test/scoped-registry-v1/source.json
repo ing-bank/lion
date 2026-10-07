@@ -1,0 +1,7 @@
+{
+  "repository": "https://github.com/webcomponents/polyfills.git",
+  "ref": "scoped-registry-redesign",
+  "commit": "8b60db656b898cc72958b531bf9a2d89d392f41a",
+  "artifact": "scoped-custom-element-registry.min.js",
+  "builtWith": "esbuild 0.27.4"
+}
