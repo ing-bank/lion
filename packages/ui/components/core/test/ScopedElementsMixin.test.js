@@ -25,11 +25,17 @@ const originalRegistryDescriptor = Object.getOwnPropertyDescriptor(
 );
 
 /**
- * Whether the "no scoped registry support" scenario can be simulated here. It cannot
- * when the spec 1.x polyfill is force-loaded: that polyfill needs the very DOM
- * features (the `customElementRegistry` accessor, and its own registry bookkeeping)
- * that the mock takes away, and it deadlocks the test run. Plain browsers, and the
- * 0.x polyfill, are fine.
+ * Whether the "no scoped registry support" scenario can be *meaningfully* simulated here by taking
+ * the features away.
+ *
+ * It cannot underneath a force-loaded spec 1.x polyfill: with the accessor mocked out, that polyfill
+ * no longer behaves like a browser without support — the host does not even end up with a shadow root
+ * — so the assertions would fail for environment reasons rather than product ones. (Verified with a
+ * bounded probe; it does not *hang* the run, contrary to what an earlier comment here claimed.)
+ *
+ * A real browser without scoped registries is available instead: `SCOPED_POLYFILL=no-support` starts
+ * Chromium with `--disable-blink-features=ScopedCustomElementRegistry`, and loads no polyfill. That is
+ * where the fallback is exercised for real; here it is skipped.
  */
 const canSimulateNoRegistrySupport = !(
   /** @type {any} */ (globalThis).CustomElementRegistryPolyfill?.inUse
@@ -38,7 +44,7 @@ const canSimulateNoRegistrySupport = !(
 // Even though the polyfill might be loaded in this test or we run it in a browser supporting these features,
 // we mock "no support", so that `supportsScopedRegistry()` returns false inside ScopedElementsMixin..
 function mockNoRegistrySupport() {
-  // Are we on a server or do we have no polyfill? Nothing to be done here...
+  // Are we on a server, on a browser without support, or without a polyfill? Nothing to be done here...
   if (!hasRealScopedRegistrySupport) return;
 
   // This will be enough to make the spec 0.x check fail inside ScopedElementsMixin and bypass scoped registries

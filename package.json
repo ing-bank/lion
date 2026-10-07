@@ -20,6 +20,8 @@
     "test:scoped-elements:none": "cross-env SCOPED_POLYFILL=none web-test-runner --config web-test-runner.scoped-spec.config.mjs --files \"packages/ui/components/core/test/*ScopedElements*.test.js\"",
     "test:browser:scoped-v1": "cross-env SCOPED_POLYFILL=v1 web-test-runner --config web-test-runner.scoped-full.config.mjs",
     "test:browser:scoped-none": "cross-env SCOPED_POLYFILL=none web-test-runner --config web-test-runner.scoped-full.config.mjs",
+    "test:scoped-elements:no-support": "cross-env SCOPED_POLYFILL=no-support web-test-runner --config web-test-runner.scoped-spec.config.mjs --files \"packages/ui/components/core/test/*ScopedElements*.test.js\"",
+    "test:browser:scoped-no-support": "cross-env SCOPED_POLYFILL=no-support web-test-runner --config web-test-runner.scoped-full.config.mjs",
     "debug:webkit": "web-test-runner --watch --config web-test-runner-webkit.config.mjs",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d _site -r git@github.com:ing-bank/lion --nojekyll",

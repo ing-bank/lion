@@ -1,19 +1,27 @@
 /**
- * Which scoped custom element registry polyfill the scoped POC test runs load, selected with
- * the `SCOPED_POLYFILL` environment variable:
+ * Which scoped custom element registry the scoped POC test runs use, selected with the
+ * `SCOPED_POLYFILL` environment variable:
  *
- *   v0    the polyfill that is on npm today — @webcomponents/scoped-custom-element-registry@0.0.10,
- *         which implements the 0.x model (the shadow root is the scope)
- *   v1    the redesign (webcomponents/polyfills#668), which implements the 1.x model, forced so it
- *         is exercised even in a browser that already has native support. The build is vendored in
- *         packages/ui/components/core/test/scoped-registry-v1 (see its README, and
- *         `scripts/scoped-registry-polyfill.mjs` to regenerate it)
- *   none  no polyfill at all: the browser's own support, or the global-registry fallback when it
- *         has none
+ *   v0          the polyfill that is on npm today — @webcomponents/scoped-custom-element-registry@0.0.10,
+ *               which implements the 0.x model (the shadow root is the scope)
+ *   v1          the redesign (webcomponents/polyfills#668), which implements the 1.x model, forced so
+ *               it is exercised even in a browser that already has native support. The build is
+ *               vendored in packages/ui/components/core/test/scoped-registry-v1 (see its README, and
+ *               `scripts/scoped-registry-polyfill.mjs` to regenerate it)
+ *   none        no polyfill at all: the browser's own support
+ *   no-support  no polyfill *and* no native support: Chromium is started with
+ *               `--disable-blink-features=ScopedCustomElementRegistry`, which removes the registry
+ *               model entirely. This is the only way to exercise the global-registry fallback for
+ *               real — mocking the DOM features away cannot reproduce it (see
+ *               ScopedElementsMixin.test.js), and it is what a browser without support looks like.
  *
  * Shared by `web-test-runner.scoped-spec.config.mjs` (the scoped-elements suites) and
  * `web-test-runner.scoped-full.config.mjs` (the whole @lion/ui suite).
  */
+import { playwrightLauncher } from '@web/test-runner-playwright';
+
+/** Chromium feature that carries the whole scoped registry model (incl. `customElementRegistry`). */
+const SCOPED_REGISTRY_FEATURE = 'ScopedCustomElementRegistry';
 
 export const SCOPED_POLYFILL_VARIANTS = {
   v0: '<script src="/node_modules/@webcomponents/scoped-custom-element-registry/scoped-custom-element-registry.min.js"></script>',
@@ -23,6 +31,7 @@ export const SCOPED_POLYFILL_VARIANTS = {
     '<script src="/packages/ui/components/core/test/scoped-registry-v1/scoped-custom-element-registry.min.js"></script>',
   ].join('\n    '),
   none: '',
+  'no-support': '',
 };
 
 /**
@@ -55,4 +64,21 @@ export function scopedPolyfillTestRunnerHtml(variant) {
   </head>
 </html>
 `;
+}
+
+/**
+ * The browser for a variant: chromium, with the scoped registry feature switched off for
+ * `no-support`.
+ *
+ * @param {keyof typeof SCOPED_POLYFILL_VARIANTS} variant
+ */
+export function scopedPolyfillBrowsers(variant) {
+  return [
+    playwrightLauncher({
+      product: 'chromium',
+      ...(variant === 'no-support'
+        ? { launchOptions: { args: [`--disable-blink-features=${SCOPED_REGISTRY_FEATURE}`] } }
+        : {}),
+    }),
+  ];
 }

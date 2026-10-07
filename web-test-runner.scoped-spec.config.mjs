@@ -1,7 +1,7 @@
 /**
  * POC test-runner config: runs the core scoped-elements tests against one of the available
  * flavours of scoped custom element registry support — see `web-test-runner.polyfills.mjs`
- * for `SCOPED_POLYFILL=v0|v1|none`.
+ * for `SCOPED_POLYFILL=v0|v1|none|no-support`.
  *
  * Usage:
  *   SCOPED_POLYFILL=v1 node node_modules/@web/test-runner/dist/bin.js \
@@ -10,10 +10,10 @@
  *
  * For the whole @lion/ui suite in the same modes, see `web-test-runner.scoped-full.config.mjs`.
  */
-import { playwrightLauncher } from '@web/test-runner-playwright';
 import { litSsrPlugin } from '@lit-labs/testing/web-test-runner-ssr-plugin.js';
 import {
   resolveScopedPolyfillVariant,
+  scopedPolyfillBrowsers,
   scopedPolyfillTestRunnerHtml,
 } from './web-test-runner.polyfills.mjs';
 
@@ -26,7 +26,7 @@ export default {
     config: { timeout: '5000' },
   },
   testRunnerHtml: scopedPolyfillTestRunnerHtml(variant),
-  browsers: [playwrightLauncher({ product: 'chromium' })],
+  browsers: scopedPolyfillBrowsers(variant),
   plugins: [litSsrPlugin()],
   groups: undefined,
 };

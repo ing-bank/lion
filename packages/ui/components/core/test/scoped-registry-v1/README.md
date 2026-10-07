@@ -37,9 +37,12 @@ The vendored build is what the `v1` mode loads. Where the polyfill matters, the 
 ```bash
 npm run test:scoped-elements:v0      # npm polyfill, spec 0.x
 npm run test:scoped-elements:v1      # this build, spec 1.x, forced
-npm run test:scoped-elements:none    # no polyfill: native support or the global fallback
+npm run test:scoped-elements:none    # no polyfill: the browser's own support
+npm run test:scoped-elements:no-support  # chromium with --disable-blink-features=ScopedCustomElementRegistry:
+                                         # no support at all, so the global-registry fallback runs for real
 npm run test:browser:scoped-v1       # the whole @lion/ui suite in the v1 mode
 npm run test:browser:scoped-none     # the whole @lion/ui suite with no polyfill
+npm run test:browser:scoped-no-support   # the whole @lion/ui suite on a browser without support
 ```
 
 The file is a _script_ (it patches the DOM on load, guarded by
