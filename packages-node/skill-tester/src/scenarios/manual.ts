@@ -22,7 +22,7 @@ export const nativeFormToLionFormScenario: TestScenario = {
   prompt: [
     'Rewrite `src/login-form.js` so it uses `lion-form` and `@lion/ui` form controls instead of',
     'a native `<form>` and native `<input>` elements. Keep the same fields (email + password) and',
-    'the same submit behaviour. Follow the conventions in the skill.',
+    'the same submit behaviour. Rewrite that file only — nothing else.',
   ].join(' '),
   targetFile: 'src/login-form.js',
   files: {
