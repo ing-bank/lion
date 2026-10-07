@@ -1,5 +1,7 @@
 import { expect, fixture } from '@open-wc/testing';
 import { LitElement, html } from 'lit';
+// The mixin this implementation replaces, kept as a live reference for the public surface it had.
+import { ScopedElementsMixin as OpenWcScopedElementsMixin } from '@open-wc/scoped-elements/lit-element.js';
 
 import {
   ScopedElementsMixin,
@@ -17,8 +19,50 @@ import { ScopedElementsMixinV4 } from '../src/ScopedElementsMixinV4.js';
  */
 
 const scopedSupport = supportsScopedRegistry();
+
+/** The two exported names must resolve to one and the same deduped mixin. */
+const SupportsScopedRegistryMixinNamesAreIdentical = () =>
+  ScopedElementsMixin === /** @type {any} */ (ScopedElementsMixinV4);
+
+/** The public surface is read off an element class, which is how a consumer reaches it. */
+class MixinSurfaceHost extends ScopedElementsMixin(LitElement) {}
+class OpenWcSurfaceHost extends OpenWcScopedElementsMixin(LitElement) {}
 /** @type {string} */
 let specVersion = 'none';
+describe('public surface (kept compatible with the 0.x era)', () => {
+  it('exposes the same mixin under both names', () => {
+    // extension layers import `ScopedElementsMixin`; the implementation file exports `V4`. They must
+    // be the identical deduped mixin, otherwise a consumer that uses both would get two behaviours.
+    expect(SupportsScopedRegistryMixinNamesAreIdentical()).to.equal(true);
+  });
+
+  it('keeps the scopedElementsVersion marker the previous mixin exposed', () => {
+    // the marker is reached through an element class, in the mixin we replace as well as in ours
+    expect(OpenWcSurfaceHost.scopedElementsVersion).to.equal('3.0.0');
+    expect(MixinSurfaceHost.scopedElementsVersion).to.match(/^\d+\.\d+\.\d+$/);
+    expect(MixinSurfaceHost.scopedElementsVersion).to.not.equal(undefined);
+    // neither implementation exposes it on the mixin function itself
+    expect(/** @type {any} */ (ScopedElementsMixin).scopedElementsVersion).to.equal(undefined);
+    // the global registry of mixin versions, which both write on import (same mechanism, same page)
+    const versions = /** @type {any} */ (globalThis).scopedElementsVersions;
+    expect(versions).to.include('3.0.0');
+    expect(versions).to.include(MixinSurfaceHost.scopedElementsVersion);
+  });
+
+  it('answers supportsScopedRegistry() for this mode', () => {
+    expect(supportsScopedRegistry()).to.equal(
+      supportsScopedRegistryV0() || supportsScopedRegistryV1(),
+    );
+    expect(supportsScopedRegistry()).to.equal(scopedSupport);
+  });
+
+  it('treats a browser with the 0.x polyfill as a version 0 environment', () => {
+    // the only mode where both are observable: 0.x wins, because its registries cannot be handed to
+    // the native `customElementRegistry` option
+    expect(supportsScopedRegistryV0() && supportsScopedRegistryV1()).to.be.false;
+  });
+});
+
 if (supportsScopedRegistryV1()) {
   specVersion = '1.x';
 } else if (supportsScopedRegistryV0()) {

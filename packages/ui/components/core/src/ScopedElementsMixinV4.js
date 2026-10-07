@@ -13,6 +13,22 @@ import { adoptStyles, isServer } from 'lit';
  */
 
 /**
+ * The version of this mixin implementation. `@open-wc/scoped-elements` v3 exposed the same marker
+ * through `ScopedElementsMixin.scopedElementsVersion` (and registered it on
+ * `window.scopedElementsVersions`), and Lion's exported mixin inherited both, so consumers may read
+ * either. The mechanism is kept; the value advances with the implementation, which is what a version
+ * marker is for: this is the v4 candidate, and it is the one that talks to both contracts.
+ */
+const version = '4.0.0';
+const versions = /** @type {string[]} */ (
+  /** @type {any} */ (globalThis).scopedElementsVersions ||
+    /** @type {any} */ (globalThis.scopedElementsVersions = [])
+);
+if (!versions.includes(version)) {
+  versions.push(version);
+}
+
+/**
  * The next version of the scoped elements mixin: this implementation is the candidate for
  * `@open-wc/scoped-elements` v4 (it no longer extends that package at runtime, and it talks
  * to both versions of the scoped registry proposal). Lion uses this internally, and
@@ -185,6 +201,15 @@ const ScopedElementsMixinV4Implementation = superclass =>
      * @type {ScopedElementsMap=}
      */
     static scopedElements;
+
+    /**
+     * The version of this mixin implementation, as `@open-wc/scoped-elements` v3 exposed it.
+     *
+     * @returns {string}
+     */
+    static get scopedElementsVersion() {
+      return version;
+    }
 
     /** @type {CustomElementRegistry=} */
     static __registry;
