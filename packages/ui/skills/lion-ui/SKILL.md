@@ -108,6 +108,19 @@ Cross-cutting `@lion/ui` APIs that most components rely on:
 
 <!-- lion-ui:systems:end -->
 
+## Guides
+
+Task-oriented how-to guides, generated from lion's own documentation:
+
+<!-- lion-ui:guides:start -->
+
+- [`Create A Custom Field`](references/guides/create-a-custom-field.md)
+- [`Create A Form`](references/guides/create-a-form.md)
+- [`Extend A Native Input`](references/guides/extend-a-native-input.md)
+- [`Get Started`](references/guides/get-started.md)
+
+<!-- lion-ui:guides:end -->
+
 ## Code Structure & Standards
 
 ### Dependency policy (important)
@@ -133,7 +146,9 @@ import { Required, MinLength } from '@lion/ui/validate.js';
 #### Pre-flight: read the control docs first (MANDATORY)
 
 Before wiring a form, read `references/systems/form.md` (validation, model-value,
-interaction-states) and the reference doc for every form control you plan to use.
+interaction-states), the [`create-a-form` guide](references/guides/create-a-form.md) for the
+light-dom best practices that form registration depends on, and the reference doc for every form
+control you plan to use.
 
 #### Light DOM: only when composing a control _within_ a form
 
