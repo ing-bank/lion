@@ -11,7 +11,7 @@
 import type { ProjectMock } from '../createProjectSandbox.ts';
 
 export type ScenarioCheck = {
-  type: 'exists' | 'contains' | 'notContains' | 'matches' | 'notMatches';
+  type: 'exists' | 'contains' | 'notContains' | 'matches' | 'notMatches' | 'noExtraFiles';
   /** File the check applies to, relative to the project root. */
   file: string;
   /** Needle for `contains` / `notContains`. */

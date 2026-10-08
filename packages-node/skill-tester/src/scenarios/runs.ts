@@ -72,6 +72,11 @@ export const ibanFieldScenario: TestScenario = {
       pattern: 'NL17INGB0002822608',
       description: 'prefills the field with the requested value',
     },
+    {
+      type: 'noExtraFiles',
+      file: 'src/my-iban-field.js',
+      description: 'creates no files other than the deliverable',
+    },
   ],
   behaviour: {
     description: 'the right component is used, upgraded, and carries the requested label + prefill',
@@ -175,6 +180,11 @@ export const accordionScenario: TestScenario = {
       file: 'src/my-accordion.js',
       pattern: '@lion/ui/(components|src)/',
       description: 'does not deep-import from @lion/ui internals',
+    },
+    {
+      type: 'noExtraFiles',
+      file: 'src/my-accordion.js',
+      description: 'creates no files other than the deliverable',
     },
   ],
   behaviour: {
