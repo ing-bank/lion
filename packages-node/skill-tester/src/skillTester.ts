@@ -27,7 +27,7 @@ import {
   type AggregateStats,
   type ScenarioScore,
 } from './scoring/qualityScore.ts';
-import { runGates } from './scoring/gates.ts';
+import { runGates, allowedLionUiSpecifiers } from './scoring/gates.ts';
 import {
   runBehaviourSuite,
   defaultRepoRoot,
@@ -245,6 +245,9 @@ export async function runSkillTester(config: SkillTesterConfig): Promise<SkillTe
   } = config;
 
   const repoRoot = config.repoRoot ?? defaultRepoRoot();
+  // Derived from the package's own export map: one allowlist instead of several denylists, and it
+  // cannot go stale when the map changes.
+  const allowedSpecifiers = allowedLionUiSpecifiers(repoRoot);
   // The behaviour tier needs the sandboxes inside the repo so that `@lion/ui` (a workspace symlink)
   // resolves; without this an opt-in behaviour run would silently fail every case from outside.
   const sandboxBase =
@@ -321,12 +324,13 @@ export async function runSkillTester(config: SkillTesterConfig): Promise<SkillTe
               });
         const durationMs = Date.now() - start;
 
-        const gates = runGates(sandboxRoot);
+        const gates = runGates(sandboxRoot, { allowedLionUiSpecifiers: allowedSpecifiers });
         const score = applyGates(
           scoreScenario({
             sandboxRoot,
             expectedTransformedFiles: scenario.expectedTransformedFiles,
             checks: scenario.checks,
+            declaredFiles: Object.keys(scenario.files),
           }),
           gates,
         );
