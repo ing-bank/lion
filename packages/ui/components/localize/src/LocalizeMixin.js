@@ -66,7 +66,15 @@ const LocalizeMixinImplementation = /** @type {LocalizeMixin} */ (superclass =>
      * @returns {Promise.<void>}
      */
     async scheduleUpdate() {
-      if (Object.getPrototypeOf(this).constructor.waitForLocalizeNamespaces) {
+      // @ts-expect-error we allow calling protected members from siblings within the same system
+      const areLocalizeNamespacesLoaded = this._localizeManager._areNamespacesInCache(
+        this.__getUniqueNamespaces(),
+      );
+
+      if (
+        !areLocalizeNamespacesLoaded &&
+        Object.getPrototypeOf(this).constructor.waitForLocalizeNamespaces
+      ) {
         await this.localizeNamespacesLoaded;
       }
       super.scheduleUpdate();
