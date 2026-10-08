@@ -1,6 +1,8 @@
 import { dedupeMixin } from '@open-wc/dedupe-mixin';
 import { adoptStyles, isServer } from 'lit';
 
+import { claimScopedRegistry } from './scopedElementsHydration.js';
+
 /**
  * @typedef {import('../../form-core/types/validate/ValidateMixinTypes.js').ScopedElementsMap} ScopedElementsMap
  * @typedef {import('@open-wc/dedupe-mixin').Constructor<ScopedElementsHost>} ScopedElementsHostConstructor
@@ -308,6 +310,36 @@ const ScopedElementsMixinV4Implementation = superclass =>
      */
     attachShadow(options) {
       const { scopedElements } = /** @type {typeof ScopedElementsHost} */ (this.constructor);
+
+      /**
+       * A server rendered (declarative) shadow root already exists: the parser created it before any
+       * script ran. It must be *reused*: re-attaching wipes its content (measured natively - the
+       * redesigned polyfill happens to reuse it, so doing it here gives native and polyfilled pages the
+       * same behaviour), and the registry of that root is the one the server rendered against, or the
+       * one `hydrateScopedRegistries` resolved from the markup hash, so it is adopted rather than
+       * replaced. Only a root that has no registry yet gets ours.
+       */
+      const declarativeRoot = !isServer ? /** @type {ShadowRoot | null} */ (this.shadowRoot) : null;
+      if (declarativeRoot) {
+        const rootRegistry = /** @type {any} */ (declarativeRoot).customElementRegistry;
+        if (rootRegistry) {
+          this.registry = rootRegistry;
+        } else if (
+          !this.registry ||
+          // @ts-expect-error
+          (this.registry === this.constructor.__registry &&
+            !Object.prototype.hasOwnProperty.call(this.constructor, '__registry'))
+        ) {
+          this.registry = supportsScopedRegistry() ? new CustomElementRegistry() : customElements;
+        }
+        if (this.registry && !rootRegistry) {
+          claimScopedRegistry(declarativeRoot, this.registry);
+        }
+        for (const [tagName, klass] of Object.entries(scopedElements ?? {})) {
+          this.defineScopedElement(tagName, klass);
+        }
+        return declarativeRoot;
+      }
 
       const shouldCreateRegistry =
         !this.registry ||
