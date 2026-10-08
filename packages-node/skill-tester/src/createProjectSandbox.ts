@@ -55,6 +55,11 @@ export async function createProjectSandbox(
     mock['package.json'] = `${JSON.stringify({ type: 'module' }, null, 2)}\n`;
   }
 
+  // A reused output path (the same model+scenario+sample across runs) must not carry files from a
+  // previous run into this one: a stale produced file, or a leftover behaviour test, would be
+  // scored as THIS run's output. Clear the target before writing.
+  await fileSystem.promises.rm(outputPath, { recursive: true, force: true });
+
   const pendingWrites = [];
   for (const [finalPath, content] of Object.entries(stringifyObjKeyValues(mock))) {
     const fullPath = path.join(outputPath, finalPath);
