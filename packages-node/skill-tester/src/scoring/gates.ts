@@ -173,17 +173,61 @@ function syntaxGateFor(files: ParsedFile[]): GateResult {
  */
 const DEEP_LION_IMPORT = /^@lion\/ui\/(components|src)\//;
 
-function policyViolation(specifier: string): string | undefined {
+/**
+ * The `@lion/ui` specifiers that actually exist, derived from the package's own export map.
+ *
+ * One allowlist replaces four denylists: `#` subpath imports, `@lion/*` other than `@lion/ui/*`,
+ * deep paths, and any subpath the export map does not declare all fail the same test — and the
+ * list stays true when the export map changes, because it is read from the map itself.
+ */
+export function allowedLionUiSpecifiers(repoRoot: string): string[] {
+  const packageJsonPath = path.join(repoRoot, 'packages/ui/package.json');
+  if (!fs.existsSync(packageJsonPath)) return [];
+  const { exports } = JSON.parse(fs.readFileSync(packageJsonPath, 'utf-8')) as {
+    exports?: Record<string, unknown>;
+  };
+  return Object.keys(exports ?? {})
+    .filter(key => key.startsWith('./'))
+    .map(key => `@lion/ui/${key.slice(2)}`);
+}
+
+/**
+ * Export-map keys use a single `*` wildcard. Matched by prefix/suffix rather than by building a
+ * RegExp, so this needs no escaping and cannot mis-escape a specifier.
+ */
+function matchesExportPattern(specifier: string, patterns: string[]): boolean {
+  return patterns.some(pattern => {
+    const [prefix, suffix] = pattern.split('*');
+    if (suffix === undefined) return specifier === prefix;
+    return (
+      specifier.startsWith(prefix) &&
+      specifier.endsWith(suffix) &&
+      specifier.length >= prefix.length + suffix.length
+    );
+  });
+}
+
+function policyViolation(specifier: string, allowed: string[] = []): string | undefined {
+  if (specifier.startsWith('#')) {
+    return `imports '${specifier}': internal '#' subpath imports are not public API, use the '@lion/ui/*' entrypoints`;
+  }
   if (DEEP_LION_IMPORT.test(specifier)) {
     return `imports '${specifier}': deep imports are not documented, use the '@lion/ui/*' entrypoints`;
   }
   if (specifier === '@lion' || (specifier.startsWith('@lion/') && !specifier.startsWith('@lion/ui'))) {
     return `imports '${specifier}': use the '@lion/ui/*' entrypoints ('@lion/*' is not a dependency)`;
   }
+  if (
+    allowed.length > 0 &&
+    specifier.startsWith('@lion/ui/') &&
+    !matchesExportPattern(specifier, allowed)
+  ) {
+    return `imports '${specifier}': not covered by the '@lion/ui' export map`;
+  }
   return undefined;
 }
 
-function importPolicyGateFor(files: ParsedFile[]): GateResult {
+function importPolicyGateFor(files: ParsedFile[], allowed: string[] = []): GateResult {
   const failures: GateFailure[] = [];
   let checked = 0;
 
@@ -192,7 +236,7 @@ function importPolicyGateFor(files: ParsedFile[]): GateResult {
     if (file.errors.length > 0) continue;
     checked++;
     for (const { value, start } of file.specifiers) {
-      const message = policyViolation(value);
+      const message = policyViolation(value, allowed);
       if (!message) continue;
       failures.push({ file: file.relative, message, ...offsetToLineColumn(file.source, start) });
     }
@@ -212,9 +256,15 @@ function importPolicyGateFor(files: ParsedFile[]): GateResult {
 }
 
 /** Run every gate over a sandbox, parsing each file exactly once. */
-export function runGates(sandboxRoot: string): GateResult[] {
+export function runGates(
+  sandboxRoot: string,
+  options: { allowedLionUiSpecifiers?: string[] } = {},
+): GateResult[] {
   const files = parseSandbox(sandboxRoot);
-  return [syntaxGateFor(files), importPolicyGateFor(files)];
+  return [
+    syntaxGateFor(files),
+    importPolicyGateFor(files, options.allowedLionUiSpecifiers ?? []),
+  ];
 }
 
 /** The syntax gate on its own. */

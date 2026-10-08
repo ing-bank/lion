@@ -110,6 +110,11 @@ function entrypointChecks(name: string, defineEntrypoints: string[] = []): Scena
       pattern: '@lion/ui/(components|src)/',
       description: 'does not deep-import from @lion/ui internals',
     },
+    {
+      type: 'noExtraFiles',
+      file: TARGET_FILE,
+      description: 'creates no files other than the deliverable',
+    },
   ];
 }
 

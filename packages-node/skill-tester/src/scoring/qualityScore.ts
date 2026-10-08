@@ -134,18 +134,73 @@ function readSandboxFile(sandboxRoot: string, relativePath: string): string {
   }
 }
 
+/** Support files the harness puts in every sandbox; never counted as unexpected output. */
+const SANDBOX_SUPPORT = ['.skill', 'package.json', 'package-lock.json', 'node_modules'];
+
+function listSandboxFiles(sandboxRoot: string, base = ''): string[] {
+  const directory = base ? path.join(sandboxRoot, base) : sandboxRoot;
+  if (!fs.existsSync(directory)) return [];
+  const found: string[] = [];
+  for (const entry of fs.readdirSync(directory, { withFileTypes: true })) {
+    const relative = base ? `${base}/${entry.name}` : entry.name;
+    if (entry.isDirectory()) found.push(...listSandboxFiles(sandboxRoot, relative));
+    else found.push(relative);
+  }
+  return found;
+}
+
+/**
+ * Files the model created that the scenario never asked for.
+ *
+ * The prompt is explicit ("create that file only — nothing else"), so this is a hard check rather
+ * than a nicety: stray files are unscored noise that can also mask a wrong answer.
+ */
+/** Files written by the harness itself (never model output). */
+const HARNESS_WRITTEN = ['behaviour.test.js', 'wtr.config.mjs'];
+
+export function unexpectedFiles(sandboxRoot: string, declaredFiles: string[]): string[] {
+  const declared = new Set(declaredFiles);
+  return listSandboxFiles(sandboxRoot).filter(relative => {
+    if (declared.has(relative)) return false;
+    if (relative === 'package.json' || relative === 'package-lock.json') return false;
+    if (relative.startsWith('.skill/')) return false;
+    if (relative.startsWith('node_modules/')) return false;
+    if (HARNESS_WRITTEN.includes(relative)) return false;
+    return true;
+  });
+}
+
 const CHECK_DESCRIPTIONS: Record<ScenarioCheck['type'], (check: ScenarioCheck) => string> = {
   contains: check => `${check.file} contains ${JSON.stringify(check.value ?? '')}`,
   notContains: check => `${check.file} does not contain ${JSON.stringify(check.value ?? '')}`,
   matches: check => `${check.file} matches /${check.pattern ?? ''}/`,
   notMatches: check => `${check.file} does not match /${check.pattern ?? ''}/`,
   exists: check => `${check.file} exists`,
+  noExtraFiles: check => `no files beyond "${check.file}" were created`,
 };
 
-export function evaluateCheck(sandboxRoot: string, check: ScenarioCheck): CheckOutcome {
+export function evaluateCheck(
+  sandboxRoot: string,
+  check: ScenarioCheck,
+  declaredFiles: string[] = [],
+): CheckOutcome {
+  const weight = check.weight ?? 1;
+
+  if (check.type === 'noExtraFiles') {
+    // The deliverable itself is never "extra", even when a caller forgets declaredFiles.
+    const unexpected = unexpectedFiles(sandboxRoot, [...declaredFiles, check.file]);
+    return {
+      description:
+        unexpected.length === 0
+          ? `no files beyond "${check.file}" were created`
+          : `unexpected file(s) created: ${unexpected.join(', ')}`,
+      passed: unexpected.length === 0,
+      weight,
+    };
+  }
+
   const content = readSandboxFile(sandboxRoot, check.file);
   const description = check.description ?? CHECK_DESCRIPTIONS[check.type](check);
-  const weight = check.weight ?? 1;
   let passed = false;
 
   switch (check.type) {
@@ -173,15 +228,18 @@ export function scoreScenario({
   sandboxRoot,
   expectedTransformedFiles = {},
   checks = [],
+  declaredFiles = [],
 }: {
   sandboxRoot: string;
   expectedTransformedFiles?: Record<string, string>;
   checks?: ScenarioCheck[];
+  /** Files the scenario shipped in the sandbox, so the extra-file check can tell them apart. */
+  declaredFiles?: string[];
 }): ScenarioScore {
   const files = Object.entries(expectedTransformedFiles).map(([relativePath, expectedContent]) =>
     scoreFile({ sandboxRoot, relativePath, expectedContent }),
   );
-  const checkOutcomes = checks.map(check => evaluateCheck(sandboxRoot, check));
+  const checkOutcomes = checks.map(check => evaluateCheck(sandboxRoot, check, declaredFiles));
 
   const items: { score: number; weight: number }[] = [
     ...files.map(file => ({ score: file.score, weight: 1 })),
