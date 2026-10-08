@@ -264,6 +264,21 @@ export class LocalizeManager extends EventTarget {
   }
 
   /**
+   * @protected
+   * @param {NamespaceObject[]} namespaces
+   * @returns {Boolean}
+   */
+  _areNamespacesInCache(namespaces, { locale = this.locale } = { locale: this.locale }) {
+    return namespaces.every(namespaceObj => {
+      const namespace = /** @type {string} */ (
+        typeof namespaceObj === 'object' ? Object.keys(namespaceObj)[0] : namespaceObj
+      );
+
+      return this._isNamespaceInCache(locale, namespace);
+    });
+  }
+
+  /**
    * @param {string | string[]} keys
    * @param {Object<string,any>} [vars]
    * @param {Object} [opts]
