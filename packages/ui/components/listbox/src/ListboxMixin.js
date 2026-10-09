@@ -2,7 +2,7 @@ import { css, html } from 'lit';
 import { SlotMixin, uuid } from '@lion/ui/core.js';
 import { dedupeMixin } from '@open-wc/dedupe-mixin';
 import { ChoiceGroupMixin, FormControlMixin, FormRegistrarMixin } from '@lion/ui/form-core.js';
-import { ScopedElementsMixin } from '../../core/src/ScopedElementsMixin.js';
+import { ScopedElementsMixinV4 } from '../../core/src/ScopedElementsMixinV4.js';
 import { LionOptions } from './LionOptions.js';
 import { moveUserProvidedDefaultSlottablesToTarget } from '../../core/src/SlotMixin.js';
 
@@ -29,7 +29,7 @@ import { moveUserProvidedDefaultSlottablesToTarget } from '../../core/src/SlotMi
 // prettier-ignore
 const ListboxMixinImplementation = /** @type {ListboxMixin} */ (superclass =>
   class ListboxMixin extends FormControlMixin(
-    ScopedElementsMixin(ChoiceGroupMixin(SlotMixin(FormRegistrarMixin(superclass)))),
+    ScopedElementsMixinV4(ChoiceGroupMixin(SlotMixin(FormRegistrarMixin(superclass)))),
   ) {
     /** @type {any} */
     static get properties() {

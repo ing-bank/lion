@@ -4,7 +4,7 @@ import { LocalizeMixin } from '@lion/ui/localize.js';
 import { css, html, LitElement, nothing } from 'lit';
 import { ifDefined } from 'lit/directives/if-defined.js';
 import { repeat } from 'lit/directives/repeat.js';
-import { ScopedElementsMixin } from '../../core/src/ScopedElementsMixin.js';
+import { ScopedElementsMixinV4 } from '../../core/src/ScopedElementsMixinV4.js';
 import { localizeNamespaceLoader } from './localizeNamespaceLoader.js';
 
 /**
@@ -13,7 +13,7 @@ import { localizeNamespaceLoader } from './localizeNamespaceLoader.js';
  * @typedef {import('../types/input-file.js').SystemFile} SystemFile
  */
 
-export class LionSelectedFileList extends LocalizeMixin(ScopedElementsMixin(LitElement)) {
+export class LionSelectedFileList extends LocalizeMixin(ScopedElementsMixinV4(LitElement)) {
   static get scopedElements() {
     return {
       // @ts-expect-error [external] fix types scopedElements

@@ -2,7 +2,7 @@ import { LionField } from '@lion/ui/form-core.js';
 import { LocalizeMixin } from '@lion/ui/localize.js';
 import { css, html } from 'lit';
 import { ifDefined } from 'lit/directives/if-defined.js';
-import { ScopedElementsMixin } from '../../core/src/ScopedElementsMixin.js';
+import { ScopedElementsMixinV4 } from '../../core/src/ScopedElementsMixinV4.js';
 import { FileHandle, MAX_FILE_SIZE } from './FileHandle.js';
 import { LionSelectedFileList } from './LionSelectedFileList.js';
 import { localizeNamespaceLoader } from './localizeNamespaceLoader.js';
@@ -40,7 +40,7 @@ function formatBytes(bytes, decimals = 2) {
  *
  * @customElement lion-input-file
  */
-export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField)) {
+export class LionInputFile extends ScopedElementsMixinV4(LocalizeMixin(LionField)) {
   static get scopedElements() {
     return {
       // @ts-ignore [ts7-2855] TS7 rejects field access via super (the parent declares this as a field). Dot form kept deliberately: bracket access is exempt from property mangling (terser keep_quoted), which could split this property into two names. Upstream fix: declare an accessor in the parent type
