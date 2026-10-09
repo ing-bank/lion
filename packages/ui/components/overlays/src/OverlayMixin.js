@@ -1,6 +1,5 @@
 import { dedupeMixin } from '@open-wc/dedupe-mixin';
 import { OverlayController } from './OverlayController.js';
-import { isEqualConfig } from './utils/is-equal-config.js';
 
 /**
  * @typedef {<T>(ingOverlayHost:T) => void} PostProcessor
@@ -28,14 +27,12 @@ export function _addOverlayMixinPostProcessor(postProcessor) {
  * @type {OverlayMixin}
  * @param {import('@open-wc/dedupe-mixin').Constructor<import('lit').LitElement>} superclass
  */
+// @ts-ignore https://github.com/microsoft/TypeScript/issues/36821#issuecomment-588375051
 export const OverlayMixinImplementation = superclass => {
   class OverlayMixin extends superclass {
     static get properties() {
       return {
-        opened: {
-          type: Boolean,
-          reflect: true,
-        },
+        opened: { type: Boolean, reflect: true },
       };
     }
 
@@ -69,13 +66,13 @@ export const OverlayMixinImplementation = superclass => {
 
     /** @param {OverlayConfig} value */
     set config(value) {
-      const shouldUpdate = !isEqualConfig(this.config, value);
-
-      if (this._overlayCtrl && shouldUpdate) {
+      // The OverlayController already guards against redundant updates
+      // (see OverlayController#updateConfig), so we delegate unconditionally here.
+      if (this._overlayCtrl) {
         this._overlayCtrl.updateConfig(value);
       }
       this.__config = value;
-      if (this._overlayCtrl && shouldUpdate) {
+      if (this._overlayCtrl) {
         this.__syncToOverlayController();
       }
     }
@@ -160,6 +157,8 @@ export const OverlayMixinImplementation = superclass => {
      */
     // eslint-disable-next-line class-methods-use-this
     _setupOpenCloseListeners() {
+      // Keeps the close-overlay event private for the controller.
+      // (we already have )
       /**
        * @param {{ stopPropagation: () => void; }} ev
        */
@@ -217,12 +216,6 @@ export const OverlayMixinImplementation = superclass => {
     // @ts-expect-error
     static enabledWarnings = super.enabledWarnings?.filter(w => w !== 'change-in-update') || [];
 
-    get _overlayInvokerNode() {
-      return /** @type {HTMLElement | undefined} */ (
-        Array.from(this.children).find(child => child.slot === 'invoker')
-      );
-    }
-
     /**
      * @overridable
      */
@@ -255,13 +248,81 @@ export const OverlayMixinImplementation = superclass => {
       );
     }
 
+    /**
+     * Returns the element that can actually receive focus inside the passed
+     * invoker (wrapper) element: the element itself when it is focusable,
+     * otherwise the first focusable descendant.
+     * @param {Element|null|undefined} focusableElOrWrapper
+     * @returns {Element|null}
+     */
+    /**
+     * @param {Element | null | undefined} focusableElOrWrapper
+     * @returns {Element | null}
+     */
+    static _getFocusableInvokerEl(focusableElOrWrapper) {
+      if (!focusableElOrWrapper) return null;
+      const focusableSelector = '[tabindex], button, a[href], [role=button]';
+      return focusableElOrWrapper.matches(focusableSelector)
+        ? focusableElOrWrapper
+        : focusableElOrWrapper.querySelector(focusableSelector);
+    }
+
+    /**
+     * The node that opens/closes this overlay.
+     *
+     * Resolved in a stable, declarative way (independent of the exact DOM order)
+     * by looking, in order, for:
+     * 1. a child with `[slot="invoker"]`
+     * 2. any element in the same root that opts in via `[data-invoker]` and
+     *    references this host by id (`for="<id>"`)
+     * 3. a preceding sibling that opts in via `[data-invoker]`
+     * @protected
+     */
+    get _overlayInvokerNode() {
+      if (!this.__invokerNode) {
+        this.__invokerNode = this._getInvokerNode();
+      }
+      return this.__invokerNode;
+    }
+
+    /**
+     * @protected
+     * @returns {Element|null}
+     */
+    _getInvokerNode() {
+      const ctor = /** @type {typeof OverlayMixin} */ (this.constructor);
+
+      const slottedNode = Array.from(this.children).find(child => child.slot === 'invoker');
+      if (slottedNode) {
+        return ctor._getFocusableInvokerEl(slottedNode);
+      }
+
+      if (this.id) {
+        // Reference the invoker declaratively: `<button data-invoker for="my-menu">`
+        const root = /** @type {Document|ShadowRoot} */ (this.getRootNode());
+        const explicitInvoker = root.querySelector?.(`[data-invoker][for="${this.id}"]`);
+        if (explicitInvoker) {
+          return ctor._getFocusableInvokerEl(explicitInvoker);
+        }
+      }
+
+      // Fall back to a preceding sibling that opted in via [data-invoker]
+      const { previousElementSibling } = this;
+      return previousElementSibling && previousElementSibling.hasAttribute('data-invoker')
+        ? ctor._getFocusableInvokerEl(previousElementSibling)
+        : null;
+    }
+
     /** @protected */
     _setupOverlayCtrl() {
       if (this.#hasSetup) return;
+
+      const invokerNode = this._overlayInvokerNode;
+
       const config = {
         contentNode: this._overlayContentNode,
         contentWrapperNode: this._overlayContentWrapperNode,
-        invokerNode: this._overlayInvokerNode,
+        invokerNode: invokerNode && invokerNode instanceof HTMLElement ? invokerNode : undefined,
         referenceNode: this._overlayReferenceNode,
         backdropNode: this._overlayBackdropNode,
       };
@@ -282,6 +343,8 @@ export const OverlayMixinImplementation = superclass => {
 
     /** @protected */
     _teardownOverlayCtrl() {
+      // Make sure that dynamic behavior (e.g. responsive) is possible by allowing multiple setups and teardowns of the overlay controller.
+      this.#hasSetup = false;
       if (!this._overlayCtrl) return;
 
       this._teardownOpenCloseListeners();
@@ -434,6 +497,7 @@ export const OverlayMixinImplementation = superclass => {
   for (const postProcessor of overlayMixinPostProcessors) {
     postProcessor(OverlayMixin);
   }
-  return /** @type {* & OverlayMixin} */ (OverlayMixin);
+  // @ts-ignore https://github.com/microsoft/TypeScript/issues/36821#issuecomment-588375051
+  return OverlayMixin;
 };
 export const OverlayMixin = dedupeMixin(OverlayMixinImplementation);

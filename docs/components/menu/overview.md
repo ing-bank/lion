@@ -1,0 +1,448 @@
+---
+title: 'Menu: Overview'
+parts:
+  - Menu
+  - Overview
+eleventyNavigation:
+  key: 'Menu: Overview'
+  order: 10
+  parent: Menu
+  title: Overview
+---
+
+# Menu: Overview
+
+A menu is a widget that offers a list of choices to the user, such as a set of actions or functions. A menu is usually opened, or made visible, by activating a menu button, choosing an item in a menu that opens a sub menu, or by invoking a command, such as Shift + F10 in Windows, that opens a context specific menu. When a user activates a choice in a menu, the menu usually closes unless the choice opened a submenu.
+
+A menu that is visually persistent is a menubar. A menubar is typically horizontal and is often used to create a menu bar similar to those found near the top of the window in many desktop applications, offering the user quick access to a consistent set of commands.
+
+A common convention for indicating that a menu item launches a dialog box is to append "…" (ellipsis) to the menu item label, e.g., "Save as …".
+
+> From [menu wai-aria best practices](https://www.w3.org/TR/wai-aria-practices/#menu)
+
+```js script
+import { html } from 'lit';
+import '@lion/ui/define/lion-item.js';
+import '@lion/ui/define/lion-menu.js';
+import '@lion/ui/define/lion-menuitem.js';
+import './src/DemoTree.js';
+import './src/DemoToolbar.js';
+import './src/DemoSpinButton.js';
+import { applyMenuDemoStyles } from './applyMenuDemoStyles.js';
+
+applyMenuDemoStyles();
+```
+
+```js preview-story
+export const menuButton = () => html`
+  <nav>
+    <button data-invoker>Open menu</button>
+    <lion-menu>
+      <div role="menuitem">Go to Definition</div>
+      <div role="menuitem">Go to Type Definition</div>
+      <div>
+        <button role="menuitem" data-invoker>Peek</button>
+        <lion-menu>
+          <div role="menuitem">Peek Call Hierarchy</div>
+          <div role="separator"></div>
+          <div role="menuitem">Peek Definition</div>
+        </lion-menu>
+      </div>
+      <div role="separator"></div>
+      <div role="menuitem">Find all References</div>
+    </lion-menu>
+  </nav>
+`;
+```
+
+```js preview-story
+export const menuButtonZ = () => html`
+  <nav>
+    <button data-invoker for="menu">Open menu</button>
+    <lion-menu id="menu">
+      <lion-menuitem> Go to Definition </lion-menuitem>
+      <lion-menuitem> Go to Type Definition </lion-menuitem>
+      <lion-menuitem>
+        <button slot="invoker">Peek</button>
+        <lion-menu>
+          <lion-menuitem type="radio"> Peek Call Hierarchy </lion-menuitem>
+          <div role="separator"></div>
+          <lion-menuitem type="radio"> Peek Definition </lion-menuitem>
+        </lion-menu>
+      </lion-menuitem>
+      <div role="separator"></div>
+      <lion-menuitem type="checkbox"> Find all References </lion-menuitem>
+    </lion-menu>
+  </nav>
+`;
+```
+
+## Groups, menuitemradios and menuitemcheckboxes
+
+From [wai aria menu fragment](https://www.w3.org/TR/wai-aria-practices-1.1/examples/menubar/menubar-2/menubar-2.html)
+
+```js preview-story
+export const groups = () => html`
+  <lion-menu bar invoker-interaction="hover">
+    <div>
+      <div role="menuitem">Font</div>
+      <lion-menu aria-label="Font">
+        <div role="menuitemradio">Sans-serif</div>
+        <div role="menuitemradio">Serif</div>
+        <div role="menuitemradio">Monospace</div>
+        <div role="menuitemradio">Fantasy</div>
+      </lion-menu>
+    </div>
+    <div>
+      <div role="menuitem">Style/Color</div>
+      <lion-menu aria-label="Style/Color">
+        <div role="menuitemcheckbox" aria-checked="true">Bold</div>
+        <div role="menuitemcheckbox" aria-checked="true">Italic</div>
+        <div role="separator"></div>
+        <div role="group" aria-label="Text Color">
+          <div role="menuitemradio" aria-checked="false">Black</div>
+          <div role="menuitemradio" aria-checked="false">Blue</div>
+          <div role="menuitemradio" aria-checked="true">Red</div>
+          <div role="menuitemradio" aria-checked="false">Green</div>
+        </div>
+        <div role="separator"></div>
+        <div role="group" aria-label="Text Decoration">
+          <div role="menuitemradio" aria-checked="true">None</div>
+          <div role="menuitemradio" aria-checked="false">Overline</div>
+          <div role="menuitemradio" aria-checked="false">Line-through</div>
+          <div role="menuitemradio" aria-checked="false">Underline</div>
+        </div>
+      </lion-menu>
+    </div>
+  </lion-menu>
+`;
+```
+
+## Tree
+
+```js preview-story
+export const tree = () => html`
+  <demo-tree>
+    <div role="treeitem">Fruits</div>
+    <demo-tree>
+      <div role="treeitem">Peek Call Hierarchy</div>
+      <div role="treeitem">Peek Definition</div>
+    </demo-tree>
+    <div role="treeitem">Vegetables</div>
+    <demo-tree>
+      <div role="treeitem">Peek Call Hierarchy</div>
+      <div>
+        <div role="treeitem">Peek</div>
+        <demo-tree>
+          <div role="treeitem">Peek Call Hierarchy</div>
+          <div role="treeitem">Peek Definition</div>
+        </demo-tree>
+      </div>
+    </demo-tree>
+    <div role="treeitem">Grains</div>
+    <demo-tree>
+      <div role="treeitem">Peek Call Hierarchy</div>
+      <div role="treeitem">Peek Definition</div>
+    </demo-tree>
+  </demo-tree>
+`;
+```
+
+## Disclosure menu
+
+See <https://www.w3.org/TR/wai-aria-practices-1.1/examples/disclosure/disclosure-navigation.html>
+
+```js preview-story
+export const disclosureMenu = () => html`
+  <nav aria-label="Mythical University">
+    <lion-menu bar ._activeMode="${'tabbable-disclosure'}">
+      <div role="listitem">
+        <button data-invoker>About</button>
+        <lion-menu>
+          <div role="listitem">
+            <a href="/about/overview">Overview</a>
+          </div>
+          <div role="listitem">
+            <a href="/about/administration">Administration</a>
+          </div>
+          <div role="listitem">
+            <a href="/about/facts">Facts</a>
+          </div>
+          <div role="listitem">
+            <a href="/about/campus-tours">Campus Tours</a>
+          </div>
+        </lion-menu>
+      </div>
+      <div role="listitem">
+        <button data-invoker>Admissions</button>
+        <lion-menu id="id_admissions_menu">
+          <div role="listitem">
+            <a href="/admissions/apply">Apply</a>
+          </div>
+          <div role="listitem">
+            <a href="/admissions/tuition">Tuition</a>
+          </div>
+          <div role="listitem">
+            <a href="/admissions/sign-up">Sign Up</a>
+          </div>
+          <div role="listitem">
+            <a href="/admissions/visit">Visit</a>
+          </div>
+          <div role="listitem">
+            <a href="/admissions/photo-tour">Photo Tour</a>
+          </div>
+          <div role="listitem">
+            <a href="/admissions/connect">Connect</a>
+          </div>
+        </lion-menu>
+      </div>
+      <div role="listitem">
+        <button data-invoker>Academics</button>
+        <lion-menu>
+          <div role="listitem">
+            <a href="/academics/colleges-and-schools">Colleges & Schools</a>
+          </div>
+          <div role="listitem">
+            <a href="/academics/programs-of-study">Programs of Study</a>
+          </div>
+          <div role="listitem">
+            <a href="/academics/honors-programs">Honors Programs</a>
+          </div>
+          <div role="listitem">
+            <a href="/academics/online-courses">Online Courses</a>
+          </div>
+          <div role="listitem">
+            <a href="/academics/course-explorer">Course Explorer</a>
+          </div>
+          <div role="listitem">
+            <a href="/academics/register-for-class">Register for Class</a>
+          </div>
+          <div role="listitem">
+            <a href="/academics/academic-calendar">Academic Calendar</a>
+          </div>
+          <div role="listitem">
+            <a href="/academics/transcripts">Transcripts</a>
+          </div>
+        </lion-menu>
+      </div>
+    </lion-menu>
+  </nav>
+`;
+```
+
+## Disclosure menu with anchors on L1
+
+See <https://codepen.io/aardrian/pen/abyXxGw>
+
+```js preview-story
+export const disclosureMenuWithAnchorsOnL1 = () => html`
+ <nav aria-label="Mythical University">
+   <lion-menu bar ._activeMode="${'tabbable-disclosure'}">
+    <div role="listitem">
+      <a href="/about">About</a>
+      <button data-invoker aria-label="More About Pages">▼</button>
+      <lion-menu>
+        <div role="listitem">
+          <a href="/about/overview">Overview</a>
+        </div>
+        <div role="listitem">
+          <a href="/about/administration">Administration</a>
+        </div>
+        <div role="listitem">
+          <a href="/about/facts">Facts</a>
+        </div>
+        <div role="listitem">
+          <a href="/about/campus-tours">Campus Tours</a>
+        </div>
+      </lion-menu>
+    </div>
+    <div role="listitem">
+      <a href="/admissions">Admissions</a>
+      <button data-invoker aria-label="More Admissions Pages">
+        ▼
+      </button>
+      <lion-menu id="id_admissions_menu">
+        <div role="listitem">
+          <a href="/admissions/apply">Apply</a>
+        </div>
+        <div role="listitem">
+          <a href="/admissions/tuition">Tuition</a>
+        </div>
+        <div role="listitem">
+          <a href="/admissions/sign-up">Sign Up</a>
+        </div>
+        <div role="listitem">
+          <a href="/admissions/visit">Visit</a>
+        </div>
+        <div role="listitem">
+          <a href="/admissions/photo-tour">Photo Tour</a>
+        </div>
+        <div role="listitem">
+          <a href="/admissions/connect">Connect</a>
+        </div>
+      </lion-menu>
+    </div>
+    <div role="listitem">
+      <a href="/academics">Academics</a>
+      <button data-invoker aria-label="More Academics Pages">▼</button>
+      <lion-menu>
+        <div role="listitem">
+          <a href="/academics/colleges-and-schools">Colleges & Schools</a>
+        </div>
+        <div role="listitem">
+          <a href="/academics/programs-of-study">Programs of Study</a>
+        </div>
+        <div role="listitem">
+          <a href="/academics/honors-programs">Honors Programs</a>
+        </div>
+        <div role="listitem">
+          <a href="/academics/online-courses">Online Courses</a>
+        </div>
+        <div role="listitem">
+          <a href="/academics/course-explorer">Course Explorer</a>
+        </div>
+        <div role="listitem">
+          <a href="/academics/register-for-class">Register for Class</a>
+        </div>
+        <div role="listitem">
+          <a href="/academics/academic-calendar">Academic Calendar</a>
+        </div>
+        <div role="listitem">
+          <a href="/academics/transcripts">Transcripts</a>
+        </div>
+      </lion-menu>
+    </div>
+  </ul>
+</nav>
+`;
+```
+
+## Toolbar
+
+From [wai aria toolbar](https://www.w3.org/TR/wai-aria-practices-1.2/examples/toolbar/toolbar.html)
+
+```js preview-story
+export const toolbar = () => html`
+  <demo-toolbar>
+    <div>
+      <button data-item title="bold" aria-label="Bold">
+        <span class="fas fa-bold" aria-hidden="true"></span>
+      </button>
+      <button data-item title="italic" aria-label="Italic">
+        <span class="fas fa-italic" aria-hidden="true"></span>
+      </button>
+      <button data-item title="underline" aria-label="Underline">
+        <span class="fas fa-underline" aria-hidden="true"></span>
+      </button>
+    </div>
+    <div role="separator"></div>
+    <div role="radiogroup" aria-label="Text Alignment">
+      <button data-item role="radio" aria-label="Text Align Left">
+        <span class="fas fa-align-left" aria-hidden="true"></span>
+      </button>
+      <button data-item role="radio" aria-label="Text Align Center">
+        <span class="fas fa-align-center" aria-hidden="true"></span>
+      </button>
+      <button data-item role="radio" aria-label="Text Align Right">
+        <span class="fas fa-align-right" aria-hidden="true"></span>
+      </button>
+    </div>
+    <div role="separator"></div>
+
+    <demo-spin-button data-item now="20" min="12" max="40" unit="px"></demo-spin-button>
+    <div role="separator"></div>
+
+    <div>
+      <div role="menuitem">Font</div>
+      <lion-menu aria-label="Font">
+        <div role="menuitemradio">Sans-serif</div>
+        <div role="menuitemradio">Serif</div>
+        <div role="menuitemradio">Monospace</div>
+        <div role="menuitemradio">Fantasy</div>
+      </lion-menu>
+    </div>
+    <div>
+      <div role="menuitem">Style/Color</div>
+      <lion-menu aria-label="Style/Color">
+        <div role="menuitemcheckbox" aria-checked="true">Bold</div>
+        <div role="menuitemcheckbox" aria-checked="true">Italic</div>
+        <div role="separator"></div>
+        <div role="group" aria-label="Text Color">
+          <div role="menuitemradio" aria-checked="false">Black</div>
+          <div role="menuitemradio" aria-checked="false">Blue</div>
+          <div role="menuitemradio" aria-checked="true">Red</div>
+          <div role="menuitemradio" aria-checked="false">Green</div>
+        </div>
+        <div role="separator"></div>
+        <div role="group" aria-label="Text Decoration">
+          <div role="menuitemradio" aria-checked="true">None</div>
+          <div role="menuitemradio" aria-checked="false">Overline</div>
+          <div role="menuitemradio" aria-checked="false">Line-through</div>
+          <div role="menuitemradio" aria-checked="false">Underline</div>
+        </div>
+      </lion-menu>
+    </div>
+  </demo-toolbar>
+`;
+```
+
+## Tree lion-item
+
+```js preview-story
+export const treeItem = () => html`
+  <demo-tree>
+    <lion-item>
+      <div>Fruits</div>
+      <demo-tree>
+        <lion-item>Peek Call Hierarchy</lion-item>
+        <lion-item>Peek Definition</lion-item>
+      </demo-tree>
+    </lion-item>
+    <lion-item>
+      <div>Vegetables</div>
+      <demo-tree>
+        <lion-item>Peek Call Hierarchy</lion-item>
+        <lion-item>
+          <div>Peek</div>
+          <demo-tree>
+            <lion-item>Peek Call Hierarchy</lion-item>
+            <lion-item>Peek Definition</lion-item>
+          </demo-tree>
+        </lion-item>
+      </demo-tree>
+    </lion-item>
+    <lion-item>
+      <div>Grains</div>
+      <demo-tree>
+        <lion-item>Peek Call Hierarchy</lion-item>
+        <lion-item>Peek Definition</lion-item>
+      </demo-tree>
+    </lion-item>
+  </demo-tree>
+`;
+```
+
+## Platform vocabulary (focusgroup)
+
+Arrow key navigation inside a composite widget (menu, menubar, toolbar, tree, listbox) is what the
+[focusgroup attribute](https://open-ui.org/components/focusgroup.explainer/) does on the platform
+(Open UI; shipping in Chrome 150, not part of the HTML spec yet). This component uses the same
+vocabulary, so an implementation that follows the platform proposal finds the same names here:
+
+| api | focusgroup term | note |
+| --- | --- | --- |
+| `axis` | axis: `inline` / `block` | `'block'` (default, up/down) or `'inline'` (left/right) |
+| `wrap` | modifier: `wrap` | arrow keys wrap around at the first/last item |
+| `multiple` | `multiple` in `<select multiple>` | whether more than one item can be checked; selection is not part of the focusgroup api |
+| `selectionFollowsFocus` | - | ARIA/APG vocabulary; selection is out of scope for focusgroup |
+| `hasNoDefaultSelected` | default selected (`HTMLOptionElement.defaultSelected`) | opt-out of the automatic selection of the first item; same property and attribute as `ListboxMixin` |
+
+```html
+<lion-menu axis="inline" wrap>
+  <lion-menuitem>Item 1</lion-menuitem>
+  <lion-menuitem>Item 2</lion-menuitem>
+</lion-menu>
+```
+
+The focusgroup behavior token (`menu`, `menubar`, `toolbar`, `listbox`, `tablist`, ...) is not an api
+here: the role and active mode stay the component's own configuration (`_listRole`/`_activeMode`).

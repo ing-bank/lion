@@ -1,0 +1,126 @@
+import { Constructor } from '@open-wc/dedupe-mixin';
+import { LitElement } from 'lit';
+import { SlotHost } from '../../core/types/SlotMixinTypes.js';
+import { DisabledHost } from '../../core/types/DisabledMixinTypes.js';
+
+export type InteractiveListItemRole =
+  | 'menuitem'
+  | 'menuitemcheckbox'
+  | 'menuitemradio'
+  | 'option'
+  | 'treeitem'
+  | 'radio'
+  | 'checkbox';
+
+export declare class InteractiveListHost extends LitElement {
+  /**
+   * When true, will synchronize activedescendant and selected element on
+   * arrow key navigation.
+   * This behavior can usually be seen on <select> on the Windows platform.
+   * Note that this behavior cannot be used when `multiple` is true.
+   * "Selection follows focus" is the ARIA APG term for this behaviour, see
+   * https://www.w3.org/WAI/ARIA/apg/practices/keyboard-interface/ (the same property exists on
+   * `ListboxMixin`).
+   */
+  public selectionFollowsFocus: Boolean;
+  /**
+   * Whether arrow key navigation wraps around at the first/last item: the `wrap` modifier of the
+   * [focusgroup](https://open-ui.org/components/focusgroup.explainer/) api.
+   */
+  public wrap: Boolean;
+  /**
+   * The axis arrow keys navigate along, in the vocabulary of the
+   * [focusgroup](https://open-ui.org/components/focusgroup.explainer/) api: `'block'`
+   * (default: up/down) or `'inline'` (left/right). Informs screen reader and affects keyboard
+   * navigation.
+   */
+  public axis: 'inline' | 'block';
+
+  /** Whether more than one item can be checked (the platform name in `<select multiple>`) */
+  public multiple: Boolean;
+
+  /** Whether items that do not fit are moved into a 'more' menu (see MoreButtonMenuMixin) */
+  public itemWrap: Boolean;
+
+  /**
+   * When true, no option is selected on initial render (`checkedIndex` stays -1). Named the same as
+   * on `ListboxMixin`; the platform calls the initial selectedness "default selected".
+   */
+  /** The item that currently has the active state */
+  public get activeItem(): HTMLElement;
+
+  public set activeItem(item: HTMLElement);
+
+  /** Element members the mixin body uses on itself (restated: `this` is resolved through this host) */
+  children: HTMLCollection;
+  shadowRoot: ShadowRoot;
+  childNodes: NodeListOf<ChildNode>;
+  localName: string;
+  disabled: boolean;
+
+  public hasNoDefaultSelected: boolean;
+
+  public singleOption: boolean;
+
+  public get checkedIndex(): number | number[];
+
+  public set checkedIndex(index: number | number[]);
+
+  public get activeIndex(): number;
+
+  public set activeIndex(index: number);
+
+  public get listItems(): HTMLElement[];
+
+  public setCheckedIndex(index: number): void;
+
+  protected get _scrollTargetNode(): HTMLElement;
+
+  protected get _invokerNode(): HTMLElement | null | undefined;
+
+  protected set _invokerNode(invokerNode: HTMLElement | null | undefined);
+
+  protected get _listNode(): HTMLElement;
+
+  /** One of 'activedescendant', 'roving-tabindex', 'tabbable-disclosure' or 'none' */
+  protected _activeMode: string;
+
+  /** The role put on the list node: 'menu' | 'menubar' | 'listbox' | 'tree' | 'toolbar' */
+  protected _listRole: string;
+
+  protected _initListItems(newItems: Element[]): void;
+
+  protected _syncCurrentPageWithLocationHref(location: Location): void;
+
+  // private __setupListboxNode(): void;
+
+  protected _getPreviousEnabledOption(currentIndex: number, offset?: number): number;
+
+  protected _getNextEnabledOption(currentIndex: number, offset?: number): number;
+
+  protected _onListKeyDown(ev: KeyboardEvent): void;
+
+  protected _onListKeyUp(ev: KeyboardEvent): void;
+
+  // protected _setupListboxNode(): void;
+
+  // protected _teardownListboxNode(): void;
+
+  protected _onListClick(ev: MouseEvent): void;
+
+  // protected _setupListboxInteractions(): void;
+
+  // protected _onChildActiveChanged(ev: Event): void;
+}
+
+export declare function InteractiveListMixinImplementation<T extends Constructor<LitElement>>(
+  superclass: T,
+): T &
+  Constructor<InteractiveListHost> &
+  Pick<typeof InteractiveListHost, keyof typeof InteractiveListHost> &
+  Constructor<DisabledHost> &
+  Pick<typeof DisabledHost, keyof typeof DisabledHost> &
+  Constructor<SlotHost> &
+  Pick<typeof SlotHost, keyof typeof SlotHost>;
+
+export type InteractiveListMixin = typeof InteractiveListMixinImplementation;

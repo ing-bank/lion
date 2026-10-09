@@ -30,6 +30,13 @@ const ChoiceGroupMixinImplementation = /** @type {ChoiceGroupMixin} */ (supercla
     /** @type {any} */
     static get properties() {
       return {
+        // TODO: rename to `multiple` (the platform name, `<select multiple>`) so it matches the
+        // vocabulary the menu's InteractiveListMixin uses. Must be non-breaking for the released
+        // components that inherit it (listbox/select-rich/combobox, radio-group/checkbox-group): add
+        // `multiple` with its own attribute, keep `multipleChoice`/`multiple-choice` as a deprecated
+        // alias that delegates to it (dev-only deprecation warning) for a release, mark it
+        // `@deprecated` only then and remove the alias in the next major. Coordinate with the TODOs in
+        // packages/ui/components/listbox/src/ListboxMixin.js and combobox/src/LionCombobox.js.
         multipleChoice: { type: Boolean, attribute: 'multiple-choice' },
       };
     }

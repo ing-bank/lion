@@ -98,7 +98,8 @@
     "test": "cd ../../ && npm run test:browser",
     "types": "wireit",
     "types-check-only": "tsc --project tsconfig-check-only.json",
-    "types-restore-visibility": "node ./scripts/types-restore-visibility.js"
+    "types-restore-visibility": "node ./scripts/types-restore-visibility.js",
+    "types-check-consumer": "node ./scripts/check-consumer-types.js"
   },
   "sideEffects": [
     "exports/define/**/*.js",
@@ -130,7 +131,7 @@
   "web-types": "./web-types.json",
   "wireit": {
     "types": {
-      "command": "tsc --build --pretty && npm run types-restore-visibility",
+      "command": "tsc --build --pretty && npm run types-restore-visibility && npm run types-check-consumer",
       "dependencies": [
         "../singleton-manager:types"
       ],
@@ -138,7 +139,8 @@
         "exports/**/*.js",
         "components/**/*",
         "tsconfig.json",
-        "scripts/types-restore-visibility.js"
+        "scripts/types-restore-visibility.js",
+        "scripts/check-consumer-types.js"
       ],
       "output": [
         "dist-types/**"

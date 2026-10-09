@@ -25,7 +25,13 @@ export declare class ListboxHost {
   public rotateKeyboardNavigation: Boolean;
   /**
    * Informs screen reader and affects keyboard navigation.
-   * By default 'vertical'
+   * By default 'vertical'.
+   *
+   * TODO: rename to `axis: 'inline' | 'block'` (the vocabulary the menu's `InteractiveListMixin` uses),
+   * together with `rotateKeyboardNavigation` -> `wrap` and `multipleChoice` -> `multiple`. Must be
+   * non-breaking: the old properties and their attributes stay available as deprecated aliases for a
+   * release (dev-only deprecation warning), and only then get `@deprecated` here and disappear in a
+   * major. See the TODO at the top of src/ListboxMixin.js.
    */
   public orientation: 'vertical' | 'horizontal';
 
