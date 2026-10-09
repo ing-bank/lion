@@ -121,6 +121,15 @@ export type ModelScenarioSummary = {
   stats: AggregateStats;
 };
 
+/** A run that produced no comparable result because the endpoint failed; re-run, not scored. */
+export type RedoableRun = {
+  model: string;
+  scenario: string;
+  sample: number;
+  reason: 'endpoint_error';
+  message: string;
+};
+
 export type SkillTesterReport = {
   skillOrAgent: { name: string; type: 'skill' | 'agent' };
   provider: 'openai' | 'copilot';
@@ -133,6 +142,12 @@ export type SkillTesterReport = {
   finishedAt: string;
   durationMs: number;
   runs: ScenarioRunResult[];
+  /**
+   * Runs the endpoint failed (5xx/429 after retries), so no comparable result exists. They are
+   * excluded from the score and re-run: an infrastructure failure says nothing about the skill, and
+   * it must not take the rest of the sweep down with it.
+   */
+  redoable: RedoableRun[];
   perModelScenario: ModelScenarioSummary[];
   perModel: { model: string; stats: AggregateStats }[];
   overall: AggregateStats;
@@ -268,6 +283,7 @@ export async function runSkillTester(config: SkillTesterConfig): Promise<SkillTe
   const { systemPrompt, extraFiles } = await loadSkillOrAgent(skillOrAgent);
   const startedAt = new Date();
   const runs: ScenarioRunResult[] = [];
+  const redoableRuns: RedoableRun[] = [];
 
   let sandboxCounter = 0;
   for (const model of models) {
@@ -307,9 +323,9 @@ export async function runSkillTester(config: SkillTesterConfig): Promise<SkillTe
 
         // The Copilot provider manages its own agent loop and needs the agent registered by name
         // (and optionally restricted to a tool list); the OpenAI-compatible one runs our loop.
-        const agentRun =
+        const runAgentForScenario = () =>
           llmConfig.provider === 'copilot'
-            ? await runCopilotAgent({
+            ? runCopilotAgent({
                 llmConfig,
                 systemPrompt,
                 userPrompt: scenario.prompt,
@@ -318,7 +334,7 @@ export async function runSkillTester(config: SkillTesterConfig): Promise<SkillTe
                 tools: skillOrAgent.tools,
                 onEvent: onAgentEvent,
               })
-            : await runOpenAiCompatibleAgent({
+            : runOpenAiCompatibleAgent({
                 llmConfig,
                 systemPrompt,
                 userPrompt: scenario.prompt,
@@ -326,6 +342,26 @@ export async function runSkillTester(config: SkillTesterConfig): Promise<SkillTe
                 maxTurns,
                 onEvent: onAgentEvent,
               });
+
+        let agentRun: Awaited<ReturnType<typeof runAgentForScenario>>;
+        try {
+          agentRun = await runAgentForScenario();
+        } catch (error) {
+          // Only a *transient* endpoint failure is a redo. A 4xx, a bad model name or a copilot
+          // configuration error is a mistake in the harness or the call, and must stay loud.
+          if (!isTransientEndpointError(error)) throw error;
+          redoableRuns.push({
+            model,
+            scenario: scenario.name,
+            sample,
+            reason: 'endpoint_error',
+            message: truncate(String(error), 300),
+          });
+          onProgress(
+            red(`    ✘ endpoint failure, recorded to redo: ${truncate(String(error), 160)}`),
+          );
+          continue;
+        }
         const durationMs = Date.now() - start;
 
         const gates = runGates(sandboxRoot, {
@@ -438,6 +474,7 @@ export async function runSkillTester(config: SkillTesterConfig): Promise<SkillTe
     finishedAt: finishedAt.toISOString(),
     durationMs: finishedAt.getTime() - startedAt.getTime(),
     runs,
+    redoable: redoableRuns,
     perModelScenario: buildPerModelScenario(runs),
     perModel: models.map(model => ({
       model,
@@ -471,6 +508,19 @@ export async function runSkillTester(config: SkillTesterConfig): Promise<SkillTe
   }
 
   return report;
+}
+
+/**
+ * A transient endpoint failure is a redo: nothing about the skill can be concluded from it. A 4xx
+ * (bad request, bad model name, auth) is a harness or configuration error and must stay loud.
+ */
+function isTransientEndpointError(error: unknown): boolean {
+  const status = (error as { status?: unknown }).status;
+  if (typeof status === 'number') return status === 429 || status >= 500;
+  return (
+    error instanceof Error &&
+    /fetch failed|ECONNRESET|ETIMEDOUT|socket hang up|network/i.test(error.message)
+  );
 }
 
 /** NUL-separated key for a single (model, scenario, sample) run. */

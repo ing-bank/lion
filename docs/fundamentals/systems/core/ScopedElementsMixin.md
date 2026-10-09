@@ -43,6 +43,9 @@ class MyForm extends ScopedElementsMixin(LitElement) {
 
 ## Best practices
 
+- Import the mixin itself from `@open-wc/scoped-elements/lit-element.js`. It is not re-exported by
+  any `@lion/ui` entrypoint, and the bare package root (`@open-wc/scoped-elements`) and its other
+  subpaths do not provide it — importing from those fails at load.
 - Import the component **class** from its `@lion/ui/<name>.js` entrypoint. `scopedElements` maps a
   tag to a class; the side-effect `@lion/ui/define/lion-<name>.js` entrypoints register globally
   and give you no class to scope.
