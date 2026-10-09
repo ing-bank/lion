@@ -491,4 +491,87 @@ describe('LocalizeMixin', () => {
       expect(p.innerText).to.equal('Hi!');
     }
   });
+
+  it('it schedules rendering directly when namespaces are already loaded', async () => {
+    let paragraphRendered = false;
+    let paragraphTextRendered = false;
+    const myElementNs = {
+      'my-element': async () => ({
+        greeting: 'Hi!',
+      }),
+    };
+
+    class MyLocalizedClass extends LocalizeMixin(LitElement) {
+      static get localizeNamespaces() {
+        return [myElementNs, ...super.localizeNamespaces];
+      }
+
+      async scheduleUpdate() {
+        const result = super.scheduleUpdate();
+
+        const p = /** @type {HTMLParagraphElement} */ (this.shadowRoot?.querySelector('p'));
+        paragraphRendered = p !== null;
+        paragraphTextRendered = p?.innerText === 'Hi!';
+
+        await result;
+      }
+
+      render() {
+        return html`<p>${localizeManager.msg('my-element:greeting')}</p>`;
+      }
+    }
+
+    const tag = defineCE(MyLocalizedClass);
+
+    // Preload namespace
+    await localizeManager.loadNamespace(myElementNs);
+
+    const el = /** @type {MyLocalizedClass} */ (fixtureSync(`<${tag}></${tag}>`));
+
+    await el.updateComplete;
+
+    expect(paragraphRendered).to.be.true;
+    expect(paragraphTextRendered).to.be.true;
+  });
+
+  it('it does not wait an additional microtask to render when namespaces are already loaded', async () => {
+    let paragraphRendered = false;
+    let paragraphTextRendered = false;
+    const myElementNs = {
+      'my-element': async () => ({
+        greeting: 'Hi!',
+      }),
+    };
+
+    class MyLocalizedClass extends LocalizeMixin(LitElement) {
+      static get localizeNamespaces() {
+        return [myElementNs, ...super.localizeNamespaces];
+      }
+
+      render() {
+        return html`<p>${localizeManager.msg('my-element:greeting')}</p>`;
+      }
+    }
+
+    const tag = defineCE(MyLocalizedClass);
+
+    // Preload namespace
+    await localizeManager.loadNamespace(myElementNs);
+
+    const el = /** @type {MyLocalizedClass} */ fixtureSync(`<${tag}></${tag}>`);
+
+    // Do not use updateComplete here (as it will always succeed)
+    await /** @type {Promise<void>} */ (
+      new Promise(resolve => {
+        queueMicrotask(() => {
+          const p = /** @type {HTMLParagraphElement} */ (el.shadowRoot?.querySelector('p'));
+          paragraphRendered = p !== null;
+          paragraphTextRendered = p?.innerText === 'Hi!';
+          resolve();
+        });
+      })
+    );
+    expect(paragraphRendered).to.be.true;
+    expect(paragraphTextRendered).to.be.true;
+  });
 });
