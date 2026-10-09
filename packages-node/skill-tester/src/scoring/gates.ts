@@ -207,6 +207,26 @@ function matchesExportPattern(specifier: string, patterns: string[]): boolean {
   });
 }
 
+/** Files the behaviour harness writes into a sandbox; they are not the model's output. */
+const HARNESS_FILES = new Set(['behaviour.test.js', 'wtr.config.mjs']);
+
+/**
+ * The skill documents exactly one scoped-elements entrypoint.
+ *
+ * Measured: the bare package root (`@open-wc/scoped-elements`) and unrelated subpaths do not provide
+ * the mixin, and the produced file then dies at import in the browser — "Could not import your test
+ * module" — after scoring 100% on the convention tier. This bans them before the browser runs.
+ */
+function openWcViolation(specifier: string): string | undefined {
+  if (
+    specifier.startsWith('@open-wc/scoped-elements') &&
+    specifier !== '@open-wc/scoped-elements/lit-element.js'
+  ) {
+    return `imports '${specifier}': use '@open-wc/scoped-elements/lit-element.js'`;
+  }
+  return undefined;
+}
+
 function policyViolation(specifier: string, allowed: string[] = []): string | undefined {
   if (specifier.startsWith('#')) {
     return `imports '${specifier}': internal '#' subpath imports are not public API, use the '@lion/ui/*' entrypoints`;
@@ -214,6 +234,8 @@ function policyViolation(specifier: string, allowed: string[] = []): string | un
   if (DEEP_LION_IMPORT.test(specifier)) {
     return `imports '${specifier}': deep imports are not documented, use the '@lion/ui/*' entrypoints`;
   }
+  const openWc = openWcViolation(specifier);
+  if (openWc) return openWc;
   if (specifier === '@lion' || (specifier.startsWith('@lion/') && !specifier.startsWith('@lion/ui'))) {
     return `imports '${specifier}': use the '@lion/ui/*' entrypoints ('@lion/*' is not a dependency)`;
   }
@@ -234,6 +256,8 @@ function importPolicyGateFor(files: ParsedFile[], allowed: string[] = []): GateR
   for (const file of files) {
     // A file that does not parse cannot yield reliable imports; the syntax gate owns that failure.
     if (file.errors.length > 0) continue;
+    // Harness-written files are not the model's output.
+    if (HARNESS_FILES.has(file.relative)) continue;
     checked++;
     for (const { value, start } of file.specifiers) {
       const message = policyViolation(value, allowed);
