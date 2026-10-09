@@ -164,7 +164,7 @@ export function renderRunRecord({
     for (const run of failingRuns) {
       for (const check of run.score.checks.filter(check => !check.passed)) {
         lines.push(
-          `| ${check.description} | ${run.scenario}:${run.sample} | ${run.model} | check failed | knowledge / navigation |`,
+          `| ${check.description} | ${run.scenario}:${run.sample} | ${run.model} | check failed | ${run.agentRun.attempted ? 'knowledge / navigation' : 'not attempted'} |`,
         );
       }
       for (const file of run.score.files.filter(file => !file.normalizedMatch)) {
@@ -199,6 +199,13 @@ export function renderRunRecord({
   lines.push(`- [${passMark(totalToolErrors === 0)}] No avoidable tool-call retries.`);
   lines.push(`- [${passMark(maxTurnsHits === 0)}] Every run finished within the turn budget.`);
   lines.push(`- [${passMark(clean)}] No actionable knowledge or navigation gap remains.`);
+
+  // Separate the two failure modes: a model that never wrote the deliverable says nothing about
+  // the skill, so it is reported as an attempt rate rather than folded into the score.
+  const attemptedRuns = report.runs.filter(run => run.agentRun.attempted).length;
+  lines.push(
+    `- Attempt rate: ${attemptedRuns}/${report.runs.length} run(s) modified the deliverable.`,
+  );
   lines.push('');
   lines.push(`Run result: **${clean ? 'clean' : 'not clean'}**`);
   lines.push('');
