@@ -86,7 +86,11 @@ export function renderRunRecord({
 
   lines.push('## Quality score');
   lines.push('');
-  lines.push(`Overall mean: **${(report.overall.mean * 100).toFixed(1)}%**`);
+  if (report.runs.length === 0) {
+    lines.push('Overall mean: **n/a** — no comparable runs (see *Runs to redo*)');
+  } else {
+    lines.push(`Overall mean: **${(report.overall.mean * 100).toFixed(1)}%**`);
+  }
   lines.push('');
   lines.push('| Model | Mean | Min | Max | Std dev | Runs |');
   lines.push('| --- | --- | --- | --- | --- | --- |');
@@ -157,7 +161,11 @@ export function renderRunRecord({
   lines.push('## Undesirable behaviors (evidence)');
   lines.push('');
   if (failingRuns.length === 0 && totalToolErrors === 0) {
-    lines.push('None observed: every scenario passed and no tool call errored.');
+    lines.push(
+      report.runs.length === 0
+        ? 'None observed: no comparable runs (see *Runs to redo*).'
+        : 'None observed: every scenario passed and no tool call errored.',
+    );
   } else {
     lines.push('| Evidence | Scenario | Model | Impact | Classification |');
     lines.push('| --- | --- | --- | --- | --- |');
