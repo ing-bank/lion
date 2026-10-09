@@ -251,7 +251,7 @@ As can be seen in the example of [SlotFunctionResults](#slotfunctionresults), ''
 ## Core: ScopedElementsMixin
 
 `ScopedElementsMixin` gives a component its own custom element registry, so the elements it renders
-are resolved from *that* registry instead of the global one. This is the default assumption for
+are resolved from _that_ registry instead of the global one. This is the default assumption for
 `@lion/ui` usage: a usage example is rendered inside a host `LitElement` that applies the mixin.
 
 ### Why scope instead of registering globally
@@ -280,6 +280,9 @@ class MyForm extends ScopedElementsMixin(LitElement) {
 
 ### Best practices
 
+- Import the mixin itself from `@open-wc/scoped-elements/lit-element.js`. It is not re-exported by
+  any `@lion/ui` entrypoint, and the bare package root (`@open-wc/scoped-elements`) and its other
+  subpaths do not provide it — importing from those fails at load.
 - Import the component **class** from its `@lion/ui/<name>.js` entrypoint. `scopedElements` maps a
   tag to a class; the side-effect `@lion/ui/define/lion-<name>.js` entrypoints register globally
   and give you no class to scope.
@@ -296,9 +299,9 @@ class MyForm extends ScopedElementsMixin(LitElement) {
 
 ### Scoped elements and forms
 
-Scoping applies to the elements a component *renders*. It does not change the light-dom requirement
+Scoping applies to the elements a component _renders_. It does not change the light-dom requirement
 for form registration: a custom form control that must register with an ancestor form still needs to
-render into light dom (see the *create a form* guide). A component that *contains* a form needs
+render into light dom (see the _create a form_ guide). A component that _contains_ a form needs
 neither — the form and its controls share one tree, so registration works across its shadow root.
 
 ## API Reference
