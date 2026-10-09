@@ -8,7 +8,16 @@ import '@lion/ui/define/lion-calendar.js';
  * @typedef {import('lit').TemplateResult} TemplateResult
  */
 
-const fixture = /** @type {(arg: TemplateResult) => Promise<LionCalendar>} */ (_fixture);
+const fixture = /** @type {(arg: TemplateResult) => Promise<LionCalendar>} */ (
+  async arg => {
+    const el = await _fixture(arg);
+    if (!el.hasAttribute('month-year-navigation') && !el.monthYearNavigation) {
+      el.monthYearNavigation = true;
+      await el.updateComplete;
+    }
+    return el;
+  }
+);
 /** Waits for the current macrotask queue to flush (e.g. to let setTimeout(0) callbacks run). */
 const nextMacrotask = () =>
   new Promise(resolve => {
@@ -18,6 +27,73 @@ const nextMacrotask = () =>
 describe('LionCalendar - Month and Year Navigation', () => {
   beforeEach(() => {
     localizeTearDown();
+  });
+
+  describe('Opt-in Configuration and Dynamic Lifecycle', () => {
+    it('is disabled by default', async () => {
+      const el = await _fixture(html`<lion-calendar></lion-calendar>`);
+      expect(el.monthYearNavigation).to.be.false;
+      expect(el.hasAttribute('month-year-navigation')).to.be.false;
+      expect(el.shadowRoot?.querySelector('#month-heading')).to.not.exist;
+      expect(el.shadowRoot?.querySelector('#month')).to.exist;
+      expect(el.shadowRoot?.querySelector('#year')).to.exist;
+    });
+
+    it('can be enabled via month-year-navigation boolean attribute', async () => {
+      const el = await _fixture(html`<lion-calendar month-year-navigation></lion-calendar>`);
+      expect(el.monthYearNavigation).to.be.true;
+      expect(el.shadowRoot?.querySelector('#month-heading')).to.exist;
+      expect(el.shadowRoot?.querySelector('#year-heading')).to.exist;
+    });
+
+    it('can be enabled via property', async () => {
+      const el = await _fixture(html`<lion-calendar .monthYearNavigation=${true}></lion-calendar>`);
+      expect(el.monthYearNavigation).to.be.true;
+      expect(el.hasAttribute('month-year-navigation')).to.be.true;
+      expect(el.shadowRoot?.querySelector('#month-heading')).to.exist;
+    });
+
+    it('returns to day grid when attribute is removed while month selection is open', async () => {
+      const el = await _fixture(
+        html`<lion-calendar
+          month-year-navigation
+          .centralDate=${new Date('2024/06/15')}
+          .selectedDate=${new Date('2024/06/15')}
+        ></lion-calendar>`,
+      );
+      const monthBtn = /** @type {HTMLElement} */ (el.shadowRoot?.querySelector('#month-heading'));
+      monthBtn.click();
+      await el.updateComplete;
+      expect(el.shadowRoot?.querySelector('.calendar__month-selection')).to.exist;
+
+      el.removeAttribute('month-year-navigation');
+      await el.updateComplete;
+
+      expect(el.shadowRoot?.querySelector('.calendar__month-selection')).to.not.exist;
+      expect(el.shadowRoot?.querySelector('#month')).to.exist;
+      expect(el.selectedDate.getTime()).to.equal(new Date('2024/06/15').getTime());
+    });
+
+    it('returns to day grid when attribute is removed while year selection is open', async () => {
+      const el = await _fixture(
+        html`<lion-calendar
+          month-year-navigation
+          .centralDate=${new Date('2024/06/15')}
+          .selectedDate=${new Date('2024/06/15')}
+        ></lion-calendar>`,
+      );
+      const yearBtn = /** @type {HTMLElement} */ (el.shadowRoot?.querySelector('#year-heading'));
+      yearBtn.click();
+      await el.updateComplete;
+      expect(el.shadowRoot?.querySelector('.calendar__year-selection')).to.exist;
+
+      el.removeAttribute('month-year-navigation');
+      await el.updateComplete;
+
+      expect(el.shadowRoot?.querySelector('.calendar__year-selection')).to.not.exist;
+      expect(el.shadowRoot?.querySelector('#year')).to.exist;
+      expect(el.selectedDate.getTime()).to.equal(new Date('2024/06/15').getTime());
+    });
   });
 
   describe('Heading Element Interaction States', () => {

@@ -33,6 +33,10 @@ describe('<lion-calendar>', () => {
     localizeTearDown();
   });
 
+  afterEach(() => {
+    sinon.restore();
+  });
+
   describe('Structure', () => {
     it('implements BEM structure', async () => {
       const el = await fixture(html`<lion-calendar></lion-calendar>`);
@@ -47,22 +51,49 @@ describe('<lion-calendar>', () => {
 
     it('has heading with month and year', async () => {
       const clock = sinon.useFakeTimers({ now: new Date('2000/12/01').getTime() });
+      try {
+        const el = await fixture(html`<lion-calendar></lion-calendar>`);
 
-      const el = await fixture(html`<lion-calendar></lion-calendar>`);
+        expect(el.shadowRoot?.querySelector('#year')).dom.to.equal(`
+          <h2
+            id="year"
+            class="calendar__navigation-heading"
+            aria-atomic="true"
+          >
+            2000
+          </h2>
+        `);
+        expect(el.shadowRoot?.querySelector('#month')).dom.to.equal(`
+          <h2
+            id="month"
+            class="calendar__navigation-heading"
+            aria-atomic="true"
+          >
+            December
+          </h2>
+        `);
+      } finally {
+        clock.restore();
+      }
+    });
 
-      // Year heading is now an interactive button (WCAG: role=button)
+    it('has interactive button headings with chevrons when month-year-navigation is enabled', async () => {
+      const el = await fixture(
+        html`<lion-calendar
+          month-year-navigation
+          .centralDate=${new Date('2000/12/01')}
+        ></lion-calendar>`,
+      );
+
       const yearHeading = el.shadowRoot?.querySelector('#year-heading');
       expect(yearHeading).to.exist;
       expect(yearHeading?.tagName.toLowerCase()).to.equal('button');
       expect(yearHeading?.textContent?.trim()).to.include('2000');
 
-      // Month heading is now an interactive button (WCAG: role=button)
       const monthHeading = el.shadowRoot?.querySelector('#month-heading');
       expect(monthHeading).to.exist;
       expect(monthHeading?.tagName.toLowerCase()).to.equal('button');
       expect(monthHeading?.textContent?.trim()).to.include('December');
-
-      clock.restore();
     });
 
     it('has previous year button', async () => {

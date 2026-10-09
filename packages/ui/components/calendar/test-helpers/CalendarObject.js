@@ -25,11 +25,17 @@ export class CalendarObject {
   }
 
   get yearHeadingEl() {
-    return this.el.shadowRoot?.querySelector('#year-heading');
+    return (
+      this.el.shadowRoot?.querySelector('#year-heading') ||
+      this.el.shadowRoot?.querySelector('#year')
+    );
   }
 
   get monthHeadingEl() {
-    return this.el.shadowRoot?.querySelector('#month-heading');
+    return (
+      this.el.shadowRoot?.querySelector('#month-heading') ||
+      this.el.shadowRoot?.querySelector('#month')
+    );
   }
 
   get nextYearButtonEl() {

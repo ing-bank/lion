@@ -840,6 +840,220 @@ describe('<lion-input-datepicker>', () => {
     });
   });
 
+  describe('Month and Year Navigation Integration', () => {
+    it('defaults to monthYearNavigation = false and forwards to calendar', async () => {
+      const el = await fixture(html`<lion-input-datepicker></lion-input-datepicker>`);
+      const elObj = new DatepickerInputObject(el);
+      await elObj.openCalendar();
+
+      expect(el.monthYearNavigation).to.be.false;
+      expect(elObj.calendarEl.monthYearNavigation).to.be.false;
+      expect(elObj.calendarEl.shadowRoot?.querySelector('#month-heading')).to.not.exist;
+      expect(elObj.calendarEl.shadowRoot?.querySelector('#month')).to.exist;
+    });
+
+    it('forwards month-year-navigation attribute to calendar', async () => {
+      const el = await fixture(
+        html`<lion-input-datepicker month-year-navigation></lion-input-datepicker>`,
+      );
+      const elObj = new DatepickerInputObject(el);
+      await elObj.openCalendar();
+
+      expect(el.monthYearNavigation).to.be.true;
+      expect(elObj.calendarEl.monthYearNavigation).to.be.true;
+      expect(elObj.calendarEl.shadowRoot?.querySelector('#month-heading')).to.exist;
+      expect(elObj.calendarEl.shadowRoot?.querySelector('#year-heading')).to.exist;
+    });
+
+    it('opens month and year selection views when headings are clicked in datepicker overlay', async () => {
+      const el = await fixture(
+        html`<lion-input-datepicker month-year-navigation></lion-input-datepicker>`,
+      );
+      const elObj = new DatepickerInputObject(el);
+      await elObj.openCalendar();
+
+      const monthBtn = /** @type {HTMLElement} */ (
+        elObj.calendarEl.shadowRoot?.querySelector('#month-heading')
+      );
+      expect(monthBtn).to.exist;
+      monthBtn.click();
+      await elObj.calendarEl.updateComplete;
+      expect(elObj.calendarEl.shadowRoot?.querySelector('.calendar__month-selection')).to.exist;
+
+      // Select month index 2
+      const monthButtons = elObj.calendarEl.shadowRoot?.querySelectorAll('.calendar__month-button');
+      /** @type {HTMLElement} */ (monthButtons?.[2])?.click();
+      await elObj.calendarEl.updateComplete;
+      expect(elObj.calendarEl.shadowRoot?.querySelector('.calendar__month-selection')).to.not.exist;
+
+      const yearBtn = /** @type {HTMLElement} */ (
+        elObj.calendarEl.shadowRoot?.querySelector('#year-heading')
+      );
+      expect(yearBtn).to.exist;
+      yearBtn.click();
+      await elObj.calendarEl.updateComplete;
+      expect(elObj.calendarEl.shadowRoot?.querySelector('.calendar__year-selection')).to.exist;
+    });
+
+    it('updates calendar when monthYearNavigation is set dynamically', async () => {
+      const el = await fixture(html`<lion-input-datepicker></lion-input-datepicker>`);
+      const elObj = new DatepickerInputObject(el);
+      await elObj.openCalendar();
+
+      expect(elObj.calendarEl.monthYearNavigation).to.be.false;
+
+      el.monthYearNavigation = true;
+      await el.updateComplete;
+      await elObj.calendarEl.updateComplete;
+
+      expect(elObj.calendarEl.monthYearNavigation).to.be.true;
+      expect(elObj.calendarEl.shadowRoot?.querySelector('#month-heading')).to.exist;
+    });
+
+    it('implements layered Escape: first Escape closes selection view without closing overlay, second Escape closes overlay', async () => {
+      const el = await fixture(
+        html`<lion-input-datepicker
+          month-year-navigation
+          .modelValue="${new Date('2024/06/15')}"
+        ></lion-input-datepicker>`,
+      );
+      const elObj = new DatepickerInputObject(el);
+      await elObj.openCalendar();
+      await elObj.calendarEl.updateComplete;
+
+      const monthBtn = /** @type {HTMLElement} */ (
+        elObj.calendarEl.shadowRoot?.querySelector('#month-heading')
+      );
+      expect(monthBtn).to.exist;
+      monthBtn.click();
+      await elObj.calendarEl.updateComplete;
+
+      const selectionGrid = elObj.calendarEl.shadowRoot?.querySelector(
+        '.calendar__month-selection',
+      );
+      expect(selectionGrid).to.exist;
+      expect(el.opened).to.be.true;
+
+      // First Escape: closes selection view, focuses heading, overlay stays open
+      await sendKeys({ press: 'Escape' });
+      await elObj.calendarEl.updateComplete;
+      await nextFrame();
+
+      expect(elObj.calendarEl.shadowRoot?.querySelector('.calendar__month-selection')).to.not.exist;
+      expect(el.opened).to.be.true;
+      expect(elObj.calendarEl.shadowRoot?.activeElement?.id).to.equal('month-heading');
+
+      // Second Escape: closes the datepicker overlay and restores focus to invoker
+      await sendKeys({ press: 'Escape' });
+      await el.updateComplete;
+      await nextFrame();
+
+      expect(el.opened).to.be.false;
+      expect(document.activeElement).to.equal(elObj.invokerEl);
+    });
+
+    it('closes overlay on outside click without hidden calendar taking focus', async () => {
+      const el = await fixture(
+        html`<lion-input-datepicker
+          month-year-navigation
+          .modelValue="${new Date('2024/06/15')}"
+        ></lion-input-datepicker>`,
+      );
+      const elObj = new DatepickerInputObject(el);
+      await elObj.openCalendar();
+      await elObj.calendarEl.updateComplete;
+
+      const monthBtn = /** @type {HTMLElement} */ (
+        elObj.calendarEl.shadowRoot?.querySelector('#month-heading')
+      );
+      monthBtn.click();
+      await elObj.calendarEl.updateComplete;
+      expect(elObj.calendarEl.shadowRoot?.querySelector('.calendar__month-selection')).to.exist;
+
+      // Click outside overlay
+      mimicClick(document.body);
+      await aTimeout(0);
+
+      expect(elObj.overlayController.isShown).to.be.false;
+      // Calendar should not steal focus
+      const calendarFocused = elObj.calendarEl.shadowRoot?.contains(
+        /** @type {Node} */ (elObj.calendarEl.shadowRoot?.activeElement),
+      );
+      expect(calendarFocused).to.be.false;
+    });
+
+    it('resets calendar to day grid view when reopened', async () => {
+      const el = await fixture(
+        html`<lion-input-datepicker
+          month-year-navigation
+          .modelValue="${new Date('2024/06/15')}"
+        ></lion-input-datepicker>`,
+      );
+      const elObj = new DatepickerInputObject(el);
+      await elObj.openCalendar();
+      await elObj.calendarEl.updateComplete;
+
+      // Open month selection
+      const monthBtn = /** @type {HTMLElement} */ (
+        elObj.calendarEl.shadowRoot?.querySelector('#month-heading')
+      );
+      monthBtn.click();
+      await elObj.calendarEl.updateComplete;
+      expect(elObj.calendarEl.shadowRoot?.querySelector('.calendar__month-selection')).to.exist;
+
+      // Close calendar overlay
+      await elObj.closeCalendar();
+      expect(el.opened).to.be.false;
+
+      // Reopen calendar overlay
+      await elObj.openCalendar();
+      await elObj.calendarEl.updateComplete;
+
+      // Selection grid should be gone, calendar back in month (day grid) view
+      expect(elObj.calendarEl.shadowRoot?.querySelector('.calendar__month-selection')).to.not.exist;
+      expect(elObj.calendarEl.shadowRoot?.querySelector('.calendar__grid')).to.exist;
+    });
+
+    it('selecting a month returns to day grid, selecting a day updates datepicker and closes overlay', async () => {
+      const el = await fixture(
+        html`<lion-input-datepicker
+          month-year-navigation
+          .modelValue="${new Date('2024/06/15')}"
+        ></lion-input-datepicker>`,
+      );
+      const elObj = new DatepickerInputObject(el);
+      await elObj.openCalendar();
+      await elObj.calendarEl.updateComplete;
+
+      // Open month selection
+      const monthBtn = /** @type {HTMLElement} */ (
+        elObj.calendarEl.shadowRoot?.querySelector('#month-heading')
+      );
+      monthBtn.click();
+      await elObj.calendarEl.updateComplete;
+
+      // Select October (month index 9)
+      const octoberBtn = /** @type {HTMLElement} */ (
+        elObj.calendarEl.shadowRoot?.querySelector('.calendar__month-button[data-month-index="9"]')
+      );
+      octoberBtn.click();
+      await elObj.calendarEl.updateComplete;
+
+      // Month selection grid closed, day grid visible for October
+      expect(elObj.calendarEl.shadowRoot?.querySelector('.calendar__month-selection')).to.not.exist;
+      expect(el.opened).to.be.true;
+
+      // Select 10th of October
+      elObj.calendarObj.getDayEl(10).click();
+      await el.updateComplete;
+
+      expect(el.opened).to.be.false;
+      expect(el.modelValue.getFullYear()).to.equal(2024);
+      expect(el.modelValue.getMonth()).to.equal(9);
+      expect(el.modelValue.getDate()).to.equal(10);
+    });
+  });
+
   describe('Run suite', () => {
     runDatepickerSuite();
   });

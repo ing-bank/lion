@@ -2,4 +2,4 @@
 '@lion/ui': minor
 ---
 
-Added interactive month and year navigation to LionCalendar. Users can now click the month or year heading to open a dedicated month/year grid selection view.
+Added opt-in interactive month and year navigation to `LionCalendar` and `LionInputDatepicker`. When `monthYearNavigation` (`month-year-navigation` attribute) is enabled, clicking the month or year heading opens an accessible selection grid (12 months or 12 years) for fast date navigation.

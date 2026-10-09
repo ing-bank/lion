@@ -180,6 +180,15 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
       __viewMode: { attribute: false },
 
       /**
+       * Whether month and year navigation/selection views are enabled
+       */
+      monthYearNavigation: {
+        type: Boolean,
+        attribute: 'month-year-navigation',
+        reflect: true,
+      },
+
+      /**
        * First year in the current year selection grid
        * @private
        */
@@ -231,6 +240,7 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
     /** @private */
     this.__eventsAdded = false;
     this.locale = '';
+    this.monthYearNavigation = false;
     /** @private */
     this.__boundKeyboardNavigationEvent = this.__keyboardNavigationEvent.bind(this);
     /** @private */
@@ -258,6 +268,8 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
 
     /** @private */
     this.__boundHandleClickOutside = this.__handleClickOutside.bind(this);
+    /** @private */
+    this.__boundCalendarKeydown = this.__calendarKeydown.bind(this);
   }
 
   static get styles() {
@@ -265,15 +277,20 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
   }
 
   render() {
-    const isSelectionActive = this.__viewMode !== 'month';
+    const isSelectionActive = this.monthYearNavigation && this.__viewMode !== 'month';
     return html`
       <div
         class="calendar${isSelectionActive ? ' calendar--selection-active' : ''}"
         role="application"
+        @keydown=${this.__boundCalendarKeydown}
       >
         ${this.__renderNavigation()} ${this.__renderData()}
-        ${this.__viewMode === 'month-selection' ? this.__renderMonthSelectionView() : ''}
-        ${this.__viewMode === 'year-selection' ? this.__renderYearSelectionView() : ''}
+        ${this.monthYearNavigation && this.__viewMode === 'month-selection'
+          ? this.__renderMonthSelectionView()
+          : ''}
+        ${this.monthYearNavigation && this.__viewMode === 'year-selection'
+          ? this.__renderYearSelectionView()
+          : ''}
         <div
           aria-live="polite"
           aria-atomic="true"
@@ -402,6 +419,11 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
     if (changedProperties.has('__focusedDate') && this.__focusedDate) {
       this.focusCentralDate();
     }
+    if (changedProperties.has('monthYearNavigation')) {
+      if (!this.monthYearNavigation && this.__viewMode !== 'month') {
+        this.__closeSelectionView(null, { focusHeading: false });
+      }
+    }
     // Manage click-outside listener based on view mode
     if (changedProperties.has('__viewMode')) {
       if (this.__viewMode !== 'month') {
@@ -505,20 +527,27 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
     const nextYear = this.centralDate.getMonth() === 11 ? year + 1 : year;
     const previousYear = this.centralDate.getMonth() === 0 ? year - 1 : year;
 
+    const headingTemplate = this.monthYearNavigation
+      ? html`
+          <button
+            id="month-heading"
+            class="calendar__navigation-heading calendar__navigation-heading--interactive"
+            aria-label="${month}, ${this.msgLit('lion-calendar:selectMonth')}"
+            aria-atomic="true"
+            @click=${this.__toggleMonthSelection}
+            @keydown=${this.__monthHeadingKeydown}
+          >
+            ${month}
+            <span class="calendar__heading-indicator" aria-hidden="true">▾</span>
+          </button>
+        `
+      : html`
+          <h2 class="calendar__navigation-heading" id="month" aria-atomic="true">${month}</h2>
+        `;
+
     return html`
       <div class="calendar__navigation__month">
-        ${this.__renderPreviousButton('Month', previousMonth, previousYear)}
-        <button
-          id="month-heading"
-          class="calendar__navigation-heading calendar__navigation-heading--interactive"
-          aria-label="${month}, ${this.msgLit('lion-calendar:selectMonth')}"
-          aria-atomic="true"
-          @click=${this.__toggleMonthSelection}
-          @keydown=${this.__monthHeadingKeydown}
-        >
-          ${month}
-          <span class="calendar__heading-indicator" aria-hidden="true">▾</span>
-        </button>
+        ${this.__renderPreviousButton('Month', previousMonth, previousYear)} ${headingTemplate}
         ${this.__renderNextButton('Month', nextMonth, nextYear)}
       </div>
     `;
@@ -533,19 +562,24 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
     const nextYear = year + 1;
     const previousYear = year - 1;
 
+    const headingTemplate = this.monthYearNavigation
+      ? html`
+          <button
+            id="year-heading"
+            class="calendar__navigation-heading calendar__navigation-heading--interactive"
+            aria-label="${year}, ${this.msgLit('lion-calendar:selectYear')}"
+            @click=${this.__toggleYearSelection}
+            @keydown=${this.__yearHeadingKeydown}
+          >
+            ${year}
+            <span class="calendar__heading-indicator" aria-hidden="true">▾</span>
+          </button>
+        `
+      : html` <h2 class="calendar__navigation-heading" id="year" aria-atomic="true">${year}</h2> `;
+
     return html`
       <div class="calendar__navigation__year">
-        ${this.__renderPreviousButton('FullYear', month, previousYear)}
-        <button
-          id="year-heading"
-          class="calendar__navigation-heading calendar__navigation-heading--interactive"
-          aria-label="${year}, ${this.msgLit('lion-calendar:selectYear')}"
-          @click=${this.__toggleYearSelection}
-          @keydown=${this.__yearHeadingKeydown}
-        >
-          ${year}
-          <span class="calendar__heading-indicator" aria-hidden="true">▾</span>
-        </button>
+        ${this.__renderPreviousButton('FullYear', month, previousYear)} ${headingTemplate}
         ${this.__renderNextButton('FullYear', month, nextYear)}
       </div>
     `;
@@ -823,6 +857,7 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
    * @private
    */
   __toggleMonthSelection() {
+    if (!this.monthYearNavigation) return;
     if (this.__viewMode === 'month-selection') {
       this.__closeSelectionView('month-heading');
     } else {
@@ -835,6 +870,7 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
    * @private
    */
   __toggleYearSelection() {
+    if (!this.monthYearNavigation) return;
     if (this.__viewMode === 'year-selection') {
       this.__closeSelectionView('year-heading');
     } else {
@@ -880,18 +916,21 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
 
   /**
    * Close the current selection view and return focus to heading
-   * @param {string} headingId
+   * @param {string | null} headingId
+   * @param {{ focusHeading?: boolean }} [options]
    * @private
    */
-  __closeSelectionView(headingId) {
+  __closeSelectionView(headingId, { focusHeading = true } = {}) {
     this.__viewMode = 'month';
-    // Return focus to heading after DOM update
-    requestAnimationFrame(() => {
-      const heading = /** @type {HTMLElement | null} */ (
-        this.shadowRoot?.getElementById(headingId)
-      );
-      heading?.focus();
-    });
+    if (focusHeading && headingId) {
+      // Return focus to heading after DOM update
+      requestAnimationFrame(() => {
+        const heading = /** @type {HTMLElement | null} */ (
+          this.shadowRoot?.getElementById(headingId)
+        );
+        heading?.focus();
+      });
+    }
   }
 
   /**
@@ -970,9 +1009,21 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
       case ' ':
         this.__selectMonth(this.__focusedMonthIndex);
         return;
-      case 'Escape':
+      case 'Escape': {
+        ev.stopPropagation();
+        ev.preventDefault();
+        const absorbKeyup = e => {
+          if (e.key === 'Escape') {
+            e.stopPropagation();
+            e.stopImmediatePropagation();
+          }
+          window.removeEventListener('keyup', absorbKeyup, true);
+        };
+        window.addEventListener('keyup', absorbKeyup, true);
+        setTimeout(() => window.removeEventListener('keyup', absorbKeyup, true), 500);
         this.__closeSelectionView('month-heading');
         return;
+      }
       case 'Tab':
         // Allow tab to exit the grid naturally
         this.__viewMode = 'month';
@@ -1010,7 +1061,6 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
    * @private
    */
   async __focusMonthInSelection(monthIndex) {
-    await this.updateComplete;
     const buttons = /** @type {NodeListOf<HTMLElement>} */ (
       this.shadowRoot?.querySelectorAll('.calendar__month-button')
     );
@@ -1105,9 +1155,21 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
         this.__selectYear(years[this.__focusedYearIndex]);
         return;
       }
-      case 'Escape':
+      case 'Escape': {
+        ev.stopPropagation();
+        ev.preventDefault();
+        const absorbKeyup = e => {
+          if (e.key === 'Escape') {
+            e.stopPropagation();
+            e.stopImmediatePropagation();
+          }
+          window.removeEventListener('keyup', absorbKeyup, true);
+        };
+        window.addEventListener('keyup', absorbKeyup, true);
+        setTimeout(() => window.removeEventListener('keyup', absorbKeyup, true), 500);
         this.__closeSelectionView('year-heading');
         return;
+      }
       case 'PageDown':
         this.__nextYearRange();
         return;
@@ -1151,7 +1213,6 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
    * @private
    */
   async __focusYearInSelection(yearIndex) {
-    await this.updateComplete;
     const buttons = /** @type {NodeListOf<HTMLElement>} */ (
       this.shadowRoot?.querySelectorAll('.calendar__year-button')
     );
@@ -1329,8 +1390,7 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
    */
   __isYearDisabled(year) {
     if (this.__hasMinDateConstraint() && year < this.minDate.getFullYear()) return true;
-    if (this.__hasMaxDateConstraint() && year > this.maxDate.getFullYear()) return true;
-    return false;
+    return this.__hasMaxDateConstraint() && year > this.maxDate.getFullYear();
   }
 
   /**
@@ -1438,6 +1498,30 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
     const isInsideCalendar = path.some(el => el === this);
     if (!isInsideCalendar && this.__viewMode !== 'month') {
       const headingId = this.__viewMode === 'month-selection' ? 'month-heading' : 'year-heading';
+      this.__closeSelectionView(headingId, { focusHeading: false });
+    }
+  }
+
+  /**
+   * Handle keydown at calendar root, intercepting Escape while selection view is open
+   * @param {KeyboardEvent} ev
+   * @private
+   */
+  __calendarKeydown(ev) {
+    if (ev.key === 'Escape' && this.monthYearNavigation && this.__viewMode !== 'month') {
+      ev.stopPropagation();
+      ev.stopImmediatePropagation();
+      ev.preventDefault();
+      const headingId = this.__viewMode === 'year-selection' ? 'year-heading' : 'month-heading';
+      const absorbKeyup = e => {
+        if (e.key === 'Escape') {
+          e.stopPropagation();
+          e.stopImmediatePropagation();
+        }
+        window.removeEventListener('keyup', absorbKeyup, true);
+      };
+      window.addEventListener('keyup', absorbKeyup, true);
+      setTimeout(() => window.removeEventListener('keyup', absorbKeyup, true), 500);
       this.__closeSelectionView(headingId);
     }
   }

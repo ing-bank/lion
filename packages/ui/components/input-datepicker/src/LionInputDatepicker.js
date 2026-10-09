@@ -99,6 +99,15 @@ export class LionInputDatepicker extends ScopedElementsMixin(
         attribute: false,
         type: Array,
       },
+
+      /**
+       * Whether month and year navigation/selection views are enabled in the calendar
+       */
+      monthYearNavigation: {
+        type: Boolean,
+        attribute: 'month-year-navigation',
+        reflect: true,
+      },
     };
   }
 
@@ -126,7 +135,7 @@ export class LionInputDatepicker extends ScopedElementsMixin(
    */
   get _calendarNode() {
     return /** @type {LionCalendar} */ (
-      this._overlayCtrl.contentNode.querySelector('[slot="content"]')
+      this._overlayCtrl?.contentNode?.querySelector('[slot="content"]')
     );
   }
 
@@ -136,6 +145,7 @@ export class LionInputDatepicker extends ScopedElementsMixin(
     this.__invokerId = uuid(this.localName);
     /** @protected */
     this._calendarInvokerSlot = 'suffix';
+    this.monthYearNavigation = false;
 
     // Configuration flags for subclassers
     /** @protected */
@@ -191,6 +201,9 @@ export class LionInputDatepicker extends ScopedElementsMixin(
     if (changedProperties.has('label')) {
       this.calendarHeading = this.calendarHeading || this.label;
     }
+    if (changedProperties.has('monthYearNavigation') && this._calendarNode) {
+      this._calendarNode.monthYearNavigation = this.monthYearNavigation;
+    }
   }
 
   /**
@@ -245,11 +258,12 @@ export class LionInputDatepicker extends ScopedElementsMixin(
    * Subclassers can replace this with their custom extension of
    * LionCalendar, like `<my-calendar id="calendar"></my-calendar>`
    */
-  // eslint-disable-next-line class-methods-use-this
   _calendarTemplate() {
     return html`
       <lion-calendar
         slot="content"
+        ?month-year-navigation="${this.monthYearNavigation}"
+        .monthYearNavigation="${this.monthYearNavigation}"
         .selectedDate="${
           /** @type {typeof LionInputDatepicker} */ (this.constructor).__getSyncDownValue(
             this.modelValue,
@@ -297,6 +311,10 @@ export class LionInputDatepicker extends ScopedElementsMixin(
   _setupOverlayCtrl() {
     super._setupOverlayCtrl();
 
+    if (this._calendarNode) {
+      this._calendarNode.monthYearNavigation = this.monthYearNavigation;
+    }
+
     this.__datepickerBeforeShow = () => {
       this._overlayCtrl.updateConfig(this._defineOverlayConfig());
     };
@@ -341,6 +359,9 @@ export class LionInputDatepicker extends ScopedElementsMixin(
    * @overridable
    */
   _onCalendarOverlayOpened() {
+    if (this._calendarNode) {
+      this._calendarNode.monthYearNavigation = this.monthYearNavigation;
+    }
     if (this._focusCentralDateOnCalendarOpen) {
       this._calendarNode.initCentralDate();
     }
