@@ -108,6 +108,10 @@ export type ScenarioRunResult = {
     finished: boolean;
     stopReason: 'completed' | 'max_turns';
     totalTokens: number;
+    /** False when the model never changed the deliverable — a no-op, not a wrong answer. */
+    attempted: boolean;
+    /** What the model said on the turn that ended the loop, when it ended without acting. */
+    finalMessage: string;
   };
 };
 
@@ -338,8 +342,16 @@ export async function runSkillTester(config: SkillTesterConfig): Promise<SkillTe
           gates,
         );
 
+        const modifiedGate = gates.find(gate => gate.name === 'modified');
+        // A run that never changed the deliverable is a no-op: it must not be reported as a
+        // knowledge gap, and it is excluded from the skill score (reported as an attempt rate).
+        const attempted = modifiedGate ? modifiedGate.passed : true;
+
         for (const gate of gates.filter(g => !g.passed)) {
           onProgress(red(`    ⛔ ${gate.name} gate: ${gate.summary}`));
+        }
+        if (!attempted) {
+          onProgress(red(`    ⛔ not attempted: the deliverable was never modified`));
         }
 
         onProgress(
@@ -370,6 +382,8 @@ export async function runSkillTester(config: SkillTesterConfig): Promise<SkillTe
             finished: agentRun.finished,
             stopReason: agentRun.stopReason,
             totalTokens: agentRun.usage.total_tokens ?? 0,
+            attempted,
+            finalMessage: agentRun.finalMessage,
           },
         });
       }
