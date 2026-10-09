@@ -225,42 +225,57 @@ describe('<lion-input-amount>', () => {
     expect(_inputNode.type).to.equal('text');
   });
 
-  it('shows no currency by default', async () => {
-    const el = await fixture(`<lion-input-amount></lion-input-amount>`);
-    expect(Array.from(el.children).find(child => child.slot === 'after')).to.be.undefined;
-  });
+  describe('currencyLabel', async () => {
+    it('shows no currency by default', async () => {
+      const el = await fixture(`<lion-input-amount></lion-input-amount>`);
+      expect(Array.from(el.children).find(child => child.slot === 'after')).to.be.undefined;
+    });
 
-  it('displays currency if provided', async () => {
-    const el = /** @type {LionInputAmount} */ (
-      await fixture(`<lion-input-amount currency="EUR"></lion-input-amount>`)
-    );
-    expect(
-      /** @type {HTMLElement[]} */ (Array.from(el.children)).find(child => child.slot === 'after')
-        ?.innerText,
-    ).to.equal('EUR');
-  });
+    it('displays currency if provided', async () => {
+      const el = /** @type {LionInputAmount} */ (
+        await fixture(`<lion-input-amount currency="EUR"></lion-input-amount>`)
+      );
+      expect(
+        /** @type {HTMLElement[]} */ (Array.from(el.children)).find(child => child.slot === 'after')
+          ?.innerText,
+      ).to.equal('EUR');
+    });
 
-  it('displays correct currency for TRY if locale is tr-TR', async () => {
-    localize.locale = 'tr-TR';
-    const el = /** @type {LionInputAmount} */ (
-      await fixture(`<lion-input-amount currency="TRY"></lion-input-amount>`)
-    );
-    expect(
-      /** @type {HTMLElement[]} */ (Array.from(el.children)).find(child => child.slot === 'after')
-        ?.innerText,
-    ).to.equal('TL');
-  });
+    it('displays correct currency for TRY if locale is tr-TR', async () => {
+      localize.locale = 'tr-TR';
+      const el = /** @type {LionInputAmount} */ (
+        await fixture(`<lion-input-amount currency="TRY"></lion-input-amount>`)
+      );
+      expect(
+        /** @type {HTMLElement[]} */ (Array.from(el.children)).find(child => child.slot === 'after')
+          ?.innerText,
+      ).to.equal('TL');
+    });
 
-  it('can update currency', async () => {
-    const el = /** @type {LionInputAmount} */ (
-      await fixture(`<lion-input-amount currency="EUR"></lion-input-amount>`)
-    );
-    el.currency = 'USD';
-    await el.updateComplete;
-    expect(
-      /** @type {HTMLElement[]} */ (Array.from(el.children)).find(child => child.slot === 'after')
-        ?.innerText,
-    ).to.equal('USD');
+    it('displays currency symbol if provided via formatOptions', async () => {
+      const el = /** @type {LionInputAmount} */ (
+        await fixture(
+          html`<lion-input-amount currency="EUR" currency-label="€"></lion-input-amount>`,
+        )
+      );
+      const currLabel = /** @type {HTMLElement[]} */ (Array.from(el.children)).find(
+        child => child.slot === 'after',
+      );
+      expect(currLabel?.innerText).to.equal('€');
+      expect(currLabel?.getAttribute('aria-label')).to.equal('€ (euros)');
+    });
+
+    it('can update currency', async () => {
+      const el = /** @type {LionInputAmount} */ (
+        await fixture(`<lion-input-amount currency="EUR"></lion-input-amount>`)
+      );
+      el.currency = 'USD';
+      await el.updateComplete;
+      expect(
+        /** @type {HTMLElement[]} */ (Array.from(el.children)).find(child => child.slot === 'after')
+          ?.innerText,
+      ).to.equal('USD');
+    });
   });
 
   it('reformats on locale changes', async () => {
@@ -311,7 +326,7 @@ describe('<lion-input-amount>', () => {
       child => child.slot === 'after',
     );
     expect(currLabel?.innerText).to.equal('EUR');
-    expect(currLabel?.getAttribute('aria-label')).to.equal('euros');
+    expect(currLabel?.getAttribute('aria-label')).to.equal('EUR (euros)');
   });
 
   it('sets currency label on the after element', async () => {
@@ -416,10 +431,10 @@ describe('<lion-input-amount>', () => {
       const label = /** @type {HTMLElement[]} */ (Array.from(el.children)).find(
         child => child.slot === 'after',
       );
-      expect(label?.getAttribute('aria-label')).to.equal('euros');
+      expect(label?.getAttribute('aria-label')).to.equal('EUR (euros)');
       el.currency = 'USD';
       await el.updateComplete;
-      expect(label?.getAttribute('aria-label')).to.equal('US dollars');
+      expect(label?.getAttribute('aria-label')).to.equal('USD (US dollars)');
       el.currency = 'PHP';
       await el.updateComplete;
       // TODO: Chrome Intl now thinks this should be pesos instead of pisos. They're probably right.

@@ -32,13 +32,24 @@ export const negativeNumber = () => html`
 `;
 ```
 
-## Set currency label
+## Set currency
 
-You can optionally set a currency label with the `currency` attribute, which is visible in the after slot by default.
+You can optionally set a currency with the `currency` attribute, which is visible in the after slot by default.
+
+```html preview-story
+<lion-input-amount label="Price" currency="USD" .modelValue="${123456.78}"></lion-input-amount>
+```
+
+### Set currency label
 
 ```js preview-story
-export const currencySuffix = () => html`
-  <lion-input-amount label="Price" currency="USD" .modelValue="${123456.78}"></lion-input-amount>
+export const currencySymbol = () => html`
+  <lion-input-amount
+    label="Price"
+    currency="USD"
+    currency-label="$"
+    .modelValue="${123456.78}"
+  ></lion-input-amount>
 `;
 ```
 
