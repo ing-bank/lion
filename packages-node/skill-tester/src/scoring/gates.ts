@@ -27,7 +27,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { parseSync } from 'oxc-parser';
 
-export type GateName = 'syntax' | 'import-policy';
+export type GateName = 'syntax' | 'import-policy' | 'modified';
 
 export type GateFailure = {
   file: string;
@@ -255,15 +255,62 @@ function importPolicyGateFor(files: ParsedFile[], allowed: string[] = []): GateR
   };
 }
 
+/**
+ * Did the model change anything at all?
+ *
+ * A no-op must not collect partial credit. Measured: an untouched starter file scored 42.9% because
+ * it satisfies `exists` (the file is there — it ships in the sandbox) and every `notMatches`
+ * (an empty file contains none of the forbidden things). So doing nothing collected 3 of 7 checks.
+ *
+ * The deliverable always ships in the sandbox, so "this is still exactly the starter" is a
+ * deterministic prerequisite like "does it parse" — not a scored dimension.
+ */
+function modifiedGateFor(sandboxRoot: string, starter: Record<string, string>): GateResult {
+  const declared = Object.entries(starter);
+  const untouched: string[] = [];
+  let changed = false;
+
+  for (const [relative, starterContent] of declared) {
+    let actual: string | undefined;
+    try {
+      actual = fs.readFileSync(path.join(sandboxRoot, relative), 'utf-8');
+    } catch {
+      actual = undefined; // deleting the file is a change (the `exists` check catches it separately)
+    }
+    if (actual === undefined || actual !== starterContent) changed = true;
+    else untouched.push(relative);
+  }
+
+  const passed = changed || declared.length === 0;
+  return {
+    name: 'modified',
+    passed,
+    checked: declared.length,
+    failures: passed
+      ? []
+      : declared.map(([relative]) => ({
+          file: relative,
+          line: 1,
+          column: 1,
+          message: 'still byte-identical to the starter file: the scenario was not attempted',
+        })),
+    summary: passed
+      ? `${declared.length - untouched.length} of ${declared.length} starter file(s) changed`
+      : `no starter file was modified (${untouched.join(', ')})`,
+  };
+}
+
 /** Run every gate over a sandbox, parsing each file exactly once. */
 export function runGates(
   sandboxRoot: string,
-  options: { allowedLionUiSpecifiers?: string[] } = {},
+  options: { allowedLionUiSpecifiers?: string[]; starter?: Record<string, string> } = {},
 ): GateResult[] {
   const files = parseSandbox(sandboxRoot);
   return [
     syntaxGateFor(files),
     importPolicyGateFor(files, options.allowedLionUiSpecifiers ?? []),
+    // Only when the caller supplies the starter: without it there is nothing to compare against.
+    ...(options.starter ? [modifiedGateFor(sandboxRoot, options.starter)] : []),
   ];
 }
 
