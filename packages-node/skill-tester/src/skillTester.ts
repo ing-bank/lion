@@ -324,7 +324,10 @@ export async function runSkillTester(config: SkillTesterConfig): Promise<SkillTe
               });
         const durationMs = Date.now() - start;
 
-        const gates = runGates(sandboxRoot, { allowedLionUiSpecifiers: allowedSpecifiers });
+        const gates = runGates(sandboxRoot, {
+          allowedLionUiSpecifiers: allowedSpecifiers,
+          starter: scenario.files,
+        });
         const score = applyGates(
           scoreScenario({
             sandboxRoot,
