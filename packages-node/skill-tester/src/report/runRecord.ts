@@ -206,6 +206,26 @@ export function renderRunRecord({
   lines.push(
     `- Attempt rate: ${attemptedRuns}/${report.runs.length} run(s) modified the deliverable.`,
   );
+
+  const redoable = report.redoable ?? [];
+  if (redoable.length > 0) {
+    lines.push('');
+    lines.push('## Runs to redo');
+    lines.push('');
+    lines.push('Excluded from the score: the endpoint failed, so no comparable result exists.');
+    lines.push('');
+    lines.push('| Scenario | Model | Sample | Reason | Evidence |');
+    lines.push('| --- | --- | --- | --- | --- |');
+    for (const run of redoable) {
+      lines.push(
+        `| ${run.scenario} | ${run.model} | ${run.sample} | ${run.reason} | ${run.message.replace(/\s+/g, ' ').replace(/\|/g, '\\|').slice(0, 200)} |`,
+      );
+    }
+    lines.push('');
+    lines.push(
+      `- [FAIL] ${redoable.length} run(s) need a redo (endpoint failure) and are excluded from the score.`,
+    );
+  }
   lines.push('');
   lines.push(`Run result: **${clean ? 'clean' : 'not clean'}**`);
   lines.push('');
