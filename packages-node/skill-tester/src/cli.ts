@@ -235,7 +235,17 @@ async function main(): Promise<void> {
 
   console.log('');
   console.log(`Provider: ${report.provider}${report.baseUrl ? ` (${report.baseUrl})` : ''}`);
-  console.log(`Overall quality score: ${(report.overall.mean * 100).toFixed(1)}%`);
+  // With no valid runs there is no score: printing 0.0% would read as "it scored zero".
+  if (report.runs.length === 0) {
+    console.log(
+      yellow(
+        'Overall quality score: n/a — no comparable run(s)' +
+          (report.redoable?.length ? ` (${report.redoable.length} to redo)` : ''),
+      ),
+    );
+  } else {
+    console.log(`Overall quality score: ${(report.overall.mean * 100).toFixed(1)}%`);
+  }
   if (report.behaviour) {
     const { passed, total, failed } = report.behaviour;
     console.log(
@@ -244,6 +254,10 @@ async function main(): Promise<void> {
     );
   }
   for (const entry of report.perModel) {
+    if (report.runs.filter(run => run.model === entry.model).length === 0) {
+      console.log(`  ${entry.model}: no comparable runs (all to redo)`);
+      continue;
+    }
     console.log(
       `  ${entry.model}: mean ${(entry.stats.mean * 100).toFixed(1)}%, ` +
         `min ${(entry.stats.min * 100).toFixed(1)}%, max ${(entry.stats.max * 100).toFixed(1)}%`,
@@ -252,7 +266,14 @@ async function main(): Promise<void> {
   const failing = report.perModelScenario
     .filter(entry => entry.stats.mean * 100 < options.passThreshold)
     .sort((a, b) => a.stats.mean - b.stats.mean);
-  if (failing.length > 0) {
+  if (report.runs.length === 0) {
+    console.log(
+      yellow(
+        `\nNo comparable runs: nothing passed and nothing failed. ` +
+          `${report.redoable?.length ?? 0} run(s) to redo.`,
+      ),
+    );
+  } else if (failing.length > 0) {
     console.log(yellow(`\n${failing.length} scenario(s) below ${options.passThreshold}%:`));
     for (const entry of failing.slice(0, 20)) {
       console.log(`  ${entry.model} · ${entry.scenario} → ${(entry.stats.mean * 100).toFixed(1)}%`);
