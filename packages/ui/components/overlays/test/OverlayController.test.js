@@ -459,6 +459,84 @@ describe('OverlayController', () => {
           });
         });
 
+        describe('When .contentWrapperNode is provided in a host that is not connected yet', () => {
+          /** @param {{ nested?: boolean }} [opts] */
+          function createDisconnectedHost({ nested = false } = {}) {
+            const host = document.createElement('div');
+            const shadowRoot = host.attachShadow({ mode: 'open' });
+            const wrapper = document.createElement('div');
+            wrapper.setAttribute('data-id', 'content-wrapper');
+            wrapper.innerHTML = '<slot name="content"></slot>';
+            if (nested) {
+              const section = document.createElement('section');
+              section.appendChild(wrapper);
+              shadowRoot.appendChild(section);
+            } else {
+              shadowRoot.appendChild(wrapper);
+            }
+            const content = document.createElement('div');
+            content.slot = 'content';
+            content.textContent = 'projected';
+            host.appendChild(content);
+            return { host, shadowRoot, wrapper, content };
+          }
+
+          it('does not throw and keeps the projected slot inside the wrapper', async () => {
+            const { host, shadowRoot, wrapper, content } = createDisconnectedHost();
+            expect(wrapper.isConnected).to.be.false;
+            const slot = /** @type {HTMLSlotElement} */ (content.assignedSlot);
+
+            const ctrl = new OverlayController({
+              ...withGlobalTestConfig(),
+              contentNode: content,
+              contentWrapperNode: wrapper,
+            });
+
+            expect(ctrl.contentWrapperNode).to.equal(wrapper);
+            expect(wrapper.parentElement?.tagName).to.equal('DIALOG');
+            expect(slot.parentElement).to.equal(wrapper);
+            expect(content.parentElement).to.equal(host);
+            expect(shadowRoot.querySelectorAll('slot').length).to.equal(1);
+          });
+
+          it('restores the same relocated slot at its original position on teardown', async () => {
+            const { host, shadowRoot, wrapper, content } = createDisconnectedHost({ nested: true });
+            const section = /** @type {HTMLElement} */ (shadowRoot.querySelector('section'));
+            const slot = /** @type {HTMLSlotElement} */ (content.assignedSlot);
+            const ctrl = new OverlayController({
+              ...withGlobalTestConfig(),
+              contentNode: content,
+              contentWrapperNode: wrapper,
+            });
+
+            ctrl.teardown();
+
+            expect(content.parentElement).to.equal(host);
+            expect(wrapper.parentElement).to.equal(section);
+            expect(slot.parentElement).to.equal(wrapper);
+            expect(shadowRoot.querySelector('dialog')).to.be.null;
+            expect(shadowRoot.querySelector('slot')).to.equal(slot);
+          });
+
+          it('survives repeated updateConfig calls and keeps slot ownership', async () => {
+            const { host, shadowRoot, wrapper, content } = createDisconnectedHost();
+            const slot = /** @type {HTMLSlotElement} */ (content.assignedSlot);
+            const ctrl = new OverlayController({
+              ...withGlobalTestConfig(),
+              contentNode: content,
+              contentWrapperNode: wrapper,
+            });
+
+            expect(() => ctrl.updateConfig({ trapsKeyboardFocus: true })).to.not.throw();
+            expect(() => ctrl.updateConfig({ trapsKeyboardFocus: false })).to.not.throw();
+
+            expect(content.parentElement).to.equal(host);
+            expect(shadowRoot.querySelectorAll('slot').length).to.equal(1);
+            expect(shadowRoot.querySelector('slot')).to.equal(slot);
+            expect(wrapper.contains(slot)).to.be.true;
+          });
+        });
+
         describe('When .contenWrapperNode provided', async () => {
           it('keeps the .contentWrapperNode for style application and wraps a <dialog role="none"> for top layer paints', async () => {
             const tagString = defineCE(
