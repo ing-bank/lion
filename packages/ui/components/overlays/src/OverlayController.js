@@ -42,7 +42,7 @@ import { isEqualConfig } from './utils/is-equal-config.js';
 function rearrangeNodes({ wrappingDialogNodeL1, contentWrapperNodeL2, contentNodeL3 }) {
   // if contentWrapperNode is provided by the user,
   // we assume it lives in shadow dom around a slot.
-  const hasLegacyMethodOfProvidingWrapperNode = Boolean(contentWrapperNodeL2.isConnected);
+  const hasLegacyMethodOfProvidingWrapperNode = Boolean(contentWrapperNodeL2.parentNode);
   // We could be initialized via a directive (in offline dom). It's important that we know about the parents,
   // as we cannot deal with single content nodes
   const hasContentNodeAttachmentPoints = Boolean(contentNodeL3.parentNode);
@@ -56,6 +56,9 @@ function rearrangeNodes({ wrappingDialogNodeL1, contentWrapperNodeL2, contentNod
   /** @type {Node} */
   let parentElement;
   const tempMarker = document.createComment('overlay-insertion-marker');
+  // Moving the wrapper can change slot assignment, so capture the node we relocate up front
+  // and restore that same node during cleanup.
+  const contentNodeOrSlot = contentNodeL3.assignedSlot || contentNodeL3;
 
   if (hasLegacyMethodOfProvidingWrapperNode) {
     // This is the case when contentWrapperNode (living in shadow dom, wrapping <slot name="my-content-outlet">) is already provided via controller.
@@ -64,20 +67,11 @@ function rearrangeNodes({ wrappingDialogNodeL1, contentWrapperNodeL2, contentNod
     // Wrap...
     wrappingDialogNodeL1.appendChild(contentWrapperNodeL2);
   } else {
-    const contentIsProjected = contentNodeL3.assignedSlot;
-    if (contentIsProjected) {
-      parentElement =
-        contentNodeL3.assignedSlot.parentElement || contentNodeL3.assignedSlot.getRootNode();
-      parentElement.insertBefore(tempMarker, contentNodeL3.assignedSlot);
-      wrappingDialogNodeL1.appendChild(contentWrapperNodeL2);
-      // Important: we do not move around contentNodeL3, but the assigned slot
-      contentWrapperNodeL2.appendChild(contentNodeL3.assignedSlot);
-    } else {
-      parentElement = contentNodeL3.parentElement || contentNodeL3.getRootNode();
-      parentElement.insertBefore(tempMarker, contentNodeL3);
-      wrappingDialogNodeL1.appendChild(contentWrapperNodeL2);
-      contentWrapperNodeL2.appendChild(contentNodeL3);
-    }
+    parentElement = contentNodeOrSlot.parentElement || contentNodeOrSlot.getRootNode();
+    parentElement.insertBefore(tempMarker, contentNodeOrSlot);
+    wrappingDialogNodeL1.appendChild(contentWrapperNodeL2);
+    // Important: for projected content we do not move contentNodeL3, but its assigned slot
+    contentWrapperNodeL2.appendChild(contentNodeOrSlot);
   }
 
   /**
@@ -109,7 +103,7 @@ function rearrangeNodes({ wrappingDialogNodeL1, contentWrapperNodeL2, contentNod
     if (hasLegacyMethodOfProvidingWrapperNode) {
       parentElement?.insertBefore(contentWrapperNodeL2, tempMarker);
     } else {
-      parentElement?.insertBefore(contentNodeL3, tempMarker);
+      parentElement?.insertBefore(contentNodeOrSlot, tempMarker);
       if (parentElement.contains(contentWrapperNodeL2)) {
         contentWrapperNodeL2.remove();
       }
