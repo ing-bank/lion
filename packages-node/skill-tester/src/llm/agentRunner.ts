@@ -34,6 +34,12 @@ export type AgentRunResult = {
   usage: ChatUsage;
   finished: boolean;
   stopReason: 'completed' | 'max_turns';
+  /**
+   * The last assistant message that ended the loop. When a model describes the answer in prose
+   * instead of calling a tool, the loop stops and this is the only evidence of what it did —
+   * without it a no-op run is indistinguishable from a wrong answer.
+   */
+  finalMessage: string;
 };
 
 export async function runAgent({
@@ -54,6 +60,7 @@ export async function runAgent({
   let toolCalls = 0;
   let turns = 0;
   let stopReason: AgentRunResult['stopReason'] = 'max_turns';
+  let finalMessage = '';
 
   for (let turn = 1; turn <= maxTurns; turn++) {
     turns = turn;
@@ -66,6 +73,7 @@ export async function runAgent({
     messages.push(message);
 
     if (message.content) {
+      finalMessage = message.content;
       onEvent?.({ type: 'assistant_message', content: message.content });
     }
 
@@ -101,6 +109,7 @@ export async function runAgent({
     usage,
     finished: stopReason === 'completed',
     stopReason,
+    finalMessage,
   };
 }
 
