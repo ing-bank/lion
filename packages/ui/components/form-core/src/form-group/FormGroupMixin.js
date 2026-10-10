@@ -15,6 +15,7 @@ import { FormElementsHaveNoError } from './FormElementsHaveNoError.js';
  * @typedef {import('../../types/FormControlMixinTypes.js').FormControlHost} FormControlHost
  * @typedef {import('../../types/registration/FormRegisteringMixinTypes.js').FormRegisteringHost} FormRegisteringHost
  * @typedef {import('../../types/registration/FormRegistrarMixinTypes.js').ElementWithParentFormGroup} ElementWithParentFormGroup
+ * @typedef {import('../../types/InteractionStateMixinTypes.js').InteractionStates} InteractionStates
  */
 
 /**
@@ -320,6 +321,42 @@ const FormGroupMixinImplementation = /** @type {FormGroupMixin} */ (superclass =
           formElement.resetInteractionState();
         }
       });
+    }
+
+    /**
+     * @override ValidateMixin
+     * Show the validity feedback when one of the following conditions is met:
+     *
+     * - submitted
+     *   If the form is submitted, always show the error message.
+     *
+     * - prefilled
+     *   all form elements already had a value when the group was initially rendered.
+     *
+     * - touched && dirty
+     *   When a user has changed the value of (one of) the form elements (making it dirty)
+     *   and then leaves the group as a whole (making it touched), an error message should
+     *   be shown. Before that, the group is considered 'invalid, but not yet interacting'.
+     * @protected
+     * @param {string} type
+     * @param {InteractionStates} meta
+     */
+    // eslint-disable-next-line class-methods-use-this, no-unused-vars
+    _showFeedbackConditionFor(type, meta) {
+      return (meta.touched && meta.dirty) || meta.prefilled || meta.submitted;
+    }
+
+    /**
+     * @enhance ValidateMixin
+     */
+    get _feedbackConditionMeta() {
+      return {
+        ...super._feedbackConditionMeta,
+        submitted: this.submitted,
+        touched: this.touched,
+        dirty: this.dirty,
+        prefilled: this.prefilled,
+      };
     }
 
     /**
