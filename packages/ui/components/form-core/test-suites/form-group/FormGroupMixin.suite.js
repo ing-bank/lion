@@ -596,6 +596,31 @@ export function runFormGroupMixinSuite(cfg = {}) {
         expect(el.validationStates.error.Required).to.be.true;
       });
 
+      it('does not show error feedback (nor aria-invalid) for invalid children before interaction', async () => {
+        const el = /**  @type {FormGroup} */ (
+          await fixture(html`
+        <${tag}>
+          <${childTag} name="myField" .validators=${[new Required()]}></${childTag}>
+        </${tag}>
+      `)
+        );
+        await el.updateComplete;
+        await el.feedbackComplete;
+
+        // the group itself is already invalid, but its error feedback should not be
+        // visible before the user interacted with the group
+        expect(el.hasFeedbackFor).to.deep.equal(['error']);
+        expect(el.showsFeedbackFor).to.deep.equal([]);
+        expect(el.getAttribute('aria-invalid')).to.equal('false');
+
+        // after interaction, feedback becomes visible
+        el.submitGroup();
+        await el.updateComplete;
+        await el.feedbackComplete;
+        expect(el.showsFeedbackFor).to.deep.equal(['error']);
+        expect(el.getAttribute('aria-invalid')).to.equal('true');
+      });
+
       it('validates on children (de)registration', async () => {
         class HasEvenNumberOfChildren extends Validator {
           static get validatorName() {

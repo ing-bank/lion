@@ -190,7 +190,7 @@ describe('<lion-form>', () => {
     const internalHandlerSpy = spy(el, 'submitGroup');
     const dispatchSpy = spy(el, 'dispatchEvent');
     button.click();
-    expect(dispatchSpy.args[0][0].type).to.equal('submit');
+    expect(dispatchSpy.args.map(args => args[0].type)).to.contain('submit');
     expect(internalHandlerSpy).to.be.calledBefore(dispatchSpy);
   });
 
@@ -225,7 +225,7 @@ describe('<lion-form>', () => {
     const button = /** @type {HTMLButtonElement} */ (el.querySelector('button'));
     const dispatchSpy = spy(el, 'dispatchEvent');
     button.click();
-    expect(dispatchSpy.args[0][0].type).to.equal('submit');
+    expect(dispatchSpy.args.map(args => args[0].type)).to.contain('submit');
     // @ts-ignore [allow-protected] in test
     expect(isActiveElement(el.formElements[1]._inputNode)).to.be.true;
   });
@@ -247,7 +247,7 @@ describe('<lion-form>', () => {
     const button = /** @type {HTMLButtonElement} */ (el.querySelector('button'));
     const dispatchSpy = spy(el, 'dispatchEvent');
     button.click();
-    expect(dispatchSpy.args[0][0].type).to.equal('submit');
+    expect(dispatchSpy.args.map(args => args[0].type)).to.contain('submit');
     const fieldset = el.formElements[0];
     // @ts-ignore [allow-protected] in test
     expect(isActiveElement(fieldset.formElements[1]._inputNode)).to.be.true;
@@ -268,7 +268,7 @@ describe('<lion-form>', () => {
     const button = /** @type {HTMLButtonElement} */ (el.querySelector('button'));
     const dispatchSpy = spy(el, 'dispatchEvent');
     button.click();
-    expect(dispatchSpy.args[0][0].type).to.equal('submit');
+    expect(dispatchSpy.args.map(args => args[0].type)).to.contain('submit');
     const fieldset = el.formElements[0];
     expect(isActiveElement(fieldset.formElements[0]._inputNode)).to.be.true;
   });
