@@ -190,7 +190,7 @@ describe('<lion-form>', () => {
     const internalHandlerSpy = spy(el, 'submitGroup');
     const dispatchSpy = spy(el, 'dispatchEvent');
     button.click();
-    expect(dispatchSpy.args.map(args => args[0].type)).to.contain('submit');
+    expect(dispatchSpy.args[0][0].type).to.equal('submit');
     expect(internalHandlerSpy).to.be.calledBefore(dispatchSpy);
   });
 
@@ -222,6 +222,7 @@ describe('<lion-form>', () => {
         </form>
       </lion-form>
     `);
+    expect(el.getAttribute('aria-invalid')).to.equal('false');
     const button = /** @type {HTMLButtonElement} */ (el.querySelector('button'));
     const dispatchSpy = spy(el, 'dispatchEvent');
     button.click();
