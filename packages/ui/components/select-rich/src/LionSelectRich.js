@@ -108,6 +108,18 @@ export class LionSelectRich extends SlotMixin(ScopedElementsMixin(OverlayMixin(L
     );
   }
 
+  /**
+   * @configure ListboxMixin
+   * @param {HTMLElement} el
+   * @param {HTMLElement} [scrollTargetEl]
+   * @protected
+   */
+  _scrollIntoView(el, scrollTargetEl) {
+    if (this.opened) {
+      super._scrollIntoView(el, scrollTargetEl);
+    }
+  }
+
   /** @protected */
   _arrowWidth;
 

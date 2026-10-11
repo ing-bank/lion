@@ -2,6 +2,7 @@ import { expect, triggerBlurFor, triggerFocusFor, fixture } from '@open-wc/testi
 import { Required } from '@lion/ui/form-core.js';
 import { html } from 'lit/static-html.js';
 import { browserDetection } from '@lion/ui/core.js';
+import sinon from 'sinon';
 
 import '@lion/ui/define/lion-option.js';
 
@@ -43,6 +44,58 @@ function expectOnlyGivenOneOptionToBeChecked(options, selectedIndex) {
 }
 
 describe('lion-select-rich interactions', () => {
+  describe('Scrolling active options', () => {
+    afterEach(() => {
+      sinon.restore();
+    });
+
+    it('does not scroll while typing a selection from the closed invoker', async () => {
+      const el = /** @type {LionSelectRich} */ (
+        await fixture(html`
+          <lion-select-rich interaction-mode="windows/linux">
+            <lion-option .choiceValue=${'red'}>Red</lion-option>
+            <lion-option .choiceValue=${'teal'}>Teal</lion-option>
+          </lion-select-rich>
+        `)
+      );
+      const scrollSpy = sinon.spy(Element.prototype, 'scrollIntoView');
+
+      mimicKeyPress(el, 't', 'KeyT');
+      await el.updateComplete;
+
+      expect(el.opened).to.be.false;
+      expect(el.checkedIndex).to.equal(1);
+      expect(scrollSpy.callCount).to.equal(0);
+    });
+
+    it('scrolls the selected option on opening and the active option on keyboard navigation', async () => {
+      const el = /** @type {LionSelectRich} */ (
+        await fixture(html`
+          <lion-select-rich interaction-mode="mac">
+            <lion-option .choiceValue=${10}>Item 1</lion-option>
+            <lion-option .choiceValue=${20} checked>Item 2</lion-option>
+            <lion-option .choiceValue=${30}>Item 3</lion-option>
+          </lion-select-rich>
+        `)
+      );
+      const { _overlayCtrl, _listboxNode } = getSelectRichMembers(el);
+      const scrollSpy = sinon.spy(Element.prototype, 'scrollIntoView');
+
+      await _overlayCtrl.show();
+      await el.updateComplete;
+
+      expect(el.opened).to.be.true;
+      expect(scrollSpy.calledOn(el.formElements[1])).to.be.true;
+      scrollSpy.resetHistory();
+
+      mimicKeyPress(_listboxNode, 'ArrowDown');
+      await el.updateComplete;
+
+      expect(el.activeIndex).to.equal(2);
+      expect(scrollSpy.calledOn(el.formElements[2])).to.be.true;
+    });
+  });
+
   describe('Interaction mode', () => {
     it('autodetects interactionMode if not defined', async () => {
       const originalIsMac = browserDetection.isMac;
