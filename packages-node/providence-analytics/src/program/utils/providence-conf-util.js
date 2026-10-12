@@ -1,10 +1,10 @@
 import { pathToFileURL } from 'url';
 import path from 'path';
 
-import { fsAdapter } from './fs-adapter.js';
+import { fsAdapter } from '#utils/fs-adapter.js';
 
 /**
- * @typedef {import('../../../types/index.js').ProvidenceCliConf} ProvidenceCliConf
+ * @typedef {import('#types/index.js').ProvidenceCliConf} ProvidenceCliConf
  */
 
 /**

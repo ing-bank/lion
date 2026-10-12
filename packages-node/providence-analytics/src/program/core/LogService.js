@@ -1,5 +1,5 @@
 import path from 'path';
-import { fsAdapter } from '../utils/fs-adapter.js';
+import { fsAdapter } from '#utils/fs-adapter.js';
 
 const { log } = console;
 

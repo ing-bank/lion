@@ -4,7 +4,7 @@ import {
   PathRelativeFromProjectRoot,
   AnalyzerQueryResult,
   FindAnalyzerOutputFile,
-} from '../core/index.js';
+} from '#types/core/index.js';
 
 export interface FindImportsAnalyzerResult extends AnalyzerQueryResult {
   queryOutput: FindImportsAnalyzerOutputFile[];
@@ -28,7 +28,7 @@ export interface FindImportsAnalyzerEntry {
   /**
    * The original "source" string belonging to specifier.
    * For example:
-   * - file `import { x } from './my/file';` gives `"./my/file"`
+   * - file `import { x } from '#types/analyzers/my/file';` gives `"./my/file"`
    * - file `import { x } from 'project';` gives `"project"`
    */
   source: SpecifierSource;
@@ -36,7 +36,7 @@ export interface FindImportsAnalyzerEntry {
    * The normalized "source" string belonging to specifier
    * (based on file system information, resolves right names and extensions).
    * For example:
-   * - file `import { x } from './my/file';` gives `"./my/file.js"`
+   * - file `import { x } from '#types/analyzers/my/file';` gives `"./my/file.js"`
    * - file `import { x } from 'project';` gives `"project"` (only files in current project are resolved)
    * - file `import { x } from '../';` gives `"../index.js"`
    */

@@ -1,14 +1,11 @@
 import { expect } from 'chai';
 import { it } from 'mocha';
 
-import { setupAnalyzerTest } from '../../../test-helpers/setup-analyzer-test.js';
-import { mockProject } from '../../../test-helpers/mock-project-helpers.js';
-import { oxcTraverse } from '../../../src/program/utils/oxc-traverse.js';
-import { AstService } from '../../../src/program/core/AstService.js';
-import {
-  trackDownIdentifier,
-  trackDownIdentifierFromScope,
-} from '../../../src/program/utils/track-down-identifier.js';
+import { setupAnalyzerTest } from '#test-helpers/setup-analyzer-test.js';
+import { mockProject } from '#test-helpers/mock-project-helpers.js';
+import { oxcTraverse } from '#utils/oxc-traverse.js';
+import { AstService } from '#core/AstService.js';
+import { trackDownIdentifier, trackDownIdentifierFromScope } from '#utils/track-down-identifier.js';
 
 /**
  * @typedef {import('../../../types/index.js').SwcPath} NodePath

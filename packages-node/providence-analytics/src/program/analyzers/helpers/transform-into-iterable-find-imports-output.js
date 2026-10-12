@@ -1,6 +1,6 @@
 /**
- * @typedef {import('../../../../types/index.js').FindImportsAnalyzerResult} FindImportsAnalyzerResult
- * @typedef {import('../../../../types/index.js').IterableFindImportsAnalyzerEntry} IterableFindImportsAnalyzerEntry
+ * @typedef {import('#types/index.js').FindImportsAnalyzerResult} FindImportsAnalyzerResult
+ * @typedef {import('#types/index.js').IterableFindImportsAnalyzerEntry} IterableFindImportsAnalyzerEntry
  */
 
 /*

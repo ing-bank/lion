@@ -3,15 +3,15 @@ import path from 'path';
 
 import { nodeResolve } from '@rollup/plugin-node-resolve';
 
-import { isRelativeSourcePath } from './relative-source-path.js';
-import { LogService } from '../core/LogService.js';
-import { toPosixPath } from './to-posix-path.js';
-import { memoize } from './memoize.js';
+import { isRelativeSourcePath } from '#utils/relative-source-path.js';
+import { LogService } from '#core/LogService.js';
+import { toPosixPath } from '#utils/to-posix-path.js';
+import { memoize } from '#utils/memoize.js';
 
 /**
- * @typedef {import('../../../types/index.js').PathRelativeFromProjectRoot} PathRelativeFromProjectRoot
- * @typedef {import('../../../types/index.js').PathFromSystemRoot} PathFromSystemRoot
- * @typedef {import('../../../types/index.js').SpecifierSource} SpecifierSource
+ * @typedef {import('#types/index.js').PathRelativeFromProjectRoot} PathRelativeFromProjectRoot
+ * @typedef {import('#types/index.js').PathFromSystemRoot} PathFromSystemRoot
+ * @typedef {import('#types/index.js').SpecifierSource} SpecifierSource
  */
 
 /**

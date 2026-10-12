@@ -1,4 +1,4 @@
-import { LogService } from '../src/program/core/LogService.js';
+import { LogService } from '#core/LogService.js';
 
 const originalWarn = LogService.warn;
 export function suppressWarningLogs() {

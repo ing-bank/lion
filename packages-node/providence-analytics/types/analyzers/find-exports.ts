@@ -6,7 +6,7 @@ import {
   RootFile,
   AnalyzerQueryResult,
   FindAnalyzerOutputFile,
-} from '../core/index.js';
+} from '#types/core/index.js';
 
 export interface FindExportsAnalyzerResult extends AnalyzerQueryResult {
   queryOutput: FindExportsAnalyzerOutputFile[];
@@ -32,7 +32,7 @@ export interface FindExportsAnalyzerEntry {
   /**
    * The original "source" string belonging to specifier.
    * For example:
-   * - file `export { x } from './my/file';` gives `"./my/file"`
+   * - file `export { x } from '#types/analyzers/my/file';` gives `"./my/file"`
    * - file `export { x } from 'project';` gives `"project"`
    */
   source: SpecifierSource;
@@ -40,7 +40,7 @@ export interface FindExportsAnalyzerEntry {
    * The normalized "source" string belonging to specifier
    * (based on file system information, resolves right names and extensions).
    * For example:
-   * - file `export { x } from './my/file';` gives `"./my/file.js"`
+   * - file `export { x } from '#types/analyzers/my/file';` gives `"./my/file.js"`
    * - file `export { x } from 'project';` gives `"project"` (only files in current project are resolved)
    * - file `export { x } from '../';` gives `"../index.js"`
    */

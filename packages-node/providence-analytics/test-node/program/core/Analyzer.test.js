@@ -1,13 +1,13 @@
 import { expect } from 'chai';
 import { it } from 'mocha';
-import { mockProject, restoreMockedProjects } from '../../../test-helpers/mock-project-helpers.js';
-import { setupAnalyzerTest } from '../../../test-helpers/setup-analyzer-test.js';
-import { QueryService } from '../../../src/program/core/QueryService.js';
-import { providence } from '../../../src/program/providence.js';
-import { DummyAnalyzer } from '../../../test-helpers/templates/DummyAnalyzer.js';
+import { mockProject, restoreMockedProjects } from '#test-helpers/mock-project-helpers.js';
+import { setupAnalyzerTest } from '#test-helpers/setup-analyzer-test.js';
+import { QueryService } from '#core/QueryService.js';
+import { providence } from '#program/providence.js';
+import { DummyAnalyzer } from '#test-helpers/templates/DummyAnalyzer.js';
 
 /**
- * @typedef {import('../../../types/index.js').ProvidenceConfig} ProvidenceConfig
+ * @typedef {import('#types/index.js').ProvidenceConfig} ProvidenceConfig
  */
 
 setupAnalyzerTest();

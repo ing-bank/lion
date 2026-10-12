@@ -1,5 +1,5 @@
 import pathLib from 'path';
-import { LogService } from '../../core/LogService.js';
+import { LogService } from '#core/LogService.js';
 
 /**
  * @typedef {import('../../../../types/index.js').AnalyzerQueryResult} AnalyzerQueryResult

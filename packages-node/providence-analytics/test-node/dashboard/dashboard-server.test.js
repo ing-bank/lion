@@ -7,10 +7,10 @@ import { createTestServer } from '@web/dev-server-core/test-helpers';
 import { expect } from 'chai';
 import { it } from 'mocha';
 
-import { providenceConfUtil } from '../../src/program/utils/providence-conf-util.js';
-import { createDashboardServerConfig } from '../../src/dashboard/server.js';
-import { ReportService } from '../../src/program/core/ReportService.js';
-import { fsAdapter } from '../../src/program/utils/fs-adapter.js';
+import { providenceConfUtil } from '#utils/providence-conf-util.js';
+import { createDashboardServerConfig } from '#dashboard/server.js';
+import { ReportService } from '#core/ReportService.js';
+import { fsAdapter } from '#utils/fs-adapter.js';
 
 /**
  * @typedef {import('@web/dev-server-core').DevServer} DevServer

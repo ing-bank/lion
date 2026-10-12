@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import { it } from 'mocha';
 import * as parse5 from 'parse5';
-import { traverseHtml } from '../../../src/program/utils/traverse-html.js';
+import { traverseHtml } from '#utils/traverse-html.js';
 
 /**
  * @typedef {{ name: string; value: string }} P5Attr

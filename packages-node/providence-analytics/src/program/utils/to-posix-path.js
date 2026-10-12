@@ -1,5 +1,5 @@
 /**
- * @typedef {import('../../../types/index.js').PathFromSystemRoot} PathFromSystemRoot
+ * @typedef {import('#types/index.js').PathFromSystemRoot} PathFromSystemRoot
  */
 
 /**

@@ -8,7 +8,7 @@ import {
   GatherFilesConfig,
   SpecifierName,
   QueryOutput,
-} from './index.js';
+} from '#types/core/index.js';
 
 /**
  * Name of the analyzer, like 'find-imports' or 'match-sublcasses'

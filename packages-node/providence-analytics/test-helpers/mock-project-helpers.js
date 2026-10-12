@@ -101,7 +101,6 @@ export function resolveDynamicImportsForMockFs(
       ],
     },
     { name: '@babel/parser' },
-    { name: '@swc/core' },
   ],
 ) {
   const require = module.createRequire(import.meta.url);

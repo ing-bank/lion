@@ -4,7 +4,7 @@ import {
   RootFile,
   AnalyzerQueryResult,
   FindAnalyzerOutputFile,
-} from '../core/index.js';
+} from '#types/core/index.js';
 
 export interface FindClassesAnalyzerResult extends AnalyzerQueryResult {
   queryOutput: FindClassesAnalyzerOutputFile[];

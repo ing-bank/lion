@@ -2,7 +2,7 @@ import { expect } from 'chai';
 import { it } from 'mocha';
 import sinon from 'sinon';
 
-import { memoize } from '../../../src/program/utils/memoize.js';
+import { memoize } from '#utils/memoize.js';
 
 describe('Memoize', () => {
   // This is important, since memoization only works when cache is disabled.

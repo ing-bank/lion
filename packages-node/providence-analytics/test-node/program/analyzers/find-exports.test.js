@@ -1,13 +1,13 @@
 import { expect } from 'chai';
 import { it } from 'mocha';
-import { providence } from '../../../src/program/providence.js';
-import { QueryService } from '../../../src/program/core/QueryService.js';
-import { setupAnalyzerTest } from '../../../test-helpers/setup-analyzer-test.js';
-import { mockProject, getEntry, getEntries } from '../../../test-helpers/mock-project-helpers.js';
-import FindExportsAnalyzer from '../../../src/program/analyzers/find-exports.js';
+import { providence } from '#program/providence.js';
+import { QueryService } from '#core/QueryService.js';
+import { setupAnalyzerTest } from '#test-helpers/setup-analyzer-test.js';
+import { mockProject, getEntry, getEntries } from '#test-helpers/mock-project-helpers.js';
+import FindExportsAnalyzer from '#analyzers/find-exports.js';
 
 /**
- * @typedef {import('../../../types/index.js').ProvidenceConfig} ProvidenceConfig
+ * @typedef {import('#types/index.js').ProvidenceConfig} ProvidenceConfig
  */
 
 setupAnalyzerTest();

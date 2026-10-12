@@ -4,9 +4,9 @@ import {
   mockProject,
   restoreMockedProjects,
   mockTargetAndReferenceProject,
-} from '../../../test-helpers/mock-project-helpers.js';
-import { resolveImportPath } from '../../../src/program/utils/resolve-import-path.js';
-import { memoize } from '../../../src/program/utils/memoize.js';
+} from '#test-helpers/mock-project-helpers.js';
+import { resolveImportPath } from '#utils/resolve-import-path.js';
+import { memoize } from '#utils/memoize.js';
 
 /**
  * @typedef {import('../../../test-helpers/mock-project-helpers.js').MockProject} MockProject

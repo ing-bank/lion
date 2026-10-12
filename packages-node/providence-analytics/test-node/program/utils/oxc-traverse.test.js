@@ -2,13 +2,13 @@ import { expect } from 'chai';
 import { it } from 'mocha';
 // @ts-expect-error
 import babelTraversePkg from '@babel/traverse';
-import { oxcTraverse } from '../../../src/program/utils/oxc-traverse.js';
-import { AstService } from '../../../src/program/core/AstService.js';
+import { oxcTraverse } from '#utils/oxc-traverse.js';
+import { AstService } from '#core/AstService.js';
 
 /**
  * @typedef {import('@swc/core').Module} SwcAstModule
- * @typedef {import('../../../types/index.js').SwcPath} SwcPath
- * @typedef {import('../../../types/index.js').SwcScope} SwcScope
+ * @typedef {import('#types/index.js').SwcPath} SwcPath
+ * @typedef {import('#types/index.js').SwcScope} SwcScope
  */
 
 /**
@@ -16,15 +16,15 @@ import { AstService } from '../../../src/program/core/AstService.js';
  */
 function gatherAllScopes(oxcAst) {
   /** @type {SwcScope[]} */
-  const swcScopes = [];
+  const oxcScopes = [];
   oxcTraverse(oxcAst, {
     enter({ scope }) {
-      if (scope && !swcScopes.includes(scope)) {
-        swcScopes.push(scope);
+      if (scope && !oxcScopes.includes(scope)) {
+        oxcScopes.push(scope);
       }
     },
   });
-  return swcScopes;
+  return oxcScopes;
 }
 
 /**
@@ -46,7 +46,7 @@ function identifierOf(path) {
 
 describe('oxcTraverse', () => {
   describe('Visitor', () => {
-    it('traverses an swc AST based on <Node.type> visitor', async () => {
+    it('traverses an oxc AST based on <Node.type> visitor', async () => {
       const code = `import x from 'y';`;
       const oxcAst = await AstService._getOxcAst(code);
 
@@ -149,8 +149,8 @@ describe('oxcTraverse', () => {
 
   describe.skip('Paths', () => {
     it(`adds {
-      node: SwcNode;
-      parent: SwcNode;
+      node: OxcNode;
+      parent: OxcNode;
       stop: function;
       scope: SwcScope;
       parentPath: SwcPath;
@@ -168,9 +168,9 @@ describe('oxcTraverse', () => {
           const middleScope = 1;
           {
             const deepestScope = 2;
-          }  
+          }
         }
-        const alsoGlobalScope = 3;    
+        const alsoGlobalScope = 3;
       `;
         const oxcAst = await AstService._getOxcAst(code);
 
@@ -317,7 +317,6 @@ describe('oxcTraverse', () => {
         /** @type {SwcPath[]} */
         const results = [];
         const visitor = {
-          // MethodProperty for swc...
           ObjectExpression(/** @type {any} */ path) {
             results.push(path);
           },
@@ -368,9 +367,9 @@ describe('oxcTraverse', () => {
           let middleScope = 1;
           {
             const deepestScope = 2;
-          }  
+          }
         }
-        let alsoGlobalScope = 3;    
+        let alsoGlobalScope = 3;
       `;
         const oxcAst = await AstService._getOxcAst(code);
 
@@ -412,7 +411,7 @@ describe('oxcTraverse', () => {
           var stillGlobalScope = 1;
           function middleScope() {
             var insideFnScope = 2;
-          }  
+          }
         }
       `;
         const oxcAst = await AstService._getOxcAst(code);
@@ -480,32 +479,32 @@ describe('oxcTraverse', () => {
       });
 
       /** @type {SwcScope[]} */
-      const swcScopes = [];
+      const oxcScopes = [];
       oxcTraverse(oxcAst, {
         enter({ scope }) {
-          if (scope && !swcScopes.includes(scope)) {
-            swcScopes.push(scope);
+          if (scope && !oxcScopes.includes(scope)) {
+            oxcScopes.push(scope);
           }
         },
       });
 
       const babelRootScopeIdOffset = babelScopes[0].uid;
 
-      expect(babelScopes.length).to.equal(swcScopes.length);
+      expect(babelScopes.length).to.equal(oxcScopes.length);
       for (let i = 0; i < babelScopes.length; i += 1) {
-        expect(babelScopes[i].uid - babelRootScopeIdOffset).to.equal(swcScopes[i].id);
+        expect(babelScopes[i].uid - babelRootScopeIdOffset).to.equal(oxcScopes[i].id);
 
         const babelEntries = Object.entries(babelScopes[i].bindings);
-        const swcEntries = Object.entries(swcScopes[i].bindings);
+        const oxcEntries = Object.entries(oxcScopes[i].bindings);
         for (const [j, [bindingKey, binding]] of babelEntries.entries()) {
-          expect(bindingKey).to.equal(swcEntries[j][0]);
-          expect(binding.path.node.type).to.equal(swcEntries[j][1]?.path?.node.type);
+          expect(bindingKey).to.equal(oxcEntries[j][0]);
+          expect(binding.path.node.type).to.equal(oxcEntries[j][1]?.path?.node.type);
         }
 
         // expect(Object.keys(babelScopes[i].bindings)).to.deep.equal(
-        //   Object.keys(swcScopes[i].bindings),
+        //   Object.keys(oxcScopes[i].bindings),
         // );
-        // expect(babelScopes[i].references).to.deep.equal(swcResults[i].references);
+        // expect(babelScopes[i].references).to.deep.equal(oxcScopes[i].references);
       }
     }
 
