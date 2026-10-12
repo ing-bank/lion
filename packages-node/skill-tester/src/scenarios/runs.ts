@@ -143,6 +143,8 @@ export const accordionScenario: TestScenario = {
     'Create `src/my-accordion.js`. Create that file only — nothing else.',
     'It must export a class named `MyAccordion`.',
     'Goal: a user can reveal two sections of content, each behind its own clickable heading.',
+    'Compose the documented <lion-accordion> element, using its documented invoker/content slot',
+    'structure.',
   ].join(' '),
   targetFile: 'src/my-accordion.js',
   files: {
