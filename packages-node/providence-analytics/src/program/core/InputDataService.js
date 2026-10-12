@@ -1,37 +1,37 @@
 import child_process from 'child_process'; // eslint-disable-line camelcase
-import { globby } from 'globby';
 import path from 'path';
+import { fsGlob } from '#utils/fs-glob.js';
 
-import { getFilePathRelativeFromRoot } from '../utils/get-file-path-relative-from-root.js';
-import { toPosixPath } from '../utils/to-posix-path.js';
-import { fsAdapter } from '../utils/fs-adapter.js';
-import { memoize } from '../utils/memoize.js';
-import { LogService } from './LogService.js';
-import { AstService } from './AstService.js';
+import { getFilePathRelativeFromRoot } from '#utils/get-file-path-relative-from-root.js';
+import { toPosixPath } from '#utils/to-posix-path.js';
+import { fsAdapter } from '#utils/fs-adapter.js';
+import { memoize } from '#utils/memoize.js';
+import { LogService } from '#core/LogService.js';
+import { AstService } from '#core/AstService.js';
 
 /**
- * @typedef {import('../../../types/index.js').PathRelativeFromProjectRoot} PathRelativeFromProjectRoot
- * @typedef {import('../../../types/index.js').FindImportsAnalyzerResult} FindImportsAnalyzerResult
- * @typedef {import('../../../types/index.js').FindImportsAnalyzerEntry} FindImportsAnalyzerEntry
- * @typedef {import('../../../types/index.js').ProjectInputDataWithMeta} ProjectInputDataWithMeta
- * @typedef {import('../../../types/index.js').AnalyzerQueryResult} AnalyzerQueryResult
- * @typedef {import('../../../types/index.js').AnalyzerQueryConfig} AnalyzerQueryConfig
- * @typedef {import('../../../types/index.js').FeatureQueryConfig} FeatureQueryConfig
- * @typedef {import('../../../types/index.js').PathFromSystemRoot} PathFromSystemRoot
- * @typedef {import('../../../types/index.js').SearchQueryConfig} SearchQueryConfig
- * @typedef {import('../../../types/index.js').GatherFilesConfig} GatherFilesConfig
- * @typedef {import('../../../types/index.js').ProjectInputData} ProjectInputData
- * @typedef {import('../../../types/index.js').AnalyzerConfig} AnalyzerConfig
+ * @typedef {import('#types/index.js').PathRelativeFromProjectRoot} PathRelativeFromProjectRoot
+ * @typedef {import('#types/index.js').FindImportsAnalyzerResult} FindImportsAnalyzerResult
+ * @typedef {import('#types/index.js').FindImportsAnalyzerEntry} FindImportsAnalyzerEntry
+ * @typedef {import('#types/index.js').ProjectInputDataWithMeta} ProjectInputDataWithMeta
+ * @typedef {import('#types/index.js').AnalyzerQueryResult} AnalyzerQueryResult
+ * @typedef {import('#types/index.js').AnalyzerQueryConfig} AnalyzerQueryConfig
+ * @typedef {import('#types/index.js').FeatureQueryConfig} FeatureQueryConfig
+ * @typedef {import('#types/index.js').PathFromSystemRoot} PathFromSystemRoot
+ * @typedef {import('#types/index.js').SearchQueryConfig} SearchQueryConfig
+ * @typedef {import('#types/index.js').GatherFilesConfig} GatherFilesConfig
+ * @typedef {import('#types/index.js').ProjectInputData} ProjectInputData
+ * @typedef {import('#types/index.js').AnalyzerConfig} AnalyzerConfig
  * @typedef {{path:PathFromSystemRoot; name:ProjectName}} ProjectNameAndPath
- * @typedef {import('../../../types/index.js').PathRelative} PathRelative
- * @typedef {import('../../../types/index.js').AnalyzerName} AnalyzerName
- * @typedef {import('../../../types/index.js').QueryConfig} QueryConfig
- * @typedef {import('../../../types/index.js').QueryResult} QueryResult
- * @typedef {import('../../../types/index.js').ProjectName} ProjectName
- * @typedef {import('../../../types/index.js').PackageJson} PackageJson
- * @typedef {import('../../../types/index.js').Analyzer} Analyzer
- * @typedef {import('../../../types/index.js').Project} Project
- * @typedef {import('../../../types/index.js').Feature} Feature
+ * @typedef {import('#types/index.js').PathRelative} PathRelative
+ * @typedef {import('#types/index.js').AnalyzerName} AnalyzerName
+ * @typedef {import('#types/index.js').QueryConfig} QueryConfig
+ * @typedef {import('#types/index.js').QueryResult} QueryResult
+ * @typedef {import('#types/index.js').ProjectName} ProjectName
+ * @typedef {import('#types/index.js').PackageJson} PackageJson
+ * @typedef {import('#types/index.js').Analyzer} Analyzer
+ * @typedef {import('#types/index.js').Project} Project
+ * @typedef {import('#types/index.js').Feature} Feature
  */
 
 /** @type {`.${string}`[]} */
@@ -84,7 +84,7 @@ const getPathsFromGlobList = memoize(
     const results = [];
     for (const pathOrGlob of list) {
       if (pathOrGlob.includes('*')) {
-        const globResults = await globby(pathOrGlob, {
+        const globResults = await fsGlob(pathOrGlob, {
           cwd: rootPath,
           absolute: false,
           onlyFiles: false,
@@ -543,22 +543,22 @@ export class InputDataService {
       combinedGlobs.push(this._getDefaultGlobDepthPattern(cfg.depth, cfg.extensions));
     }
 
-    const globbyCfg = {
+    const globCfg = {
       expandDirectories: false,
       fs: fsAdapter.fs,
       onlyFiles: true,
       absolute: true,
       cwd: startPath,
     };
-    let filteredGlobRes = await globby(combinedGlobs, globbyCfg);
+    let filteredGlobRes = await fsGlob(combinedGlobs, globCfg);
 
-    // Unfortunatly, globby does not correctly remove the negated globs,
+    // Unfortunately, negated globs are not always correctly removed from the result,
     // so we have to do it manually
     const negatedGlobs = combinedGlobs.filter(p => p.startsWith('!'));
     if (negatedGlobs.length) {
-      const subtract = await globby(
+      const subtract = await fsGlob(
         negatedGlobs.map(p => p.slice(1)),
-        globbyCfg,
+        globCfg,
       );
       // eslint-disable-next-line no-shadow
       filteredGlobRes = filteredGlobRes.filter(file => !subtract.includes(file));
@@ -566,7 +566,7 @@ export class InputDataService {
 
     // Make sure we don't delete to much by giving customConfig.allowlist priority
     if (customConfig.allowlist?.length) {
-      const customResults = await globby(customConfig.allowlist, globbyCfg);
+      const customResults = await fsGlob(customConfig.allowlist, globCfg);
       filteredGlobRes = Array.from(new Set([...filteredGlobRes, ...customResults]));
     }
 
@@ -652,7 +652,7 @@ export class InputDataService {
       const valueToUseForGlob = stripDotSlashFromLocalPath(resolvedVal).replace('*', '**/*');
 
       // Generate all possible entries via glob, first strip './'
-      const internalExportMapPathsForKeyRaw = await globby(valueToUseForGlob, {
+      const internalExportMapPathsForKeyRaw = await fsGlob(valueToUseForGlob, {
         cwd: packageRootPath,
         onlyFiles: true,
       });
