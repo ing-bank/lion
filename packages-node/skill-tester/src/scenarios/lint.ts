@@ -17,6 +17,8 @@
  *   L5  everything referenced actually exists (entrypoints/tags/reference docs)
  *   L6  a TODO starter leaks no answer (no imports, no convention statements)
  *   L7  exactly one deliverable, and the prompt forbids creating anything else
+ *   L8  a check demands no element the prompt never names — the reverse direction — unless that
+ *       check accepts an alternative shape itself
  *
  * L4 and L5 are deliberately literal: they only resolve what can be resolved without judgement.
  * Anything requiring taste (is this example idiomatic? is it minimal?) is a review question, not
@@ -144,6 +146,26 @@ export function lintScenario(scenario: TestScenario, context: LintContext = {}):
   }
   if (!/\bonly\b|nothing else/i.test(scenario.prompt)) {
     add('L7', 'prompt does not restrict the model to the single deliverable file');
+  }
+
+  // L8 — the reverse direction. L3/L4 check that the prompt's demands are measured; this checks
+  // that the checks measure nothing the prompt never asked for. Measured: a check demanded a
+  // rendered `<lion-input-iban>` while the prompt only asked for "a field where a user can enter an
+  // IBAN", so four correct subclass answers across three models were graded as failures. A check
+  // that accepts an alternative shape is not over-strict, which is how it was fixed, so it is
+  // exempt. Only markup mentions count: a `lion-x` inside an entrypoint path
+  // (`@lion/ui/define/lion-x.js`) is a module name, not an element the prompt must name.
+  for (const check of checks) {
+    const pattern = check.pattern ?? '';
+    if (pattern.includes('|')) continue;
+    for (const [, element] of pattern.matchAll(/<(lion-[a-z0-9-]+)/g)) {
+      if (!scenario.prompt.includes(element)) {
+        add(
+          'L8',
+          `check demands <${element}> and accepts no alternative, but the prompt never names it`,
+        );
+      }
+    }
   }
 
   return findings;
