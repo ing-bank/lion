@@ -55,7 +55,6 @@
   },
   "dependencies": {
     "@rollup/plugin-node-resolve": "^16.0.3",
-    "globby": "^16.1.0",
     "oxc-parser": "0.137.0",
     "parse5": "^8.0.0",
     "semver": "^7.7.3"
@@ -89,7 +88,7 @@
     "software"
   ],
   "engines": {
-    "node": ">=18.0.0"
+    "node": ">=22.0.0"
   },
   "publishConfig": {
     "access": "public"
@@ -100,6 +99,16 @@
       "oxc-parser": "Pin it as long as the api is unstable, to prevent unpredictable behavior",
       "semver": "Only needed for one check. Create internal util later"
     }
+  },
+  "imports": {
+    "#analyzers/*": "./src/program/analyzers/*",
+    "#cli/*": "./src/cli/*",
+    "#core/*": "./src/program/core/*",
+    "#dashboard/*": "./src/dashboard/*",
+    "#program/*": "./src/program/*",
+    "#test-helpers/*": "./test-helpers/*",
+    "#types/*": "./types/*",
+    "#utils/*": "./src/program/utils/*"
   },
   "wireit": {
     "types": {
