@@ -13,6 +13,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import type { Ledger, LedgerEntry } from './ledger.ts';
+import { RATES, formatUsd } from '../pricing/models.ts';
 
 /** Below this, cross-run variance is not meaningful. */
 const INDICATIVE_BELOW = 3;
@@ -37,6 +38,14 @@ function behaviourCell(entry: LedgerEntry): string {
 
 function tokensPerRun(entry: LedgerEntry): string {
   return entry.samples === 0 ? 'n/a' : Math.round(entry.tokens / entry.samples).toLocaleString('en-US');
+}
+
+/** Cost for the whole cell, or an explicit absence — never a guessed number. */
+function costCell(entry: LedgerEntry): string {
+  if (entry.cost !== undefined) return formatUsd(entry.cost);
+  if (!RATES[entry.model]) return 'no published rate';
+  // The model has a rate but the row predates input/output tracking; $0.00 would be a lie.
+  return 'n/a — recorded before the token split';
 }
 
 export function renderQualityPage(ledger: Ledger): string {
@@ -78,8 +87,10 @@ export function renderQualityPage(ledger: Ledger): string {
     const kind = rows[0]?.kind ?? 'unknown';
     lines.push(`## ${scenario} (${kind})`);
     lines.push('');
-    lines.push('| Model | Mean | Min | Max | sd | n | Behaviour | Attempts | Redo | Tokens/run |');
-    lines.push('| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |');
+    lines.push(
+      '| Model | Mean | Min | Max | sd | n | Behaviour | Attempts | Redo | Tokens/run | Cost |',
+    );
+    lines.push('| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |');
     for (const entry of rows) {
       lines.push(
         `| \`${entry.model}\` ` +
@@ -91,7 +102,8 @@ export function renderQualityPage(ledger: Ledger): string {
           `| ${behaviourCell(entry)} ` +
           `| ${entry.samples === 0 ? 'n/a' : `${entry.attempts}/${entry.samples}`} ` +
           `| ${entry.samples === 0 ? 'n/a' : entry.redoable} ` +
-          `| ${tokensPerRun(entry)} |`,
+          `| ${tokensPerRun(entry)} ` +
+          `| ${costCell(entry)} |`,
       );
     }
     lines.push('');
@@ -107,6 +119,27 @@ export function renderQualityPage(ledger: Ledger): string {
       '"Attempts" is how many runs actually modified the deliverable; a run that never wrote ' +
       'anything is recorded as *not attempted* rather than as a wrong answer.',
   );
+  lines.push('');
+  lines.push('## Rates used for the cost column');
+  lines.push('');
+  lines.push('USD per 1M tokens, as read from the sources below. Input and output are priced');
+  lines.push('separately; cached input is not discounted here, so a published cost is an upper bound.');
+  lines.push('');
+  lines.push('| Model | Input /1M | Output /1M | Source | Confidence | Read |');
+  lines.push('| --- | --- | --- | --- | --- | --- |');
+  for (const model of [...new Set(ledger.entries.map(entry => entry.model))].sort()) {
+    const rate = RATES[model];
+    lines.push(
+      rate
+        ? `| \`${model}\` | $${rate.input} | $${rate.output} | <${rate.source}> | ${rate.confidence} | ${rate.retrievedAt} |`
+        : `| \`${model}\` | — | — | no published rate found | — | — |`,
+    );
+  }
+  lines.push('');
+  for (const model of [...new Set(ledger.entries.map(entry => entry.model))].sort()) {
+    const note = RATES[model]?.note;
+    if (note) lines.push(`- \`${model}\`: ${note}`);
+  }
   lines.push('');
 
   return `${lines.join('\n').replace(/\n{3,}/g, '\n\n').trimEnd()}\n`;
