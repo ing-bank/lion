@@ -14,6 +14,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import type { SkillTesterReport } from '../skillTester.ts';
 import type { TestScenario } from '../scenarios/types.ts';
+import { costOf } from '../pricing/models.ts';
 
 export type LedgerEntry = {
   skillRevision: string;
@@ -30,6 +31,11 @@ export type LedgerEntry = {
   attempts: number;
   redoable: number;
   tokens: number;
+  /** The input/output split, kept because a cost needs both rates. */
+  promptTokens: number;
+  completionTokens: number;
+  /** USD for the whole cell, or undefined when the model has no published rate. */
+  cost?: number;
   ranAt: string;
 };
 
@@ -94,6 +100,16 @@ export function updateLedger(
         run => run.model === summary.model && run.scenario === summary.scenario,
       ).length,
       tokens: runs.reduce((sum, run) => sum + run.agentRun.totalTokens, 0),
+      promptTokens: runs.reduce((sum, run) => sum + (run.agentRun.promptTokens ?? 0), 0),
+      completionTokens: runs.reduce((sum, run) => sum + (run.agentRun.completionTokens ?? 0), 0),
+      ...(() => {
+        const cost = costOf(
+          summary.model,
+          runs.reduce((sum, run) => sum + (run.agentRun.promptTokens ?? 0), 0),
+          runs.reduce((sum, run) => sum + (run.agentRun.completionTokens ?? 0), 0),
+        );
+        return cost === undefined ? {} : { cost };
+      })(),
       ranAt: report.finishedAt,
     };
     byKey.set(ledgerKey(entry), entry);

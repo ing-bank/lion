@@ -108,6 +108,9 @@ export type ScenarioRunResult = {
     finished: boolean;
     stopReason: 'completed' | 'max_turns';
     totalTokens: number;
+    /** Input tokens; rates differ per direction, so the split is what a cost needs. */
+    promptTokens: number;
+    completionTokens: number;
     /** False when the model never changed the deliverable — a no-op, not a wrong answer. */
     attempted: boolean;
     /** What the model said on the turn that ended the loop, when it ended without acting. */
@@ -418,6 +421,8 @@ export async function runSkillTester(config: SkillTesterConfig): Promise<SkillTe
             finished: agentRun.finished,
             stopReason: agentRun.stopReason,
             totalTokens: agentRun.usage.total_tokens ?? 0,
+            promptTokens: agentRun.usage.prompt_tokens ?? 0,
+            completionTokens: agentRun.usage.completion_tokens ?? 0,
             attempted,
             finalMessage: agentRun.finalMessage,
           },
