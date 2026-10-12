@@ -29,23 +29,34 @@ const skillOrAgent: SkillOrAgent = {
   location: defaultLionUiSkillLocation(repoRoot),
 };
 
-/** A correct answer: imports the define entrypoint and renders the element. */
+/** A correct answer: a component file that composes the documented element. */
 const GOOD_EXAMPLE = [
-  "import { html } from 'lit';",
-  "import '@lion/ui/define/lion-button.js';",
+  "import { LitElement, html } from 'lit';",
+  "import { ScopedElementsMixin } from '@open-wc/scoped-elements/lit-element.js';",
+  "import { LionButton } from '@lion/ui/button.js';",
   '',
-  'export const example = () => html`<lion-button>Click me</lion-button>`;',
+  'export class MyButton extends ScopedElementsMixin(LitElement) {',
+  "  static scopedElements = { 'lion-button': LionButton };",
+  '',
+  '  render() {',
+  '    return html`<lion-button>Click me</lion-button>`;',
+  '  }',
+  '}',
   '',
 ].join('\n');
 
 /**
- * Renders a tag the host does not register. The host supplies the scoped registry (the assumed
- * context), so a missing entrypoint no longer fails behaviour — an unregistered TAG does.
+ * Renders an element nobody registers: the produced component names a tag that is not the documented
+ * one, so the element stays unupgraded and the behaviour assertion must catch it.
  */
 const WRONG_TAG_EXAMPLE = [
-  "import { html } from 'lit';",
+  "import { LitElement, html } from 'lit';",
   '',
-  'export const example = () => html`<not-a-lion-button>Click me</not-a-lion-button>`;',
+  'export class MyButton extends LitElement {',
+  '  render() {',
+  '    return html`<not-a-lion-button>Click me</not-a-lion-button>`;',
+  '  }',
+  '}',
   '',
 ].join('\n');
 
@@ -59,8 +70,9 @@ async function runAgainst(producedFile: string) {
   });
   assert.equal(scenarios.length, 1, 'expected exactly the button component scenario');
 
+  const target = scenarios[0].targetFile ?? 'src/example.js';
   const server = await startMockOpenAiServer([
-    { message: writeFileToolCall('src/example.js', producedFile) },
+    { message: writeFileToolCall(target, producedFile) },
     { message: { role: 'assistant', content: 'done' } },
   ]);
 

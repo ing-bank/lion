@@ -1,8 +1,21 @@
 /**
  * Generates one small, isolated scenario per `@lion/ui` component and per system.
  *
- * Each scenario asks for a minimal, self-contained usage example in a single file and asserts
- * the conventions the `lion-ui` skill exists to teach:
+ * ## The component contract
+ *
+ * A component scenario asks for a **component file**: one file that exports a class, renders the
+ * component's documented element in its own template, and carries its own scoped element registry.
+ * This replaced an earlier contract where the file exported a render *function* and the harness
+ * supplied a host element to mount it in.
+ *
+ * The old contract was not neutral: the assertion "the component ends up in a scoped registry" was
+ * satisfied by the host the *harness* wrote, not by the produced code. A model that imported the
+ * class and called it a day passed. With a component file the produced code owns its rendering, so
+ * the behaviour test mounts what the model actually wrote.
+ *
+ * ## The convention checks
+ *
+ * `entrypointChecks` asserts the import rules the `lion-ui` skill exists to teach:
  *
  *   - import through a real `@lion/ui` entrypoint — either the class entrypoint
  *     (`@lion/ui/<name>.js`) or the side-effect `define/*` entrypoint
@@ -11,17 +24,26 @@
  *   - never deep-import into `@lion/ui` internals (`@lion/ui/components/**`, `@lion/ui/src/**`),
  *     which is the import rule the skill actually states. Bare `lit` is NOT a violation:
  *     `@lion/ui/core.js` exports only mixins and utilities (no `LitElement`/`html`/`css`), and the
- *     skill's own canonical example is `import { html } from 'lit';`;
- *   - use the component's real custom-element tag, in markup or via `createElement` (only
- *     asserted when the custom elements manifest confirms the tag exists).
+ *     skill's own canonical example is `import { html } from 'lit';`.
  *
- * For components with a confirmed tag and a known class, a **behaviour** test is attached as well.
- * It is written against the *produced file* — it imports `./src/example.js` — and it renders the
- * example in the context the skill assumes: a host `LitElement` that applies `ScopedElementsMixin`
- * and registers the component in its `scopedElements`. The element therefore lives in the host's
- * scoped registry, NOT in the global one, so `customElements.get('<tag>')` is the wrong probe.
- * Asserting on the global registry was measured to reject a correct class-entrypoint answer; see
- * `references/systems/core.md` in the skill for the documented best practices.
+ * Beyond that, a component scenario asserts the declared class is exported, that the documented tag
+ * is used (markup or `createElement`), and that nothing else was written. The tag assertion is only
+ * added when the custom elements manifest confirms the tag exists.
+ *
+ * ## Behaviour
+ *
+ * When the manifest confirms both a tag and its class, a behaviour test is attached. It imports the
+ * *produced file*, mounts the produced class, and asserts the documented element is rendered and
+ * upgraded. Two consequences, both deliberate:
+ *
+ *   - the mount reuses the produced file's own registration when it registers itself, and defines
+ *     its own tag otherwise — registering the same constructor twice throws `NotSupportedError`,
+ *     which would fail the whole module with an unhelpful message;
+ *   - the harness supplies no host, so the scoped registry in play is the one the produced code
+ *     created. `customElements.get('<tag>')` must therefore not be used as a probe.
+ *
+ * System scenarios keep the earlier render-function contract: they carry no behaviour test, so
+ * nothing depended on the host.
  *
  * The accepted entrypoints and the tag/class facts are derived from the repository
  * (`packages/ui/exports/*`, `custom-elements.json`), so the checks assert what this codebase
@@ -45,14 +67,32 @@ export const NON_VISUAL_COMPONENT_DIRS = [
 /** Systems documented under `docs/fundamentals/systems`. */
 export const SYSTEM_NAMES = ['core', 'form', 'icon', 'localize', 'overlays'];
 
-const TARGET_FILE = 'src/example.js';
+/** The file system scenarios still write; their contract is unchanged. */
+const SYSTEM_TARGET_FILE = 'src/example.js';
 
-/**
- * The export name the example must keep. Stated in the prompt so the generated behaviour test can
- * execute the produced code; without a known entry point a behaviour test can only re-test the
- * library, which passes no matter what the model wrote.
- */
-const EXAMPLE_EXPORT = 'example';
+/** The produced component file: `my-accordion` -> `src/my-accordion.js`. */
+export function targetFileFor(componentName: string): string {
+  return `src/my-${componentName}.js`;
+}
+
+/** The class the produced file must export: `my-accordion` -> `MyAccordion`. */
+export function classNameFor(componentName: string): string {
+  const pascal = componentName
+    .split(/[-_]/)
+    .map(part => part.charAt(0).toUpperCase() + part.slice(1))
+    .join('');
+  return `My${pascal}`;
+}
+
+/** The tag the produced file registers itself under, if it registers one at all. */
+export function ownTagFor(componentName: string): string {
+  return `my-${componentName}`;
+}
+
+/** The tag the behaviour test defines when the produced file does not register itself. */
+export function testTagFor(componentName: string): string {
+  return `test-my-${componentName}`;
+}
 
 /** Repository facts the generated checks depend on. */
 export type LionUiScenarioContext = {
@@ -79,20 +119,26 @@ export function defineEntrypointFor(name: string): string {
 }
 
 /**
+ * The import-policy checks, which every scenario shares. The caller adds `exists` and
+ * `noExtraFiles` around them, plus whatever else its own contract demands.
+ *
  * Accept both ways the skill documents: importing the class (`from '@lion/ui/x.js'`) and
  * registering the element (`import '@lion/ui/define/lion-x.js'`).
  */
-function entrypointChecks(name: string, defineEntrypoints: string[] = []): ScenarioCheck[] {
+function entrypointChecks(
+  file: string,
+  name: string,
+  defineEntrypoints: string[] = [],
+): ScenarioCheck[] {
   const escaped = escapeRegExp(name);
-  const classImport = `from\\s+['\"]@lion/ui/${escaped}\\.js['\"]`;
+  const classImport = `from\\s+['"]@lion/ui/${escaped}\\.js['"]`;
   const defineSupported = defineEntrypoints.includes(name);
-  const defineImport = `['\"]@lion/ui/define/lion-${escaped}\\.js['\"]`;
+  const defineImport = `['"]@lion/ui/define/lion-${escaped}\\.js['"]`;
 
   return [
-    { type: 'exists', file: TARGET_FILE },
     {
       type: 'matches',
-      file: TARGET_FILE,
+      file,
       pattern: defineSupported ? `${classImport}|${defineImport}` : classImport,
       description: defineSupported
         ? `imports '${entrypointFor(name)}' or '${defineEntrypointFor(name)}'`
@@ -100,19 +146,25 @@ function entrypointChecks(name: string, defineEntrypoints: string[] = []): Scena
     },
     {
       type: 'notMatches',
-      file: TARGET_FILE,
-      pattern: `from\\s+['\"]@lion/${escaped}['\"]`,
+      file,
+      pattern: `from\\s+['"]@lion/${escaped}['"]`,
       description: `does not import from '@lion/${name}' directly`,
     },
     {
       type: 'notMatches',
-      file: TARGET_FILE,
+      file,
       pattern: '@lion/ui/(components|src)/',
       description: 'does not deep-import from @lion/ui internals',
     },
+  ];
+}
+
+function declarationChecks(file: string): ScenarioCheck[] {
+  return [
+    { type: 'exists', file },
     {
       type: 'noExtraFiles',
-      file: TARGET_FILE,
+      file,
       description: 'creates no files other than the deliverable',
     },
   ];
@@ -126,59 +178,54 @@ function starterFile(description: string): string {
 }
 
 /**
- * A behaviour test for a component, written against the **produced file** and rendered in the
- * context the skill assumes.
+ * A behaviour test for a component, written against the **produced file**.
  *
- * The host applies `ScopedElementsMixin` and registers the component in `scopedElements`, exactly
- * as the skill's rule requires. Two consequences, both deliberate:
- *
- *   - the element is resolved from the host's scoped registry, so the test must NOT probe the
- *     global registry (`customElements.get` is legitimately undefined there — measured to reject a
- *     correct answer);
- *   - the host tag is unique per component, because batching runs many test files in one browser
- *     and a shared host tag would let the first component's `scopedElements` win.
+ * It mounts the produced class directly. When the produced file registers that class itself, its
+ * tag is reused; otherwise the test defines one of its own. No host is supplied, so the scoped
+ * registry in play belongs to the produced code.
  */
 function componentBehaviour(
-  name: string,
+  componentName: string,
   tagName: string,
   className: string,
 ): NonNullable<TestScenario['behaviour']> {
-  const hostTag = `behaviour-host-${name}`;
+  const targetFile = targetFileFor(componentName);
+  const producedClass = classNameFor(componentName);
+  const ownTag = ownTagFor(componentName);
+  const testTag = testTagFor(componentName);
 
   return {
-    description: `the produced example renders <${tagName}> inside a scoped-elements host`,
+    description: `the produced component renders <${tagName}>`,
     testSource: [
       "import { expect, fixture } from '@open-wc/testing';",
-      "import { LitElement } from 'lit';",
-      "import { ScopedElementsMixin } from '@open-wc/scoped-elements/lit-element.js';",
-      `import { ${className} } from '${entrypointFor(name)}';`,
-      `import { ${EXAMPLE_EXPORT} } from './${TARGET_FILE}';`,
+      `import { ${className} } from '${entrypointFor(componentName)}';`,
+      `import { ${producedClass} } from './${targetFile}';`,
       '',
-      '// The assumed context: the example is rendered inside a host LitElement that applies',
-      '// ScopedElementsMixin and registers the components it renders. The component therefore',
-      '// lives in the scoped registry of this host, NOT in the global one.',
-      `class BehaviourHost extends ScopedElementsMixin(LitElement) {`,
-      `  static scopedElements = { '${tagName}': ${className} };`,
-      '',
-      '  render() {',
-      `    return ${EXAMPLE_EXPORT}();`,
+      '// The produced file may register the class itself under its own tag. Registering the same',
+      '// constructor twice throws NotSupportedError, which would fail the whole test module with an',
+      '// unhelpful message, so reuse any registration before defining a tag of our own.',
+      `const own = '${testTag}';`,
+      `const derived = '${ownTag}';`,
+      'const mount = () => {',
+      "  if (customElements.get(own)) return fixture('<' + own + '></' + own + '>');",
+      `  if (customElements.get(derived) === ${producedClass}) {`,
+      "    return fixture('<' + derived + '></' + derived + '>');",
       '  }',
-      '}',
+      '  try {',
+      `    customElements.define(own, ${producedClass});`,
+      '  } catch (error) {',
+      "    throw new Error('the produced file registered the class under an unknown tag: ' + error);",
+      '  }',
+      "  return fixture('<' + own + '></' + own + '>');",
+      '};',
       '',
-      `if (!customElements.get('${hostTag}')) {`,
-      `  customElements.define('${hostTag}', BehaviourHost);`,
-      '}',
-      '',
-      `describe('component/${name}', () => {`,
-      `  it('renders <${tagName}> from the produced example inside a scoped host', async () => {`,
-      `    expect(typeof ${EXAMPLE_EXPORT}, 'the produced file keeps the "example" export').to.equal(`,
-      "      'function',",
-      '    );',
-      '',
-      `    const host = await fixture('<${hostTag}></${hostTag}>');`,
-      `    const el = host.shadowRoot.querySelector('${tagName}');`,
-      `    expect(el, 'the example renders <${tagName}>').to.not.equal(null);`,
-      `    expect(el, 'the scoped registry upgraded the element').to.be.instanceOf(${className});`,
+      `describe('component/${componentName}', () => {`,
+      `  it('renders <${tagName}> from the produced component', async () => {`,
+      '    const el = await mount();',
+      '    const root = el.shadowRoot ?? el;',
+      `    const rendered = root.querySelector('${tagName}');`,
+      `    expect(rendered, 'the component renders <${tagName}>').to.not.equal(null);`,
+      `    expect(rendered, 'the scoped registry upgraded it').to.be.instanceOf(${className});`,
       '  });',
       '});',
       '',
@@ -196,7 +243,21 @@ export function createComponentScenario(
 ): TestScenario {
   const { knownTags = [], defineEntrypoints = [], tagClasses = {} } = context;
   const tagName = `lion-${componentName}`;
-  const checks = entrypointChecks(componentName, defineEntrypoints);
+  const targetFile = targetFileFor(componentName);
+  const producedClass = classNameFor(componentName);
+  const [exists, noExtraFiles] = declarationChecks(targetFile);
+
+  const checks: ScenarioCheck[] = [
+    exists,
+    {
+      type: 'matches',
+      file: targetFile,
+      pattern: `export class ${producedClass}`,
+      description: `exports the class \`${producedClass}\``,
+    },
+    ...entrypointChecks(targetFile, componentName, defineEntrypoints),
+  ];
+
   const tagConfirmed = knownTags.includes(tagName);
   if (tagConfirmed) {
     // Accept the tag in markup or created programmatically: both name the documented element.
@@ -204,31 +265,34 @@ export function createComponentScenario(
     const escapedTag = escapeRegExp(tagName);
     checks.push({
       type: 'matches',
-      file: TARGET_FILE,
-      pattern:
-        `<${escapedTag}(?:[\\s>/]|$)|createElement\\(\\s*['\"]${escapedTag}['\"]`,
+      file: targetFile,
+      pattern: `<${escapedTag}(?:[\\s>/]|$)|createElement\\(\\s*['"]${escapedTag}['"]`,
       description: `uses the <${tagName}> element (markup or createElement)`,
     });
   }
 
+  checks.push(noExtraFiles);
+
   const scenario: TestScenario = {
     name: `component/${componentName}`,
     kind: 'component',
-    description: `Minimal usage example for the "${componentName}" component.`,
+    description: `Minimal component file for the "${componentName}" component.`,
     prompt: [
-      `Add a minimal, correct usage example for the "${componentName}" component to \`${TARGET_FILE}\`.`,
-      'Create that file only — nothing else.',
-      'It must be a small self-contained example that imports everything it needs from the',
-      'correct @lion/ui entrypoints and renders the component with its documented element name.',
-      `Keep the \`${EXAMPLE_EXPORT}\` export: a function that renders the example, so it can be`,
-      'executed. Follow the conventions in the skill.',
+      `Create \`${targetFile}\`. Create that file only — nothing else.`,
+      `It must export a class named \`${producedClass}\`.`,
+      `Goal: a component that renders the documented \`<${tagName}>\` element in its own template.`,
+      'Compose that element — do not subclass it.',
+      'Follow the conventions in the skill: import everything through the documented @lion/ui',
+      'entrypoints, and give the component its own scoped element registry.',
     ].join(' '),
-    targetFile: TARGET_FILE,
-    files: { [TARGET_FILE]: starterFile(`add a usage example for the "${componentName}" component.`) },
+    targetFile,
+    files: {
+      [targetFile]: starterFile(`create the "${componentName}" component in this file.`),
+    },
     checks,
   };
 
-  // The behaviour test needs the class to register in `scopedElements`.
+  // The behaviour test needs the class the produced file composes, to check it was upgraded.
   const className = tagClasses[tagName];
   if (tagConfirmed && className) {
     scenario.behaviour = componentBehaviour(componentName, tagName, className);
@@ -245,20 +309,28 @@ export function createSystemScenario(
   systemName: string,
   context: LionUiScenarioContext = {},
 ): TestScenario {
+  const [exists, noExtraFiles] = declarationChecks(SYSTEM_TARGET_FILE);
+
   return {
     name: `system/${systemName}`,
     kind: 'system',
     description: `Minimal example exercising the "${systemName}" system.`,
     prompt: [
-      `Add a minimal example to \`${TARGET_FILE}\` that uses the "${systemName}" system of`,
+      `Add a minimal example to \`${SYSTEM_TARGET_FILE}\` that uses the "${systemName}" system of`,
       'Create that file only — nothing else.',
       `@lion/ui (imported from '${entrypointFor(systemName)}'). Follow the conventions in the`,
       'skill: import through the documented @lion/ui entrypoints, never from @lion/* or a deep',
       'import into @lion/ui internals.',
     ].join(' '),
-    targetFile: TARGET_FILE,
-    files: { [TARGET_FILE]: starterFile(`add an example that uses the "${systemName}" system.`) },
-    checks: entrypointChecks(systemName, context.defineEntrypoints ?? []),
+    targetFile: SYSTEM_TARGET_FILE,
+    files: {
+      [SYSTEM_TARGET_FILE]: starterFile(`add an example that uses the "${systemName}" system.`),
+    },
+    checks: [
+      exists,
+      ...entrypointChecks(SYSTEM_TARGET_FILE, systemName, context.defineEntrypoints ?? []),
+      noExtraFiles,
+    ],
   };
 }
 
