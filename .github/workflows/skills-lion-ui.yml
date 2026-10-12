@@ -8,8 +8,31 @@ name: Regenerate lion-ui skill
 # plan is to also trigger this automatically after every release, by adding a job here (or a
 # `workflow_run` trigger watching `release.yml`) gated on the changesets `published` output from
 # release.yml, so the skill is refreshed once per published release rather than on every push.
+#
+# The eval is deliberately NOT a merge gate: it spends model tokens, it is statistical rather than
+# deterministic, and a page of scores cannot decide whether a pull request is correct. It runs here
+# because a manual regeneration is already a deliberate act with a human waiting on the PR.
 on:
   workflow_dispatch:
+    inputs:
+      models:
+        description: Comma-separated models to evaluate with
+        required: false
+        default: deepseek-v4-flash
+      samples:
+        description: Samples per scenario; below 3 is indicative only
+        required: false
+        default: '3'
+      limit:
+        description: Evaluate only the first N scenarios (0 = all of them)
+        required: false
+        default: '0'
+
+env:
+  # The endpoint is a repository variable so a fork can point elsewhere; the key is a secret, and
+  # every step that would spend tokens is skipped when it is absent.
+  SKILL_TESTER_BASE_URL: ${{ vars.SKILL_TESTER_BASE_URL || 'https://api.runware.ai/v1' }}
+  SKILL_TESTER_API_KEY: ${{ secrets.SKILL_TESTER_API_KEY }}
 
 jobs:
   regenerate-skills:
@@ -31,6 +54,34 @@ jobs:
       - name: Generate lion-ui skill
         run: npm run skills:generate
 
+      - name: Install Chromium for the behaviour tier
+        if: env.SKILL_TESTER_API_KEY != ''
+        run: npx playwright install --with-deps chromium
+
+      # Measures the skill generated above and renders the results page into the docs tree, so the
+      # pull request carries the skill *and* the numbers for that exact skill revision. The ledger
+      # is keyed on the skill directory's git tree hash, so the two stay tied together.
+      - name: Evaluate the regenerated skill
+        if: env.SKILL_TESTER_API_KEY != ''
+        run: |
+          LIMIT=""
+          if [ "${{ inputs.limit }}" != "0" ]; then
+            LIMIT="--limit ${{ inputs.limit }}"
+          fi
+          npm run eval -w packages-node/skill-tester -- \
+            --models "${{ inputs.models }}" \
+            --base-url "$SKILL_TESTER_BASE_URL" \
+            --samples "${{ inputs.samples }}" \
+            $LIMIT \
+            --behaviour \
+            --docs
+
+      - name: Note that the evaluation was skipped
+        if: env.SKILL_TESTER_API_KEY == ''
+        run: |
+          echo "SKILL_TESTER_API_KEY is not set, so the eval and the results page were skipped."
+          echo "Add it as a repository secret to publish measured numbers alongside the skill."
+
       - name: Open pull request
         uses: peter-evans/create-pull-request@v6
         with:
@@ -41,4 +92,7 @@ jobs:
             `docs/fundamentals/systems/**` and `packages/ui/custom-elements.json`.
           branch: skills/lion-ui-update
           delete-branch: true
-          add-paths: packages/ui/skills/lion-ui/**
+          add-paths: |
+            packages/ui/skills/lion-ui/**
+            packages-node/skill-tester/results/**
+            docs/fundamentals/node-tools/skill-tester/**
