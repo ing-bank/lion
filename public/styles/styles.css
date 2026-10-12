@@ -108,6 +108,26 @@ body {
     padding: 0 1.5rem;
 }
 
+/*
+ * Desktop gets wider side gutters. 1.5rem stays as the narrow-viewport value; from 1024px up the
+ * gutter grows so content does not sit against the edge of a large screen. Header, hero, docs,
+ * search and footer all share .container, so this is the one knob.
+ *
+ * 40px is the largest value that leaves the hero heading wrapping exactly as it does today at
+ * 1440px (48px would push it from 3 to 4 lines); 1600px+ is above that width and takes 56px.
+ */
+@media (min-width: 1024px) {
+    .container {
+        padding: 0 2.5rem;
+    }
+}
+
+@media (min-width: 1600px) {
+    .container {
+        padding: 0 3.5rem;
+    }
+}
+
 /* Header */
 .site-header {
     padding: 24px 0;
