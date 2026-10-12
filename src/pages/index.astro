@@ -20,14 +20,14 @@ const {
               <defs>
                   <marker id="arrow" viewBox="0 0 10 10" refX="5" refY="5"
                       markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-                      <path d="M 0 0 L 10 5 L 0 10 z" fill="rgba(255,255,255,0.5)" />
+                      <path d="M 0 0 L 10 5 L 0 10 z" class="blueprint-arrow" />
                   </marker>
                   <pattern id="smallGrid" width="20" height="20" patternUnits="userSpaceOnUse">
-                      <path d="M 20 0 L 0 0 0 20" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="0.5"/>
+                      <path d="M 20 0 L 0 0 0 20" fill="none" class="blueprint-grid" stroke-width="0.5"/>
                   </pattern>
                   <pattern id="grid" width="100" height="100" patternUnits="userSpaceOnUse">
                       <rect width="100" height="100" fill="url(#smallGrid)"/>
-                      <path d="M 100 0 L 0 0 0 100" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+                      <path d="M 100 0 L 0 0 0 100" fill="none" class="blueprint-grid-major" stroke-width="1"/>
                   </pattern>
               </defs>
 
@@ -42,9 +42,9 @@ const {
               <!-- Left Bracket Group -->
               <g class="group-left layer-mid">
                   <!-- Construction Circles -->
-                  <circle cx="340" cy="200" r="4" fill="none" stroke="rgba(255,255,255,0.1)" />
-                  <circle cx="260" cy="300" r="4" fill="none" stroke="rgba(255,255,255,0.1)" />
-                  <circle cx="340" cy="400" r="4" fill="none" stroke="rgba(255,255,255,0.1)" />
+                  <circle cx="340" cy="200" r="4" fill="none" class="blueprint-node" />
+                  <circle cx="260" cy="300" r="4" fill="none" class="blueprint-node" />
+                  <circle cx="340" cy="400" r="4" fill="none" class="blueprint-node" />
                   
                   <!-- The Shape: Sharp Bracket (Logo Style) -->
                   <path d="M340 200 L260 300 L340 400" class="logo-part draw-in" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
@@ -54,8 +54,8 @@ const {
                   <text x="230" y="300" class="dimension-text" transform="rotate(-90 230 300)" opacity="0" style="transition: opacity 0.3s">200px</text>
                   
                   <!-- Projection Lines -->
-                  <line x1="340" y1="200" x2="240" y2="200" stroke="white" stroke-opacity="0.1" stroke-dasharray="2 2" opacity="0" style="transition: opacity 0.3s"/>
-                  <line x1="340" y1="400" x2="240" y2="400" stroke="white" stroke-opacity="0.1" stroke-dasharray="2 2" opacity="0" style="transition: opacity 0.3s"/>
+                  <line x1="340" y1="200" x2="240" y2="200" class="blueprint-projection" stroke-dasharray="2 2" opacity="0" style="transition: opacity 0.3s"/>
+                  <line x1="340" y1="400" x2="240" y2="400" class="blueprint-projection" stroke-dasharray="2 2" opacity="0" style="transition: opacity 0.3s"/>
               </g>
 
               <!-- Right Bracket Group -->
@@ -68,8 +68,8 @@ const {
                   <text x="575" y="300" class="dimension-text" transform="rotate(90 575 300)" opacity="0" style="transition: opacity 0.3s">200px</text>
 
                   <!-- Projection Lines -->
-                  <line x1="460" y1="200" x2="560" y2="200" stroke="white" stroke-opacity="0.1" stroke-dasharray="2 2" opacity="0" style="transition: opacity 0.3s"/>
-                  <line x1="460" y1="400" x2="560" y2="400" stroke="white" stroke-opacity="0.1" stroke-dasharray="2 2" opacity="0" style="transition: opacity 0.3s"/>
+                  <line x1="460" y1="200" x2="560" y2="200" class="blueprint-projection" stroke-dasharray="2 2" opacity="0" style="transition: opacity 0.3s"/>
+                  <line x1="460" y1="400" x2="560" y2="400" class="blueprint-projection" stroke-dasharray="2 2" opacity="0" style="transition: opacity 0.3s"/>
               </g>
 
               <!-- Center Dot Group -->
@@ -77,8 +77,8 @@ const {
                   <!-- The Shape: Dot (Logo Style) -->
                   <circle cx="400" cy="300" r="20" class="logo-part draw-in" style="animation-delay: 0.4s"/>
                   
-                  <circle cx="400" cy="300" r="40" stroke="white" stroke-opacity="0.1" stroke-dasharray="4 4" fill="none"/>
-                  <circle cx="400" cy="300" r="40" stroke="white" stroke-opacity="0.1" stroke-dasharray="4 4" fill="none"/>
+                  <circle cx="400" cy="300" r="40" class="blueprint-ring" stroke-dasharray="4 4" fill="none"/>
+                  <circle cx="400" cy="300" r="40" class="blueprint-ring" stroke-dasharray="4 4" fill="none"/>
                   
                   <!-- Radius Dimension -->
                   <line x1="400" y1="300" x2="435" y2="320" class="dimension-line" opacity="0" style="transition: opacity 0.3s"/>
