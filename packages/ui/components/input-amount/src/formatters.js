@@ -5,17 +5,18 @@ import {
 } from '@lion/ui/localize-no-side-effects.js';
 
 /**
- * @typedef {import('../../localize/types/LocalizeMixinTypes.js').FormatNumberOptions} FormatOptions
+ * @typedef {import('../../localize/types/LocalizeMixinTypes.js').FormatNumberOptions} FormatNumberOptions
+ * @typedef {import('../../localize/types/LocalizeMixinTypes.js').FormatNumberPart} FormatNumberPart
  */
 
 /**
  * Formats a number considering the default fraction digits provided by Intl.
  *
  * @param {number} modelValue Number to format
- * @param {FormatOptions} [givenOptions]
+ * @param {FormatNumberOptions} [givenOptions]
  */
 export function formatAmount(modelValue, givenOptions) {
-  /** @type {FormatOptions} */
+  /** @type {FormatNumberOptions} */
   const options = {
     currency: 'EUR',
     ...givenOptions,
@@ -40,5 +41,6 @@ export function formatCurrencyLabel(currency, locale) {
   if (currency === '') {
     return '';
   }
+
   return normalizeCurrencyLabel(currency, locale);
 }

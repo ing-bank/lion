@@ -7,7 +7,7 @@ import { parseAmount } from './parsers.js';
 
 /**
  * @typedef {import('../../form-core/types/FormatMixinTypes.js').FormatOptions} FormatOptions
- * @typedef {FormatOptions & {locale?:string;currency:string|undefined}} AmountFormatOptions
+ * @typedef {FormatOptions & {locale?:string;currency:string|undefined;currencySymbol:string|undefined;}} AmountFormatOptions
  */
 
 /**
@@ -25,6 +25,10 @@ export class LionInputAmount extends LocalizeMixin(LionInput) {
        * reader users
        */
       currency: String,
+      currencyLabel: {
+        type: String,
+        attribute: 'currency-label',
+      },
       /**
        * @desc the modelValue of the input-amount has the 'Number' type. This allows
        * Application Developers to easily read from and write to this input or write custom
@@ -71,6 +75,7 @@ export class LionInputAmount extends LocalizeMixin(LionInput) {
     this.formatter = formatAmount;
     /** @type {string | undefined} */
     this.currency = undefined;
+    this.currencyLabel = '';
     /** @type {string | undefined} */
     this.locale = undefined;
     this.__currencyDisplayNodeIsConnected = true;
@@ -201,19 +206,25 @@ export class LionInputAmount extends LocalizeMixin(LionInput) {
 
   /** @private */
   __setCurrencyDisplayLabel() {
-    // TODO: (@erikkroes) for optimal a11y, abbreviations should be part of aria-label
-    // example, for a language switch with text 'en', an aria-label of 'english' is not
-    // sufficient, it should also contain the abbreviation.
     if (this.__currencyDisplayNode) {
+      const label = this.currencyLabel || this.currency || '';
+      let currencyName = '';
+      if (this.currency) {
+        currencyName = getCurrencyName(this.currency, {});
+      }
       this.__currencyDisplayNode.setAttribute(
         'aria-label',
-        this.currency ? getCurrencyName(this.currency, {}) : '',
+        `${label} ${currencyName ? `(${currencyName})` : ''}`,
       );
     }
   }
 
   get __currencyLabel() {
-    return this.currency ? formatCurrencyLabel(this.currency, this._localizeManager.locale) : '';
+    let label = this.currencyLabel || '';
+    if (!label && this.currency) {
+      label = formatCurrencyLabel(this.currency, this._localizeManager.locale);
+    }
+    return label;
   }
 
   __reformat() {
