@@ -46,6 +46,13 @@
     --overlay-border: light-dark(rgba(0, 0, 0, 0.12), rgba(255, 255, 255, 0.1));
     --diagram-line: light-dark(rgba(0, 0, 0, 0.2), rgba(255, 255, 255, 0.2));
     --diagram-line-strong: light-dark(rgba(0, 0, 0, 0.5), rgba(255, 255, 255, 0.5));
+    /*
+     * Blueprint hero graphic (src/pages/index.astro). These were hard-coded white, so the whole
+     * drawing disappeared on the light background. Dark values are unchanged from what shipped.
+     */
+    --diagram-grid: light-dark(rgba(0, 0, 0, 0.07), rgba(255, 255, 255, 0.05));
+    --diagram-line-soft: light-dark(rgba(0, 0, 0, 0.15), rgba(255, 255, 255, 0.1));
+    --diagram-stroke: light-dark(#111111, #ffffff);
 }
 
 * {
@@ -581,8 +588,16 @@ main {
 .dimension-line { stroke: var(--diagram-line-strong); stroke-width: 1; marker-end: url(#arrow); marker-start: url(#arrow); }
 .dimension-text { fill: var(--diagram-line-strong); font-size: 12px; text-anchor: middle; }
 
+/* Blueprint hero graphic parts — see the --diagram-* tokens above. */
+.blueprint-arrow { fill: var(--diagram-line-strong); }
+.blueprint-grid { stroke: var(--diagram-grid); }
+.blueprint-grid-major { stroke: var(--diagram-line-soft); }
+.blueprint-node { stroke: var(--diagram-line-soft); }
+.blueprint-projection { stroke: var(--diagram-line-soft); }
+.blueprint-ring { stroke: var(--diagram-line-soft); }
+
 .logo-part { 
-    stroke: white; 
+    stroke: var(--diagram-stroke); 
     stroke-width: 2; 
     fill: transparent; 
     transition: all 0.3s ease;
