@@ -82,26 +82,44 @@ test('a component scenario asserts the entrypoint convention and its tag when kn
   );
 });
 
-test('a generated component scenario does not score a correct example as failing', () => {
-  // The generated checks must accept the canonical correct answer.
-  const scenario = createComponentScenario('button', ['lion-button']);
+test('a generated component scenario does not score a correct answer as failing', () => {
+  // The generated checks must accept the canonical correct answer: a component file that composes
+  // the documented element and carries its own scoped registry.
+  const scenario = createComponentScenario('button', { knownTags: ['lion-button'] });
   const correct = [
+    "import { LitElement, html } from 'lit';",
+    "import { ScopedElementsMixin } from '@open-wc/scoped-elements/lit-element.js';",
     "import { LionButton } from '@lion/ui/button.js';",
-    "import { LitElement, html } from '@lion/ui/core.js';",
-    'export const example = () => html`<lion-button>Click</lion-button>`;',
+    '',
+    'export class MyButton extends ScopedElementsMixin(LitElement) {',
+    "  static scopedElements = { 'lion-button': LionButton };",
+    '',
+    '  render() {',
+    '    return html`<lion-button>Click</lion-button>`;',
+    '  }',
+    '}',
+    '',
   ].join('\n');
-  const root = fs.mkdtempSync(path.join(os.tmpdir(), 'st-'));
-  fs.mkdirSync(path.join(root, 'src'), { recursive: true });
-  fs.writeFileSync(path.join(root, 'src/example.js'), correct);
-  const scored = scoreScenario({ sandboxRoot: root, checks: scenario.checks });
-  assert.equal(scored.score, 1, `checks rejected a correct example: ${JSON.stringify(scored.checks)}`);
+  const scored = scoreExample(correct, scenario);
+  assert.equal(
+    scored.score,
+    1,
+    `checks rejected a correct answer: ${JSON.stringify(scored.checks)}`,
+  );
 });
 
-/** Score a single-file example against one scenario's checks. */
-function scoreExample(content: string, scenario: { checks?: Parameters<typeof scoreScenario>[0]['checks'] }) {
+/** Score a single-file answer against one scenario's checks, at the file that scenario targets. */
+function scoreExample(
+  content: string,
+  scenario: {
+    checks?: Parameters<typeof scoreScenario>[0]['checks'];
+    targetFile?: string;
+  },
+) {
+  const target = scenario.targetFile ?? 'src/example.js';
   const root = fs.mkdtempSync(path.join(os.tmpdir(), 'st-'));
-  fs.mkdirSync(path.join(root, 'src'), { recursive: true });
-  fs.writeFileSync(path.join(root, 'src/example.js'), content);
+  fs.mkdirSync(path.dirname(path.join(root, target)), { recursive: true });
+  fs.writeFileSync(path.join(root, target), content);
   return scoreScenario({ sandboxRoot: root, checks: scenario.checks });
 }
 
@@ -116,8 +134,14 @@ test('the define entrypoint is accepted, because the skill tells you to prefer i
   const scenario = createComponentScenario('button', { knownTags: ['lion-button'], defineEntrypoints });
   const viaDefine = [
     "import '@lion/ui/define/lion-button.js';",
-    "import { LitElement, html } from '@lion/ui/core.js';",
-    'export const example = () => html`<lion-button>Click</lion-button>`;',
+    "import { LitElement, html } from 'lit';",
+    '',
+    'export class MyButton extends LitElement {',
+    '  render() {',
+    '    return html`<lion-button>Click</lion-button>`;',
+    '  }',
+    '}',
+    '',
   ].join('\n');
   const scored = scoreExample(viaDefine, scenario);
   assert.equal(scored.score, 1, `define entrypoint was rejected: ${JSON.stringify(scored.checks)}`);
@@ -148,12 +172,12 @@ test('the tag check accepts markup and createElement, but not a different elemen
   const scenario = createComponentScenario('button', { knownTags: ['lion-button'] });
   const classImport = "import { LionButton } from '@lion/ui/button.js';\n";
 
-  const markup = `${classImport}export const example = () => html\`<lion-button>Click</lion-button>\`;\n`;
+  const markup = `${classImport}export class MyButton { render() { return html\`<lion-button>Click</lion-button>\`; } }\n`;
   assert.equal(scoreExample(markup, scenario).score, 1);
 
-  const created = `${classImport}const el = document.createElement('lion-button');\n`;
+  const created = `${classImport}export class MyButton {}\nconst el = document.createElement('lion-button');\n`;
   assert.equal(scoreExample(created, scenario).score, 1, 'createElement should be accepted');
 
-  const wrongTag = `${classImport}const el = document.createElement('lion-not-this-component');\n`;
+  const wrongTag = `${classImport}export class MyButton {}\nconst el = document.createElement('lion-not-this-component');\n`;
   assert.ok(scoreExample(wrongTag, scenario).score < 1, 'a different element name must fail');
 });
