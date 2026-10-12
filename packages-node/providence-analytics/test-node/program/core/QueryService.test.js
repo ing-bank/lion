@@ -1,13 +1,13 @@
 import { expect } from 'chai';
 import { it } from 'mocha';
 
-import { DummyAnalyzer } from '../../../test-helpers/templates/DummyAnalyzer.js';
-import FindImportsAnalyzer from '../../../src/program/analyzers/find-imports.js';
-import { QueryService } from '../../../src/program/core/QueryService.js';
+import { DummyAnalyzer } from '#test-helpers/templates/DummyAnalyzer.js';
+import FindImportsAnalyzer from '#analyzers/find-imports.js';
+import { QueryService } from '#core/QueryService.js';
 
 /**
- * @typedef {import('../../../types/index.js').PathFromSystemRoot} PathFromSystemRoot
- * @typedef {import('../../../types/index.js').Analyzer} Analyzer
+ * @typedef {import('#types/index.js').PathFromSystemRoot} PathFromSystemRoot
+ * @typedef {import('#types/index.js').Analyzer} Analyzer
  */
 
 describe('QueryService', () => {

@@ -1,12 +1,12 @@
 import { expect } from 'chai';
 import { it } from 'mocha';
 
-import { getSourceCodeFragmentOfDeclaration } from '../../../src/program/utils/index.js';
-import { mockProject } from '../../../test-helpers/mock-project-helpers.js';
-import { memoize } from '../../../src/program/utils/memoize.js';
+import { getSourceCodeFragmentOfDeclaration } from '#utils/index.js';
+import { mockProject } from '#test-helpers/mock-project-helpers.js';
+import { memoize } from '#utils/memoize.js';
 
 /**
- * @typedef {import('../../../types/index.js').PathFromSystemRoot} PathFromSystemRoot
+ * @typedef {import('#types/index.js').PathFromSystemRoot} PathFromSystemRoot
  */
 
 describe('getSourceCodeFragmentOfDeclaration', () => {

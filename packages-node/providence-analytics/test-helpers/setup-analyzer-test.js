@@ -1,14 +1,14 @@
-import { InputDataService } from '../src/program/core/InputDataService.js';
-import { QueryService } from '../src/program/core/QueryService.js';
-import { restoreMockedProjects } from './mock-project-helpers.js';
+import { InputDataService } from '#core/InputDataService.js';
+import { QueryService } from '#core/QueryService.js';
+import { restoreMockedProjects } from '#test-helpers/mock-project-helpers.js';
 import {
   suppressNonCriticalLogs,
   restoreSuppressNonCriticalLogs,
-} from './mock-log-service-helpers.js';
-import { memoize } from '../src/program/utils/memoize.js';
+} from '#test-helpers/mock-log-service-helpers.js';
+import { memoize } from '#utils/memoize.js';
 
 /**
- * @typedef {import('../types/index.js').QueryResult} QueryResult
+ * @typedef {import('#types/index.js').QueryResult} QueryResult
  */
 
 let hasRunBefore = false;

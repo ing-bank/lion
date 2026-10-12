@@ -1,4 +1,4 @@
-import { toPosixPath } from './to-posix-path.js';
+import { toPosixPath } from '#utils/to-posix-path.js';
 
 /**
  * Determines for a source path of an import- or export specifier, whether

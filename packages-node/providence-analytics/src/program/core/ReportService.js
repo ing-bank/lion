@@ -1,15 +1,15 @@
 import path from 'path';
-import { hash } from '../utils/hash.js';
-import { fsAdapter } from '../utils/fs-adapter.js';
+import { hash } from '#utils/hash.js';
+import { fsAdapter } from '#utils/fs-adapter.js';
 
 /**
- * @typedef {import('../../../types/index.js').AnalyzerQueryResult} AnalyzerQueryResult
- * @typedef {import('../../../types/index.js').PathFromSystemRoot} PathFromSystemRoot
- * @typedef {import('../../../types/index.js').AnalyzerConfig} AnalyzerConfig
- * @typedef {import('../../../types/index.js').AnalyzerName} AnalyzerName
- * @typedef {import('../../../types/index.js').ProjectName} ProjectName
- * @typedef {import('../../../types/index.js').QueryResult} QueryResult
- * @typedef {import('../../../types/index.js').Project} Project
+ * @typedef {import('#types/index.js').AnalyzerQueryResult} AnalyzerQueryResult
+ * @typedef {import('#types/index.js').PathFromSystemRoot} PathFromSystemRoot
+ * @typedef {import('#types/index.js').AnalyzerConfig} AnalyzerConfig
+ * @typedef {import('#types/index.js').AnalyzerName} AnalyzerName
+ * @typedef {import('#types/index.js').ProjectName} ProjectName
+ * @typedef {import('#types/index.js').QueryResult} QueryResult
+ * @typedef {import('#types/index.js').Project} Project
  */
 
 /**

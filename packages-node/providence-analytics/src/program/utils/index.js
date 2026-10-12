@@ -1,12 +1,13 @@
-export { toRelativeSourcePath, isRelativeSourcePath } from './relative-source-path.js';
-export { trackDownIdentifier } from './track-down-identifier.js';
+export { toRelativeSourcePath, isRelativeSourcePath } from '#utils/relative-source-path.js';
+export { trackDownIdentifier } from '#utils/track-down-identifier.js';
 export {
   getSourceCodeFragmentOfDeclaration,
   getFilePathOrExternalSource,
-} from './get-source-code-fragment-of-declaration.js';
-export { oxcTraverse } from './oxc-traverse.js';
-export { fsAdapter } from './fs-adapter.js';
-export { memoize } from './memoize.js';
-export { hash } from './hash.js';
+} from '#utils/get-source-code-fragment-of-declaration.js';
+export { oxcTraverse } from '#utils/oxc-traverse.js';
+export { fsAdapter } from '#utils/fs-adapter.js';
+export { fsGlob } from '#utils/fs-glob.js';
+export { memoize } from '#utils/memoize.js';
+export { hash } from '#utils/hash.js';
 
 // TODO: move trackdownIdentifier to utils as well

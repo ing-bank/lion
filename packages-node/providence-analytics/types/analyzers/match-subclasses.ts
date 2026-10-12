@@ -4,7 +4,7 @@ import {
   PathRelativeFromProjectRoot,
   AnalyzerQueryResult,
   MatchedExportSpecifier,
-} from '../core/index.js';
+} from '#types/core/index.js';
 
 export interface MatchSubclassesAnalyzerResult
   extends AnalyzerQueryResult<MatchSubclassesAnalyzerOutputEntry[]> {

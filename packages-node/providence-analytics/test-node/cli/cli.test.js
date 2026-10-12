@@ -4,17 +4,17 @@ import { expect } from 'chai';
 import { it } from 'mocha';
 import sinon from 'sinon';
 
-import { mockProject } from '../../test-helpers/mock-project-helpers.js';
-import { InputDataService } from '../../src/program/core/InputDataService.js';
-import { QueryService } from '../../src/program/core/QueryService.js';
-import { _providenceModule } from '../../src/program/providence.js';
-import { _cliHelpersModule } from '../../src/cli/cli-helpers.js';
-import { cli } from '../../src/cli/cli.js';
-import { memoize } from '../../src/program/utils/memoize.js';
-import { setupAnalyzerTest } from '../../test-helpers/setup-analyzer-test.js';
+import { mockProject } from '#test-helpers/mock-project-helpers.js';
+import { InputDataService } from '#core/InputDataService.js';
+import { QueryService } from '#core/QueryService.js';
+import { _providenceModule } from '#program/providence.js';
+import { _cliHelpersModule } from '#cli/cli-helpers.js';
+import { cli } from '#cli/cli.js';
+import { memoize } from '#utils/memoize.js';
+import { setupAnalyzerTest } from '#test-helpers/setup-analyzer-test.js';
 
 /**
- * @typedef {import('../../types/index.js').QueryResult} QueryResult
+ * @typedef {import('#types/index.js').QueryResult} QueryResult
  */
 
 const externalCfgMock = {

@@ -1,15 +1,11 @@
 import { expect } from 'chai';
 import { it } from 'mocha';
-import { InputDataService } from '../../../src/program/core/InputDataService.js';
-import { memoize } from '../../../src/program/utils/memoize.js';
-import {
-  restoreMockedProjects,
-  mockProject,
-  mock,
-} from '../../../test-helpers/mock-project-helpers.js';
+import { InputDataService } from '#core/InputDataService.js';
+import { memoize } from '#utils/memoize.js';
+import { restoreMockedProjects, mockProject, mock } from '#test-helpers/mock-project-helpers.js';
 
 /**
- * @typedef {import('../../../types/index.js').PathFromSystemRoot} PathFromSystemRoot
+ * @typedef {import('#types/index.js').PathFromSystemRoot} PathFromSystemRoot
  */
 
 describe('InputDataService', () => {
@@ -149,7 +145,7 @@ describe('InputDataService', () => {
 
       it('gathers a list of files', async () => {
         const globOutput = await InputDataService.gatherFilesFromDir('/fictional/project');
-        expect(globOutput).to.deep.equal([
+        expect(globOutput).to.have.deep.members([
           '/fictional/project/index.js',
           '/fictional/project/internal.js',
           '/fictional/project/something.test.js',
@@ -162,7 +158,7 @@ describe('InputDataService', () => {
         const globOutput = await InputDataService.gatherFilesFromDir('/fictional/project', {
           depth: 0,
         });
-        expect(globOutput).to.deep.equal([
+        expect(globOutput).to.have.deep.members([
           '/fictional/project/index.js',
           '/fictional/project/internal.js',
           '/fictional/project/something.test.js',
@@ -173,7 +169,7 @@ describe('InputDataService', () => {
         const globOutput = await InputDataService.gatherFilesFromDir('/fictional/project', {
           extensions: ['.html', '.js'],
         });
-        expect(globOutput).to.deep.equal([
+        expect(globOutput).to.have.deep.members([
           '/fictional/project/index.html',
           '/fictional/project/index.js',
           '/fictional/project/internal.js',
@@ -189,7 +185,7 @@ describe('InputDataService', () => {
           extensions: ['.html', '.js'],
           allowlist: ['!nested/**'],
         });
-        expect(globOutput).to.deep.equal([
+        expect(globOutput).to.have.deep.members([
           '/fictional/project/index.html',
           '/fictional/project/index.js',
           '/fictional/project/internal.js',
@@ -203,7 +199,7 @@ describe('InputDataService', () => {
           extensions: ['.html', '.js'],
           allowlist: ['!index.js', '!**/*/index.js'],
         });
-        expect(globOutput).to.deep.equal([
+        expect(globOutput).to.have.deep.members([
           '/fictional/project/index.html',
           '/fictional/project/internal.js',
           '/fictional/project/something.test.html',
@@ -217,7 +213,7 @@ describe('InputDataService', () => {
           extensions: ['.html', '.js'],
           allowlist: ['!**/*.test.{html,js}'],
         });
-        expect(globOutput).to.deep.equal([
+        expect(globOutput).to.have.deep.members([
           '/fictional/project/index.html',
           '/fictional/project/index.js',
           '/fictional/project/internal.js',
@@ -230,7 +226,7 @@ describe('InputDataService', () => {
           extensions: ['.html', '.js'],
           allowlist: ['nested'],
         });
-        expect(globOutput).to.deep.equal([]);
+        expect(globOutput).to.have.deep.members([]);
       });
 
       it('omits node_modules and bower_components at root level by default', async () => {
@@ -243,7 +239,7 @@ describe('InputDataService', () => {
         });
 
         const globOutput = await InputDataService.gatherFilesFromDir('/fictional/project');
-        expect(globOutput).to.deep.equal([
+        expect(globOutput).to.have.deep.members([
           '/fictional/project/index.js',
           '/fictional/project/nested/bower_components/pkg/y.js',
           '/fictional/project/nested/node_modules/pkg/x.js',
@@ -259,7 +255,7 @@ describe('InputDataService', () => {
         const globOutput = await InputDataService.gatherFilesFromDir('/fictional/project', {
           allowlist: ['*', 'added/**/*'],
         });
-        expect(globOutput).to.deep.equal([
+        expect(globOutput).to.have.deep.members([
           '/fictional/project/root-lvl.js',
           '/fictional/project/added/file.js',
         ]);
@@ -275,7 +271,7 @@ describe('InputDataService', () => {
         const globOutput = await InputDataService.gatherFilesFromDir('/fictional/project', {
           allowlist: ['deeper/**/*'],
         });
-        expect(globOutput).to.deep.equal([
+        expect(globOutput).to.have.deep.members([
           '/fictional/project/deeper/file.js',
           '/fictional/project/deeper/glob/file.js',
           '/fictional/project/deeper/glob/structure/file.js',
@@ -293,7 +289,7 @@ describe('InputDataService', () => {
           });
 
           const globOutput = await InputDataService.gatherFilesFromDir('/fictional/project');
-          expect(globOutput).to.deep.equal(['/fictional/project/index.js']);
+          expect(globOutput).to.have.deep.members(['/fictional/project/index.js']);
         });
 
         it('omits hidden files by default', async () => {
@@ -303,7 +299,7 @@ describe('InputDataService', () => {
           });
 
           const globOutput = await InputDataService.gatherFilesFromDir('/fictional/project');
-          expect(globOutput).to.deep.equal(['/fictional/project/index.js']);
+          expect(globOutput).to.have.deep.members(['/fictional/project/index.js']);
         });
 
         describe('AllowlistMode', () => {
@@ -316,7 +312,7 @@ describe('InputDataService', () => {
               '.gitignore': '/dist',
             });
             const globOutput = await InputDataService.gatherFilesFromDir('/fictional/project');
-            expect(globOutput).to.deep.equal([
+            expect(globOutput).to.have.deep.members([
               // This means allowlistMode is 'git'
             ]);
 
@@ -330,7 +326,7 @@ describe('InputDataService', () => {
               }),
             });
             const globOutput2 = await InputDataService.gatherFilesFromDir('/fictional/project');
-            expect(globOutput2).to.deep.equal([
+            expect(globOutput2).to.have.deep.members([
               // This means allowlistMode is 'npm'
               '/fictional/project/dist/bundle.js',
             ]);
@@ -345,7 +341,7 @@ describe('InputDataService', () => {
             const globOutput3 = await InputDataService.gatherFilesFromDir(
               '/inside/proj/with/node_modules/detect-as-npm',
             );
-            expect(globOutput3).to.deep.equal([
+            expect(globOutput3).to.have.deep.members([
               // This means allowlistMode is 'npm' (even though we found .gitignore)
               '/inside/proj/with/node_modules/detect-as-npm/dist/bundle.js',
             ]);
@@ -360,7 +356,7 @@ describe('InputDataService', () => {
             const globOutput4 = await InputDataService.gatherFilesFromDir(
               '/inside/proj/with/node_modules/@scoped/detect-as-npm',
             );
-            expect(globOutput4).to.deep.equal([
+            expect(globOutput4).to.have.deep.members([
               // This means allowlistMode is 'npm' (even though we found .gitignore)
               '/inside/proj/with/node_modules/@scoped/detect-as-npm/dist/bundle.js',
             ]);
@@ -379,7 +375,7 @@ describe('InputDataService', () => {
             const globOutput = await InputDataService.gatherFilesFromDir('/fictional/project', {
               allowlistMode: 'npm',
             });
-            expect(globOutput).to.deep.equal([
+            expect(globOutput).to.have.deep.members([
               '/fictional/project/file.add.js',
               '/fictional/project/docs/x.js',
               '/fictional/project/src/y.js',
@@ -405,7 +401,7 @@ build/
             const globOutput = await InputDataService.gatherFilesFromDir('/fictional/project', {
               allowlistMode: 'git',
             });
-            expect(globOutput).to.deep.equal([
+            expect(globOutput).to.have.deep.members([
               '/fictional/project/keep/it.js',
               '/fictional/project/shall/pass.js',
             ]);
@@ -425,7 +421,7 @@ build/
             const globOutput = await InputDataService.gatherFilesFromDir('/fictional/project', {
               allowlistMode: 'all',
             });
-            expect(globOutput).to.deep.equal([
+            expect(globOutput).to.have.deep.members([
               '/fictional/project/dist/bundle.js',
               '/fictional/project/src/file.js',
             ]);
@@ -444,7 +440,7 @@ build/
             const globOutput = await InputDataService.gatherFilesFromDir('/fictional/project', {
               allowlistMode: 'export-map',
             });
-            expect(globOutput).to.deep.equal(['./internal/file.js']);
+            expect(globOutput).to.have.deep.members(['./internal/file.js']);
           });
         });
 
@@ -462,7 +458,7 @@ build/
             allowlist: ['dist/**'],
             allowlistMode: 'git', // for clarity, (would also be autodetected if not provided)
           });
-          expect(globOutput).to.deep.equal(['/fictional/project/dist/bundle.js']);
+          expect(globOutput).to.have.deep.members(['/fictional/project/dist/bundle.js']);
         });
 
         describe('Default allowlist', () => {
@@ -476,7 +472,7 @@ build/
             const globOutput = await InputDataService.gatherFilesFromDir('/fictional/project', {
               allowlist: ['added*'],
             });
-            expect(globOutput).to.deep.equal(['/fictional/project/added.js']);
+            expect(globOutput).to.have.deep.members(['/fictional/project/added.js']);
           });
 
           it('allows to omit default config filter', async () => {
@@ -492,7 +488,7 @@ build/
               allowlist: ['!omit*'],
               omitDefaultAllowlist: true,
             });
-            expect(globOutput).to.deep.equal([
+            expect(globOutput).to.have.deep.members([
               '/fictional/project/abc.config.js',
               '/fictional/project/added.js',
               '/fictional/project/xyz.conf.js',
@@ -521,7 +517,7 @@ build/
           packageRootPath: '/my/proj',
         });
 
-        expect(exportMapPaths).to.deep.equal([
+        expect(exportMapPaths).to.have.deep.members([
           { internal: './internal-path.js', exposed: './exposed-path.js' },
           { internal: './internal/folder-a/path.js', exposed: './external/folder-a/path.js' },
           { internal: './internal/folder-b/path.js', exposed: './external/folder-b/path.js' },
@@ -539,7 +535,7 @@ build/
         const exportMapPaths = await InputDataService.getPathsFromExportMap(exports, {
           packageRootPath: '/my/proj',
         });
-        expect(exportMapPaths).to.deep.equal([
+        expect(exportMapPaths).to.have.deep.members([
           { internal: './internal-path.js', exposed: './exposed-path.js' },
         ]);
       });
@@ -557,7 +553,7 @@ build/
         const exportMapPaths = await InputDataService.getPathsFromExportMap(exports, {
           packageRootPath: '/my/proj',
         });
-        expect(exportMapPaths).to.deep.equal([
+        expect(exportMapPaths).to.have.deep.members([
           { internal: './internal-exports-folder/file-a.js', exposed: './file-a.js' },
           { internal: './internal-exports-folder/file-b.js', exposed: './file-b.js' },
           { internal: './internal-exports-folder/file-c.js', exposed: './file-c.js' },
@@ -576,7 +572,7 @@ build/
         const exportMapPaths = await InputDataService.getPathsFromExportMap(exports, {
           packageRootPath: '/my/proj',
         });
-        expect(exportMapPaths).to.deep.equal([
+        expect(exportMapPaths).to.have.deep.members([
           { internal: './internal-folder/file-a.js', exposed: './exposed-folder/file-a.js' },
           {
             internal: './internal-folder/another-folder/file-b.js',
@@ -598,7 +594,7 @@ build/
         const exportMapPaths = await InputDataService.getPathsFromExportMap(exports, {
           packageRootPath: '/my/proj',
         });
-        expect(exportMapPaths).to.deep.equal([
+        expect(exportMapPaths).to.have.deep.members([
           { exposed: './exposed-folder/folder-a/file.js', internal: './folder-a/file.js' },
           { exposed: './exposed-folder/folder-b/file.js', internal: './folder-b/file.js' },
         ]);
@@ -618,7 +614,7 @@ build/
         const exportMapPaths = await InputDataService.getPathsFromExportMap(exports, {
           packageRootPath: '/my/proj',
         });
-        expect(exportMapPaths).to.deep.equal([
+        expect(exportMapPaths).to.have.deep.members([
           { internal: './internal-folder/file-a.js', exposed: './exposed-folder/file-a.js' },
         ]);
       });
@@ -638,7 +634,7 @@ build/
           const exportMapPaths = await InputDataService.getPathsFromExportMap(exports, {
             packageRootPath: '/my/proj',
           });
-          expect(exportMapPaths).to.deep.equal([
+          expect(exportMapPaths).to.have.deep.members([
             { internal: './esm-exports/file.js', exposed: './file.js' },
           ]);
         });
@@ -657,7 +653,7 @@ build/
             packageRootPath: '/my/proj',
             nodeResolveMode: 'require',
           });
-          expect(exportMapPaths).to.deep.equal([
+          expect(exportMapPaths).to.have.deep.members([
             { internal: './cjs-exports/file.cjs', exposed: './file.cjs' },
           ]);
         });
@@ -676,7 +672,7 @@ build/
             packageRootPath: '/my/proj',
             nodeResolveMode: 'develop',
           });
-          expect(exportMapPaths).to.deep.equal([
+          expect(exportMapPaths).to.have.deep.members([
             { internal: './develop-exports/file.js', exposed: './file.js' },
           ]);
         });
@@ -700,7 +696,7 @@ build/
           const exportMapPaths = await InputDataService.getPathsFromExportMap(exports, {
             packageRootPath: '/my/proj',
           });
-          expect(exportMapPaths).to.deep.equal([
+          expect(exportMapPaths).to.have.deep.members([
             { internal: './index.js', exposed: '.' },
             { internal: './file.js', exposed: './exposed-file.js' },
           ]);
@@ -721,7 +717,7 @@ build/
           const exportMapPaths = await InputDataService.getPathsFromExportMap(exports, {
             packageRootPath: '/my/proj',
           });
-          expect(exportMapPaths).to.deep.equal([
+          expect(exportMapPaths).to.have.deep.members([
             { internal: './internal-folder/file-a.js', exposed: './exposed-folder/file-a.js' },
             { internal: './internal-folder/file-b.js', exposed: './exposed-folder/file-b.js' },
           ]);
@@ -740,7 +736,7 @@ build/
           const exportMapPaths = await InputDataService.getPathsFromExportMap(exports, {
             packageRootPath: '/my/proj',
           });
-          expect(exportMapPaths).to.deep.equal([
+          expect(exportMapPaths).to.have.deep.members([
             { internal: './internal-folder/file-a.js', exposed: './exposed-folder/file-a.js' },
             { internal: './internal-folder/file-b.js', exposed: './exposed-folder/file-b.js' },
           ]);

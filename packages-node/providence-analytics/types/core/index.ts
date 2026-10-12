@@ -1,3 +1,3 @@
-export * from './core.js';
-export * from './Analyzer.js';
-export * from './QueryService.js';
+export * from '#types/core/core.js';
+export * from '#types/core/Analyzer.js';
+export * from '#types/core/QueryService.js';

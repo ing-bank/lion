@@ -94,7 +94,7 @@ npx providence-analytics analyze match-imports -t /importing/project -r /exporti
 ## Utils
 
 Providence comes with many tools for deep traversal of identifiers,
-the (babel like) traversal of ast trees in oxc and swc and more.
+the (babel like) traversal of ast trees in oxc and more.
 Also more generic utils for caching and performant globbing come delivered with Providence.
 
 For a better understanding, check out the utils folders (tests and code).

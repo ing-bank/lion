@@ -2,9 +2,9 @@
 import path from 'path';
 import { expect } from 'chai';
 import { it } from 'mocha';
-import { appendProjectDependencyPaths } from '../../src/cli/cli-helpers.js';
-import { toPosixPath } from '../../src/program/utils/to-posix-path.js';
-import { getCurrentDir } from '../../src/program/utils/get-current-dir.js';
+import { appendProjectDependencyPaths } from '#cli/cli-helpers.js';
+import { toPosixPath } from '#utils/to-posix-path.js';
+import { getCurrentDir } from '#utils/get-current-dir.js';
 
 /**
  * These tests are added on top of unit tests. See:

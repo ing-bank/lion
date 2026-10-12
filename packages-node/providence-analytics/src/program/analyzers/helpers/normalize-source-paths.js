@@ -1,14 +1,14 @@
 /* eslint-disable no-param-reassign */
 import path from 'path';
 
-import { isRelativeSourcePath } from '../../utils/relative-source-path.js';
-import { resolveImportPath } from '../../utils/resolve-import-path.js';
-import { toPosixPath } from '../../utils/to-posix-path.js';
+import { isRelativeSourcePath } from '#utils/relative-source-path.js';
+import { resolveImportPath } from '#utils/resolve-import-path.js';
+import { toPosixPath } from '#utils/to-posix-path.js';
 
 /**
- * @typedef {import('../../../../types/index.js').PathRelative} PathRelative
- * @typedef {import('../../../../types/index.js').PathFromSystemRoot} PathFromSystemRoot
- * @typedef {import('../../../../types/index.js').FindImportsAnalyzerEntry} FindImportsAnalyzerEntry
+ * @typedef {import('#types/index.js').PathRelative} PathRelative
+ * @typedef {import('#types/index.js').PathFromSystemRoot} PathFromSystemRoot
+ * @typedef {import('#types/index.js').FindImportsAnalyzerEntry} FindImportsAnalyzerEntry
  */
 
 /**
