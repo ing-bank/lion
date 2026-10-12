@@ -1,0 +1,23 @@
+{
+  "version": 1,
+  "updatedAt": "2026-10-12T17:22:34.689Z",
+  "entries": [
+    {
+      "skillRevision": "3df6d8308bc811f1d379851d3cadecf5a32434e6",
+      "model": "deepseek-v4-flash",
+      "scenario": "field/iban-field",
+      "kind": "component",
+      "samples": 3,
+      "mean": 1,
+      "min": 1,
+      "max": 1,
+      "stdDev": 0,
+      "behaviourPassed": 3,
+      "behaviourTotal": 3,
+      "attempts": 3,
+      "redoable": 0,
+      "tokens": 165766,
+      "ranAt": "2026-10-12T17:22:34.407Z"
+    }
+  ]
+}

@@ -24,6 +24,7 @@
   "scripts": {
     "eval": "node src/cli.ts",
     "eval:copilot": "node examples/run.mjs copilot",
+    "eval:docs": "node scripts/render-quality-page.mjs",
     "eval:list": "node src/cli.ts --list",
     "eval:local": "node examples/run.mjs local",
     "eval:openai": "node examples/run.mjs openai",

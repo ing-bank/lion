@@ -18,6 +18,25 @@ import { runSkillTester, defaultLionUiSkillLocation, createAgentConfig } from '.
 import { loadLionUiScenarios, manualScenarios } from './scenarios/index.ts';
 import type { TestScenario } from './scenarios/types.ts';
 import type { Provider } from './config.ts';
+import { execSync } from 'node:child_process';
+import { loadLedger, updateLedger, writeLedger } from './report/ledger.ts';
+import { writeQualityPage } from './report/docsPage.ts';
+
+/**
+ * Git tree hash of the skill directory. A commit elsewhere in the repo must not invalidate every
+ * stored result, so the ledger keys on the skill's own tree hash rather than the commit.
+ */
+function skillRevisionOf(root: string): string {
+  try {
+    return execSync('git rev-parse HEAD:packages/ui/skills/lion-ui', {
+      cwd: root,
+      encoding: 'utf-8',
+      stdio: ['ignore', 'pipe', 'ignore'],
+    }).trim();
+  } catch {
+    return 'unknown';
+  }
+}
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -38,6 +57,10 @@ type CliOptions = {
   help: boolean;
   filters: { kind?: string; name?: string };
   sampleScenarios?: number;
+  /** After the run, update the results ledger and re-render the docs quality page. */
+  docs: boolean;
+  docsPath?: string;
+  ledgerPath?: string;
 };
 
 function parseArgs(argv: string[]): CliOptions {
@@ -50,6 +73,7 @@ function parseArgs(argv: string[]): CliOptions {
     samples: 1,
     maxTurns: 25,
     passThreshold: 100,
+    docs: false,
     useMockAgent: false,
     behaviour: false,
     list: false,
@@ -93,6 +117,15 @@ function parseArgs(argv: string[]): CliOptions {
         break;
       case '--behaviour':
         options.behaviour = true;
+        break;
+      case '--docs':
+        options.docs = true;
+        break;
+      case '--docs-path':
+        options.docsPath = next();
+        break;
+      case '--ledger':
+        options.ledgerPath = next();
         break;
       case '--kind':
         options.filters.kind = next();
@@ -280,6 +313,29 @@ async function main(): Promise<void> {
     }
   } else {
     console.log(green(`\nAll scenarios reached ${options.passThreshold}%.`));
+  }
+
+  if (options.docs) {
+    const here = path.dirname(fileURLToPath(import.meta.url));
+    const root = path.resolve(here, '../../..');
+    const ledgerFile = options.ledgerPath
+      ? path.resolve(options.ledgerPath)
+      : path.join(here, '../results/ledger.json');
+    const pageFile = options.docsPath
+      ? path.resolve(options.docsPath)
+      : path.join(root, 'docs/fundamentals/node-tools/skill-tester/quality.md');
+
+    // Kinds live on the scenarios, not on the report.
+    const withKinds = [...loadLionUiScenarios({ repoRoot: root }), ...manualScenarios];
+    const ledger = updateLedger(loadLedger(ledgerFile), report, withKinds, skillRevisionOf(root));
+    writeLedger(ledgerFile, ledger);
+    writeQualityPage(pageFile, ledger);
+    console.log(
+      green(
+        `\nResults page: ${path.relative(root, pageFile)} ` +
+          `(${ledger.entries.length} row(s) in ${path.relative(root, ledgerFile)})`,
+      ),
+    );
   }
 
   process.exitCode = report.overall.mean * 100 >= options.passThreshold ? 0 : 1;
