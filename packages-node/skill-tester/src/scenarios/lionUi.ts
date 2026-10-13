@@ -282,6 +282,7 @@ export function createComponentScenario(
       `It must export a class named \`${producedClass}\`.`,
       `Goal: a component that renders the documented \`<${tagName}>\` element in its own template.`,
       'Compose that element — do not subclass it.',
+      'Use it the way its own documentation shows: include whatever content it needs in order to work.',
       'Follow the conventions in the skill: import everything through the documented @lion/ui',
       'entrypoints, and give the component its own scoped element registry.',
     ].join(' '),
