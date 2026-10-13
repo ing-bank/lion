@@ -139,7 +139,8 @@
 .back-link {
     display: inline-flex;
     align-items: center;
-    color: #64748b;
+    /* Was a hard-coded slate that never followed the theme: 4.41:1 on the dark background. */
+    color: var(--text-secondary);
     text-decoration: none;
     margin-bottom: 2rem;
     font-weight: 500;
@@ -172,7 +173,8 @@
 
 .component-nav a {
     display: block;
-    color: #64748b;
+    /* Overridden further down today, but it was the same hard-coded slate. */
+    color: var(--text-secondary);
     text-decoration: none;
     padding: 0.5rem 0.75rem;
     border-radius: 6px;
