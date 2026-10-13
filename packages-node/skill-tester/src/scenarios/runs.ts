@@ -73,6 +73,11 @@ export const ibanFieldScenario: TestScenario = {
       description: 'prefills the field with the requested value',
     },
     {
+      type: 'noUnusedImports',
+      file: 'src/my-iban-field.js',
+      description: 'imports nothing it does not use',
+    },
+    {
       type: 'noExtraFiles',
       file: 'src/my-iban-field.js',
       description: 'creates no files other than the deliverable',
@@ -187,6 +192,11 @@ export const accordionScenario: TestScenario = {
       file: 'src/my-accordion.js',
       pattern: '@lion/ui/(components|src)/',
       description: 'does not deep-import from @lion/ui internals',
+    },
+    {
+      type: 'noUnusedImports',
+      file: 'src/my-accordion.js',
+      description: 'imports nothing it does not use',
     },
     {
       type: 'noExtraFiles',

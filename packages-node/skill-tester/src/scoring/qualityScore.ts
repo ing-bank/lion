@@ -30,6 +30,7 @@ import path from 'node:path';
 import { diffLines } from 'diff';
 import type { ScenarioCheck } from '../scenarios/types.ts';
 import type { GateResult } from './gates.ts';
+import { unusedImportNames } from './gates.ts';
 
 export type FileScore = {
   path: string;
@@ -177,6 +178,7 @@ const CHECK_DESCRIPTIONS: Record<ScenarioCheck['type'], (check: ScenarioCheck) =
   notMatches: check => `${check.file} does not match /${check.pattern ?? ''}/`,
   exists: check => `${check.file} exists`,
   noExtraFiles: check => `no files beyond "${check.file}" were created`,
+  noUnusedImports: check => `${check.file} imports nothing it does not use`,
 };
 
 export function evaluateCheck(
@@ -219,6 +221,18 @@ export function evaluateCheck(
     case 'notMatches':
       passed = !new RegExp(check.pattern ?? '', check.flags).test(content);
       break;
+    case 'noUnusedImports': {
+      const unused = unusedImportNames(content);
+      if (unused.length > 0) {
+        return {
+          description: `${check.file} imports ${unused.join(', ')} without using it`,
+          passed: false,
+          weight,
+        };
+      }
+      passed = true;
+      break;
+    }
   }
 
   return { description, passed, weight };
