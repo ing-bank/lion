@@ -53,6 +53,15 @@
     --diagram-grid: light-dark(rgba(0, 0, 0, 0.07), rgba(255, 255, 255, 0.05));
     --diagram-line-soft: light-dark(rgba(0, 0, 0, 0.15), rgba(255, 255, 255, 0.1));
     --diagram-stroke: light-dark(#111111, #ffffff);
+
+    /*
+     * Shiki token colours, mapped onto the theme like the plain/string tokens below. The dark
+     * values are the shipped ones; the light values replace fixed greys that measured 2.85:1
+     * and 4.48:1 on the light code background.
+     */
+    --code-keyword: light-dark(#5a5a5a, #777777);
+    --code-type: light-dark(#5a5a5a, #999999);
+    --code-number: light-dark(#8a4b00, #FFAB70);
 }
 
 * {
@@ -834,11 +843,11 @@ main {
 }
 
 .astro-code [style="color:#6F42C1;--shiki-dark:#B392F0"] {
-    color: #999 !important;
+    color: var(--code-type) !important;
 }
 
 .astro-code [style="color:#D73A49;--shiki-dark:#F97583"] {
-    color: #777 !important;
+    color: var(--code-keyword) !important;
 }
 .astro-code [style="color:#22863A;--shiki-dark:#85E89D"] {
     color: var(--highlight-color) !important;
@@ -847,6 +856,9 @@ main {
     color: var(--highlight-color) !important;
 }
 .astro-code [style="color:#005CC5;--shiki-dark:#79B8FF"] {
-    color: #777 !important;
+    color: var(--code-keyword) !important;
+}
+.astro-code [style="color:#E36209;--shiki-dark:#FFAB70"] {
+    color: var(--code-number) !important;
 }
 
