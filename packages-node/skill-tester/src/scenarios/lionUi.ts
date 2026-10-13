@@ -271,6 +271,11 @@ export function createComponentScenario(
     });
   }
 
+  checks.push({
+    type: 'noUnusedImports',
+    file: targetFile,
+    description: 'imports nothing it does not use',
+  });
   checks.push(noExtraFiles);
 
   const scenario: TestScenario = {
@@ -330,6 +335,11 @@ export function createSystemScenario(
     checks: [
       exists,
       ...entrypointChecks(SYSTEM_TARGET_FILE, systemName, context.defineEntrypoints ?? []),
+      {
+        type: 'noUnusedImports',
+        file: SYSTEM_TARGET_FILE,
+        description: 'imports nothing it does not use',
+      },
       noExtraFiles,
     ],
   };
