@@ -182,18 +182,27 @@ const SlotMixinImplementation = /** @type {SlotMixin} */ (superclass =>
     __renderTemplateInScopedContext({ template, slotName, renderAsDirectHostChild }) {
       const isFirstRender = !this.__renderMetaPerSlot.has(slotName);
       if (isFirstRender) {
-        // @ts-expect-error wait for browser support
-        const supportsScopedRegistry = !!ShadowRoot.prototype.createElement;
         const hasShadowRoot = Boolean(this.shadowRoot);
         if (!hasShadowRoot) {
           // TODO: throw an error in a breaking release
           // eslint-disable-next-line no-console
           console.error(`[SlotMixin] No shadowRoot was found`);
         }
-        const registryRoot = supportsScopedRegistry ? this.shadowRoot : document;
 
-        // @ts-expect-error wait for browser support
-        const renderTargetThatRespectsShadowRootScoping = registryRoot.createElement('div');
+        // The render target is created in the scope of the host, so the elements
+        // inside it resolve against the scoped registry. How that is done depends on
+        // the version of the scoped registry proposal: spec 0.x creates it through
+        // the shadow root, spec 1.x through `document.createElement` with a
+        // `customElementRegistry` option. ScopedElementsMixin's `createScopedElement`
+        // handles both (and falls back to the global registry when scoping is not
+        // available); without ScopedElementsMixin there is nothing to scope, so the
+        // global document is used, as before.
+        const hostWithOptionalScopedElements = /** @type {{createScopedElement?: (tagName: string) => HTMLElement}} */ (
+          /** @type {unknown} */ (this)
+        );
+        const renderTargetThatRespectsShadowRootScoping = /** @type {HTMLDivElement} */ (
+          hostWithOptionalScopedElements.createScopedElement?.('div') ?? document.createElement('div')
+        );
         const startComment = document.createComment(`_start_slot_${slotName}_`);
         const endComment = document.createComment(`_end_slot_${slotName}_`);
 

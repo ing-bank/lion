@@ -1,12 +1,12 @@
 import { css, html } from 'lit';
 import { ChoiceInputMixin, LionField } from '@lion/ui/form-core.js';
-import { ScopedElementsMixin } from '../../core/src/ScopedElementsMixin.js';
+import { ScopedElementsMixinV4 } from '../../core/src/ScopedElementsMixinV4.js';
 import { LionSwitchButton } from './LionSwitchButton.js';
 
 /**
  * @customElement lion-switch
  */
-export class LionSwitch extends ScopedElementsMixin(ChoiceInputMixin(LionField)) {
+export class LionSwitch extends ScopedElementsMixinV4(ChoiceInputMixin(LionField)) {
   static get styles() {
     return [
       ...super.styles,

@@ -4,7 +4,11 @@ import { LitElement } from 'lit';
 import sinon from 'sinon';
 import { moveUserProvidedDefaultSlottablesToTarget } from '../src/SlotMixin.js';
 
-import { ScopedElementsMixin, supportsScopedRegistry } from '../src/ScopedElementsMixin.js';
+import {
+  ScopedElementsMixin,
+  supportsScopedRegistry,
+  supportsScopedRegistryV1,
+} from '../src/ScopedElementsMixin.js';
 import { isActiveElement } from '../test-helpers/isActiveElement.js';
 
 /**
@@ -690,8 +694,12 @@ describe('SlotMixin', () => {
     it('supports scoped elements when scoped registries supported (or polyfill loaded)', async () => {
       if (!supportsScopedRegistry()) return;
 
+      // Spec 0.x resolves the tag through the shadow root; spec 1.x through
+      // `document.createElement` with the `customElementRegistry` option.
+      const scope = supportsScopedRegistryV1() ? document : ShadowRoot.prototype;
+
       // @ts-expect-error
-      const createElSpy = sinon.spy(ShadowRoot.prototype, 'createElement');
+      const createElSpy = sinon.spy(scope, 'createElement');
 
       class ScopedEl extends LitElement {}
 
@@ -722,7 +730,12 @@ describe('SlotMixin', () => {
       const tag = unsafeStatic(tagName);
       await fixture(html`<${tag}></${tag}>`);
 
-      expect(createElSpy.callCount).to.equal(1);
+      const scopedCalls = createElSpy
+        .getCalls()
+        .filter(call =>
+          supportsScopedRegistryV1() ? call.args[1]?.customElementRegistry : call.args[0] === 'div',
+        );
+      expect(scopedCalls.length).to.equal(1);
 
       createElSpy.restore();
     });

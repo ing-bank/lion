@@ -15,3 +15,7 @@ _demos
 /docs/_merged_assets/scoped-custom-element-registry.min.js
 /src/components/shared/
 /src/components/UIMainNav/
+
+# a vendored build of a third party package (see core/test/scoped-registry-v1/README.md),
+# ignored the same way as the polyfill copies under docs/_assets
+/packages/ui/components/core/test/scoped-registry-v1/scoped-custom-element-registry.min.js

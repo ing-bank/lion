@@ -13,3 +13,7 @@ _demos
 /docs/_merged_includes/
 
 /packages/ui/_legacy-changelogs
+
+# a vendored build of a third party package (see core/test/scoped-registry-v1/README.md),
+# ignored the same way as the polyfill copies under docs/_assets
+/packages/ui/components/core/test/scoped-registry-v1/scoped-custom-element-registry.min.js

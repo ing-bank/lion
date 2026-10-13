@@ -12,7 +12,7 @@ import {
   ArrowMixin,
 } from '@lion/ui/overlays.js';
 import { LocalizeMixin } from '@lion/ui/localize-no-side-effects.js';
-import { ScopedElementsMixin } from '../../core/src/ScopedElementsMixin.js';
+import { ScopedElementsMixinV4 } from '../../core/src/ScopedElementsMixinV4.js';
 import { localizeNamespaceLoader } from './localizeNamespaceLoader.js';
 
 /**
@@ -23,7 +23,7 @@ import { localizeNamespaceLoader } from './localizeNamespaceLoader.js';
 /**
  * @customElement lion-input-datepicker
  */
-export class LionInputDatepicker extends ScopedElementsMixin(
+export class LionInputDatepicker extends ScopedElementsMixinV4(
   ArrowMixin(OverlayMixin(LocalizeMixin(LionInputDate))),
 ) {
   static get scopedElements() {

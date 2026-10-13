@@ -3,7 +3,7 @@ import { DisabledMixin, SlotMixin } from '@lion/ui/core.js';
 import { dedupeMixin } from '@open-wc/dedupe-mixin';
 // TODO: make form-core independent from localize
 import { getLocalizeManager } from '@lion/ui/localize-no-side-effects.js';
-import { ScopedElementsMixin } from '../../../core/src/ScopedElementsMixin.js';
+import { ScopedElementsMixinV4 } from '../../../core/src/ScopedElementsMixinV4.js';
 import { FormControlMixin } from '../FormControlMixin.js';
 import { AsyncQueue } from '../utils/AsyncQueue.js';
 import { pascalCase } from '../utils/pascalCase.js';
@@ -54,7 +54,7 @@ function getValueForValidators(modelValue) {
 // prettier-ignore
 export const ValidateMixinImplementation = /** @type {ValidateMixin} */ (superclass =>
   class extends FormControlMixin(
-    SyncUpdatableMixin(DisabledMixin(SlotMixin(ScopedElementsMixin(superclass)))),
+    SyncUpdatableMixin(DisabledMixin(SlotMixin(ScopedElementsMixinV4(superclass)))),
   ) {
     static get scopedElements() {
       return {
