@@ -1,6 +1,6 @@
 import { litSsrPlugin } from '@lit-labs/testing/web-test-runner-ssr-plugin.js';
 import { playwrightLauncher } from '@web/test-runner-playwright';
-import { advancedPerfPlugin } from './packages-node/web-test-runner-advanced-perf/src/index.js';
+import { advancedPerfPlugin } from '@lion-labs/test-runner-advanced-perf';
 
 export default {
   browsers: [playwrightLauncher({ product: 'chromium' })],

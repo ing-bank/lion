@@ -13,7 +13,7 @@ eleventyNavigation:
 
 # Web Test Runner Advanced Perf: Overview
 
-`@lion-labs/web-test-runner-advanced-perf` adds Chromium performance tracing and repeated statistical measurements to Web Test Runner.
+`@lion-labs/test-runner-advanced-perf` adds Chromium performance tracing and repeated statistical measurements to Web Test Runner.
 
 The statistical benchmark API is inspired by [Tachometer](https://github.com/Polymer/tachometer); it is an independent, Web Test Runner-focused implementation and is not a replacement for Tachometer.
 
@@ -34,7 +34,7 @@ These are [Core Web Vitals](https://en.wikipedia.org/wiki/Core_Web_Vitals)-style
 ## Installation
 
 ```bash
-npm i -D @lion-labs/web-test-runner-advanced-perf @web/test-runner-commands
+npm i -D @lion-labs/test-runner-advanced-perf @web/test-runner-commands
 ```
 
 Configure a dedicated Web Test Runner file with Playwright Chromium. It discovers only `*.statistical-bench.js` files, keeping normal test runs fast.
@@ -42,7 +42,7 @@ Configure a dedicated Web Test Runner file with Playwright Chromium. It discover
 ```js
 import { litSsrPlugin } from '@lit-labs/testing/web-test-runner-ssr-plugin.js';
 import { playwrightLauncher } from '@web/test-runner-playwright';
-import { advancedPerfPlugin } from '@lion-labs/web-test-runner-advanced-perf';
+import { advancedPerfPlugin } from '@lion-labs/test-runner-advanced-perf';
 
 export default {
   browsers: [playwrightLauncher({ product: 'chromium' })],
@@ -66,7 +66,7 @@ Use `runBenchmarks()` in a browser test to measure an operation repeatedly. For 
 
 ```js
 import { fixture, html, expect } from '@open-wc/testing';
-import { runBenchmarks } from '@lion-labs/web-test-runner-advanced-perf/browser.js';
+import { runBenchmarks } from '@lion-labs/test-runner-advanced-perf/browser.js';
 
 const frameBudget = 1000 / 60;
 

@@ -3,7 +3,7 @@ import { litSsrPlugin } from '@lit-labs/testing/web-test-runner-ssr-plugin.js';
 import { playwrightLauncher } from '@web/test-runner-playwright';
 import { glob } from 'node:fs/promises';
 import { globby } from 'globby';
-import { advancedPerfPlugin } from './packages-node/web-test-runner-advanced-perf/src/index.js';
+import { advancedPerfPlugin } from '@lion-labs/test-runner-advanced-perf';
 
 const config = {
   shouldLoadPolyfill: !process.argv.includes('--no-scoped-registries-polyfill'),

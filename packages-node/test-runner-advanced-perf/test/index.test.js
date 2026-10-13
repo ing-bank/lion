@@ -10,7 +10,7 @@ import {
   summaryStats,
 } from '../src/index.js';
 
-describe('web-test-runner-advanced-perf', () => {
+describe('test-runner-advanced-perf', () => {
   describe('statistical measurements', () => {
     it('calculates a 95% confidence interval from repeated samples', () => {
       const result = summaryStats([8, 10, 12, 10, 10]);
