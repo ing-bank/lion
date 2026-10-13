@@ -31,7 +31,7 @@ export class DemoToolbar extends LionMenu {
       // @ts-ignore - InteractiveListItemRole type
       const role = /** @type {InteractiveListItemRole} */ (item.getAttribute('role'));
       let listItemsWithinGroup = this.listItems;
-      let multiple = this.multipleChoice;
+      let { multiple } = this;
       if (role === 'radio' || role === 'checkbox') {
         /**
          * If index = 1 (radio 'Red'), closest group will be div[role=radiogroup]
