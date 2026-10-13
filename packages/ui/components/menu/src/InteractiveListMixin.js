@@ -20,7 +20,14 @@ import {
  * @typedef {import('../types/InteractiveListMixinTypes.js').InteractiveListMixin} InteractiveListMixinType
  */
 
-// TODO: consider renaming to FocusGroupMixin
+/**
+ * Platform alignment: this mixin is the equivalent of the
+ * [focusgroup](https://open-ui.org/components/focusgroup.explainer/) attribute (arrow key
+ * navigation inside a composite widget). The name stays: it is a public export and it covers
+ * listbox, menu/menubar, toolbar and tree alike. Its own api speaks the focusgroup vocabulary
+ * (`axis` with `inline`/`block`, `wrap`, `multiple`), so implementations that follow the platform
+ * proposal find the same names here.
+ */
 
 // TODO: make all available in controller/directive (same logic with an elegant prop-to-host-mapping)
 
@@ -149,7 +156,7 @@ const InteractiveListMixinImplementation = /** @type {InteractiveListMixinType} 
           color: #adadad;
         }
 
-        :host([orientation='horizontal']) ::slotted([slot='list']) {
+        :host([axis='inline']) ::slotted([slot='list']) {
           display: flex;
         }
       `,
@@ -164,16 +171,35 @@ const InteractiveListMixinImplementation = /** @type {InteractiveListMixinType} 
 
     static get properties() {
       return {
-        // TODO: align with name of open-ui => "inline|block" in focusgroup
-        orientation: { type: String, reflect: true },
-        // TODO: align with name of platform => ("multiple" in select, selection not part of focusgroup)
-        multipleChoice: { type: Boolean, attribute: 'multiple-choice' },
-        // TODO: align with name of open-ui
+        /**
+         * The axis arrow keys navigate along, in the vocabulary of the
+         * [focusgroup](https://open-ui.org/components/focusgroup.explainer/) api: `'block'`
+         * (default: up/down) or `'inline'` (left/right).
+         */
+        axis: { type: String, reflect: true },
+        /**
+         * Whether more than one item can be checked. The platform name for this is `multiple`
+         * (`<select multiple>`); selection is explicitly not part of the focusgroup api.
+         */
+        multiple: { type: Boolean, attribute: 'multiple' },
+        /**
+         * Whether checking an item follows the active item. ARIA/APG vocabulary; selection is out of
+         * scope for the focusgroup api.
+         */
         selectionFollowsFocus: { type: Boolean, attribute: 'selection-follows-focus' },
-        // TODO: align with name of open-ui => "wrap" in focusgroup
-        rotateKeyboardNavigation: { type: Boolean, attribute: 'rotate-keyboard-navigation' },
-        // TODO: align with name of open-ui
-        noPreselect: { type: Boolean, attribute: 'no-preselect' },
+        /**
+         * Whether arrow key navigation wraps around at the first/last item: the `wrap` modifier of
+         * the focusgroup api.
+         */
+        wrap: { type: Boolean, attribute: 'wrap' },
+        /**
+         * Whether no item is selected on initial render (`checkedIndex` stays -1). The platform name
+         * for the initial selectedness is "default selected" (`HTMLOptionElement.defaultSelected`,
+         * `HTMLInputElement.defaultChecked`, the HTML selectedness-setting algorithm); the opt-out is
+         * named the way the platform names its own opt-outs (`novalidate`, `nomodule`). Same property
+         * as `ListboxMixin` has, so a listbox and a menu can be configured alike.
+         */
+        hasNoDefaultSelected: { type: Boolean, reflect: true, attribute: 'has-no-default-selected' },
 
         // TODO: implement, for now we start with only more-menu. See instructions in code about more menu.
         // Values:
@@ -296,7 +322,7 @@ const InteractiveListMixinImplementation = /** @type {InteractiveListMixinType} 
       }
 
       // @ts-ignore - focusableEl is safely used as HTMLElement here
-      if (this.orientation === 'vertical' && !isInView(this._scrollTargetNode, focusableEl)) {
+      if (this.axis === 'block' && !isInView(this._scrollTargetNode, focusableEl)) {
         focusableEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
       }
 
@@ -316,7 +342,7 @@ const InteractiveListMixinImplementation = /** @type {InteractiveListMixinType} 
      * @type {number | number[]}
      */
     get checkedIndex() {
-      if (!this.multipleChoice) {
+      if (!this.multiple) {
         return this.listItems.findIndex(o => isChecked(o));
       }
       return this.listItems.filter(o => isChecked(o)).map(o => this.listItems.indexOf(o));
@@ -325,7 +351,7 @@ const InteractiveListMixinImplementation = /** @type {InteractiveListMixinType} 
     /**
      * @deprecated
      * This setter exists for backwards compatibility of single choice groups.
-     * A setter api would be confusing for a multipleChoice group. Use `setCheckedIndex` instead.
+     * A setter api would be confusing for a multiple group. Use `setCheckedIndex` instead.
      * @param {number} index
      */
     set checkedIndex(index) {
@@ -333,13 +359,13 @@ const InteractiveListMixinImplementation = /** @type {InteractiveListMixinType} 
     }
 
     /**
-     * When `multipleChoice` is false, will toggle, else will check provided index
+     * When `multiple` is false, will toggle, else will check provided index
      * @param {Number} index
      */
     setCheckedIndex(index) {
       const item = this.listItems[index];
       if (!item) return;
-      if (!this.multipleChoice) {
+      if (!this.multiple) {
         // Uncheck all
         this.listItems.forEach(listItem => {
           setChecked(listItem, true);
@@ -363,18 +389,18 @@ const InteractiveListMixinImplementation = /** @type {InteractiveListMixinType} 
       super();
 
       // TODO: copy descriptions from ListboxMixin and ChoiceGroupMixin to here
-      /** @type {'vertical' | 'horizontal'} */
-      this.orientation = 'vertical';
-      this.multipleChoice = false;
+      /** @type {'inline' | 'block'} */
+      this.axis = 'block';
+      this.multiple = false;
       this.selectionFollowsFocus = false;
-      this.rotateKeyboardNavigation = false;
+      this.wrap = false;
 
       /**
-       * By default, checkedIndex is set to 0. When noPreselect is true,
+       * By default, checkedIndex is set to 0. When hasNoDefaultSelected is true,
        * checkedIndex will not be set
        * @type {boolean}
        */
-      this.noPreselect = false;
+      this.hasNoDefaultSelected = false;
 
       /**
        * Whenever possible (for [role="listbox|menu"], usually with one level) we use an
@@ -552,7 +578,7 @@ const InteractiveListMixinImplementation = /** @type {InteractiveListMixinType} 
       this._listNode.addEventListener('focusin', this._onListFocusIn);
 
       // TODO: add "more menu" functionality here... when itemWrap is set. We only support "more-menu" (for now):
-      // 1. we can measure the width (if orientation is horizontal) of this._listNode
+      // 1. we can measure the width (if the axis is inline) of this._listNode
       // and see how its children fit, moving them to an overlayController
       // having hideVisually as hide mechanism (opening on focus, closing on blur).
       // N.B. this._listNode has `display:flex`. This means we need to add `text-wrap: nowrap;`
@@ -578,7 +604,7 @@ const InteractiveListMixinImplementation = /** @type {InteractiveListMixinType} 
         });
       } // for 'tabbable-disclosure', we assume items are already focusable and part of tab sequence
 
-      if (!this.noPreselect && this.checkedIndex === -1) {
+      if (!this.hasNoDefaultSelected && this.checkedIndex === -1) {
         this.checkedIndex = 0;
       }
       newItems.forEach(item => {
@@ -617,23 +643,23 @@ const InteractiveListMixinImplementation = /** @type {InteractiveListMixinType} 
           break;
         case 'ArrowUp':
           ev.preventDefault();
-          if (this.orientation === 'vertical' || this._activeMode === 'tabbable-disclosure') {
+          if (this.axis === 'block' || this._activeMode === 'tabbable-disclosure') {
             this.activeIndex = this._getPreviousEnabledOption(this.activeIndex);
           }
           break;
         case 'ArrowLeft':
-          if (this.orientation === 'horizontal' || this._activeMode === 'tabbable-disclosure') {
+          if (this.axis === 'inline' || this._activeMode === 'tabbable-disclosure') {
             this.activeIndex = this._getPreviousEnabledOption(this.activeIndex);
           }
           break;
         case 'ArrowDown':
           ev.preventDefault();
-          if (this.orientation === 'vertical' || this._activeMode === 'tabbable-disclosure') {
+          if (this.axis === 'block' || this._activeMode === 'tabbable-disclosure') {
             this.activeIndex = this._getNextEnabledOption(this.activeIndex);
           }
           break;
         case 'ArrowRight':
-          if (this.orientation === 'horizontal' || this._activeMode === 'tabbable-disclosure') {
+          if (this.axis === 'inline' || this._activeMode === 'tabbable-disclosure') {
             this.activeIndex = this._getNextEnabledOption(this.activeIndex);
           }
           break;
@@ -649,7 +675,7 @@ const InteractiveListMixinImplementation = /** @type {InteractiveListMixinType} 
       }
 
       const keys = ['ArrowUp', 'ArrowDown', 'Home', 'End'];
-      if (keys.includes(key) && this.selectionFollowsFocus && !this.multipleChoice) {
+      if (keys.includes(key) && this.selectionFollowsFocus && !this.multiple) {
         this.setCheckedIndex(this.activeIndex);
       }
     }
@@ -788,7 +814,7 @@ const InteractiveListMixinImplementation = /** @type {InteractiveListMixinType} 
         }
       }
 
-      if (this.rotateKeyboardNavigation) {
+      if (this.wrap) {
         const startIndex = offset === -1 ? this.listItems.length - 1 : 0;
         for (let i = startIndex; until(i); i += 1) {
           if (this.listItems[i] && !isDisabled(this.listItems[i])) {

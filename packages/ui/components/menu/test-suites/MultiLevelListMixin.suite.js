@@ -191,7 +191,7 @@ export function runMultiLevelListMixinSuite(customConfig) {
 
         it('navigates between L2 items on [ArrowDown] [ArrowUp] keys', async () => {
           const el = await fixture(html`
-            <${tag} orientation="horizontal">
+            <${tag} axis="inline">
               <div role="listitem" id="item-0">
                 <button data-invoker>Item 0</button>
                 <${tagChild}>
@@ -259,7 +259,7 @@ export function runMultiLevelListMixinSuite(customConfig) {
 
             // Normalize
             subList.activeIndex = 0;
-            subList.orientation = 'horizontal';
+            subList.axis = 'inline';
 
             mimicKeyPress(_listNode, 'ArrowUp');
             expect(closeSpy).to.have.been.calledOnce;
@@ -271,7 +271,7 @@ export function runMultiLevelListMixinSuite(customConfig) {
             <${tag}>
               <div role="listitem" id="item-0">
                 <button data-invoker>Item 0</button>
-                <${tagChild} orientation="vertical">
+                <${tagChild} axis="block">
                   <div role="listitem" id="item-0-0">
                     <a href="#foo">Sub item 0</a>
                   </div>

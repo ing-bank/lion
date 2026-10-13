@@ -68,12 +68,12 @@ export function runLionMenuSuite(customConfig) {
 
       el._listRole = 'menu';
       expect(el._listRole).to.equal('menu');
-      expect(el.orientation).to.equal('vertical');
+      expect(el.axis).to.equal('block');
       // @ts-ignore - bar property of LionMenu
       el.bar = true;
       await el.updateComplete;
       expect(el._listRole).to.equal('menubar');
-      expect(el.orientation).to.equal('horizontal');
+      expect(el.axis).to.equal('inline');
     });
 
     describe('Programmatic interaction', () => {

@@ -97,7 +97,7 @@ export function applyMenuDemoStyles() {
       content: '▼';
     }
 
-    [orientation='horizontal'] [role^='menuitem'][aria-expanded]::after {
+    [axis='inline'] [role^='menuitem'][aria-expanded]::after {
       content: '▼';
     }
 

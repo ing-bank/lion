@@ -7,6 +7,11 @@ import { FormRegistrarHost } from '../registration/FormRegistrarMixinTypes.js';
 import { ChoiceInputHost } from './ChoiceInputMixinTypes.js';
 
 export declare class ChoiceGroupHost extends FormControlHost {
+  /**
+   * TODO: rename to `multiple` (the platform name, `<select multiple>`), non-breaking: keep this
+   * property and the `multiple-choice` attribute as a deprecated alias for a release before removing
+   * them in a major. See the TODO in src/choice-group/ChoiceGroupMixin.js.
+   */
   multipleChoice: boolean;
   get serializedValue(): string;
   set serializedValue(value: string);

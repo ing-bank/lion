@@ -177,7 +177,7 @@ class LionMenuCore extends MultiLevelListMixin(LitElement) {
     // @ts-ignore - InteractiveListItemRole type
     const role = /** @type {InteractiveListItemRole} */ (item.getAttribute('role'));
     let listItemsWithinGroup = this.listItems;
-    let multiple = this.multipleChoice;
+    let { multiple } = this;
     if (role === 'menuitemradio' || role === 'menuitemcheckbox') {
       /**
        * If index = 3 (menuitemradio 'Red'), closest group will be div[role=group]
@@ -248,12 +248,12 @@ class LionMenuCore extends MultiLevelListMixin(LitElement) {
 
     if (changedProperties.has('bar')) {
       if (this.bar) {
-        this.orientation = 'horizontal';
+        this.axis = 'inline';
         if (this._listRole === 'menu') {
           this._listRole = 'menubar';
         }
       } else {
-        this.orientation = 'vertical';
+        this.axis = 'block';
         if (this._listRole === 'menubar') {
           this._listRole = 'menu';
         }
@@ -390,7 +390,7 @@ export class LionMenu extends OverlayWithListInvokerMixin(LionMenuCore) {
     const { parentList } = this;
     /** @type {import('@popperjs/core').Placement} */
     let placement = 'bottom-start';
-    if (parentList?.orientation !== 'horizontal') {
+    if (parentList?.axis !== 'inline') {
       placement = 'right-start';
     }
 
