@@ -3,9 +3,13 @@
  *
  * Model: three states, one source of truth.
  *
- *   system (default) → :root { color-scheme: light dark }   follows the OS / browser preference
- *   dark             → :root:has(#theme-dark:checked)       explicit choice, pinned
- *   light            → :root:has(#theme-light:checked)      explicit choice, pinned
+ *   auto  (default)  → :root:has(#theme-auto:checked)   follows the OS / browser preference
+ *   dark             → :root:has(#theme-dark:checked)   explicit choice, pinned
+ *   light            → :root:has(#theme-light:checked)  explicit choice, pinned
+ *
+ * All three are radios in the same group, so exactly one is always selected and the control never
+ * changes shape: "Auto" is an option you can see and return to, not a button that appears once you
+ * have overridden the system.
  *
  * Every colour token in styles.css is declared once, with light-dark(). light-dark() resolves
  * against the *computed* color-scheme, so selecting a theme flips a single declaration per state
@@ -34,12 +38,11 @@
 }
 
 /*
- * System-resolved dark. The :not(:has(#theme-light:checked)) guard keeps an explicit light choice
- * authoritative even while the OS is dark. Complex :not() needs Safari 16.4+, well below the
- * oldest supported version here.
+ * System-resolved dark — only while "Auto" is the selected option. An explicit light or dark
+ * choice is never touched by the OS preference.
  */
 @media (prefers-color-scheme: dark) {
-  :root:not(:has(#theme-light:checked)) {
+  :root:has(#theme-auto:checked) {
     --heading-gradient-from: #ffffff;
     --heading-gradient-to: #777777;
     --hero-gradient-from: #ffffff;
@@ -52,6 +55,10 @@
  * Explicit choices. Same specificity as the system block above, declared after it, so an explicit
  * choice always wins regardless of what the OS says.
  */
+:root:has(#theme-auto:checked) {
+  color-scheme: light dark;
+}
+
 :root:has(#theme-dark:checked) {
   color-scheme: dark;
 
@@ -69,9 +76,8 @@
 /* ----------------------------------------------------------------------------------------------
  * Theme switch (rendered by src/components/TopNav.astro)
  *
- * Two icon labels (light / dark) plus an "Auto" reset. The reset only exists visually while an
- * override is active and is the only way back to the system preference — without it the first
- * click would silently turn a temporary adjustment into a permanent pin.
+ * Three options — Auto, light, dark — as one radio group, so the current choice is always visible
+ * and always exactly one. The checked label is the selection: highlight border plus a tinted fill.
  * -------------------------------------------------------------------------------------------- */
 
 .theme-switch {
@@ -90,8 +96,7 @@
   pointer-events: none;
 }
 
-.theme-switch label,
-.theme-switch input[type='reset'] {
+.theme-switch label {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -103,42 +108,35 @@
   background: transparent;
   color: var(--text-secondary);
   cursor: pointer;
-  transition: color 0.2s, border-color 0.2s;
+  transition: color 0.2s, border-color 0.2s, background-color 0.2s;
 }
 
-.theme-switch label:hover,
-.theme-switch input[type='reset']:hover {
+/* "Auto" is a word rather than an icon, so it gets a pill instead of a circle. */
+.theme-switch label[for='theme-auto'] {
+  width: auto;
+  padding: 0 10px;
+  border-radius: 999px;
+  font-size: 0.75rem;
+}
+
+.theme-switch label:hover {
   color: var(--text-primary);
 }
 
 .theme-switch input[type='radio']:checked + label {
   color: var(--text-primary);
   border-color: var(--highlight-color);
+  background: color-mix(in srgb, var(--highlight-color) 18%, transparent);
 }
 
-.theme-switch input[type='radio']:focus-visible + label,
-.theme-switch input[type='reset']:focus-visible {
+.theme-switch input[type='radio']:focus-visible + label {
   outline: 2px solid var(--focus-border-color-outer, currentColor);
   outline-offset: 2px;
 }
 
-.theme-switch input[type='reset'] {
-  display: none;
-  width: auto;
-  padding: 0 10px;
-  border-radius: 999px;
-  font: inherit;
-  font-size: 0.75rem;
-}
-
-.theme-switch:has(input:checked) input[type='reset'] {
-  display: inline-flex;
-}
-
 /* Contrast themes replace the palette; hand the switch over to the system colours. */
 @media (forced-colors: active) {
-  .theme-switch label,
-  .theme-switch input[type='reset'] {
+  .theme-switch label {
     border-color: ButtonText;
   }
 
@@ -147,8 +145,7 @@
     color: Highlight;
   }
 
-  .theme-switch input[type='radio']:focus-visible + label,
-  .theme-switch input[type='reset']:focus-visible {
+  .theme-switch input[type='radio']:focus-visible + label {
     outline-color: Highlight;
   }
 }
