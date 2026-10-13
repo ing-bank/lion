@@ -886,7 +886,7 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
     this.__focusedMonthIndex = this.centralDate.getMonth();
     this.__viewMode = 'month-selection';
     await this.updateComplete;
-    this.__announceToScreenReader(this.msgLit('lion-calendar:monthSelectionOpened'));
+    this.__announceToScreenReader(String(this.msgLit('lion-calendar:monthSelectionOpened')));
     this.__focusMonthInSelection(this.__focusedMonthIndex);
   }
 
@@ -906,10 +906,12 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
     await this.updateComplete;
     const rangeEnd = this.__yearRangeStart + YEAR_GRID_SIZE - 1;
     this.__announceToScreenReader(
-      this.msgLit('lion-calendar:yearSelectionOpened', {
-        startYear: this.__yearRangeStart,
-        endYear: rangeEnd,
-      }),
+      String(
+        this.msgLit('lion-calendar:yearSelectionOpened', {
+          startYear: this.__yearRangeStart,
+          endYear: rangeEnd,
+        }),
+      ),
     );
     this.__focusYearInSelection(this.__focusedYearIndex);
   }
@@ -920,7 +922,8 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
    * @param {{ focusHeading?: boolean }} [options]
    * @private
    */
-  __closeSelectionView(headingId, { focusHeading = true } = {}) {
+  __closeSelectionView(headingId, options = {}) {
+    const { focusHeading = true } = options;
     this.__viewMode = 'month';
     if (focusHeading && headingId) {
       // Return focus to heading after DOM update
@@ -983,7 +986,6 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
       'Enter',
       ' ',
       'Escape',
-      'Tab',
     ];
     if (preventedKeys.includes(ev.key)) {
       ev.preventDefault();
@@ -1012,7 +1014,7 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
       case 'Escape': {
         ev.stopPropagation();
         ev.preventDefault();
-        const absorbKeyup = e => {
+        const absorbKeyup = (/** @type {KeyboardEvent} */ e) => {
           if (e.key === 'Escape') {
             e.stopPropagation();
             e.stopImmediatePropagation();
@@ -1024,10 +1026,6 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
         this.__closeSelectionView('month-heading');
         return;
       }
-      case 'Tab':
-        // Allow tab to exit the grid naturally
-        this.__viewMode = 'month';
-        return;
       // no default
     }
 
@@ -1046,7 +1044,8 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
    * @private
    */
   __findNextEnabledMonthFrom(currentIndex, step) {
-    const wrapMonth = n => ((n % MONTHS_IN_YEAR) + MONTHS_IN_YEAR) % MONTHS_IN_YEAR;
+    const wrapMonth = (/** @type {number} */ n) =>
+      ((n % MONTHS_IN_YEAR) + MONTHS_IN_YEAR) % MONTHS_IN_YEAR;
     const direction = step > 0 ? 1 : -1;
     const startIndex = wrapMonth(currentIndex + step);
     const candidate = Array.from({ length: MONTHS_IN_YEAR }, (_, i) =>
@@ -1127,7 +1126,6 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
       'Escape',
       'PageUp',
       'PageDown',
-      'Tab',
     ];
     if (preventedKeys.includes(ev.key)) {
       ev.preventDefault();
@@ -1158,7 +1156,7 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
       case 'Escape': {
         ev.stopPropagation();
         ev.preventDefault();
-        const absorbKeyup = e => {
+        const absorbKeyup = (/** @type {KeyboardEvent} */ e) => {
           if (e.key === 'Escape') {
             e.stopPropagation();
             e.stopImmediatePropagation();
@@ -1175,9 +1173,6 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
         return;
       case 'PageUp':
         this.__previousYearRange();
-        return;
-      case 'Tab':
-        this.__viewMode = 'month';
         return;
       // no default
     }
@@ -1244,9 +1239,21 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
    * @private
    */
   __initializeYearRange(targetYear) {
-    // Center the range: show 4 years before, 7 after (0-indexed)
-    const clampedYear = Math.max(5, Math.min(9988, targetYear));
-    this.__yearRangeStart = clampedYear - 4;
+    let startYear = targetYear - 4;
+
+    const hasMin = this.__hasMinDateConstraint();
+    const hasMax = this.__hasMaxDateConstraint();
+    const minYear = hasMin ? this.minDate.getFullYear() : 5;
+    const maxYear = hasMax ? this.maxDate.getFullYear() : 9999;
+
+    if (hasMax && startYear + YEAR_GRID_SIZE - 1 > maxYear) {
+      startYear = maxYear - YEAR_GRID_SIZE + 1;
+    }
+    if (hasMin && startYear < minYear) {
+      startYear = minYear;
+    }
+
+    this.__yearRangeStart = Math.max(5, Math.min(9988, startYear));
   }
 
   /**
@@ -1255,13 +1262,18 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
    */
   async __previousYearRange() {
     if (this.__isPreviousRangeDisabled()) return;
+    const isFocusOnHeaderButton =
+      this.shadowRoot?.activeElement?.classList.contains('calendar__year-range-prev') ||
+      this.shadowRoot?.activeElement?.classList.contains('calendar__year-range-next');
     this.__yearRangeStart -= YEAR_GRID_SIZE;
     // Focus first enabled year in new range
     this.__focusedYearIndex = 0;
     await this.updateComplete;
     const rangeEnd = this.__yearRangeStart + YEAR_GRID_SIZE - 1;
     this.__announceYearRange(this.__yearRangeStart, rangeEnd);
-    this.__focusYearInSelection(0);
+    if (!isFocusOnHeaderButton || this.__isPreviousRangeDisabled()) {
+      this.__focusYearInSelection(0);
+    }
   }
 
   /**
@@ -1270,12 +1282,17 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
    */
   async __nextYearRange() {
     if (this.__isNextRangeDisabled()) return;
+    const isFocusOnHeaderButton =
+      this.shadowRoot?.activeElement?.classList.contains('calendar__year-range-prev') ||
+      this.shadowRoot?.activeElement?.classList.contains('calendar__year-range-next');
     this.__yearRangeStart += YEAR_GRID_SIZE;
     this.__focusedYearIndex = 0;
     await this.updateComplete;
     const rangeEnd = this.__yearRangeStart + YEAR_GRID_SIZE - 1;
     this.__announceYearRange(this.__yearRangeStart, rangeEnd);
-    this.__focusYearInSelection(0);
+    if (!isFocusOnHeaderButton || this.__isNextRangeDisabled()) {
+      this.__focusYearInSelection(0);
+    }
   }
 
   /**
@@ -1457,10 +1474,12 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
    */
   __announceYearRange(startYear, endYear) {
     this.__announceToScreenReader(
-      this.msgLit('lion-calendar:yearsRange', {
-        startYear,
-        endYear,
-      }),
+      String(
+        this.msgLit('lion-calendar:yearsRange', {
+          startYear,
+          endYear,
+        }),
+      ),
     );
   }
 
@@ -1513,7 +1532,7 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
       ev.stopImmediatePropagation();
       ev.preventDefault();
       const headingId = this.__viewMode === 'year-selection' ? 'year-heading' : 'month-heading';
-      const absorbKeyup = e => {
+      const absorbKeyup = (/** @type {KeyboardEvent} */ e) => {
         if (e.key === 'Escape') {
           e.stopPropagation();
           e.stopImmediatePropagation();

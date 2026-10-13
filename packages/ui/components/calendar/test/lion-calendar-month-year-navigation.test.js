@@ -10,7 +10,7 @@ import '@lion/ui/define/lion-calendar.js';
 
 const fixture = /** @type {(arg: TemplateResult) => Promise<LionCalendar>} */ (
   async arg => {
-    const el = await _fixture(arg);
+    const el = /** @type {LionCalendar} */ (await _fixture(arg));
     if (!el.hasAttribute('month-year-navigation') && !el.monthYearNavigation) {
       el.monthYearNavigation = true;
       await el.updateComplete;
@@ -31,7 +31,9 @@ describe('LionCalendar - Month and Year Navigation', () => {
 
   describe('Opt-in Configuration and Dynamic Lifecycle', () => {
     it('is disabled by default', async () => {
-      const el = await _fixture(html`<lion-calendar></lion-calendar>`);
+      const el = /** @type {LionCalendar} */ (
+        await _fixture(html`<lion-calendar></lion-calendar>`)
+      );
       expect(el.monthYearNavigation).to.be.false;
       expect(el.hasAttribute('month-year-navigation')).to.be.false;
       expect(el.shadowRoot?.querySelector('#month-heading')).to.not.exist;
@@ -40,26 +42,32 @@ describe('LionCalendar - Month and Year Navigation', () => {
     });
 
     it('can be enabled via month-year-navigation boolean attribute', async () => {
-      const el = await _fixture(html`<lion-calendar month-year-navigation></lion-calendar>`);
+      const el = /** @type {LionCalendar} */ (
+        await _fixture(html`<lion-calendar month-year-navigation></lion-calendar>`)
+      );
       expect(el.monthYearNavigation).to.be.true;
       expect(el.shadowRoot?.querySelector('#month-heading')).to.exist;
       expect(el.shadowRoot?.querySelector('#year-heading')).to.exist;
     });
 
     it('can be enabled via property', async () => {
-      const el = await _fixture(html`<lion-calendar .monthYearNavigation=${true}></lion-calendar>`);
+      const el = /** @type {LionCalendar} */ (
+        await _fixture(html`<lion-calendar .monthYearNavigation=${true}></lion-calendar>`)
+      );
       expect(el.monthYearNavigation).to.be.true;
       expect(el.hasAttribute('month-year-navigation')).to.be.true;
       expect(el.shadowRoot?.querySelector('#month-heading')).to.exist;
     });
 
     it('returns to day grid when attribute is removed while month selection is open', async () => {
-      const el = await _fixture(
-        html`<lion-calendar
-          month-year-navigation
-          .centralDate=${new Date('2024/06/15')}
-          .selectedDate=${new Date('2024/06/15')}
-        ></lion-calendar>`,
+      const el = /** @type {LionCalendar} */ (
+        await _fixture(
+          html`<lion-calendar
+            month-year-navigation
+            .centralDate=${new Date('2024/06/15')}
+            .selectedDate=${new Date('2024/06/15')}
+          ></lion-calendar>`,
+        )
       );
       const monthBtn = /** @type {HTMLElement} */ (el.shadowRoot?.querySelector('#month-heading'));
       monthBtn.click();
@@ -71,16 +79,18 @@ describe('LionCalendar - Month and Year Navigation', () => {
 
       expect(el.shadowRoot?.querySelector('.calendar__month-selection')).to.not.exist;
       expect(el.shadowRoot?.querySelector('#month')).to.exist;
-      expect(el.selectedDate.getTime()).to.equal(new Date('2024/06/15').getTime());
+      expect(el.selectedDate?.getTime()).to.equal(new Date('2024/06/15').getTime());
     });
 
     it('returns to day grid when attribute is removed while year selection is open', async () => {
-      const el = await _fixture(
-        html`<lion-calendar
-          month-year-navigation
-          .centralDate=${new Date('2024/06/15')}
-          .selectedDate=${new Date('2024/06/15')}
-        ></lion-calendar>`,
+      const el = /** @type {LionCalendar} */ (
+        await _fixture(
+          html`<lion-calendar
+            month-year-navigation
+            .centralDate=${new Date('2024/06/15')}
+            .selectedDate=${new Date('2024/06/15')}
+          ></lion-calendar>`,
+        )
       );
       const yearBtn = /** @type {HTMLElement} */ (el.shadowRoot?.querySelector('#year-heading'));
       yearBtn.click();
@@ -92,7 +102,7 @@ describe('LionCalendar - Month and Year Navigation', () => {
 
       expect(el.shadowRoot?.querySelector('.calendar__year-selection')).to.not.exist;
       expect(el.shadowRoot?.querySelector('#year')).to.exist;
-      expect(el.selectedDate.getTime()).to.equal(new Date('2024/06/15').getTime());
+      expect(el.selectedDate?.getTime()).to.equal(new Date('2024/06/15').getTime());
     });
   });
 
@@ -474,6 +484,69 @@ describe('LionCalendar - Month and Year Navigation', () => {
 
       expect(Number(newFirstYear)).to.equal(Number(initialFirstYear) - 12);
     });
+
+    it('aligns year range to maxDate so no dead future years are shown when maxDate is constrained', async () => {
+      const el = await fixture(
+        html`<lion-calendar
+          .centralDate=${new Date('2026/06/15')}
+          .maxDate=${new Date('2028/12/31')}
+        ></lion-calendar>`,
+      );
+      const yearBtn = /** @type {HTMLElement} */ (el.shadowRoot?.querySelector('#year-heading'));
+      yearBtn.click();
+      await el.updateComplete;
+
+      const yearButtons = Array.from(
+        el.shadowRoot?.querySelectorAll('.calendar__year-button') || [],
+      );
+      const firstYear = Number(yearButtons[0]?.textContent?.trim());
+      const lastYear = Number(yearButtons[yearButtons.length - 1]?.textContent?.trim());
+
+      // 12-year window should end at 2028 (2017 to 2028), avoiding dead future years 2029-2033
+      expect(lastYear).to.equal(2028);
+      expect(firstYear).to.equal(2017);
+      expect(yearButtons.length).to.equal(12);
+
+      // Next button should be disabled as we are at maxDate
+      const nextBtn = /** @type {HTMLButtonElement} */ (
+        el.shadowRoot?.querySelector('.calendar__year-range-next')
+      );
+      expect(nextBtn.disabled).to.be.true;
+
+      // 2026 should be focused / current
+      const focusedButton = el.shadowRoot?.querySelector(
+        '.calendar__year-button.calendar__year-button--current',
+      );
+      expect(focusedButton?.textContent?.trim()).to.equal('2026');
+    });
+
+    it('aligns year range to minDate so no dead past years are shown when minDate is constrained', async () => {
+      const el = await fixture(
+        html`<lion-calendar
+          .centralDate=${new Date('2026/06/15')}
+          .minDate=${new Date('2024/01/01')}
+        ></lion-calendar>`,
+      );
+      const yearBtn = /** @type {HTMLElement} */ (el.shadowRoot?.querySelector('#year-heading'));
+      yearBtn.click();
+      await el.updateComplete;
+
+      const yearButtons = Array.from(
+        el.shadowRoot?.querySelectorAll('.calendar__year-button') || [],
+      );
+      const firstYear = Number(yearButtons[0]?.textContent?.trim());
+      const lastYear = Number(yearButtons[yearButtons.length - 1]?.textContent?.trim());
+
+      // 12-year window should start at minYear 2024 (2024 to 2035)
+      expect(firstYear).to.equal(2024);
+      expect(lastYear).to.equal(2035);
+
+      // Prev button should be disabled as we are at minDate
+      const prevBtn = /** @type {HTMLButtonElement} */ (
+        el.shadowRoot?.querySelector('.calendar__year-range-prev')
+      );
+      expect(prevBtn.disabled).to.be.true;
+    });
   });
 
   describe('Keyboard Navigation in Month Selection View', () => {
@@ -506,7 +579,7 @@ describe('LionCalendar - Month and Year Navigation', () => {
       await el.updateComplete;
 
       // Navigate to January (index 0) - set focusedMonthIndex directly
-      el.__focusedMonthIndex = 0;
+      /** @type {any} */ (el).__focusedMonthIndex = 0;
       await el.updateComplete;
 
       const grid = el.shadowRoot?.querySelector('.calendar__month-selection');
@@ -541,7 +614,7 @@ describe('LionCalendar - Month and Year Navigation', () => {
       await el.updateComplete;
 
       // June is index 5
-      el.__focusedMonthIndex = 5;
+      /** @type {any} */ (el).__focusedMonthIndex = 5;
       await el.updateComplete;
 
       const grid = el.shadowRoot?.querySelector('.calendar__month-selection');
@@ -549,22 +622,22 @@ describe('LionCalendar - Month and Year Navigation', () => {
       // ArrowRight -> July (6)
       grid?.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight', bubbles: true }));
       await el.updateComplete;
-      expect(el.__focusedMonthIndex).to.equal(6);
+      expect(/** @type {any} */ (el).__focusedMonthIndex).to.equal(6);
 
       // ArrowLeft -> June (5)
       grid?.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowLeft', bubbles: true }));
       await el.updateComplete;
-      expect(el.__focusedMonthIndex).to.equal(5);
+      expect(/** @type {any} */ (el).__focusedMonthIndex).to.equal(5);
 
       // ArrowDown -> September (8) (3 columns -> +3)
       grid?.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true }));
       await el.updateComplete;
-      expect(el.__focusedMonthIndex).to.equal(8);
+      expect(/** @type {any} */ (el).__focusedMonthIndex).to.equal(8);
 
       // ArrowUp -> June (5)
       grid?.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowUp', bubbles: true }));
       await el.updateComplete;
-      expect(el.__focusedMonthIndex).to.equal(5);
+      expect(/** @type {any} */ (el).__focusedMonthIndex).to.equal(5);
     });
   });
 
@@ -602,6 +675,48 @@ describe('LionCalendar - Month and Year Navigation', () => {
       await el.updateComplete;
 
       expect(el.shadowRoot?.querySelector('.calendar__year-selection')).to.not.exist;
+    });
+
+    it('does not close year selection view and does not prevent Shift+Tab so user can navigate to range buttons', async () => {
+      const el = /** @type {LionCalendar} */ (
+        await fixture(html`<lion-calendar .centralDate=${new Date('2024/06/15')}></lion-calendar>`)
+      );
+      const yearBtn = /** @type {HTMLElement} */ (el.shadowRoot?.querySelector('#year-heading'));
+      yearBtn.click();
+      await el.updateComplete;
+
+      expect(el.shadowRoot?.querySelector('.calendar__year-selection')).to.exist;
+
+      const grid = el.shadowRoot?.querySelector('.calendar__year-grid');
+      const event = new KeyboardEvent('keydown', {
+        key: 'Tab',
+        shiftKey: true,
+        bubbles: true,
+        cancelable: true,
+      });
+      grid?.dispatchEvent(event);
+      await el.updateComplete;
+
+      expect(event.defaultPrevented).to.be.false;
+      expect(el.shadowRoot?.querySelector('.calendar__year-selection')).to.exist;
+    });
+
+    it('keeps focus on range navigation button when activated via click/keyboard if still enabled', async () => {
+      const el = /** @type {LionCalendar} */ (
+        await fixture(html`<lion-calendar .centralDate=${new Date('2024/06/15')}></lion-calendar>`)
+      );
+      const yearBtn = /** @type {HTMLElement} */ (el.shadowRoot?.querySelector('#year-heading'));
+      yearBtn.click();
+      await el.updateComplete;
+
+      const prevRangeBtn = /** @type {HTMLButtonElement} */ (
+        el.shadowRoot?.querySelector('.calendar__year-range-prev')
+      );
+      prevRangeBtn.focus();
+      prevRangeBtn.click();
+      await el.updateComplete;
+
+      expect(el.shadowRoot?.activeElement).to.equal(prevRangeBtn);
     });
 
     it('navigates to next year range on PageDown', async () => {
@@ -657,7 +772,7 @@ describe('LionCalendar - Month and Year Navigation', () => {
       await el.updateComplete;
 
       // Set focus to the 5th year in the grid (index 4)
-      el.__focusedYearIndex = 4;
+      /** @type {any} */ (el).__focusedYearIndex = 4;
       await el.updateComplete;
 
       const grid = el.shadowRoot?.querySelector('.calendar__year-grid');
@@ -665,22 +780,22 @@ describe('LionCalendar - Month and Year Navigation', () => {
       // ArrowRight -> index 5
       grid?.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight', bubbles: true }));
       await el.updateComplete;
-      expect(el.__focusedYearIndex).to.equal(5);
+      expect(/** @type {any} */ (el).__focusedYearIndex).to.equal(5);
 
       // ArrowLeft -> index 4
       grid?.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowLeft', bubbles: true }));
       await el.updateComplete;
-      expect(el.__focusedYearIndex).to.equal(4);
+      expect(/** @type {any} */ (el).__focusedYearIndex).to.equal(4);
 
       // ArrowDown -> index 8 (4 columns -> +4)
       grid?.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true }));
       await el.updateComplete;
-      expect(el.__focusedYearIndex).to.equal(8);
+      expect(/** @type {any} */ (el).__focusedYearIndex).to.equal(8);
 
       // ArrowUp -> index 4
       grid?.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowUp', bubbles: true }));
       await el.updateComplete;
-      expect(el.__focusedYearIndex).to.equal(4);
+      expect(/** @type {any} */ (el).__focusedYearIndex).to.equal(4);
     });
   });
 
