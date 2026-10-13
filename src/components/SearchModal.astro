@@ -17,7 +17,8 @@ const { uiOptions = { showImages: false } } = Astro.props as Props;
     width: 90%;
     max-width: 700px;
     padding: 40px;
-    background-color: #0a0a0a;
+    /* Hard-coded #0a0a0a: with --text-primary the modal title measured 1.05:1 in light mode. */
+    background-color: var(--card-bg);
     border: none;
     border-radius: 12px;
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
@@ -46,7 +47,8 @@ const { uiOptions = { showImages: false } } = Astro.props as Props;
     right: 20px;
     background: none;
     border: none;
-    color: #ffffff;
+    /* Was hard-coded #ffffff / #FFC107 (the dark values). */
+    color: var(--text-secondary);
     font-size: 28px;
     cursor: pointer;
     width: 32px;
@@ -58,7 +60,7 @@ const { uiOptions = { showImages: false } } = Astro.props as Props;
   }
 
   .search-modal-close:hover {
-    color: #FFC107;
+    color: var(--highlight-color);
   }
 
   .search-header {
