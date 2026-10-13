@@ -79,10 +79,11 @@ const { uiOptions = { showImages: false } } = Astro.props as Props;
   }
 
   :global(dialog#searchModal .pagefind-ui) {
-    --pagefind-ui-primary: #FFC107;
-    --pagefind-ui-text: #ffffff;
-    --pagefind-ui-background: #0a0a0a;
-    --pagefind-ui-border: #222222;
+    /* Was hard-coded to the dark palette, which left a black search box on the light page. */
+    --pagefind-ui-primary: var(--highlight-color);
+    --pagefind-ui-text: var(--text-primary);
+    --pagefind-ui-background: var(--bg-surface);
+    --pagefind-ui-border: var(--border-color);
     --pagefind-ui-border-width: 1px;
   }
 
