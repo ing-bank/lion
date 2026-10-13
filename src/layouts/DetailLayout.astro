@@ -90,7 +90,8 @@ if (items.length > 0 && componentsByCategory.size === 0) {
     padding: 0.5rem 1rem;
     background: none;
     border: none;
-    color: #888;
+    /* Hard-coded #888 was the dark value: 3.54:1 on white. */
+    color: var(--text-secondary);
     font-size: 0.75rem;
     font-weight: 600;
     text-align: left;
@@ -114,7 +115,8 @@ if (items.length > 0 && componentsByCategory.size === 0) {
   }
 
   .category-toggle:hover {
-    color: #333;
+    /* #333 was the light value: 1.9:1 on the dark background. */
+    color: var(--text-primary);
   }
 
   .category-submenu {
