@@ -66,6 +66,11 @@ export const nativeFormToLionFormScenario: TestScenario = {
       description: 'no longer renders native <input> elements',
     },
     {
+      type: 'noUnusedImports',
+      file: 'src/login-form.js',
+      description: 'imports nothing it does not use',
+    },
+    {
       type: 'noExtraFiles',
       file: 'src/login-form.js',
       description: 'creates no files other than the deliverable',
@@ -172,6 +177,11 @@ export const ibanFieldScenario: TestScenario = {
       file: 'src/iban-field.js',
       pattern: 'export class IbanField',
       description: 'keeps the `IbanField` export',
+    },
+    {
+      type: 'noUnusedImports',
+      file: 'src/iban-field.js',
+      description: 'imports nothing it does not use',
     },
     {
       type: 'noExtraFiles',

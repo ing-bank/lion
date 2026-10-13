@@ -11,7 +11,18 @@
 import type { ProjectMock } from '../createProjectSandbox.ts';
 
 export type ScenarioCheck = {
-  type: 'exists' | 'contains' | 'notContains' | 'matches' | 'notMatches' | 'noExtraFiles';
+  type:
+    | 'exists'
+    | 'contains'
+    | 'notContains'
+    | 'matches'
+    | 'notMatches'
+    | 'noExtraFiles'
+    /**
+     * Every imported binding is used. A *check*, never a gate: a stray import does not stop the code
+     * from working, so zeroing a run over it would fail correct answers.
+     */
+    | 'noUnusedImports';
   /** File the check applies to, relative to the project root. */
   file: string;
   /** Needle for `contains` / `notContains`. */

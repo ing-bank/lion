@@ -134,6 +134,48 @@ function parseSandbox(sandboxRoot: string): ParsedFile[] {
   return files;
 }
 
+/**
+ * Local binding names the file imports and never refers to again.
+ *
+ * oxc gives the local name of every import entry and the span of the statement, so a name is reported
+ * only when it appears nowhere outside the import statements — a mention anywhere else, including in
+ * a comment, counts as a use. That direction matters: a wrongly-flagged import would fail a correct
+ * answer, which is the defect class this harness spent a session removing. A missed unused import
+ * costs nothing.
+ */
+export function unusedImportNames(source: string): string[] {
+  const result = parseSync('unused-imports.js', source) as OxcParseResult;
+  const statements = (result.module?.staticImports ?? []) as {
+    start?: number;
+    end?: number;
+    entries?: { localName?: { value?: string } }[];
+  }[];
+
+  const spansByName = new Map<string, { start: number; end: number }[]>();
+  for (const statement of statements) {
+    const span = { start: statement.start ?? 0, end: statement.end ?? 0 };
+    for (const entry of statement.entries ?? []) {
+      const name = entry.localName?.value;
+      if (!name) continue;
+      spansByName.set(name, [...(spansByName.get(name) ?? []), span]);
+    }
+  }
+
+  const unused: string[] = [];
+  for (const [name, spans] of spansByName) {
+    const escaped = name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const pattern = new RegExp(`\\b${escaped}\\b`, 'g');
+    let outsideImport = 0;
+    let match: RegExpExecArray | null;
+    while ((match = pattern.exec(source)) !== null) {
+      const at = match.index;
+      if (!spans.some(span => at >= span.start && at < span.end)) outsideImport++;
+    }
+    if (outsideImport === 0) unused.push(name);
+  }
+  return unused;
+}
+
 function syntaxGateFor(files: ParsedFile[]): GateResult {
   const failures: GateFailure[] = [];
   for (const file of files) {
