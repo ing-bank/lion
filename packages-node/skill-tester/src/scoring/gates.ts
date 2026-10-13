@@ -207,6 +207,33 @@ function matchesExportPattern(specifier: string, patterns: string[]): boolean {
   });
 }
 
+/**
+ * The `@lion/ui` specifiers that exist as files, e.g. `@lion/ui/checkbox-group.js`.
+ *
+ * The export map carries a blanket `./*` key, so an allowlist derived from it validates the *shape*
+ * of a specifier and cannot tell whether it resolves to anything. Measured: a run wrote
+ * `import { LionCheckbox } from '@lion/ui/checkbox.js'` — there is no such entrypoint (LionCheckbox
+ * lives in `checkbox-group`) — and the convention tier scored it 100% while the browser refused the
+ * import. This set is read from the filesystem, so that gap is closed without a browser.
+ */
+export function resolvableLionUiSpecifiers(repoRoot: string): string[] {
+  const exportsDir = path.join(repoRoot, 'packages/ui/exports');
+  const specifiers = new Set<string>();
+  if (!fs.existsSync(exportsDir)) return [];
+
+  const walk = (dir: string, prefix = '') => {
+    for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+      if (entry.isDirectory()) {
+        walk(path.join(dir, entry.name), `${prefix}${entry.name}/`);
+        continue;
+      }
+      specifiers.add(`@lion/ui/${prefix}${entry.name}`);
+    }
+  };
+  walk(exportsDir);
+  return [...specifiers];
+}
+
 /** Files the behaviour harness writes into a sandbox; they are not the model's output. */
 const HARNESS_FILES = new Set(['behaviour.test.js', 'wtr.config.mjs']);
 
@@ -227,7 +254,20 @@ function openWcViolation(specifier: string): string | undefined {
   return undefined;
 }
 
-function policyViolation(specifier: string, allowed: string[] = []): string | undefined {
+function policyViolation(
+  specifier: string,
+  allowed: string[] = [],
+  resolvable: string[] = [],
+): string | undefined {
+  // A specifier of the right shape that resolves to nothing is the same defect as a deep import:
+  // the code cannot run. Only checked when the caller supplies the filesystem-derived set.
+  if (
+    resolvable.length > 0 &&
+    specifier.startsWith('@lion/ui/') &&
+    !resolvable.includes(specifier)
+  ) {
+    return `imports '${specifier}': no such '@lion/ui' entrypoint (it does not exist under packages/ui/exports)`;
+  }
   if (specifier.startsWith('#')) {
     return `imports '${specifier}': internal '#' subpath imports are not public API, use the '@lion/ui/*' entrypoints`;
   }
@@ -249,7 +289,11 @@ function policyViolation(specifier: string, allowed: string[] = []): string | un
   return undefined;
 }
 
-function importPolicyGateFor(files: ParsedFile[], allowed: string[] = []): GateResult {
+function importPolicyGateFor(
+  files: ParsedFile[],
+  allowed: string[] = [],
+  resolvable: string[] = [],
+): GateResult {
   const failures: GateFailure[] = [];
   let checked = 0;
 
@@ -260,7 +304,7 @@ function importPolicyGateFor(files: ParsedFile[], allowed: string[] = []): GateR
     if (HARNESS_FILES.has(file.relative)) continue;
     checked++;
     for (const { value, start } of file.specifiers) {
-      const message = policyViolation(value, allowed);
+      const message = policyViolation(value, allowed, resolvable);
       if (!message) continue;
       failures.push({ file: file.relative, message, ...offsetToLineColumn(file.source, start) });
     }
@@ -327,12 +371,20 @@ function modifiedGateFor(sandboxRoot: string, starter: Record<string, string>): 
 /** Run every gate over a sandbox, parsing each file exactly once. */
 export function runGates(
   sandboxRoot: string,
-  options: { allowedLionUiSpecifiers?: string[]; starter?: Record<string, string> } = {},
+  options: {
+    allowedLionUiSpecifiers?: string[];
+    resolvableLionUiSpecifiers?: string[];
+    starter?: Record<string, string>;
+  } = {},
 ): GateResult[] {
   const files = parseSandbox(sandboxRoot);
   return [
     syntaxGateFor(files),
-    importPolicyGateFor(files, options.allowedLionUiSpecifiers ?? []),
+    importPolicyGateFor(
+      files,
+      options.allowedLionUiSpecifiers ?? [],
+      options.resolvableLionUiSpecifiers ?? [],
+    ),
     // Only when the caller supplies the starter: without it there is nothing to compare against.
     ...(options.starter ? [modifiedGateFor(sandboxRoot, options.starter)] : []),
   ];
