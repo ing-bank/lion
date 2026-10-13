@@ -5,7 +5,8 @@
     --blog-paper: #ffffff;
     --blog-text: #1a1a1a;
     --blog-text-secondary: #555555;
-    --blog-accent: #FFC107; /* Warm Yellow to match main site */
+    --blog-accent: #FFC107; /* Warm Yellow to match main site — tints and graphics only */
+    --blog-accent-ink: #7a5c00; /* the same accent as text: #FFC107 is 1.6:1 on the white paper */
     --blog-line: #e0e0e0;
     --blog-font-serif: var(--font-family);
 }
@@ -46,7 +47,7 @@ body.blog-page {
 }
 
 .blog-page .main-nav a:hover {
-    color: var(--blog-accent);
+    color: var(--blog-accent-ink);
 }
 
 /* Blog Layout */
@@ -166,7 +167,7 @@ body.blog-page {
 }
 
 .post-tag {
-    color: var(--blog-accent);
+    color: var(--blog-accent-ink);
     font-weight: 600;
 }
 
@@ -201,7 +202,7 @@ body.blog-page {
 }
 
 .read-more:hover {
-    color: var(--blog-accent);
+    color: var(--blog-accent-ink);
 }
 
 /* Footer Override */
@@ -216,7 +217,7 @@ body.blog-page {
 }
 
 .blog-page .footer-links a:hover {
-    color: var(--blog-accent);
+    color: var(--blog-accent-ink);
 }
 
 @media (max-width: 900px) {
@@ -281,8 +282,8 @@ body.blog-page {
 }
 
 .blog-article-content code {
-    background-color: rgba(255, 193, 7, 0.05);
-    border: 1px solid rgba(255, 193, 7, 0.1);
+    background-color: color-mix(in srgb, var(--blog-accent) 8%, transparent);
+    border: 1px solid color-mix(in srgb, var(--blog-accent) 18%, transparent);
     border-radius: 4px;
     padding: 2px 6px;
     font-family: 'Menlo', 'Monaco', 'Courier New', monospace;
@@ -308,7 +309,7 @@ body.blog-page {
 }
 
 .blog-article-content blockquote {
-    border-left: 4px solid var(--blog-accent);
+    border-left: 4px solid var(--blog-accent-ink);
     padding-left: 16px;
     margin-left: 0;
     margin-bottom: 16px;
@@ -374,15 +375,15 @@ body.blog-page {
 }
 
 .blog-detail-toc a:hover {
-    color: var(--blog-accent);
-    border-left-color: var(--blog-accent);
+    color: var(--blog-accent-ink);
+    border-left-color: var(--blog-accent-ink);
     padding-left: 20px;
 }
 
 .blog-detail-toc a.active {
-    color: var(--blog-accent);
-    border-left-color: var(--blog-accent);
-    background: rgba(255, 193, 7, 0.05);
+    color: var(--blog-accent-ink);
+    border-left-color: var(--blog-accent-ink);
+    background: color-mix(in srgb, var(--blog-accent) 8%, transparent);
     font-weight: 600;
 }
 
