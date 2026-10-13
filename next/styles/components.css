@@ -8,7 +8,9 @@
     font-size: 3rem;
     font-weight: 600;
     margin-bottom: 16px;
-    background: linear-gradient(180deg, #ffffff 0%, #888888 100%);
+    /* Was hard-coded #ffffff -> #888888, which is invisible on the light background. The hero
+     * pair carries the same shipped dark values (#fff -> #888), so dark does not drift. */
+    background: linear-gradient(180deg, var(--hero-gradient-from) 0%, var(--hero-gradient-to) 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -42,7 +44,7 @@
     
     .page-header h1 {
         font-size: 2rem;
-        background: linear-gradient(180deg, #ffffff 0%, #888888 100%);
+        background: linear-gradient(180deg, var(--hero-gradient-from) 0%, var(--hero-gradient-to) 100%);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         background-clip: text;
@@ -205,10 +207,12 @@
     font-size: 1.25rem;
     color: var(--text-secondary);
     line-height: 1.6;
-    background: rgba(0, 0, 0, 0.3);
+    /* Same translucent-bar recipe as the site header; was hard-coded rgba(0,0,0,0.3), which put a
+     * dark bar behind light-mode secondary text. */
+    background: var(--header-bg);
     backdrop-filter: blur(20px) saturate(180%);
     -webkit-backdrop-filter: blur(20px) saturate(180%);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    border-bottom: 1px solid var(--header-border);
 }
 
 .demo-section {
