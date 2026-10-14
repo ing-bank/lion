@@ -121,12 +121,22 @@ function parseArgs(argv: string[]): CliOptions {
       case '--docs':
         options.docs = true;
         break;
-      case '--docs-path':
-        options.docsPath = next();
+      case '--docs-path': {
+        const value = next();
+        if (value.startsWith('--')) {
+          throw new Error(`--docs-path needs a path, but got "${value}" instead`);
+        }
+        options.docsPath = value;
         break;
-      case '--ledger':
-        options.ledgerPath = next();
+      }
+      case '--ledger': {
+        const value = next();
+        if (value.startsWith('--')) {
+          throw new Error(`--ledger needs a path, but got "${value}" instead`);
+        }
+        options.ledgerPath = value;
         break;
+      }
       case '--kind':
         options.filters.kind = next();
         break;
@@ -277,7 +287,25 @@ async function main(): Promise<void> {
       ),
     );
   } else {
-    console.log(`Overall quality score: ${(report.overall.mean * 100).toFixed(1)}%`);
+    // The same rule the run record and the ledger apply: a run that never modified the deliverable is
+    // not a zero, it is not a comparable run, so it must not drag the headline down.
+    const attemptedRuns = report.runs.filter(run => run.agentRun.attempted);
+    if (attemptedRuns.length === 0) {
+      console.log(
+        yellow(
+          `Overall quality score: n/a — no run modified the deliverable (${report.runs.length} run(s))`,
+        ),
+      );
+    } else {
+      const attemptedMean =
+        attemptedRuns.reduce((sum, run) => sum + run.score.score, 0) / attemptedRuns.length;
+      console.log(
+        `Overall quality score: ${(attemptedMean * 100).toFixed(1)}%` +
+          (attemptedRuns.length < report.runs.length
+            ? ` (${attemptedRuns.length}/${report.runs.length} run(s) comparable)`
+            : ''),
+      );
+    }
   }
   if (report.behaviour) {
     const { passed, total, failed } = report.behaviour;
