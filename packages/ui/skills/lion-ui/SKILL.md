@@ -11,15 +11,19 @@ compatibility: Works in modern browsers. Built on Lit. Framework-agnostic (usabl
 Explore the project first, then use this skill whenever you touch an `@lion/ui` component or
 system (forms, validation, overlays, localization, icons).
 
-## Who this is for: app developers, not subclassers
+## Two supported paths: consume, or subclass
 
 This skill is written for an **app developer** consuming `@lion/ui` — you compose lion's components
 into your application (and may wrap them in your own components) using the documented entrypoints,
-attributes, properties and events.
+attributes, properties and events. That is **path one: consume lion directly**, and it is what the
+lion-ui skill tests measure.
 
-It is _not_ aimed at a **subclasser** building a design system on lion's internals: subclassing
-lion base classes, extending their mixins, or overriding their rendering is out of scope here. If a
-task looks like it needs that, prefer composing the documented component instead.
+**Path two is subclassing** — extending a lion base class to introduce your own tag names and your own
+branding/styling. That belongs to a **subclasser** (the team that builds a design system on lion), not
+to an app developer, and it is **out of scope for the lion-ui skill tests**: a subclass is graded
+against the design system it belongs to, so testing it against lion's documented API measures the wrong
+thing. If a task only asks you to use a lion component, do not subclass — compose the documented
+component instead.
 
 ## MANDATORY: read each component's reference doc before using it
 
@@ -91,6 +95,7 @@ lion forms are built from composable form controls (`lion-input`, `lion-select`,
 - [`Input Tel`](references/components/input-tel.md)
 - [`Input Tel Dropdown`](references/components/input-tel-dropdown.md)
 - [`Listbox`](references/components/listbox.md)
+- [`Menu`](references/components/menu.md)
 - [`Pagination`](references/components/pagination.md)
 - [`Progress Indicator`](references/components/progress-indicator.md)
 - [`Radio Group`](references/components/radio-group.md)
@@ -183,9 +188,14 @@ export class MyForm extends ScopedElementsMixin(LitElement) {
 
 Do **not** override `createRenderRoot` on a lion component subclass to force light DOM: lion's form
 controls rely on scoped elements for their own slot rendering, and with no shadow root that breaks
-(measured — it throws inside `ScopedElementsMixin`). The one documented exception is building _form
-sub-components_, where the parent applies `ScopedElementsMixin`; that edge case is covered in the
-guides and is not the common case.
+(measured — it throws inside `ScopedElementsMixin`).
+
+`createRenderRoot` is needed in **exactly one situation**: when the component you write is a **parent of
+a form control** — it contains a form control itself and must be usable inside a form — because form
+registration travels up through light DOM. For everything else the default shadow root with
+`ScopedElementsMixin` above is correct: a leaf component, a component with no form control inside it, or
+a component whose children are ordinary (non-form) elements. This is the one documented exception, not
+the common case.
 
 #### Native element -> required `@lion/ui` replacement
 
