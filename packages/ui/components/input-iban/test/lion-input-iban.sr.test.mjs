@@ -18,8 +18,11 @@ import '@lion/ui/define/lion-input-iban.js';
  *
  * The error message itself sits in the shadow root of `lion-validation-feedback`
  * with `aria-live="assertive"` (DOM verified), so the real readers announce it.
- * The virtual screen reader does not model live regions and only reports the
- * field as "invalid", which is why only nvda and voiceover expect the message.
+ * The virtual screen reader only announces live regions it can see from the
+ * light DOM - it neither observes shadow roots nor walks from a shadow root up
+ * to its host - so it reports the field as "invalid" without the message. That
+ * is why only nvda and voiceover expect the message, while the DOM assertions
+ * below keep the live region itself covered on every run.
  *
  * @typedef {import('@lion/ui/input-iban.js').LionInputIban} LionInputIban
  */
@@ -36,6 +39,27 @@ async function fixtureIban() {
     `)
   );
   return el;
+}
+
+/**
+ * Wait until a DOM condition holds, so a DOM assertion does not race the render
+ * (the error message is rendered a tick after `aria-invalid` flips).
+ *
+ * @param {() => boolean} condition
+ * @param {string} description
+ * @param {number} [timeout]
+ */
+async function waitUntil(condition, description, timeout = 5000) {
+  const deadline = Date.now() + timeout;
+  while (!condition()) {
+    if (Date.now() > deadline) {
+      throw new Error(`Timed out after ${timeout}ms waiting until ${description}`);
+    }
+    // eslint-disable-next-line no-await-in-loop
+    await new Promise(resolve => {
+      setTimeout(resolve, 50);
+    });
+  }
 }
 
 describe('<lion-input-iban> screen reader', () => {
@@ -58,7 +82,7 @@ describe('<lion-input-iban> screen reader', () => {
     await sr.next();
 
     await sr.expect({
-      virtual: contains('textbox, IBAN, not invalid, not disabled'),
+      virtual: contains('textbox, IBAN, not disabled, not invalid'),
       // nvda and voiceover wording is finalised by the first CI run of those readers
       nvda: contains('IBAN', 'edit'),
       voiceover: contains('IBAN', 'text field'),
@@ -77,7 +101,7 @@ describe('<lion-input-iban> screen reader', () => {
     await sr.waitFor('NL17 INGB 0002 8226 08');
 
     await sr.expect({
-      virtual: contains('textbox, IBAN, NL17 INGB 0002 8226 08, not invalid, not disabled'),
+      virtual: contains('textbox, IBAN, NL17 INGB 0002 8226 08, not disabled, not invalid'),
       nvda: contains('NL17 INGB 0002 8226 08'),
       voiceover: contains('NL17 INGB 0002 8226 08'),
     });
@@ -92,17 +116,21 @@ describe('<lion-input-iban> screen reader', () => {
     await sr.waitFor('FOO');
     await sr.press('Tab');
 
-    await sr.waitFor('FOO, invalid');
+    await sr.waitFor(', invalid');
 
     await sr.expect({
-      virtual: contains('textbox, IBAN, FOO, invalid, not disabled'),
+      virtual: contains('textbox, IBAN, FOO, not disabled, invalid'),
       nvda: contains('FOO', 'invalid', 'Please enter a valid IBAN'),
       voiceover: contains('FOO', 'invalid', 'Please enter a valid IBAN'),
     });
 
-    // The virtual reader does not model live regions, so the message the real
-    // readers announce is pinned down in the DOM instead.
+    // The virtual reader cannot see live regions inside a shadow root, so the
+    // message the real readers announce is pinned down in the DOM instead.
     const feedback = /** @type {HTMLElement} */ (el.querySelector('[slot="feedback"]'));
+    await waitUntil(
+      () => (feedback.shadowRoot?.textContent ?? '').includes('Please enter a valid IBAN'),
+      'the validation feedback node renders its message',
+    );
     expect(el.querySelector('input')?.getAttribute('aria-invalid')).to.equal('true');
     expect(feedback.getAttribute('aria-live')).to.equal('assertive');
     expect(feedback.shadowRoot?.textContent).to.include('Please enter a valid IBAN');

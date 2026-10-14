@@ -79,6 +79,16 @@ CI runs `--nvda` on `windows-latest` and `--voiceover` on `macos-15`, both with
 window, so those runs launch a non headless browser with
 `__experimentalWindowFocus__`.
 
+## Known limits of the virtual reader
+
+`@guidepup/virtual-screen-reader` announces `aria-live` regions it can see from the
+light DOM only: it neither observes shadow roots nor walks from a node inside a
+shadow root up to its host. Lion renders validation messages in the shadow root of
+`lion-validation-feedback`, so a `virtual` run reports the field as "invalid"
+without the message. Real NVDA and VoiceOver do announce it (`aria-live="assertive"`),
+so those expectations carry the message while the `virtual` one does not; a DOM
+assertion in the test keeps the live region itself covered locally.
+
 ## Failure output
 
 ```

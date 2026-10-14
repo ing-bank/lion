@@ -6,6 +6,9 @@
  * @typedef {import('../types/index.js').SrReader} SrReader
  */
 
+import path from 'path';
+import { fileURLToPath } from 'url';
+
 import { recordObservation, resetObservations } from './transcripts.js';
 
 const DEFAULT_WAIT_TIMEOUT = 30000;
@@ -15,16 +18,39 @@ const WAIT_POLL_INTERVAL = 50;
 const READERS = ['virtual', 'nvda', 'voiceover'];
 
 /**
- * Browser bundles of the virtual screen reader we try, in order. Which path
- * exists depends on whether the package was hoisted to the root `node_modules`
- * or nested under this package.
+ * Fallback locations of the virtual screen reader browser bundle, for layouts
+ * where the package could not be resolved (see getVirtualBundlePaths).
  */
-const VIRTUAL_BUNDLE_PATHS = [
+const FALLBACK_VIRTUAL_BUNDLE_PATHS = [
   '/node_modules/@guidepup/virtual-screen-reader/lib/esm/index.browser.js',
   '/node_modules/@lion/test-runner-screenreader/node_modules/@guidepup/virtual-screen-reader/lib/esm/index.browser.js',
-  '/node_modules/@guidepup/virtual-screen-reader/lib/esm/index.mjs',
-  '/node_modules/@lion/test-runner-screenreader/node_modules/@guidepup/virtual-screen-reader/lib/esm/index.mjs',
 ];
+
+/**
+ * Where the page can find the virtual screen reader browser bundle. Resolved
+ * first, so a hoisted, nested or otherwise relocated install works, and the
+ * known layouts as a fallback.
+ *
+ * @returns {string[]}
+ */
+function getVirtualBundlePaths() {
+  /** @type {string[]} */
+  const paths = [];
+  try {
+    const resolved = /** @type {any} */ (import.meta).resolve(
+      '@guidepup/virtual-screen-reader/browser.js',
+    );
+    if (typeof resolved === 'string' && resolved.startsWith('file://')) {
+      const relative = path.relative(process.cwd(), fileURLToPath(resolved));
+      if (!relative.startsWith('..')) {
+        paths.push(`/${relative}`);
+      }
+    }
+  } catch {
+    // package not resolvable here: fall back to the known layouts
+  }
+  return paths.concat(FALLBACK_VIRTUAL_BUNDLE_PATHS);
+}
 
 /**
  * Reader methods we hand to node for the virtual reader. This is the part of
@@ -87,7 +113,7 @@ async function startVirtualReader(page) {
     throw new Error(
       `Could not start the virtual screen reader: ${lastError?.message ?? 'bundle not found'}`,
     );
-  }, VIRTUAL_BUNDLE_PATHS);
+  }, getVirtualBundlePaths());
 }
 
 /**
