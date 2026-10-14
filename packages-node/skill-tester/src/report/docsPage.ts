@@ -23,7 +23,16 @@ function percent(value: number): string {
 }
 
 function cell(entry: LedgerEntry, value: (entry: LedgerEntry) => string): string {
-  return entry.samples === 0 ? 'n/a' : value(entry);
+  if (entry.samples === 0) return 'n/a';
+  // No run modified the deliverable: there is no comparable score, and 0% would read as a failure.
+  if (entry.attempts === 0) return 'n/a';
+  return value(entry);
+}
+
+function meanCell(entry: LedgerEntry): string {
+  const rendered = cell(entry, e => `**${percent(e.mean)}**`);
+  // The mean covers the runs that modified the deliverable only — mark it when that is not all of them.
+  return entry.attempts > 0 && entry.attempts < entry.samples ? `${rendered}²` : rendered;
 }
 
 function samplesCell(entry: LedgerEntry): string {
@@ -79,22 +88,33 @@ export function renderQualityPage(ledger: Ledger): string {
       'not how good the skill is in general.',
   );
   lines.push('');
+  lines.push(
+    '`Rev` is the skill revision the row was measured against — the git tree hash of the skill ' +
+      'directory, so it changes when the skill does and not when an unrelated commit lands. A ' +
+      'scenario can hold rows from more than one revision; they are listed newest first, and only ' +
+      'rows on the same revision are comparable.',
+  );
+  lines.push('');
   lines.push(`Ledger updated: ${ledger.updatedAt || 'n/a'}`);
   lines.push('');
 
   for (const scenario of scenarios) {
-    const rows = ledger.entries.filter(entry => entry.scenario === scenario);
+    const rows = ledger.entries
+      .filter(entry => entry.scenario === scenario)
+      .sort((a, b) => (b.ranAt ?? '').localeCompare(a.ranAt ?? ''));
     const kind = rows[0]?.kind ?? 'unknown';
     lines.push(`## ${scenario} (${kind})`);
     lines.push('');
     lines.push(
-      '| Model | Mean | Min | Max | sd | n | Behaviour | Attempts | Redo | Tokens/run | Cost |',
+      '| Model | Mean | Min | Max | sd | n | Behaviour | Attempts | Redo | Tokens/run | Cost | Rev |',
     );
-    lines.push('| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |');
+    lines.push(
+      '| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |',
+    );
     for (const entry of rows) {
       lines.push(
         `| \`${entry.model}\` ` +
-          `| ${cell(entry, e => `**${percent(e.mean)}**`)} ` +
+          `| ${meanCell(entry)} ` +
           `| ${cell(entry, e => percent(e.min))} ` +
           `| ${cell(entry, e => percent(e.max))} ` +
           `| ${cell(entry, e => e.stdDev.toFixed(1))} ` +
@@ -103,7 +123,8 @@ export function renderQualityPage(ledger: Ledger): string {
           `| ${entry.samples === 0 ? 'n/a' : `${entry.attempts}/${entry.samples}`} ` +
           `| ${entry.samples === 0 ? 'n/a' : entry.redoable} ` +
           `| ${tokensPerRun(entry)} ` +
-          `| ${costCell(entry)} |`,
+          `| ${costCell(entry)} ` +
+          `| \`${entry.skillRevision.slice(0, 7)}\` |`,
       );
     }
     lines.push('');
@@ -111,6 +132,17 @@ export function renderQualityPage(ledger: Ledger): string {
 
   if (hasIndicative) {
     lines.push(`¹ fewer than ${INDICATIVE_BELOW} samples: indicative only.`);
+    lines.push('');
+  }
+  if (ledger.entries.some(entry => entry.attempts > 0 && entry.attempts < entry.samples)) {
+    lines.push('² the mean covers only the runs that modified the deliverable — see Attempts.');
+    lines.push('');
+  }
+  if (ledger.entries.some(entry => entry.samples > 0 && entry.attempts === 0)) {
+    lines.push(
+      'A row also prints `n/a` when no run modified the deliverable: an untouched file is ' +
+        '*not attempted*, which says nothing about the skill and must not read as a score of zero.',
+    );
     lines.push('');
   }
 

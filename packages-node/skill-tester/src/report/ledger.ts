@@ -85,17 +85,22 @@ export function updateLedger(
     );
     if (runs.length === 0) continue;
 
-    const withBehaviour = runs.filter(run => run.behaviour);
+    // A run that never modified the deliverable says nothing about the skill, so it is excluded from
+    // the score stats: counting it as a zero is the mirror image of the false floor a no-op used to
+    // collect. `samples` stays the number of runs, so the page can show "0/3 attempted" instead of
+    // silently dropping the scenario.
+    const attempted = runs.filter(run => run.agentRun.attempted);
+    const withBehaviour = attempted.filter(run => run.behaviour);
     const entry: LedgerEntry = {
       skillRevision,
       model: summary.model,
       scenario: summary.scenario,
       kind: kinds.get(summary.scenario) ?? 'unknown',
       samples: runs.length,
-      ...statsOf(runs.map(run => run.score.score)),
+      ...statsOf(attempted.map(run => run.score.score)),
       behaviourPassed: withBehaviour.filter(run => run.behaviour?.passed).length,
       behaviourTotal: withBehaviour.length,
-      attempts: runs.filter(run => run.agentRun.attempted).length,
+      attempts: attempted.length,
       redoable: report.redoable.filter(
         run => run.model === summary.model && run.scenario === summary.scenario,
       ).length,
