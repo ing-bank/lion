@@ -1,5 +1,12 @@
 # Change Log
 
+## 0.21.0
+
+### Minor Changes
+
+- 05f3085: Replace the `globby` dependency with a small `fsGlob` util built on the native `fs.promises.glob`, and require Node.js >= 22.
+  Internal imports now use package subpath imports (`#core/*`, `#utils/*`, ...).
+
 ## 0.20.0
 
 ### Minor Changes
