@@ -1,5 +1,42 @@
 # @lion/ui
 
+## 0.23.0
+
+### Minor Changes
+
+- 392201c: Add the menu system to `@lion/ui`: `<lion-menu>`, `<lion-item>` and `<lion-menuitem>`, built on the
+  shared `InteractiveListMixin`, plus the `MultiLevelListMixin` and `MoreButtonMenuMixin` building
+  blocks. Menus, listboxes, toolbars and trees now share one keyboard-navigable interactive-list
+  implementation (roving tabindex, activedescendant, type-ahead, wrap-around, multi-level lists and
+  the "more" button pattern).
+
+  Consumers get `LionMenu`, `LionItem` and `LionMenuitem` from `@lion/ui/exports/menu.js`, the
+  `lion-menu`/`lion-item`/`lion-menuitem` element definitions, and `runInteractiveListMixinSuite`,
+  `runMultiLevelListMixinSuite` and `runLionMenuInteractionsSuite` for their own test suites.
+
+  Overlays gained the pieces the menu builds on:
+  - `OverlayConfig` accepts `placementMode: 'custom'`, `syncChildrenCloseState`,
+    `elementToFocusOnShow`, `isActivated` and `requireConnectedNodes`; the unused internal
+    `_noDialogEl` flag is gone.
+  - `withClickInteraction` and `withHoverInteraction` are exported from
+    `@lion/ui/exports/overlays.js` (they were internal visibility-trigger partials).
+
+  The interactive-list api speaks the [focusgroup](https://open-ui.org/components/focusgroup.explainer/)
+  vocabulary, so implementations that follow the platform proposal recognise the names: `axis`
+  (`'block'` default / `'inline'`) replaces `orientation` (`vertical`/`horizontal`),
+  `wrap` replaces `rotateKeyboardNavigation` and `multiple` replaces `multipleChoice`.
+  `hasNoDefaultSelected` (the initial selectedness the platform calls "default selected", and the same
+  property `ListboxMixin` exposes) replaces `noPreselect`; `selectionFollowsFocus` stays, it is the
+  ARIA APG term for exactly that behaviour.
+
+### Patch Changes
+
+- fb55824: [input-amount] add option to set currencyLabel as a symbol
+- 23610da: OverlayController: fix `TypeError` (`appendChild` argument is not a Node) when a `contentWrapperNode` that is not connected yet (e.g. in a host that is not attached to the document) wraps a projected slot and the controller is re-initialized via `updateConfig`. The relocated slot is now captured before the DOM is mutated and restored at its original position on cleanup.
+- 163e149: Update phone-number validation metadata to libphonenumber v9.0.41, including French Guiana premium-rate numbers, using a temporary bundled awesome-phonenumber build until an upstream release includes the metadata.
+- 0996264: [combobox] sync the checked option label to the textbox on overlay close while the input is focused (autocomplete list/none)
+- 6611298: Prevent closed select-rich options from scrolling the page during element upgrade or type-ahead selection.
+
 ## 0.22.0
 
 ### Minor Changes

@@ -1,6 +1,6 @@
 {
   "name": "@lion/ui",
-  "version": "0.22.0",
+  "version": "0.23.0",
   "description": "A package of extendable web components",
   "license": "MIT",
   "author": "ing-bank",
@@ -99,9 +99,9 @@
     "publish-docs": "node ../../packages-node/publish-docs/src/cli.js --github-url https://github.com/ing-bank/lion/ --git-root-dir ../../",
     "test": "cd ../../ && npm run test:browser",
     "types": "wireit",
+    "types-check-consumer": "node ./scripts/check-consumer-types.js",
     "types-check-only": "tsc --project tsconfig-check-only.json",
-    "types-restore-visibility": "node ./scripts/types-restore-visibility.js",
-    "types-check-consumer": "node ./scripts/check-consumer-types.js"
+    "types-restore-visibility": "node ./scripts/types-restore-visibility.js"
   },
   "sideEffects": [
     "exports/define/**/*.js",
