@@ -221,6 +221,12 @@ html`
 ## Rules
 
 - Always read the component's reference doc before using it.
+- **Import from the module an API is documented under — never from a name you infer.** `@lion/ui/`
+  ships a fixed set of entrypoints, so a specifier you reason your way to from an element or a
+  concept is a guess that fails at load: `<lion-checkbox>` comes from `@lion/ui/checkbox-group.js`
+  and `@lion/ui/checkbox.js` does not exist; `LionOption` comes from the listbox module, not
+  `option.js`; the validators come from the form module that documents them, not `validate.js`. See
+  `references/systems/core.md`.
 - **Assume a scoped-elements host.** Usage examples are rendered inside a host `LitElement` that
   applies `ScopedElementsMixin` and registers every component it renders, e.g.
   `static scopedElements = { 'lion-input-iban': LionInputIban }`. Import the component **class**
