@@ -14,12 +14,15 @@
  *
  * It runs as the last step of the `types` wireit task (`packages/ui/package.json`), so
  * `npm run lint` -> `lint:types` -> `npm run types` covers it in CI. Run it directly with
- * `npm run types-check-consumer --workspace @lion/ui` after a build.
+ * `npm run types-check-consumer --workspace @lion/ui` after a build. The extension fixture also
+ * runs on TypeScript 4.7.4: importing declarations alone does not exercise subclass overrides.
  */
 import fs from 'fs';
 import os from 'os';
 import path from 'path';
-import { execFileSync } from 'child_process';
+import childProcess from 'child_process';
+import util from 'util';
+import module from 'module';
 import { fileURLToPath } from 'url';
 
 const pkgDir = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
@@ -28,6 +31,10 @@ const rootModules = path.join(repoRoot, 'node_modules');
 const exportsDir = path.join(pkgDir, 'exports');
 const distTypesDir = path.join(pkgDir, 'dist-types');
 const pkgJson = JSON.parse(fs.readFileSync(path.join(pkgDir, 'package.json'), 'utf8'));
+const execFile = util.promisify(childProcess.execFile);
+const legacyTsc = module
+  .createRequire(path.join(repoRoot, 'test/typescript-legacy/package.json'))
+  .resolve('typescript/bin/tsc');
 
 if (!fs.existsSync(distTypesDir)) {
   console.error(
@@ -102,6 +109,11 @@ try {
     path.join(fixture, 'index.ts'),
     `${specifiers.map(spec => `import '${spec}';`).join('\n')}\n`,
   );
+  fs.copyFileSync(
+    path.join(pkgDir, 'scripts/fixtures/consumer-extensions.ts'),
+    path.join(fixture, 'consumer-extensions.ts'),
+  );
+  fs.writeFileSync(path.join(fixture, 'package.json'), '{"type":"module"}\n');
   fs.writeFileSync(
     path.join(fixture, 'tsconfig.json'),
     `${JSON.stringify(
@@ -116,7 +128,7 @@ try {
           skipLibCheck: false,
           types: [],
         },
-        include: ['index.ts'],
+        include: ['index.ts', 'consumer-extensions.ts'],
       },
       null,
       2,
@@ -127,13 +139,32 @@ try {
   console.log(
     `[consumer-types] compiling ${specifiers.length} entry points with skipLibCheck: false`,
   );
-  execFileSync(process.execPath, [tsc, '-p', fixture], { stdio: 'inherit' });
-  console.log('[consumer-types] 0 errors - the published declarations are consumer-clean');
-} catch (error) {
-  console.error(
-    `[consumer-types] a consumer with \`skipLibCheck: false\` cannot compile these declarations (${error.status ?? 1})`,
+  const modern = await execFile(process.execPath, [tsc, '-p', fixture]);
+  if (modern.stdout) process.stdout.write(modern.stdout);
+  fs.writeFileSync(
+    path.join(fixture, 'tsconfig-extensions.json'),
+    `${JSON.stringify({
+      extends: './tsconfig.json',
+      include: ['consumer-extensions.ts'],
+    })}\n`,
   );
-  process.exit(1);
+  console.log('[consumer-types] checking subclass extensions with TypeScript 4.7.4');
+  const legacy = await execFile(process.execPath, [
+    legacyTsc,
+    '-p',
+    path.join(fixture, 'tsconfig-extensions.json'),
+  ]);
+  if (legacy.stdout) process.stdout.write(legacy.stdout);
+  console.log(
+    '[consumer-types] 0 errors - entry points and subclass extensions are consumer-clean',
+  );
+} catch (error) {
+  if (error.stdout) process.stderr.write(error.stdout);
+  if (error.stderr) process.stderr.write(error.stderr);
+  console.error(
+    `[consumer-types] a consumer with \`skipLibCheck: false\` cannot compile these declarations (${error.code ?? 1})`,
+  );
+  process.exitCode = 1;
 } finally {
   fs.rmSync(fixture, { recursive: true, force: true });
 }

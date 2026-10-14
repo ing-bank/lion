@@ -51,7 +51,8 @@
   },
   "workspaces": [
     "packages/*",
-    "packages-node/*"
+    "packages-node/*",
+    "test/typescript-legacy"
   ],
   "dependencies": {
     "@playwright/test": "^1.61.0",

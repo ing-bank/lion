@@ -145,7 +145,9 @@
         "components/**/*",
         "tsconfig.json",
         "scripts/types-restore-visibility.js",
-        "scripts/check-consumer-types.js"
+        "scripts/check-consumer-types.js",
+        "scripts/fixtures/consumer-extensions.ts",
+        "../../test/typescript-legacy/package.json"
       ],
       "output": [
         "dist-types/**"
