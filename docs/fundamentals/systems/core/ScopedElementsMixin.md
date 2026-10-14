@@ -49,6 +49,16 @@ class MyForm extends ScopedElementsMixin(LitElement) {
 - Import the component **class** from its `@lion/ui/<name>.js` entrypoint. `scopedElements` maps a
   tag to a class; the side-effect `@lion/ui/define/lion-<name>.js` entrypoints register globally
   and give you no class to scope.
+- **The entrypoint is the module an API is documented under — not a name you infer from it.** A tag
+  or a concept does not name a module. `@lion/ui/` ships a fixed set of entrypoints, so a specifier
+  reached by reasoning from the name is a guess that fails at load: `<lion-checkbox>` is exported
+  from `@lion/ui/checkbox-group.js` (not `checkbox.js`), `LionOption` from the listbox module (not
+  `option.js`), and the validators from the form module that documents them (not `validate.js`).
+  Measured: three such guesses in a single sweep, each zeroing a run, and five of six browser
+  failures in that sweep were the same mistake reaching the browser.
+- An element usually shares a module with its siblings: `lion-checkbox` and `lion-checkbox-group`
+  are one component. When the module for an element is unclear, look for the family it belongs to
+  rather than for its own name.
 - Declare `static scopedElements` on the host. The same tag may map to different classes in
   different hosts, which is the point of scoping.
 - Do **not** detect a component with `customElements.get('<tag>')`. Under a scoped registry the
