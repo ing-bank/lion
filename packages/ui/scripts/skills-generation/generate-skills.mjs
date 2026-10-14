@@ -203,6 +203,58 @@ function updateSkillMdIndex(markerName, entries) {
   fs.writeFileSync(skillMdPath, `${before}\n\n${listMd}\n\n${after}`);
 }
 
+/**
+ * Writes `references/entrypoints.md`: every `@lion/ui` specifier that actually exists.
+ *
+ * Measured motivation: the most common failure in a full sweep was guessing an entrypoint from an
+ * element or a concept name — `@lion/ui/checkbox.js`, `@lion/ui/option.js`, `@lion/ui/validate.js` —
+ * none of which exists. Seven runs were zeroed by the import gate and five of six browser failures
+ * were the same mistake, because a module that cannot resolve cannot load. A rule in the docs
+ * discourages the guess (measured: it removed it in a re-run); this list removes the need for it.
+ */
+function writeEntrypointReference() {
+  const exportsDir = path.join(path.resolve(skillDir, '../..'), 'exports');
+  const specifiers = [];
+  const walk = (dir, prefix = '') => {
+    for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+      if (entry.isDirectory()) {
+        walk(path.join(dir, entry.name), `${prefix}${entry.name}/`);
+        continue;
+      }
+      specifiers.push(`@lion/ui/${prefix}${entry.name}`);
+    }
+  };
+  if (fs.existsSync(exportsDir)) walk(exportsDir);
+  specifiers.sort();
+
+  const define = specifiers.filter(specifier => specifier.startsWith('@lion/ui/define/'));
+  const classes = specifiers.filter(specifier => !specifier.startsWith('@lion/ui/define/'));
+
+  fs.mkdirSync(referencesDir, { recursive: true });
+  fs.writeFileSync(
+    path.join(referencesDir, 'entrypoints.md'),
+    [
+      '# Entrypoints',
+      '',
+      '> Generated from `packages/ui/exports` by `npm run skills:generate`. Do not edit by hand.',
+      '',
+      `These ${specifiers.length} specifiers are the ones that exist. A specifier reasoned from an`,
+      'element or a concept name will not be among them — `<lion-checkbox>` comes from `checkbox-group`,',
+      'not from `checkbox` — and importing one that does not exist fails at load.',
+      '',
+      '## Importing a class',
+      '',
+      ...classes.map(specifier => `- \`${specifier}\``),
+      '',
+      '## Registering an element (side effect)',
+      '',
+      ...define.map(specifier => `- \`${specifier}\``),
+      '',
+    ].join('\n'),
+  );
+  return specifiers.length;
+}
+
 function main() {
   if (!fs.existsSync(customElementsJsonPath)) {
     throw new Error(
@@ -276,6 +328,7 @@ function main() {
   updateSkillMdIndex('components', componentEntries);
   updateSkillMdIndex('systems', systemEntries);
   updateSkillMdIndex('guides', guideEntries);
+  writeEntrypointReference();
 
   console.log(
     `Generated ${componentEntries.length} component reference(s), ${systemEntries.length} ` +
