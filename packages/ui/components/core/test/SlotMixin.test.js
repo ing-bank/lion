@@ -12,6 +12,16 @@ import { isActiveElement } from '../test-helpers/isActiveElement.js';
  */
 
 describe('SlotMixin', () => {
+  it('preserves a subclass constructor when the mixin is reapplied', () => {
+    class SlottedElement extends SlotMixin(LitElement) {
+      get slots() {
+        return { ...super.slots, content: () => document.createElement('span') };
+      }
+    }
+
+    expect(SlotMixin(SlottedElement)).to.equal(SlottedElement);
+  });
+
   it('inserts provided element into light dom and sets slot', async () => {
     const tag = defineCE(
       class extends SlotMixin(LitElement) {
