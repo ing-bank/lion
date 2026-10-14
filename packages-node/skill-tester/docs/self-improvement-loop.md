@@ -5,6 +5,17 @@ documentation change rather than a guess, and — more importantly — how to te
 a skill gap and something that only looks like one. The companion workflow lives in
 `packages/ui/skills/recursive-skill-improver`; this page is the worked example.
 
+## Three things that get called "harness"
+
+This page says **measurement gap** where the diagram means a defect in the measuring tool, so it is
+not confused with a test suite.
+
+| Term                                                 | What it is                                                                                                                       | What a failure means                                                             |
+| ---------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- |
+| **the measuring tool** — skill-tester                | runs a model against one scenario and scores it: the run loop, the gates, the checks, the behaviour tier, the record, the ledger | the measurement was wrong — fix it here, never in the docs                       |
+| **the test suite** — `test-node/*.test.ts`, 88 tests | checks the measuring tool itself                                                                                                 | the tool broke; a clean sweep says nothing about it, and vice versa              |
+| **`@web/test-runner`**                               | the browser runner the behaviour tier drives                                                                                     | the produced code could not load, or an assertion about it failed in the browser |
+
 ## The loop
 
 ```mermaid
@@ -13,7 +24,7 @@ flowchart TD
   E --> A{"Attribute the failure before editing anything"}
   A -->|"produced code is wrong AND the docs never stated the rule"| S["Skill gap"]
   A -->|"the model never wrote the file, or the endpoint died"| N["Not a skill gap"]
-  A -->|"the check demands what the prompt never asked for"| H["Harness gap"]
+  A -->|"the check demands what the prompt never asked for"| H["Measurement gap — a defect in the tool"]
   S --> D["Edit the SOURCE doc"]
   D --> G["npm run skills:generate"]
   G --> V["Re-run the failing scenarios"]
@@ -97,7 +108,11 @@ Two other harness bugs in the same campaign are the reason the first decision in
 
 - **a no-op scored 42.9%.** An untouched file satisfied "the file exists" and "contains no native
   input", so doing nothing collected partial credit. A no-op is now _not attempted_, excluded from the
-  score and reported as an attempt rate — and must never become a skill edit;
+  score and reported as an attempt rate — and must never become a skill edit. How often it happens,
+  measured: across the published ledger **125 of 126 runs modified the deliverable** (99.2%), one no-op
+  cell among 42 scenarios. Rare, but not never — and the first one seen was 1 in 5 samples in a small
+  cell, which is why a cell below three samples is marked indicative: a rare event looks common when the
+  cell is small;
 - **one endpoint failure killed a whole measurement run.** A transient 429/5xx is now recorded as
   _to redo_, excluded from the score, and the sweep survives it. With no comparable runs there is no
   score at all: the page prints `n/a`, never `0%`.
