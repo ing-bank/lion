@@ -112,6 +112,41 @@ They provide an unopinionated, white-label layer that can be extended to your ow
 npm i @lion/ui
 ```
 
+### Temporary phone-number metadata workaround
+
+We temporarily vendor `awesome-phonenumber@7.9.0-tlouisse.libphonenumber-9.0.41`,
+rebuilt from Google's **libphonenumber v9.0.41**, instead of the registry dependency.
+This includes updated phone-number metadata, such as the French Guiana premium-rate
+example `+594890123456`, which the previous `awesome-phonenumber@7.8.0` rejected.
+We keep this workaround until the next upstream awesome-phonenumber release
+incorporating the required metadata is available.
+
+The artifact lives in `packages/ui/vendor/awesome-phonenumber-7.9.0-tlouisse.libphonenumber-9.0.41.tgz`.
+`@lion/ui` uses a package-relative `file:vendor/...` dependency and bundles the
+installed `awesome-phonenumber` package when published. This preserves normal
+consumer installation and lazy imports without access to the Lion checkout.
+The private root also declares the same tarball as a development dependency so
+npm installs it during a clean workspace install rather than assuming the
+workspace already contains its bundled dependencies. The legacy docs dependency
+keeps its separate registry version.
+The temporary `prepack` helper verifies the checksum and installs only the tarball
+in an isolated temporary prefix using npm's offline mode (without running dependency
+scripts or writing a lockfile). It copies that installed package into the local
+bundle and removes the temporary prefix, because npm packing does not include
+hoisted workspace bundles. Other Lion dependencies remain unchanged.
+The original MIT license and Google's Apache-2.0 notices remain in the artifact
+and bundled package. See [vendor provenance](packages/ui/vendor/README.md) for the
+source commit, checksum, and reproducible packaging instructions.
+
+Once the next upstream awesome-phonenumber release includes the required
+metadata, restore the normal registry dependency in `packages/ui/package.json`,
+remove `awesome-phonenumber` from `bundledDependencies`, remove the vendor asset
+and its `files` entry, remove the root development dependency, and regenerate
+`package-lock.json`. Remove the temporary `prepack` lifecycle and
+`scripts/prepare-vendored-phone.js` helper as well. Keep the metadata
+regression test and rerun the phone tests, typechecks, and packed-consumer install
+check before removing this workaround documentation.
+
 ## How to use
 
 ### Extend a Web Component

@@ -46,6 +46,15 @@ describe('PhoneNumber validation', () => {
     expect(validator.execute('+31612345678', 'NL')).to.be.false;
   });
 
+  it('accepts the French Guiana premium-rate example from libphonenumber v9.0.41', () => {
+    const validator = new PhoneNumber();
+    expect(validator.execute('+594890123456', 'GF')).to.be.false;
+    const parsed = PhoneUtilManager.PhoneUtil.parsePhoneNumber('+594890123456');
+    expect(parsed.valid).to.be.true;
+    expect(parsed.type).to.equal('premium-rate');
+    expect(parsed.regionCode).to.equal('GF');
+  });
+
   it('handles validation via awesome-phonenumber', () => {
     const validator = new PhoneNumber();
     // @ts-ignore

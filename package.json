@@ -99,6 +99,7 @@
     "astro": "^6.0.8",
     "astro-pagefind": "^1.8.5",
     "astro-seo": "^0.7.5",
+    "awesome-phonenumber": "file:packages/ui/vendor/awesome-phonenumber-7.9.0-tlouisse.libphonenumber-9.0.41.tgz",
     "bundlesize": "^1.0.0-beta.2",
     "cem-plugin-vs-code-custom-data-generator": "^1.4.2",
     "chai": "^4.5.0",
