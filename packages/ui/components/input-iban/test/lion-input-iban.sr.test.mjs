@@ -82,8 +82,9 @@ describe('<lion-input-iban> screen reader', () => {
 
     await sr.expect({
       virtual: contains('textbox, IBAN, not disabled, not invalid'),
-      // nvda and voiceover wording is finalised by the first CI run of those readers
-      nvda: contains('IBAN', 'edit'),
+      // nvda speaks one phrase per item ("name, role, value"), so the field is a
+      // single phrase with a trailing comma for its empty value
+      nvda: contains('IBAN, edit,'),
       voiceover: contains('IBAN', 'text field'),
     });
   });

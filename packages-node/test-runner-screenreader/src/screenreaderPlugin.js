@@ -9,6 +9,7 @@
 import path from 'path';
 import { fileURLToPath } from 'url';
 
+import { normalizePhrases } from './comparePhrases.js';
 import { recordObservation, resetObservations } from './transcripts.js';
 
 const DEFAULT_WAIT_TIMEOUT = 30000;
@@ -169,15 +170,43 @@ function createScreenReader({ screenReader, getPage }) {
   };
 
   /**
+   * NVDA has no "go to the start of the document" command, so it is stopped and
+   * started again. A restart that does not come back is reported here, instead
+   * of letting every following test time out on a reader that is not running.
+   */
+  const restart = async () => {
+    /** @type {any} */
+    let lastError = null;
+    for (let attempt = 0; attempt < 2; attempt += 1) {
+      try {
+        await instance?.stop?.();
+        await instance?.start?.();
+        await instance?.spokenPhraseLog?.();
+        return;
+      } catch (error) {
+        lastError = error;
+      }
+    }
+    throw new Error(
+      `Could not restart the ${screenReader} screen reader: ${
+        lastError?.message ?? 'unknown error'
+      }`,
+    );
+  };
+
+  /**
    * Bring the reader back to the start of the document and empty the logs, so
    * every test observes one state instead of the transcript of its neighbours.
    */
   const reset = async () => {
     if (screenReader === 'virtual') {
       await startVirtualReader(getPage());
-    } else {
-      await instance?.stop?.();
-      await instance?.start?.();
+    } else if (instance?.keyboardCommands?.moveToFirst) {
+      // VoiceOver can go back to the start of the document itself, so it does
+      // not need to be restarted between tests.
+      await instance.perform(instance.keyboardCommands.moveToFirst);
+    } else if (instance) {
+      await restart();
     }
     await instance?.clearSpokenPhraseLog?.();
     await instance?.clearItemTextLog?.();
@@ -310,7 +339,8 @@ export function screenreaderPlugin(options) {
       }
 
       if (command === 'sr-phraseLog') {
-        return readerFor(session).spokenPhraseLog();
+        const phraseLog = await readerFor(session).spokenPhraseLog();
+        return normalizePhrases(phraseLog);
       }
 
       if (command === 'sr-itemText') {
@@ -323,7 +353,7 @@ export function screenreaderPlugin(options) {
         const deadline = Date.now() + timeout;
         const needle = String(payload?.phrase ?? '').toLowerCase();
         /** @type {string[]} */
-        let phraseLog = await instance.spokenPhraseLog();
+        let phraseLog = normalizePhrases(await instance.spokenPhraseLog());
         while (
           !phraseLog.some(
             /** @param {string} phrase */ phrase => phrase.toLowerCase().includes(needle),
@@ -335,7 +365,7 @@ export function screenreaderPlugin(options) {
           await new Promise(resolve => {
             setTimeout(resolve, WAIT_POLL_INTERVAL);
           });
-          phraseLog = await instance.spokenPhraseLog();
+          phraseLog = normalizePhrases(await instance.spokenPhraseLog());
         }
         return { found: true, phraseLog };
       }

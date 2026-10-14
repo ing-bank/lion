@@ -61,6 +61,10 @@ Rules the flow enforces:
   a DOM property talks to the component but not to NVDA or VoiceOver, which only
   speak what their own keyboard input produced.
 - Waiting is `sr.waitFor(phrase)`, never a fixed sleep.
+- Phrases are compared with runs of whitespace collapsed and empty entries
+  dropped: readers pad their announcements (`"IBAN, edit, "` for NVDA) and
+  guidepup's log can carry an empty phrase for "nothing said". Padding is not
+  meaning, so the written expectation carries the words only.
 - There is no update mode. A run passes or fails like any other test; on a
   mismatch the failure output shows the expected and heard phrase log, and the
   developer updates the expectation in the test.
@@ -150,10 +154,12 @@ passed.
 | `exact(...phrases)`      | `SrPhraseList`      | phrase log has to match one to one              |
 | `contains(...phrases)`   | `SrPhraseList`      | phrases have to appear in this order            |
 
-Note on `sr.reset()`: the virtual reader restarts its document, while NVDA and
-VoiceOver are stopped and started again, because Guidepup has no portable "go to
-the start of the document" command. That is the price of every test observing one
-state instead of the transcript of its neighbours.
+Note on `sr.reset()`: the virtual reader restarts its document; VoiceOver goes
+back to the first item through `keyboardCommands.moveToFirst`; NVDA has no such
+command, so it is stopped and started again - with the restart verified and
+retried once, so a reader that does not come back fails loudly instead of timing
+out every following test. That is the price of every test observing one state
+instead of the transcript of its neighbours.
 
 ## License
 

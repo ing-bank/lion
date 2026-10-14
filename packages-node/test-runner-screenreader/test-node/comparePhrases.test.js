@@ -76,6 +76,27 @@ describe('comparePhrases', () => {
     });
   });
 
+  describe('normalisation', () => {
+    it('ignores the whitespace a reader pads an announcement with', () => {
+      const result = comparePhrases({ mode: 'contains', phrases: ['IBAN, edit,'] }, [
+        'IBAN, edit, ',
+      ]);
+      expect(result.ok).to.be.true;
+    });
+
+    it('collapses runs of whitespace inside a phrase', () => {
+      const result = comparePhrases({ mode: 'exact', phrases: ['textbox,  IBAN'] }, [
+        'textbox,\n      IBAN',
+      ]);
+      expect(result.ok).to.be.true;
+    });
+
+    it('drops empty entries from the heard log', () => {
+      const result = comparePhrases({ mode: 'exact', phrases: ['IBAN'] }, ['IBAN', '', '   ']);
+      expect(result.ok).to.be.true;
+    });
+  });
+
   describe('formatMismatch', () => {
     it('shows the expected log, the heard log and the first divergence', () => {
       const expected = /** @type {SrPhraseList} */ ({

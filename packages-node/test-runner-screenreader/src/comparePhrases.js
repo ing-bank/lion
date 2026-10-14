@@ -7,15 +7,33 @@
  */
 
 /**
+ * @param {string[]} phrases
+ * @returns {string[]} the same phrases, with runs of whitespace collapsed and
+ *   empty entries dropped: a screen reader that says nothing is not saying ""
+ */
+export function normalizePhrases(phrases) {
+  return phrases
+    .map(phrase => String(phrase).replace(/\s+/g, ' ').trim())
+    .filter(phrase => phrase.length > 0);
+}
+
+/**
  * @param {string[]} expected
  * @param {string[]} heard
  * @returns {Comparison}
  */
 export function compareExact(expected, heard) {
-  const length = Math.max(expected.length, heard.length);
+  const expectedPhrases = normalizePhrases(expected);
+  const heardPhrases = normalizePhrases(heard);
+  const length = Math.max(expectedPhrases.length, heardPhrases.length);
   for (let i = 0; i < length; i += 1) {
-    if (expected[i] !== heard[i]) {
-      return { ok: false, index: i, expectedPhrase: expected[i], heardPhrase: heard[i] };
+    if (expectedPhrases[i] !== heardPhrases[i]) {
+      return {
+        ok: false,
+        index: i,
+        expectedPhrase: expectedPhrases[i],
+        heardPhrase: heardPhrases[i],
+      };
     }
   }
   return { ok: true, index: -1 };
@@ -30,17 +48,24 @@ export function compareExact(expected, heard) {
  * @returns {Comparison}
  */
 export function compareContains(expected, heard) {
+  const expectedPhrases = normalizePhrases(expected);
+  const heardPhrases = normalizePhrases(heard);
   let cursor = 0;
-  for (const phrase of expected) {
+  for (const phrase of expectedPhrases) {
     let at = -1;
-    for (let i = cursor; i < heard.length; i += 1) {
-      if (heard[i] === phrase) {
+    for (let i = cursor; i < heardPhrases.length; i += 1) {
+      if (heardPhrases[i] === phrase) {
         at = i;
         break;
       }
     }
     if (at === -1) {
-      return { ok: false, index: cursor, expectedPhrase: phrase, heardPhrase: heard[cursor] };
+      return {
+        ok: false,
+        index: cursor,
+        expectedPhrase: phrase,
+        heardPhrase: heardPhrases[cursor],
+      };
     }
     cursor = at + 1;
   }
@@ -63,10 +88,11 @@ export function comparePhrases(expected, heard) {
  * @returns {string}
  */
 export function formatPhrases(phrases) {
-  if (phrases.length === 0) {
+  const normalized = normalizePhrases(phrases);
+  if (normalized.length === 0) {
     return '    (nothing spoken)';
   }
-  return phrases.map((phrase, index) => `    [${index}] ${JSON.stringify(phrase)}`).join('\n');
+  return normalized.map((phrase, index) => `    [${index}] ${JSON.stringify(phrase)}`).join('\n');
 }
 
 /**
