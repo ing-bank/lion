@@ -61,7 +61,10 @@ describe('change-graph', () => {
 
   it('resolves import aliases and self-references and stops at external packages', async () => {
     const graph = await buildImportGraph({ root });
-    const deps = file => [...graph.get(path.join(root, file))].map(f => path.relative(root, f));
+    const deps = file =>
+      [...graph.get(path.join(root, file))].map(f =>
+        path.relative(root, f).split(path.sep).join('/'),
+      );
     expect(deps('components/a/A.js').sort()).to.deep.equal(['exports/lib.js', 'shared/util.js']);
     expect(deps('components/b/B.js').sort()).to.deep.equal([
       'components/a/A.js',
@@ -71,7 +74,10 @@ describe('change-graph', () => {
 
   it('flags every unit that can reach a changed file', async () => {
     const graph = await buildImportGraph({ root });
-    const unitOf = file => /components\/([^/]+)\//.exec(path.relative(root, file))?.[1] ?? null;
+    const unitOf = file => {
+      const [directory, unit] = path.relative(root, file).split(path.sep);
+      return directory === 'components' ? unit : null;
+    };
     const units = collectUnitFiles(graph, unitOf);
     expect(findAffectedUnits(units, [path.join(root, 'shared/util.js')]).sort()).to.deep.equal([
       'a',
