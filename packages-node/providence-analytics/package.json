@@ -61,15 +61,10 @@
   },
   "optionalDependencies": {
     "@babel/parser": "^7.29.0",
-    "@babel/plugin-syntax-import-assertions": "^7.28.6",
     "@swc/core": "~1.10.12"
   },
   "devDependencies": {
-    "@babel/parser": "^7.29.0",
-    "@babel/plugin-syntax-import-assertions": "^7.28.6",
     "@babel/traverse": "^7.29.0",
-    "@swc/core": "~1.10.12",
-    "@types/inquirer": "^9.0.9",
     "@types/mocha": "^10.0.10",
     "@web/dev-server": "^0.4.6",
     "@web/dev-server-core": "^0.7.5",
@@ -95,7 +90,9 @@
   },
   "comments": {
     "dependencies": {
+      "@babel/parser": "Lazily imported by AstService (the `--fallback-to-babel` parser) and referenced from the emitted declarations, so optional",
       "@rollup/plugin-node-resolve": "Move to devDep (for mocking require.resolve) later and use require.resolve for prod later",
+      "@swc/core": "Lazily imported by AstService for the `swc` ast type - every shipped analyzer uses `oxc`, the base Analyzer defaults to `babel` - and referenced from the emitted declarations, so optional",
       "oxc-parser": "Pin it as long as the api is unstable, to prevent unpredictable behavior",
       "semver": "Only needed for one check. Create internal util later"
     }
