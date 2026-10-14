@@ -1,5 +1,7 @@
+import fs from 'fs';
 import module from 'module';
 import path from 'path';
+import { fileURLToPath } from 'url';
 
 const mockFsRequire = module.createRequire(import.meta.url);
 // eslint-disable-next-line import/no-extraneous-dependencies
@@ -82,10 +84,41 @@ function getPackageRootFromNodeModulesPath(resolvedPath, dynamicImport) {
 }
 
 /**
+ * Every `node_modules` directory a package can be looked up in, walking up from this file.
+ *
+ * `require.resolve` collapses symlinks to their target, and in a relinked worktree (a symlink
+ * farm pointing into another checkout) that target lives outside this tree. `mock-fs` patches
+ * `fs.realpathSync` - and with it the sync calls the ESM loader uses - so *inside* a mock the
+ * loader keeps stat'ing the lookup path (the symlink) instead. Both need to be mocked, or a
+ * dynamically imported native dependency cannot be found.
+ * @param {string} name
+ * @returns {string[]} the scope dir (for scoped names) or package dir per found node_modules
+ */
+function getPackageLookupRoots(name) {
+  const scope = name.startsWith('@') ? name.split('/')[0] : name;
+  /** @type {string[]} */
+  const roots = [];
+  let dir = path.dirname(fileURLToPath(import.meta.url));
+  // eslint-disable-next-line no-constant-condition
+  while (true) {
+    const candidate = path.join(dir, 'node_modules', scope);
+    if (fs.existsSync(candidate)) {
+      roots.push(candidate);
+    }
+    const parentDir = path.dirname(dir);
+    if (parentDir === dir) {
+      break;
+    }
+    dir = parentDir;
+  }
+  return roots;
+}
+
+/**
  * @example
  * ```js
  * const importablePaths = resolveDynamicImportsForMockFs();
- * mockFs({...Object.fromEntries(importablePaths.map(p => [p, mockFs.load(p)])), ...rest });
+ * mockFs({...Object.fromEntries(importablePaths.map(p => [p, mockFs.load(p)])), ...rest});
  * ```
  *
  * @param {{name:string;siblings?:string[]}[]} dynamicImports
@@ -104,8 +137,13 @@ export function resolveDynamicImportsForMockFs(
   ],
 ) {
   const require = module.createRequire(import.meta.url);
+  /** @type {string[]} */
   const importablePaths = [];
   for (const dynamicImport of dynamicImports) {
+    // Presence check only: `require.resolve` collapses symlinks to their target, and in a
+    // relinked worktree that target lives in another checkout. Mocking *that* path is not
+    // enough - see getPackageLookupRoots - but a package that is not installed at all cannot
+    // be mocked either way.
     /** @type {string} */
     let resolvedPath;
     try {
@@ -114,14 +152,19 @@ export function resolveDynamicImportsForMockFs(
       console.warn(`[resolveDynamicImportsForMockFs] Did not find ${dynamicImport.name}`);
       continue; // eslint-disable-line no-continue
     }
-    const rootPath = getPackageRootFromNodeModulesPath(resolvedPath, dynamicImport.name);
-    importablePaths.push(rootPath);
-    for (const sibling of dynamicImport.siblings || []) {
-      const siblingPath = `${rootPath.split(path.sep).slice(0, -1).join(path.sep)}${path.sep}${sibling}`;
-      importablePaths.push(siblingPath);
+    const lookupRoots = getPackageLookupRoots(dynamicImport.name);
+    const rootPaths = lookupRoots.length
+      ? lookupRoots
+      : [getPackageRootFromNodeModulesPath(resolvedPath, dynamicImport.name)];
+    for (const rootPath of rootPaths) {
+      importablePaths.push(rootPath);
+      for (const sibling of dynamicImport.siblings || []) {
+        const siblingPath = `${rootPath.split(path.sep).slice(0, -1).join(path.sep)}${path.sep}${sibling}`;
+        importablePaths.push(siblingPath);
+      }
     }
   }
-  return importablePaths;
+  return [...new Set(importablePaths)];
 }
 const importablePaths = resolveDynamicImportsForMockFs();
 
