@@ -17,7 +17,7 @@ import {
   reachesProperty,
   resolveReferenceTrace,
   selectRecordedEntries,
-} from './index.js';
+} from '../src/index.js';
 
 const refs = value => [...value.matchAll(/var\((--[\w-]+)\)/g)].map(match => match[1]);
 
