@@ -12,7 +12,7 @@
     "test:node": "mocha './test-node/**/*.test.js' --timeout 8000"
   },
   "dependencies": {
-    "oxc-parser": "^0.112.0",
+    "oxc-parser": "0.137.0",
     "oxc-resolver": "^1.12.0"
   },
   "license": "MIT",
