@@ -6,9 +6,14 @@ import { remarkProcessDemos } from './src/utils/remark-plugins/remark-process-de
 import { remarkModifiedTime } from './src/utils/remark-plugins/remark-modified-time.mjs';
 import { remarkRewriteMdLinks } from './src/utils/remark-plugins/remark-rewrite-md-links.mjs';
 
+// The portal is published under a prefix: '/next' for the production site, another prefix
+// for a branch preview (see scripts/deploy-portal-preview.mjs). Everything inside the portal
+// resolves its urls against import.meta.env.BASE_URL, so the prefix is a build time concern.
+const base = process.env.ASTRO_BASE_URL || '/next';
+
 const mdjsSetupConfig = {
   simulationSettings: {
-    simulatorUrl: '/next/simulator',
+    simulatorUrl: `${base}/simulator`,
     languages: [
       { key: 'de-DE', name: 'German' },
       { key: 'en-GB', name: 'English (United Kingdom)' },
@@ -20,7 +25,7 @@ const mdjsSetupConfig = {
 
 // https://astro.build/config
 export default defineConfig({
-  base: '/next',
+  base,
   trailingSlash: 'never',
   integrations: [lit(), pagefind()],
   markdown: {

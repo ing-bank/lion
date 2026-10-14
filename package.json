@@ -31,6 +31,7 @@
     "lint:versions": "node ./scripts/lint-versions.js",
     "prepare": "husky install",
     "preview": "npx serve _site",
+    "portal:preview": "node ./scripts/deploy-portal-preview.mjs",
     "release": "changeset publish",
     "repo:clean-slate": "git clean -dfX",
     "repo:diff-package-lock": "npx diff-package-lock",

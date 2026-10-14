@@ -272,6 +272,27 @@ We use [GitHub Pages](https://docs.github.com/en/pages) to host our static websi
 npm run deploy
 ```
 
+### Branch previews (test versions of the portal)
+
+A branch preview is the portal built with another base url, published in a folder that carries
+the branch name. Nothing links to it, so it can be shared before a branch is merged.
+
+```bash
+npm run portal:preview                     # HEAD -> https://lion.js.org/next-preview/<branch-slug>/
+npm run portal:preview -- --no-push        # build and stage locally, do not publish
+npm run portal:preview -- --no-build       # reuse the dist/ that is already there
+npm run portal:preview -- --branch=feat/x  # preview another branch
+```
+
+The portal resolves all of its urls against `import.meta.env.BASE_URL` (set through
+`ASTRO_BASE_URL`), so a preview is the ordinary build with a different prefix; no other source
+changes are involved. `next-preview/index.html` lists the previews that are currently published.
+
+The shared Pages site is public: a preview url is unlisted but not access controlled. For content
+that may not be public, stage it locally and expose it on the tailnet instead (`npm run
+portal:preview -- --target=local`, then serve `~/portal-previews` from a static server behind
+`tailscale serve`; the printed url is only reachable from devices in the tailnet).
+
 ## Contact
 
 Feel free to create a github issue for any feedback or questions you might have.
