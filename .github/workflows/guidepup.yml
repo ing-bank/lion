@@ -18,6 +18,11 @@ jobs:
 
       - name: Setup screen reader
         uses: guidepup/setup-action@main
+        with:
+          # macos runners cannot always write the TCC database, and the action
+          # then reports success while VoiceOver still cannot mount its
+          # preferences ("Failed to mount Guidepup preferences")
+          ignoreTccDb: true
 
       - name: Setup Node
         uses: actions/setup-node@v4

@@ -153,6 +153,7 @@ function createVirtualProxy(page) {
 function createScreenReader({ screenReader, getPage }) {
   /** @type {any} */
   let instance = null;
+  let resets = 0;
 
   const start = async () => {
     if (screenReader === 'virtual') {
@@ -199,15 +200,20 @@ function createScreenReader({ screenReader, getPage }) {
    * every test observes one state instead of the transcript of its neighbours.
    */
   const reset = async () => {
+    resets += 1;
     if (screenReader === 'virtual') {
       await startVirtualReader(getPage());
-    } else if (instance?.keyboardCommands?.moveToFirst) {
+    } else if (resets > 1 && instance?.keyboardCommands?.moveToFirst) {
       // VoiceOver can go back to the start of the document itself, so it does
       // not need to be restarted between tests.
       await instance.perform(instance.keyboardCommands.moveToFirst);
-    } else if (instance) {
+    } else if (resets > 1 && instance) {
       await restart();
     }
+    // The first reset only clears the logs: a reader that was just started is
+    // already at the start of the document, and stopping NVDA right after
+    // starting it leaves it unreachable ("NVDA is not running") for the whole
+    // run.
     await instance?.clearSpokenPhraseLog?.();
     await instance?.clearItemTextLog?.();
   };
