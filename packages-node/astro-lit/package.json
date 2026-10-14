@@ -33,7 +33,8 @@
   },
   "devDependencies": {
     "@lit-labs/ssr-client": "^1.1.7",
-    "lit": "^3.3.2"
+    "lit": "^3.3.2",
+    "@lion/ui": "^0.21.1"
   },
   "keywords": [
     "lion-tools",

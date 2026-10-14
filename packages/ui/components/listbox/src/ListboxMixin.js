@@ -4,7 +4,7 @@ import { dedupeMixin } from '@open-wc/dedupe-mixin';
 import { ChoiceGroupMixin, FormControlMixin, FormRegistrarMixin } from '@lion/ui/form-core.js';
 import { ScopedElementsMixin } from '../../core/src/ScopedElementsMixin.js';
 import { LionOptions } from './LionOptions.js';
-import { moveUserProvidedDefaultSlottablesToTarget } from '../../core/src/SlotMixin.js';
+import { moveUserProvidedDefaultSlottablesToTarget } from '../../core/src/LightRenderMixin.js';
 
 // TODO: make this mixin reuse the interactive-list implementation instead of its own copy of the
 // navigation logic. The extraction this TODO used to ask for ("ListNavigationWithActiveDescendantMixin
