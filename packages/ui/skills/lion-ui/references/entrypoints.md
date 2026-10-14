@@ -2,7 +2,7 @@
 
 > Generated from `packages/ui/exports` by `npm run skills:generate`. Do not edit by hand.
 
-These 127 specifiers are the ones that exist. A specifier reasoned from an
+These 132 specifiers are the ones that exist. A specifier reasoned from an
 element or a concept name will not be among them — `<lion-checkbox>` comes from `checkbox-group`,
 not from `checkbox` — and importing one that does not exist fails at load.
 
@@ -60,6 +60,8 @@ not from `checkbox` — and importing one that does not exist fails at load.
 - `@lion/ui/localize-no-side-effects.js`
 - `@lion/ui/localize-test-helpers.js`
 - `@lion/ui/localize.js`
+- `@lion/ui/menu-test-suites.js`
+- `@lion/ui/menu.js`
 - `@lion/ui/overlays-no-side-effects.js`
 - `@lion/ui/overlays-test-helpers.js`
 - `@lion/ui/overlays-test-suites.js`
@@ -119,7 +121,10 @@ not from `checkbox` — and importing one that does not exist fails at load.
 - `@lion/ui/define/lion-input-tel-dropdown.js`
 - `@lion/ui/define/lion-input-tel.js`
 - `@lion/ui/define/lion-input.js`
+- `@lion/ui/define/lion-item.js`
 - `@lion/ui/define/lion-listbox.js`
+- `@lion/ui/define/lion-menu.js`
+- `@lion/ui/define/lion-menuitem.js`
 - `@lion/ui/define/lion-option.js`
 - `@lion/ui/define/lion-options.js`
 - `@lion/ui/define/lion-pagination.js`

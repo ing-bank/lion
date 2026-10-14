@@ -6,6 +6,12 @@
 
 Creating your own forms as an Application Developer is really simple. Only two rules need to be followed.
 
+There are two supported ways to work with lion. **Consume** lion's components directly — compose them
+into your app, optionally wrapped in your own components — which is what application code normally does
+and what the `lion-ui` skill documents. Or **subclass** them to give them your own tag names, branding
+and styling: that path belongs to the team that builds your Design System (see
+[Extending form components](#extending-form-components) below).
+
 This guide is written for Application Developers that work with a fully styled and configured extension of Lion.
 Say for instance we have a 'Wolf' extension layer with a set of styled/configured Lion form components:
 
@@ -30,6 +36,8 @@ Large or complex forms might need to be split up into multiple files. This compo
 - (web) components
 
 In the latter case: make sure that your components don't have a shadow root. This can be achieved by rendering into Light DOM. The form registration mechanism relies on light dom by design: as soon as you do start to use shadow roots, you will notice that your form components won't register themselves anymore to their parents.
+
+This is narrower than it may sound: `createRenderRoot` returning the host is needed **only** when the component you write is a *parent of a form control* — it contains a form control itself and must be usable inside a form. A leaf component, or a component that holds no form control, keeps its normal shadow root.
 
 > Today, rendering to light dom is the only way to [stay accessible](../../fundamentals/rationales/accessibility.md#shadow-roots-and-accessibility).
 
