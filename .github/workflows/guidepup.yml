@@ -27,6 +27,9 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Install screen reader assets
+        run: npx @guidepup/setup install
+
       - name: Playwright
         run: npx playwright install --with-deps
 
@@ -49,6 +52,9 @@ jobs:
 
       - name: Install dependencies
         run: npm ci
+
+      - name: Install screen reader assets
+        run: npx @guidepup/setup install
 
       - name: Playwright
         run: npx playwright install --with-deps
