@@ -79,15 +79,29 @@ CI runs `--nvda` on `windows-latest` and `--voiceover` on `macos-15`, both with
 window, so those runs launch a non headless browser with
 `__experimentalWindowFocus__`.
 
-## Known limits of the virtual reader
+## Patched virtual reader (live regions in shadow roots)
 
-`@guidepup/virtual-screen-reader` announces `aria-live` regions it can see from the
-light DOM only: it neither observes shadow roots nor walks from a node inside a
-shadow root up to its host. Lion renders validation messages in the shadow root of
-`lion-validation-feedback`, so a `virtual` run reports the field as "invalid"
-without the message. Real NVDA and VoiceOver do announce it (`aria-live="assertive"`),
-so those expectations carry the message while the `virtual` one does not; a DOM
-assertion in the test keeps the live region itself covered locally.
+`patches/@guidepup+virtual-screen-reader+0.33.0.patch` makes the virtual reader
+announce live regions that live inside a shadow root, which is where Lion renders
+validation messages. Upstream misses them in three coupled places:
+
+- `observeDOM` observes the container subtree only, so a shadow root is never a
+  mutation target's observed tree;
+- `getElementFromNode` is `isElement(node) ? node : node.parentElement`, and a
+  mutation whose target is a `ShadowRoot` has no `parentElement`, so the target
+  resolves to `undefined`;
+- `getLiveRegionAttributes` walks up with `parentElement` only, so it cannot reach
+  the `aria-live` attribute on a shadow root's host element.
+
+The patch observes shadow roots (including ones attached later, by wrapping
+`attachShadow`), maps a `ShadowRoot` target to its host, and hops to the host
+while walking up.
+
+**Revisit this patch on every upgrade of `@guidepup/virtual-screen-reader`**: it is
+a diff against 0.33.0's browser bundle, which is minified (hence a ~400 KB patch
+file for three small edits), and it fails the build rather than degrading silently
+because the root `postinstall` runs `patch-package --error-on-fail`. It should be
+dropped as soon as the same behaviour lands upstream.
 
 ## Failure output
 

@@ -17,12 +17,11 @@ import '@lion/ui/define/lion-input-iban.js';
  * through typing an IBAN. Hence the Tab between typing and asserting.
  *
  * The error message itself sits in the shadow root of `lion-validation-feedback`
- * with `aria-live="assertive"` (DOM verified), so the real readers announce it.
- * The virtual screen reader only announces live regions it can see from the
- * light DOM - it neither observes shadow roots nor walks from a shadow root up
- * to its host - so it reports the field as "invalid" without the message. That
- * is why only nvda and voiceover expect the message, while the DOM assertions
- * below keep the live region itself covered on every run.
+ * with `aria-live="assertive"`, so every reader announces it. The virtual reader
+ * needs patches/@guidepup+virtual-screen-reader+0.33.0.patch for that: upstream
+ * only observes the light DOM and only walks up through `parentElement`, so a
+ * live region inside a shadow root stays invisible to it. The DOM assertions at
+ * the end of the invalid case keep the live region wiring covered as well.
  *
  * @typedef {import('@lion/ui/input-iban.js').LionInputIban} LionInputIban
  */
@@ -116,16 +115,21 @@ describe('<lion-input-iban> screen reader', () => {
     await sr.waitFor('FOO');
     await sr.press('Tab');
 
-    await sr.waitFor(', invalid');
+    await sr.waitFor('Please enter a valid IBAN');
 
     await sr.expect({
-      virtual: contains('textbox, IBAN, FOO, not disabled, invalid'),
+      virtual: contains(
+        'textbox, IBAN, FOO, not disabled, invalid',
+        // "Error,," is what the reader joins: the additions phrase of the live
+        // region plus its text phrase
+        'assertive: Error,, Please enter a valid IBAN.',
+      ),
       nvda: contains('FOO', 'invalid', 'Please enter a valid IBAN'),
       voiceover: contains('FOO', 'invalid', 'Please enter a valid IBAN'),
     });
 
-    // The virtual reader cannot see live regions inside a shadow root, so the
-    // message the real readers announce is pinned down in the DOM instead.
+    // The live region wiring itself is pinned in the DOM as well, so a broken
+    // aria-live or a missing message fails here even before the readers disagree.
     const feedback = /** @type {HTMLElement} */ (el.querySelector('[slot="feedback"]'));
     await waitUntil(
       () => (feedback.shadowRoot?.textContent ?? '').includes('Please enter a valid IBAN'),
