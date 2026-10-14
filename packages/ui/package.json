@@ -81,6 +81,7 @@
     "dist-types",
     "docs",
     "exports",
+    "vendor",
     "vscode.css-custom-data.json",
     "vscode.html-custom-data.json",
     "web-types.json",
@@ -93,6 +94,7 @@
     "debug:firefox": "cd ../../ && npm run debug:firefox",
     "debug:webkit": "cd ../../ && npm run debug:webkit",
     "generate-lion-exports": "node ./scripts/generate-lion-exports.js",
+    "prepack": "node ./scripts/prepare-vendored-phone.js",
     "prepublishOnly": "npm run types && npm run create-npm-publish-docs && npm run publish-docs && npm run custom-elements-manifest && npm run generate-lion-exports",
     "publish-docs": "node ../../packages-node/publish-docs/src/cli.js --github-url https://github.com/ing-bank/lion/ --git-root-dir ../../",
     "test": "cd ../../ && npm run test:browser",
@@ -113,10 +115,13 @@
     "@open-wc/scoped-elements": "^3.0.6",
     "@popperjs/core": "^2.11.8",
     "autosize": "^6.0.0",
-    "awesome-phonenumber": "^7.8.0",
+    "awesome-phonenumber": "file:vendor/awesome-phonenumber-7.9.0-tlouisse.libphonenumber-9.0.41.tgz",
     "ibantools": "^4.3.9",
     "lit": "^3.1.2",
     "singleton-manager": "^1.8.0"
+  },
+  "bundledDependencies": {
+    "0": "awesome-phonenumber"
   },
   "keywords": [
     "design-system",
