@@ -9,7 +9,7 @@
   },
   "scripts": {
     "test": "npm run test:node",
-    "test:node": "mocha './src/**/*.test.js' --timeout 8000"
+    "test:node": "mocha './test-node/**/*.test.js' --timeout 8000"
   },
   "dependencies": {
     "oxc-parser": "^0.112.0",
@@ -24,7 +24,6 @@
     "directory": "packages-node/change-graph"
   },
   "files": [
-    "src",
-    "!src/**/*.test.js"
+    "src"
   ]
 }
