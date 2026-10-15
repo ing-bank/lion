@@ -104,7 +104,7 @@ const bypassImportMapForFile = async (filePath, packageDir, importMap) => {
 };
 
 /**
- * Normalizes the import map by removing the stars
+ * Normalizes string and ESM conditional import targets by removing the stars
  *
  * @param {object} imports packageJson.imports
  * @returns {object}
@@ -113,8 +113,19 @@ const normalizeImportMap = imports => {
   // @ts-ignore
   const removeFirstStar = str => str.replace('*', '');
   return Object.entries(imports || {}).reduce((accumulator, [key, value]) => {
+    const target =
+      value && typeof value === 'object'
+        ? Object.entries(value).find(
+            ([condition]) => condition === 'import' || condition === 'default',
+          )?.[1]
+        : value;
+    if (typeof target !== 'string') {
+      throw new Error(
+        `Unsupported import map target for "${key}": expected a string or an import/default string target`,
+      );
+    }
     // @ts-ignore
-    accumulator[removeFirstStar(key)] = removeFirstStar(value);
+    accumulator[removeFirstStar(key)] = removeFirstStar(target);
     return accumulator;
   }, {});
 };
