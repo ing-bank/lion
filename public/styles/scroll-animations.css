@@ -445,7 +445,7 @@
     left: 0;
     right: 0;
     height: 2px;
-    background: var(--highlight-color);
+    background: var(--accent-yellow);
     transform-origin: left;
     z-index: 1000;
     animation: grow-progress linear both;

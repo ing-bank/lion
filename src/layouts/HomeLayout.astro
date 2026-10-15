@@ -1,6 +1,8 @@
 ---
 import { SEO } from "astro-seo";
 import TopNav from "../components/TopNav.astro";
+import ThemeInit from '../components/ThemeInit.astro';
+import LionWordmark from '../components/LionWordmark.astro';
 
 const site = Astro.site || Astro.url.origin;
 const canonicalURL = new URL(Astro.url.pathname, site).toString();
@@ -15,6 +17,7 @@ const { title } = Astro.props;
     <meta name="view-transition" content="same-origin" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="color-scheme" content="light dark" />
+    <ThemeInit />
     <title>Lion - Fundamental White Label Web Components</title>
     <link rel="icon" type="image/svg+xml" href=`${import.meta.env.BASE_URL}/favicon.svg` />
     <meta name="generator" content={Astro.generator} />
@@ -58,7 +61,7 @@ const { title } = Astro.props;
         <div class="container">
             <div class="footer-row">
                 <div class="footer-brand">
-                    <img src=`${import.meta.env.BASE_URL}/lionui-text.svg` alt="lion ui" height="16" class="logo-text-svg">
+                    <LionWordmark />
                     <p class="copyright">&copy; 2025 Lion Project. MIT License.</p>
                 </div>
                 <div class="footer-links">

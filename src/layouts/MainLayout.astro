@@ -3,7 +3,9 @@ import { getCollection } from "astro:content";
 import { SEO } from "astro-seo";
 
 import { UIPortalFooter } from "../components/ui-portal-footer.js";
+import ThemeInit from '../components/ThemeInit.astro';
 import { UIPortalMainNav } from "../components/ui-portal-main-nav.js";
+import LionWordmark from '../components/LionWordmark.astro';
 
 const site = Astro.site || Astro.url.origin;
 const canonicalURL = new URL(Astro.url.pathname, site).toString();
@@ -246,6 +248,8 @@ const footerData = [
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />
+    <meta name="color-scheme" content="light dark" />
+    <ThemeInit />
     <link rel="icon" type="image/svg+xml" href=`${import.meta.env.BASE_URL}/favicon.svg` />
     <meta name="generator" content={Astro.generator} />
 
@@ -282,7 +286,7 @@ const footerData = [
         <div class="header-content">
           <a href={`${import.meta.env.BASE_URL}/`} class="logo">
             <img src={`${import.meta.env.BASE_URL}/logo.svg`} alt="Lion Logo" width="32" height="32">
-            <img src={`${import.meta.env.BASE_URL}/lionui-text.svg`} alt="lion ui" height="16" class="logo-text-svg">
+            <LionWordmark />
           </a>
         </div>
       </div>
