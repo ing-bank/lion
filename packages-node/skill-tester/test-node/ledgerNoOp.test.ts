@@ -70,6 +70,17 @@ test('a fully attempted cell is unchanged', () => {
   assert.equal(entry.mean, 1);
 });
 
+test('a scenario with no comparable run is recorded as an absence, not omitted', () => {
+  const other = { name: 'component/other', kind: 'component' } as TestScenario;
+  // Two runs for component/demo, none of which wrote the file: component/other was never run at all.
+  const ledger = updateLedger(emptyLedger, reportWith([run(false, 0), run(false, 0)]), [scenario, other], 'rev1');
+  const demo = ledger.entries.find(entry => entry.scenario === 'component/demo');
+  const otherEntry = ledger.entries.find(entry => entry.scenario === 'component/other');
+  assert.equal(demo?.samples, 2, 'the attempted count is kept for the run scenario');
+  assert.ok(otherEntry, 'an unrun scenario is not silently dropped from the page');
+  assert.equal(otherEntry?.samples, 0, 'so the page can print n/a for it');
+});
+
 test('the ledger key is revision-scoped, so a re-run replaces a row and a new skill adds one', () => {
   const first = updateLedger(emptyLedger, reportWith([run(true, 0.5)]), [scenario], 'rev1');
   const sameRevision = updateLedger(first, reportWith([run(true, 0.9)]), [scenario], 'rev1');

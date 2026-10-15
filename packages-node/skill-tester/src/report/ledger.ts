@@ -120,6 +120,40 @@ export function updateLedger(
     byKey.set(ledgerKey(entry), entry);
   }
 
+  // A scenario that ends with no comparable run is a real absence, not a non-scenario: record a
+  // placeholder so the page can print n/a instead of pretending the scenario does not exist.
+  const models = new Set([
+    ...report.runs.map(run => run.model),
+    ...report.redoable.map(run => run.model),
+  ]);
+  for (const model of models) {
+    for (const scenario of scenarios) {
+      const key = ledgerKey({ skillRevision, model, scenario: scenario.name });
+      if (byKey.has(key)) continue;
+      byKey.set(key, {
+        skillRevision,
+        model,
+        scenario: scenario.name,
+        kind: kinds.get(scenario.name) ?? 'unknown',
+        samples: 0,
+        mean: 0,
+        min: 0,
+        max: 0,
+        stdDev: 0,
+        behaviourPassed: 0,
+        behaviourTotal: 0,
+        attempts: 0,
+        redoable: report.redoable.filter(
+          run => run.model === model && run.scenario === scenario.name,
+        ).length,
+        tokens: 0,
+        promptTokens: 0,
+        completionTokens: 0,
+        ranAt: report.finishedAt,
+      });
+    }
+  }
+
   return {
     version: 1,
     updatedAt: new Date().toISOString(),
