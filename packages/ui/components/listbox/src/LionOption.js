@@ -28,6 +28,7 @@ export class LionOption extends DisabledMixin(
     };
   }
 
+  /** @returns {import('lit').CSSResultArray} */
   static get styles() {
     return [
       css`

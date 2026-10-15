@@ -1,7 +1,9 @@
 import { LionCombobox } from '@lion/ui/combobox.js';
 import { LionSelectRich } from '@lion/ui/select-rich.js';
 import { SlotMixin } from '@lion/ui/core.js';
-import { LitElement } from 'lit';
+import { LitElement, css } from 'lit';
+import { LionOption } from '@lion/ui/listbox.js';
+import { ValidationExtension } from './consumer-mixins.js';
 import { Constructor } from '@open-wc/dedupe-mixin';
 import { SlotHost } from '@lion/ui/types/core.js';
 
@@ -48,3 +50,43 @@ export class ConsumerSelect extends SlotMixin(LionSelectRich) {
     return { ...super.slots, extra: () => document.createElement('span') };
   }
 }
+
+export class ConsumerOption extends LionOption {
+  static override get styles() {
+    return [
+      super.styles,
+      css`
+        :host {
+          color: red;
+        }
+      `,
+    ];
+  }
+}
+
+class ExtensionBase extends LitElement {
+  static extraStatic = 'retained';
+  extraInstance = 'retained';
+}
+
+export class ConsumerValidation extends ValidationExtension(ExtensionBase) {}
+
+export const extraStatic: string = ConsumerValidation.extraStatic;
+export const extraInstance: string = new ConsumerValidation().extraInstance;
+
+export function genericSlotPrototype<T extends Constructor<LitElement>>(base: T): void {
+  const extended = SlotMixin(base);
+  extended.prototype.requestUpdate();
+  const slots: SlotHost['slots'] = extended.prototype.slots;
+  void slots;
+}
+
+class ConstructorBase extends LitElement {
+  constructor(public label: string) {
+    super();
+  }
+}
+
+const SlottedConstructor = SlotMixin(ConstructorBase);
+export const constructorLabel: string = new SlottedConstructor('retained').label;
+export const prototypeLabel: string = SlottedConstructor.prototype.label;

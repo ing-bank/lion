@@ -79,13 +79,15 @@ export declare class SlotHost {
  *   };
  * }
  */
+declare function SlotMixinImplementation<T extends Constructor<LitElement & SlotHost>>(
+  superclass: T,
+): T;
 declare function SlotMixinImplementation<T extends Constructor<LitElement>>(
   superclass: T,
-): T extends Constructor<SlotHost>
-  ? T
-  : T &
-      Constructor<SlotHost> &
-      Pick<typeof SlotHost, keyof typeof SlotHost> &
-      Pick<typeof LitElement, keyof typeof LitElement>;
+): T &
+  Constructor<SlotHost> & { prototype: LitElement & SlotHost } & Pick<
+    typeof LitElement,
+    Exclude<keyof typeof LitElement, 'prototype'>
+  >;
 
 export type SlotMixin = typeof SlotMixinImplementation;
