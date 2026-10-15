@@ -272,6 +272,15 @@ We use [GitHub Pages](https://docs.github.com/en/pages) to host our static websi
 npm run deploy
 ```
 
+### The legacy rocket site (/prev)
+
+The astro portal owns the site root; the older [rocket](https://rocket.modern-web.dev/) site is
+published under `/prev` and is **frozen**: `npm run build` only builds the portal, and the
+`@rocket/*` dependencies are gone. The published copy under `/prev` is the archive, so `npm run
+deploy` passes `--add` to `gh-pages` and never removes existing files (that also keeps the branch
+previews in place). Rebuilding that site would mean restoring `rocket.config.mjs` and the rocket
+dependencies from git history (`git log -- rocket.config.mjs`).
+
 ### Branch previews (test versions of the portal)
 
 A branch preview is the portal built with another base url, published in a folder that carries
