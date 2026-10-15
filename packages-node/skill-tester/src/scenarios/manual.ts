@@ -20,9 +20,10 @@ export const nativeFormToLionFormScenario: TestScenario = {
   kind: 'integration',
   description: 'Migrate a native form to lion-form with a lion-form submit handler.',
   prompt: [
-    'Rewrite `src/login-form.js` so it uses `lion-form` and `@lion/ui` form controls instead of',
-    'a native `<form>` and native `<input>` elements. Keep the same fields (email + password) and',
-    'the same submit behaviour. Rewrite that file only — nothing else.',
+    'Rewrite `src/login-form.js` so the form is wrapped in `lion-form`, keeping the native `<form>`',
+    'element that `lion-form` slots into it, and so it uses `@lion/ui` form controls instead of',
+    'native `<input>` elements. Keep the same fields (email + password) and the same submit behaviour.',
+    'Rewrite that file only — nothing else.',
   ].join(' '),
   targetFile: 'src/login-form.js',
   files: {
@@ -42,10 +43,16 @@ export const nativeFormToLionFormScenario: TestScenario = {
   checks: [
     { type: 'exists', file: 'src/login-form.js' },
     {
-      type: 'matches',
+      type: 'notMatches',
       file: 'src/login-form.js',
-      pattern: `from\\s+['\"]@lion/ui/form.js['\"]`,
-      description: "imports LionForm from '@lion/ui/form.js'",
+      pattern: '@lion/ui/define/',
+      description: 'does not register elements globally through a define entrypoint',
+    },
+    {
+      type: 'notMatches',
+      file: 'src/login-form.js',
+      pattern: '@lion/ui/(components|src)/',
+      description: 'does not deep-import from @lion/ui internals',
     },
     {
       type: 'matches',
@@ -54,10 +61,10 @@ export const nativeFormToLionFormScenario: TestScenario = {
       description: 'uses the <lion-form> element',
     },
     {
-      type: 'notMatches',
+      type: 'matches',
       file: 'src/login-form.js',
       pattern: '<form(\\s|>)',
-      description: 'no longer renders a native <form>',
+      description: 'keeps the native <form> that lion-form slots into it',
     },
     {
       type: 'notMatches',
@@ -117,10 +124,16 @@ export const ibanFieldScenario: TestScenario = {
   expectedTransformedFiles: {
     'src/iban-field.js': [
       "import { LitElement, html } from 'lit';",
-      "import '@lion/ui/define/lion-form.js';",
-      "import '@lion/ui/define/lion-input-iban.js';",
+      "import { ScopedElementsMixin } from '@open-wc/scoped-elements/lit-element.js';",
+      "import { LionForm } from '@lion/ui/form.js';",
+      "import { LionInputIban } from '@lion/ui/input-iban.js';",
       '',
-      'export class IbanField extends LitElement {',
+      'export class IbanField extends ScopedElementsMixin(LitElement) {',
+      '  static scopedElements = {',
+      "    'lion-form': LionForm,",
+      "    'lion-input-iban': LionInputIban,",
+      '  };',
+
       '  render() {',
       '    return html`',
       '      <lion-form>',
@@ -145,8 +158,14 @@ export const ibanFieldScenario: TestScenario = {
     {
       type: 'matches',
       file: 'src/iban-field.js',
-      pattern: '@lion/ui/(define/lion-input-iban|input-iban)\\.js',
-      description: 'imports the IBAN field through a documented @lion/ui entrypoint',
+      pattern: '@lion/ui/input-iban\\.js',
+      description: 'imports the IBAN field through its documented class entrypoint',
+    },
+    {
+      type: 'notMatches',
+      file: 'src/iban-field.js',
+      pattern: '@lion/ui/define/',
+      description: 'does not register elements globally through a define entrypoint',
     },
     {
       type: 'notMatches',

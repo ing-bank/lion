@@ -17,7 +17,7 @@ Scores are the skill-tester convention checks plus behaviour in a real browser, 
 
 `Rev` is the skill revision the row was measured against — the git tree hash of the skill directory, so it changes when the skill does and not when an unrelated commit lands. A scenario can hold rows from more than one revision; they are listed newest first, and only rows on the same revision are comparable.
 
-Ledger updated: 2026-10-15T11:11:42.295Z
+Ledger updated: 2026-10-15T21:10:08.771Z
 
 ## component/accordion (component)
 
@@ -242,19 +242,22 @@ Ledger updated: 2026-10-15T11:11:42.295Z
 
 | Model               | Mean       | Min    | Max    | sd  | n   | Behaviour | Attempts | Redo | Tokens/run | Cost  | Rev       |
 | ------------------- | ---------- | ------ | ------ | --- | --- | --------- | -------- | ---- | ---------- | ----- | --------- |
+| `deepseek-v4-flash` | **100.0%** | 100.0% | 100.0% | 0.0 | 3   | 3/3       | 3/3      | 0    | 93,782     | $0.02 | `451cadf` |
 | `deepseek-v4-flash` | **100.0%** | 100.0% | 100.0% | 0.0 | 3   | 3/3       | 3/3      | 0    | 106,622    | $0.02 | `9d07772` |
 
 ## integration/native-form-to-lion-form (integration)
 
-| Model               | Mean      | Min   | Max   | sd  | n   | Behaviour | Attempts | Redo | Tokens/run | Cost  | Rev       |
-| ------------------- | --------- | ----- | ----- | --- | --- | --------- | -------- | ---- | ---------- | ----- | --------- |
-| `deepseek-v4-flash` | **71.4%** | 71.4% | 71.4% | 0.0 | 3   | —         | 3/3      | 0    | 181,768    | $0.04 | `3df6d83` |
+| Model               | Mean       | Min    | Max    | sd  | n   | Behaviour | Attempts | Redo | Tokens/run | Cost  | Rev       |
+| ------------------- | ---------- | ------ | ------ | --- | --- | --------- | -------- | ---- | ---------- | ----- | --------- |
+| `deepseek-v4-flash` | **100.0%** | 100.0% | 100.0% | 0.0 | 3   | —         | 3/3      | 0    | 121,338    | $0.03 | `3f8ac1e` |
+| `deepseek-v4-flash` | **71.4%**  | 71.4%  | 71.4%  | 0.0 | 3   | —         | 3/3      | 0    | 181,768    | $0.04 | `3df6d83` |
 
 ## repair/iban-field (repair)
 
-| Model               | Mean      | Min   | Max   | sd  | n   | Behaviour | Attempts | Redo | Tokens/run | Cost  | Rev       |
-| ------------------- | --------- | ----- | ----- | --- | --- | --------- | -------- | ---- | ---------- | ----- | --------- |
-| `deepseek-v4-flash` | **92.8%** | 92.8% | 92.8% | 0.0 | 3   | 3/3       | 3/3      | 0    | 135,732    | $0.03 | `3df6d83` |
+| Model               | Mean      | Min   | Max    | sd  | n   | Behaviour | Attempts | Redo | Tokens/run | Cost  | Rev       |
+| ------------------- | --------- | ----- | ------ | --- | --- | --------- | -------- | ---- | ---------- | ----- | --------- |
+| `deepseek-v4-flash` | **99.5%** | 98.5% | 100.0% | 0.0 | 3   | 3/3       | 3/3      | 0    | 157,597    | $0.04 | `3f8ac1e` |
+| `deepseek-v4-flash` | **92.8%** | 92.8% | 92.8%  | 0.0 | 3   | 3/3       | 3/3      | 0    | 135,732    | $0.03 | `3df6d83` |
 
 ## system/core (system)
 
