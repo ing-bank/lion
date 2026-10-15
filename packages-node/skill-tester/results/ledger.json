@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-10-15T20:56:50.648Z",
+  "updatedAt": "2026-10-15T21:10:08.771Z",
   "entries": [
     {
       "skillRevision": "3df6d8308bc811f1d379851d3cadecf5a32434e6",
@@ -843,6 +843,26 @@
       "ranAt": "2026-10-14T00:50:17.844Z"
     },
     {
+      "skillRevision": "3f8ac1e89e3258ca014bd312c471a4689fb8fa06",
+      "model": "deepseek-v4-flash",
+      "scenario": "integration/native-form-to-lion-form",
+      "kind": "integration",
+      "samples": 3,
+      "mean": 1,
+      "min": 1,
+      "max": 1,
+      "stdDev": 0,
+      "behaviourPassed": 0,
+      "behaviourTotal": 0,
+      "attempts": 3,
+      "redoable": 0,
+      "tokens": 364015,
+      "promptTokens": 337997,
+      "completionTokens": 26018,
+      "cost": 0.029668525999999997,
+      "ranAt": "2026-10-15T21:10:08.507Z"
+    },
+    {
       "skillRevision": "3df6d8308bc811f1d379851d3cadecf5a32434e6",
       "model": "deepseek-v4-flash",
       "scenario": "repair/iban-field",
@@ -861,6 +881,26 @@
       "completionTokens": 13756,
       "cost": 0.032006032,
       "ranAt": "2026-10-14T00:50:17.844Z"
+    },
+    {
+      "skillRevision": "3f8ac1e89e3258ca014bd312c471a4689fb8fa06",
+      "model": "deepseek-v4-flash",
+      "scenario": "repair/iban-field",
+      "kind": "repair",
+      "samples": 3,
+      "mean": 0.9950682229163242,
+      "min": 0.9852046687489726,
+      "max": 1,
+      "stdDev": 0.006974586038335141,
+      "behaviourPassed": 3,
+      "behaviourTotal": 3,
+      "attempts": 3,
+      "redoable": 0,
+      "tokens": 472791,
+      "promptTokens": 460799,
+      "completionTokens": 11992,
+      "cost": 0.0368555,
+      "ranAt": "2026-10-15T21:07:38.812Z"
     },
     {
       "skillRevision": "3df6d8308bc811f1d379851d3cadecf5a32434e6",
