@@ -33,7 +33,7 @@ Say for instance we have a 'Wolf' extension layer with a set of styled/configure
 
 When building a form, keep these things in mind:
 
-- avoid shadow roots inside your form
+- give the form and its controls one shared DOM: sub forms must not have a shadow root
 - do not extend form components
 
 ## Avoiding shadow roots
@@ -45,7 +45,21 @@ Large or complex forms might need to be split up into multiple files. This compo
 
 In the latter case: make sure that your components don't have a shadow root. This can be achieved by rendering into Light DOM. The form registration mechanism relies on light dom by design: as soon as you do start to use shadow roots, you will notice that your form components won't register themselves anymore to their parents.
 
-This is narrower than it may sound: `createRenderRoot` returning the host is needed **only** when the component you write is a _parent of a form control_ — it contains a form control itself and must be usable inside a form. A leaf component, or a component that holds no form control, keeps its normal shadow root.
+### The overarching component, and sub forms
+
+A form has one DOM that the form element and its controls share. That gives the components you write one
+of two roles:
+
+- **the overarching component** - the file that loads `@lion/ui/define/lion-form.js` and renders
+  `<lion-form>` around the native `<form>` - **may** have a shadow root. It is the boundary of the form:
+  it loads the form and the controls, and nothing inside it has to register past that boundary.
+- **sub forms** - components that live _inside_ the form and carry the controls - **must not** have a
+  shadow root. They need to share the (light) DOM with `<lion-form>` and the `<form>` element, because
+  registration travels up the DOM: with a shadow root in between, the controls inside it stop
+  registering to their parents and validation and serialization silently lose them.
+
+So `createRenderRoot()` returning the host belongs on a **sub form**, not on the form's overarching
+component - that one keeps its shadow root.
 
 > Today, rendering to light dom is the only way to [stay accessible](../../fundamentals/rationales/accessibility.md#shadow-roots-and-accessibility).
 
