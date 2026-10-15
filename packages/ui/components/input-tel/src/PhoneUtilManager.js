@@ -2,7 +2,7 @@
 let resolveLoaded;
 
 /**
- * @typedef {* & typeof import('awesome-phonenumber')} AwesomePhoneNumber
+ * @typedef {* & typeof import('#awesome-phonenumber')} AwesomePhoneNumber
  */
 
 /**
@@ -13,7 +13,7 @@ let resolveLoaded;
  */
 export class PhoneUtilManager {
   static async loadLibPhoneNumber() {
-    const PhoneUtil = /** @type {AwesomePhoneNumber} */ (await import('awesome-phonenumber'));
+    const PhoneUtil = /** @type {AwesomePhoneNumber} */ (await import('#awesome-phonenumber'));
     this.PhoneUtil = { ...PhoneUtil };
     resolveLoaded(undefined);
     return PhoneUtil;

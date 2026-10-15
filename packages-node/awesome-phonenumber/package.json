@@ -1,0 +1,33 @@
+{
+  "name": "@lion/awesome-phonenumber",
+  "version": "7.9.0-tlouisse.libphonenumber-9.0.41",
+  "private": true,
+  "type": "module",
+  "license": "MIT",
+  "scripts": {
+    "build": "wireit"
+  },
+  "devDependencies": {
+    "@rollup/plugin-commonjs": "29.0.0",
+    "@rollup/plugin-node-resolve": "16.0.3",
+    "google-closure-compiler": "20251104.0.0",
+    "google-closure-library": "20230802.0.0",
+    "rollup": "4.57.1"
+  },
+  "wireit": {
+    "build": {
+      "command": "node scripts/build.js",
+      "files": [
+        "scripts/build.js",
+        "scripts/verify-sources.js",
+        "scripts/closure-inputs.js",
+        "upstream/**/*",
+        "provenance.json",
+        "source-checksums.json"
+      ],
+      "output": [
+        "dist/**"
+      ]
+    }
+  }
+}

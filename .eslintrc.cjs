@@ -25,6 +25,7 @@ module.exports = {
         '**/docs/**/*.js',
         '**/*.config.js',
         'scripts/**/*.js',
+        'packages-node/awesome-phonenumber/scripts/*.js',
       ],
       rules: {
         'lit/binding-positions': 'off',

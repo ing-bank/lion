@@ -1,0 +1,97 @@
+{
+  "name": "awesome-phonenumber",
+  "description": "Google's libphonenumber pre-compiled with the closure compiler",
+  "license": "MIT",
+  "version": "0.0.0-development",
+  "author": "Gustaf Räntilä <g.rantila@gmail.com>",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/grantila/awesome-phonenumber.git"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "main": "./index.js",
+  "types": "./index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./index.d.ts",
+      "require": "./index.js",
+      "default": "./index-esm.mjs"
+    },
+    "./package.json": "./package.json"
+  },
+  "scripts": {
+    "build:libphonenumber": "node_modules/.bin/gulp",
+    "build:rewrite": "ts-node scripts/rewrite.ts",
+    "build:esm:build": "rollup -c ./rollup.config.mjs",
+    "build:esm:rewrite": "ts-node scripts/rewrite-esm.ts",
+    "build:esm": "yarn build:esm:build && yarn build:esm:rewrite",
+    "build": "yarn build:libphonenumber && yarn build:rewrite && yarn build:esm",
+    "test:compile": "scripts/test.sh",
+    "test": "yarn test:compile && NODE_OPTIONS=--experimental-vm-modules jest",
+    "test-dist-webpack": "yarn --cwd webpack build-test",
+    "test-dist-esm": "yarn --cwd esm-test build-test",
+    "test-dist-cjs": "yarn --cwd cjs-test build-test",
+    "test-dist": "yarn test-dist-webpack && yarn test-dist-esm && yarn test-dist-cjs",
+    "cz": "git-cz",
+    "semantic-release": "semantic-release",
+    "pack": "scripts/pack.sh",
+    "pack:verify": "node scripts/verify-pack.mjs"
+  },
+  "pre-commit": [
+    "test"
+  ],
+  "workspaces": [
+    "webpack",
+    "cjs-test",
+    "esm-test"
+  ],
+  "files": [
+    "lib",
+    "index.js",
+    "index-esm.mjs",
+    "index.d.ts",
+    "LICENSE.libphonenumber",
+    "LICENSE.closure-library"
+  ],
+  "keywords": [
+    "libphonenumber",
+    "phonenumber",
+    "phone",
+    "number",
+    "closure",
+    "web",
+    "browser",
+    "browserify",
+    "awesome"
+  ],
+  "devDependencies": {
+    "@babel/preset-env": "^7.28.6",
+    "@babel/preset-typescript": "^7.28.5",
+    "@rollup/plugin-commonjs": "^29.0.0",
+    "@types/jest": "^30.0.0",
+    "@types/mkdirp": "^2.0.0",
+    "@types/node": "^22.19.7",
+    "commitizen": "^4.3.1",
+    "cz-conventional-changelog": "^3.3.0",
+    "google-closure-compiler": "^20251104.0.0",
+    "google-closure-library": "^20230802.0.0",
+    "gulp": "^5.0.1",
+    "jest": "^30.2.0",
+    "mkdirp": "^3.0.1",
+    "pre-commit": "^1.2.2",
+    "replace": "^1.2.2",
+    "rmfr": "^2.0.0",
+    "rollup": "4.57.1",
+    "ts-jest-resolver": "^2.0.1",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.3"
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
+  },
+  "packageManager": "yarn@4.5.0"
+}

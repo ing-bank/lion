@@ -1,15 +1,15 @@
 'use strict';
 
-const { createRequire, builtinModules } = require('module');
+const nodeModule = require('module');
 
 exports.interfaceVersion = 2;
 
 exports.resolve = function (source, file, config) {
   try {
-    if (builtinModules.includes(source)) {
+    if (nodeModule.isBuiltin(source)) {
       return { found: true, path: null };
     }
-    const myRequire = createRequire(file);
+    const myRequire = nodeModule.createRequire(file);
     const resolvedPath = myRequire.resolve(source);
 
     return { found: true, path: resolvedPath };

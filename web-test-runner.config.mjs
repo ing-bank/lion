@@ -46,6 +46,12 @@ export default {
   coverageConfig: {
     report: true,
     reportDir: 'coverage',
+    // Keep third-party phone code excluded, as it was when loaded from node_modules.
+    exclude: [
+      '**/node_modules/**/*',
+      '**/web_modules/**/*',
+      '**/generated/awesome-phonenumber/**/*',
+    ],
     threshold: { statements: 95, functions: 94, branches: 95, lines: 95 },
   },
   testFramework: {
