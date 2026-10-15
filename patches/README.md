@@ -47,6 +47,11 @@ The solution is to add the parent directory name to the each <H> id as a prefix.
 
 The patch is required to make `astro build` work correctly. `lit` is added as an `external` library for the build option in `astro.config.mjs`. And without the patch the build throws errors.
 
+The patch is applied to the installed version of `lit` (patch-package matches the version in the file
+name), so when lit is bumped the patch file has to be renamed with it - it was `lit+2.8.0.patch` while
+the tree ran lit 3.x, which meant a clean install would have skipped it and broken the build. It is
+`lit+3.3.3.patch` now.
+
 ## @lit-labs/ssr
 
 ### Why this patch exists
