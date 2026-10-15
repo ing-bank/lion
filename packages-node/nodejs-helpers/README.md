@@ -24,3 +24,5 @@ Put shared tasks between lion and ing-web(extends lion) here.
 targets it selects the first `import` or `default` entry in declaration order, ignoring
 `types` and `require` because it rewrites ESM source files. Entries without a supported
 string runtime target are rejected. The package's import map itself is left unchanged.
+Glob patterns and rewritten ESM specifiers use forward slashes on all platforms,
+including Windows.
