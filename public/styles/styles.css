@@ -208,6 +208,16 @@ main {
         gap: 12px;
     }
 
+    /*
+     * Mobile: the bar is a very light grey instead of the page-level chrome grey. On a phone the
+     * bar is the only chrome in view, so it stays closer to white and reads as a tint rather than a
+     * surface; the wordmark carries its own black outline to stay legible on it (see
+     * src/components/LionWordmark.astro).
+     */
+    :root {
+        --header-bg: light-dark(rgba(247, 247, 247, 0.92), rgba(17, 17, 17, 0.85));
+    }
+
     .site-header .container > .site-nav {
         order: 3;
     }
@@ -228,44 +238,11 @@ main {
     text-decoration: none;
     letter-spacing: -0.02em;
 }
-
-.logo img {
-    display: block;
-}
-
 /*
- * The mark sits in its own wrapper so it can carry a subtle ring: the ring has to live outside the
- * <img>, because in light mode the mark is inverted by an asset-level filter and a border on the
- * image would be inverted with it (a light ring would come out dark).
+ * The wordmark is an inline SVG (src/components/LionWordmark.astro). The <·> mark that used to sit
+ * before it in the topbar, and the asset-level invert that made it legible in light mode, are gone
+ * with it - the wordmark follows currentColor on its own.
  */
-.logo-mark {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    padding: 4px;
-    border: 1px solid var(--border-color);
-    border-radius: 10px;
-}
-
-/*
- * public/logo.svg and public/lionui-text.svg are hard-coded white, so both disappear on a light
- * background. Inverting a monochrome *asset* is what an asset-level filter is for; inverting the
- * root element is not (it creates a containing block for position:fixed descendants — .site-header
- * is fixed — plus a stacking context, and it regressed --text-secondary below WCAG AA).
- * The wordmark used to be filtered here too, which is what turned its accent into rgb(124,62,0);
- * it is now an inline SVG (src/components/LionWordmark.astro) that follows currentColor, so this
- * rule only has the monochrome mark left to invert.
- */
-@media (prefers-color-scheme: light) {
-    :root:not(:has(#theme-dark:checked)) .logo img {
-        filter: invert(1) hue-rotate(180deg);
-    }
-}
-
-:root:has(#theme-light:checked) .logo img {
-    filter: invert(1) hue-rotate(180deg);
-}
-
 .logo-text-svg {
     height: 36px;
     width: auto;

@@ -60,9 +60,17 @@ const {
 
               <!-- Right Bracket Group -->
               <g class="group-right layer-mid">
+                  <!-- Construction Circles: mirrored from the left group, which had them and the right did not -->
+                  <circle cx="460" cy="200" r="4" fill="none" class="blueprint-node" />
+                  <circle cx="540" cy="300" r="4" fill="none" class="blueprint-node" />
+                  <circle cx="460" cy="400" r="4" fill="none" class="blueprint-node" />
+
                   <!-- The Shape: Sharp Bracket (Logo Style) -->
                   <path d="M460 200 L540 300 L460 400" class="logo-part draw-in" stroke-linecap="round" stroke-linejoin="round" style="animation-delay: 0.2s" fill="none"/>
-                  
+
+                  <!-- Angle Indicator, mirrored from the left group -->
+                  <path d="M460 250 A 50 50 0 0 1 490 300" stroke="var(--highlight-color)" stroke-width="1" fill="none" opacity="0" class="angle-indicator"/>
+
                   <!-- Dimensions -->
                   <line x1="560" y1="200" x2="560" y2="400" class="dimension-line" opacity="0" style="transition: opacity 0.3s"/>
                   <text x="575" y="300" class="dimension-text" transform="rotate(90 575 300)" opacity="0" style="transition: opacity 0.3s">200px</text>
@@ -76,8 +84,8 @@ const {
               <g class="group-center layer-front">
                   <!-- The Shape: Dot (Logo Style) -->
                   <circle cx="400" cy="300" r="20" class="logo-part draw-in" style="animation-delay: 0.4s"/>
-                  
-                  <circle cx="400" cy="300" r="40" class="blueprint-ring" stroke-dasharray="4 4" fill="none"/>
+
+                  <!-- One ring, not two: this circle was declared twice, so it drew twice. -->
                   <circle cx="400" cy="300" r="40" class="blueprint-ring" stroke-dasharray="4 4" fill="none"/>
                   
                   <!-- Radius Dimension -->

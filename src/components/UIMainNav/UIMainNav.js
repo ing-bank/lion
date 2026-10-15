@@ -506,7 +506,9 @@ export class UIMainNav extends UIBaseElement {
      */
     navLevel(context, { levelConfig, level, isToggleTarget, hasActiveChild }) {
       const { templates, part, translations } = context;
-      const hasBackButton = isToggleTarget && level > 1;
+      // Only a level that *replaces* the previous one needs a way back. Inline levels expand
+      // downward, so the expander itself is the way back and the button would be noise.
+      const hasBackButton = isToggleTarget && level > 1 && levelConfig?.showVia === 'popover';
 
       return html`<!-- -->
         <div ${part('level', { levelConfig, level, isToggleTarget, hasActiveChild })}>
@@ -907,7 +909,7 @@ UIMainNav.provideDesign({
             opacity: 1;
           }
 
-          [data-level][data-open] {
+          [data-level='1'][data-open] {
             /*
              * Was background-color: black — the dark theme's surface spelled as a colour literal:
              * in light mode the fly-out stayed black while its own ink stayed dark, so the panel
@@ -924,6 +926,46 @@ UIMainNav.provideDesign({
             width: min(20rem, 88vw);
             padding: 2rem 1.5rem;
             overflow-y: auto;
+          }
+
+          /*
+           * Levels deeper than the first unfold *downward*, in place: no extra panel, no scroll
+           * jump, no covering the parent. Level 0 (the hamburger's own wrapper) and level 1 (the
+           * fly-out) must stay out of this: level 0 is not a panel and went invisible (opacity 0)
+           * when these rules caught it. Closed, a level carries the hidden attribute, so the
+           * opening is a
+           * grid-rows transition from 0fr, which is the one way to animate to an unknown height.
+           */
+          [data-part='level']:not([data-level='0']):not([data-level='1']) {
+            display: grid;
+            grid-template-rows: 0fr;
+            position: static;
+            width: auto;
+            height: auto;
+            padding: 0;
+            border: none;
+            background: none;
+            overflow: hidden;
+            opacity: 0;
+            transition:
+              grid-template-rows var(--_flyout-duration) var(--_flyout-ease),
+              opacity var(--_flyout-duration) var(--_flyout-ease),
+              display var(--_flyout-duration) var(--_flyout-ease) allow-discrete;
+          }
+
+          [data-part='level']:not([data-level='0']):not([data-level='1'])[data-open] {
+            grid-template-rows: 1fr;
+            opacity: 1;
+
+            @starting-style {
+              grid-template-rows: 0fr;
+              opacity: 0;
+            }
+          }
+
+          /* The grid row needs to be allowed to be shorter than its content. */
+          [data-part='level']:not([data-level='0']):not([data-level='1']) > [data-part='list'] {
+            min-height: 0;
           }
 
           /*
@@ -949,7 +991,14 @@ UIMainNav.provideDesign({
           [data-part='listitem'] {
             display: flex;
             align-items: center;
+            flex-wrap: wrap;
             gap: 0.25rem;
+          }
+
+          /* The nested level takes its own line, full width: without this it sits in the same flex
+           * row as the label and squeezes the chevron away from the right edge. */
+          [data-part='level']:not([data-level='0']):not([data-level='1']) {
+            flex: 1 0 100%;
           }
 
           [data-part='listitem'] > [data-part='anchor'],

@@ -112,10 +112,9 @@ function toNavLevels(items) {
     if (children.length) {
       node.nextLevel = {
         key: slug(item.name),
-        // Level 1 is opened with mode 'popover' by the component; the nested panels need the same
-        // mode, otherwise they default to a disclosure that only toggles `hidden` and never gets
-        // the fly-out surface or its animation.
-        showVia: 'popover',
+        // Nested levels are disclosures: they expand *downward* inside the fly-out instead of
+        // opening another full-height panel. Level 1 is the panel (the component opens it with
+        // mode 'popover'); its children are inline.
         items: toNavLevels(children),
       };
     }
@@ -295,10 +294,7 @@ const { variant } = Astro.props;
 
 <header class="site-header">
     <div class="container">
-        <a href=`${import.meta.env.BASE_URL}` class="logo">
-            <span class="logo-mark">
-                <img src=`${import.meta.env.BASE_URL}/logo.svg` alt="Lion Logo" width="32" height="32">
-            </span>
+        <a href=`${import.meta.env.BASE_URL}` class="logo" aria-label="Lion">
             <LionWordmark />
         </a>
         
