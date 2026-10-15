@@ -54,7 +54,7 @@ function walk(dir, base = dir) {
 
 const specifiers = walk(exportsDir)
   .filter(file => file.endsWith('.js'))
-  .map(file => `@lion/ui/${file}`)
+  .map(file => `@lion/ui/${file.split(path.sep).join('/')}`)
   .sort();
 
 /** module shape of the exports map still has to be a wildcard we understand */

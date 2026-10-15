@@ -35,6 +35,8 @@ yarn-error.log
 **/web-types.json
 dist
 dist-types
+packages/ui/generated/
+packages-node/awesome-phonenumber/build/
 *.tsbuildinfo
 .wireit
 

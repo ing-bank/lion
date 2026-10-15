@@ -3,7 +3,7 @@ import { PhoneUtilManager } from './PhoneUtilManager.js';
 
 /**
  * @typedef {import('../types/index.js').RegionCode} RegionCode
- * @typedef {import('awesome-phonenumber').PhoneNumberFormat} PhoneNumberFormat
+ * @typedef {import('#awesome-phonenumber').PhoneNumberFormat} PhoneNumberFormat
  */
 
 /**
