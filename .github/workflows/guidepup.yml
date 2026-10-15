@@ -16,18 +16,17 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Setup screen reader
-        uses: guidepup/setup-action@main
-        with:
-          # macos runners cannot always write the TCC database, and the action
-          # then reports success while VoiceOver still cannot mount its
-          # preferences ("Failed to mount Guidepup preferences")
-          ignoreTccDb: true
-
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: 22.x
+
+      # guidepup/setup-action is no longer supported ("use the @guidepup/setup
+      # CLI directly"). `setup` configures the machine, `install` adds the screen
+      # reader assets that belong to this project's guidepup version - both are
+      # needed, and the assets step has to run after the project is installed.
+      - name: Setup screen reader environment
+        run: npx @guidepup/setup setup --ci
 
       - name: Install dependencies
         run: npm ci
@@ -47,13 +46,13 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Setup screen reader
-        uses: guidepup/setup-action@main
-
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: 22.x
+
+      - name: Setup screen reader environment
+        run: npx @guidepup/setup setup --ci
 
       - name: Install dependencies
         run: npm ci
