@@ -47,19 +47,31 @@ In the latter case: make sure that your components don't have a shadow root. Thi
 
 ### The overarching component, and sub forms
 
-A form has one DOM that the form element and its controls share. That gives the components you write one
-of two roles:
+A form and its controls share one DOM. The component that owns `lion-form` and the native `<form>`
+element is the **overarching component**, and everything it renders inside that form lives in the same
+tree:
 
-- **the overarching component** - the file that loads `@lion/ui/define/lion-form.js` and renders
-  `<lion-form>` around the native `<form>` - **may** have a shadow root. It is the boundary of the form:
-  it loads the form and the controls, and nothing inside it has to register past that boundary.
-- **sub forms** - components that live _inside_ the form and carry the controls - **must not** have a
-  shadow root. They need to share the (light) DOM with `<lion-form>` and the `<form>` element, because
-  registration travels up the DOM: with a shadow root in between, the controls inside it stop
-  registering to their parents and validation and serialization silently lose them.
+- **the overarching component** applies `ScopedElementsMixin` and registers the lion components it
+  renders in its scoped registry (`static scopedElements = { 'lion-form': LionForm, 'lion-input-iban':
+LionInputIban }`). It **may** have a shadow root: it is the form's boundary, and its scoped registry —
+  not global registration — is what makes the controls upgrade.
+- **sub forms** - components that live _inside_ the form and carry controls - **must not** have a shadow
+  root, so they stay in the same DOM as `lion-form` and `<form>`. Registration travels up the DOM, so a
+  shadow root in between makes the controls inside it stop registering to their parents, and validation
+  and serialization lose them silently. `createRenderRoot()` returning the host is what achieves that.
 
-So `createRenderRoot()` returning the host belongs on a **sub form**, not on the form's overarching
-component - that one keeps its shadow root.
+A second component also means a second template context. So when you only need to split a large form
+into several files, prefer a **shared template**: a plain lit-html template function renders in the
+overarching component's context, where the parent's scoped registry resolves every tag and no extra
+boundary is introduced.
+
+### Never use the `define` entrypoints
+
+Registration goes through the **scoped registry of the host** (`ScopedElementsMixin`), never through
+`@lion/ui/define/...`. A `define` entrypoint registers a tag globally on the page, which is exactly what
+scoped elements exist to avoid: it opts out of the host's registry, it makes a second version of the same
+tag impossible, and inside a scoped host it is unnecessary. Import the class and register it in
+`static scopedElements`.
 
 > Today, rendering to light dom is the only way to [stay accessible](../../fundamentals/rationales/accessibility.md#shadow-roots-and-accessibility).
 

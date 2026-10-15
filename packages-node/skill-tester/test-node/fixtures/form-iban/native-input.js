@@ -1,10 +1,9 @@
 import { LitElement, html } from 'lit';
-import '@lion/ui/define/lion-form.js';
+import { ScopedElementsMixin } from '@open-wc/scoped-elements/lit-element.js';
+import { LionForm } from '@lion/ui/form.js';
 
-export class MyForm extends LitElement {
-  createRenderRoot() {
-    return this;
-  }
+export class MyForm extends ScopedElementsMixin(LitElement) {
+  static scopedElements = { 'lion-form': LionForm };
 
   render() {
     return html`
