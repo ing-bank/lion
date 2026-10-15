@@ -70,6 +70,17 @@ getter into a property and reject a further getter override with `TS2611`. `Slot
 preserves the superclass type when its host is already present, matching its runtime
 deduplication; this allows extending `SlotMixin(LionSelectRich)` without that duplicate.
 
+Its overloads preserve an already-slotted base and describe a newly applied host
+separately. Unlike an unresolved conditional return type, this keeps a generic
+constructor recognizable when composing `ValidateMixin(SlotMixin(base))`. The
+newly applied host has one combined `LitElement & SlotHost` prototype rather than
+two intersected prototype declarations; base constructors and their static members
+remain part of the return type.
+
+`LionOption.styles` returns Lit's `CSSResultArray`, including nested style arrays.
+Subclasses may therefore return `[super.styles, additionalStyles]`, as supported
+by Lit at runtime, without flattening the inherited array solely for type checking.
+
 Downstream mixin signatures must also avoid reintroducing an already inherited
 `SlotHost`. For a mixin that **requires** a slotted base and only adds `FieldHost`
 members, the signature can retain those members without redeclaring the slot host:
@@ -94,8 +105,9 @@ actual composition. Neither `skipLibCheck` nor suppressing a downstream getter e
 corrects that signature.
 
 The consumer declaration gate (`npm run types-check-consumer --workspace @lion/ui`)
-checks the copied package's entry points and subclass extensions on the current
-compiler, plus the extension fixture on pinned TypeScript 4.7.4. The older compiler is
+checks the copied package's entry points, subclass extensions and JSDoc-typed generic
+mixin composition on the current compiler, plus the extension fixtures on pinned
+TypeScript 4.7.4. The older compiler is
 isolated in the private `test/typescript-legacy` workspace so it cannot replace the
 compiler used to build Lion.
 

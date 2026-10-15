@@ -75,7 +75,7 @@ try {
   const copyRecursive = (from, to) => {
     fs.mkdirSync(to, { recursive: true });
     for (const entry of fs.readdirSync(from, { withFileTypes: true })) {
-      if (entry.name !== 'node_modules') {
+      if (entry.name !== 'node_modules' && entry.name !== '.wireit') {
         const src = path.join(from, entry.name);
         const dst = path.join(to, entry.name);
         if (entry.isDirectory()) copyRecursive(src, dst);
@@ -109,10 +109,9 @@ try {
     path.join(fixture, 'index.ts'),
     `${specifiers.map(spec => `import '${spec}';`).join('\n')}\n`,
   );
-  fs.copyFileSync(
-    path.join(pkgDir, 'scripts/fixtures/consumer-extensions.ts'),
-    path.join(fixture, 'consumer-extensions.ts'),
-  );
+  for (const name of ['consumer-extensions.ts', 'consumer-mixins.js', 'consumer-mixins-types.ts']) {
+    fs.copyFileSync(path.join(pkgDir, 'scripts/fixtures', name), path.join(fixture, name));
+  }
   fs.writeFileSync(path.join(fixture, 'package.json'), '{"type":"module"}\n');
   fs.writeFileSync(
     path.join(fixture, 'tsconfig.json'),
@@ -126,6 +125,8 @@ try {
           strict: true,
           noEmit: true,
           skipLibCheck: false,
+          allowJs: true,
+          checkJs: true,
           types: [],
         },
         include: ['index.ts', 'consumer-extensions.ts'],

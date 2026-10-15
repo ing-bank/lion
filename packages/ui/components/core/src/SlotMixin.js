@@ -97,7 +97,7 @@ function determineSlotFunctionResultType(slotFunctionResult) {
  * @param {import('@open-wc/dedupe-mixin').Constructor<LitElement>} superclass
  */
 // prettier-ignore
-const SlotMixinImplementation = /** @type {SlotMixin} */ (superclass =>
+const SlotMixinImplementation = /** @type {SlotMixin} */ ((/** @type {import('@open-wc/dedupe-mixin').Constructor<LitElement>} */ superclass) =>
   class SlotMixin extends superclass {
     /**
      * @return {SlotsMap}
