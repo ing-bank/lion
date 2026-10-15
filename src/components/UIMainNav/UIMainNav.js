@@ -914,47 +914,67 @@ UIMainNav.provideDesign({
           }
 
           /*
-           * Fly-out animation: the panel fades in and shifts a little, the backdrop fades with it.
-           * Same language as the rest of the portal (0.28s, cubic-bezier(0.2, 0, 0.2, 1)), and it
-           * collapses under prefers-reduced-motion.
+           * Fly-out animation: a fade with a small scale, not a slide. The panel is anchored to the
+           * left edge, so it settles from 0.97 into place from that edge (transform-origin) instead of
+           * travelling sideways - a slide out of an off-screen edge left nothing to see while the
+           * backdrop faded, and the reverse read as a jump rather than a recede.
+           *
+           * The two states each declare their own transition, which is what lets the panel recede
+           * faster than it arrives: the closing animation is the one on the *closed* rule, the opening
+           * one lives on :popover-open.
            */
           :host {
-            --_flyout-duration: 0.28s;
-            --_flyout-ease: cubic-bezier(0.2, 0, 0.2, 1);
-            --_flyout-shift: 1.25rem;
+            --_flyout-duration-in: 0.24s;
+            --_flyout-duration-out: 0.22s;
+            --_flyout-ease-in: cubic-bezier(0.2, 0, 0.2, 1);
+            --_flyout-ease-out: cubic-bezier(0.2, 0, 0.2, 1);
+            /* The two directions do not travel the same distance: coming in the panel settles out of
+             * the edge (0.97 -> 1), going out it is a fade with only a hint of scale (1 -> 0.985), so
+             * the recede reads as the panel letting go instead of shrinking away. */
+            --_flyout-scale-in: 0.97;
+            --_flyout-scale-out: 0.985;
           }
 
           @media (prefers-reduced-motion: reduce) {
             :host {
-              --_flyout-duration: 0.01s;
-              --_flyout-shift: 0;
+              --_flyout-duration-in: 0.01s;
+              --_flyout-duration-out: 0.01s;
+              --_flyout-scale-in: 1;
+              --_flyout-scale-out: 1;
             }
           }
 
           :host(:not([data-prevent-animations])) [popover] {
             transition:
-              translate var(--_flyout-duration) var(--_flyout-ease),
-              opacity var(--_flyout-duration) var(--_flyout-ease),
-              overlay var(--_flyout-duration) var(--_flyout-ease) allow-discrete,
-              display var(--_flyout-duration) var(--_flyout-ease) allow-discrete;
-            translate: calc(-1 * var(--_flyout-shift)) 0;
+              opacity var(--_flyout-duration-out) var(--_flyout-ease-out),
+              scale var(--_flyout-duration-out) var(--_flyout-ease-out),
+              overlay var(--_flyout-duration-out) allow-discrete,
+              display var(--_flyout-duration-out) allow-discrete;
             opacity: 0;
+            scale: var(--_flyout-scale-out);
           }
 
           :host(:not([data-prevent-animations])) [popover]:popover-open {
-            translate: 0 0;
+            transition:
+              opacity var(--_flyout-duration-in) var(--_flyout-ease-in),
+              scale var(--_flyout-duration-in) var(--_flyout-ease-in),
+              overlay var(--_flyout-duration-in) allow-discrete,
+              display var(--_flyout-duration-in) allow-discrete;
+            /* The panel grows out of the edge it is attached to. */
+            transform-origin: left center;
             opacity: 1;
+            scale: 1;
 
             @starting-style {
-              translate: calc(-1 * var(--_flyout-shift)) 0;
               opacity: 0;
+              scale: var(--_flyout-scale-in);
             }
           }
 
           [popover]::backdrop {
             background: light-dark(rgba(0, 0, 0, 0.28), rgba(0, 0, 0, 0.5));
             opacity: 0;
-            transition: opacity var(--_flyout-duration) var(--_flyout-ease) allow-discrete;
+            transition: opacity var(--_flyout-duration-out) var(--_flyout-ease-out) allow-discrete;
 
             @starting-style {
               opacity: 0;
@@ -1004,9 +1024,9 @@ UIMainNav.provideDesign({
             overflow: hidden;
             opacity: 0;
             transition:
-              grid-template-rows var(--_flyout-duration) var(--_flyout-ease),
-              opacity var(--_flyout-duration) var(--_flyout-ease),
-              display var(--_flyout-duration) var(--_flyout-ease) allow-discrete;
+              grid-template-rows var(--_flyout-duration-in) var(--_flyout-ease-in),
+              opacity var(--_flyout-duration-in) var(--_flyout-ease-in),
+              display var(--_flyout-duration-in) var(--_flyout-ease-in) allow-discrete;
           }
 
           [data-part='level']:not([data-level='0']):not([data-level='1'])[data-open] {
@@ -1084,7 +1104,7 @@ UIMainNav.provideDesign({
             border-right: 1.5px solid currentColor;
             border-bottom: 1.5px solid currentColor;
             transform: rotate(-45deg);
-            transition: transform var(--_flyout-duration) var(--_flyout-ease);
+            transition: transform var(--_flyout-duration-in) var(--_flyout-ease-in);
           }
 
           [data-part='listitem']:has(> [data-part='level'][data-open]) [data-part='level-invoker']::after {
