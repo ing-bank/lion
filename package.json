@@ -57,7 +57,7 @@
   ],
   "dependencies": {
     "@playwright/test": "^1.61.0",
-    "lit": "^3.3.2",
+    "lit": "^3.3.3",
     "playwright": "^1.61.0"
   },
   "devDependencies": {
@@ -152,6 +152,20 @@
         "Version of 'sharp' package we get via '@rocket/cli' is too old to be built on a Mac.",
         "But updating package '@rocket-cli' causes our portal to break. Reason unknown.",
         "So, we override the sharp version in here until '@rocket-cli' can be updated."
+      ],
+      "lit, lit-element, lit-html, @lit/reactive-element": [
+        "The workspace installed lit several times over: the root 3.x plus 2.8.0 copies inside @lion/*",
+        "and @rocket/*. Which copy an Astro island's module graph resolved varied per page load, and the",
+        "injected @lit-labs/ssr-client hydration support patches exactly one LitElement - so on some loads",
+        "an island rendered a second copy of its template beside the server-rendered shadow root instead of",
+        "hydrating it (a duplicated table of contents, 3 of 6 page loads). The portal and @lion/ui run the",
+        "single 3.3.3 copy."
+      ],
+      "//@lion/core, @rocket/engine, @rocket/drawer": [
+        "This repo is hybrid: it still runs on rocket next to astro, and those packages are the lit 2 era",
+        "(they declare lit ^2.x). They keep the lit line they were built and tested against, so the",
+        "collapse above only covers the portal and @lion/ui - a lit 3 upgrade of the rocket side is a",
+        "separate migration, not a side effect of this one."
       ]
     },
     "olderVersions": {
@@ -234,8 +248,48 @@
     "pug-code-gen": "3.0.3",
     "astro": "^6.0.8",
     "@lit-labs/ssr": "4.1.0",
-    "@lit-labs/ssr-client": "1.1.7",
-    "@lit-labs/ssr-dom-shim": "1.6.0"
+    "@lit-labs/ssr-client": "1.1.8",
+    "@lit-labs/ssr-dom-shim": "1.6.0",
+    "lit": "$lit",
+    "lit-element": "4.2.2",
+    "lit-html": "3.3.3",
+    "@lit/reactive-element": "$@lit/reactive-element",
+    "@lion/core": {
+      "lit": "2.8.0",
+      "lit-element": "3.3.3",
+      "lit-html": "2.8.0",
+      "@lit/reactive-element": "1.6.3"
+    },
+    "@lion/listbox": {
+      "lit": "2.8.0",
+      "lit-element": "3.3.3",
+      "lit-html": "2.8.0",
+      "@lit/reactive-element": "1.6.3"
+    },
+    "@lion/overlays": {
+      "lit": "2.8.0",
+      "lit-element": "3.3.3",
+      "lit-html": "2.8.0",
+      "@lit/reactive-element": "1.6.3"
+    },
+    "@rocket/engine": {
+      "lit": "2.8.0",
+      "lit-element": "3.3.3",
+      "lit-html": "2.8.0",
+      "@lit/reactive-element": "1.6.3"
+    },
+    "@rocket/search": {
+      "lit": "2.8.0",
+      "lit-element": "3.3.3",
+      "lit-html": "2.8.0",
+      "@lit/reactive-element": "1.6.3"
+    },
+    "@rocket/drawer": {
+      "lit": "2.8.0",
+      "lit-element": "3.3.3",
+      "lit-html": "2.8.0",
+      "@lit/reactive-element": "1.6.3"
+    }
   },
   "prettier": {
     "printWidth": 100,
