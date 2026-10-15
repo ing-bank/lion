@@ -3,11 +3,9 @@
   "name": "@lion/root",
   "license": "MIT",
   "scripts": {
-    "build": "npm run build:astro && npm run build:rocket && npm run build:update-links",
+    "build": "npm run build:astro",
     "build:astro": "astro telemetry disable && astro build --force",
     "build:clean": "find src/pages -path \"*/_demos/*.js\" -type f -delete && rm -rf node_modules/_lion_docs && npm run build",
-    "build:rocket": "rocket build",
-    "build:update-links": "node ./src/utils/rewrite-links.mjs",
     "bundlesize": "rollup -c bundlesize/rollup.config.js && bundlesize",
     "changeset": "changeset",
     "custom-elements-manifest": "npm run custom-elements-manifest --workspaces --if-present && node ./scripts/create-api-tables.mjs",
@@ -16,7 +14,7 @@
     "debug:no-scoped-registries-polyfill": "npm run debug -- --no-scoped-registries-polyfill",
     "debug:webkit": "web-test-runner --watch --config web-test-runner-webkit.config.mjs",
     "predeploy": "npm run build",
-    "deploy": "gh-pages -d _site -r git@github.com:ing-bank/lion --nojekyll",
+    "deploy": "gh-pages -d _site -a -r git@github.com:ing-bank/lion --nojekyll",
     "dev": "astro dev --force",
     "format": "npm run format:eslint && npm run format:prettier",
     "format:eslint": "eslint --ext .js,.html . --fix",
@@ -29,9 +27,9 @@
     "lint:prettier": "prettier \"**/*.js\" --list-different || (echo '↑↑ these files are not prettier formatted ↑↑' && exit 1)",
     "lint:types": "npm run types",
     "lint:versions": "node ./scripts/lint-versions.js",
+    "portal:preview": "node ./scripts/deploy-portal-preview.mjs",
     "prepare": "husky install",
     "preview": "npx serve _site",
-    "portal:preview": "node ./scripts/deploy-portal-preview.mjs",
     "release": "changeset publish",
     "repo:clean-slate": "git clean -dfX",
     "repo:diff-package-lock": "npx diff-package-lock",
@@ -75,14 +73,11 @@
     "@mdjs/mdjs-preview": "^0.6.0",
     "@mdjs/mdjs-story": "^0.4.0",
     "@open-wc/building-rollup": "^2.2.3",
+    "@open-wc/dedupe-mixin": "^2.0.1",
     "@open-wc/eslint-config": "^12.0.3",
     "@open-wc/scoped-elements": "^3.0.5",
     "@open-wc/testing": "^4.0.0",
     "@open-wc/testing-helpers": "^3.0.1",
-    "@rocket/blog": "0.4.0",
-    "@rocket/cli": "^0.21.0",
-    "@rocket/launch": "^0.6.0",
-    "@rocket/search": "^0.5.1",
     "@thepassle/module-graph": "^0.11.0",
     "@types/autosize": "^4.0.3",
     "@types/chai-as-promised": "^8.0.1",
@@ -184,11 +179,14 @@
       "remark-html": [
         "Can't be updated to 14.x, because remark-html is still in commonjs."
       ],
-      "@rocket/*": [
-        "Pinned, as newer versions require a complete overhaul of docs. Later we will move to astro."
-      ],
       "looks-same": [
         "Part of ./scripts/screenshots, which is not incorporated atm in automated test suite. TODO: re-evaluate solution and whether visual regression testing needs to be part of this repo"
+      ],
+      "@open-wc/dedupe-mixin": [
+        "Declared at the root on purpose: it used to arrive hoisted only through the rocket dependency tree,",
+        "and both src/components/shared/UIBaseElement.js and @open-wc/testing-helpers' declarations import it",
+        "by name (the type gate compiles dependency declarations, skipLibCheck is off), so dropping rocket",
+        "without declaring it broke the build."
       ],
       "@open-wc/building-rollup": [
         "Can't be updated to 3.x, as v2 seems to be better compatible with rocket setup"
@@ -267,24 +265,6 @@
       "@lit/reactive-element": "1.6.3"
     },
     "@lion/overlays": {
-      "lit": "2.8.0",
-      "lit-element": "3.3.3",
-      "lit-html": "2.8.0",
-      "@lit/reactive-element": "1.6.3"
-    },
-    "@rocket/engine": {
-      "lit": "2.8.0",
-      "lit-element": "3.3.3",
-      "lit-html": "2.8.0",
-      "@lit/reactive-element": "1.6.3"
-    },
-    "@rocket/search": {
-      "lit": "2.8.0",
-      "lit-element": "3.3.3",
-      "lit-html": "2.8.0",
-      "@lit/reactive-element": "1.6.3"
-    },
-    "@rocket/drawer": {
       "lit": "2.8.0",
       "lit-element": "3.3.3",
       "lit-html": "2.8.0",
