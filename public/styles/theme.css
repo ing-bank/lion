@@ -132,12 +132,14 @@
   transition: color 0.2s, border-color 0.2s, background-color 0.2s;
 }
 
-/* "Auto" is a word rather than an icon, so it gets a pill instead of a circle. */
+/* "Auto" is a word rather than an icon, so it gets a pill instead of a circle. The word is
+ * smaller than the surrounding labels on purpose: it has to sit inside the same 32px row. */
 .theme-switch label[for='theme-auto'] {
   width: auto;
-  padding: 0 10px;
+  padding: 0 8px;
   border-radius: 999px;
-  font-size: 0.75rem;
+  font-size: 0.625rem;
+  line-height: 1;
 }
 
 .theme-switch label:hover {

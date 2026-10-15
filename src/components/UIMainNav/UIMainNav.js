@@ -49,7 +49,8 @@ const iconIds = {
     <svg
       width="20"
       height="20"
-      viewBox="0 0 24 24"
+      viewBox="-1.5 -1.5 27 27"
+      data-filled="true"
       fill="currentColor"
       stroke="none"
       stroke-width="2"
@@ -152,8 +153,12 @@ export class UIMainNavPartDirective extends UIPartDirective {
       const { level, isToggleTarget, levelConfig } = localContext;
 
       UIMainNavPartDirective.setLevel(element, level);
-      element.setAttribute('id', `level-${level}`);
-      context.registerRef(`level-${level}`, element);
+      // `level-2` alone collides: every item that has children renders a level 2 panel, and a
+      // popovertarget can only address one id. levelConfig.key (set when the tree is built) makes
+      // both the panel id and its invoker's popovertarget unique per parent.
+      const levelId = levelConfig?.key ? `level-${level}-${levelConfig.key}` : `level-${level}`;
+      element.setAttribute('id', levelId);
+      context.registerRef(levelId, element);
 
       const { showVia = 'disclosure', initialOpen, visuallyHidden = false } = levelConfig || {};
 
@@ -247,8 +252,15 @@ export class UIMainNavPartDirective extends UIPartDirective {
       assertButton(element);
       UIMainNavPartDirective.setLevel(element, localContext.level);
       element.setAttribute('data-part', 'level-invoker');
-      element.setAttribute('popovertarget', `level-${localContext.level + 1}`);
+      const targetKey = localContext.item?.nextLevel?.key;
+      element.setAttribute(
+        'popovertarget',
+        targetKey ? `level-${localContext.level + 1}-${targetKey}` : `level-${localContext.level + 1}`,
+      );
       element.setAttribute('type', 'button');
+      if (localContext.item?.name) {
+        element.setAttribute('aria-label', `Show ${localContext.item.name}`);
+      }
       context.registerRef(`level-invoker-l${localContext.level + 1}`, element);
       if (isServer) return;
 
@@ -518,7 +530,10 @@ export class UIMainNav extends UIBaseElement {
                       ? templates.navLevel(context, {
                           hasActiveChild: item.hasActiveChild,
                           levelConfig: item.nextLevel,
-                          isToggleTarget: !item.url,
+                          // An item may be both a link and a parent (the portal's top level items
+                          // are): the panel is a popover either way, so the link keeps working and
+                          // the chevron next to it expands the level.
+                          isToggleTarget: true,
                           level: level + 1,
                         })
                       : nothing}
@@ -529,6 +544,16 @@ export class UIMainNav extends UIBaseElement {
     },
     navItem(context, { item, level }) {
       const { part, templates } = context;
+
+      if (item.url && item.nextLevel) {
+        // Link + expander: the anchor navigates to the section, the button reveals its levels. The
+        // chevron itself is drawn by the stylesheet (::after), so this stays icon-free.
+        return html`<!-- -->
+          <a ${part('anchor', { item, level })}>
+            ${templates.icon(context, { item, level })}<span>${item.name}</span>
+          </a>
+          <button ${part('level-invoker', { item, level })}></button>`;
+      }
 
       if (item.url) {
         // N.B. taken care of by directive
@@ -639,6 +664,35 @@ UIMainNav.provideDesign({
         color: var(--text-secondary);
       }
 
+      /*
+       * The burger is the mobile counterpart of the theme switch labels: the same 32px box, the same
+       * circle and the same hover treatment, so the two controls read as one group on the right of
+       * the bar instead of a small icon pressed against the switch. Measured before: the burger box
+       * was 20x26 and its left edge sat exactly on the switch's right edge (0px apart).
+       */
+      [data-part='l1-invoker'] {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        /* border-box: the global reset in styles.css does not reach into the shadow root, so without
+         * this the 1px border made the burger 34px against the switch labels' 32px. */
+        box-sizing: border-box;
+        width: 2rem;
+        height: 2rem;
+        padding: 0;
+        border: 1px solid transparent;
+        border-radius: 50%;
+        background: transparent;
+        color: var(--text-secondary);
+        cursor: pointer;
+        transition: color 0.2s, background-color 0.2s;
+      }
+
+      [data-part='l1-invoker']:hover {
+        color: var(--text-primary);
+        background: var(--overlay-subtle);
+      }
+
       [data-part='icon'] {
         width: 1.25rem;
         height: 1.25rem;
@@ -650,6 +704,15 @@ UIMainNav.provideDesign({
         height: 100%;
         /* fill: currentColor; */
         stroke: currentColor;
+      }
+
+      /*
+       * A filled glyph must not be stroked: the rule above doubles the ink of a solid path, which
+       * measured 24 x 23.4 inside the 24 x 24 viewBox - about 17% larger than the stroked icons next
+       * to it, so the octocat read as oddly scaled. Its viewBox carries the optical margin instead.
+       */
+      [data-part='icon'] svg[data-filled] {
+        stroke: none;
       }
 
       [data-part='command-invoker']:hover,
@@ -786,6 +849,62 @@ UIMainNav.provideDesign({
 
           [data-part='list'] {
             flex-direction: column;
+            /* The UA gives a <ul> padding-inline-start: 40px, which held the fly-out items 40px away
+             * from the panel edge (measured: items at x=104 with a 64px panel padding, i.e. the text
+             * sat too close to the 283px panel's right edge). */
+            padding: 0;
+          }
+
+          /*
+           * Fly-out animation: the panel fades in and shifts a little, the backdrop fades with it.
+           * Same language as the rest of the portal (0.28s, cubic-bezier(0.2, 0, 0.2, 1)), and it
+           * collapses under prefers-reduced-motion.
+           */
+          :host {
+            --_flyout-duration: 0.28s;
+            --_flyout-ease: cubic-bezier(0.2, 0, 0.2, 1);
+            --_flyout-shift: 1.25rem;
+          }
+
+          @media (prefers-reduced-motion: reduce) {
+            :host {
+              --_flyout-duration: 0.01s;
+              --_flyout-shift: 0;
+            }
+          }
+
+          :host(:not([data-prevent-animations])) [popover] {
+            transition:
+              translate var(--_flyout-duration) var(--_flyout-ease),
+              opacity var(--_flyout-duration) var(--_flyout-ease),
+              overlay var(--_flyout-duration) var(--_flyout-ease) allow-discrete,
+              display var(--_flyout-duration) var(--_flyout-ease) allow-discrete;
+            translate: calc(-1 * var(--_flyout-shift)) 0;
+            opacity: 0;
+          }
+
+          :host(:not([data-prevent-animations])) [popover]:popover-open {
+            translate: 0 0;
+            opacity: 1;
+
+            @starting-style {
+              translate: calc(-1 * var(--_flyout-shift)) 0;
+              opacity: 0;
+            }
+          }
+
+          [popover]::backdrop {
+            background: light-dark(rgba(0, 0, 0, 0.28), rgba(0, 0, 0, 0.5));
+            opacity: 0;
+            transition: opacity var(--_flyout-duration) var(--_flyout-ease) allow-discrete;
+
+            @starting-style {
+              opacity: 0;
+            }
+          }
+
+          [popover]:popover-open::backdrop {
+            opacity: 1;
           }
 
           [data-level][data-open] {
@@ -800,7 +919,86 @@ UIMainNav.provideDesign({
             border-right: 1px solid var(--border-color);
             position: fixed;
             height: 100vh;
-            padding: 4rem;
+            /* Was content-sized (163px) and then min-width 15rem; a drawer reads better at a fixed
+             * share of the viewport, capped so it does not swallow a tablet screen. */
+            width: min(20rem, 88vw);
+            padding: 2rem 1.5rem;
+            overflow-y: auto;
+          }
+
+          /*
+           * Levels inside a level: indented list, and the chevron of an expander that has an open
+           * panel flips. The chevron is drawn here rather than shipped as another icon.
+           */
+          [data-part='list'] [data-part='list'] {
+            padding-left: 0.75rem;
+            margin-top: 0.25rem;
+          }
+
+          [data-part='level-invoker'] {
+            justify-content: flex-start;
+            width: auto;
+            flex: 0 0 auto;
+          }
+
+          /*
+           * A row: the label (anchor or toggle button) takes the line, the expander chevron sits at
+           * the end of it. Without this the empty chevron button wrapped onto its own line under
+           * every item that has children.
+           */
+          [data-part='listitem'] {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+          }
+
+          [data-part='listitem'] > [data-part='anchor'],
+          [data-part='listitem'] > [data-part='command-invoker'],
+          [data-part='listitem'] > [data-part='level-invoker'] {
+            flex: 0 1 auto;
+          }
+
+          [data-part='listitem'] > [data-part='anchor'] {
+            flex: 1 1 auto;
+          }
+
+          /* An item that is only a toggle (a folder without its own page) keeps the whole line. */
+          [data-part='listitem']:not(:has(> [data-part='anchor'])) > [data-part='level-invoker'],
+          [data-part='listitem']:not(:has(> [data-part='anchor'])) > [data-part='command-invoker'] {
+            flex: 1 1 auto;
+          }
+
+          [data-part='level-invoker']::after {
+            content: '';
+            width: 0.45rem;
+            height: 0.45rem;
+            margin-left: auto;
+            border-right: 1.5px solid currentColor;
+            border-bottom: 1.5px solid currentColor;
+            transform: rotate(-45deg);
+            transition: transform var(--_flyout-duration) var(--_flyout-ease);
+          }
+
+          [data-part='listitem']:has(> [data-part='level'][data-open]) [data-part='level-invoker']::after {
+            transform: rotate(45deg);
+          }
+
+          [data-part='level-back-btn'] {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+            padding: 0.5rem 0;
+            border: none;
+            background: transparent;
+            color: var(--text-secondary);
+            font: inherit;
+            cursor: pointer;
+            text-transform: capitalize;
+          }
+
+          [data-part='level-back-btn']:hover {
+            color: var(--text-primary);
           }
         `,
       ],
@@ -849,17 +1047,24 @@ UIMainNav.provideDesign({
       ],
       breakpoint: '1024px',
       container: globalThis,
-      templateContextProcessor: (/** @type {{ data: { navData: any; }; }} */ context) => ({
-        ...context,
-        data: {
-          ...context.data,
-          navData: {
-            ...context.data.navData,
-            hideToggle: true,
-            shouldHandleScrollLock: false,
+      templateContextProcessor: (/** @type {{ data: { navData: any; }; }} */ context) => {
+        // The desktop row is one flat line of links, so the levels are stripped here: the mobile
+        // layout is the only one that renders a tree.
+        const stripLevels = items => items.map(({ nextLevel, ...item }) => ({ ...item }));
+
+        return {
+          ...context,
+          data: {
+            ...context.data,
+            navData: {
+              ...context.data.navData,
+              items: stripLevels(context.data.navData.items),
+              hideToggle: true,
+              shouldHandleScrollLock: false,
+            },
           },
-        },
-      }),
+        };
+      },
     },
   }),
 });

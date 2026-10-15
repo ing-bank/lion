@@ -210,8 +210,9 @@ body.blog-page {
 
 /* Footer Override */
 .blog-page .site-footer {
-    background: #e5e5e5;
-    border-top: 1px solid var(--blog-line);
+    /* Was a hard-coded #e5e5e5, which is a second, unrelated grey next to the portal's chrome. */
+    background: var(--chrome-bg);
+    border-top: 1px solid var(--header-border);
 }
 
 .blog-page .footer-brand p, 
