@@ -3,7 +3,7 @@ parts:
   - Overview
   - Ajax
   - Tools
-title: 'Ajax: Overview'
+title: 'Overview'
 eleventyNavigation:
   key: Tools >> Ajax >> Overview
   title: Overview
@@ -11,7 +11,7 @@ eleventyNavigation:
   parent: Tools >> Ajax
 ---
 
-# Ajax: Overview
+# Overview
 
 `Ajax` is a small wrapper around `fetch` which:
 

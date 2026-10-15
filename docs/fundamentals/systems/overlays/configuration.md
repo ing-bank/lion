@@ -3,7 +3,7 @@ parts:
   - Configuration
   - Overlays
   - Systems
-title: 'Overlays: Configuration'
+title: 'Configuration'
 eleventyNavigation:
   key: Systems >> Overlays >> Configuration
   title: Configuration
@@ -11,7 +11,7 @@ eleventyNavigation:
   parent: Systems >> Overlays
 ---
 
-# Overlays: Configuration
+# Configuration
 
 ```js script
 import { html } from '@mdjs/mdjs-preview';

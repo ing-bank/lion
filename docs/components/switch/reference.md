@@ -1,5 +1,5 @@
 ---
-title: 'Switch: Reference'
+title: 'Reference'
 parts:
   - Switch
   - Reference
@@ -10,7 +10,7 @@ eleventyNavigation:
   title: Reference
 ---
 
-# Switch: Reference
+# Reference
 
 <p class="lion-paragraph--emphasis">Everything you need to re-use the switch.</p>
 

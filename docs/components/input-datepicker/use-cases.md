@@ -1,5 +1,5 @@
 ---
-title: 'Input Datepicker: Use Cases'
+title: 'Use Cases'
 parts:
   - Input Datepicker
   - Use Cases
@@ -10,7 +10,7 @@ eleventyNavigation:
   title: Use Cases
 ---
 
-# Input Datepicker: Use Cases
+# Use Cases
 
 ```js script
 import { html } from '@mdjs/mdjs-preview';

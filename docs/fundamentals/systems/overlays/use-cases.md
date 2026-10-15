@@ -3,7 +3,7 @@ parts:
   - Use Cases
   - Overlays
   - Systems
-title: 'Overlays: Use Cases'
+title: 'Use Cases'
 eleventyNavigation:
   key: Systems >> Overlays >> Use Cases
   title: Use Cases
@@ -11,7 +11,7 @@ eleventyNavigation:
   parent: Systems >> Overlays
 ---
 
-# Overlays: Use Cases
+# Use Cases
 
 ```js script
 import { html, render, LitElement } from '@mdjs/mdjs-preview';

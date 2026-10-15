@@ -1,5 +1,5 @@
 ---
-title: 'Input Stepper: Use Cases'
+title: 'Use Cases'
 parts:
   - Input Stepper
   - Use Cases
@@ -10,7 +10,7 @@ eleventyNavigation:
   title: Use Cases
 ---
 
-# Input Stepper: Use Cases
+# Use Cases
 
 ```js script
 import { html } from '@mdjs/mdjs-preview';

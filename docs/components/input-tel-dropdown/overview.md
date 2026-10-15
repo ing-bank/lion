@@ -1,5 +1,5 @@
 ---
-title: 'Input Tel Dropdown: Overview'
+title: 'Overview'
 parts:
   - Input Tel Dropdown
   - Overview
@@ -10,7 +10,7 @@ eleventyNavigation:
   title: Overview
 ---
 
-# Input Tel Dropdown: Overview
+# Overview
 
 Extension of Input Tel that prefixes a dropdown list that shows all possible regions / countries.
 

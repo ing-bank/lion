@@ -1,5 +1,5 @@
 ---
-title: 'Combobox: Overview'
+title: 'Overview'
 parts:
   - Combobox
   - Overview
@@ -10,7 +10,7 @@ eleventyNavigation:
   title: Overview
 ---
 
-# Combobox: Overview
+# Overview
 
 A combobox is a widget made up of the combination of two distinct elements:
 

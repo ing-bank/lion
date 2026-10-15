@@ -1,5 +1,5 @@
 ---
-title: 'Collapsible: Use Cases'
+title: 'Use Cases'
 parts:
   - Collapsible
   - Use Cases
@@ -10,7 +10,7 @@ eleventyNavigation:
   title: Use Cases
 ---
 
-# Collapsible: Use Cases
+# Use Cases
 
 ```js script
 import { html } from '@mdjs/mdjs-preview';

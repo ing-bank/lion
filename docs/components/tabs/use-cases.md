@@ -1,5 +1,5 @@
 ---
-title: 'Tabs: Use Cases'
+title: 'Use Cases'
 parts:
   - Tabs
   - Use Cases
@@ -10,7 +10,7 @@ eleventyNavigation:
   title: Use Cases
 ---
 
-# Tabs: Use Cases
+# Use Cases
 
 ```js script
 import { LitElement, html } from '@mdjs/mdjs-preview';

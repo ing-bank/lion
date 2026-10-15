@@ -1,5 +1,5 @@
 ---
-title: 'Select Rich: Use Cases'
+title: 'Use Cases'
 parts:
   - Select Rich
   - Use Cases
@@ -10,7 +10,7 @@ eleventyNavigation:
   title: Use Cases
 ---
 
-# Select Rich: Use Cases
+# Use Cases
 
 ```js script
 import { LitElement, html } from '@mdjs/mdjs-preview';

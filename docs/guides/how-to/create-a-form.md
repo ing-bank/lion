@@ -2,7 +2,7 @@
 parts:
   - How To
   - Create a form
-title: 'How To: Create a form'
+title: 'Create a form'
 eleventyNavigation:
   key: 'How To: Create a form'
   order: 15
@@ -10,7 +10,7 @@ eleventyNavigation:
   title: Create a form
 ---
 
-# How To: Create a form
+# Create a form
 
 Creating your own forms as an Application Developer is really simple. Only two rules need to be followed.
 

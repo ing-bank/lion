@@ -3,7 +3,7 @@ parts:
   - Overview
   - Overlays
   - Systems
-title: 'Overlays: Overview'
+title: 'Overview'
 eleventyNavigation:
   key: Systems >> Overlays >> Overview
   title: Overview
@@ -11,7 +11,7 @@ eleventyNavigation:
   parent: Systems >> Overlays
 ---
 
-# Overlays: Overview
+# Overview
 
 Supports different types of overlays like dialogs, toasts, tooltips, dropdown, etc.
 

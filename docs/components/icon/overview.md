@@ -1,5 +1,5 @@
 ---
-title: 'Icon: Overview'
+title: 'Overview'
 parts:
   - Icon
   - Overview
@@ -10,7 +10,7 @@ eleventyNavigation:
   title: Overview
 ---
 
-# Icon: Overview
+# Overview
 
 A web component for displaying icons.
 

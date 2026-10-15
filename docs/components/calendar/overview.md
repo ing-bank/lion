@@ -1,5 +1,5 @@
 ---
-title: 'Calendar: Overview'
+title: 'Overview'
 parts:
   - Calendar
   - Overview
@@ -10,7 +10,7 @@ eleventyNavigation:
   title: Overview
 ---
 
-# Calendar: Overview
+# Overview
 
 A reusable and accessible calendar view web component.
 

@@ -3,7 +3,7 @@ parts:
   - Example Fail
   - Singleton Manager
   - Tools
-title: 'Singleton Manager: Example Fail'
+title: 'Example Fail'
 eleventyNavigation:
   key: Tools >> Singleton Manager >> Example Fail
   title: Example Fail
@@ -11,7 +11,7 @@ eleventyNavigation:
   parent: Tools >> Singleton Manager
 ---
 
-# Singleton Manager: Example Fail
+# Example Fail
 
 In this SPA (Single Page Application) demo you will be able to reproduce the issue.
 

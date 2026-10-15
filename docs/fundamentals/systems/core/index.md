@@ -2,7 +2,7 @@
 parts:
   - Core
   - Systems
-title: 'Systems: Core'
+title: 'Core'
 eleventyNavigation:
   key: Systems >> Core
   title: Core
@@ -10,6 +10,6 @@ eleventyNavigation:
   parent: Systems
 ---
 
-# Systems: Core
+# Core
 
 -> go to Overview

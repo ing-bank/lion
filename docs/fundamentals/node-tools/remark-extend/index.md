@@ -2,7 +2,7 @@
 parts:
   - Remark Extend
   - Node Tools
-title: 'Node Tools: Remark Extend'
+title: 'Remark Extend'
 eleventyNavigation:
   key: Node Tools >> Remark Extend
   title: Remark Extend
@@ -10,4 +10,4 @@ eleventyNavigation:
   parent: Node Tools
 ---
 
-# Node Tools: Remark Extend
+# Remark Extend

@@ -1,5 +1,5 @@
 ---
-title: 'Menu: Overview'
+title: 'Overview'
 parts:
   - Menu
   - Use Cases

@@ -1,5 +1,5 @@
 ---
-title: 'Progress Indicator: Overview'
+title: 'Overview'
 parts:
   - Progress Indicator
   - Overview
@@ -10,7 +10,7 @@ eleventyNavigation:
   title: Overview
 ---
 
-# Progress Indicator: Overview
+# Overview
 
 A web component that implements accessibility requirements for progress indicators.
 

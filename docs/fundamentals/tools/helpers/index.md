@@ -2,7 +2,7 @@
 parts:
   - Helpers
   - Tools
-title: 'Tools: Helpers'
+title: 'Helpers'
 eleventyNavigation:
   key: Tools >> Helpers
   title: Helpers
@@ -10,6 +10,6 @@ eleventyNavigation:
   parent: Tools
 ---
 
-# Tools: Helpers
+# Helpers
 
 -> go to Overview

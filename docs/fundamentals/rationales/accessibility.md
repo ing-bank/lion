@@ -2,7 +2,7 @@
 parts:
   - Accessibility
   - Rationales
-title: 'Rationales: Accessibility'
+title: 'Accessibility'
 eleventyNavigation:
   key: Rationales >> Accessibility
   title: Accessibility
@@ -10,7 +10,7 @@ eleventyNavigation:
   parent: Rationales
 ---
 
-# Rationales: Accessibility
+# Accessibility
 
 In Lion accessibility is a first class citizen. That means accessibility is never an afterthought.
 

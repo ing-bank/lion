@@ -1,5 +1,5 @@
 ---
-title: 'Button: Extensions'
+title: 'Extensions'
 parts:
   - Button
   - Extensions
@@ -10,7 +10,7 @@ eleventyNavigation:
   title: Extensions
 ---
 
-# Button: Extensions
+# Extensions
 
 ```js script
 import { html } from '@mdjs/mdjs-preview';

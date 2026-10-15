@@ -2,7 +2,7 @@
 parts:
   - Overlays
   - Systems
-title: 'Systems: Overlays'
+title: 'Overlays'
 eleventyNavigation:
   key: Systems >> Overlays
   title: Overlays
@@ -10,6 +10,6 @@ eleventyNavigation:
   parent: Systems
 ---
 
-# Systems: Overlays
+# Overlays
 
 -> go to Overview

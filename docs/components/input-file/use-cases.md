@@ -1,5 +1,5 @@
 ---
-title: 'Input File: Use Cases'
+title: 'Use Cases'
 parts:
   - Input File
   - Use Cases
@@ -10,7 +10,7 @@ eleventyNavigation:
   title: Use Cases
 ---
 
-# Input File: Use Cases
+# Use Cases
 
 ```js script
 import { Required, Validator } from '@lion/ui/form-core.js';

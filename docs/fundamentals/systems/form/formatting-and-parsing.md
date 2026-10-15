@@ -3,7 +3,7 @@ parts:
   - Formatting and Parsing
   - Form
   - Systems
-title: 'Form: Formatting and Parsing'
+title: 'Formatting and Parsing'
 eleventyNavigation:
   key: Systems >> Form >> Formatting and Parsing
   title: Formatting and Parsing
@@ -11,7 +11,7 @@ eleventyNavigation:
   parent: Systems >> Form
 ---
 
-# Form: Formatting and Parsing
+# Formatting and Parsing
 
 ```js script
 import { html } from '@mdjs/mdjs-preview';

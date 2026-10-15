@@ -3,7 +3,7 @@ parts:
   - Overview
   - Publish Docs
   - Node Tools
-title: 'Publish Docs: Overview'
+title: 'Overview'
 eleventyNavigation:
   key: Node Tools >> Publish Docs >> Overview
   title: Overview
@@ -11,7 +11,7 @@ eleventyNavigation:
   parent: Node Tools >> Publish Docs
 ---
 
-# Publish Docs: Overview
+# Overview
 
 A tool that copies and processes your documentation (in a monorepo) so it can be published/shipped with your package.
 

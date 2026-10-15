@@ -3,7 +3,7 @@ parts:
   - Overview
   - Remark Extend
   - Node Tools
-title: 'Remark Extend: Overview'
+title: 'Overview'
 eleventyNavigation:
   key: Node Tools >> Remark Extend >> Overview
   title: Overview
@@ -11,7 +11,7 @@ eleventyNavigation:
   parent: Node Tools >> Remark Extend
 ---
 
-# Remark Extend: Overview
+# Overview
 
 A plugin for remark to extend markdown by importing from source files.
 

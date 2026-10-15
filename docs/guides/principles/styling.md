@@ -2,7 +2,7 @@
 parts:
   - Principles
   - Styling
-title: 'Principles: Styling'
+title: 'Styling'
 eleventyNavigation:
   key: 'Principles: Styling'
   order: 30
@@ -10,7 +10,7 @@ eleventyNavigation:
   title: Styling
 ---
 
-# Principles: Styling
+# Styling
 
 ## Markup and styling
 

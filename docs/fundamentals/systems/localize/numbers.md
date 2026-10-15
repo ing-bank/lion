@@ -3,7 +3,7 @@ parts:
   - Format Numbers
   - Localize
   - Systems
-title: 'Localize: Format Numbers'
+title: 'Format Numbers'
 eleventyNavigation:
   key: Systems >> Localize >> Format Numbers
   title: Format Numbers
@@ -11,7 +11,7 @@ eleventyNavigation:
   parent: Systems >> Localize
 ---
 
-# Localize: Format Numbers
+# Format Numbers
 
 ## Features
 

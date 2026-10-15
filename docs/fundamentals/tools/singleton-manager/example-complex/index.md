@@ -3,7 +3,7 @@ parts:
   - Example Complex
   - Singleton Manager
   - Tools
-title: 'Singleton Manager: Example Complex'
+title: 'Example Complex'
 eleventyNavigation:
   key: Tools >> Singleton Manager >> Example Complex
   title: Example Complex
@@ -11,7 +11,7 @@ eleventyNavigation:
   parent: Tools >> Singleton Manager
 ---
 
-# Singleton Manager: Example Complex
+# Example Complex
 
 In this SPA (Single Page Application) demo you will be able to reproduce the solution.
 

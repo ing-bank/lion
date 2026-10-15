@@ -2,7 +2,7 @@
 parts:
   - How To
   - Get Started
-title: 'How To: Get Started'
+title: 'Get Started'
 eleventyNavigation:
   key: 'How To: Get Started'
   order: 10
@@ -10,7 +10,7 @@ eleventyNavigation:
   title: Get Started
 ---
 
-# How To: Get Started
+# Get Started
 
 ## Technologies Used
 

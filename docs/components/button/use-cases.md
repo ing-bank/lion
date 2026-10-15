@@ -1,5 +1,5 @@
 ---
-title: 'Button: Use Cases'
+title: 'Use Cases'
 parts:
   - Use Cases
   - Button
@@ -10,7 +10,7 @@ eleventyNavigation:
   parent: Button
 ---
 
-# Button: Use Cases
+# Use Cases
 
 ```js script
 import { html } from '@mdjs/mdjs-preview';

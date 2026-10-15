@@ -2,7 +2,7 @@
 parts:
   - Localize
   - Systems
-title: 'Systems: Localize'
+title: 'Localize'
 eleventyNavigation:
   key: Systems >> Localize
   title: Localize
@@ -10,6 +10,6 @@ eleventyNavigation:
   parent: Systems
 ---
 
-# Systems: Localize
+# Localize
 
 -> go to Overview

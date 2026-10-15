@@ -4,7 +4,7 @@ parts:
   - Edge cases
   - Overlays
   - Systems
-title: 'Overlays: Edge cases'
+title: 'Edge cases'
 eleventyNavigation:
   key: Systems >> Overlays >> Edge cases
   title: Edge cases
@@ -12,7 +12,7 @@ eleventyNavigation:
   parent: Systems >> Overlays
 ---
 
-# Overlays: Edge cases
+# Edge cases
 
 ```js script
 import { html, render, LitElement } from '@mdjs/mdjs-preview';

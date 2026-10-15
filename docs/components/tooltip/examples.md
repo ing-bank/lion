@@ -1,5 +1,5 @@
 ---
-title: 'Tooltip: Examples'
+title: 'Examples'
 parts:
   - Tooltip
   - Examples
@@ -10,7 +10,7 @@ eleventyNavigation:
   title: Examples
 ---
 
-# Tooltip: Examples
+# Examples
 
 ```js script
 import { html } from '@mdjs/mdjs-preview';

@@ -1,5 +1,5 @@
 ---
-title: 'Pagination: Overview'
+title: 'Overview'
 parts:
   - Pagination
   - Overview
@@ -10,7 +10,7 @@ eleventyNavigation:
   title: Overview
 ---
 
-# Pagination: Overview
+# Overview
 
 A web component that handles pagination.
 

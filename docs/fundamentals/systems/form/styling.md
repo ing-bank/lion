@@ -3,7 +3,7 @@ parts:
   - Styling
   - Form
   - Systems
-title: 'Form: Styling'
+title: 'Styling'
 eleventyNavigation:
   key: Systems >> Form >> Styling
   title: Styling
@@ -11,7 +11,7 @@ eleventyNavigation:
   parent: Systems >> Form
 ---
 
-# Form: Styling
+# Styling
 
 ```js script
 import { html } from '@mdjs/mdjs-preview';

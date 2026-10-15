@@ -1,5 +1,5 @@
 ---
-title: 'Steps: Overview'
+title: 'Overview'
 parts:
   - Steps
   - Overview
@@ -10,7 +10,7 @@ eleventyNavigation:
   title: Overview
 ---
 
-# Steps: Overview
+# Overview
 
 A web component that can be used to break a single goal down into dependable sub-tasks.
 
