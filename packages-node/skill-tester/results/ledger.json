@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-10-15T11:11:42.295Z",
+  "updatedAt": "2026-10-15T20:56:50.648Z",
   "entries": [
     {
       "skillRevision": "3df6d8308bc811f1d379851d3cadecf5a32434e6",
@@ -801,6 +801,26 @@
       "completionTokens": 7757,
       "cost": 0.024907029,
       "ranAt": "2026-10-15T11:11:42.028Z"
+    },
+    {
+      "skillRevision": "451cadf02977a394c31467e35fed97e6880b0266",
+      "model": "deepseek-v4-flash",
+      "scenario": "form/iban-in-form",
+      "kind": "component",
+      "samples": 3,
+      "mean": 1,
+      "min": 1,
+      "max": 1,
+      "stdDev": 0,
+      "behaviourPassed": 3,
+      "behaviourTotal": 3,
+      "attempts": 3,
+      "redoable": 0,
+      "tokens": 281346,
+      "promptTokens": 275915,
+      "completionTokens": 5431,
+      "cost": 0.021800483000000002,
+      "ranAt": "2026-10-15T20:56:50.415Z"
     },
     {
       "skillRevision": "3df6d8308bc811f1d379851d3cadecf5a32434e6",

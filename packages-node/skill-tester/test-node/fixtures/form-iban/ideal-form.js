@@ -1,14 +1,16 @@
 import { LitElement, html } from 'lit';
-import '@lion/ui/define/lion-form.js';
-import '@lion/ui/define/lion-input-iban.js';
+import { ScopedElementsMixin } from '@open-wc/scoped-elements/lit-element.js';
+import { LionForm } from '@lion/ui/form.js';
+import { LionInputIban } from '@lion/ui/input-iban.js';
 
-// A parent of a form control: it carries the field and must be usable inside a form, so it renders
-// into the host. With no shadow root there is no scoped registry, which is why the component uses the
-// define entrypoints - they register the tags globally.
-export class MyForm extends LitElement {
-  createRenderRoot() {
-    return this;
-  }
+// The overarching component. It registers what it renders in its own scoped registry - no global
+// registration, no define entrypoint - and keeps its shadow root: the form and its controls share that
+// one tree, which is what makes the controls upgrade and register upward.
+export class MyForm extends ScopedElementsMixin(LitElement) {
+  static scopedElements = {
+    'lion-form': LionForm,
+    'lion-input-iban': LionInputIban,
+  };
 
   render() {
     return html`

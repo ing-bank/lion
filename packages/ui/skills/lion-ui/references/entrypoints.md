@@ -91,7 +91,10 @@ not from `checkbox` — and importing one that does not exist fails at load.
 - `@lion/ui/validate-messages-no-side-effects.js`
 - `@lion/ui/validate-messages.js`
 
-## Registering an element (side effect)
+## Do not use these: global `define` entrypoints
+
+Listed because they exist on disk, not because the skill uses them. Registering a tag globally opts
+out of the host's scoped registry; register the class in `static scopedElements` instead.
 
 - `@lion/ui/define/lion-accordion.js`
 - `@lion/ui/define/lion-button-reset.js`
