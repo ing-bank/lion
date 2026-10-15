@@ -2,6 +2,7 @@
 import { SEO } from "astro-seo";
 import TopNav from "../../components/TopNav.astro";
 import Search from "astro-pagefind/components/Search";
+import ThemeInit from "../../components/ThemeInit.astro";
 
 const site = Astro.site || Astro.url.origin;
 const canonicalURL = new URL(Astro.url.pathname, site).toString();
@@ -58,6 +59,8 @@ const resolvedImageWithDomain = new URL("/opengraph.jpg", site).toString();
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="color-scheme" content="light dark" />
+    <ThemeInit />
     <meta name="view-transition" content="same-origin" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Search - Lion UI</title>

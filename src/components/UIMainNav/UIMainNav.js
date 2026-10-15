@@ -44,6 +44,13 @@ const iconIds = {
     </svg>
   `,
 
+  /*
+   * No entries for the section items: the menu is label-only, and `templates.icon` renders nothing
+   * for an id that is not in this map, so those rows carry no icon node at all - nothing is rendered
+   * and then hidden in CSS. Search and GitHub keep theirs: those two icons carry meaning instead of
+   * repeating the label next to them.
+   */
+
   // GitHub SVG template literal
   'lion:portal:github': html`
     <svg
@@ -515,10 +522,7 @@ export class UIMainNav extends UIBaseElement {
           ${hasBackButton
             ? html`<!-- -->
                 <button ${part('level-back-btn', { level })}>
-                  ${templates.icon(context, {
-                    item: { iconId: 'lion:portal:chevronLeft' },
-                    level: 0,
-                  })}
+                  <span data-part="back-chevron" aria-hidden="true"></span>
                   ${translations.levelBackBtn}
                 </button>`
             : nothing}
@@ -735,14 +739,13 @@ UIMainNav.provideDesign({
         font-weight: 500;
       }
 
-      [data-part='icon'][data-level='1'] + span {
-        clip: rect(0 0 0 0);
-        clip-path: inset(50%);
-        height: 1px;
-        overflow: hidden;
-        position: absolute;
-        white-space: nowrap;
-        width: 1px;
+      /*
+       * The burger is mirrored. Its three lines are drawn 24, 16 and 22 units long, all anchored to
+       * the left edge, so the original leans left; flipping it horizontally puts the longest line at
+       * the outer edge of the bar.
+       */
+      [data-part='l1-invoker'] [data-part='icon'] {
+        transform: scaleX(-1);
       }
 
       [data-part='command-invoker'],
@@ -849,12 +852,65 @@ UIMainNav.provideDesign({
           }
           */
 
+          /*
+           * Spacing: one rhythm for the whole fly-out. The rows are 0.25rem apart, the row itself
+           * carries its padding (0.6rem 0.75rem) and bleeds 0.75rem into the panel's own 1.5rem
+           * padding, so the label stays on the 24px gutter while a hover or current state covers the
+           * full width of the panel instead of only the text.
+           */
           [data-part='list'] {
             flex-direction: column;
             /* The UA gives a <ul> padding-inline-start: 40px, which held the fly-out items 40px away
              * from the panel edge (measured: items at x=104 with a 64px panel padding, i.e. the text
              * sat too close to the 283px panel's right edge). */
             padding: 0;
+            gap: 0.25rem;
+          }
+
+          [data-part='listitem'] {
+            /* Full bleed: the row spans the panel edge to edge, so a hover or current state covers
+             * the whole width instead of stopping at the gutter. The row's own padding keeps the
+             * label on the 24px line. */
+            margin-inline: -1.5rem;
+            border-radius: 8px;
+          }
+
+          /* A collapsed branch that holds the current page: the toggle carries the accent, because the
+           * current entry itself is a level down and out of sight. */
+          [data-part='listitem'][data-has-active-child] > [data-part='level-invoker'] {
+            color: var(--accent-on-surface);
+          }
+
+          [data-part='listitem'] > [data-part='anchor'],
+          [data-part='listitem'] > [data-part='command-invoker'],
+          [data-part='listitem'] > [data-part='level-invoker'] {
+            padding: 0.6rem 1.5rem;
+            border-radius: 8px;
+          }
+
+          /* The selection states are the row's, not the text's: hover, focus and the current page
+           * fill the whole width between the panel's gutters. */
+          [data-part='listitem']:hover,
+          [data-part='listitem']:focus-within {
+            background-color: var(--overlay-subtle);
+          }
+
+          /*
+           * The row that holds the current page: an item with its own page reports it on the anchor
+           * (aria-current), a top-level row that is now a toggle carries data-active from the nav data
+           * instead.
+           */
+          [data-part='listitem']:has(> [data-part='anchor'][aria-current='page']),
+          [data-part='listitem'][data-active] {
+            background-color: color-mix(in srgb, var(--accent-yellow) 16%, transparent);
+            box-shadow: inset 3px 0 0 0 var(--accent-yellow);
+          }
+
+          [data-part='listitem']:has(> [data-part='anchor'][aria-current='page']) > [data-part='anchor'] {
+            box-shadow: none;
+            outline: none;
+            text-decoration: none;
+            font-weight: 600;
           }
 
           /*
@@ -969,12 +1025,15 @@ UIMainNav.provideDesign({
           }
 
           /*
-           * Levels inside a level: indented list, and the chevron of an expander that has an open
-           * panel flips. The chevron is drawn here rather than shipped as another icon.
+           * Levels inside a level: one indent for the whole tree. A child label starts 20px inside
+           * its parent row's label (which sits on the panel's 24px gutter), and the rows stay
+           * full-bleed, so the indent is carried by the label only and the states still cover the
+           * width. Was 12px, which read as a nudge rather than a level.
            */
           [data-part='list'] [data-part='list'] {
-            padding-left: 0.75rem;
+            padding-left: 1.25rem;
             margin-top: 0.25rem;
+            gap: 0.15rem;
           }
 
           [data-part='level-invoker'] {
@@ -1032,6 +1091,16 @@ UIMainNav.provideDesign({
             transform: rotate(45deg);
           }
 
+          /* The back chevron is drawn here (the portal iconset has no chevronLeft, so the button
+           * used to render an empty icon slot next to its label). */
+          [data-part='back-chevron'] {
+            width: 0.45rem;
+            height: 0.45rem;
+            border-left: 1.5px solid currentColor;
+            border-bottom: 1.5px solid currentColor;
+            transform: rotate(45deg);
+          }
+
           [data-part='level-back-btn'] {
             display: inline-flex;
             align-items: center;
@@ -1054,8 +1123,26 @@ UIMainNav.provideDesign({
       breakpoint: '0px',
       container: globalThis,
       templateContextProcessor: context => {
+        /**
+         * A top-level row with a level is a toggle, not a link: clicking "components" opens its level
+         * instead of navigating away, and the section's own page moves into that level as its first
+         * entry - the link is still one tap away, underneath, where the menu is read. Rows without a
+         * level (Search, GitHub) are left alone.
+         */
+        const moveTopLinksIntoLevel = items =>
+          items.map(item => {
+            const { url, nextLevel } = item;
+            if (!url || !nextLevel?.items?.length) return item;
+            const { url: _url, ...rest } = item;
+            return {
+              ...rest,
+              nextLevel: { ...nextLevel, items: [{ name: item.name, url }, ...nextLevel.items] },
+            };
+          });
+
         const navData = {
           ...context.data.navData,
+          items: moveTopLinksIntoLevel(context.data.navData.items),
           hideToggle: false,
           shouldHandleScrollLock: true,
         };

@@ -36,8 +36,19 @@
     };
 
     const stored = read();
-    if (CHOICES.includes(stored)) {
-      root.dataset.theme = stored;
+    const choice = CHOICES.includes(stored) ? stored : 'auto';
+    root.dataset.theme = choice;
+
+    /*
+     * The colour-scheme meta is what the browser is allowed to use for the canvas before any
+     * stylesheet is parsed, and every layout ships it as "light dark". With the OS in dark mode that
+     * let it paint the dark canvas on a page whose stored choice is light - the dark flash you see
+     * on a light page, which is why it only happened sometimes (only on a dark OS). Matching the
+     * meta to the choice in this blocking script, before the first paint, removes it.
+     */
+    const meta = document.querySelector('meta[name="color-scheme"]');
+    if (meta) {
+      meta.setAttribute('content', choice === 'auto' ? 'light dark' : choice);
     }
 
     const syncRadios = () => {
