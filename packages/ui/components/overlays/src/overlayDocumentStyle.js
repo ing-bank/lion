@@ -15,6 +15,7 @@ export const overlayDocumentStyle = css`
 
   body.overlays-scroll-lock-ios-fix {
     position: fixed;
+    top: var(--scroll-y-compensation, none); /* This variable is set in OverlaysManager */
     width: 100%;
   }
 

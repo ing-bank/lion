@@ -254,7 +254,10 @@ export class OverlaysManager {
     document.body.classList.add('overlays-scroll-lock');
     if (isIOS || isMacSafari) {
       // iOS and safar for mac have issues with overlays with input fields. This is fixed by applying
-      // position: fixed to the body. As a side effect, this will scroll the body to the top.
+      // position: fixed to the body. As a side effect, this will scroll the body to the top,
+      // so we compensate by applying negative top value via a CSS variable, and scroll back to
+      // the original position when enabling scroll again.
+      document.body.style.setProperty('--scroll-y-compensation', `-${window.scrollY}px`);
       document.body.classList.add('overlays-scroll-lock-ios-fix');
     }
     if (isIOS) {
@@ -281,6 +284,12 @@ export class OverlaysManager {
     document.body.classList.remove('overlays-scroll-lock');
     if (isIOS || isMacSafari) {
       document.body.classList.remove('overlays-scroll-lock-ios-fix');
+      window.scrollTo({
+        top:
+          parseInt(document.body.style.getPropertyValue('--scroll-y-compensation') || '0', 10) * -1,
+        behavior: 'instant',
+      });
+      document.body.style.removeProperty('--scroll-y-compensation');
     }
     if (isIOS) {
       document.documentElement.classList.remove('overlays-scroll-lock-ios-fix');
