@@ -62,7 +62,7 @@
      * behind the nav labels had sd 44.7 in light and 52.4 on /components/, with dark glyph ghosts at
      * luma 88-104 in the bar). The scrim now carries the legibility and the blur only adds texture.
      */
-    --header-bg: light-dark(rgba(232, 232, 232, 0.85), rgba(17, 17, 17, 0.85));
+    --header-bg: light-dark(rgba(251, 251, 251, 0.9), rgba(17, 17, 17, 0.85));
     /*
      * The chrome (fixed bar + footer) is a neutral grey rather than the page colour: at #ffffff
      * on a #ffffff page the bar only existed as a blur, and the footer had no surface at all, so
@@ -206,16 +206,6 @@ main {
     /* The switch group and the burger are two controls, not one block: give them a gutter. */
     .site-header .container {
         gap: 12px;
-    }
-
-    /*
-     * Mobile: the bar is a very light grey instead of the page-level chrome grey. On a phone the
-     * bar is the only chrome in view, so it stays closer to white and reads as a tint rather than a
-     * surface; the wordmark carries its own black outline to stay legible on it (see
-     * src/components/LionWordmark.astro).
-     */
-    :root {
-        --header-bg: light-dark(rgba(247, 247, 247, 0.92), rgba(17, 17, 17, 0.85));
     }
 
     .site-header .container > .site-nav {

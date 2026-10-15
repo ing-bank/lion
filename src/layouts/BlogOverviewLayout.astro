@@ -56,9 +56,59 @@ const {
     width: 100%;
   }
 
+  /*
+   * Stacked below 900px. The hero and the feed sit in one flex row on a wide screen; on a phone
+   * that row left the feed 264px of a 390px viewport (measured: cards at x=182, width 264) with the
+   * hero's right-aligned text crammed beside it. Here the hero becomes a full-width header and the
+   * feed is one column under it.
+   */
   @media (max-width: 900px) {
+    .container.flex {
+      flex-direction: column;
+    }
+
+    .blog-overview {
+      width: 100%;
+      margin-right: 0;
+      padding: 96px 0 28px;
+      text-align: left;
+    }
+
+    .blog-overview h1 {
+      font-size: 3rem;
+    }
+
+    /* A short accent rule under the title, left aligned with it - the one piece of colour in an
+     * otherwise grey header, and the same yellow as the accent everywhere else. */
+    .blog-overview h1::after {
+      content: '';
+      display: block;
+      width: 56px;
+      height: 4px;
+      margin-top: 18px;
+      border-radius: 999px;
+      background: var(--blog-accent);
+    }
+
+    .blog-overview p {
+      margin: 0;
+      max-width: 42ch;
+    }
+
+    .blog-grid-container {
+      padding: 28px 0 48px;
+    }
+
     .blog-grid {
       grid-template-columns: repeat(2, 1fr);
+      gap: 24px;
+    }
+  }
+
+  /* A phone gets one card per row: two 160px columns is not a blog feed. */
+  @media (max-width: 700px) {
+    .blog-grid {
+      grid-template-columns: 1fr;
     }
   }
 
@@ -68,8 +118,7 @@ const {
     }
 
     .blog-grid {
-      grid-template-columns: 1fr;
-      gap: 24px;
+      gap: 20px;
     }
   }
 </style>

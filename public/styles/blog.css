@@ -1,14 +1,25 @@
-/* Blog Specific Styles - Distinct "Journal" Look */
+/* Blog Specific Styles - Distinct "Journal" Look
+ *
+ * The blog keeps the portal's chrome, layout, type and yellow accent, and keeps its own surfaces:
+ * a light grey page with white paper in the light theme, a dark grey page with #2f2f2f paper in the
+ * dark one. Both are declared as light-dark() pairs below, so the section follows the theme like
+ * every other page instead of pinning one scheme.
+ */
 
 :root {
-    --blog-bg: #f0f0f0;
-    --blog-paper: #ffffff;
-    --blog-text: #1a1a1a;
-    --blog-text-secondary: #555555;
-    --blog-accent: #FFC107; /* Warm Yellow to match main site — tints and graphics only */
-    --blog-accent-ink: var(--accent-on-surface); /* #FFC107 is 1.6:1 on the white paper, so the
-                                                   * accent is never the ink itself (see styles.css) */
-    --blog-line: #e0e0e0;
+    /* The blog keeps its own greys, but they follow the theme now instead of forcing the dark set:
+     * the light surface is its original light grey, the dark surface the dark grey it had, and every
+     * pair is a light-dark() of the two. No color-scheme override, so the bar, the footer and the
+     * embedded components show their light or dark values exactly like the rest of the portal. */
+    --blog-bg: light-dark(#f0f0f0, #262626);
+    --blog-paper: light-dark(#ffffff, #2f2f2f);
+    --blog-text: light-dark(#1a1a1a, #f2f2f2);
+    --blog-text-secondary: light-dark(#555555, #b0b0b0);
+    --blog-accent: #FFC107;
+    /* #FFC107 is 1.6:1 on the white paper and 11.3:1 on the dark grey, so it can only be the ink on
+     * one of them - this token is the accent that is readable in either (see styles.css). */
+    --blog-accent-ink: var(--accent-on-surface);
+    --blog-line: light-dark(#e0e0e0, #3f3f3f);
     --blog-font-serif: var(--font-family);
 }
 
@@ -20,18 +31,20 @@ body.blog-page {
     --border-color: var(--blog-line);
 }
 
-/* The blog header is the same bar as the rest of the portal: it used to hard-code a white
- * rgba() here, so the blog bar stayed white in dark mode (measured: bar mean luma 234). */
+/* The blog header is the same bar as the rest of the portal, drawn from the same token - no
+ * hard-coded rgba() here: that is what kept the blog bar white in dark mode (luma 234). */
 .blog-page .site-header {
     background: var(--header-bg);
     border-bottom: 1px solid var(--header-border);
 }
 
+/* Was a #222 box behind the wordmark, from when the bar was white and the glyphs light. The bar is
+ * dark now, so the lockup is just the portal's: ink on the bar, no box. */
 .blog-page .logo {
-    color: var(--blog-text);
-    background-color: #222;
-    padding: 6px 12px;
-    border-radius: 6px;
+    color: var(--text-primary);
+    background-color: transparent;
+    padding: 0;
+    border-radius: 0;
     display: inline-flex;
     align-items: center;
     gap: 8px;
@@ -45,7 +58,7 @@ body.blog-page {
 }
 
 .blog-page .main-nav a {
-    color: var(--blog-line);
+    color: var(--text-secondary);
 }
 
 .blog-page .main-nav a:hover {
@@ -83,24 +96,6 @@ body.blog-page {
 }
 
 /* Featured Post (Spans full width) */
-.post-card.featured {
-    grid-column: span 12;
-    display: grid;
-    grid-template-columns: 1.5fr 1fr;
-    gap: 40px;
-    background: var(--blog-paper);
-    border: 1px solid var(--blog-line);
-    padding: 40px;
-    align-items: center;
-    box-shadow: 5px 5px 0px rgba(0,0,0,0.05);
-    transition: transform 0.2s;
-}
-
-.post-card.featured:hover {
-    transform: translateY(-2px);
-    box-shadow: 8px 8px 0px rgba(0,0,0,0.1);
-}
-
 /* Regular Posts */
 .post-card {
     grid-column: span 4;
@@ -112,9 +107,9 @@ body.blog-page {
     cursor: pointer;
 }
 
-.post-card:not(.featured):hover {
+.post-card:hover {
     border-color: var(--blog-text);
-    box-shadow: 5px 5px 0px rgba(0,0,0,0.05);
+    box-shadow: 5px 5px 0px light-dark(rgba(0, 0, 0, 0.05), rgba(0, 0, 0, 0.3));
     transform: translateY(-2px);
 }
 
@@ -126,7 +121,7 @@ body.blog-page {
     position: relative;
     width: 100%;
     aspect-ratio: 16/9;
-    background: #ddd;
+    background: light-dark(#ddd, #3a3a3a);
     border-bottom: 1px solid var(--blog-line);
     filter: grayscale(100%);
     transition: filter 0.3s;
@@ -225,18 +220,59 @@ body.blog-page {
 }
 
 @media (max-width: 900px) {
-    .post-card.featured {
-        grid-template-columns: 1fr;
-    }
     .post-card {
-        grid-column: span 6;
+        border-radius: 10px;
+        overflow: hidden;
+        /* Two columns on a tablet, one on a phone (below). The old span 6 / span 12 counted columns
+         * that a single-column grid does not have - span 12 there creates implicit columns. */
+        grid-column: span 1;
+    }
+
+    .post-image .post-image__img {
+        aspect-ratio: 16 / 10;
+    }
+
+    .post-content {
+        padding: 20px;
+    }
+
+    .post-title {
+        font-size: 1.4rem;
+        line-height: 1.25;
+    }
+
+    /* The tag becomes a pill: on a phone it is the first thing the eye lands on, and a bare line of
+     * accent text was too easy to miss. */
+    .post-tag {
+        background-color: color-mix(in srgb, var(--blog-accent) 16%, transparent);
+        border: 1px solid color-mix(in srgb, var(--blog-accent) 35%, transparent);
+        border-radius: 999px;
+        padding: 2px 8px;
+    }
+
+    /* Full-width tap target with the arrow pushed right, instead of a ~90px text link. The summary's
+     * margin is evened out with the padding here (16px each side of the rule), so the divider sits
+     * in the middle of its own whitespace instead of 20px above it and 14px below. */
+    .post-excerpt {
+        margin-bottom: 16px;
+    }
+
+    .read-more {
+        justify-content: space-between;
+        width: 100%;
+        padding-top: 16px;
+        border-top: 1px solid var(--blog-line);
+    }
+}
+
+@media (max-width: 700px) {
+    /* One card per row, edge to edge of the phone gutter. */
+    .post-card {
+        grid-column: 1 / -1;
     }
 }
 
 @media (max-width: 600px) {
-    .post-card {
-        grid-column: span 12;
-    }
     .blog-hero h1 {
         font-size: 2.5rem;
     }
@@ -300,7 +336,10 @@ body.blog-page {
 }
 
 .blog-article-content pre {
-    background: #111;
+    /* No background on purpose: .astro-code in styles.css sets background-color: var(--bg-color)
+     * with !important, and inside the blog --bg-color *is* the page, so a code block reads as the
+     * page colour with its own border - the same treatment it gets on the docs pages. A hard-coded
+     * background here would be a dead declaration. */
     border: 1px solid var(--blog-line);
     border-radius: 8px;
     padding: 16px;
