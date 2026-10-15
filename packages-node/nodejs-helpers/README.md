@@ -19,3 +19,8 @@ Don't try to predict and write a utility function, in other words, add utilities
 Keep the APIs simple, extendable, yet specific to our use cases(KISS), in other words, don't write a generic utility.
 
 Put shared tasks between lion and ing-web(extends lion) here.
+
+`bypassImportMap` accepts string targets and flat conditional targets. For conditional
+targets it selects the first `import` or `default` entry in declaration order, ignoring
+`types` and `require` because it rewrites ESM source files. Entries without a supported
+string runtime target are rejected. The package's import map itself is left unchanged.
