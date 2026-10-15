@@ -190,12 +190,18 @@ Do **not** override `createRenderRoot` on a lion component subclass to force lig
 controls rely on scoped elements for their own slot rendering, and with no shadow root that breaks
 (measured — it throws inside `ScopedElementsMixin`).
 
-`createRenderRoot` is needed in **exactly one situation**: when the component you write is a **parent of
-a form control** — it contains a form control itself and must be usable inside a form — because form
-registration travels up through light DOM. For everything else the default shadow root with
-`ScopedElementsMixin` above is correct: a leaf component, a component with no form control inside it, or
-a component whose children are ordinary (non-form) elements. This is the one documented exception, not
-the common case.
+A form has one DOM that the form element and its controls share, and that gives the components you
+write one of two roles (see `references/guides/create-a-form.md`):
+
+- **the overarching component** - the file that loads `@lion/ui/define/lion-form.js` and renders
+  `<lion-form>` around the native `<form>` - **may** have a shadow root. It is the form's boundary;
+- **sub forms** - components living _inside_ the form that carry controls - **must not** have a shadow
+  root, so they share the (light) DOM with `<lion-form>` and `<form>`. Registration travels up the DOM,
+  so a shadow root in between makes the controls inside it stop registering to their parents.
+
+So `createRenderRoot()` returning the host belongs on a **sub form**, not on the overarching component.
+Everything else (a leaf component, a component holding no form control) keeps the normal shadow root
+with `ScopedElementsMixin`.
 
 #### Native element -> required `@lion/ui` replacement
 
