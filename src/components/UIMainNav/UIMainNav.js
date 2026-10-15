@@ -659,13 +659,15 @@ UIMainNav.provideDesign({
         text-decoration: none;
       }
 
-      [data-part='anchor'][data-level='1'][aria-current='page'] {
-        color: var(--highlight-color);
-        font-weight: 500;
-      }
-
+      [data-part='anchor'][data-level='1'][aria-current='page'],
       [data-part='anchor'][data-level='1'][aria-current='page']:hover {
-        color: var(--highlight-color);
+        /* Outline treatment: the accent cannot be the ink on a light surface, so the current page
+         * is marked by a yellow outline around readable text. */
+        color: var(--accent-on-surface);
+        outline: 2px solid var(--accent-yellow);
+        outline-offset: 2px;
+        border-radius: 4px;
+        font-weight: 500;
       }
 
       [data-part='icon'][data-level='1'] + span {
@@ -787,7 +789,15 @@ UIMainNav.provideDesign({
           }
 
           [data-level][data-open] {
-            background-color: black;
+            /*
+             * Was background-color: black — the dark theme's surface spelled as a colour literal:
+             * in light mode the fly-out stayed black while its own ink stayed dark, so the panel
+             * rendered dark-on-dark (panel colour rgb(0,0,0) on rgb(0,0,0) = 1.00:1, its links
+             * rgb(90,90,90) on rgb(0,0,0) = 3.04:1, both below AA).
+             */
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            border-right: 1px solid var(--border-color);
             position: fixed;
             height: 100vh;
             padding: 4rem;
@@ -829,7 +839,11 @@ UIMainNav.provideDesign({
           }
 
           [data-part='anchor'][aria-current='page'] {
-            color: var(--highlight-color);
+            color: var(--accent-on-surface);
+            text-decoration: underline;
+            text-decoration-color: var(--accent-yellow);
+            text-decoration-thickness: 2px;
+            text-underline-offset: 3px;
           }
         `,
       ],

@@ -16,7 +16,7 @@ export const sharedGlobalStyle = css`
     content: '';
     position: absolute;
     inset: -0.25rem;
-    outline-color: var(--highlight-color);
+    outline-color: var(--accent-on-surface);
     outline-style: dotted;
     outline-width: var(--border-width-lg);
     outline-offset: 2px;

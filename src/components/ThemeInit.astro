@@ -1,0 +1,66 @@
+---
+/**
+ * The theme choice has to survive a page navigation, and this portal is a static MPA: there is no
+ * client router, so the CSS-only switch (radios -> :has() -> color-scheme in public/styles/theme.css)
+ * resets on every page load.
+ *
+ * This is the smallest thing that fixes it: a blocking inline script in <head> that reads the
+ * stored choice before the first paint and writes it to `data-theme` on <html>, which theme.css
+ * maps onto `color-scheme` exactly like the checked radio does. It then keeps the radio group in
+ * sync, so the control shows the stored choice and switching it stores the new one again.
+ *
+ * Without JavaScript nothing breaks: the radios still work, they just reset per page.
+ */
+---
+<script is:inline>
+  (() => {
+    const KEY = 'lion-portal-theme';
+    const CHOICES = ['auto', 'light', 'dark'];
+    const root = document.documentElement;
+
+    const read = () => {
+      try {
+        return localStorage.getItem(KEY);
+      } catch {
+        // private mode / storage disabled: fall back to the CSS-only behaviour
+        return null;
+      }
+    };
+
+    const write = choice => {
+      try {
+        localStorage.setItem(KEY, choice);
+      } catch {
+        // ignore: the theme is a comfort setting, not a requirement
+      }
+    };
+
+    const stored = read();
+    if (CHOICES.includes(stored)) {
+      root.dataset.theme = stored;
+    }
+
+    const syncRadios = () => {
+      const choice = root.dataset.theme;
+      if (!CHOICES.includes(choice)) return;
+      const radio = document.getElementById(`theme-${choice}`);
+      if (radio) radio.checked = true;
+    };
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', syncRadios, { once: true });
+    } else {
+      syncRadios();
+    }
+
+    // One listener for the whole document: the switch is re-rendered with every nav, so a listener
+    // bound to the inputs themselves would be lost on navigation.
+    document.addEventListener('change', event => {
+      const input = event.target;
+      if (!(input instanceof HTMLInputElement) || input.name !== 'theme') return;
+      if (!CHOICES.includes(input.value)) return;
+      root.dataset.theme = input.value;
+      write(input.value);
+    });
+  })();
+</script>

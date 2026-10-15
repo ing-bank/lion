@@ -6,7 +6,8 @@
     --blog-text: #1a1a1a;
     --blog-text-secondary: #555555;
     --blog-accent: #FFC107; /* Warm Yellow to match main site — tints and graphics only */
-    --blog-accent-ink: #7a5c00; /* the same accent as text: #FFC107 is 1.6:1 on the white paper */
+    --blog-accent-ink: var(--accent-on-surface); /* #FFC107 is 1.6:1 on the white paper, so the
+                                                   * accent is never the ink itself (see styles.css) */
     --blog-line: #e0e0e0;
     --blog-font-serif: var(--font-family);
 }
@@ -19,10 +20,11 @@ body.blog-page {
     --border-color: var(--blog-line);
 }
 
-/* Override Header for Light Mode */
+/* The blog header is the same bar as the rest of the portal: it used to hard-code a white
+ * rgba() here, so the blog bar stayed white in dark mode (measured: bar mean luma 234). */
 .blog-page .site-header {
-    background: rgba(255, 255, 255, 0.8);
-    border-bottom: 1px solid var(--blog-line);
+    background: var(--header-bg);
+    border-bottom: 1px solid var(--header-border);
 }
 
 .blog-page .logo {
@@ -138,7 +140,8 @@ body.blog-page {
     position: absolute;
     /* filter: grayscale(0%) sepia(100%) brightness(90%); */
     content: ''; 
-    background-color: rgba(var(--highlight-color), 0.5);
+    /* rgba() of a custom property that holds a hex colour resolves to nothing; same 50% tint. */
+    background-color: color-mix(in srgb, var(--accent-yellow) 50%, transparent);
     /* background-blend-mode: multiply; */
     /* pointer-events: none; */
     /* opacity: 0.6; */
@@ -273,8 +276,12 @@ body.blog-page {
 }
 
 .blog-article-content a {
-    color: var(--highlight-color);
-    text-decoration: none;
+    /* Outline treatment: the ink stays readable, the accent is the underline. */
+    color: var(--accent-on-surface);
+    text-decoration: underline;
+    text-decoration-color: var(--accent-yellow);
+    text-decoration-thickness: 2px;
+    text-underline-offset: 3px;
 }
 
 .blog-article-content a:hover {
@@ -309,7 +316,7 @@ body.blog-page {
 }
 
 .blog-article-content blockquote {
-    border-left: 4px solid var(--blog-accent-ink);
+    border-left: 4px solid var(--accent-yellow);
     padding-left: 16px;
     margin-left: 0;
     margin-bottom: 16px;
@@ -343,8 +350,12 @@ body.blog-page {
 }
 
 .blog-footer a {
-    color: var(--highlight-color);
-    text-decoration: none;
+    /* Outline treatment: the ink stays readable, the accent is the underline. */
+    color: var(--accent-on-surface);
+    text-decoration: underline;
+    text-decoration-color: var(--accent-yellow);
+    text-decoration-thickness: 2px;
+    text-underline-offset: 3px;
 }
 
 .blog-footer a:hover {
@@ -376,13 +387,17 @@ body.blog-page {
 
 .blog-detail-toc a:hover {
     color: var(--blog-accent-ink);
-    border-left-color: var(--blog-accent-ink);
+    border-left-color: var(--accent-yellow);
     padding-left: 20px;
+    text-decoration: underline;
+    text-decoration-color: var(--accent-yellow);
+    text-decoration-thickness: 2px;
+    text-underline-offset: 3px;
 }
 
 .blog-detail-toc a.active {
     color: var(--blog-accent-ink);
-    border-left-color: var(--blog-accent-ink);
+    border-left-color: var(--accent-yellow);
     background: color-mix(in srgb, var(--blog-accent) 8%, transparent);
     font-weight: 600;
 }

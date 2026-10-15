@@ -2,6 +2,8 @@
 import { SEO } from "astro-seo";
 import TopNav from "../components/TopNav.astro";
 import { UIPortalInpageNav } from "../components/ui-portal-inpage-nav.js";
+import ThemeInit from '../components/ThemeInit.astro';
+import LionWordmark from '../components/LionWordmark.astro';
 
 const site = Astro.site || Astro.url.origin;
 const canonicalURL = new URL(Astro.url.pathname, site).toString();
@@ -150,14 +152,14 @@ if (items.length > 0 && componentsByCategory.size === 0) {
   }
 
   .component-link:hover {
-    background-color: rgba(255, 193, 7, 0.05);
-    color: var(--highlight-color);
+    background-color: color-mix(in srgb, var(--accent-yellow) 5%, transparent);
+    color: var(--accent-on-surface);
   }
 
   .component-link.active {
-    color: var(--highlight-color);
-    background-color: rgba(255, 193, 7, 0.1);
-    border-left-color: var(--highlight-color);
+    color: var(--accent-on-surface);
+    background-color: color-mix(in srgb, var(--accent-yellow) 10%, transparent);
+    border-left-color: var(--accent-yellow);
     font-weight: 500;
   }
 
@@ -207,6 +209,7 @@ if (items.length > 0 && componentsByCategory.size === 0) {
     <meta name="view-transition" content="same-origin" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="color-scheme" content="light dark" />
+    <ThemeInit />
     <title>{title}</title>
     <link rel="icon" type="image/svg+xml" href=`${import.meta.env.BASE_URL}/favicon.svg` />
     <meta name="generator" content={Astro.generator} />
@@ -299,7 +302,7 @@ if (items.length > 0 && componentsByCategory.size === 0) {
         <div class="container">
             <div class="footer-row">
                 <div class="footer-brand">
-                    <img src=`${import.meta.env.BASE_URL}/lionui-text.svg` alt="lion ui" height="16" class="logo-text-svg">
+                    <LionWordmark />
                     <p class="copyright">&copy; 2025 Lion Project. MIT License.</p>
                 </div>
                 <div class="footer-links">

@@ -35,7 +35,8 @@ const resolvedImageWithDomain = new URL("/opengraph.jpg", site).toString();
 
   :global(.pagefind-ui) {
     /* Was hard-coded to the dark palette, which left a black search box on the light page. */
-    --pagefind-ui-primary: var(--highlight-color);
+    /* Marks and the clear button are text, so the readable accent ink rather than the yellow. */
+    --pagefind-ui-primary: var(--accent-on-surface);
     --pagefind-ui-text: var(--text-primary);
     --pagefind-ui-background: var(--bg-surface);
     --pagefind-ui-border: var(--border-color);
