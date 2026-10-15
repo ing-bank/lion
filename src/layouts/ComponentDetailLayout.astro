@@ -1,5 +1,6 @@
 ---
 import DetailLayout from "./DetailLayout.astro";
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 
 const { title, componentName, description = "Accessible component with various states and styles.", components = [], headings = [] } = Astro.props;
 
@@ -8,7 +9,7 @@ const componentsByCategory = new Map();
 components.forEach(component => {
   const [compName] = component.href.split('/').filter(p => p && p !== 'components');
   const category = compName || 'other';
-  
+
   if (!componentsByCategory.has(category)) {
     componentsByCategory.set(category, []);
   }
@@ -25,7 +26,7 @@ components.forEach(component => {
   sectionName="Components"
   itemName={componentName}
   description={description}
-  backLink={`${import.meta.env.BASE_URL}/components/`}
+  backLink={`${base}/components/`}
   backLinkLabel="← Back to Overview"
   itemsByCategory={componentsByCategory}
   headings={headings}

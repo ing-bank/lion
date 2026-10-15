@@ -1,6 +1,7 @@
 ---
 import { getCollection, getEntry, render } from "astro:content";
 import DetailLayout from "../../layouts/DetailLayout.astro";
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 
 export async function getStaticPaths() {
     const entries = await getCollection("lionGuides");
@@ -47,7 +48,7 @@ allGuides
     if (!guidesByCategory.has(category)) {
       guidesByCategory.set(category, []);
     }
-    
+
     guidesByCategory.get(category).push({
       href: `/guides/${guidePath}/`,
       label,
@@ -71,7 +72,7 @@ const sortedCategories = new Map(
   sectionName="Guides"
   itemName={guideName}
   description={entry.data?.description || `${displayName} guide.`}
-  backLink={`${import.meta.env.BASE_URL}/guides/`}
+  backLink={`${base}/guides/`}
   backLinkLabel="← Back to Guides"
   itemsByCategory={sortedCategories}
   headings={headings.map(h => ({ name: h.text, url: h.slug }))}
