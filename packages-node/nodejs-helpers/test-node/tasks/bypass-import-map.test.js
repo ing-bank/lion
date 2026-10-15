@@ -4,6 +4,7 @@ import { exec } from 'child_process';
 import { readFile } from 'fs/promises';
 import fs from 'node:fs/promises';
 import os from 'node:os';
+import sinon from 'sinon';
 import chai from 'chai';
 // eslint-disable-next-line import/no-unresolved
 import chaiAsPromised from 'chai-as-promised';
@@ -190,6 +191,38 @@ describe('Conditional import maps', () => {
       );
       expect(await fs.readFile(path.join(packageDir, 'package.json'), 'utf8')).to.equal(manifest);
     });
+  });
+
+  it('rewrites nested imports and respects ignored directories with Windows separators', async () => {
+    await fs.writeFile(
+      path.join(packageDir, 'package.json'),
+      JSON.stringify({
+        imports: { '#awesome-phonenumber': { import: './generated/phone.mjs' } },
+      }),
+    );
+    await fs.mkdir(path.join(packageDir, 'components/nested'));
+    await fs.mkdir(path.join(packageDir, 'scripts'));
+    const sourcePath = path.join(packageDir, 'components/nested/consumer.js');
+    const ignoredPath = path.join(packageDir, 'scripts/consumer.js');
+    const initialCode = "import phone from '#awesome-phonenumber';\nexport default phone;";
+    await fs.writeFile(sourcePath, initialCode);
+    await fs.writeFile(ignoredPath, initialCode);
+    const nativeRelative = path.relative;
+    const sandbox = sinon.createSandbox();
+    sandbox.stub(path, 'relative').callsFake((from, to) => {
+      const relative = nativeRelative(from, to);
+      return to === packageDir ? relative.replaceAll('/', '\\') : relative;
+    });
+    try {
+      await bypassImportMap(packageDir, { ignoredDirs: ['scripts'] });
+    } finally {
+      sandbox.restore();
+    }
+
+    expect(await fs.readFile(sourcePath, 'utf8')).to.equal(
+      await prettify("import phone from '../../generated/phone.mjs';\nexport default phone;"),
+    );
+    expect(await fs.readFile(ignoredPath, 'utf8')).to.equal(initialCode);
   });
 
   it('rejects a conditional entry with no supported ESM runtime target', async () => {

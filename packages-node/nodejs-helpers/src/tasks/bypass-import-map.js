@@ -29,7 +29,7 @@ const getMatchingPatternAndReplacement = (source, fileDir, packageDir, importMap
   if (!pattern || !replacement) {
     return { pattern: '', replacement: '' };
   }
-  const fileToPackageRelativeDir = path.relative(fileDir, packageDir) || '.';
+  const fileToPackageRelativeDir = path.relative(fileDir, packageDir).replace(/\\/g, '/') || '.';
   // TODO: Is there a case where replacement does not start with ./, check spec.
   const updatedReplacement = replacement.replace('./', `${fileToPackageRelativeDir}/`);
   return { pattern, replacement: updatedReplacement };
@@ -150,9 +150,11 @@ export const bypassImportMap = async (packageDir, options = {}) => {
   if (!imports) {
     return Promise.resolve();
   }
-  const ignoredPatterns = ignoredDirs.map(dir => `!${path.join(packageDir, dir)}`);
-  const searchPatterns = [path.join(packageDir, '**', '*.js'), ...ignoredPatterns];
-  const filePaths = await globby(searchPatterns);
+  const filePaths = await globby('**/*.js', {
+    cwd: packageDir,
+    absolute: true,
+    ignore: ignoredDirs.map(dir => `${dir.replace(/\\/g, '/')}/**`),
+  });
   const importMap = normalizeImportMap(imports);
   // @ts-ignore
   return asyncConcurrentForEach(filePaths, filePath =>
