@@ -1,0 +1,68 @@
+name: SR automation
+
+on:
+  push:
+    paths:
+      - 'packages/ui/components/**/test/*.sr.test.mjs'
+      - 'packages-node/test-runner-screenreader/**'
+      - 'web-test-runner-sr.config.mjs'
+      - '.github/workflows/guidepup.yml'
+  workflow_dispatch:
+
+jobs:
+  voiceover:
+    name: VoiceOver (macos)
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup screen reader
+        uses: guidepup/setup-action@main
+        with:
+          # macos runners cannot always write the TCC database, and the action
+          # then reports success while VoiceOver still cannot mount its
+          # preferences ("Failed to mount Guidepup preferences")
+          ignoreTccDb: true
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22.x
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install screen reader assets
+        run: npx @guidepup/setup install
+
+      - name: Playwright
+        run: npx playwright install --with-deps
+
+      - name: Run screen reader tests
+        run: npm run test:sr -- --voiceover
+
+  nvda:
+    name: NVDA (windows)
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup screen reader
+        uses: guidepup/setup-action@main
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22.x
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install screen reader assets
+        run: npx @guidepup/setup install
+
+      - name: Playwright
+        run: npx playwright install --with-deps
+
+      - name: Run screen reader tests
+        run: npm run test:sr -- --nvda

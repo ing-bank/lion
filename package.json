@@ -15,6 +15,7 @@
     "debug:firefox": "web-test-runner --watch --config web-test-runner-firefox.config.mjs",
     "debug:no-scoped-registries-polyfill": "npm run debug -- --no-scoped-registries-polyfill",
     "debug:webkit": "web-test-runner --watch --config web-test-runner-webkit.config.mjs",
+    "debug:sr": "web-test-runner --watch --config web-test-runner-sr.config.mjs",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d _site -r git@github.com:ing-bank/lion --nojekyll",
     "dev": "astro dev --force",
@@ -46,6 +47,7 @@
     "test:node": "npm run test:node --workspaces --if-present",
     "test:screenshots": "npx rimraf screenshots/.diff/ && npx rimraf screenshots/.current/ && mocha --require scripts/screenshots/bootstrap.js --exit --timeout 10000 \"packages/**/test/*.screenshots-test.js\"",
     "test:screenshots:update": "cross-env UPDATE_SCREENSHOTS=true npm run test:screenshots",
+    "test:sr": "web-test-runner --config web-test-runner-sr.config.mjs",
     "types": "npm run types --workspaces --if-present",
     "types-check-only": "npm run types-check-only --workspaces --if-present"
   },
