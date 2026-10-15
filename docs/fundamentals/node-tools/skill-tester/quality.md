@@ -17,7 +17,7 @@ Scores are the skill-tester convention checks plus behaviour in a real browser, 
 
 `Rev` is the skill revision the row was measured against — the git tree hash of the skill directory, so it changes when the skill does and not when an unrelated commit lands. A scenario can hold rows from more than one revision; they are listed newest first, and only rows on the same revision are comparable.
 
-Ledger updated: 2026-10-14T23:32:26.125Z
+Ledger updated: 2026-10-15T11:11:42.295Z
 
 ## component/accordion (component)
 
@@ -237,6 +237,12 @@ Ledger updated: 2026-10-14T23:32:26.125Z
 | Model               | Mean       | Min    | Max    | sd  | n   | Behaviour | Attempts | Redo | Tokens/run | Cost  | Rev       |
 | ------------------- | ---------- | ------ | ------ | --- | --- | --------- | -------- | ---- | ---------- | ----- | --------- |
 | `deepseek-v4-flash` | **100.0%** | 100.0% | 100.0% | 0.0 | 3   | 3/3       | 3/3      | 0    | 58,145     | $0.01 | `3df6d83` |
+
+## form/iban-in-form (component)
+
+| Model               | Mean       | Min    | Max    | sd  | n   | Behaviour | Attempts | Redo | Tokens/run | Cost  | Rev       |
+| ------------------- | ---------- | ------ | ------ | --- | --- | --------- | -------- | ---- | ---------- | ----- | --------- |
+| `deepseek-v4-flash` | **100.0%** | 100.0% | 100.0% | 0.0 | 3   | 3/3       | 3/3      | 0    | 106,622    | $0.02 | `9d07772` |
 
 ## integration/native-form-to-lion-form (integration)
 
