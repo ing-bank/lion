@@ -541,6 +541,9 @@ function runKey(model: string, scenario: string, sample: number): string {
 function buildPerModelScenario(runs: ScenarioRunResult[]): ModelScenarioSummary[] {
   const grouped = new Map<string, number[]>();
   for (const run of runs) {
+    // Only comparable runs: a run that never modified the deliverable is not a zero, and folding it in
+    // here is what let the below-threshold list name a scenario the model never attempted.
+    if (!run.agentRun.attempted) continue;
     const key = `${run.model}\u0000${run.scenario}`;
     const bucket = grouped.get(key) ?? [];
     bucket.push(run.score.score);
