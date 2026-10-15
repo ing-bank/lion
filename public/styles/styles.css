@@ -62,7 +62,17 @@
      * behind the nav labels had sd 44.7 in light and 52.4 on /components/, with dark glyph ghosts at
      * luma 88-104 in the bar). The scrim now carries the legibility and the blur only adds texture.
      */
-    --header-bg: light-dark(rgba(255, 255, 255, 0.75), rgba(0, 0, 0, 0.55));
+    --header-bg: light-dark(rgba(232, 232, 232, 0.85), rgba(17, 17, 17, 0.85));
+    /*
+     * The chrome (fixed bar + footer) is a neutral grey rather than the page colour: at #ffffff
+     * on a #ffffff page the bar only existed as a blur, and the footer had no surface at all, so
+     * neither read as a separate layer. Same value family in both themes - #e8e8e8 lifted out of
+     * white, #111111 lifted out of black - which is what gives the page its contrast against the
+     * chrome. The light value was #f2f2f2 first; one step darker (#e8e8e8) reads as a real surface
+     * and still passes AA for the secondary ink: #5a5a5a on #e8e8e8 is 5.63:1 (16.87:1 was #111
+     * on #f2f2f2, now 15.41:1).
+     */
+    --chrome-bg: light-dark(#e8e8e8, #111111);
     --header-border: light-dark(rgba(0, 0, 0, 0.08), rgba(255, 255, 255, 0.08));
     --overlay-subtle: light-dark(rgba(0, 0, 0, 0.04), rgba(255, 255, 255, 0.05));
     --overlay-border: light-dark(rgba(0, 0, 0, 0.12), rgba(255, 255, 255, 0.1));
@@ -187,6 +197,27 @@ main {
     align-items: center;
 }
 
+/*
+ * Mobile: the nav collapses to the hamburger, and the burger belongs on the right - the logo keeps
+ * the left edge, the theme switch sits next to the burger. Order only, so the DOM keeps reading
+ * logo -> nav -> theme switch for the desktop row (which is where the links and command icons live).
+ */
+@media (max-width: 1023px) {
+    /* The switch group and the burger are two controls, not one block: give them a gutter. */
+    .site-header .container {
+        gap: 12px;
+    }
+
+    .site-header .container > .site-nav {
+        order: 3;
+    }
+
+    .site-header .container > .theme-switch {
+        order: 2;
+        margin-left: auto;
+    }
+}
+
 .logo {
     display: flex;
     align-items: center;
@@ -200,6 +231,20 @@ main {
 
 .logo img {
     display: block;
+}
+
+/*
+ * The mark sits in its own wrapper so it can carry a subtle ring: the ring has to live outside the
+ * <img>, because in light mode the mark is inverted by an asset-level filter and a border on the
+ * image would be inverted with it (a light ring would come out dark).
+ */
+.logo-mark {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4px;
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
 }
 
 /*
@@ -564,7 +609,9 @@ main {
 /* Footer */
 .site-footer {
     padding: 80px 0;
-    border-top: 1px solid var(--border-color);
+    /* Was transparent, i.e. the page colour continued into the footer. */
+    background: var(--chrome-bg);
+    border-top: 1px solid var(--header-border);
 }
 
 .footer-row {

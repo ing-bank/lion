@@ -72,23 +72,62 @@ function convertCollectionTreeToNavigation(collectionTree, baseUrl = '/', isSort
     }
   });
 
-  // we need to prune the children that are not active
-  navigation.forEach((navigationNode) => {
-    if (
-        navigationNode.children?.length > 0
-        && !Astro.url.pathname.startsWith(navigationNode.url)
-    ) {
-      delete navigationNode.children;
-    }
-  });
-
   return navigation;
+}
+
+/**
+ * The nav renders nested levels from `nextLevel` (see UIMainNav), and an item that has it is
+ * expandable. The collection tree is deeper than a fly-out can carry - a components subtree alone
+ * is a whole documentation tree - so the menu keeps one level below each top item and stops there.
+ */
+function pruneDeeperThan(nodes, depth = 0) {
+  for (const node of nodes) {
+    if (!node.children?.length) continue;
+    if (depth >= 1) {
+      delete node.children;
+      continue;
+    }
+    pruneDeeperThan(node.children, depth + 1);
+  }
+
+  return nodes;
+}
+
+const slug = value =>
+  value
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-|-$/g, '');
+
+/**
+ * `children` is what the server side uses to mark the active trail; `nextLevel` is what the
+ * component renders and what makes an item a toggle. The key keeps the popover ids unique - one
+ * level 2 panel per parent, and a popovertarget can only address one id.
+ */
+function toNavLevels(items) {
+  return items.map(item => {
+    const children = item.children || [];
+    const node = { ...item };
+    delete node.children;
+    if (children.length) {
+      node.nextLevel = {
+        key: slug(item.name),
+        // Level 1 is opened with mode 'popover' by the component; the nested panels need the same
+        // mode, otherwise they default to a disclosure that only toggles `hidden` and never gets
+        // the fly-out surface or its animation.
+        showVia: 'popover',
+        items: toNavLevels(children),
+      };
+    }
+    return node;
+  });
 }
 
 async function getNavigation(collectionName, baseUrl = '/', isSortedAlphabetically = true, filter = () => true) {
   const collectionTree = await buildCollectionTree(collectionName, filter);
+  const navigation = convertCollectionTreeToNavigation(collectionTree, baseUrl, isSortedAlphabetically);
 
-  return convertCollectionTreeToNavigation(collectionTree, baseUrl, isSortedAlphabetically);
+  return pruneDeeperThan(navigation);
 }
 
 const components = await getNavigation(
@@ -257,14 +296,16 @@ const { variant } = Astro.props;
 <header class="site-header">
     <div class="container">
         <a href=`${import.meta.env.BASE_URL}` class="logo">
-            <img src=`${import.meta.env.BASE_URL}/logo.svg` alt="Lion Logo" width="32" height="32">
+            <span class="logo-mark">
+                <img src=`${import.meta.env.BASE_URL}/logo.svg` alt="Lion Logo" width="32" height="32">
+            </span>
             <LionWordmark />
         </a>
         
-        <div>
+        <div class="site-nav">
           <UIPortalMainNav 
             client:load 
-            nav-data={JSON.stringify({ items: navData })} 
+            nav-data={JSON.stringify({ items: toNavLevels(navData) })} 
             variant={variant || ''}
           />
         </div>
