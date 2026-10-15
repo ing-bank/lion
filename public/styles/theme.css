@@ -34,7 +34,7 @@
   --heading-gradient-to: #777777;
   --hero-gradient-from: #111111;
   --hero-gradient-to: #777777;
-  --grid-line-color: #ececec;
+  --grid-line-color: #f5f5f5;
 }
 
 /*
@@ -46,7 +46,7 @@
   --_dark-heading-gradient-to: #777777;
   --_dark-hero-gradient-from: #ffffff;
   --_dark-hero-gradient-to: #888888;
-  --_dark-grid-line-color: #111111;
+  --_dark-grid-line-color: #0b0b0b;
 }
 
 /*

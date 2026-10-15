@@ -20,7 +20,7 @@
   xmlns="http://www.w3.org/2000/svg"
 >
   <text x="0" y="28" class="wordmark-glyphs" fill="currentColor">lıon</text>
-  <text x="54" y="28" class="wordmark-glyphs" fill="var(--accent-yellow)">uı</text>
+  <text x="54" y="28" class="wordmark-glyphs wordmark-accent" fill="var(--accent-yellow)">uı</text>
 </svg>
 
 <style>
@@ -35,5 +35,21 @@
     font-weight: 600;
     font-size: 32px;
     letter-spacing: -0.03em;
+  }
+
+  /*
+   * Outline on the accent half only. "lion" is already #111111 on light chrome (16:1), so it needs
+   * nothing; "ui" is #FFC107, which is 1.63:1 and stops being readable as the bar gets lighter, so
+   * paint-order keeps the stroke behind the fill, so the letters stay yellow and the outline only
+   * separates them from the background. In dark mode the stroke is transparent - the accent there
+   * sits on near-black, where a dark outline would just blur it.
+   *
+   * light-dark() takes colours only: as a length the declaration is invalid and gets dropped.
+   */
+  .wordmark-accent {
+    paint-order: stroke fill;
+    stroke: light-dark(#000000, transparent);
+    stroke-width: 1.5px;
+    stroke-linejoin: round;
   }
 </style>
