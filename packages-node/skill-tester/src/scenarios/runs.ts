@@ -60,13 +60,13 @@ export const ibanInFormScenario: TestScenario = {
     {
       type: 'matches',
       file: 'src/my-form.js',
-      pattern: '@lion/ui/(define/lion-input-iban|input-iban)\\.js',
-      description: 'imports the IBAN input through a documented @lion/ui entrypoint',
+      pattern: '@lion/ui/input-iban\\.js',
+      description: 'imports the IBAN input through its documented class entrypoint',
     },
     {
       type: 'matches',
       file: 'src/my-form.js',
-      pattern: 'lion-form|(define/lion-form|form)\\.js',
+      pattern: '(<lion-form|@lion/ui/form\\.js)',
       description: 'gives the field a lion form context',
     },
     {
@@ -80,6 +80,12 @@ export const ibanInFormScenario: TestScenario = {
       file: 'src/my-form.js',
       pattern: 'extends\\s+Lion[A-Za-z]*',
       description: 'consumes lion rather than subclassing it',
+    },
+    {
+      type: 'notMatches',
+      file: 'src/my-form.js',
+      pattern: '@lion/ui/define/',
+      description: 'does not use a global define entrypoint',
     },
     {
       type: 'notMatches',

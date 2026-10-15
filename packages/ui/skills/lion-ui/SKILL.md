@@ -190,16 +190,18 @@ Do **not** override `createRenderRoot` on a lion component subclass to force lig
 controls rely on scoped elements for their own slot rendering, and with no shadow root that breaks
 (measured — it throws inside `ScopedElementsMixin`).
 
-A form has one DOM that the form element and its controls share, and that gives the components you
-write one of two roles (see `references/guides/create-a-form.md`):
+A form and its controls share one DOM, and that gives the components you write one of two roles (see
+`references/guides/create-a-form.md`):
 
-- **the overarching component** - the file that loads `@lion/ui/define/lion-form.js` and renders
-  `<lion-form>` around the native `<form>` - **may** have a shadow root. It is the form's boundary;
+- **the overarching component** - it applies `ScopedElementsMixin` and registers the lion components it
+  renders in `static scopedElements` - **may** have a shadow root. Its scoped registry, not global
+  registration, is what makes the controls upgrade;
 - **sub forms** - components living _inside_ the form that carry controls - **must not** have a shadow
-  root, so they share the (light) DOM with `<lion-form>` and `<form>`. Registration travels up the DOM,
-  so a shadow root in between makes the controls inside it stop registering to their parents.
+  root, so they share the DOM with `lion-form` and `<form>`. Registration travels up the DOM, so a
+  shadow root in between makes the controls inside it stop registering to their parents.
 
-So `createRenderRoot()` returning the host belongs on a **sub form**, not on the overarching component.
+Prefer a **shared template** over a sub form when you only need to split a large form into files: a
+template renders in the overarching component's context, where its scoped registry resolves every tag.
 Everything else (a leaf component, a component holding no form control) keeps the normal shadow root
 with `ScopedElementsMixin`.
 
@@ -237,6 +239,8 @@ html`
 ## Rules
 
 - Always read the component's reference doc before using it.
+- **Never import a `@lion/ui/define/...` entrypoint.** It registers a tag globally, which opts out of
+  your host's scoped registry. Register the class in `static scopedElements` instead.
 - **The valid entrypoints are a fixed, generated list** — `references/entrypoints.md`, built from
   `packages/ui/exports` on every regeneration. Check it instead of deriving a specifier from a name.
 - **Import from the module an API is documented under — never from a name you infer.** `@lion/ui/`
