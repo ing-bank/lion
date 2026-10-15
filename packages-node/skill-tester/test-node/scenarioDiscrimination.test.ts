@@ -1,18 +1,24 @@
 /**
  * Scenario discrimination — does a scenario's assertion tell a right answer from a wrong one?
  *
- * The gap this closes: the suite pins the harness's internals thoroughly (41 of 87 tests) and never
- * asked whether a scenario's own assertion distinguishes anything. `field/iban-field` demanded a
- * `<lion-input-iban>` *child* while its prompt only asked for "a field where a user can enter an IBAN
- * account number" — so four working subclass answers across three models were failed, and finding
- * that took 16 model runs and four models.
+ * The gap this closes: the suite pinned the harness's internals thoroughly and never asked whether a
+ * scenario's own assertion distinguishes anything. One did not: it demanded a `<lion-input-iban>`
+ * *child* while its prompt only asked for "a field where a user can enter an IBAN account number", so
+ * four working subclass answers across three models were failed, and finding that took 16 model runs
+ * and four models.
  *
- * These fixtures are the artifacts from those very runs, not invented ones:
+ * That scenario has since been reshaped into `form/iban-in-form`: the deliverable is a form, built
+ * from scratch, that CARRIES a form control. Two reasons. Consumption is the path these tests measure,
+ * so the prompt asks for a form that composes lion instead of inviting a subclass; and a component
+ * that carries a form control is the one documented case where light DOM is required, so the skill's
+ * `createRenderRoot` rule is now exercised in a real browser rather than trusted.
  *
- *   ideal.js                accepted   the canonical component file (scored 100%)
- *   subclass.js             accepted   the shape that was wrongly failed
- *   native-input.js         rejected   control: right label and prefill, wrong component
- *   no-label-no-prefill.js  rejected   control: right component, missing demanded props
+ * These fixtures are artifacts of measured runs, plus the reshaped ideal:
+ *
+ *   ideal-form.js          accepted   consume lion from scratch, in the documented light-dom case
+ *   subclass.js            rejected   a supported path, but a subclasser's: out of scope here
+ *   native-input.js        rejected   control: right label and prefill, wrong component
+ *   no-label-no-prefill.js rejected   control: right component, missing demanded props
  *
  * The two controls are the point. They parse cleanly, every import resolves, and they fail only
  * because the assertion catches what the prompt actually demanded — so a failure cannot be an import
@@ -28,7 +34,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { runBehaviourSuite, defaultRepoRoot } from '../src/behaviour/runner.ts';
-import { ibanFieldScenario } from '../src/scenarios/runs.ts';
+import { ibanInFormScenario } from '../src/scenarios/runs.ts';
 import type { TestScenario } from '../src/scenarios/types.ts';
 
 const repoRoot = defaultRepoRoot();
@@ -36,7 +42,7 @@ const fixturesDir = path.join(path.dirname(fileURLToPath(import.meta.url)), 'fix
 const harnessAvailable = fs.existsSync(path.join(repoRoot, 'node_modules/.bin/web-test-runner'));
 const skip = harnessAvailable ? false : 'web-test-runner is not installed';
 
-const SCENARIO: TestScenario = ibanFieldScenario;
+const SCENARIO: TestScenario = ibanInFormScenario;
 
 type Expectation = {
   fixture: string;
@@ -48,23 +54,24 @@ type Expectation = {
 
 const EXPECTATIONS: Expectation[] = [
   {
-    fixture: 'field-iban/ideal.js',
+    fixture: 'form-iban/ideal-form.js',
     accepted: true,
-    why: 'the canonical composition is a correct answer',
+    why: 'consuming lion from scratch, in the documented light-dom case, is the canonical answer',
   },
   {
-    fixture: 'field-iban/subclass.js',
-    accepted: true,
-    why: 'a subclass of the documented field is a correct answer too (measured)',
+    fixture: 'form-iban/subclass.js',
+    accepted: false,
+    mustMention: /form context|lion-form|right component/,
+    why: 'subclassing is a subclasser\'s path and out of scope for these tests',
   },
   {
-    fixture: 'field-iban/native-input.js',
+    fixture: 'form-iban/native-input.js',
     accepted: false,
     mustMention: /right component|instance of/,
     why: 'a native input is not the documented component',
   },
   {
-    fixture: 'field-iban/no-label-no-prefill.js',
+    fixture: 'form-iban/no-label-no-prefill.js',
     accepted: false,
     mustMention: /labelled|prefilled/,
     why: 'the demanded label and prefill must actually be asserted',
@@ -86,7 +93,7 @@ function stage(fixture: string): string {
 }
 
 test(
-  'field/iban-field accepts every valid shape and rejects the near misses, for the right reason',
+  'form/iban-in-form accepts the composed form and rejects the near misses, for the right reason',
   { skip, timeout: 240_000 },
   () => {
     const testSource = SCENARIO.behaviour?.testSource;
