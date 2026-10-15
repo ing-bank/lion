@@ -155,6 +155,34 @@ function createScreenReader({ screenReader, getPage }) {
   let instance = null;
   let resets = 0;
 
+  /**
+   * A screen reader that was just started does not always answer yet: in CI NVDA
+   * reports "NVDA is not running" right after `start()`, and only comes back
+   * after a stop/start cycle. So wait for an answer instead of trusting the
+   * first call, and let `start()` do that twice before giving up.
+   *
+   * @param {number} [timeout]
+   */
+  const answersWithin = async (timeout = 15000) => {
+    const deadline = Date.now() + timeout;
+    for (;;) {
+      try {
+        const phraseLog = await instance?.spokenPhraseLog?.();
+        if (Array.isArray(phraseLog)) {
+          return true;
+        }
+      } catch {
+        // not answering (yet)
+      }
+      if (Date.now() > deadline) {
+        return false;
+      }
+      await new Promise(resolve => {
+        setTimeout(resolve, 250);
+      });
+    }
+  };
+
   const start = async () => {
     if (screenReader === 'virtual') {
       const page = getPage();
@@ -167,32 +195,40 @@ function createScreenReader({ screenReader, getPage }) {
     const guidepupModule = '@guidepup/guidepup';
     const module = await import(guidepupModule);
     instance = screenReader === 'nvda' ? module.nvda : module.voiceOver;
+
     await instance.start();
+    if (await answersWithin()) {
+      return;
+    }
+
+    await instance.stop?.();
+    instance = screenReader === 'nvda' ? module.nvda : module.voiceOver;
+    await instance.start();
+
+    if (!(await answersWithin())) {
+      throw new Error(
+        `The ${screenReader} screen reader did not answer after starting twice ` +
+          '(check that the screen reader is installed and running for this OS user).',
+      );
+    }
+  };
+
+  const stop = async () => {
+    try {
+      await instance?.stop?.();
+    } catch {
+      // stopping a reader that already went away is not a test failure
+    }
+    instance = null;
   };
 
   /**
    * NVDA has no "go to the start of the document" command, so it is stopped and
-   * started again. A restart that does not come back is reported here, instead
-   * of letting every following test time out on a reader that is not running.
+   * started again - waiting for it to answer again before the run continues.
    */
   const restart = async () => {
-    /** @type {any} */
-    let lastError = null;
-    for (let attempt = 0; attempt < 2; attempt += 1) {
-      try {
-        await instance?.stop?.();
-        await instance?.start?.();
-        await instance?.spokenPhraseLog?.();
-        return;
-      } catch (error) {
-        lastError = error;
-      }
-    }
-    throw new Error(
-      `Could not restart the ${screenReader} screen reader: ${
-        lastError?.message ?? 'unknown error'
-      }`,
-    );
+    await stop();
+    await start();
   };
 
   /**
@@ -210,21 +246,8 @@ function createScreenReader({ screenReader, getPage }) {
     } else if (resets > 1 && instance) {
       await restart();
     }
-    // The first reset only clears the logs: a reader that was just started is
-    // already at the start of the document, and stopping NVDA right after
-    // starting it leaves it unreachable ("NVDA is not running") for the whole
-    // run.
     await instance?.clearSpokenPhraseLog?.();
     await instance?.clearItemTextLog?.();
-  };
-
-  const stop = async () => {
-    try {
-      await instance?.stop?.();
-    } catch {
-      // stopping a reader that already went away is not a test failure
-    }
-    instance = null;
   };
 
   return {
