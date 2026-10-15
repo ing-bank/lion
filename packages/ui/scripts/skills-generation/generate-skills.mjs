@@ -255,6 +255,42 @@ function writeEntrypointReference() {
   return specifiers.length;
 }
 
+/**
+ * Points every form control's reference doc at the form guidance.
+ *
+ * A form and its controls have to share one DOM, and which component may keep a shadow root depends on
+ * its role in that form — so the page a model reads before using a control has to carry the pointer.
+ * The set of controls is derived from the repository's own form documentation rather than hand-listed:
+ * "which components are form controls" is exactly the kind of list that rots.
+ */
+function linkFormControlsToFormGuide() {
+  const formDocsDir = path.join(docsRoot, 'fundamentals/systems/form');
+  if (!fs.existsSync(formDocsDir)) return 0;
+
+  const mentioned = new Set();
+  for (const file of fs.readdirSync(formDocsDir)) {
+    if (!file.endsWith('.md')) continue;
+    const text = fs.readFileSync(path.join(formDocsDir, file), 'utf-8');
+    for (const match of text.matchAll(/lion-([a-z][a-z-]*)/g)) mentioned.add(match[1]);
+  }
+
+  const pointer =
+    '> **Building a form?** Read [Create a form](../guides/create-a-form.md) first — the form and its\n' +
+    '> controls have to share one (light) DOM, and which component may keep a shadow root follows from\n' +
+    '> its role in that form.\n\n';
+
+  let linked = 0;
+  for (const name of mentioned) {
+    const reference = path.join(referencesDir, 'components', `${name}.md`);
+    if (!fs.existsSync(reference)) continue;
+    const content = fs.readFileSync(reference, 'utf-8');
+    if (content.includes('Create a form')) continue;
+    fs.writeFileSync(reference, pointer + content);
+    linked++;
+  }
+  return linked;
+}
+
 function main() {
   if (!fs.existsSync(customElementsJsonPath)) {
     throw new Error(
@@ -329,9 +365,10 @@ function main() {
   updateSkillMdIndex('systems', systemEntries);
   updateSkillMdIndex('guides', guideEntries);
   writeEntrypointReference();
+  const formControlsLinked = linkFormControlsToFormGuide();
 
   console.log(
-    `Generated ${componentEntries.length} component reference(s), ${systemEntries.length} ` +
+    `Generated ${componentEntries.length} component reference(s) (${formControlsLinked} form control(s) linked to the form guide), ${systemEntries.length} ` +
       `system reference(s) and ${guideEntries.length} guide reference(s) under ` +
       `${path.relative(repoRoot, referencesDir)}.`,
   );
