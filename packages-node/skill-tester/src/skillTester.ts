@@ -486,9 +486,9 @@ export async function runSkillTester(config: SkillTesterConfig): Promise<SkillTe
     perModelScenario: buildPerModelScenario(runs),
     perModel: models.map(model => ({
       model,
-      stats: aggregate(runs.filter(run => run.model === model).map(run => run.score.score)),
+      stats: aggregate(runs.filter(run => run.model === model && run.agentRun.attempted).map(run => run.score.score)),
     })),
-    overall: aggregate(runs.map(run => run.score.score)),
+    overall: aggregate(runs.filter(one => one.agentRun.attempted).map(run => run.score.score)),
     ...(behaviourSummary ? { behaviour: behaviourSummary } : {}),
   };
 
