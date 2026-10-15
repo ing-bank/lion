@@ -1,5 +1,5 @@
 ---
-title: 'Menu: Migration from the prerelease'
+title: 'Migration from the prerelease'
 parts:
   - Menu
   - Migration
@@ -10,7 +10,7 @@ eleventyNavigation:
   title: Migration
 ---
 
-# Menu: Migration from the prerelease
+# Migration from the prerelease
 
 The menu shipped as prereleases of `@lion/ui` (dist-tag `menu-system`, driven by the
 `.changeset/pre.json` pre-mode of the same name): `0.16.1-menu-system.N` from the 2021 branch and

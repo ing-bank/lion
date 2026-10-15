@@ -2,7 +2,7 @@
 parts:
   - How To
   - Extend a native input
-title: 'How To: Extend a native input'
+title: 'Extend a native input'
 eleventyNavigation:
   key: 'How To: Extend a native input'
   order: 20
@@ -10,7 +10,7 @@ eleventyNavigation:
   title: Extend a native input
 ---
 
-# How To: Extend a native input
+# Extend a native input
 
 ```js script
 import { html } from '@mdjs/mdjs-preview';

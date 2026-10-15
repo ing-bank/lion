@@ -1,5 +1,5 @@
 ---
-title: 'Collapsible: Examples'
+title: 'Examples'
 parts:
   - Collapsible
   - Examples
@@ -10,7 +10,7 @@ eleventyNavigation:
   title: Examples
 ---
 
-# Collapsible: Examples
+# Examples
 
 ```js script
 import { html } from '@mdjs/mdjs-preview';

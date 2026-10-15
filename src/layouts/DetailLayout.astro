@@ -47,6 +47,29 @@ const {
 
 const currentPath = Astro.url.pathname;
 
+/*
+ * Breadcrumb: the ancestors of this page, section first. The docs titles used to carry their parent
+ * as a prefix ("Principles: Definitions and Terms"), which is what this trail replaces - the parent
+ * is one crumb up instead of being repeated in the heading ("Guides" then "Principles" for
+ * /guides/principles/definitions-and-terms, and it goes as deep as the page: /fundamentals/systems/
+ * core/overview shows Fundamentals, Systems, Core).
+ *
+ * Labels come from the url segments, so they follow the folder names the sidebar uses.
+ */
+const basePath = import.meta.env.BASE_URL.replace(/\/$/, '');
+const relativePath = currentPath.startsWith(basePath) ? currentPath.slice(basePath.length) : currentPath;
+const pathSegments = relativePath.split('/').filter(Boolean);
+const breadcrumbSegments = pathSegments.slice(1, -1); // drop the section and the page itself
+const humanise = segment =>
+  decodeURIComponent(segment)
+    .replace(/[-_]/g, ' ')
+    .replace(/\b\w/g, char => char.toUpperCase());
+
+const breadcrumbTrail = breadcrumbSegments.map((segment, index) => ({
+  label: humanise(segment),
+  url: `${import.meta.env.BASE_URL}/${pathSegments[0]}/${breadcrumbSegments.slice(0, index + 1).join('/')}`,
+}));
+
 // If items are provided but not categorized, put them all in the first category
 let componentsByCategory = itemsByCategory;
 if (items.length > 0 && componentsByCategory.size === 0) {
@@ -65,6 +88,52 @@ if (items.length > 0 && componentsByCategory.size === 0) {
     height: 100vh;
     overflow-y: auto;
 
+  }
+
+  /*
+   * Breadcrumb: small and muted, with the page title below it doing the announcing. The separator is
+   * drawn rather than typed, so it does not read as part of either label.
+   */
+  .docs-breadcrumb {
+    font-size: 0.8rem;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    color: var(--text-secondary);
+    margin-bottom: 0.5rem;
+  }
+
+  .docs-breadcrumb ol {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+    margin: 0;
+    padding: 0;
+  }
+
+  .docs-breadcrumb li {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .docs-breadcrumb li:not(:first-child)::before {
+    content: '/';
+    color: var(--border-color);
+  }
+
+  .docs-breadcrumb a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .docs-breadcrumb a:hover,
+  .docs-breadcrumb a:focus-visible {
+    color: var(--accent-on-surface);
+    text-decoration: underline;
+    text-decoration-color: var(--accent-yellow);
+    text-underline-offset: 3px;
   }
 
   .component-nav h3 {
@@ -288,6 +357,16 @@ if (items.length > 0 && componentsByCategory.size === 0) {
                 </aside>
 
                 <div class="docs-content" data-pagefind-body>
+                    {breadcrumbTrail.length > 0 && (
+                        <nav class="docs-breadcrumb" aria-label="Breadcrumb">
+                            <ol>
+                                <li><a href={backLink}>{sectionName}</a></li>
+                                {breadcrumbTrail.map(crumb => (
+                                    <li><a href={crumb.url}>{crumb.label}</a></li>
+                                ))}
+                            </ol>
+                        </nav>
+                    )}
                     <slot />
                 </div>
 

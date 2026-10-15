@@ -2,7 +2,7 @@
 parts:
   - Publish Docs
   - Node Tools
-title: 'Node Tools: Publish Docs'
+title: 'Publish Docs'
 eleventyNavigation:
   key: Node Tools >> Publish Docs
   title: Publish Docs
@@ -10,4 +10,4 @@ eleventyNavigation:
   parent: Node Tools
 ---
 
-# Node Tools: Publish Docs
+# Publish Docs

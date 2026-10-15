@@ -3,7 +3,7 @@ parts:
   - Overview
   - Providence Analytics
   - Node Tools
-title: 'Providence Analytics: Overview'
+title: 'Overview'
 eleventyNavigation:
   key: Node Tools >> Providence Analytics >> Overview
   title: Overview
@@ -11,7 +11,7 @@ eleventyNavigation:
   parent: Node Tools >> Providence Analytics
 ---
 
-# Providence Analytics: Overview
+# Overview
 
 ```js script
 import { html } from '@mdjs/mdjs-preview';

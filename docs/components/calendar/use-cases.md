@@ -1,5 +1,5 @@
 ---
-title: 'Calendar: Use Cases'
+title: 'Use Cases'
 parts:
   - Calendar
   - Use Cases
@@ -10,7 +10,7 @@ eleventyNavigation:
   title: Use Cases
 ---
 
-# Calendar: Use Cases
+# Use Cases
 
 ```js script
 import { html, css } from '@mdjs/mdjs-preview';

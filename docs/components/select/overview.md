@@ -1,5 +1,5 @@
 ---
-title: 'Select: Overview'
+title: 'Overview'
 parts:
   - Select
   - Overview
@@ -10,7 +10,7 @@ eleventyNavigation:
   title: Overview
 ---
 
-# Select: Overview
+# Overview
 
 A web component that works as a wrapper around the native `select`.
 

@@ -1,5 +1,5 @@
 ---
-title: 'Menu: Extensions'
+title: 'Extensions'
 parts:
   - Menu
   - Extensions
@@ -10,7 +10,7 @@ eleventyNavigation:
   title: Extensions
 ---
 
-# Menu: Extensions
+# Extensions
 
 ```js script
 import { html } from 'lit';

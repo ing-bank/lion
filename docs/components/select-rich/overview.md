@@ -1,5 +1,5 @@
 ---
-title: 'Select Rich: Overview'
+title: 'Overview'
 parts:
   - Select Rich
   - Overview
@@ -10,7 +10,7 @@ eleventyNavigation:
   title: Overview
 ---
 
-# Select Rich: Overview
+# Overview
 
 This web component is a 'rich' version of the native `<select>` element.
 It allows providing fully customized options and a fully customized invoker button and is meant to be used whenever the native `<select>` doesn't provide enough styling, theming or user interaction opportunities.

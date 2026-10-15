@@ -1,5 +1,5 @@
 ---
-title: 'Tooltip: Use Cases'
+title: 'Use Cases'
 parts:
   - Tooltip
   - Use Cases
@@ -10,7 +10,7 @@ eleventyNavigation:
   title: Use Cases
 ---
 
-# Tooltip: Use Cases
+# Use Cases
 
 ```js script
 import { css, html } from '@mdjs/mdjs-preview';

@@ -1,5 +1,5 @@
 ---
-title: 'Dialog: Use Cases'
+title: 'Use Cases'
 parts:
   - Dialog
   - Use Cases
@@ -10,7 +10,7 @@ eleventyNavigation:
   title: Use Cases
 ---
 
-# Dialog: Use Cases
+# Use Cases
 
 `lion-dialog` is a component wrapping a modal dialog controller.
 Its purpose is to make it easy to use our Overlay System declaratively.

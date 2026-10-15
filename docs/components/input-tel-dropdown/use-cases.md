@@ -1,5 +1,5 @@
 ---
-title: 'Input Tel Dropdown: Use Cases'
+title: 'Use Cases'
 parts:
   - Input Tel Dropdown
   - Use Cases
@@ -10,7 +10,7 @@ eleventyNavigation:
   title: Use Cases
 ---
 
-# Input Tel Dropdown: Use Cases
+# Use Cases
 
 ```js script
 import { html } from '@mdjs/mdjs-preview';

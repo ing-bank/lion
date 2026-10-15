@@ -1,5 +1,5 @@
 ---
-title: 'Dialog: Overview'
+title: 'Overview'
 parts:
   - Dialog
   - Overview
@@ -10,7 +10,7 @@ eleventyNavigation:
   title: Overview
 ---
 
-# Dialog: Overview
+# Overview
 
 A web component that wraps a modal dialog controller.
 Its purpose is to make it easy to use our Overlay System declaratively.

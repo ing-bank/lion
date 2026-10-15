@@ -3,7 +3,7 @@ parts:
   - Use Cases
   - Form
   - Systems
-title: 'Form: Use Cases'
+title: 'Use Cases'
 eleventyNavigation:
   key: Systems >> Form >> Use Cases
   title: Use Cases
@@ -11,7 +11,7 @@ eleventyNavigation:
   parent: Systems >> Form
 ---
 
-# Form: Use Cases
+# Use Cases
 
 This is a meta package to show interaction between various form elements.
 For usage and installation please see the appropriate packages.

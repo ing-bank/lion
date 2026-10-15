@@ -1,5 +1,5 @@
 ---
-title: 'Accordion: Reference'
+title: 'Reference'
 parts:
   - Accordion
   - Reference
@@ -10,7 +10,7 @@ eleventyNavigation:
   title: Reference
 ---
 
-# Accordion: Reference
+# Reference
 
 <p class="lion-paragraph--emphasis">Everything you need to re-use the accordion.</p>
 

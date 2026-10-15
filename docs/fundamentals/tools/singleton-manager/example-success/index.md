@@ -3,7 +3,7 @@ parts:
   - Example Success
   - Singleton Manager
   - Tools
-title: 'Singleton Manager: Example Success'
+title: 'Example Success'
 eleventyNavigation:
   key: Tools >> Singleton Manager >> Example Success
   title: Example Success
@@ -11,7 +11,7 @@ eleventyNavigation:
   parent: Tools >> Singleton Manager
 ---
 
-# Singleton Manager: Example Success
+# Example Success
 
 In this SPA (Single Page Application) demo you will be able to reproduce the solution.
 

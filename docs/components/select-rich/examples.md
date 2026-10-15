@@ -1,5 +1,5 @@
 ---
-title: 'Select Rich: Examples'
+title: 'Examples'
 parts:
   - Select Rich
   - Examples
@@ -10,7 +10,7 @@ eleventyNavigation:
   title: Examples
 ---
 
-# Select Rich: Examples
+# Examples
 
 ```js script
 import { html } from '@mdjs/mdjs-preview';

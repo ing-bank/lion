@@ -1,5 +1,5 @@
 ---
-title: 'Combobox: Extensions'
+title: 'Extensions'
 parts:
   - Combobox
   - Extensions
@@ -10,7 +10,7 @@ eleventyNavigation:
   title: Extensions
 ---
 
-# Combobox: Extensions
+# Extensions
 
 ```js script
 import { html } from '@mdjs/mdjs-preview';

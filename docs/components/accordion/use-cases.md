@@ -1,5 +1,5 @@
 ---
-title: 'Accordion: Use Cases'
+title: 'Use Cases'
 parts:
   - Accordion
   - Use Cases
@@ -10,7 +10,7 @@ eleventyNavigation:
   title: Use Cases
 ---
 
-# Accordion: Use Cases
+# Use Cases
 
 ```js script
 import { html as previewHtml } from '@mdjs/mdjs-preview';

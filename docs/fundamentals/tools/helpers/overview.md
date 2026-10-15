@@ -3,7 +3,7 @@ parts:
   - Overview
   - Helpers
   - Tools
-title: 'Helpers: Overview'
+title: 'Overview'
 eleventyNavigation:
   key: Tools >> Helpers >> Overview
   title: Overview
@@ -11,7 +11,7 @@ eleventyNavigation:
   parent: Tools >> Helpers
 ---
 
-# Helpers: Overview
+# Overview
 
 A helpers package that contains several helpers that are used inside lion but can be used outside as well.
 

@@ -2,7 +2,7 @@
 parts:
   - Icon
   - Systems
-title: 'Systems: Icon'
+title: 'Icon'
 eleventyNavigation:
   key: Systems >> Icon
   title: Icon
@@ -10,6 +10,6 @@ eleventyNavigation:
   parent: Systems
 ---
 
-# Systems: Icon
+# Icon
 
 -> go to Overview

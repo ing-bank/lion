@@ -1,5 +1,5 @@
 ---
-title: 'Checkbox Group: Overview'
+title: 'Overview'
 parts:
   - Checkbox Group
   - Overview
@@ -10,7 +10,7 @@ eleventyNavigation:
   title: Overview
 ---
 
-# Checkbox Group: Overview
+# Overview
 
 A checkbox group enhances the functionality of the native `<input type="checkbox">` element.
 Its purpose is to provide a way for users to check **multiple** options amongst a set of choices, or to function as a single toggle.

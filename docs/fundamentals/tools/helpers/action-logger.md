@@ -3,7 +3,7 @@ parts:
   - Action Logger
   - Helpers
   - Tools
-title: 'Helpers: Action Logger'
+title: 'Action Logger'
 eleventyNavigation:
   key: Tools >> Helpers >> Action Logger
   title: Action Logger
@@ -11,7 +11,7 @@ eleventyNavigation:
   parent: Tools >> Helpers
 ---
 
-# Helpers: Action Logger
+# Action Logger
 
 A visual element to show action logs in demos `sb-action-logger`
 

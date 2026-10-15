@@ -1,5 +1,5 @@
 ---
-title: 'Textarea: Use Cases'
+title: 'Use Cases'
 parts:
   - Textarea
   - Use Cases
@@ -10,7 +10,7 @@ eleventyNavigation:
   title: Use Cases
 ---
 
-# Textarea: Use Cases
+# Use Cases
 
 ```js script
 import { html } from '@mdjs/mdjs-preview';

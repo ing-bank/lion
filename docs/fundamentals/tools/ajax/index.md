@@ -2,7 +2,7 @@
 parts:
   - Ajax
   - Tools
-title: 'Tools: Ajax'
+title: 'Ajax'
 eleventyNavigation:
   key: Tools >> Ajax
   title: Ajax
@@ -10,6 +10,6 @@ eleventyNavigation:
   parent: Tools
 ---
 
-# Tools: Ajax
+# Ajax
 
 -> go to Overview

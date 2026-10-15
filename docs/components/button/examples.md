@@ -1,5 +1,5 @@
 ---
-title: 'Button: Examples'
+title: 'Examples'
 parts:
   - Button
   - Examples
@@ -10,7 +10,7 @@ eleventyNavigation:
   title: Examples
 ---
 
-# Button: Examples
+# Examples
 
 ```js script
 import { html } from '@mdjs/mdjs-preview';

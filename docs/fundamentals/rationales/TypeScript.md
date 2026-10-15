@@ -2,7 +2,7 @@
 parts:
   - TypeScript
   - Rationales
-title: 'Rationales: TypeScript'
+title: 'TypeScript'
 eleventyNavigation:
   key: Rationales >> TypeScript
   title: TypeScript
@@ -10,7 +10,7 @@ eleventyNavigation:
   parent: Rationales
 ---
 
-# Rationales: TypeScript
+# TypeScript
 
 [TypeScript](https://www.typescriptlang.org) is superset of JavaScript and a popular tool for getting strongly typed syntax and better autocompletion in JavaScript.
 

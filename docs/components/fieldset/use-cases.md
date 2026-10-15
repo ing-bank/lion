@@ -1,5 +1,5 @@
 ---
-title: 'Fieldset: Use Cases'
+title: 'Use Cases'
 parts:
   - Fieldset
   - Use Cases
@@ -10,7 +10,7 @@ eleventyNavigation:
   title: Use Cases
 ---
 
-# Fieldset: Use Cases
+# Use Cases
 
 ```js script
 import { html } from '@mdjs/mdjs-preview';

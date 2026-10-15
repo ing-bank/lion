@@ -3,7 +3,7 @@ parts:
   - ModelValue
   - Form
   - Systems
-title: 'Form: ModelValue'
+title: 'ModelValue'
 eleventyNavigation:
   key: Systems >> Form >> ModelValue
   title: ModelValue
@@ -11,7 +11,7 @@ eleventyNavigation:
   parent: Systems >> Form
 ---
 
-# Form: ModelValue
+# ModelValue
 
 The modelValue or model can be considered as the ‘aorta’ of our form system.
 It is the single source of truth; not only for the current state

@@ -2,7 +2,7 @@
 parts:
   - Babel Extend Docs
   - Node Tools
-title: 'Node Tools: Babel Extend Docs'
+title: 'Babel Extend Docs'
 eleventyNavigation:
   key: Node Tools >> Babel Extend Docs
   title: Babel Extend Docs
@@ -10,4 +10,4 @@ eleventyNavigation:
   parent: Node Tools
 ---
 
-# Node Tools: Babel Extend Docs
+# Babel Extend Docs
