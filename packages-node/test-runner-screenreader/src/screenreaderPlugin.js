@@ -12,7 +12,7 @@ import { fileURLToPath } from 'url';
 import { normalizePhrases } from './comparePhrases.js';
 import { recordObservation, resetObservations } from './transcripts.js';
 
-const DEFAULT_WAIT_TIMEOUT = 30000;
+const DEFAULT_WAIT_TIMEOUT = 15000;
 const WAIT_POLL_INTERVAL = 50;
 
 /** @type {readonly SrReader[]} */
@@ -210,6 +210,13 @@ function createScreenReader({ screenReader, getPage }) {
         `The ${screenReader} screen reader did not answer after starting twice ` +
           '(check that the screen reader is installed and running for this OS user).',
       );
+    }
+
+    if (instance?.keyboardCommands?.moveToFrontWindow) {
+      // VoiceOver reads whatever window is in front; the guidepup preferences
+      // volume that the setup leaves mounted otherwise ends up in the log
+      // ("guidepup-voiceover-preferences-... Volume").
+      await instance.perform(instance.keyboardCommands.moveToFrontWindow);
     }
   };
 
