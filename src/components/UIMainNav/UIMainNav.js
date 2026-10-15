@@ -169,33 +169,55 @@ export class UIMainNavPartDirective extends UIPartDirective {
 
       const { showVia = 'disclosure', initialOpen, visuallyHidden = false } = levelConfig || {};
 
-      const invoker = context.refs[level === 1 ? 'l1-invoker' : `level-invoker-l${level}`];
-      if (!(isToggleTarget && invoker)) return;
+      /*
+       * The invoker is looked up through onRegisterRef, not read once: a panel's setup runs a single
+       * time and the invoker for it can be registered on a later render (the mobile layout re-renders
+       * the tree from its templateContextProcessor), in which case reading `refs` here returned
+       * undefined and the panel kept its early return forever - clicking a section then opened
+       * nothing (measured: no data-open, no aria-expanded on the top level invokers).
+       *
+       * The key carries the level's own key as well: every item with children renders a level 2 panel,
+       * and a shared `level-invoker-l2` name meant each panel bound to whichever invoker registered
+       * last. Same reason the panel id is keyed.
+       */
+      const invokerKey =
+        level === 1
+          ? 'l1-invoker'
+          : `level-invoker-l${level}${levelConfig?.key ? `-${levelConfig.key}` : ''}`;
 
-      if (localContext.levelConfig.hideToggle) {
-        return;
-      }
+      // levelConfig is undefined for the level 0 wrapper the burger lives in.
+      if (!isToggleTarget || levelConfig?.hideToggle) return;
 
-      if (level === 1) {
+      const attachToggle = invoker => {
+        if (!invoker) return;
+
+        if (level === 1) {
+          new VisibilityToggleCtrl(options?.host, {
+            visuallyHidden: false,
+            initialOpen: false,
+            target: element,
+            mode: 'popover',
+            invoker,
+            level: 1,
+          });
+          return;
+        }
+
         new VisibilityToggleCtrl(options?.host, {
-          visuallyHidden: false,
-          initialOpen: false,
           target: element,
-          mode: 'popover',
+          visuallyHidden,
+          mode: showVia,
+          initialOpen,
           invoker,
-          level: 1,
+          level,
         });
-        return;
-      }
+      };
 
-      new VisibilityToggleCtrl(options?.host, {
-        target: element,
-        visuallyHidden,
-        mode: showVia,
-        initialOpen,
-        invoker,
-        level,
-      });
+      if (context.refs[invokerKey]) {
+        attachToggle(context.refs[invokerKey]);
+      } else {
+        context.onRegisterRef(invokerKey, attachToggle);
+      }
     },
     /**
      * @param {ElementPart} litPart
@@ -243,6 +265,10 @@ export class UIMainNavPartDirective extends UIPartDirective {
       UIMainNavPartDirective.setLevel(element, localContext.level);
       assertAnchor(element);
       element.setAttribute('data-part', 'anchor');
+      // The "overview" entry a top level row moves into its level (see toNavLevels in TopNav.astro).
+      if (localContext.item?.overview) {
+        element.setAttribute('data-overview', '');
+      }
       element.setAttribute('href', localContext.item.url);
       if (localContext.item.target) {
         element.setAttribute('target', localContext.item.target);
@@ -259,16 +285,24 @@ export class UIMainNavPartDirective extends UIPartDirective {
       assertButton(element);
       UIMainNavPartDirective.setLevel(element, localContext.level);
       element.setAttribute('data-part', 'level-invoker');
+      /*
+       * One invoker per parent, so the ref key carries the level's own key: every item with children
+       * renders a level 2 panel, and a single shared `level-invoker-l2` ref meant each panel bound to
+       * whichever invoker happened to register last - clicking a section then toggled nothing at all
+       * (measured: no data-open after a click on "components"). Same reason the panel id is keyed.
+       */
       const targetKey = localContext.item?.nextLevel?.key;
-      element.setAttribute(
-        'popovertarget',
-        targetKey ? `level-${localContext.level + 1}-${targetKey}` : `level-${localContext.level + 1}`,
-      );
+      const levelKey = targetKey ? `-${targetKey}` : '';
+      // popovertarget only when the level opens as a popover: in the default disclosure mode the
+      // element is not a popover, so the attribute would address nothing.
+      if (localContext.item?.nextLevel?.showVia === 'popover') {
+        element.setAttribute('popovertarget', `level-${localContext.level + 1}${levelKey}`);
+      }
       element.setAttribute('type', 'button');
       if (localContext.item?.name) {
         element.setAttribute('aria-label', `Show ${localContext.item.name}`);
       }
-      context.registerRef(`level-invoker-l${localContext.level + 1}`, element);
+      context.registerRef(`level-invoker-l${localContext.level + 1}${levelKey}`, element);
       if (isServer) return;
 
       element.addEventListener('click', async event => {
@@ -691,7 +725,9 @@ UIMainNav.provideDesign({
         background: transparent;
         color: var(--text-secondary);
         cursor: pointer;
-        transition: color 0.2s, background-color 0.2s;
+        transition:
+          color 0.2s,
+          background-color 0.2s;
       }
 
       [data-part='l1-invoker']:hover {
@@ -867,12 +903,40 @@ UIMainNav.provideDesign({
             gap: 0.25rem;
           }
 
+          /*
+           * Full bleed, once: the top-level row spans the panel edge to edge, so a hover or current
+           * state covers the whole width instead of stopping at the gutter, and its own padding keeps
+           * the label on the 24px line.
+           *
+           * Only level 1 carries the negative margin. A deeper row lives inside a level that is
+           * already edge to edge, so bleeding it again added another 24px per level - measured row
+           * widths 367, 415 and 463px inside a 320px panel, with the rows starting 24, 48 and 72px
+           * left of the panel. Deeper rows bleed nothing and take their indent from their padding.
+           */
           [data-part='listitem'] {
-            /* Full bleed: the row spans the panel edge to edge, so a hover or current state covers
-             * the whole width instead of stopping at the gutter. The row's own padding keeps the
-             * label on the 24px line. */
-            margin-inline: -1.5rem;
             border-radius: 8px;
+          }
+
+          [data-part='listitem'][data-level='1'] {
+            margin-inline: -1.5rem;
+          }
+
+          /*
+           * The "overview" entry: the section's own page, which the toggle above it moved down here.
+           * It is a label for the level rather than one more item, so it reads like a muted
+           * small-caps heading and carries its own space below - the level's items start after it.
+           */
+          [data-part='anchor'][data-overview] {
+            color: var(--text-secondary);
+            font-size: 0.78rem;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+          }
+
+          [data-part='listitem']:has(> [data-part='anchor'][data-overview]) {
+            margin-bottom: 0.5rem;
+            border-bottom: 1px solid var(--border-color);
           }
 
           /* A collapsed branch that holds the current page: the toggle carries the accent, because the
@@ -906,7 +970,8 @@ UIMainNav.provideDesign({
             box-shadow: inset 3px 0 0 0 var(--accent-yellow);
           }
 
-          [data-part='listitem']:has(> [data-part='anchor'][aria-current='page']) > [data-part='anchor'] {
+          [data-part='listitem']:has(> [data-part='anchor'][aria-current='page'])
+            > [data-part='anchor'] {
             box-shadow: none;
             outline: none;
             text-decoration: none;
@@ -928,11 +993,10 @@ UIMainNav.provideDesign({
             --_flyout-duration-out: 0.22s;
             --_flyout-ease-in: cubic-bezier(0.2, 0, 0.2, 1);
             --_flyout-ease-out: cubic-bezier(0.2, 0, 0.2, 1);
-            /* The two directions do not travel the same distance: coming in the panel settles out of
-             * the edge (0.97 -> 1), going out it is a fade with only a hint of scale (1 -> 0.985), so
-             * the recede reads as the panel letting go instead of shrinking away. */
+            /* Only the entry moves: coming in the panel settles out of the edge (0.97 -> 1). Going
+             * out it is a plain fade - scale 1, so the exit is opacity and nothing else. */
             --_flyout-scale-in: 0.97;
-            --_flyout-scale-out: 0.985;
+            --_flyout-scale-out: 1;
           }
 
           @media (prefers-reduced-motion: reduce) {
@@ -1045,15 +1109,36 @@ UIMainNav.provideDesign({
           }
 
           /*
-           * Levels inside a level: one indent for the whole tree. A child label starts 20px inside
-           * its parent row's label (which sits on the panel's 24px gutter), and the rows stay
-           * full-bleed, so the indent is carried by the label only and the states still cover the
-           * width. Was 12px, which read as a nudge rather than a level.
+           * Levels inside a level. The indent is *not* a padding on the nested list: the rows bleed
+           * the panel's 1.5rem padding to be full width (see [data-part='listitem'] below), so
+           * padding the list made every level's rows 1.25rem wider than the one above it - measured
+           * 347, 375 and 403px inside a 320px panel, i.e. the deepest labels ran out of the panel.
+           *
+           * The list stays flush and the indent is added to the row's own padding per depth, so a
+           * deeper label starts further in while every row keeps the panel's width.
            */
           [data-part='list'] [data-part='list'] {
-            padding-left: 1.25rem;
+            padding-left: 0;
             margin-top: 0.25rem;
             gap: 0.15rem;
+          }
+
+          [data-part='listitem'][data-level='2'] > [data-part='anchor'],
+          [data-part='listitem'][data-level='2'] > [data-part='command-invoker'],
+          [data-part='listitem'][data-level='2'] > [data-part='level-invoker'] {
+            padding-left: 2.75rem;
+          }
+
+          [data-part='listitem'][data-level='3'] > [data-part='anchor'],
+          [data-part='listitem'][data-level='3'] > [data-part='command-invoker'],
+          [data-part='listitem'][data-level='3'] > [data-part='level-invoker'] {
+            padding-left: 4rem;
+          }
+
+          [data-part='listitem'][data-level='4'] > [data-part='anchor'],
+          [data-part='listitem'][data-level='4'] > [data-part='command-invoker'],
+          [data-part='listitem'][data-level='4'] > [data-part='level-invoker'] {
+            padding-left: 5.25rem;
           }
 
           [data-part='level-invoker'] {
@@ -1107,7 +1192,8 @@ UIMainNav.provideDesign({
             transition: transform var(--_flyout-duration-in) var(--_flyout-ease-in);
           }
 
-          [data-part='listitem']:has(> [data-part='level'][data-open]) [data-part='level-invoker']::after {
+          [data-part='listitem']:has(> [data-part='level'][data-open])
+            [data-part='level-invoker']::after {
             transform: rotate(45deg);
           }
 
@@ -1143,26 +1229,8 @@ UIMainNav.provideDesign({
       breakpoint: '0px',
       container: globalThis,
       templateContextProcessor: context => {
-        /**
-         * A top-level row with a level is a toggle, not a link: clicking "components" opens its level
-         * instead of navigating away, and the section's own page moves into that level as its first
-         * entry - the link is still one tap away, underneath, where the menu is read. Rows without a
-         * level (Search, GitHub) are left alone.
-         */
-        const moveTopLinksIntoLevel = items =>
-          items.map(item => {
-            const { url, nextLevel } = item;
-            if (!url || !nextLevel?.items?.length) return item;
-            const { url: _url, ...rest } = item;
-            return {
-              ...rest,
-              nextLevel: { ...nextLevel, items: [{ name: item.name, url }, ...nextLevel.items] },
-            };
-          });
-
         const navData = {
           ...context.data.navData,
-          items: moveTopLinksIntoLevel(context.data.navData.items),
           hideToggle: false,
           shouldHandleScrollLock: true,
         };
@@ -1206,7 +1274,16 @@ UIMainNav.provideDesign({
       templateContextProcessor: (/** @type {{ data: { navData: any; }; }} */ context) => {
         // The desktop row is one flat line of links, so the levels are stripped here: the mobile
         // layout is the only one that renders a tree.
-        const stripLevels = items => items.map(({ nextLevel, ...item }) => ({ ...item }));
+        const stripLevels = items =>
+          items.map(({ nextLevel, ...item }) => {
+            // A top-level item's own page lives as the first entry of its level (see toNavLevels in
+            // TopNav.astro, which is what turns the row into a toggle in the fly-out). The desktop
+            // row is a link itself, so it takes the url back.
+            const [first] = nextLevel?.items ?? [];
+            // `overview` is the marker TopNav puts on the entry it moved into the level.
+            const withLink = first?.overview && first.url ? { ...item, url: first.url } : item;
+            return withLink;
+          });
 
         return {
           ...context,
