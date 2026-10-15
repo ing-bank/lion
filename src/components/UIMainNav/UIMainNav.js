@@ -984,17 +984,17 @@ UIMainNav.provideDesign({
            * travelling sideways - a slide out of an off-screen edge left nothing to see while the
            * backdrop faded, and the reverse read as a jump rather than a recede.
            *
-           * The two states each declare their own transition, which is what lets the panel recede
-           * faster than it arrives: the closing animation is the one on the *closed* rule, the opening
-           * one lives on :popover-open.
+           * Only the entry is animated. Closing has no duration at all (see --_flyout-duration-out),
+           * so going back out of the menu is a state change rather than a movement that has to finish
+           * first; the two states therefore do not need mirrored transitions.
            */
           :host {
             --_flyout-duration-in: 0.24s;
-            --_flyout-duration-out: 0.22s;
+            /* Deliberately 0s: the panel and its backdrop are gone in the frame the close lands in. */
+            --_flyout-duration-out: 0s;
             --_flyout-ease-in: cubic-bezier(0.2, 0, 0.2, 1);
             --_flyout-ease-out: cubic-bezier(0.2, 0, 0.2, 1);
-            /* Only the entry moves: coming in the panel settles out of the edge (0.97 -> 1). Going
-             * out it is a plain fade - scale 1, so the exit is opacity and nothing else. */
+            /* Only the entry moves: coming in the panel settles out of the edge (0.97 -> 1). */
             --_flyout-scale-in: 0.97;
             --_flyout-scale-out: 1;
           }
@@ -1002,7 +1002,6 @@ UIMainNav.provideDesign({
           @media (prefers-reduced-motion: reduce) {
             :host {
               --_flyout-duration-in: 0.01s;
-              --_flyout-duration-out: 0.01s;
               --_flyout-scale-in: 1;
               --_flyout-scale-out: 1;
             }
@@ -1061,9 +1060,9 @@ UIMainNav.provideDesign({
             border-right: 1px solid var(--border-color);
             position: fixed;
             height: 100vh;
-            /* Was content-sized (163px) and then min-width 15rem; a drawer reads better at a fixed
-             * share of the viewport, capped so it does not swallow a tablet screen. */
-            width: min(20rem, 88vw);
+            /* A drawer reads better at a fixed share of the viewport, capped so it does not swallow a
+             * tablet screen. Was content-sized (163px), then min-width 15rem, then min(20rem, 88vw). */
+            width: min(22rem, 90vw);
             padding: 2rem 1.5rem;
             overflow-y: auto;
           }
@@ -1075,6 +1074,11 @@ UIMainNav.provideDesign({
            * when these rules caught it. Closed, a level carries the hidden attribute, so the
            * opening is a
            * grid-rows transition from 0fr, which is the one way to animate to an unknown height.
+           *
+           * Only the unfolding is animated. Collapsing runs on --_flyout-duration-out (0s, see the
+           * fly-out above), so going back with the back-chevron folds the level away in the frame it
+           * is clicked: a transition is read from the state an element moves *into*, which is why the
+           * entry duration lives on the [data-open] rule below.
            */
           [data-part='level']:not([data-level='0']):not([data-level='1']) {
             display: grid;
@@ -1088,14 +1092,18 @@ UIMainNav.provideDesign({
             overflow: hidden;
             opacity: 0;
             transition:
-              grid-template-rows var(--_flyout-duration-in) var(--_flyout-ease-in),
-              opacity var(--_flyout-duration-in) var(--_flyout-ease-in),
-              display var(--_flyout-duration-in) var(--_flyout-ease-in) allow-discrete;
+              grid-template-rows var(--_flyout-duration-out) var(--_flyout-ease-out),
+              opacity var(--_flyout-duration-out) var(--_flyout-ease-out),
+              display var(--_flyout-duration-out) var(--_flyout-ease-out) allow-discrete;
           }
 
           [data-part='level']:not([data-level='0']):not([data-level='1'])[data-open] {
             grid-template-rows: 1fr;
             opacity: 1;
+            transition:
+              grid-template-rows var(--_flyout-duration-in) var(--_flyout-ease-in),
+              opacity var(--_flyout-duration-in) var(--_flyout-ease-in),
+              display var(--_flyout-duration-in) var(--_flyout-ease-in) allow-discrete;
 
             @starting-style {
               grid-template-rows: 0fr;
