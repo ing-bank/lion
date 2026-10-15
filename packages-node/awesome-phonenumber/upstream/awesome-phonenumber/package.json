@@ -83,7 +83,7 @@
     "pre-commit": "^1.2.2",
     "replace": "^1.2.2",
     "rmfr": "^2.0.0",
-    "rollup": "4.57.1",
+    "rollup": "4.59.0",
     "ts-jest-resolver": "^2.0.1",
     "ts-node": "^10.9.2",
     "typescript": "^5.9.3"
