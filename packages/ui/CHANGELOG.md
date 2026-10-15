@@ -1,5 +1,21 @@
 # @lion/ui
 
+## 0.23.1
+
+### Patch Changes
+
+- 45117d6: Fix generic validation mixin composition through SlotMixin while preserving deduped
+  subclass accessors, constructor arguments and static members. Allow LionOption
+  subclasses to return nested Lit style arrays without changing runtime behavior.
+- 6bcedef: Preserve the superclass type when reapplying `SlotMixin` to an already slotted component.
+  This prevents TypeScript 4.7 from treating `slots` as a property instead of an accessor when
+  subclassing, for example, `SlotMixin(LionSelectRich)`. Runtime behavior is unchanged.
+- 534c957: Fix npm installation failures by rebuilding the temporary phone-number fork from
+  pinned sources and shipping the generated library inside Lion, without a phone
+  runtime or bundled dependency. Preserve libphonenumber v9.0.41 metadata, including
+  French Guiana premium-rate numbers. Internal imports need no consumer configuration.
+- 462d544: Fix the issue that showing overlay scrolls the page to the top on Safari
+
 ## 0.23.0
 
 ### Minor Changes
