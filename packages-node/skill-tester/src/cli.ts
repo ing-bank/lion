@@ -340,7 +340,22 @@ async function main(): Promise<void> {
       console.log(`  ${entry.model} · ${entry.scenario} → ${(entry.stats.mean * 100).toFixed(1)}%`);
     }
   } else {
-    console.log(green(`\nAll scenarios reached ${options.passThreshold}%.`));
+    // "All scenarios reached X%" is a lie when some were never measured - a sweep that runs out of
+    // endpoint balance (measured: HTTP 429 "Insufficient available balance") leaves scenarios with no
+    // comparable run at all, and they must be named rather than folded into a clean summary.
+    const measuredScenarios = new Set(report.runs.map(run => run.scenario));
+    const unmeasured = scenarios
+      .map(scenario => scenario.name)
+      .filter(name => !measuredScenarios.has(name));
+    console.log(
+      green(`\nAll measured scenarios reached ${options.passThreshold}%.`) +
+        (unmeasured.length
+          ? yellow(
+              ` ${unmeasured.length} scenario(s) were not measured (nothing comparable): ` +
+                unmeasured.join(', '),
+            )
+          : ''),
+    );
   }
 
   if (options.docs) {
