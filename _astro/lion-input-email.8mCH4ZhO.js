@@ -1,0 +1,1 @@
+import{L as i}from"./LocalizeMixin.BQj4Bv0d.js";import{L as t}from"./LionInput.C0jEFl-r.js";import{I as o}from"./StringValidators.UXrPEtgv.js";class s extends i(t){constructor(){super(),this.autocomplete="email",this.defaultValidators.push(new o)}}customElements.define("lion-input-email",s);

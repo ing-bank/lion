@@ -1,24 +1,87 @@
-<html theme="light" platform="web" lang="en"><head>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta charset="utf-8">
-    <style type="text/css">
-      body {
-        margin: 0;
-        height: fit-content;
+<!DOCTYPE html><html theme="light" platform="web" lang="en" data-astro-cid-z5duo6xp><head><meta name="viewport" content="width=device-width, initial-scale=1"><meta charset="utf-8"><meta name="color-scheme" content="light dark"><script>
+  (() => {
+    const KEY = 'lion-portal-theme';
+    const CHOICES = ['auto', 'light', 'dark'];
+    const root = document.documentElement;
+
+    const read = () => {
+      try {
+        return localStorage.getItem(KEY);
+      } catch {
+        // private mode / storage disabled: fall back to the CSS-only behaviour
+        return null;
       }
-      html[edge-distance] body {
-        padding: 8px;
+    };
+
+    const write = choice => {
+      try {
+        localStorage.setItem(KEY, choice);
+      } catch {
+        // ignore: the theme is a comfort setting, not a requirement
       }
-    </style>
-    
-  
-<link rel="preload" href="../8eb26f9c.js" as="script" crossorigin="anonymous" />
-<link rel="preload" href="../b8bc2eda.js" as="script" crossorigin="anonymous" />
-<link rel="preload" href="../6638bb86.js" as="script" crossorigin="anonymous" />
-</head>
-  <body>
+    };
 
+    const stored = read();
+    const choice = CHOICES.includes(stored) ? stored : 'auto';
+    root.dataset.theme = choice;
 
-<script type="module" src="../8eb26f9c.js"></script>
+    /*
+     * The colour-scheme meta is what the browser is allowed to use for the canvas before any
+     * stylesheet is parsed, and every layout ships it as "light dark". With the OS in dark mode that
+     * let it paint the dark canvas on a page whose stored choice is light - the dark flash you see
+     * on a light page, which is why it only happened sometimes (only on a dark OS). Matching the
+     * meta to the choice in this blocking script, before the first paint, removes it.
+     */
+    const meta = document.querySelector('meta[name="color-scheme"]');
+    if (meta) {
+      meta.setAttribute('content', choice === 'auto' ? 'light dark' : choice);
+    }
 
-</body></html>
+    const syncRadios = () => {
+      const choice = root.dataset.theme;
+      if (!CHOICES.includes(choice)) return;
+      const radio = document.getElementById(`theme-${choice}`);
+      if (radio) radio.checked = true;
+    };
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', syncRadios, { once: true });
+    } else {
+      syncRadios();
+    }
+
+    // One listener for the whole document: the switch is re-rendered with every nav, so a listener
+    // bound to the inputs themselves would be lost on navigation.
+    document.addEventListener('change', event => {
+      const input = event.target;
+      if (!(input instanceof HTMLInputElement) || input.name !== 'theme') return;
+      if (!CHOICES.includes(input.value)) return;
+      root.dataset.theme = input.value;
+      write(input.value);
+    });
+  })();
+</script><script type="module" src="/_astro/simulator.astro_astro_type_script_index_0_lang.B76tXjRC.js"></script><style>body{margin:0;height:fit-content}html[edge-distance] body{padding:8px}
+</style><script>/**
+ * Declarative Shadow DOM ponyfill, injected into `<head>` of every page.
+ *
+ * Browsers that already support declarative shadow DOM parsing do nothing here
+ * (the check below short-circuits). Older browsers hydrate the shadow roots
+ * once the document is parsed.
+ */
+async function polyfill() {
+  const { hydrateShadowRoots } = await import(
+    '@webcomponents/template-shadowroot/template-shadowroot.js'
+  );
+  window.addEventListener('DOMContentLoaded', () => hydrateShadowRoots(document.body), {
+    once: true,
+  });
+}
+
+const polyfillCheckEl = Document.parseHTMLUnsafe(
+  '<p><template shadowrootmode="open"></template></p>',
+).querySelector('p');
+
+if (!polyfillCheckEl?.shadowRoot) {
+  polyfill();
+}
+</script></head> <body data-astro-cid-z5duo6xp></body></html>
