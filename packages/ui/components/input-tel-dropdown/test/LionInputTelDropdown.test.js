@@ -199,7 +199,7 @@ describe('WithFormControlInputTelDropdown', () => {
     });
 
     afterEach(() => {
-      restorePhoneUtilManager();
+      restorePhoneUtilManager({ loadedState: 'current' });
     });
 
     it('without interaction are not called', async () => {

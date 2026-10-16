@@ -101,6 +101,10 @@ test(
       );
       assert.deepEqual(packed.bundled, []);
       const files = new Set(packed.files.map(file => file.path));
+      assert(
+        ![...files].some(file => /(^|\/)scripts\//.test(file)),
+        'Build-only scripts must not be published',
+      );
       const shipped = [
         'index.js',
         'index-esm.mjs',
@@ -134,6 +138,18 @@ test(
       const manifest = JSON.parse(
         await fs.readFile(path.join(installedRoot, 'package.json'), 'utf8'),
       );
+      for (const hook of ['preinstall', 'install', 'postinstall', 'prepare']) {
+        assert.equal(manifest.scripts[hook], undefined, `${hook} must not need build-only scripts`);
+      }
+      for (const component of ['listbox', 'select-rich']) {
+        const name = component === 'listbox' ? 'LionListbox' : 'LionSelectRich';
+        const declaration = await fs.readFile(
+          path.join(installedRoot, `dist-types/components/${component}/src/${name}.d.ts`),
+          'utf8',
+        );
+        assert.match(declaration, /\n {4}get _focusableNode\(\)/);
+        if (component === 'select-rich') assert.doesNotMatch(declaration, /get slots\(\)/);
+      }
       assert.equal(manifest.dependencies['awesome-phonenumber'], undefined);
       assert.equal(manifest.bundledDependencies, undefined);
       assert.equal(manifest.bundleDependencies, undefined);

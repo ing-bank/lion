@@ -9,12 +9,11 @@ import { SlotHost } from '@lion/ui/types/core.js';
 
 export function focusCombobox(combobox: LionCombobox): void {
   combobox.focus();
-  // @ts-expect-error The focusable node is a protected subclass extension point.
   combobox._focusableNode;
 }
 
 export class ConsumerCombobox extends LionCombobox {
-  protected override get _focusableNode(): HTMLElement {
+  override get _focusableNode(): HTMLElement {
     return super._focusableNode;
   }
 }
@@ -70,6 +69,12 @@ class ExtensionBase extends LitElement {
 }
 
 export class ConsumerValidation extends ValidationExtension(ExtensionBase) {}
+
+export class ConsumerValidationSelect extends ValidationExtension(LionSelectRich) {
+  override get slots() {
+    return { ...super.slots, extra: () => document.createElement('span') };
+  }
+}
 
 export const extraStatic: string = ConsumerValidation.extraStatic;
 export const extraInstance: string = new ConsumerValidation().extraInstance;

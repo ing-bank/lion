@@ -90,7 +90,7 @@
   `skipLibCheck` reported `TS7008: Member '...' implicitly has an 'any' type` (42 such errors in a
   representative consumer, 0 before).
 
-  The affected members are restored by `scripts/types-restore-visibility.js`, which is wired into
+  The affected members are restored by `scripts/postprocess-declarations.js`, which is wired into
   `wireit.types` right after `tsc` and re-attaches the modifier from the emitted JSDoc: the six Lit reactive properties, which cannot take a field
   without shadowing the accessor Lit installs (everything else is declared in the sources now), byte-for-byte the
   TS 4.9.5 output (`private x;`, `protected y: T;`). It touches no source and
