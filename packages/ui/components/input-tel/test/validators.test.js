@@ -75,7 +75,7 @@ describe('PhoneNumber validation', () => {
     });
 
     afterEach(() => {
-      restorePhoneUtilManager();
+      restorePhoneUtilManager({ loadedState: 'current' });
     });
 
     it('behaves asynchronously when lib is still loading', () => {

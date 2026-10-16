@@ -264,7 +264,7 @@ export function runInputTelDropdownSuite(
         resolveLoaded(undefined);
         await aTimeout(0);
         expect(spy).to.have.been.calledWith('prefix');
-        restorePhoneUtilManager();
+        restorePhoneUtilManager({ loadedState: 'current' });
         spy.restore();
       });
 

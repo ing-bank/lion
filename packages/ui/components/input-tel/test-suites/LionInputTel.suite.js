@@ -43,7 +43,7 @@ function runActiveRegionTests({ tag, phoneUtilLoadedAfterInit }) {
       });
 
       afterEach(() => {
-        restorePhoneUtilManager();
+        restorePhoneUtilManager({ loadedState: 'current' });
       });
     }
     // 1. **allowed regions**: try to get the region from preconfigured allowed region (first entry)
@@ -467,7 +467,7 @@ export function runInputTelSuite({ klass = LionInputTel, hasParentheses = false 
       });
 
       afterEach(() => {
-        restorePhoneUtilManager();
+        restorePhoneUtilManager({ loadedState: 'current' });
       });
 
       it('reformats once lib has been loaded', async () => {
