@@ -43,7 +43,15 @@ export function isVisible(element) {
     return true;
   }
 
+  const { checkVisibility } = /** @type {{
+    checkVisibility?: (options?: { checkOpacity?: boolean, checkVisibilityCSS?: boolean }) => boolean;
+  }} */ (element);
+  if (typeof checkVisibility === 'function') {
+    return checkVisibility.call(element, { checkOpacity: false, checkVisibilityCSS: true });
+  }
+
   // display: none is not inherited, so finally check if element has calculated width or height
   // matches display: none from parent
+  // eslint-disable-next-line lion/prefer-check-visibility
   return !!(element.offsetWidth || element.offsetHeight || element.getClientRects().length);
 }

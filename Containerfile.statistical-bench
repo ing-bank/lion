@@ -1,0 +1,11 @@
+FROM node:24.21.0-bookworm
+
+ENV PLAYWRIGHT_BROWSERS_PATH=/ms-playwright
+
+RUN npx --yes playwright@1.61.0 install --with-deps chromium
+
+WORKDIR /workspace
+COPY . .
+RUN npm ci --ignore-scripts && npx patch-package
+
+CMD ["npm", "run", "test:statistical-bench"]
