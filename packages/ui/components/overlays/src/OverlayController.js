@@ -310,6 +310,8 @@ export class OverlayController extends EventTarget {
 
   /**
    * The outer wrapper while set up, or the original content after teardown.
+   * Keep the fallback for existing clients that remove content after teardown;
+   * changing or removing it is deferred to a future breaking release.
    * @type {HTMLDialogElement | HTMLDivElement}
    */
   get content() {

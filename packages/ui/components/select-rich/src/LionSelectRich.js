@@ -89,6 +89,8 @@ export class LionSelectRich extends SlotMixin(ScopedElementsMixin(OverlayMixin(L
   }
 
   /**
+   * Must remain public: narrowing the public Listbox member causes TS2415.
+   * Unlike Listbox, this override was protected in Lion 0.21.1.
    * @configure FocusMixin
    */
   get _focusableNode() {
