@@ -154,7 +154,7 @@
       ]
     },
     "types": {
-      "command": "tsc --build --pretty && npm run types-restore-visibility && npm run types-check-consumer",
+      "command": "tsc --build --pretty && npm run types-restore-visibility && node scripts/types-restore-slot-accessors.js && npm run types-check-consumer",
       "dependencies": [
         "../singleton-manager:types",
         "build:phone"
@@ -165,6 +165,7 @@
         "tsconfig.json",
         "package.json",
         "scripts/types-restore-visibility.js",
+        "scripts/types-restore-slot-accessors.js",
         "scripts/check-consumer-types.js",
         "scripts/fixtures/consumer-extensions.ts",
         "../../test/typescript-legacy/package.json"

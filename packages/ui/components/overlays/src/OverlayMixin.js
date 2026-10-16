@@ -251,20 +251,17 @@ export const OverlayMixinImplementation = superclass => {
     /**
      * Returns the element that can actually receive focus inside the passed
      * invoker (wrapper) element: the element itself when it is focusable,
-     * otherwise the first focusable descendant.
+     * otherwise the first focusable descendant. Custom invokers without a
+     * focusable light DOM descendant remain click targets themselves.
      * @param {Element|null|undefined} focusableElOrWrapper
      * @returns {Element|null}
-     */
-    /**
-     * @param {Element | null | undefined} focusableElOrWrapper
-     * @returns {Element | null}
      */
     static _getFocusableInvokerEl(focusableElOrWrapper) {
       if (!focusableElOrWrapper) return null;
       const focusableSelector = '[tabindex], button, a[href], [role=button]';
       return focusableElOrWrapper.matches(focusableSelector)
         ? focusableElOrWrapper
-        : focusableElOrWrapper.querySelector(focusableSelector);
+        : focusableElOrWrapper.querySelector(focusableSelector) || focusableElOrWrapper;
     }
 
     /**

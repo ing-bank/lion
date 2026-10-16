@@ -89,7 +89,6 @@ export class LionSelectRich extends SlotMixin(ScopedElementsMixin(OverlayMixin(L
   }
 
   /**
-   * @protected
    * @configure FocusMixin
    */
   get _focusableNode() {
