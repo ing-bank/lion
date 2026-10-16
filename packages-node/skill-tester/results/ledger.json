@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-10-15T21:37:05.095Z",
+  "updatedAt": "2026-10-15T22:41:04.565Z",
   "entries": [
     {
       "skillRevision": "3df6d8308bc811f1d379851d3cadecf5a32434e6",
@@ -61,6 +61,26 @@
       "completionTokens": 3670,
       "cost": 0.01168601,
       "ranAt": "2026-10-14T00:50:17.844Z"
+    },
+    {
+      "skillRevision": "3f8ac1e89e3258ca014bd312c471a4689fb8fa06",
+      "model": "deepseek-v4-flash",
+      "scenario": "component/accordion-run",
+      "kind": "component",
+      "samples": 3,
+      "mean": 1,
+      "min": 1,
+      "max": 1,
+      "stdDev": 0,
+      "behaviourPassed": 3,
+      "behaviourTotal": 3,
+      "attempts": 3,
+      "redoable": 0,
+      "tokens": 205652,
+      "promptTokens": 201841,
+      "completionTokens": 3811,
+      "cost": 0.015922999,
+      "ranAt": "2026-10-15T22:41:04.324Z"
     },
     {
       "skillRevision": "3df6d8308bc811f1d379851d3cadecf5a32434e6",
@@ -1263,6 +1283,26 @@
       "ranAt": "2026-10-14T00:50:17.844Z"
     },
     {
+      "skillRevision": "3f8ac1e89e3258ca014bd312c471a4689fb8fa06",
+      "model": "deepseek-v4-flash",
+      "scenario": "component/steps",
+      "kind": "component",
+      "samples": 3,
+      "mean": 1,
+      "min": 1,
+      "max": 1,
+      "stdDev": 0,
+      "behaviourPassed": 3,
+      "behaviourTotal": 3,
+      "attempts": 3,
+      "redoable": 0,
+      "tokens": 172169,
+      "promptTokens": 167479,
+      "completionTokens": 4690,
+      "cost": 0.013445974,
+      "ranAt": "2026-10-15T22:24:45.736Z"
+    },
+    {
       "skillRevision": "3df6d8308bc811f1d379851d3cadecf5a32434e6",
       "model": "deepseek-v4-flash",
       "scenario": "component/switch",
@@ -1363,6 +1403,26 @@
       "ranAt": "2026-10-14T00:50:17.844Z"
     },
     {
+      "skillRevision": "3f8ac1e89e3258ca014bd312c471a4689fb8fa06",
+      "model": "deepseek-v4-flash",
+      "scenario": "component/textarea",
+      "kind": "component",
+      "samples": 3,
+      "mean": 1,
+      "min": 1,
+      "max": 1,
+      "stdDev": 0,
+      "behaviourPassed": 3,
+      "behaviourTotal": 3,
+      "attempts": 3,
+      "redoable": 0,
+      "tokens": 190698,
+      "promptTokens": 187483,
+      "completionTokens": 3215,
+      "cost": 0.014740603000000001,
+      "ranAt": "2026-10-15T22:26:29.249Z"
+    },
+    {
       "skillRevision": "3df6d8308bc811f1d379851d3cadecf5a32434e6",
       "model": "deepseek-v4-flash",
       "scenario": "component/tooltip",
@@ -1461,6 +1521,26 @@
       "completionTokens": 5431,
       "cost": 0.021800483000000002,
       "ranAt": "2026-10-15T20:56:50.415Z"
+    },
+    {
+      "skillRevision": "3f8ac1e89e3258ca014bd312c471a4689fb8fa06",
+      "model": "deepseek-v4-flash",
+      "scenario": "form/iban-in-form",
+      "kind": "component",
+      "samples": 3,
+      "mean": 1,
+      "min": 1,
+      "max": 1,
+      "stdDev": 0,
+      "behaviourPassed": 3,
+      "behaviourTotal": 3,
+      "attempts": 3,
+      "redoable": 0,
+      "tokens": 416191,
+      "promptTokens": 410121,
+      "completionTokens": 6070,
+      "cost": 0.032097906,
+      "ranAt": "2026-10-15T22:39:57.529Z"
     },
     {
       "skillRevision": "3df6d8308bc811f1d379851d3cadecf5a32434e6",
@@ -1623,6 +1703,26 @@
       "ranAt": "2026-10-14T23:32:25.907Z"
     },
     {
+      "skillRevision": "3f8ac1e89e3258ca014bd312c471a4689fb8fa06",
+      "model": "deepseek-v4-flash",
+      "scenario": "system/form",
+      "kind": "system",
+      "samples": 3,
+      "mean": 1,
+      "min": 1,
+      "max": 1,
+      "stdDev": 0,
+      "behaviourPassed": 0,
+      "behaviourTotal": 0,
+      "attempts": 3,
+      "redoable": 0,
+      "tokens": 777089,
+      "promptTokens": 756416,
+      "completionTokens": 20673,
+      "cost": 0.060650585,
+      "ranAt": "2026-10-15T22:31:28.585Z"
+    },
+    {
       "skillRevision": "3df6d8308bc811f1d379851d3cadecf5a32434e6",
       "model": "deepseek-v4-flash",
       "scenario": "system/icon",
@@ -1641,6 +1741,26 @@
       "completionTokens": 6785,
       "cost": 0.007819053,
       "ranAt": "2026-10-14T00:50:17.844Z"
+    },
+    {
+      "skillRevision": "3f8ac1e89e3258ca014bd312c471a4689fb8fa06",
+      "model": "deepseek-v4-flash",
+      "scenario": "system/icon",
+      "kind": "system",
+      "samples": 3,
+      "mean": 1,
+      "min": 1,
+      "max": 1,
+      "stdDev": 0,
+      "behaviourPassed": 0,
+      "behaviourTotal": 0,
+      "attempts": 3,
+      "redoable": 0,
+      "tokens": 205704,
+      "promptTokens": 196772,
+      "completionTokens": 8932,
+      "cost": 0.016321268,
+      "ranAt": "2026-10-15T22:34:52.166Z"
     },
     {
       "skillRevision": "3df6d8308bc811f1d379851d3cadecf5a32434e6",
@@ -1663,6 +1783,26 @@
       "ranAt": "2026-10-14T00:50:17.844Z"
     },
     {
+      "skillRevision": "3f8ac1e89e3258ca014bd312c471a4689fb8fa06",
+      "model": "deepseek-v4-flash",
+      "scenario": "system/localize",
+      "kind": "system",
+      "samples": 3,
+      "mean": 1,
+      "min": 1,
+      "max": 1,
+      "stdDev": 0,
+      "behaviourPassed": 0,
+      "behaviourTotal": 0,
+      "attempts": 3,
+      "redoable": 0,
+      "tokens": 224366,
+      "promptTokens": 218981,
+      "completionTokens": 5385,
+      "cost": 0.017466461,
+      "ranAt": "2026-10-15T22:36:18.798Z"
+    },
+    {
       "skillRevision": "3df6d8308bc811f1d379851d3cadecf5a32434e6",
       "model": "deepseek-v4-flash",
       "scenario": "system/overlays",
@@ -1681,6 +1821,26 @@
       "completionTokens": 3803,
       "cost": 0.014996855,
       "ranAt": "2026-10-14T00:50:17.844Z"
+    },
+    {
+      "skillRevision": "3f8ac1e89e3258ca014bd312c471a4689fb8fa06",
+      "model": "deepseek-v4-flash",
+      "scenario": "system/overlays",
+      "kind": "system",
+      "samples": 3,
+      "mean": 1,
+      "min": 1,
+      "max": 1,
+      "stdDev": 0,
+      "behaviourPassed": 0,
+      "behaviourTotal": 0,
+      "attempts": 3,
+      "redoable": 0,
+      "tokens": 282020,
+      "promptTokens": 276510,
+      "completionTokens": 5510,
+      "cost": 0.02185779,
+      "ranAt": "2026-10-15T22:37:46.761Z"
     }
   ]
 }
