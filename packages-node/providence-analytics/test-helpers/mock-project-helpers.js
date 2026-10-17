@@ -3,6 +3,10 @@ import module from 'module';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
+// Side effect: swaps the native oxc-resolver for a JS resolver, which the suites need because
+// mock-fs patches the JS `fs` module and oxc-resolver reads the real file system.
+import './mock-resolver.js';
+
 const mockFsRequire = module.createRequire(import.meta.url);
 // eslint-disable-next-line import/no-extraneous-dependencies
 const mockFs = mockFsRequire('mock-fs');
