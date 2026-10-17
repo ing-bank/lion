@@ -101,8 +101,17 @@ export function findClassDeclaration(customElementsJson, className) {
  * @returns {string}
  */
 export function classDeclarationToMarkdown(declaration) {
+  // The regular reference shows the PUBLIC flow only - what an app developer composing the component
+  // needs. Protected and private members are the subclasser's surface and belong in the companion
+  // subclasser doc, not in the reference a consumer reads first (measured: protected members were the
+  // bulk of these references' size). Private is already dropped by `private: 'hidden'`; protected is
+  // removed here so the table is public-only regardless of the renderer's option support.
+  const publicOnly = {
+    ...declaration,
+    members: (declaration.members ?? []).filter(member => member.privacy === 'public'),
+  };
   return customElementsManifestToMarkdown(
-    { modules: [{ declarations: [declaration] }] },
+    { modules: [{ declarations: [publicOnly] }] },
     CEM_TO_MARKDOWN_OPTIONS,
   );
 }

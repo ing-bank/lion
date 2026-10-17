@@ -488,18 +488,6 @@ If there is a button or a form inside the tab panel then these elements get focu
 | `expanded`     | public  | `array`   |         | array of indices of the expanded accordions                            |                |
 | `focusedIndex` | public  | `number`  |         | index number of the focused accordion                                  |                |
 
-#### Methods
-
-| Name              | Privacy   | Description | Parameters          | Return | Inherited From |
-| ----------------- | --------- | ----------- | ------------------- | ------ | -------------- |
-| `_cleanInvoker`   | protected |             | `entry: StoreEntry` |        |                |
-| `_collapse`       | protected |             | `entry: StoreEntry` |        |                |
-| `_expand`         | protected |             | `entry: StoreEntry` |        |                |
-| `_focusInvoker`   | protected |             | `entry: StoreEntry` |        |                |
-| `_setupContent`   | protected |             | `entry: StoreEntry` |        |                |
-| `_setupInvoker`   | protected |             | `entry: StoreEntry` |        |                |
-| `_unfocusInvoker` | protected |             | `entry: StoreEntry` |        |                |
-
 #### Attributes
 
 | Name           | Field        | Inherited From |

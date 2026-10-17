@@ -286,24 +286,18 @@ For notifications about specific step status change you can use individual event
 
 #### Fields
 
-| Name                   | Privacy   | Type                 | Default | Description                                                                                                                 | Inherited From |
-| ---------------------- | --------- | -------------------- | ------- | --------------------------------------------------------------------------------------------------------------------------- | -------------- |
-| `current`              | public    | `number`             | `0`     | Number of the current entered step.                                                                                         |                |
-| `data`                 | public    | `{[key: string]: ?}` | `{}`    | Storage for data gathered across different steps.&#xA;Data is passed into each step condition function as a first argument. |                |
-| `steps`                | public    |                      |         |                                                                                                                             |                |
-| `_internalCurrentSync` | protected | `boolean`            | `true`  |                                                                                                                             |                |
-| `_max`                 | protected | `number`             | `0`     |                                                                                                                             |                |
+| Name      | Privacy | Type                 | Default | Description                                                                                                                 | Inherited From |
+| --------- | ------- | -------------------- | ------- | --------------------------------------------------------------------------------------------------------------------------- | -------------- |
+| `current` | public  | `number`             | `0`     | Number of the current entered step.                                                                                         |                |
+| `data`    | public  | `{[key: string]: ?}` | `{}`    | Storage for data gathered across different steps.&#xA;Data is passed into each step condition function as a first argument. |                |
+| `steps`   | public  |                      |         |                                                                                                                             |                |
 
 #### Methods
 
-| Name                       | Privacy   | Description | Parameters                                                                                   | Return | Inherited From |
-| -------------------------- | --------- | ----------- | -------------------------------------------------------------------------------------------- | ------ | -------------- |
-| `next`                     | public    |             |                                                                                              |        |                |
-| `previous`                 | public    |             |                                                                                              |        |                |
-| `_changeStep`              | protected |             | `newCurrent: number, oldCurrent: number`                                                     |        |                |
-| `_dispatchTransitionEvent` | protected |             | `fromStep: {number: number, element: LionStep}, toStep: {number: number, element: LionStep}` |        |                |
-| `_goTo`                    | protected |             | `newCurrent: number, oldCurrent: number`                                                     |        |                |
-| `_onCurrentChanged`        | protected |             | `newValues: {current: number}, oldValues: {current: number}`                                 |        |                |
+| Name       | Privacy | Description | Parameters | Return | Inherited From |
+| ---------- | ------- | ----------- | ---------- | ------ | -------------- |
+| `next`     | public  |             |            |        |                |
+| `previous` | public  |             |            |        |                |
 
 #### Events
 

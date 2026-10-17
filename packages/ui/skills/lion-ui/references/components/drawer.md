@@ -274,28 +274,19 @@ export const events = ({ shadowRoot }) => html`
 
 #### Fields
 
-| Name             | Privacy   | Type      | Default | Description                                                                  | Inherited From  |
-| ---------------- | --------- | --------- | ------- | ---------------------------------------------------------------------------- | --------------- |
-| `opened`         | public    | `boolean` | `false` |                                                                              | LionCollapsible |
-| `position`       | public    | `string`  |         | Setter for position property, available values are 'top', 'left' and 'right' |                 |
-| `transitioning`  | public    | `boolean` |         |                                                                              |                 |
-| `_contentHeight` | protected |           |         |                                                                              | LionCollapsible |
-| `_contentNode`   | protected |           |         |                                                                              | LionCollapsible |
-| `_contentWidth`  | protected |           |         |                                                                              |                 |
-| `_invokerNode`   | protected |           |         |                                                                              | LionCollapsible |
+| Name            | Privacy | Type      | Default | Description                                                                  | Inherited From  |
+| --------------- | ------- | --------- | ------- | ---------------------------------------------------------------------------- | --------------- |
+| `opened`        | public  | `boolean` | `false` |                                                                              | LionCollapsible |
+| `position`      | public  | `string`  |         | Setter for position property, available values are 'top', 'left' and 'right' |                 |
+| `transitioning` | public  | `boolean` |         |                                                                              |                 |
 
 #### Methods
 
-| Name                 | Privacy   | Description                                                    | Parameters                                                                 | Return          | Inherited From  |
-| -------------------- | --------- | -------------------------------------------------------------- | -------------------------------------------------------------------------- | --------------- | --------------- |
-| `hide`               | public    | Hide extra content.                                            |                                                                            |                 | LionCollapsible |
-| `show`               | public    | Show extra content.                                            |                                                                            |                 | LionCollapsible |
-| `toggle`             | public    | Toggle the current(opened/closed) state.                       |                                                                            |                 | LionCollapsible |
-| `_hideAnimation`     | protected | Trigger hide animation and wait for transition to be finished. | `{ contentNode }, options: @param {HTMLElement} options.contentNode    * ` |                 | LionCollapsible |
-| `_openedChanged`     | protected |                                                                |                                                                            |                 |                 |
-| `_showAnimation`     | protected | Trigger show animation and wait for transition to be finished. | `{ contentNode }, options: @param {HTMLElement} options.contentNode    * ` |                 | LionCollapsible |
-| `_updateContentSize` | protected |                                                                |                                                                            |                 |                 |
-| `_waitForTransition` | protected | Wait until the transition event is finished.                   | `{ contentNode }, options: @param {HTMLElement} options.contentNode    * ` | `Promise<void>` |                 |
+| Name     | Privacy | Description                              | Parameters | Return | Inherited From  |
+| -------- | ------- | ---------------------------------------- | ---------- | ------ | --------------- |
+| `hide`   | public  | Hide extra content.                      |            |        | LionCollapsible |
+| `show`   | public  | Show extra content.                      |            |        | LionCollapsible |
+| `toggle` | public  | Toggle the current(opened/closed) state. |            |        | LionCollapsible |
 
 #### Events
 

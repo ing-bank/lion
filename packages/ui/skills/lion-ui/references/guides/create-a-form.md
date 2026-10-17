@@ -45,9 +45,9 @@ tree:
 
 - **the overarching component** applies `ScopedElementsMixin` and registers the lion components it
   renders in its scoped registry (`static scopedElements = { 'lion-form': LionForm, 'lion-input-iban':
-  LionInputIban }`). It **may** have a shadow root: it is the form's boundary, and its scoped registry —
+LionInputIban }`). It **may** have a shadow root: it is the form's boundary, and its scoped registry —
   not global registration — is what makes the controls upgrade.
-- **sub forms** - components that live *inside* the form and carry controls - **must not** have a shadow
+- **sub forms** - components that live _inside_ the form and carry controls - **must not** have a shadow
   root, so they stay in the same DOM as `lion-form` and `<form>`. Registration travels up the DOM, so a
   shadow root in between makes the controls inside it stop registering to their parents, and validation
   and serialization lose them silently. `createRenderRoot()` returning the host is what achieves that.
