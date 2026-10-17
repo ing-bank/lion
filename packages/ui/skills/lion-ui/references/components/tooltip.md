@@ -361,20 +361,10 @@ export const main = () => html`
 
 #### Fields
 
-| Name              | Privacy   | Type                     | Default         | Description                                                                                                                                | Inherited From |
-| ----------------- | --------- | ------------------------ | --------------- | ------------------------------------------------------------------------------------------------------------------------------------------ | -------------- |
-| `hasArrow`        | public    | `boolean`                | `false`         | Whether an arrow should be displayed                                                                                                       | ArrowMixin     |
-| `invokerRelation` | public    | `'label'\|'description'` | `'description'` | Decides whether the tooltip invoker text should be considered a description&#xA;(sets aria-describedby) or a label (sets aria-labelledby). |                |
-| `_arrowNode`      | protected |                          |                 |                                                                                                                                            | ArrowMixin     |
-
-#### Methods
-
-| Name                    | Privacy   | Description                                                                                                                 | Parameters                                         | Return                   | Inherited From |
-| ----------------------- | --------- | --------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------- | ------------------------ | -------------- |
-| `_arrowNodeTemplate`    | protected |                                                                                                                             |                                                    |                          | ArrowMixin     |
-| `_arrowTemplate`        | protected |                                                                                                                             |                                                    |                          | ArrowMixin     |
-| `_defineOverlayConfig`  | protected | Overrides arrow and keepTogether modifier to be enabled,&#xA;and adds onCreate and onUpdate hooks to sync from popper state |                                                    | `OverlayConfig`          | ArrowMixin     |
-| `_getPopperArrowConfig` | protected |                                                                                                                             | `popperConfigToExtendFrom: Partial<PopperOptions>` | `Partial<PopperOptions>` | ArrowMixin     |
+| Name              | Privacy | Type                     | Default         | Description                                                                                                                                | Inherited From |
+| ----------------- | ------- | ------------------------ | --------------- | ------------------------------------------------------------------------------------------------------------------------------------------ | -------------- |
+| `hasArrow`        | public  | `boolean`                | `false`         | Whether an arrow should be displayed                                                                                                       | ArrowMixin     |
+| `invokerRelation` | public  | `'label'\|'description'` | `'description'` | Decides whether the tooltip invoker text should be considered a description&#xA;(sets aria-describedby) or a label (sets aria-labelledby). |                |
 
 #### Attributes
 

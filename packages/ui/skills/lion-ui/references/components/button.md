@@ -221,13 +221,12 @@ export const bootstrapButton = () => {
 
 #### Fields
 
-| Name                     | Privacy   | Type      | Default    | Description | Inherited From            |
-| ------------------------ | --------- | --------- | ---------- | ----------- | ------------------------- |
-| `active`                 | public    | `boolean` | `false`    |             |                           |
-| `disabled`               | public    | `boolean` | `false`    |             | DisabledMixin             |
-| `tabIndex`               | public    | `number`  |            |             | DisabledWithTabIndexMixin |
-| `type`                   | public    | `string`  | `'button'` |             |                           |
-| `_requestedToBeDisabled` | protected | `boolean` | `false`    |             | DisabledMixin             |
+| Name       | Privacy | Type      | Default    | Description | Inherited From            |
+| ---------- | ------- | --------- | ---------- | ----------- | ------------------------- |
+| `active`   | public  | `boolean` | `false`    |             |                           |
+| `disabled` | public  | `boolean` | `false`    |             | DisabledMixin             |
+| `tabIndex` | public  | `number`  |            |             | DisabledWithTabIndexMixin |
+| `type`     | public  | `string`  | `'button'` |             |                           |
 
 #### Methods
 
@@ -252,23 +251,20 @@ export const bootstrapButton = () => {
 
 #### Fields
 
-| Name                     | Privacy   | Type      | Default   | Description | Inherited From |
-| ------------------------ | --------- | --------- | --------- | ----------- | -------------- |
-| `active`                 | public    | `boolean` | `false`   |             | LionButton     |
-| `disabled`               | public    | `boolean` | `false`   |             | LionButton     |
-| `tabIndex`               | public    | `number`  |           |             | LionButton     |
-| `type`                   | public    | `string`  | `'reset'` |             | LionButton     |
-| `_requestedToBeDisabled` | protected | `boolean` | `false`   |             | LionButton     |
+| Name       | Privacy | Type      | Default   | Description | Inherited From |
+| ---------- | ------- | --------- | --------- | ----------- | -------------- |
+| `active`   | public  | `boolean` | `false`   |             | LionButton     |
+| `disabled` | public  | `boolean` | `false`   |             | LionButton     |
+| `tabIndex` | public  | `number`  |           |             | LionButton     |
+| `type`     | public  | `string`  | `'reset'` |             | LionButton     |
 
 #### Methods
 
-| Name                                          | Privacy   | Description | Parameters | Return | Inherited From |
-| --------------------------------------------- | --------- | ----------- | ---------- | ------ | -------------- |
-| `click`                                       | public    |             |            |        | LionButton     |
-| `makeRequestToBeDisabled`                     | public    |             |            |        | LionButton     |
-| `retractRequestToBeDisabled`                  | public    |             |            |        | LionButton     |
-| `_setupSubmitAndResetHelperOnConnected`       | protected |             |            |        |                |
-| `_teardownSubmitAndResetHelperOnDisconnected` | protected |             |            |        |                |
+| Name                         | Privacy | Description | Parameters | Return | Inherited From |
+| ---------------------------- | ------- | ----------- | ---------- | ------ | -------------- |
+| `click`                      | public  |             |            |        | LionButton     |
+| `makeRequestToBeDisabled`    | public  |             |            |        | LionButton     |
+| `retractRequestToBeDisabled` | public  |             |            |        | LionButton     |
 
 #### Attributes
 
@@ -285,24 +281,20 @@ export const bootstrapButton = () => {
 
 #### Fields
 
-| Name                     | Privacy   | Type                      | Default    | Description | Inherited From |
-| ------------------------ | --------- | ------------------------- | ---------- | ----------- | -------------- |
-| `active`                 | public    | `boolean`                 | `false`    |             | LionButton     |
-| `disabled`               | public    | `boolean`                 | `false`    |             | LionButton     |
-| `tabIndex`               | public    | `number`                  |            |             | LionButton     |
-| `type`                   | public    | `string`                  | `'submit'` |             | LionButton     |
-| `_nativeButtonNode`      | protected | `HTMLButtonElement\|null` |            |             |                |
-| `_requestedToBeDisabled` | protected | `boolean`                 | `false`    |             | LionButton     |
+| Name       | Privacy | Type      | Default    | Description | Inherited From |
+| ---------- | ------- | --------- | ---------- | ----------- | -------------- |
+| `active`   | public  | `boolean` | `false`    |             | LionButton     |
+| `disabled` | public  | `boolean` | `false`    |             | LionButton     |
+| `tabIndex` | public  | `number`  |            |             | LionButton     |
+| `type`     | public  | `string`  | `'submit'` |             | LionButton     |
 
 #### Methods
 
-| Name                                          | Privacy   | Description | Parameters | Return | Inherited From  |
-| --------------------------------------------- | --------- | ----------- | ---------- | ------ | --------------- |
-| `click`                                       | public    |             |            |        | LionButton      |
-| `makeRequestToBeDisabled`                     | public    |             |            |        | LionButton      |
-| `retractRequestToBeDisabled`                  | public    |             |            |        | LionButton      |
-| `_setupSubmitAndResetHelperOnConnected`       | protected |             |            |        | LionButtonReset |
-| `_teardownSubmitAndResetHelperOnDisconnected` | protected |             |            |        | LionButtonReset |
+| Name                         | Privacy | Description | Parameters | Return | Inherited From |
+| ---------------------------- | ------- | ----------- | ---------- | ------ | -------------- |
+| `click`                      | public  |             |            |        | LionButton     |
+| `makeRequestToBeDisabled`    | public  |             |            |        | LionButton     |
+| `retractRequestToBeDisabled` | public  |             |            |        | LionButton     |
 
 #### Attributes
 
