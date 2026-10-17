@@ -305,18 +305,11 @@ export const main = () => html`
 
 #### Fields
 
-| Name            | Privacy   | Type     | Default | Description                         | Inherited From |
-| --------------- | --------- | -------- | ------- | ----------------------------------- | -------------- |
-| `panels`        | public    |          |         |                                     |                |
-| `selectedIndex` | public    | `number` | `0`     | An index number of the selected tab |                |
-| `tabs`          | public    |          |         |                                     |                |
-| `_pairCount`    | protected |          |         |                                     |                |
-
-#### Methods
-
-| Name                         | Privacy   | Description | Parameters      | Return | Inherited From |
-| ---------------------------- | --------- | ----------- | --------------- | ------ | -------------- |
-| `_setSelectedIndexWithFocus` | protected |             | `value: number` |        |                |
+| Name            | Privacy | Type     | Default | Description                         | Inherited From |
+| --------------- | ------- | -------- | ------- | ----------------------------------- | -------------- |
+| `panels`        | public  |          |         |                                     |                |
+| `selectedIndex` | public  | `number` | `0`     | An index number of the selected tab |                |
+| `tabs`          | public  |          |         |                                     |                |
 
 #### Events
 

@@ -307,21 +307,19 @@ import '@lion/ui/define/lion-calendar.js';
 
 #### Methods
 
-| Name                      | Privacy   | Description                                                                                     | Parameters   | Return | Inherited From |
-| ------------------------- | --------- | ----------------------------------------------------------------------------------------------- | ------------ | ------ | -------------- |
-| `findNearestEnabledDate`  | public    |                                                                                                 | `date: Date` |        |                |
-| `findNextEnabledDate`     | public    |                                                                                                 | `date: Date` |        |                |
-| `findPreviousEnabledDate` | public    |                                                                                                 | `date: Date` |        |                |
-| `focusCentralDate`        | public    |                                                                                                 |              |        |                |
-| `focusDate`               | public    |                                                                                                 | `date: Date` |        |                |
-| `focusSelectedDate`       | public    |                                                                                                 |              |        |                |
-| `goToNextMonth`           | public    |                                                                                                 |              |        |                |
-| `goToNextYear`            | public    |                                                                                                 |              |        |                |
-| `goToPreviousMonth`       | public    |                                                                                                 |              |        |                |
-| `goToPreviousYear`        | public    |                                                                                                 |              |        |                |
-| `initCentralDate`         | public    | This exposes an interface for datepickers that want to&#xA;reinitialize when calendar is opened |              |        |                |
-| `_nextIconTemplate`       | protected |                                                                                                 |              |        |                |
-| `_previousIconTemplate`   | protected |                                                                                                 |              |        |                |
+| Name                      | Privacy | Description                                                                                     | Parameters   | Return | Inherited From |
+| ------------------------- | ------- | ----------------------------------------------------------------------------------------------- | ------------ | ------ | -------------- |
+| `findNearestEnabledDate`  | public  |                                                                                                 | `date: Date` |        |                |
+| `findNextEnabledDate`     | public  |                                                                                                 | `date: Date` |        |                |
+| `findPreviousEnabledDate` | public  |                                                                                                 | `date: Date` |        |                |
+| `focusCentralDate`        | public  |                                                                                                 |              |        |                |
+| `focusDate`               | public  |                                                                                                 | `date: Date` |        |                |
+| `focusSelectedDate`       | public  |                                                                                                 |              |        |                |
+| `goToNextMonth`           | public  |                                                                                                 |              |        |                |
+| `goToNextYear`            | public  |                                                                                                 |              |        |                |
+| `goToPreviousMonth`       | public  |                                                                                                 |              |        |                |
+| `goToPreviousYear`        | public  |                                                                                                 |              |        |                |
+| `initCentralDate`         | public  | This exposes an interface for datepickers that want to&#xA;reinitialize when calendar is opened |              |        |                |
 
 #### Events
 

@@ -216,22 +216,17 @@ _hideAnimation({ contentNode }) {
 
 #### Fields
 
-| Name             | Privacy   | Type      | Default | Description | Inherited From |
-| ---------------- | --------- | --------- | ------- | ----------- | -------------- |
-| `opened`         | public    | `boolean` | `false` |             |                |
-| `_contentHeight` | protected |           |         |             |                |
-| `_contentNode`   | protected |           |         |             |                |
-| `_invokerNode`   | protected |           |         |             |                |
+| Name     | Privacy | Type      | Default | Description | Inherited From |
+| -------- | ------- | --------- | ------- | ----------- | -------------- |
+| `opened` | public  | `boolean` | `false` |             |                |
 
 #### Methods
 
-| Name             | Privacy   | Description                                   | Parameters     | Return | Inherited From |
-| ---------------- | --------- | --------------------------------------------- | -------------- | ------ | -------------- |
-| `hide`           | public    | Hide extra content.                           |                |        |                |
-| `show`           | public    | Show extra content.                           |                |        |                |
-| `toggle`         | public    | Toggle the current(opened/closed) state.      |                |        |                |
-| `_hideAnimation` | protected | Hide animation implementation in sub-classer. | `opts: Object` |        |                |
-| `_showAnimation` | protected | Show animation implementation in sub-classer. | `opts: Object` |        |                |
+| Name     | Privacy | Description                              | Parameters | Return | Inherited From |
+| -------- | ------- | ---------------------------------------- | ---------- | ------ | -------------- |
+| `hide`   | public  | Hide extra content.                      |            |        |                |
+| `show`   | public  | Show extra content.                      |            |        |                |
+| `toggle` | public  | Toggle the current(opened/closed) state. |            |        |                |
 
 #### Events
 

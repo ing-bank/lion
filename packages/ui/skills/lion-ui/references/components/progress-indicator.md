@@ -173,23 +173,14 @@ export const main = () => html`
 
 #### Fields
 
-| Name                  | Privacy   | Type      | Default | Description                                                                                                                                                              | Inherited From |
-| --------------------- | --------- | --------- | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | -------------- |
-| `indeterminate`       | public    | `boolean` |         |                                                                                                                                                                          |                |
-| `max`                 | public    | `number`  | `100`   |                                                                                                                                                                          |                |
-| `min`                 | public    | `number`  | `0`     |                                                                                                                                                                          |                |
-| `value`               | public    | `number`  | `0`     |                                                                                                                                                                          |                |
-| `_ariaLabel`          | public    | `string`  | `''`    |                                                                                                                                                                          |                |
-| `_ariaLabelledby`     | public    | `string`  | `''`    |                                                                                                                                                                          |                |
-| `_progressPercentage` | protected |           |         | In case of a determinate progress-indicator it returns the progress percentage&#xA;based on value, min & max.&#xA;Could be used for styling inside the \_graphicTemplate |                |
-
-#### Methods
-
-| Name                        | Privacy   | Description | Parameters | Return | Inherited From |
-| --------------------------- | --------- | ----------- | ---------- | ------ | -------------- |
-| `_graphicTemplate`          | protected |             |            |        |                |
-| `_resetAriaValueAttributes` | protected |             |            |        |                |
-| `_setDefaultLabel`          | protected |             |            |        |                |
+| Name              | Privacy | Type      | Default | Description | Inherited From |
+| ----------------- | ------- | --------- | ------- | ----------- | -------------- |
+| `indeterminate`   | public  | `boolean` |         |             |                |
+| `max`             | public  | `number`  | `100`   |             |                |
+| `min`             | public  | `number`  | `0`     |             |                |
+| `value`           | public  | `number`  | `0`     |             |                |
+| `_ariaLabel`      | public  | `string`  | `''`    |             |                |
+| `_ariaLabelledby` | public  | `string`  | `''`    |             |                |
 
 #### Attributes
 

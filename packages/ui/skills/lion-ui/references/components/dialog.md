@@ -262,12 +262,6 @@ Configuration passed to `config` property:
 | --------------- | ------- | --------- | ------- | ----------- | -------------- |
 | `isAlertDialog` | public  | `boolean` | `false` |             |                |
 
-#### Methods
-
-| Name                   | Privacy   | Description | Parameters | Return | Inherited From |
-| ---------------------- | --------- | ----------- | ---------- | ------ | -------------- |
-| `_defineOverlayConfig` | protected |             |            |        |                |
-
 #### Attributes
 
 | Name              | Field         | Inherited From |
