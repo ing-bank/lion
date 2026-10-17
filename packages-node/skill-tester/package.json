@@ -29,6 +29,7 @@
     "eval:local": "node examples/run.mjs local",
     "eval:openai": "node examples/run.mjs openai",
     "eval:runware": "node examples/run.mjs runware",
+    "skill:index": "node scripts/render-skill-index.mjs",
     "test": "node --test --test-concurrency=1 \"test-node/*.test.ts\"",
     "test:node": "node --test --test-concurrency=1 \"test-node/*.test.ts\""
   },
