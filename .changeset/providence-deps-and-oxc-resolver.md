@@ -13,4 +13,7 @@ test asserts both resolvers return the same path for relative, bare, subpath, ex
 
 Also removes unused dependencies: `@types/inquirer` (the CLI no longer uses inquirer) and
 `@babel/plugin-syntax-import-assertions` (`AstService` passes the built-in parser plugin names to
-`@babel/parser`), plus the duplicate `@babel/parser` / `@swc/core` declarations.
+`@babel/parser`), plus the duplicate `@babel/parser` / `@swc/core` declarations. The dashboard imports (`@web/dev-server`,
+`lit-element`) stay dev-only: both an `optionalDependencies` edge and a `dependencies` edge were
+measured and rejected (the first breaks `packages/ui`'s type gate in CI, the second adds a
+194-package closure to every consumer); the constraint is now recorded in `comments.dependencies`.
