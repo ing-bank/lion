@@ -369,6 +369,40 @@ export async function runSkillTester(config: SkillTesterConfig): Promise<SkillTe
         }
         const durationMs = Date.now() - start;
 
+        // RAG measurement: which of the skill's own files did this run actually open? The transcript
+        // is already in memory, so the read_file tool calls are recovered from it, filtered to the
+        // skill directory, and their on-disk size summed. The prompt-token count in usage is an upper
+        // bound on the disclosure cost; this is the disclosure itself.
+        const skillReads = new Map<string, number>();
+        for (const m of (agentRun as { transcript?: unknown[] }).transcript ?? []) {
+          const toolCalls =
+            (m as { tool_calls?: { function?: { name?: string; arguments?: string } }[] })
+              .tool_calls ?? [];
+          for (const tc of toolCalls) {
+            if (tc.function?.name !== 'read_file' || skillReads.has(tc.function.arguments))
+              continue;
+            let requestedPath = '';
+            try {
+              requestedPath =
+                (JSON.parse(tc.function?.arguments ?? '{}') as { path?: string }).path ?? '';
+            } catch {
+              continue;
+            }
+            if (!requestedPath) continue;
+            const abs = path.resolve(requestedPath);
+            if (!abs.includes(`${path.sep}skills${path.sep}lion-ui${path.sep}`)) continue;
+            let bytes = 0;
+            try {
+              bytes = fs.statSync(abs).size;
+            } catch {
+              // A read of a file that no longer exists still happened; count it as zero bytes.
+            }
+            skillReads.set(tc.function.arguments, bytes);
+          }
+        }
+        const skillFilesRead = skillReads.size;
+        const skillBytesRead = [...skillReads.values()].reduce((sum, bytes) => sum + bytes, 0);
+
         const gates = runGates(sandboxRoot, {
           allowedLionUiSpecifiers: allowedSpecifiers,
           resolvableLionUiSpecifiers: resolvableSpecifiers,
@@ -399,7 +433,10 @@ export async function runSkillTester(config: SkillTesterConfig): Promise<SkillTe
         onProgress(
           `${score.percent >= 100 ? green('✔') : score.percent >= 50 ? yellow('~') : red('✘')} ` +
             `${scenario.name} → ${score.percent}% ` +
-            gray(`(${agentRun.turns} turns, ${agentRun.toolCalls} tool calls)`),
+            gray(
+              `(${agentRun.turns} turns, ${agentRun.toolCalls} tool calls, ` +
+                `RAG read ${skillFilesRead} skill file(s) / ${(skillBytesRead / 1024).toFixed(0)} KB)`,
+            ),
         );
 
         if (behaviour && scenario.behaviour) {
@@ -428,6 +465,8 @@ export async function runSkillTester(config: SkillTesterConfig): Promise<SkillTe
             completionTokens: agentRun.usage.completion_tokens ?? 0,
             attempted,
             finalMessage: agentRun.finalMessage,
+            skillFilesRead,
+            skillBytesRead,
           },
         });
       }
@@ -486,7 +525,11 @@ export async function runSkillTester(config: SkillTesterConfig): Promise<SkillTe
     perModelScenario: buildPerModelScenario(runs),
     perModel: models.map(model => ({
       model,
-      stats: aggregate(runs.filter(run => run.model === model && run.agentRun.attempted).map(run => run.score.score)),
+      stats: aggregate(
+        runs
+          .filter(run => run.model === model && run.agentRun.attempted)
+          .map(run => run.score.score),
+      ),
     })),
     overall: aggregate(runs.filter(one => one.agentRun.attempted).map(run => run.score.score)),
     ...(behaviourSummary ? { behaviour: behaviourSummary } : {}),
