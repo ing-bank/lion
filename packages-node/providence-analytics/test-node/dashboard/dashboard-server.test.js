@@ -3,17 +3,17 @@ import { fileURLToPath, pathToFileURL } from 'url';
 import pathLib from 'path';
 import sinon from 'sinon';
 
-import { createTestServer } from '@web/dev-server-core/test-helpers';
 import { expect } from 'chai';
 import { it } from 'mocha';
 
 import { providenceConfUtil } from '#utils/providence-conf-util.js';
 import { createDashboardServerConfig } from '#dashboard/server.js';
+import { miniDevServer } from '#utils/mini-dev-server.js';
 import { ReportService } from '#core/ReportService.js';
 import { fsAdapter } from '#utils/fs-adapter.js';
 
 /**
- * @typedef {import('@web/dev-server-core').DevServer} DevServer
+ * @typedef {import('#types/index.js').MiniDevServer} DevServer
  */
 
 const __dirname = pathLib.dirname(fileURLToPath(import.meta.url));
@@ -60,12 +60,15 @@ describe('Dashboard Server', () => {
     beforeEach(async () => {
       const conf = await getConf(`${fixturesPath}/providence.conf.mjs`);
       providenceConfStub = sinon.stub(providenceConfUtil, 'getConf').resolves(conf);
-      ({ host, server } = await createTestServer(await createDashboardServerConfig()));
+      // miniDevServer is a drop-in for @web/dev-server, so tests use the same config as the CLI
+      ({ host, server } = await miniDevServer.createTestServer(
+        await createDashboardServerConfig(),
+      ));
     });
 
-    afterEach(() => {
+    afterEach(async () => {
       providenceConfStub.restore();
-      server.stop();
+      await server.stop();
     });
 
     describe('Index', () => {
@@ -81,6 +84,23 @@ describe('Dashboard Server', () => {
       it(`returns (static) js assets via app/*`, async () => {
         const response = await fetch(`${host}/src/dashboard/app/p-board.js`);
         expect(response.status).to.equal(200);
+      });
+
+      it(`rewrites bare specifiers to paths the browser can fetch`, async () => {
+        const response = await fetch(`${host}/src/dashboard/app/p-board.js`);
+        const responseText = await response.text();
+
+        // `import { LitElement } from 'lit-element'` becomes a servable path
+        expect(responseText).to.include("from '/node_modules/lit-element/index.js'");
+
+        const dependency = await fetch(`${host}/node_modules/lit-element/index.js`);
+        expect(dependency.status).to.equal(200);
+      });
+
+      it(`returns 404 for paths outside the served root`, async () => {
+        // encoded, so the url is not normalised away before it reaches the server
+        const response = await fetch(`${host}/..%2f..%2fetc%2fpasswd`);
+        expect(response.status).to.equal(404);
       });
     });
 
