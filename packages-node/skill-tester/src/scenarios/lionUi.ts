@@ -50,6 +50,7 @@
  * actually ships rather than a hand-maintained list.
  */
 
+import { COMPONENT_SYNONYMS } from '../../../../scripts/lib/component-synonyms.mjs';
 import type { TestScenario, ScenarioCheck } from './types.ts';
 
 /** Component folders under `packages/ui/components` that are not standalone visual components. */
@@ -97,9 +98,9 @@ const COMPONENT_PROMPTS: Record<string, { description: string; synonyms: string[
 };
 
 function goalPrompt(componentName: string): string {
-  const entry = COMPONENT_PROMPTS[componentName];
+  const entry = COMPONENT_SYNONYMS[componentName];
   if (!entry) return `Goal: a component that renders the documented lion component for ${componentName}.`;
-  return `Goal: ${entry.description}. You may know this component as: ${entry.synonyms.join(', ')}.`;
+  return `Goal: ${entry.description}.`;
 }
 
 export const NON_VISUAL_COMPONENT_DIRS = [
