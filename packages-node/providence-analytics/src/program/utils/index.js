@@ -8,6 +8,7 @@ export { oxcTraverse } from '#utils/oxc-traverse.js';
 export { fsAdapter } from '#utils/fs-adapter.js';
 export { fsGlob } from '#utils/fs-glob.js';
 export { memoize } from '#utils/memoize.js';
+export { miniDevServer } from '#utils/mini-dev-server.js';
 export { hash } from '#utils/hash.js';
 
 // TODO: move trackdownIdentifier to utils as well
