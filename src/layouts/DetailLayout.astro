@@ -4,6 +4,7 @@ import TopNav from "../components/TopNav.astro";
 import { UIPortalInpageNav } from "../components/ui-portal-inpage-nav.js";
 import ThemeInit from '../components/ThemeInit.astro';
 import LionWordmark from '../components/LionWordmark.astro';
+import { humanise } from '../utils/humanise.mjs';
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 
 const site = Astro.site || Astro.url.origin;
@@ -60,11 +61,6 @@ const currentPath = Astro.url.pathname;
 const relativePath = currentPath.startsWith(base) ? currentPath.slice(base.length) : currentPath;
 const pathSegments = relativePath.split('/').filter(Boolean);
 const breadcrumbSegments = pathSegments.slice(1, -1); // drop the section and the page itself
-const humanise = segment =>
-  decodeURIComponent(segment)
-    .replace(/[-_]/g, ' ')
-    .replace(/\b\w/g, char => char.toUpperCase());
-
 const breadcrumbTrail = breadcrumbSegments.map((segment, index) => ({
   label: humanise(segment),
   url: `${base}/${pathSegments[0]}/${breadcrumbSegments.slice(0, index + 1).join('/')}`,
