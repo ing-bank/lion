@@ -26,7 +26,8 @@ async function getTestGroups() {
   }));
 }
 
-const groups = await getTestGroups();
+// a --files run (e.g. npm run debug:component) does not use the group list, so do not glob for it
+const groups = config.files ? undefined : await getTestGroups();
 
 /**
  * @type {import('@web/test-runner').TestRunnerConfig['testRunnerHtml']}
