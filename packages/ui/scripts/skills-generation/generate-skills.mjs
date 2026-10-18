@@ -2,6 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import matter from 'gray-matter';
+import { COMPONENT_SYNONYMS } from '../../../../scripts/lib/component-synonyms.mjs';
 import {
   computeApiTablesByDocGroup,
   findClassDeclaration,
@@ -201,7 +202,11 @@ function updateSkillMdIndex(markerName, entries) {
 
   const listMd = entries
     .sort((a, b) => a.name.localeCompare(b.name))
-    .map(e => `- [\`${toTitleCase(e.name)}\`](${e.refPath})`)
+    .map(
+      e =>
+        `- [\`${toTitleCase(e.name)}\`](${e.refPath})` +
+          (e.synonyms?.length ? ` — ${e.synonyms.join(', ')}` : ''),
+    )
     .join('\n');
 
   const before = skillMd.slice(0, startIndex + startMarker.length);
@@ -398,7 +403,7 @@ function main() {
       sourceDirPath,
       apiTableMd: tablesByGroup.get(`components/${name}`),
     });
-    componentEntries.push({ name, refPath });
+    componentEntries.push({ name, refPath, synonyms: COMPONENT_SYNONYMS[name]?.synonyms });
   }
 
   const systemEntries = [];

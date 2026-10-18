@@ -71,41 +71,41 @@ lion forms are built from composable form controls (`lion-input`, `lion-select`,
 
 <!-- lion-ui:components:start -->
 
-- [`Accordion`](references/components/accordion.md)
-- [`Button`](references/components/button.md)
-- [`Calendar`](references/components/calendar.md)
-- [`Checkbox Group`](references/components/checkbox-group.md)
-- [`Collapsible`](references/components/collapsible.md)
-- [`Combobox`](references/components/combobox.md)
-- [`Dialog`](references/components/dialog.md)
-- [`Drawer`](references/components/drawer.md)
-- [`Fieldset`](references/components/fieldset.md)
-- [`Form`](references/components/form.md)
+- [`Accordion`](references/components/accordion.md) — accordion, expandable headings, disclosure sections
+- [`Button`](references/components/button.md) — button, action button
+- [`Calendar`](references/components/calendar.md) — calendar, date grid
+- [`Checkbox Group`](references/components/checkbox-group.md) — checkbox group, multiple choices
+- [`Collapsible`](references/components/collapsible.md) — collapsible, expandable section
+- [`Combobox`](references/components/combobox.md) — combobox, autocomplete, dropdown input
+- [`Dialog`](references/components/dialog.md) — dialog, modal, popup
+- [`Drawer`](references/components/drawer.md) — drawer, side panel, off-canvas
+- [`Fieldset`](references/components/fieldset.md) — fieldset, field group
+- [`Form`](references/components/form.md) — form, form wrapper
 - [`Icon`](references/components/icon.md)
-- [`Input`](references/components/input.md)
-- [`Input Amount`](references/components/input-amount.md)
-- [`Input Amount Dropdown`](references/components/input-amount-dropdown.md)
-- [`Input Date`](references/components/input-date.md)
-- [`Input Datepicker`](references/components/input-datepicker.md)
-- [`Input Email`](references/components/input-email.md)
-- [`Input File`](references/components/input-file.md)
-- [`Input Iban`](references/components/input-iban.md)
-- [`Input Range`](references/components/input-range.md)
-- [`Input Stepper`](references/components/input-stepper.md)
-- [`Input Tel`](references/components/input-tel.md)
-- [`Input Tel Dropdown`](references/components/input-tel-dropdown.md)
-- [`Listbox`](references/components/listbox.md)
-- [`Menu`](references/components/menu.md)
-- [`Pagination`](references/components/pagination.md)
-- [`Progress Indicator`](references/components/progress-indicator.md)
-- [`Radio Group`](references/components/radio-group.md)
-- [`Select`](references/components/select.md)
-- [`Select Rich`](references/components/select-rich.md)
-- [`Steps`](references/components/steps.md)
-- [`Switch`](references/components/switch.md)
-- [`Tabs`](references/components/tabs.md)
-- [`Textarea`](references/components/textarea.md)
-- [`Tooltip`](references/components/tooltip.md)
+- [`Input`](references/components/input.md) — input, text field
+- [`Input Amount`](references/components/input-amount.md) — amount input, money field
+- [`Input Amount Dropdown`](references/components/input-amount-dropdown.md) — amount with currency, currency amount input
+- [`Input Date`](references/components/input-date.md) — date input, date field
+- [`Input Datepicker`](references/components/input-datepicker.md) — datepicker, date picker field
+- [`Input Email`](references/components/input-email.md) — email input, email field
+- [`Input File`](references/components/input-file.md) — file input, file picker, upload
+- [`Input Iban`](references/components/input-iban.md) — IBAN field, bank account number input
+- [`Input Range`](references/components/input-range.md) — range slider, slider
+- [`Input Stepper`](references/components/input-stepper.md) — stepper, number stepper
+- [`Input Tel`](references/components/input-tel.md) — phone input, tel field
+- [`Input Tel Dropdown`](references/components/input-tel-dropdown.md) — phone with country code, tel dropdown
+- [`Listbox`](references/components/listbox.md) — listbox, option list
+- [`Menu`](references/components/menu.md) — menu, dropdown menu
+- [`Pagination`](references/components/pagination.md) — pagination, pager, page numbers
+- [`Progress Indicator`](references/components/progress-indicator.md) — progress bar, spinner, loading indicator
+- [`Radio Group`](references/components/radio-group.md) — radio group, single choice
+- [`Select`](references/components/select.md) — select, dropdown
+- [`Select Rich`](references/components/select-rich.md) — rich select, custom dropdown
+- [`Steps`](references/components/steps.md) — steps, step indicator, wizard steps
+- [`Switch`](references/components/switch.md) — switch, toggle
+- [`Tabs`](references/components/tabs.md) — tabs, tab panel
+- [`Textarea`](references/components/textarea.md) — textarea, multi-line input
+- [`Tooltip`](references/components/tooltip.md) — tooltip, hint popup
 
 <!-- lion-ui:components:end -->
 
