@@ -323,10 +323,10 @@ export function createSystemScenario(
     description: `Minimal example exercising the "${systemName}" system.`,
     prompt: [
       `Add a minimal example to \`${SYSTEM_TARGET_FILE}\` that uses the "${systemName}" system of`,
-      'Create that file only — nothing else.',
       `@lion/ui (imported from '${entrypointFor(systemName)}'). Follow the conventions in the`,
       'skill: import through the documented @lion/ui entrypoints, never from @lion/* or a deep',
       'import into @lion/ui internals.',
+      'Create that file only — nothing else.',
     ].join(' '),
     targetFile: SYSTEM_TARGET_FILE,
     files: {
