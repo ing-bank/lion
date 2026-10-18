@@ -276,6 +276,21 @@ export function createComponentScenario(
     file: targetFile,
     description: 'imports nothing it does not use',
   });
+  // Consumption is measured, not prompted: the slimmer prompt no longer says how to consume, so the
+  // harness must still pin it. A subclass is a supported path but out of scope here, and a global
+  // define entrypoint opts out of the host's scoped registry.
+  checks.push({
+    type: 'notMatches',
+    file: targetFile,
+    pattern: '@lion/ui/define/',
+    description: 'does not use a global define entrypoint',
+  });
+  checks.push({
+    type: 'notMatches',
+    file: targetFile,
+    pattern: 'extends\\s+Lion[A-Za-z]*',
+    description: 'consumes lion rather than subclassing it',
+  });
   checks.push(noExtraFiles);
 
   const scenario: TestScenario = {
@@ -285,11 +300,7 @@ export function createComponentScenario(
     prompt: [
       `Create \`${targetFile}\`. Create that file only — nothing else.`,
       `It must export a class named \`${producedClass}\`.`,
-      `Goal: a component that renders the documented \`<${tagName}>\` element in its own template.`,
-      'Compose that element — do not subclass it.',
-      'Use it the way its own documentation shows: include whatever content it needs in order to work.',
-      'Follow the conventions in the skill: import everything through the documented @lion/ui',
-      'entrypoints, and give the component its own scoped element registry.',
+      `Goal: a component that renders a \`<${tagName}>\` element.`,
     ].join(' '),
     targetFile,
     files: {
@@ -322,10 +333,7 @@ export function createSystemScenario(
     kind: 'system',
     description: `Minimal example exercising the "${systemName}" system.`,
     prompt: [
-      `Add a minimal example to \`${SYSTEM_TARGET_FILE}\` that uses the "${systemName}" system of`,
-      `@lion/ui (imported from '${entrypointFor(systemName)}'). Follow the conventions in the`,
-      'skill: import through the documented @lion/ui entrypoints, never from @lion/* or a deep',
-      'import into @lion/ui internals.',
+      `Add a minimal example to \`${SYSTEM_TARGET_FILE}\` that uses the "${systemName}" system of @lion/ui.`,
       'Create that file only — nothing else.',
     ].join(' '),
     targetFile: SYSTEM_TARGET_FILE,
@@ -339,6 +347,12 @@ export function createSystemScenario(
         type: 'noUnusedImports',
         file: SYSTEM_TARGET_FILE,
         description: 'imports nothing it does not use',
+      },
+      {
+        type: 'notMatches',
+        file: SYSTEM_TARGET_FILE,
+        pattern: '@lion/ui/define/',
+        description: 'does not use a global define entrypoint',
       },
       noExtraFiles,
     ],

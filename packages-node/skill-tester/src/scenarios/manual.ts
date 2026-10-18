@@ -20,10 +20,9 @@ export const nativeFormToLionFormScenario: TestScenario = {
   kind: 'integration',
   description: 'Migrate a native form to lion-form with a lion-form submit handler.',
   prompt: [
-    'Rewrite `src/login-form.js` so the form is wrapped in `lion-form`, keeping the native `<form>`',
-    'element that `lion-form` slots into it, and so it uses `@lion/ui` form controls instead of',
-    'native `<input>` elements. Keep the same fields (email + password) and the same submit behaviour.',
-    'Rewrite that file only — nothing else.',
+    'Rewrite `src/login-form.js` so the form is wrapped in `lion-form` and uses `@lion/ui` form',
+    'controls instead of native `<input>` elements. Keep the same fields (email + password) and the',
+    'same submit behaviour. Rewrite that file only — nothing else.',
   ].join(' '),
   targetFile: 'src/login-form.js',
   files: {
@@ -102,10 +101,9 @@ export const ibanFieldScenario: TestScenario = {
   description: 'Repair an IBAN field: deep import, native input, no form registration.',
   prompt: [
     'Repair `src/iban-field.js`. It renders a native `<input>` and reaches into `@lion/ui`',
-    'internals with a deep import. Make it render a `lion-input-iban` inside a `lion-form` that has',
-    'a native `<form>` slotted into it, registering the field on the form under the name `account`.',
-    'Keep the class name `IbanField` and its named export, and import only through the documented',
-    '`@lion/ui` entrypoints.',
+    'internals with a deep import. Make it render a `lion-input-iban` inside a `lion-form`,',
+    'registering the field on the form under the name `account`. Keep the class name `IbanField`',
+    'and its named export. Rewrite only that file — nothing else.',
   ].join(' '),
   targetFile: 'src/iban-field.js',
   files: {

@@ -123,9 +123,10 @@ function scoreExample(
   return scoreScenario({ sandboxRoot: root, checks: scenario.checks });
 }
 
-test('the define entrypoint is accepted, because the skill tells you to prefer it', () => {
-  // Regression: a real run scored 80% only because it used '@lion/ui/define/lion-x.js',
-  // which the skill documents as the preferred entrypoint.
+test('the define entrypoint is rejected: global registration is not the skill path', () => {
+  // The skill now says never to use a @lion/ui/define entrypoint: it registers a tag globally, opting
+  // out of the host's scoped registry. A viaDefine answer must therefore fail even though the define
+  // entrypoint exists on disk and the import check still accepts it as an alternative.
   const defineEntrypoints = discoverDefineEntrypoints(repoRoot);
   assert.ok(defineEntrypoints.includes('button'), 'button should ship a define entrypoint');
   assert.ok(defineEntrypoints.includes('form'), 'form should ship a define entrypoint');
@@ -144,7 +145,13 @@ test('the define entrypoint is accepted, because the skill tells you to prefer i
     '',
   ].join('\n');
   const scored = scoreExample(viaDefine, scenario);
-  assert.equal(scored.score, 1, `define entrypoint was rejected: ${JSON.stringify(scored.checks)}`);
+  assert.notEqual(scored.score, 1, `define entrypoint got full marks: ${JSON.stringify(scored.checks)}`);
+  assert.ok(
+    scored.checks.some(
+      check => check.description.includes('global define entrypoint') && !check.passed,
+    ),
+    'the define ban itself must be the reason it fails',
+  );
 });
 
 test('a direct @lion/<name> import is still rejected', () => {
