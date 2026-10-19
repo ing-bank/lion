@@ -9,11 +9,12 @@
  * modifier - every consumer that does not set `skipLibCheck` reports
  * `TS7008: Member '__x' implicitly has an 'any' type`.
  *
- * The emitted JSDoc keeps the intent, so this script re-attaches the modifier that TS 7 left off.
- * It exists only until the emit is fixed upstream; see
+ * This build-only script normalizes emitted declarations before the consumer checks and packing.
+ * The emitted JSDoc keeps the intent, so restoreVisibility re-attaches the modifier TS 7 left off.
+ * That workaround is needed until the emit is fixed upstream; see
  * https://github.com/microsoft/TypeScript/issues/64628 (report filed with a minimal repro and
- * the 4.7.4/4.9.5/5.9.3/6.0.3 vs 7.0.2 comparison), after which this file and its wiring in
- * package.json (`scripts.types-restore-visibility`, `wireit.types.command`) can be deleted.
+ * the 4.7.4/4.9.5/5.9.3/6.0.3 vs 7.0.2 comparison). Remove only that transform once fixed;
+ * the legacy slot-accessor normalization below has a separate purpose.
  *
  * Two guards, both of them found by measurement rather than by reading:
  *  - a single-line `/** @private *\/` block counts too (a multi-line-only matcher silently
@@ -28,9 +29,9 @@
 import fs from 'fs';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { globby } from 'globby';
-import { fileURLToPath } from 'url';
+import url from 'url';
 
-const packageRoot = fileURLToPath(new URL('../', import.meta.url));
+const packageRoot = url.fileURLToPath(new URL('../', import.meta.url));
 
 // class body member: indentation, optional existing modifiers, a name, then the rest of the line
 const MEMBER =
@@ -117,6 +118,17 @@ function restoreVisibility(contents) {
   return { result: result.join('\n'), restored };
 }
 
+// TS 4 omitted this redundant override; TS 7 emits it. Intersecting the resulting
+// class with SlotHost in a consumer mixin makes TS 4 collapse the two getters into
+// a property (TS2611 in subclasses). Inherit the identical SlotHost signature.
+function restoreSlotAccessor(contents) {
+  const redundantOverride = '    /** @type {SlotsMap} */\n    get slots(): SlotsMap;';
+  if (contents.includes('get slots()') && !contents.includes(redundantOverride)) {
+    throw new Error('Unexpected LionSelectRich slots declaration; review accessor normalization');
+  }
+  return contents.replace(redundantOverride, '\n');
+}
+
 async function main() {
   const fileNames = await globby('dist-types/**/*.d.ts', { cwd: packageRoot });
   let restored = 0;
@@ -125,10 +137,19 @@ async function main() {
   // `@private`/`@protected` are .js-only constructs: in a .ts source they are just doc tags and
   // TS 4 never emitted a modifier for them (see FormatMixinTypes.d.ts -> FormatMixinTypes.ts),
   // so declarations coming from TypeScript sources are left alone.
-  const jsSourced = fileNames.filter(fileName => {
-    const source = `${packageRoot}${fileName.replace(/^dist-types\//, '').replace(/\.d\.ts$/, '.js')}`;
-    return fs.existsSync(source);
-  });
+  const hasJsSource = await Promise.all(
+    fileNames.map(async fileName => {
+      const source = `${packageRoot}${fileName.replace(/^dist-types\//, '').replace(/\.d\.ts$/, '.js')}`;
+      try {
+        await fs.promises.access(source);
+        return true;
+      } catch (error) {
+        if (error.code === 'ENOENT') return false;
+        throw error;
+      }
+    }),
+  );
+  const jsSourced = fileNames.filter((fileName, index) => hasJsSource[index]);
 
   for (const fileName of jsSourced) {
     // eslint-disable-next-line no-await-in-loop
@@ -147,8 +168,18 @@ async function main() {
     }
   }
 
+  const declaration = `${packageRoot}dist-types/components/select-rich/src/LionSelectRich.d.ts`;
+  const contents = await fs.promises.readFile(declaration, 'utf8');
+  const normalized = restoreSlotAccessor(contents);
+  if (restoreSlotAccessor(normalized) !== normalized) {
+    throw new Error('Slot accessor normalization is not idempotent');
+  }
+  if (normalized !== contents) {
+    await fs.promises.writeFile(declaration, normalized, 'utf8');
+  }
+
   // eslint-disable-next-line no-console
-  console.log(`types-restore-visibility: restored ${restored} modifiers in ${touched} files`);
+  console.log(`postprocess-declarations: restored ${restored} modifiers in ${touched} files`);
 }
 
-main();
+await main();

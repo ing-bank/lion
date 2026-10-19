@@ -311,6 +311,34 @@ describe('OverlayController', () => {
 
   // TODO: Add more teardown feature tests
   describe('Teardown', () => {
+    it('allows removing content after teardown without leaving nodes in the DOM', async () => {
+      const contentNode = /** @type {HTMLElement} */ (fixtureSync('<div>notification</div>'));
+      const ctrl = new OverlayController({ placementMode: 'global', contentNode });
+      const wrapper = ctrl.content;
+      await ctrl.show();
+
+      ctrl.teardown();
+      ctrl.content.remove();
+
+      expect(contentNode.isConnected).to.be.false;
+      expect(wrapper.isConnected).to.be.false;
+      expect(isRegisteredOnManager(ctrl)).to.be.false;
+      ctrl.teardown();
+    });
+
+    it('recreates wrappers after teardown while keeping content available', () => {
+      const contentNode = /** @type {HTMLElement} */ (fixtureSync('<div>notification</div>'));
+      const ctrl = new OverlayController({ placementMode: 'global', contentNode });
+      const wrapper = ctrl.content;
+
+      ctrl.teardown();
+      expect(ctrl.content).to.equal(contentNode);
+      ctrl.updateConfig({ placementMode: 'global', contentNode });
+
+      expect(ctrl.content).not.to.equal(wrapper);
+      expect(ctrl.content.contains(contentNode)).to.be.true;
+    });
+
     it('unregisters itself from overlayManager', async () => {
       const ctrl = new OverlayController(withGlobalTestConfig());
 
