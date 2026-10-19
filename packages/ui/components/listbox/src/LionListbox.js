@@ -21,8 +21,8 @@ export class LionListbox extends ListboxMixin(
   }
 
   /**
+   * Public to preserve the Lion 0.21.1 extension contract.
    * @configure FocusMixin
-   * @protected
    * @returns {HTMLElement}
    */
   get _focusableNode() {
