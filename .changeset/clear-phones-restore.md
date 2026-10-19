@@ -1,9 +1,8 @@
 ---
-'@lion/ui': major
+'@lion/ui': minor
 ---
 
-**Breaking change for telephone test helpers:** `restorePhoneUtilManager()` now restores the
-real `PhoneUtilManager.isLoaded` getter and original `loadComplete` promise. Its public name and
+`restorePhoneUtilManager()` now restores the real `PhoneUtilManager.isLoaded` getter and original `loadComplete` promise. Its public name and
 zero-argument signature are unchanged. Previously it restored a boolean captured at module import,
 often `false`, accidentally leaving real parsing and formatting disabled after mock cleanup.
 
