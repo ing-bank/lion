@@ -6,6 +6,12 @@ import { LionOption } from '@lion/ui/listbox.js';
 import { ValidationExtension } from './consumer-mixins.js';
 import { Constructor } from '@open-wc/dedupe-mixin';
 import { SlotHost } from '@lion/ui/types/core.js';
+import { restorePhoneUtilManager } from '@lion/ui/input-tel-test-helpers.js';
+
+type Assert<T extends true> = T;
+type RestoreHelperHasNoParameters = Assert<
+  Parameters<typeof restorePhoneUtilManager> extends [] ? true : false
+>;
 
 export function focusCombobox(combobox: LionCombobox): void {
   combobox.focus();
