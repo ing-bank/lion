@@ -15,7 +15,11 @@ function round(value, decimals) {
   if (typeof decimals === 'undefined' || numberContainsExponent) {
     return Number(value);
   }
-  return Number(`${Math.round(Number(`${value}e${decimals}`))}e-${decimals}`);
+  const shifted = Math.round(Number(`${value}e${decimals}`));
+  if (shifted.toString().includes('e')) {
+    return Number(value);
+  }
+  return Number(`${shifted}e-${decimals}`);
 }
 
 /**
