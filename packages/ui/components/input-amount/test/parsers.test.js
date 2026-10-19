@@ -82,4 +82,14 @@ describe('parseAmount()', async () => {
     expect(parseAmount('−15.00')).to.equal(-15);
     expect(parseAmount('-333.33')).to.equal(-333.33);
   });
+
+  it('does not return NaN for big numbers that turn into exponent notation when rounding', async () => {
+    expect(parseAmount('11111111111111111111', { currency: 'EUR' })).to.equal(
+      Number(11111111111111111111n),
+    );
+
+    expect(parseAmount('111111111111111111111', { currency: 'EUR' })).to.equal(
+      Number(111111111111111111111n),
+    );
+  });
 });
