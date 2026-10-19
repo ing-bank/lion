@@ -38,6 +38,14 @@ export const OverlayMixinImplementation = superclass => {
 
     #hasSetup = false;
 
+    /**
+     * The value the controller last mirrored onto us. While `_setOpenedWithoutPropertyEffects` has
+     * the sync block active we only skip the update if `opened` still equals this value: a consumer
+     * that changed `opened` itself in the same update cycle must still be mirrored back.
+     * @private
+     */
+    __ctrlSetValue = /** @type {boolean | undefined} */ (undefined);
+
     constructor() {
       super();
       /**
@@ -144,8 +152,14 @@ export const OverlayMixinImplementation = superclass => {
     updated(changedProperties) {
       super.updated(changedProperties);
 
-      if (changedProperties.has('opened') && this._overlayCtrl && !this.__blockSyncToOverlayCtrl) {
-        this.__syncToOverlayController();
+      if (changedProperties.has('opened') && this._overlayCtrl) {
+        const isEchoOfController =
+          this.__blockSyncToOverlayCtrl && this.opened === this.__ctrlSetValue;
+        if (!isEchoOfController) {
+          this.__syncToOverlayController();
+        } else {
+          this.__ctrlSetValue = undefined;
+        }
       }
     }
 
@@ -368,11 +382,13 @@ export const OverlayMixinImplementation = superclass => {
     /** @private */
     __setupSyncFromOverlayController() {
       this.__onOverlayCtrlShow = () => {
-        this.opened = true;
+        this.__ctrlSetValue = true;
+        this._setOpenedWithoutPropertyEffects(true);
       };
 
       this.__onOverlayCtrlHide = () => {
-        this.opened = false;
+        this.__ctrlSetValue = false;
+        this._setOpenedWithoutPropertyEffects(false);
       };
 
       /**

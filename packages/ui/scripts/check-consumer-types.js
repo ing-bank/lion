@@ -37,8 +37,8 @@ const legacyTsc = module
   .resolve('typescript/bin/tsc');
 
 if (!fs.existsSync(distTypesDir)) {
-  console.error(
-    `[consumer-types] no ${path.relative(repoRoot, distTypesDir)} yet - build the declarations first (npm run types)`,
+  process.stderr.write(
+    `[consumer-types] no ${path.relative(repoRoot, distTypesDir)} yet - build the declarations first (npm run types)\n`,
   );
   process.exit(1);
 }
@@ -60,8 +60,8 @@ const specifiers = walk(exportsDir)
 /** module shape of the exports map still has to be a wildcard we understand */
 const wildcard = pkgJson.exports?.['./*'];
 if (!wildcard || !/^\.\/dist-types\/exports\/\*$/.test(wildcard.types || '')) {
-  console.error(
-    `[consumer-types] unexpected exports map - this gate assumes "./*" -> "./dist-types/exports/*"`,
+  process.stderr.write(
+    `[consumer-types] unexpected exports map - this gate assumes "./*" -> "./dist-types/exports/*"\n`,
   );
   process.exit(1);
 }
@@ -137,8 +137,8 @@ try {
   );
 
   const tsc = path.join(rootModules, 'typescript', 'bin', 'tsc');
-  console.log(
-    `[consumer-types] compiling ${specifiers.length} entry points with skipLibCheck: false`,
+  process.stdout.write(
+    `[consumer-types] compiling ${specifiers.length} entry points with skipLibCheck: false\n`,
   );
   const modern = await execFile(process.execPath, [tsc, '-p', fixture]);
   if (modern.stdout) process.stdout.write(modern.stdout);
@@ -149,21 +149,21 @@ try {
       include: ['consumer-extensions.ts'],
     })}\n`,
   );
-  console.log('[consumer-types] checking subclass extensions with TypeScript 4.7.4');
+  process.stdout.write('[consumer-types] checking subclass extensions with TypeScript 4.7.4\n');
   const legacy = await execFile(process.execPath, [
     legacyTsc,
     '-p',
     path.join(fixture, 'tsconfig-extensions.json'),
   ]);
   if (legacy.stdout) process.stdout.write(legacy.stdout);
-  console.log(
-    '[consumer-types] 0 errors - entry points and subclass extensions are consumer-clean',
+  process.stdout.write(
+    '[consumer-types] 0 errors - entry points and subclass extensions are consumer-clean\n',
   );
 } catch (error) {
   if (error.stdout) process.stderr.write(error.stdout);
   if (error.stderr) process.stderr.write(error.stderr);
-  console.error(
-    `[consumer-types] a consumer with \`skipLibCheck: false\` cannot compile these declarations (${error.code ?? 1})`,
+  process.stderr.write(
+    `[consumer-types] a consumer with \`skipLibCheck: false\` cannot compile these declarations (${error.code ?? 1})\n`,
   );
   process.exitCode = 1;
 } finally {

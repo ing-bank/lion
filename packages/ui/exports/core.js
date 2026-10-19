@@ -5,3 +5,6 @@ export { SlotMixin } from '../components/core/src/SlotMixin.js';
 export { browserDetection } from '../components/core/src/browserDetection.js';
 export { EventTargetShim } from '../components/core/src/EventTargetShim.js';
 export { uuid } from '../components/core/src/uuid.js';
+export { isDisabled } from '../components/core/src/isDisabled.js';
+export { htmlFragment } from '../components/core/src/htmlFragment.js';
+export { cssSheet } from '../components/core/src/cssSheet.js';

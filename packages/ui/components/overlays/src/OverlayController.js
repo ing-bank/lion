@@ -322,7 +322,7 @@ export class OverlayController extends EventTarget {
 
   /**
    * Determines the connection point in DOM (body vs next to invoker).
-   * @type {'global' | 'local' | 'custom' | undefined}
+   * @type {'global' | 'local' | 'custom' | 'none' | undefined}
    */
   get placementMode() {
     return this.config?.placementMode;
