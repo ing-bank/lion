@@ -102,6 +102,10 @@ test(
       assert.deepEqual(packed.bundled, []);
       const files = new Set(packed.files.map(file => file.path));
       assert(
+        ![...files].some(file => file.includes('restorePhoneUtilManagerLive')),
+        'Live-state cleanup must remain test-only, including generated declarations',
+      );
+      assert(
         ![...files].some(file => /(^|\/)scripts\//.test(file)),
         'Build-only scripts must not be published',
       );
@@ -135,6 +139,22 @@ test(
         fixture,
       );
       const installedRoot = path.join(fixture, 'node_modules/@lion/ui');
+      const helperDeclaration = await fs.readFile(
+        path.join(
+          installedRoot,
+          'dist-types/components/input-tel/test-helpers/mockPhoneUtilManager.d.ts',
+        ),
+        'utf8',
+      );
+      assert.match(helperDeclaration, /function restorePhoneUtilManager\(\): void;/);
+      for (const suite of [
+        'components/input-tel/test-suites/LionInputTel.suite.js',
+        'components/input-tel-dropdown/test-suites/LionInputTelDropdown.suite.js',
+        'exports/input-tel-test-helpers.js',
+      ]) {
+        const source = await fs.readFile(path.join(installedRoot, suite), 'utf8');
+        assert.doesNotMatch(source, /restorePhoneUtilManagerLive|loadedState/);
+      }
       const manifest = JSON.parse(
         await fs.readFile(path.join(installedRoot, 'package.json'), 'utf8'),
       );
