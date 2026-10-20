@@ -15,7 +15,7 @@ Its implementation is based on the following Design pattern:
 <https://www.w3.org/TR/wai-aria-practices/examples/listbox/listbox-collapsible.html>
 
 ```js script
-import { LitElement, html } from '@mdjs/mdjs-preview';
+import { LitElement, html } from 'lit';
 import '@lion/ui/define/lion-select-rich.js';
 import '@lion/ui/define/lion-option.js';
 ```
@@ -55,7 +55,7 @@ import '@lion/ui/define/lion-option.js';
 ## Select Rich: Use Cases
 
 ```js script
-import { LitElement, html } from '@mdjs/mdjs-preview';
+import { LitElement, html } from 'lit';
 import '@lion/ui/define/lion-select-rich.js';
 import '@lion/ui/define/lion-option.js';
 ```
@@ -433,11 +433,10 @@ class IntlSelectInvoker extends LionSelectInvoker {
 ## Select Rich: Examples
 
 ```js script
-import { html } from '@mdjs/mdjs-preview';
+import { html } from 'lit';
 import { repeat } from 'lit/directives/repeat.js';
 import '@lion/ui/define/lion-select-rich.js';
-import './src/intl-select-rich.js';
-import { regionMetaList } from './src/regionMetaList.js';
+
 ```
 
 ### Select Rich International

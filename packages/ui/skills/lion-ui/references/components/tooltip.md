@@ -8,7 +8,7 @@ A web component used for basic popups on hover.
 Its purpose is to show content appearing when the user hovers over an invoker element with the cursor or with the keyboard, or if the invoker element is focused.
 
 ```js script
-import { html } from '@mdjs/mdjs-preview';
+import { html } from 'lit';
 import '@lion/ui/define/lion-tooltip.js';
 ```
 
@@ -52,7 +52,7 @@ import '@lion/ui/define/lion-tooltip.js';
 ## Tooltip: Use Cases
 
 ```js script
-import { css, html } from '@mdjs/mdjs-preview';
+import { css, html } from 'lit';
 import { LionTooltip } from '@lion/ui/tooltip.js';
 import '@lion/ui/define/lion-tooltip.js';
 ```
@@ -318,7 +318,7 @@ export const customArrow = () => {
 ## Tooltip: Examples
 
 ```js script
-import { html } from '@mdjs/mdjs-preview';
+import { html } from 'lit';
 import '@lion/ui/define/lion-tooltip.js';
 ```
 

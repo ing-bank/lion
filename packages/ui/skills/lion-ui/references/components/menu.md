@@ -6,7 +6,6 @@
 
 ```js script
 import { html } from 'lit';
-import './src/DemoNavigationBar.js';
 
 // N.B. data structure designed to be compatible with existing extension layer
 // TODO: maybe refactor api and bridge
@@ -270,9 +269,7 @@ import { html } from 'lit';
 import '@lion/ui/define/lion-item.js';
 import '@lion/ui/define/lion-menu.js';
 import '@lion/ui/define/lion-menuitem.js';
-import './src/DemoTree.js';
-import './src/DemoToolbar.js';
-import './src/DemoSpinButton.js';
+
 import { applyMenuDemoStyles } from './applyMenuDemoStyles.js';
 
 applyMenuDemoStyles();

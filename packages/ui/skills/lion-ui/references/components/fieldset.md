@@ -9,7 +9,7 @@
 ## Fieldset: Overview
 
 ```js script
-import { html } from '@mdjs/mdjs-preview';
+import { html } from 'lit';
 
 import '@lion/ui/define/lion-input.js';
 import '@lion/ui/define/lion-fieldset.js';
@@ -61,7 +61,7 @@ import '@lion/ui/define/lion-fieldset.js';
 ## Fieldset: Use Cases
 
 ```js script
-import { html } from '@mdjs/mdjs-preview';
+import { html } from 'lit';
 import { localize } from '@lion/ui/localize.js';
 import { MinLength, Validator, Required } from '@lion/ui/form-core.js';
 

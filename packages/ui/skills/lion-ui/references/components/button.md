@@ -11,7 +11,7 @@
 A button web component that is easily stylable and accessible.
 
 ```js script
-import { html } from '@mdjs/mdjs-preview';
+import { html } from 'lit';
 import '@lion/ui/define/lion-button.js';
 ```
 
@@ -42,7 +42,7 @@ import '@lion/ui/define/lion-button.js';
 ## Button: Use Cases
 
 ```js script
-import { html } from '@mdjs/mdjs-preview';
+import { html } from 'lit';
 import '@lion/ui/define/lion-button.js';
 import '@lion/ui/define/lion-button-reset.js';
 import '@lion/ui/define/lion-button-submit.js';
@@ -154,9 +154,9 @@ whose `type` property is synchronized with the type of the `<lion-button-submit>
 ## Button: Examples
 
 ```js script
-import { html } from '@mdjs/mdjs-preview';
+import { html } from 'lit';
 import '@lion/ui/define/lion-button.js';
-import iconSvg from './src/icon.svg.js';
+
 ```
 
 ### Icon button
@@ -187,7 +187,7 @@ export const mainAndIconButton = () => html`
 ## Button: Extensions
 
 ```js script
-import { html } from '@mdjs/mdjs-preview';
+import { html } from 'lit';
 import './assets/bootstrap-button.js';
 ```
 

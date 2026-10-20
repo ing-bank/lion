@@ -7,7 +7,7 @@
 A web component for displaying icons.
 
 ```js script
-import { html } from '@mdjs/mdjs-preview';
+import { html } from 'lit';
 import { icons } from '@lion/ui/icon.js';
 import '@lion/ui/define/lion-icon.js';
 
@@ -48,7 +48,7 @@ import '@lion/ui/define/lion-icon.js';
 ## Icon: Use Cases
 
 ```js script
-import { html } from '@mdjs/mdjs-preview';
+import { html } from 'lit';
 import { icons } from '@lion/ui/icon.js';
 import './assets/iconset-bugs.js';
 import './assets/iconset-misc.js';

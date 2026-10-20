@@ -5,7 +5,7 @@
 ## Calendar: Use Cases
 
 ```js script
-import { html, css } from '@mdjs/mdjs-preview';
+import { html, css } from 'lit';
 import '@lion/ui/define/lion-calendar.js';
 ```
 
@@ -241,7 +241,7 @@ export const findingEnabledDates = () => {
 A reusable and accessible calendar view web component.
 
 ```js script
-import { html, css } from '@mdjs/mdjs-preview';
+import { html, css } from 'lit';
 import '@lion/ui/define/lion-calendar.js';
 ```
 

@@ -58,7 +58,7 @@ localize.locale = 'es-ES';
 ### As a function
 
 ```js script
-import { html, render, LitElement } from '@mdjs/mdjs-preview';
+import { html, render, LitElement } from 'lit';
 import { localize, formatNumber, formatDate, LocalizeMixin } from '@lion/ui/localize.js';
 import '@lion/ui/define-helpers/sb-locale-switcher.js';
 ```
@@ -196,7 +196,7 @@ With the `formatNumber` you can safely display a number for all languages.
 The input value is `1234.56`.
 
 ```js script
-import { html, css } from '@mdjs/mdjs-preview';
+import { html, css } from 'lit';
 import { formatNumber, formatNumberToParts } from '@lion/ui/localize.js';
 import allLocales from './assets/all-locales.js';
 
@@ -416,7 +416,7 @@ With the `formatDate` you can safely display dates for all languages.
 The input value is `new Date('1987/05/12')`.
 
 ```js script
-import { css, html } from '@mdjs/mdjs-preview';
+import { css, html } from 'lit';
 import { formatNumber, formatNumberToParts, formatDate } from '@lion/ui/localize.js';
 import allLocales from './assets/all-locales.js';
 

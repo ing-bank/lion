@@ -8,10 +8,9 @@ A web component that wraps a modal dialog controller.
 Its purpose is to make it easy to use our Overlay System declaratively.
 
 ```js script
-import { html } from '@mdjs/mdjs-preview';
+import { html } from 'lit';
 import '@lion/ui/define/lion-dialog.js';
 
-import { demoStyle } from './src/demoStyle.js';
 ```
 
 ```js preview-story
@@ -70,12 +69,9 @@ The `config` property uses a setter to merge the passed configuration with the c
 Its purpose is to make it easy to use our Overlay System declaratively.
 
 ```js script
-import { html } from '@mdjs/mdjs-preview';
+import { html } from 'lit';
 import '@lion/ui/define/lion-dialog.js';
-import { demoStyle } from './src/demoStyle.js';
-import './src/styled-dialog-content.js';
-import './src/slots-dialog-content.js';
-import './src/external-dialog.js';
+
 ```
 
 ```html

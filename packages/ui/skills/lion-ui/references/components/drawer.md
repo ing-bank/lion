@@ -13,11 +13,10 @@ drawer's invoker, `headline` for the optional headline and `content` for the con
 Through the `position` property, the drawer can be placed on the `top`, `left` or `right` of the viewport.
 
 ```js script
-import { html } from '@mdjs/mdjs-preview';
+import { html } from 'lit';
 import '@lion/ui/define/lion-drawer.js';
 import '@lion/ui/define/lion-icon.js';
 import { icons } from '@lion/ui/icon.js';
-import { demoStyle } from './src/demoStyle.js';
 
 icons.addIconResolver('lion', (iconset, name) => {
   switch (iconset) {
@@ -76,11 +75,10 @@ import '@lion/ui/define/lion-drawer.js';
 ## Drawer: Use Cases
 
 ```js script
-import { html } from '@mdjs/mdjs-preview';
+import { html } from 'lit';
 import { icons } from '@lion/ui/icon.js';
 import '@lion/ui/define/lion-drawer.js';
 import '@lion/ui/define/lion-icon.js';
-import { demoStyle } from './src/demoStyle.js';
 
 icons.addIconResolver('lion', (iconset, name) => {
   switch (iconset) {

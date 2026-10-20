@@ -7,7 +7,7 @@
 A web component that can be used to break a single goal down into dependable sub-tasks.
 
 ```js script
-import { html } from '@mdjs/mdjs-preview';
+import { html } from 'lit';
 import '@lion/ui/define/lion-steps.js';
 import '@lion/ui/define/lion-step.js';
 ```
@@ -73,7 +73,7 @@ import '@lion/ui/define/lion-step.js';
 ## Steps: Use Cases
 
 ```js script
-import { html } from '@mdjs/mdjs-preview';
+import { html } from 'lit';
 import '@lion/ui/define/lion-steps.js';
 import '@lion/ui/define/lion-step.js';
 ```

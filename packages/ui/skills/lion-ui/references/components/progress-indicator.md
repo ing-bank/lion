@@ -7,7 +7,7 @@
 A web component that implements accessibility requirements for progress indicators.
 
 ```js script
-import { html } from '@mdjs/mdjs-preview';
+import { html } from 'lit';
 import '@lion/ui/define/lion-progress-indicator.js';
 ```
 
@@ -44,7 +44,7 @@ import '@lion/ui/define/lion-progress-indicator.js';
 ## Progress Indicator: Examples
 
 ```js script
-import { html } from '@mdjs/mdjs-preview';
+import { html } from 'lit';
 import '@lion/ui/define/lion-progress-indicator.js';
 import './assets/my-indeterminate-progress-spinner.js';
 import './assets/my-determinate-progress-bar.js';

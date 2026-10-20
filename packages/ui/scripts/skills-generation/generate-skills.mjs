@@ -3,6 +3,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import matter from 'gray-matter';
 import { COMPONENT_SYNONYMS, SYSTEM_SYNONYMS } from '../../../../scripts/lib/component-synonyms.mjs';
+import { stripDocNoise } from '../../../../scripts/lib/strip-doc-noise.mjs';
 import {
   computeApiTablesByDocGroup,
   findClassDeclaration,
@@ -103,7 +104,7 @@ function mergeDocPages(dirPath) {
     const raw = fs.readFileSync(path.join(dirPath, file), 'utf8');
     const parsed = matter(raw);
     const order = parsed.data?.eleventyNavigation?.order ?? 999;
-    return { order, content: parsed.content.trim() };
+    return { order, content: stripDocNoise(parsed.content).trim() };
   });
 
   pages.sort((a, b) => a.order - b.order);
@@ -164,7 +165,7 @@ function writeSinglePageReferenceFile({ name, sourceFilePath }) {
   const relativeSource = path.relative(repoRoot, sourceFilePath);
   const parsed = matter(fs.readFileSync(sourceFilePath, 'utf8'));
   // The page's own `# Title` becomes `## Title` so the file keeps a single top-level heading.
-  const body = shiftHeadings(parsed.content.trim(), 1);
+  const body = shiftHeadings(stripDocNoise(parsed.content).trim(), 1);
 
   const fileContent = [
     `# ${toTitleCase(name)}`,

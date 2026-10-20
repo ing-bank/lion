@@ -137,7 +137,7 @@ Both methods do so by calling `reset|resetGroup` or `clear|clearGroup` on each `
 ## Form: Formatting and Parsing
 
 ```js script
-import { html } from '@mdjs/mdjs-preview';
+import { html } from 'lit';
 import '@lion/ui/define/lion-input.js';
 import { Unparseable } from '@lion/ui/form-core.js';
 import { liveFormatPhoneNumber } from '@lion/ui/input-tel.js';
@@ -385,7 +385,7 @@ Where the developer sets the modelValue of the input programmatically:
 ## Form: Interaction States
 
 ```js script
-import { html, render } from '@mdjs/mdjs-preview';
+import { html, render } from 'lit';
 import { renderLitAsNode } from '@lion/ui/helpers.js';
 import '@lion/ui/define/lion-input.js';
 import '@lion/ui/define/lion-input-date.js';
@@ -570,7 +570,7 @@ In those cases, using the `resetInteractionState` on a field or a form resets it
 ## Form: Validate
 
 ```js script
-import { html } from '@mdjs/mdjs-preview';
+import { html } from 'lit';
 import { LionInput } from '@lion/ui/input.js';
 import '@lion/ui/define/lion-checkbox-group.js';
 import '@lion/ui/define/lion-checkbox.js';
@@ -1545,7 +1545,7 @@ export const multipleFieldValidation = () =>
 ## Form: Styling
 
 ```js script
-import { html } from '@mdjs/mdjs-preview';
+import { html } from 'lit';
 import '@lion/ui/define/lion-input.js';
 import '@lion/ui/define/lion-button.js';
 ```
@@ -1630,7 +1630,7 @@ This is a meta package to show interaction between various form elements.
 For usage and installation please see the appropriate packages.
 
 ```js script
-import { html } from '@mdjs/mdjs-preview';
+import { html } from 'lit';
 import '@lion/ui/define/lion-button.js';
 import '@lion/ui/define/lion-checkbox-group.js';
 import '@lion/ui/define/lion-checkbox.js';

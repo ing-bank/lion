@@ -9,7 +9,7 @@
 ## Form: Overview
 
 ```js script
-import { html } from '@mdjs/mdjs-preview';
+import { html } from 'lit';
 
 import '@lion/ui/define/lion-input.js';
 import '@lion/ui/define/lion-form.js';
@@ -66,7 +66,7 @@ import '@lion/ui/define/lion-form.js';
 ## Form: Use Cases
 
 ```js script
-import { html as previewHtml } from '@mdjs/mdjs-preview';
+import { html as previewHtml } from 'lit';
 import { Required } from '@lion/ui/form-core.js';
 import { loadDefaultFeedbackMessages } from '@lion/ui/validate-messages.js';
 import '@lion/ui/define/lion-fieldset.js';

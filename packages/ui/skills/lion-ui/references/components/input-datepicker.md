@@ -13,7 +13,7 @@ For an input field with a big range, such as `birthday-input`, a datepicker is n
 We encourage using our standard [input-date](../input-date/overview.md) for this.
 
 ```js script
-import { html } from '@mdjs/mdjs-preview';
+import { html } from 'lit';
 import '@lion/ui/define/lion-input-datepicker.js';
 ```
 
@@ -54,7 +54,7 @@ import '@lion/ui/define/lion-input-datepicker.js';
 ## Input Datepicker: Use Cases
 
 ```js script
-import { html } from '@mdjs/mdjs-preview';
+import { html } from 'lit';
 import { MinMaxDate, IsDateDisabled } from '@lion/ui/form-core.js';
 import { loadDefaultFeedbackMessages } from '@lion/ui/validate-messages.js';
 import { formatDate } from '@lion/ui/localize.js';

@@ -7,7 +7,7 @@
 <p class="lion-paragraph--emphasis">An accordion is a vertically stacked set of interactive headings that each contain a title representing a section of content. It allows users to toggle the display of sections of content.</p>
 
 ```js script
-import { html as previewHtml } from '@mdjs/mdjs-preview';
+import { html as previewHtml } from 'lit';
 ```
 
 ```js preview-story
@@ -137,7 +137,7 @@ class MyComponent extends ScopedElementsMixin(LitElement) {
 ## Accordion: Use Cases
 
 ```js script
-import { html as previewHtml } from '@mdjs/mdjs-preview';
+import { html as previewHtml } from 'lit';
 
 import '@lion/ui/define/lion-accordion.js';
 ```

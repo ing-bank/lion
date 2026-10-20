@@ -11,7 +11,7 @@
 A web component based on the file input field.
 
 ```js script
-import { html } from '@mdjs/mdjs-preview';
+import { html } from 'lit';
 import '@lion/ui/define/lion-input-file.js';
 ```
 
@@ -46,7 +46,7 @@ import '@lion/ui/define/lion-input-file.js';
 ```js script
 import { Required, Validator } from '@lion/ui/form-core.js';
 import { loadDefaultFeedbackMessages } from '@lion/ui/validate-messages.js';
-import { html } from '@mdjs/mdjs-preview';
+import { html } from 'lit';
 import { ScopedElementsMixin } from '@open-wc/scoped-elements/lit-element.js';
 import { LitElement } from 'lit';
 import '@lion/ui/define/lion-input-file.js';

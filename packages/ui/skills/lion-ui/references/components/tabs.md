@@ -7,7 +7,7 @@
 A web component that allows users to quickly move between a small number of equally important views.
 
 ```js script
-import { LitElement, html } from '@mdjs/mdjs-preview';
+import { LitElement, html } from 'lit';
 import '@lion/ui/define/lion-tabs.js';
 ```
 
@@ -56,7 +56,7 @@ If there is a button or a form inside the tab panel then these elements get focu
 ## Tabs: Use Cases
 
 ```js script
-import { LitElement, html } from '@mdjs/mdjs-preview';
+import { LitElement, html } from 'lit';
 
 import '@lion/ui/define/lion-tabs.js';
 ```
@@ -278,10 +278,8 @@ Make sure your template re-renders when myCollection is updated.
 ## Tabs: Examples
 
 ```js script
-import { LitElement, html } from '@mdjs/mdjs-preview';
-import './src/lea-tabs.js';
-import './src/lea-tab.js';
-import './src/lea-tab-panel.js';
+import { LitElement, html } from 'lit';
+
 ```
 
 ### Lea Tabs
