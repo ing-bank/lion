@@ -389,15 +389,21 @@ export async function runSkillTester(config: SkillTesterConfig): Promise<SkillTe
               continue;
             }
             if (!requestedPath) continue;
-            const abs = path.resolve(requestedPath);
-            if (!abs.includes(`${path.sep}skills${path.sep}lion-ui${path.sep}`)) continue;
+            // The skill is read from its sandbox copy (`.skill/<name>/...`), not the repo path, so the
+            // filter must match that marker; resolving against the process cwd silently counted zero.
+            const normalised = requestedPath.split('\\').join('/');
+            const sandboxSkillDir = `.skill/${skillOrAgent.name}/`;
+            const realSkillMarker = `skills/${skillOrAgent.name}/`;
+            if (!normalised.startsWith(sandboxSkillDir) && !normalised.includes(realSkillMarker)) {
+              continue;
+            }
             let bytes = 0;
             try {
-              bytes = fs.statSync(abs).size;
+              bytes = fs.statSync(path.resolve(sandboxRoot, requestedPath)).size;
             } catch {
               // A read of a file that no longer exists still happened; count it as zero bytes.
             }
-            skillReads.set(tc.function.arguments, bytes);
+            skillReads.set(normalised, bytes);
           }
         }
         const skillFilesRead = skillReads.size;
