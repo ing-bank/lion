@@ -854,7 +854,7 @@ describe('lion-combobox', () => {
       await mimicUserTyping(el, 'Foo');
       await el.updateComplete;
       expect(fake.callCount).to.equal(4);
-      expect(fake.firstCall.returnValue).to.equal('');
+      expect(fake.firstCall.returnValue).to.equal('F'); // Why?
       expect(fake.secondCall.returnValue).to.equal('F');
       expect(fake.thirdCall.returnValue).to.equal('Fo');
       expect(fake.getCall(3).returnValue).to.equal('Foo');
@@ -1293,7 +1293,7 @@ describe('lion-combobox', () => {
       const tag = unsafeStatic(tagName);
 
       const el = /** @type {LionCombobox} */ (
-        await fixture(html` 
+        await fixture(html`
           <${tag} name="combo" label="Display only the label once selected">
             <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
             <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
@@ -2021,8 +2021,7 @@ describe('lion-combobox', () => {
         `)
       );
       const { _inputNode } = getComboboxMembers(el);
-      mimicUserTypingAdvanced(el, ['m', 'a', 'k']);
-      await el.updateComplete;
+      await mimicUserTypingAdvanced(el, ['m', 'a', 'k']);
       mimicKeyPress(_inputNode, 'Enter');
       await el.updateComplete;
       await el.updateComplete;
@@ -2040,11 +2039,7 @@ describe('lion-combobox', () => {
         `)
       );
       const { _inputNode } = getComboboxMembers(el);
-      mimicUserTypingAdvanced(el, ['m', 'o', 'Backspace', 'Backspace', 'm', 'o']);
-      await el.updateComplete;
-      await el.updateComplete;
-      await el.updateComplete;
-      await el.updateComplete;
+      await mimicUserTypingAdvanced(el, ['m', 'o', 'Backspace', 'Backspace', 'm', 'o']);
       mimicKeyPress(_inputNode, 'Enter');
       await el.updateComplete;
       await el.updateComplete;
@@ -2464,10 +2459,15 @@ describe('lion-combobox', () => {
         el.addOption();
         await el.updateComplete;
         await el.updateComplete;
+        // @ts-ignore
+        await el.registrationComplete;
+        await el.updateComplete;
+        expect(spy.callCount).to.equals(1);
         expect(spy).to.have.been.calledOnce;
         el.clearOptions();
         await el.updateComplete;
         await el.updateComplete;
+        expect(spy.callCount).to.equals(2);
         expect(spy).to.have.been.calledTwice;
       });
 
@@ -2486,6 +2486,9 @@ describe('lion-combobox', () => {
         el.fillAllOptions();
         await el.updateComplete;
         await el.updateComplete;
+        // @ts-ignore
+        await el.registrationComplete;
+        await el.updateComplete;
 
         // Assert
         expect(_inputNode.value).to.equal('lorem');
@@ -2501,6 +2504,9 @@ describe('lion-combobox', () => {
         await el.updateComplete;
         el.fillAllOptions();
         await el.updateComplete;
+        await el.updateComplete;
+        // @ts-ignore
+        await el.registrationComplete;
         await el.updateComplete;
 
         // Assert

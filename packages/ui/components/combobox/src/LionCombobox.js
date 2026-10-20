@@ -623,10 +623,19 @@ export class LionCombobox extends LocalizeMixin(OverlayMixin(CustomChoiceGroupMi
       changedProperties.has('__shouldAutocompleteNextUpdate') &&
       this.__shouldAutocompleteNextUpdate
     ) {
-      // Only update list in render cycle
-      this._handleAutocompletion();
-      this.__shouldAutocompleteNextUpdate = false;
-      this.__listboxContentChanged = false;
+      const fn = () => {
+        // Only update list in render cycle
+        this._handleAutocompletion();
+        this.__shouldAutocompleteNextUpdate = false;
+        this.__listboxContentChanged = false;
+      };
+
+      // if registration is not yet done, delay autocomplete until after registration is complete
+      if (this.registrationComplete.done) {
+        fn();
+      } else {
+        this.registrationComplete.then(fn);
+      }
     }
 
     if (typeof this._selectionDisplayNode?.onComboboxElementUpdated === 'function') {

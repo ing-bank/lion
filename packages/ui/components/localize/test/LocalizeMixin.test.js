@@ -298,6 +298,8 @@ describe('LocalizeMixin', () => {
     const updateSpy = sinon.spy(el, 'requestUpdate');
 
     el.connectedCallback();
+    // Need to wait for first updateComplete, so the localeReady has been called and will not interfere with the locale change
+    await el.updateComplete;
 
     localizeManager.locale = 'nl-NL';
     await el.localizeNamespacesLoaded;

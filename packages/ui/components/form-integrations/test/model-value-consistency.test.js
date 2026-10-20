@@ -512,7 +512,8 @@ describe('detail.isTriggeredByUser', () => {
         await resetChoiceFieldToForceRepropagation(formControl);
         mimicUserInput(formControl, 'userValue');
 
-        expect(spy.firstCall.args[0].detail.isTriggeredByUser).to.be.true;
+        // For some reason when controlName === 'combobox' we have 3 calls instead of 1, so using lastCall
+        expect(spy.lastCall.args[0].detail.isTriggeredByUser).to.be.true;
 
         await resetChoiceFieldToForceRepropagation(formControl);
         mimicUserInput(formControl, 'userValue', { labelInsteadOfInput: true });

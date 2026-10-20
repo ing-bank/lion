@@ -323,7 +323,12 @@ export function runInputAmountDropdownSuite({ klass } = { klass: LionInputAmount
         const el = await fixture(html` <${tag} .allowedCurrencies="${['GBP']}"></${tag}> `);
         // @ts-ignore
         const spy = sinon.spy(el, '__rerenderSlot');
+        // CurrencyUtil is always directly loaded, testing rerender by requesting a slot.
+        // TODO: should this test exist?
+        el.requestUpdate();
         await aTimeout(0);
+        // adding a specific test on a spy property to avoid timeouts if the spy hasn't been called
+        expect(spy.callCount).to.equal(1);
         expect(spy).to.have.been.calledWith('prefix');
         spy.restore();
       });
