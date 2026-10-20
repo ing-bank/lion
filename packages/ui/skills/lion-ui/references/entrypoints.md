@@ -2,7 +2,7 @@
 
 > Generated from `packages/ui/exports` by `npm run skills:generate`. Do not edit by hand.
 
-These 132 specifiers are the ones that exist. A specifier reasoned from an
+These 107 specifiers are the ones that exist. A specifier reasoned from an
 element or a concept name will not be among them — `<lion-checkbox>` comes from `checkbox-group`,
 not from `checkbox` — and importing one that does not exist fails at load.
 
@@ -10,66 +10,41 @@ not from `checkbox` — and importing one that does not exist fails at load.
 
 - `@lion/ui/accordion.js`
 - `@lion/ui/button.js`
-- `@lion/ui/calendar-suites.js`
-- `@lion/ui/calendar-test-helpers.js`
 - `@lion/ui/calendar.js`
-- `@lion/ui/checkbox-group-test-suites.js`
 - `@lion/ui/checkbox-group.js`
 - `@lion/ui/collapsible.js`
-- `@lion/ui/combobox-test-helpers.js`
 - `@lion/ui/combobox.js`
 - `@lion/ui/core.js`
-- `@lion/ui/define-helpers/sb-action-logger.js`
-- `@lion/ui/define-helpers/sb-locale-switcher.js`
 - `@lion/ui/dialog.js`
 - `@lion/ui/drawer.js`
 - `@lion/ui/fieldset.js`
-- `@lion/ui/form-core-test-helpers.js`
-- `@lion/ui/form-core-test-suites.js`
 - `@lion/ui/form-core.js`
 - `@lion/ui/form-integrations.js`
 - `@lion/ui/form.js`
 - `@lion/ui/helpers.js`
 - `@lion/ui/icon-no-side-effects.js`
 - `@lion/ui/icon.js`
-- `@lion/ui/input-amount-dropdown-test-helpers.js`
-- `@lion/ui/input-amount-dropdown-test-suites.js`
 - `@lion/ui/input-amount-dropdown.js`
 - `@lion/ui/input-amount.js`
 - `@lion/ui/input-date.js`
-- `@lion/ui/input-datepicker-suites.js`
-- `@lion/ui/input-datepicker-test-helpers.js`
 - `@lion/ui/input-datepicker.js`
 - `@lion/ui/input-email.js`
 - `@lion/ui/input-file.js`
 - `@lion/ui/input-iban.js`
 - `@lion/ui/input-range.js`
-- `@lion/ui/input-stepper-suites.js`
 - `@lion/ui/input-stepper.js`
-- `@lion/ui/input-tel-dropdown-test-helpers.js`
-- `@lion/ui/input-tel-dropdown-test-suites.js`
 - `@lion/ui/input-tel-dropdown.js`
-- `@lion/ui/input-tel-test-helpers.js`
-- `@lion/ui/input-tel-test-suites.js`
 - `@lion/ui/input-tel.js`
-- `@lion/ui/input-test-helpers.js`
 - `@lion/ui/input.js`
-- `@lion/ui/listbox-test-helpers.js`
-- `@lion/ui/listbox-test-suites.js`
 - `@lion/ui/listbox.js`
 - `@lion/ui/localize-no-side-effects.js`
-- `@lion/ui/localize-test-helpers.js`
 - `@lion/ui/localize.js`
-- `@lion/ui/menu-test-suites.js`
 - `@lion/ui/menu.js`
 - `@lion/ui/overlays-no-side-effects.js`
-- `@lion/ui/overlays-test-helpers.js`
-- `@lion/ui/overlays-test-suites.js`
 - `@lion/ui/overlays.js`
 - `@lion/ui/pagination.js`
 - `@lion/ui/progress-indicator.js`
 - `@lion/ui/radio-group.js`
-- `@lion/ui/select-rich-test-helpers.js`
 - `@lion/ui/select-rich.js`
 - `@lion/ui/select.js`
 - `@lion/ui/steps.js`

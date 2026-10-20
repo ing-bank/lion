@@ -240,7 +240,15 @@ function writeEntrypointReference() {
   specifiers.sort();
 
   const define = specifiers.filter(specifier => specifier.startsWith('@lion/ui/define/'));
-  const classes = specifiers.filter(specifier => !specifier.startsWith('@lion/ui/define/'));
+  // Test suites and storybook helpers ship from the same `exports` folder but are not consumer API:
+  // they are excluded from the skill entirely (a consumer never imports them, and listing them only
+  // invites a wrong import).
+  const isHelper = specifier =>
+    /(test-helpers|test-suites|-suites\.js|define-helpers|\/testing)/.test(specifier);
+  const classes = specifiers.filter(
+    specifier => !specifier.startsWith('@lion/ui/define/') && !isHelper(specifier),
+  );
+  const listed = classes.length + define.length;
 
   fs.mkdirSync(referencesDir, { recursive: true });
   fs.writeFileSync(
@@ -250,7 +258,7 @@ function writeEntrypointReference() {
       '',
       '> Generated from `packages/ui/exports` by `npm run skills:generate`. Do not edit by hand.',
       '',
-      `These ${specifiers.length} specifiers are the ones that exist. A specifier reasoned from an`,
+      `These ${listed} specifiers are the ones that exist. A specifier reasoned from an`,
       'element or a concept name will not be among them — `<lion-checkbox>` comes from `checkbox-group`,',
       'not from `checkbox` — and importing one that does not exist fails at load.',
       '',
