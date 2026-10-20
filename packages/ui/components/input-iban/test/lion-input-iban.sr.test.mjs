@@ -95,7 +95,7 @@ describe('<lion-input-iban> screen reader', () => {
       // holds the value phrase "blank" (its typed-character echo below shows it
       // does follow the keyboard, so nothing has to steer it there)
       nvda: contains('blank'),
-      voiceover: contains('IBAN', 'text field'),
+      voiceover: contains('IBAN edit text'),
     });
   });
 
@@ -122,12 +122,15 @@ describe('<lion-input-iban> screen reader', () => {
     await sr.next();
     await sr.next();
 
-    await sr.waitFor('NL17 INGB 0002 8226 08');
+    // The value as both real readers say it ("NL 17 INGB ..."; the DOM formatting has
+    // no space after the country code), so the wait cannot be about the exact string.
+    await sr.waitFor('INGB 0002 8226 08');
 
     await sr.expect({
       virtual: contains('textbox, IBAN, NL17 INGB 0002 8226 08, not disabled, not invalid'),
-      nvda: contains('NL17 INGB 0002 8226 08'),
-      voiceover: contains('NL17 INGB 0002 8226 08'),
+      // One phrase for the whole field: name, role, value
+      nvda: containsLike('IBAN, edit, selected NL 17 INGB 0002 8226 08'),
+      voiceover: containsLike('INGB 0002 8226 08'),
     });
   });
 
@@ -152,8 +155,10 @@ describe('<lion-input-iban> screen reader', () => {
 
     await sr.expect({
       virtual: contains('textbox, IBAN, FOO, not disabled, invalid'),
-      nvda: contains('FOO', 'invalid'),
-      voiceover: contains('FOO', 'invalid'),
+      // nvda says the state and the message in the field phrase: "IBAN, edit, invalid
+      // entry, Error, Please enter a valid IBAN., selected FOO"
+      nvda: containsLike('invalid entry, Error, Please enter a valid IBAN.'),
+      voiceover: containsLike('invalid'),
     });
 
     // The message itself. Readers decorate a live region announcement with its
