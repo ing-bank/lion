@@ -8,7 +8,7 @@ import { comparePhrases, formatMismatch, formatPhrases } from './comparePhrases.
  * @typedef {import('../types/index.js').SrReader} SrReader
  */
 
-const DEFAULT_WAIT_TIMEOUT = 30000;
+const DEFAULT_WAIT_TIMEOUT = 15000;
 
 /** Every reader an expectation has to describe. */
 export const READERS = /** @type {const} */ (['virtual', 'nvda', 'voiceover']);
