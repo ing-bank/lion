@@ -21,8 +21,9 @@
  *
  * Scenarios can additionally declare objective `checks` (contains / notContains / matches) for
  * properties that must hold but cannot be pinned to one golden file (e.g. "imports from
- * `@lion/ui/*`, never from `@lion/*`"). File scores and check outcomes are averaged into a
- * single 0..100 score, with a full breakdown kept for reporting.
+ * `@lion/ui/*`, never from `@lion/*`"). Check outcomes — not the golden — are averaged into a single
+ * 0..100 score; the golden diff is kept in the breakdown as a diagnostic and as proof that the
+ * scenario is solvable.
  */
 
 import fs from 'node:fs';
@@ -255,8 +256,11 @@ export function scoreScenario({
   );
   const checkOutcomes = checks.map(check => evaluateCheck(sandboxRoot, check, declaredFiles));
 
+  // The golden files stay in the breakdown and are the scenario's solvability proof, but they no
+  // longer score: textual similarity to one reference implementation penalises correct alternatives
+  // (measured: a stale golden dragged a correct answer down to 92.8%). The score is the convention
+  // checks, gated by parse/import-policy and complemented by the behaviour tier.
   const items: { score: number; weight: number }[] = [
-    ...files.map(file => ({ score: file.score, weight: 1 })),
     ...checkOutcomes.map(check => ({ score: check.passed ? 1 : 0, weight: check.weight })),
   ];
 

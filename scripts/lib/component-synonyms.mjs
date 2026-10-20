@@ -44,3 +44,30 @@ export const COMPONENT_SYNONYMS = {
   textarea: { description: 'a multi-line text input', synonyms: ['textarea', 'multi-line input'] },
   tooltip: { description: 'a small popup with extra information', synonyms: ['tooltip', 'hint popup'] },
 };
+
+/**
+ * Same for the cross-cutting systems: the description is the prompt goal, the synonyms go into the
+ * skill's systems index so a user word ("translations", "modals") routes to the right reference.
+ */
+export const SYSTEM_SYNONYMS = {
+  core: {
+    description: 'the shared building blocks (mixins and utilities) used to compose your own components',
+    synonyms: ['mixins', 'utilities', 'base classes', 'building blocks'],
+  },
+  form: {
+    description: 'the form system that ties fields to a form and validates them',
+    synonyms: ['forms', 'fields', 'validation', 'field groups'],
+  },
+  icon: {
+    description: 'the icon system for rendering icons',
+    synonyms: ['icons', 'glyphs', 'icon rendering'],
+  },
+  localize: {
+    description: 'the localization system for translations and locale-aware date and number formatting',
+    synonyms: ['translations', 'i18n', 'localization', 'locale formatting'],
+  },
+  overlays: {
+    description: 'the overlay system for elements that float above the page',
+    synonyms: ['overlays', 'tooltips', 'popups', 'dialogs', 'positioning'],
+  },
+};

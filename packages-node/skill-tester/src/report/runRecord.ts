@@ -114,7 +114,7 @@ export function renderRunRecord({
 
   if (report.behaviour) {
     // Reported separately from the conformance score on purpose: a scenario can reach 100% on the
-    // convention checks and the goldens while the produced code does not work at all, and that gap
+    // convention checks while the produced code does not work at all, and that gap
     // is the finding worth surfacing rather than averaging away.
     lines.push('## Behaviour (real browser)');
     lines.push('');

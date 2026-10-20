@@ -115,11 +115,11 @@ Cross-cutting `@lion/ui` APIs that most components rely on:
 
 <!-- lion-ui:systems:start -->
 
-- [`Core`](references/systems/core.md)
-- [`Form`](references/systems/form.md)
-- [`Icon`](references/systems/icon.md)
-- [`Localize`](references/systems/localize.md)
-- [`Overlays`](references/systems/overlays.md)
+- [`Core`](references/systems/core.md) — mixins, utilities, base classes, building blocks
+- [`Form`](references/systems/form.md) — forms, fields, validation, field groups
+- [`Icon`](references/systems/icon.md) — icons, glyphs, icon rendering
+- [`Localize`](references/systems/localize.md) — translations, i18n, localization, locale formatting
+- [`Overlays`](references/systems/overlays.md) — overlays, tooltips, popups, dialogs, positioning
 
 <!-- lion-ui:systems:end -->
 

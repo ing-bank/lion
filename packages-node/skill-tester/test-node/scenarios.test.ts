@@ -59,9 +59,9 @@ test('every component and system gets exactly one small, isolated scenario', () 
   }
 
   for (const scenario of scenarios) {
-    const hasGolden = Object.keys(scenario.expectedTransformedFiles ?? {}).length > 0;
     const hasChecks = (scenario.checks ?? []).length > 0;
-    assert.ok(hasGolden || hasChecks, `${scenario.name} has neither golden files nor checks`);
+    // The golden no longer scores, so a scenario without checks would score vacuously: require checks.
+    assert.ok(hasChecks, `${scenario.name} has no checks, so it would score vacuously`);
     assert.ok(Object.keys(scenario.files).length === 1, `${scenario.name} should start from one file`);
     assert.ok(scenario.prompt.length > 0);
   }
