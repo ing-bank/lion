@@ -91,7 +91,7 @@ test('a generated component scenario does not score a correct answer as failing'
     "import { ScopedElementsMixin } from '@open-wc/scoped-elements/lit-element.js';",
     "import { LionButton } from '@lion/ui/button.js';",
     '',
-    'export class MyButton extends ScopedElementsMixin(LitElement) {',
+    'export class MyElem extends ScopedElementsMixin(LitElement) {',
     "  static scopedElements = { 'lion-button': LionButton };",
     '',
     '  render() {',
@@ -137,7 +137,7 @@ test('the define entrypoint is rejected: global registration is not the skill pa
     "import '@lion/ui/define/lion-button.js';",
     "import { LitElement, html } from 'lit';",
     '',
-    'export class MyButton extends LitElement {',
+    'export class MyElem extends LitElement {',
     '  render() {',
     '    return html`<lion-button>Click</lion-button>`;',
     '  }',
@@ -179,12 +179,12 @@ test('the tag check accepts markup and createElement, but not a different elemen
   const scenario = createComponentScenario('button', { knownTags: ['lion-button'] });
   const classImport = "import { LionButton } from '@lion/ui/button.js';\n";
 
-  const markup = `${classImport}export class MyButton { render() { return html\`<lion-button>Click</lion-button>\`; } }\nMyButton.scopedElements = { 'lion-button': LionButton };\n`;
+  const markup = `${classImport}export class MyElem { render() { return html\`<lion-button>Click</lion-button>\`; } }\nMyElem.scopedElements = { 'lion-button': LionButton };\n`;
   assert.equal(scoreExample(markup, scenario).score, 1);
 
-  const created = `${classImport}export class MyButton {}\nMyButton.scopedElements = { 'lion-button': LionButton };\nconst el = document.createElement('lion-button');\n`;
+  const created = `${classImport}export class MyElem {}\nMyElem.scopedElements = { 'lion-button': LionButton };\nconst el = document.createElement('lion-button');\n`;
   assert.equal(scoreExample(created, scenario).score, 1, 'createElement should be accepted');
 
-  const wrongTag = `${classImport}export class MyButton {}\nMyButton.scopedElements = { 'lion-button': LionButton };\nconst el = document.createElement('lion-not-this-component');\n`;
+  const wrongTag = `${classImport}export class MyElem {}\nMyElem.scopedElements = { 'lion-button': LionButton };\nconst el = document.createElement('lion-not-this-component');\n`;
   assert.ok(scoreExample(wrongTag, scenario).score < 1, 'a different element name must fail');
 });
