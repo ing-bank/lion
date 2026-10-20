@@ -1332,7 +1332,7 @@ export function runComboboxSuite({
         const tag = unsafeStatic(tagName);
 
         const el = /** @type {LionCombobox} */ (
-          await fixture(html` 
+          await fixture(html`
             <${tag} name="combo" label="Display only the label once selected">
               <${tags.option} ${optionFixture(`Artichoke`)} .choiceValue="${'Artichoke'}">Artichoke</${tags.option}>
               <${tags.option} ${optionFixture(`Chard`)} .choiceValue="${'Chard'}">Chard</${tags.option}>
@@ -2093,8 +2093,7 @@ export function runComboboxSuite({
           `)
         );
         const { _inputNode } = getComboboxMembers(el);
-        mimicUserTypingAdvanced(el, ['m', 'a', 'k']);
-        await el.updateComplete;
+        await mimicUserTypingAdvanced(el, ['m', 'a', 'k']);
         mimicKeyPress(_inputNode, 'Enter');
         await el.updateComplete;
         await el.updateComplete;
@@ -2112,11 +2111,7 @@ export function runComboboxSuite({
           `)
         );
         const { _inputNode } = getComboboxMembers(el);
-        mimicUserTypingAdvanced(el, ['m', 'o', 'Backspace', 'Backspace', 'm', 'o']);
-        await el.updateComplete;
-        await el.updateComplete;
-        await el.updateComplete;
-        await el.updateComplete;
+        await mimicUserTypingAdvanced(el, ['m', 'o', 'Backspace', 'Backspace', 'm', 'o']);
         mimicKeyPress(_inputNode, 'Enter');
         await el.updateComplete;
         await el.updateComplete;
@@ -2569,8 +2564,7 @@ export function runComboboxSuite({
           await el.updateComplete;
           await el.updateComplete;
           el.updateOptions(defaultOptions);
-          await el.updateComplete;
-          await el.updateComplete;
+          await el.combobox.updateComplete;
 
           // Assert
           expect(_inputNode.value).to.equal('lorem');
@@ -2585,8 +2579,7 @@ export function runComboboxSuite({
           await el.updateComplete;
           await el.updateComplete;
           el.updateOptions(defaultOptions);
-          await el.updateComplete;
-          await el.updateComplete;
+          await el.combobox.updateComplete;
 
           // Assert
           expect(_inputNode.value).to.equal('lorem');
@@ -2623,8 +2616,7 @@ export function runComboboxSuite({
           await el.updateComplete;
           await el.updateComplete;
           el.updateOptions(['party', 'particularly long option', 'play']);
-          await el.updateComplete;
-          await el.updateComplete;
+          await el.combobox.updateComplete;
 
           // Assert (the input has inline-completed with new suggestions)
           expect(_inputNode.value).to.equal('party');
@@ -2654,8 +2646,8 @@ export function runComboboxSuite({
           expect(_inputNode.selectionEnd).to.equal(1);
 
           el.updateOptions(['apple', 'apricot', 'avocado']);
-          await el.updateComplete;
-          await el.updateComplete;
+          await el.combobox.updateComplete;
+
           expect(_inputNode.value).to.equal('apple');
           expect(_inputNode.selectionStart).to.equal(1);
           expect(_inputNode.selectionEnd).to.equal(_inputNode.value.length);

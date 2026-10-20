@@ -830,7 +830,7 @@ export function runInputFileSuite({
         mimicSelectFile(el, [file]);
         await el.updateComplete;
 
-        await el.reset();
+        el.reset();
         expect(el.modelValue).to.deep.equal([]);
         // @ts-expect-error [allow-protected-in-test]
         expect(el._selectedFilesMetaData).to.deep.equal([]);
