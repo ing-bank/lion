@@ -157,6 +157,14 @@ passed.
 | `contains(...phrases)`   | `SrPhraseList`      | phrases have to appear in this order            |
 | `containsLike(...texts)` | `SrPhraseList`      | each text has to be part of a spoken phrase     |
 
+Note on VoiceOver: its cursor does not start inside the browser. The machine setup
+leaves a mounted preferences volume in the Finder and VoiceOver reads that instead
+(its log held `"guidepup-voiceover-preferences-macos-15 Volume"` for every phrase in
+CI), so the flow puts the browser in front and selects its web content through the item
+chooser once the reader is up - the recipe from guidepup's own Playwright example, with
+the public commands. `screenreaderPlugin({ appId })` names the browser's macOS
+application id (Playwright's webkit build by default).
+
 Note on `sr.reset()`: it only clears the logs. A real reader is left running and is
 not repositioned. VoiceOver has `keyboardCommands.moveToFirst`, NVDA has no such
 command, and restarting NVDA between tests means start/stop bookkeeping on a reader

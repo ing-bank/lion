@@ -148,11 +148,13 @@ function createVirtualProxy(page) {
 }
 
 /**
- * @param {{ screenReader: SrReader, getPage: () => Page }} options
+ * @param {{ screenReader: SrReader, getPage: () => Page, appId: string }} options
  */
-function createScreenReader({ screenReader, getPage }) {
+function createScreenReader({ screenReader, getPage, appId }) {
   /** @type {any} */
   let instance = null;
+  /** @type {any} */
+  let guidepup = null;
 
   /**
    * A screen reader that was just started does not always answer yet: in CI NVDA
@@ -182,6 +184,36 @@ function createScreenReader({ screenReader, getPage }) {
     }
   };
 
+  /**
+   * VoiceOver's cursor does not start inside the browser. The machine setup leaves a
+   * mounted preferences volume in the Finder, and VoiceOver reads that instead: its
+   * log holds "guidepup-voiceover-preferences-macos-15 Volume" for every phrase. This
+   * puts the browser in front and uses the item chooser to select its web content, so
+   * VoiceOver is at the beginning of the page - the recipe from guidepup's own
+   * Playwright example, with the public commands.
+   */
+  const navigateToWebContent = async () => {
+    const commands = instance?.keyboardCommands;
+    if (!commands?.openItemChooser) {
+      return;
+    }
+    const { macOSActivateId, MacOSKeyCodes } = guidepup;
+    const withNoCapture = { capture: false };
+
+    await macOSActivateId(appId);
+    await instance.perform({ keyCode: MacOSKeyCodes.Escape }, withNoCapture);
+    await instance.perform(commands.openItemChooser, withNoCapture);
+    await instance.type('web content', { capture: 'initial' });
+    await instance.perform({ keyCode: MacOSKeyCodes.Enter }, withNoCapture);
+    await instance.interact(withNoCapture);
+
+    await instance.clearSpokenPhraseLog();
+    await instance.clearItemTextLog();
+
+    await instance.perform(commands.moveCursorToKeyboardFocus);
+    await instance.perform(commands.hearItemDescription);
+  };
+
   const start = async () => {
     if (screenReader === 'virtual') {
       const page = getPage();
@@ -193,6 +225,7 @@ function createScreenReader({ screenReader, getPage }) {
     // module graph: only the real screen reader runs need guidepup installed.
     const guidepupModule = '@guidepup/guidepup';
     const module = await import(guidepupModule);
+    guidepup = module;
     instance = screenReader === 'nvda' ? module.nvda : module.voiceOver;
 
     await instance.start();
@@ -252,18 +285,21 @@ function createScreenReader({ screenReader, getPage }) {
     start,
     reset,
     stop,
+    navigateToWebContent,
   };
 }
 
 /**
  * @param {SrReader} screenReader
  * @param {TestSession} session
+ * @param {string} appId
  */
-function createSessionState(screenReader, session) {
+function createSessionState(screenReader, session, appId) {
   return {
     reader: createScreenReader({
       screenReader,
       getPage: () => /** @type {any} */ (session.browser).getPage(session.id),
+      appId,
     }),
   };
 }
@@ -276,6 +312,8 @@ function createSessionState(screenReader, session) {
  */
 export function screenreaderPlugin(options) {
   const screenReader = options?.screenReader;
+  // Playwright's webkit build is the browser the VoiceOver run drives.
+  const appId = options?.appId ?? 'org.webkit.Playwright';
   if (!READERS.includes(screenReader)) {
     throw new Error(
       `Unsupported screen reader: ${JSON.stringify(screenReader)}. Use one of: ${READERS.join(
@@ -292,7 +330,7 @@ export function screenreaderPlugin(options) {
    */
   const stateFor = session => {
     if (!sessionStates.has(session.id)) {
-      sessionStates.set(session.id, createSessionState(screenReader, session));
+      sessionStates.set(session.id, createSessionState(screenReader, session, appId));
     }
     return /** @type {{ reader: ReturnType<typeof createScreenReader> }} */ (
       sessionStates.get(session.id)
@@ -318,6 +356,7 @@ export function screenreaderPlugin(options) {
       return;
     }
     await state.reader.start();
+    await state.reader.navigateToWebContent();
     resetObservations(session.id);
     // Prove the reader actually answers before a test depends on it.
     const phraseLog = await state.reader.instance.spokenPhraseLog();

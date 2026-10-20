@@ -40,6 +40,12 @@ export interface SrObservation {
 }
 
 export interface ScreenreaderPluginOptions {
+  /**
+   * The macOS application id of the browser the VoiceOver run drives, used to put it
+   * in front so VoiceOver's cursor can reach its web content (Playwright's webkit
+   * build by default: `org.webkit.Playwright`).
+   */
+  appId?: string;
   /** The screen reader this test run is bound to. */
   screenReader: SrReader;
 }
