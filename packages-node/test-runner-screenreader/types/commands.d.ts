@@ -5,6 +5,9 @@ export function exact(...phrases: string[]): Extract<SrPhraseList, { mode: 'exac
 
 /** Expect `phrases` to appear in the spoken phrase log, in this order. */
 export function contains(...phrases: string[]): Extract<SrPhraseList, { mode: 'contains' }>;
+export function containsLike(
+  ...phrases: string[]
+): Extract<SrPhraseList, { mode: 'containsLike' }>;
 
 export interface ScreenreaderCommands {
   /**

@@ -35,6 +35,18 @@ export function contains(...phrases) {
 }
 
 /**
+ * A reader may decorate a phrase that belongs to a live region ("polite: Error,,
+ * Please enter a valid IBAN."), so the message can be asserted as part of a
+ * spoken phrase instead of as the whole phrase.
+ *
+ * @param {...string} phrases
+ * @returns {SrPhraseList}
+ */
+export function containsLike(...phrases) {
+  return { mode: 'containsLike', phrases };
+}
+
+/**
  * @returns {Promise<SrReader>}
  */
 async function currentReader() {

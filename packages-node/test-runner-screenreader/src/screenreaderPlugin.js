@@ -403,8 +403,13 @@ export function screenreaderPlugin(options) {
         // was - on the Finder window that the setup leaves mounted, which is what
         // ends up in its log as "guidepup-voiceover-preferences-... Volume".
         const instance = readerFor(session);
-        if (instance?.keyboardCommands?.moveCursorToKeyboardFocus) {
-          await instance.perform(instance.keyboardCommands.moveCursorToKeyboardFocus);
+        const keyboardCommands = instance?.keyboardCommands;
+        if (keyboardCommands?.moveCursorToKeyboardFocus) {
+          // Moving the cursor alone does not speak, so ask for the announced item
+          // as well - otherwise the log stays empty and the test cannot tell
+          // "VoiceOver is on the field" from "VoiceOver says nothing".
+          await instance.perform(keyboardCommands.moveCursorToKeyboardFocus);
+          await instance.perform(keyboardCommands.hearItemDescription);
         }
         return { focused: true };
       }

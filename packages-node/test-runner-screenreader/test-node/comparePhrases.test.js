@@ -76,6 +76,37 @@ describe('comparePhrases', () => {
     });
   });
 
+  describe('containsLike', () => {
+    it('matches a phrase inside a spoken phrase', () => {
+      const expected = /** @type {SrPhraseList} */ ({
+        mode: 'containsLike',
+        phrases: ['Please enter a valid IBAN'],
+      });
+      const heard = ['polite: Error,, Please enter a valid IBAN.', 'textbox, IBAN'];
+      expect(comparePhrases(expected, heard).ok).to.equal(true);
+    });
+
+    it('keeps the order of the expected phrases', () => {
+      const expected = /** @type {SrPhraseList} */ ({
+        mode: 'containsLike',
+        phrases: ['textbox', 'invalid'],
+      });
+      const heard = ['textbox, IBAN, FOO', 'not disabled, invalid'];
+      expect(comparePhrases(expected, heard).ok).to.equal(true);
+      expect(comparePhrases(expected, [...heard].reverse()).ok).to.equal(false);
+    });
+
+    it('fails when the text is not spoken at all', () => {
+      const expected = /** @type {SrPhraseList} */ ({
+        mode: 'containsLike',
+        phrases: ['Please enter a valid IBAN'],
+      });
+      const comparison = comparePhrases(expected, ['textbox, IBAN']);
+      expect(comparison.ok).to.equal(false);
+      expect(comparison.expectedPhrase).to.equal('Please enter a valid IBAN');
+    });
+  });
+
   describe('normalisation', () => {
     it('ignores the whitespace a reader pads an announcement with', () => {
       const result = comparePhrases({ mode: 'contains', phrases: ['IBAN, edit,'] }, [

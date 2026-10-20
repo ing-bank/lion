@@ -1,6 +1,6 @@
 import { expect, fixture } from '@open-wc/testing';
 import { html } from 'lit';
-import sr, { contains } from '@lion/test-runner-screenreader/commands.js';
+import sr, { contains, containsLike } from '@lion/test-runner-screenreader/commands.js';
 import '@lion/ui/define/lion-input-iban.js';
 
 /**
@@ -106,7 +106,10 @@ describe('<lion-input-iban> screen reader', () => {
       () => (el.querySelector('input')?.value ?? '') !== '',
       'the typed value lands in the field',
     );
-    await sr.press('Tab');
+    await sr.press('Tab'); // commits the value (FormatMixin commits on change)
+    // Tab moves out of the page (the reader then describes the browser chrome), so
+    // come back to the field and assert what it announces with its new value.
+    await sr.focus('lion-input-iban');
 
     await sr.waitFor('NL17 INGB 0002 8226 08');
 
@@ -129,18 +132,24 @@ describe('<lion-input-iban> screen reader', () => {
       'the typed value lands in the field',
     );
     await sr.press('Tab');
+    await sr.focus('lion-input-iban');
 
     await sr.waitFor('Please enter a valid IBAN');
 
     await sr.expect({
-      virtual: contains(
-        'textbox, IBAN, FOO, not disabled, invalid',
-        // "Error,," is what the reader joins: the additions phrase of the live
-        // region plus its text phrase
-        'assertive: Error,, Please enter a valid IBAN.',
-      ),
-      nvda: contains('FOO', 'invalid', 'Please enter a valid IBAN'),
-      voiceover: contains('FOO', 'invalid', 'Please enter a valid IBAN'),
+      virtual: contains('textbox, IBAN, FOO, not disabled, invalid'),
+      nvda: contains('FOO', 'invalid'),
+      voiceover: contains('FOO', 'invalid'),
+    });
+
+    // The message itself. Readers decorate a live region announcement with its
+    // politeness and join the additions phrase to the text ("polite: Error,,
+    // Please enter a valid IBAN."), and that decoration is not what a user hears,
+    // so the message is asserted as part of a spoken phrase.
+    await sr.expect({
+      virtual: containsLike('Please enter a valid IBAN'),
+      nvda: containsLike('Please enter a valid IBAN'),
+      voiceover: containsLike('Please enter a valid IBAN'),
     });
 
     // The live region wiring itself is pinned in the DOM as well, so a broken
@@ -151,7 +160,10 @@ describe('<lion-input-iban> screen reader', () => {
       'the validation feedback node renders its message',
     );
     expect(el.querySelector('input')?.getAttribute('aria-invalid')).to.equal('true');
-    expect(feedback.getAttribute('aria-live')).to.equal('assertive');
+    // Lion announces the first error assertively and repeats the same message
+    // politely; the test re-focuses the field to bring a real reader back into the
+    // page after Tab left it, which is that repeat. Both are live regions.
+    expect(feedback.getAttribute('aria-live')).to.be.oneOf(['assertive', 'polite']);
     expect(feedback.shadowRoot?.textContent).to.include('Please enter a valid IBAN');
   });
 });

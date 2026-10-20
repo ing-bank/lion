@@ -155,6 +155,7 @@ passed.
 | `sr.stopInteracting()`   | `Promise<void>`     | stop interacting with the current item          |
 | `exact(...phrases)`      | `SrPhraseList`      | phrase log has to match one to one              |
 | `contains(...phrases)`   | `SrPhraseList`      | phrases have to appear in this order            |
+| `containsLike(...texts)` | `SrPhraseList`      | each text has to be part of a spoken phrase     |
 
 Note on `sr.reset()`: it only clears the logs. A real reader is left running and is
 not repositioned. VoiceOver has `keyboardCommands.moveToFirst`, NVDA has no such
@@ -170,9 +171,22 @@ a test that needs it to walk to the control also calls `sr.next()`. Both are the
 same two lines per test, and neither depends on where the reader was left after the
 previous test.
 
+`containsLike` exists for what a reader *decorates*: a live region announcement
+arrives as `"polite: Error,, Please enter a valid IBAN."`, where the politeness and the
+joined additions phrase are not what a user hears. The message itself is asserted with
+`containsLike('Please enter a valid IBAN')`; use `contains` when the whole phrase is
+the point.
+
 Note on waits: `sr.waitFor()` defaults to 15s, below the 20s after which the browser
 side gives up on a test runner command, so a phrase that never comes is reported as
-that phrase and not as a transport error.
+that phrase and not as a transport error. `sr.waitFor()` matches on `includes`, so it
+works with a decorated phrase.
+
+Note on committing a value: a real reader leaves the page on `Tab` (the next focusable
+is the browser chrome, and its log then holds "localhost:8000 … Google Chrome for
+Testing, region"), and NVDA echoes every character it types while typing. So a test
+commits with `Tab`, calls `sr.focus()` to bring the reader back into the page, and
+waits for the typed value in the DOM rather than in the reader's log.
 
 ## License
 

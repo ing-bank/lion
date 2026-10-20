@@ -73,13 +73,51 @@ export function compareContains(expected, heard) {
 }
 
 /**
+ * Like `compareContains`, but a phrase may be part of a spoken phrase. Readers
+ * decorate an announcement that belongs to a live region ("assertive: Error,,
+ * Please enter a valid IBAN." for the virtual reader, "polite: Error,," after a
+ * re-validation), and that decoration is not what a user hears - the message is.
+ *
+ * @param {string[]} expected
+ * @param {string[]} heard
+ * @returns {Comparison}
+ */
+export function compareContainsLike(expected, heard) {
+  const expectedPhrases = normalizePhrases(expected);
+  const heardPhrases = normalizePhrases(heard);
+  let cursor = 0;
+  for (const phrase of expectedPhrases) {
+    let at = -1;
+    for (let i = cursor; i < heardPhrases.length; i += 1) {
+      if (heardPhrases[i].includes(phrase)) {
+        at = i;
+        break;
+      }
+    }
+    if (at === -1) {
+      return {
+        ok: false,
+        index: cursor,
+        expectedPhrase: phrase,
+        heardPhrase: heardPhrases[cursor],
+      };
+    }
+    cursor = at + 1;
+  }
+  return { ok: true, index: -1 };
+}
+
+/**
  * @param {SrPhraseList} expected
  * @param {string[]} heard
  * @returns {Comparison}
  */
 export function comparePhrases(expected, heard) {
-  return expected.mode === 'exact'
-    ? compareExact(expected.phrases, heard)
+  if (expected.mode === 'exact') {
+    return compareExact(expected.phrases, heard);
+  }
+  return expected.mode === 'containsLike'
+    ? compareContainsLike(expected.phrases, heard)
     : compareContains(expected.phrases, heard);
 }
 
