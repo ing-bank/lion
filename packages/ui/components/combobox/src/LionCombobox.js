@@ -593,6 +593,17 @@ export class LionCombobox extends LocalizeMixin(OverlayMixin(CustomChoiceGroupMi
     }
   }
 
+  async scheduleUpdate() {
+    // @ts-ignore
+    if (!this.registrationComplete.done) {
+      // The combobox needs the registration to be completed before rendering.
+      // If registration is not completed, autocompletion will not work correctly.
+      await this.registrationComplete;
+    }
+
+    return super.scheduleUpdate();
+  }
+
   /**
    * @param {import('lit').PropertyValues } changedProperties
    */
