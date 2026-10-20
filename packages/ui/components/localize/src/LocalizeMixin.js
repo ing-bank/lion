@@ -36,6 +36,8 @@ const LocalizeMixinImplementation = /** @type {LocalizeMixin} */ (superclass =>
       super(...restArgs);
 
       this._localizeManager = getLocalizeManager();
+       /** @private */
+      this.__localeUpdatedRan = false;
 
       /** @private */
       this.__boundLocalizeOnLocaleChanged =
@@ -71,6 +73,12 @@ const LocalizeMixinImplementation = /** @type {LocalizeMixin} */ (superclass =>
         this.__getUniqueNamespaces(),
       );
 
+      if (areLocalizeNamespacesLoaded) {
+        // `onLocaleReady()` will only actually run, if `localeUpdated` wasn't emitted yet
+        // (ie. `__localeUpdatedRan` is false).
+        this.onLocaleReady();
+      }
+
       if (
         !areLocalizeNamespacesLoaded &&
         Object.getPrototypeOf(this).constructor.waitForLocalizeNamespaces
@@ -82,7 +90,16 @@ const LocalizeMixinImplementation = /** @type {LocalizeMixin} */ (superclass =>
 
     connectedCallback() {
       super.connectedCallback();
-      if (this.localizeNamespacesLoaded) {
+      // @ts-expect-error we allow calling protected members from siblings within the same system
+      const areLocalizeNamespacesLoaded = this._localizeManager._areNamespacesInCache(
+        this.__getUniqueNamespaces(),
+      );
+      // If namespaces are already loaded, make localize run synchronously.
+      // `this.onLocaleReady()` should still be run however: it will run during `scheduleUpdate()` synchronously
+      // to make sure it is run at the expected time. ie after `connectedCallback()`, but before `update()`
+      if (areLocalizeNamespacesLoaded) {
+        this.__localizeMessageSync = true;
+      } else if (this.localizeNamespacesLoaded) {
         this.localizeNamespacesLoaded.then(() => this.onLocaleReady());
       }
       this._localizeManager.addEventListener(
@@ -159,6 +176,7 @@ const LocalizeMixinImplementation = /** @type {LocalizeMixin} */ (superclass =>
      */
     __localizeOnLocaleChanging() {
       this.__localizeStartLoadingNamespaces();
+      this.__localeUpdatedRan = false;
     }
 
     /**
@@ -170,7 +188,10 @@ const LocalizeMixinImplementation = /** @type {LocalizeMixin} */ (superclass =>
     }
 
     onLocaleReady() {
-      this.onLocaleUpdated();
+      if (!this.__localeUpdatedRan) {
+        this.onLocaleUpdated();
+        this.__localeUpdatedRan = true;
+      }
     }
 
     /**
@@ -179,8 +200,11 @@ const LocalizeMixinImplementation = /** @type {LocalizeMixin} */ (superclass =>
      */
     // eslint-disable-next-line no-unused-vars
     onLocaleChanged(newLocale, oldLocale) {
-      this.onLocaleUpdated();
-      this.requestUpdate();
+      if (!this.__localeUpdatedRan) {
+        this.onLocaleUpdated();
+        this.__localeUpdatedRan = true;
+        this.requestUpdate();
+      }
     }
 
     // eslint-disable-next-line class-methods-use-this

@@ -182,6 +182,15 @@ export class LionInputTelDropdown extends LionInputTel {
     };
   }
 
+  async scheduleUpdate() {
+    // LionInputTelDropdown needs the loading of the localizeManager to be complete before rendering.
+    // If loading is not completed, incorrect / previous data might be used in `this.__namesForLocale`.
+    // (see usage of the `locale`property of `this._localizeManager` in `onLocaleUpdated()`)
+    await this._localizeManager.loadingComplete;
+
+    return super.scheduleUpdate();
+  }
+
   /**
    * @configure LocalizeMixin
    */

@@ -163,6 +163,7 @@ describe('Form Validation Integrations', () => {
       );
       el.touched = true;
       el.dirty = true;
+      await localizeManager.loadingComplete;
       await el.updateComplete;
       await el.feedbackComplete;
       const { _feedbackNode } = getFormControlMembers(el);
