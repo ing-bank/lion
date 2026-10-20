@@ -1,0 +1,113 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <style>
+      #wrap { width: 880px; }
+      .fallback { color: var(--muted-foreground); font: 13px/1.5 inherit; }
+    </style>
+  </head>
+  <body>
+    <div id="wrap">
+      <pre class="mermaid">
+flowchart TD
+  subgraph START["The problem"]
+    A1["A skill = docs that teach a model to build components"]
+    A2["Only measure: a human thinks 'looks right'"]
+  end
+
+  subgraph BUILT["What we built"]
+    B1["44 small isolated tasks — one per component"]
+    B2["Verdict 1: LOOKS RIGHT — fast text checks, no browser"]
+    B3["Verdict 2: WORKS — the produced code runs in a real browser"]
+    B1 --> B2 --> B3
+  end
+
+  subgraph LIED["Where the measuring lied — every one measured, none theorised"]
+    L1["Failed correct answers: a check demanded a shape the prompt never asked for"]
+    L2["Credited doing nothing: an untouched file scored 42.9%"]
+    L3["Called a never-written file a knowledge gap"]
+    L4["One flaky endpoint killed a whole measurement run"]
+    L5["A parser bug made every result pass silently"]
+  end
+
+  subgraph FIXED["What each lie became"]
+    F1["The check tests the prompt's outcome; a control proves it still discriminates"]
+    F2["Not written = NOT ATTEMPTED — excluded, reported as an attempt rate"]
+    F3["No data = n/a — never 0%"]
+    F4["Endpoint died = TO REDO — excluded, the sweep survives"]
+    F5["Pinned by a test that reproduces the regression"]
+  end
+
+  subgraph GUARDS["Guards — cheap now, what once took 16 model runs"]
+    G1["Linter: a task's prompt and its grading must agree, both directions"]
+    G2["Gate: an import must resolve to a file that exists"]
+    G3["Component tests from the real artifacts — committed, not scratch"]
+  end
+
+  subgraph SELF["It maintains itself"]
+    S1["A sweep publishes its own table into the docs site"]
+    S2["CI measures the skill it just regenerated"]
+  end
+
+  subgraph KNOW["What we know so far"]
+    K1["13 of 44 tasks, 1 model"]
+    K2["Every score 100%; behaviour 33/36"]
+    K3["The 3 failures were real defects, not noise"]
+  end
+
+  A1 --> BUILT
+  A2 --> BUILT
+  B3 --> LIED
+
+  L1 -->|"16 model runs, 4 models"| F1
+  L2 --> F2
+  L3 --> F2
+  L4 --> F4
+  L5 --> F5
+
+  F1 --> GUARDS
+  F2 --> GUARDS
+  F4 --> GUARDS
+
+  GUARDS --> SELF
+  SELF --> KNOW
+  K3 --> PUNCH["The skill was largely innocent. The measuring was guilty."]
+      </pre>
+    </div>
+    <p class="fallback" id="fallback" hidden>
+      Mermaid could not load the diagram library — the source above is the diagram.
+    </p>
+    <script type="module">
+      const root = getComputedStyle(document.documentElement);
+      const val = (name, fallback) => root.getPropertyValue(name).trim() || fallback;
+      const foreground = val('--foreground', '#e6e6e6');
+      const border = val('--border', '#555');
+      try {
+        const { default: mermaid } = await import(
+          'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs'
+        );
+        mermaid.initialize({
+          startOnLoad: true,
+          theme: 'base',
+          themeVariables: {
+            fontFamily: 'inherit',
+            fontSize: '13px',
+            primaryColor: 'transparent',
+            primaryTextColor: foreground,
+            primaryBorderColor: border,
+            secondaryTextColor: foreground,
+            tertiaryTextColor: foreground,
+            lineColor: border,
+            clusterBkg: 'transparent',
+            clusterBorder: border,
+            edgeLabelBackground: 'transparent',
+            noteTextColor: foreground,
+          },
+        });
+      } catch {
+        document.getElementById('fallback').hidden = false;
+      }
+    </script>
+  </body>
+</html>
