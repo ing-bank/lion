@@ -50,7 +50,7 @@
  * actually ships rather than a hand-maintained list.
  */
 
-import { COMPONENT_SYNONYMS } from '../../../../scripts/lib/component-synonyms.mjs';
+import { COMPONENT_SYNONYMS, SYSTEM_SYNONYMS } from '../../../../scripts/lib/component-synonyms.mjs';
 import type { TestScenario, ScenarioCheck } from './types.ts';
 
 /** Component folders under `packages/ui/components` that are not standalone visual components. */
@@ -101,6 +101,13 @@ function goalPrompt(componentName: string): string {
   const entry = COMPONENT_SYNONYMS[componentName];
   if (!entry) return `Goal: a component that renders the documented lion component for ${componentName}.`;
   return `Goal: ${entry.description}.`;
+}
+
+/** The goal of a system scenario: the system's description, never its name. */
+function systemDescription(systemName: string): string {
+  const entry = SYSTEM_SYNONYMS[systemName];
+  if (!entry) return `an example that uses the "${systemName}" system of @lion/ui`;
+  return entry.description;
 }
 
 export const NON_VISUAL_COMPONENT_DIRS = [
@@ -380,7 +387,7 @@ export function createSystemScenario(
     kind: 'system',
     description: `Minimal example exercising the "${systemName}" system.`,
     prompt: [
-      `Add a minimal example to \`${SYSTEM_TARGET_FILE}\` that uses the "${systemName}" system of @lion/ui.`,
+      `Add a minimal example to \`${SYSTEM_TARGET_FILE}\` that shows ${systemDescription(systemName)}.`,
       'Create that file only — nothing else.',
     ].join(' '),
     targetFile: SYSTEM_TARGET_FILE,

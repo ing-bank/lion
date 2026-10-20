@@ -110,7 +110,7 @@ test('evaluateCheck supports contains / notContains / matches / notMatches / exi
   );
 });
 
-test('scoreScenario averages file scores and checks by weight', () => {
+test('scoreScenario scores the checks and keeps the golden as a diagnostic', () => {
   const root = tempSandbox({ 'src/a.js': 'const a = 1;\n' });
   const result = scoreScenario({
     sandboxRoot: root,
@@ -120,9 +120,10 @@ test('scoreScenario averages file scores and checks by weight', () => {
       { type: 'contains', file: 'src/a.js', value: 'missing', weight: 3 },
     ],
   });
-  // 1 (file) + 1*1 (check) + 0*3 (check) => 2/5
-  assert.equal(result.score, 2 / 5);
-  assert.equal(result.percent, 40);
+  // Only the checks score: (1*1 + 0*3) / 4 => 1/4. The golden no longer scores but is still reported.
+  assert.equal(result.score, 1 / 4);
+  assert.equal(result.percent, 25);
+  assert.equal(result.files.length, 1, 'the golden stays in the breakdown as a diagnostic');
 });
 
 test('aggregate computes mean, min, max and standard deviation', () => {

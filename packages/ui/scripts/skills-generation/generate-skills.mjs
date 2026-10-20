@@ -2,7 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import matter from 'gray-matter';
-import { COMPONENT_SYNONYMS } from '../../../../scripts/lib/component-synonyms.mjs';
+import { COMPONENT_SYNONYMS, SYSTEM_SYNONYMS } from '../../../../scripts/lib/component-synonyms.mjs';
 import {
   computeApiTablesByDocGroup,
   findClassDeclaration,
@@ -423,7 +423,7 @@ function main() {
       sourceDirPath,
       apiTableMd: tablesByGroup.get(`fundamentals/systems/${name}`),
     });
-    systemEntries.push({ name, refPath });
+    systemEntries.push({ name, refPath, synonyms: SYSTEM_SYNONYMS[name]?.synonyms });
   }
 
   const guideEntries = [];
