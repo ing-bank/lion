@@ -122,16 +122,13 @@ const SYSTEM_TARGET_FILE = 'src/example.js';
 
 /** The produced component file: `my-accordion` -> `src/my-accordion.js`. */
 export function targetFileFor(componentName: string): string {
-  return `src/my-${componentName}.js`;
+  // Neutral boilerplate so the filename never leaks the component: identical for every scenario.
+  return 'src/my-elem.js';
 }
 
-/** The class the produced file must export: `my-accordion` -> `MyAccordion`. */
+/** The class the produced file must export. Neutral, so the class name never reveals the component. */
 export function classNameFor(componentName: string): string {
-  const pascal = componentName
-    .split(/[-_]/)
-    .map(part => part.charAt(0).toUpperCase() + part.slice(1))
-    .join('');
-  return `My${pascal}`;
+  return 'MyElem';
 }
 
 /** The tag the produced file registers itself under, if it registers one at all. */

@@ -35,7 +35,7 @@ const GOOD_EXAMPLE = [
   "import { ScopedElementsMixin } from '@open-wc/scoped-elements/lit-element.js';",
   "import { LionButton } from '@lion/ui/button.js';",
   '',
-  'export class MyButton extends ScopedElementsMixin(LitElement) {',
+  'export class MyElem extends ScopedElementsMixin(LitElement) {',
   "  static scopedElements = { 'lion-button': LionButton };",
   '',
   '  render() {',
@@ -52,7 +52,7 @@ const GOOD_EXAMPLE = [
 const WRONG_TAG_EXAMPLE = [
   "import { LitElement, html } from 'lit';",
   '',
-  'export class MyButton extends LitElement {',
+  'export class MyElem extends LitElement {',
   '  render() {',
   '    return html`<not-a-lion-button>Click me</not-a-lion-button>`;',
   '  }',
