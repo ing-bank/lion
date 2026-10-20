@@ -32,9 +32,15 @@ import '@lion/ui/define/lion-input-iban.js';
 async function fixtureIban() {
   const el = /** @type {LionInputIban} */ (
     await fixture(html`
-      <lion-input-iban>
-        <label slot="label">IBAN</label>
-      </lion-input-iban>
+      <div>
+        <lion-input-iban>
+          <label slot="label">IBAN</label>
+        </lion-input-iban>
+        <!-- Somewhere for Tab to go: without a focusable neighbour the focus leaves
+             the page (the reader then describes the browser chrome) and the field
+             never gets its blur-and-come-back. -->
+        <button type="button">Next</button>
+      </div>
     `)
   );
   return el;
@@ -106,10 +112,15 @@ describe('<lion-input-iban> screen reader', () => {
       () => (el.querySelector('input')?.value ?? '') !== '',
       'the typed value lands in the field',
     );
-    await sr.press('Tab'); // commits the value (FormatMixin commits on change)
-    // Tab moves out of the page (the reader then describes the browser chrome), so
-    // come back to the field and assert what it announces with its new value.
+    // Tab commits the value (FormatMixin commits on change) and moves to the button
+    // next to the field, so the focus stays in the page instead of leaving it for the
+    // browser chrome. Coming back to the field makes every reader announce it again,
+    // with its new value: a real reader follows the focus, the virtual reader walks.
+    await sr.press('Tab');
+    await sr.press('Shift+Tab');
     await sr.focus('lion-input-iban');
+    await sr.next();
+    await sr.next();
 
     await sr.waitFor('NL17 INGB 0002 8226 08');
 
@@ -132,7 +143,10 @@ describe('<lion-input-iban> screen reader', () => {
       'the typed value lands in the field',
     );
     await sr.press('Tab');
+    await sr.press('Shift+Tab');
     await sr.focus('lion-input-iban');
+    await sr.next();
+    await sr.next();
 
     await sr.waitFor('Please enter a valid IBAN');
 

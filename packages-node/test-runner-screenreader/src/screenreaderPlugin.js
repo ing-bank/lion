@@ -441,6 +441,14 @@ export function screenreaderPlugin(options) {
         // does not follow the keyboard focus, so its cursor would stay where it
         // was - on the Finder window that the setup leaves mounted, which is what
         // ends up in its log as "guidepup-voiceover-preferences-... Volume".
+        if (screenReader === 'virtual') {
+          // The virtual reader has no OS focus to follow: give it a fresh walk of
+          // the page, so the sr.next() steps a test uses to reach the control start
+          // from the top again. The phrase log is left alone, so the test still
+          // asserts over everything that was said before.
+          await startVirtualReader(/** @type {any} */ (session.browser).getPage(session.id));
+          return { focused: true };
+        }
         const instance = readerFor(session);
         const keyboardCommands = instance?.keyboardCommands;
         if (keyboardCommands?.moveCursorToKeyboardFocus) {

@@ -190,11 +190,18 @@ side gives up on a test runner command, so a phrase that never comes is reported
 that phrase and not as a transport error. `sr.waitFor()` matches on `includes`, so it
 works with a decorated phrase.
 
-Note on committing a value: a real reader leaves the page on `Tab` (the next focusable
-is the browser chrome, and its log then holds "localhost:8000 … Google Chrome for
-Testing, region"), and NVDA echoes every character it types while typing. So a test
-commits with `Tab`, calls `sr.focus()` to bring the reader back into the page, and
-waits for the typed value in the DOM rather than in the reader's log.
+Note on committing a value: a real reader leaves the page on `Tab` when the field is the
+only focusable thing in it (the next stop is the browser chrome, and the log then holds
+"localhost:8000 … Google Chrome for Testing, region"), and NVDA echoes every character it
+types while typing. So a test fixture keeps a focusable neighbour next to the field, the
+test types, presses `Tab` to commit (`FormatMixin` commits on change) and `Shift+Tab` to
+come back to the field, and then re-anchors with `sr.focus()` + `sr.next()`. Waiting for
+the typed value happens in the DOM, not in the reader's log.
+
+Note on `sr.focus()`: for the virtual reader it gives the reader a fresh walk of the page
+(the virtual reader has no OS focus to follow, so the `sr.next()` steps start from the
+top again) and leaves the phrase log alone, so a test still asserts over everything that
+was said before.
 
 ## License
 
