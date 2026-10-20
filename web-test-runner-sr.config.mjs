@@ -1,3 +1,5 @@
+import { execFileSync } from 'node:child_process';
+import { fileURLToPath } from 'node:url';
 import { defaultReporter } from '@web/test-runner';
 import { playwrightLauncher } from '@web/test-runner-playwright';
 import { screenreaderPlugin, screenreaderReporter } from '@lion/test-runner-screenreader';
@@ -19,6 +21,33 @@ function getScreenReader() {
 
 const screenReader = getScreenReader();
 const isRealReader = screenReader !== 'virtual';
+
+/**
+ * A real screen reader can start and then stop answering on a machine where it
+ * is not installed or configured properly (reported as "NVDA is not running" or
+ * "VoiceOver not running" somewhere in a test). Say so before the test run,
+ * with the reader's own answer once a second, instead of letting it surface as a
+ * timeout in the middle of a test. Never fails the run: the tests are the gate.
+ */
+function reportReaderHealth() {
+  if (!isRealReader) {
+    return;
+  }
+  const script = fileURLToPath(
+    new URL(
+      'packages-node/test-runner-screenreader/scripts/screenreader-smoke.mjs',
+      import.meta.url,
+    ),
+  );
+  console.log(`\n[preflight] ${screenReader} on this machine:`);
+  try {
+    execFileSync(process.execPath, [script, screenReader, '10'], { stdio: 'inherit' });
+  } catch {
+    console.log(`[preflight] ${screenReader} did not stay reachable (see above)`);
+  }
+}
+
+reportReaderHealth();
 
 /**
  * A real screen reader reads the focused OS window, so those runs need a real
