@@ -56,8 +56,9 @@ test('every entrypoint specifier is classified (consumer | helper | types | defi
   assert.ok(specs.length > 100, `expected the full specifier list, got ${specs.length}`);
   const counts = { consumer: 0, helper: 0, types: 0, define: 0 };
   for (const spec of specs) counts[group(spec)] += 1;
-  // Measured baseline, so the split does not drift unnoticed.
-  assert.deepEqual(counts, { consumer: 46, helper: 25, types: 11, define: 50 });
+  // Test suites and storybook helpers are excluded from the skill entirely; the rest is pinned.
+  assert.deepEqual(counts, { consumer: 46, helper: 0, types: 11, define: 50 });
+  assert.equal(specs.length, 107, 'test suites and storybook helpers must not be listed');
 });
 
 test('no NEW consumer entrypoint is undocumented', () => {
