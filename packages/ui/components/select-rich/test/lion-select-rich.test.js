@@ -4,6 +4,7 @@ import { mimicClick } from '@lion/ui/overlays-test-helpers.js';
 import { OverlayController } from '@lion/ui/overlays.js';
 import { LionOption } from '@lion/ui/listbox.js';
 import '@lion/ui/define/lion-select-rich.js';
+import '@lion/ui/define/lion-select-invoker.js';
 import '@lion/ui/define/lion-listbox.js';
 import '@lion/ui/define/lion-option.js';
 import '@lion/ui/define/lion-tabs.js';
@@ -246,6 +247,24 @@ describe('lion-select-rich', () => {
     it('should be closed by default', async () => {
       const el = await fixture(html` <lion-select-rich></lion-select-rich> `);
       expect(el.opened).to.be.false;
+    });
+
+    it('opens when the invoker is clicked before overlay setup completes', async () => {
+      const el = /** @type {LionSelectRich} */ (document.createElement('lion-select-rich'));
+      const invoker = new LionSelectInvoker();
+      invoker.slot = 'invoker';
+      el.appendChild(invoker);
+      document.body.appendChild(el);
+
+      invoker.click();
+
+      await el.updateComplete;
+      const { _overlayCtrl } = getSelectRichMembers(el);
+      await waitUntil(() => _overlayCtrl?.isShown);
+      expect(_overlayCtrl.isShown).to.be.true;
+
+      el.remove();
+      await aTimeout(0);
     });
 
     it('shows/hides the listbox via opened attribute', async () => {

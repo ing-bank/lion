@@ -167,7 +167,14 @@ test(
           path.join(installedRoot, `dist-types/components/${component}/src/${name}.d.ts`),
           'utf8',
         );
-        assert.match(declaration, /\n {4}get _focusableNode\(\)/);
+        if (component === 'listbox') {
+          assert.match(
+            declaration,
+            /\n {4}get _focusableNode\(\): HTMLInputElement \| HTMLTextAreaElement \| import\("\.\.\/\.\.\/form-core\/types\/FormControlMixinTypes\.js"\)\.HTMLElementWithValue;/,
+          );
+        } else {
+          assert.match(declaration, /\n {4}protected get _focusableNode\(\): LionSelectInvoker;/);
+        }
         if (component === 'select-rich') assert.doesNotMatch(declaration, /get slots\(\)/);
       }
       assert.equal(manifest.dependencies['awesome-phonenumber'], undefined);

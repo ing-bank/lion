@@ -129,6 +129,27 @@ function restoreSlotAccessor(contents) {
   return contents.replace(redundantOverride, '\n');
 }
 
+// Source types permit implementation checking. Restore the 0.21.1 signatures and suppress only
+// the inherited TS2416 diagnostic on SelectRich's protected invoker override.
+function restoreFocusContract(contents, sourceSignature, publishedSignature) {
+  if (contents.includes(publishedSignature)) return contents;
+  if (contents.split(sourceSignature).length !== 2) {
+    throw new Error('Unexpected focus declaration; review legacy contract normalization');
+  }
+  return contents.replace(sourceSignature, publishedSignature);
+}
+
+function suppressLegacyFocusOverrideError(contents) {
+  const signature = '    protected get _focusableNode(): LionSelectInvoker;';
+  const suppression =
+    '    // @ts-ignore -- Preserve the 0.21.1 protected override contract for subclassers.';
+  if (contents.includes(suppression)) return contents;
+  if (contents.split(signature).length !== 2) {
+    throw new Error('Unexpected select-rich focus declaration; review its inherited contract');
+  }
+  return contents.replace(signature, `${suppression}\n${signature}`);
+}
+
 async function main() {
   const fileNames = await globby('dist-types/**/*.d.ts', { cwd: packageRoot });
   let restored = 0;
@@ -176,6 +197,39 @@ async function main() {
   }
   if (normalized !== contents) {
     await fs.promises.writeFile(declaration, normalized, 'utf8');
+  }
+
+  for (const [file, sourceSignature, publishedSignature] of [
+    [
+      'select-rich/src/LionSelectRich',
+      '    get _focusableNode(): LionSelectInvoker;',
+      '    protected get _focusableNode(): LionSelectInvoker;',
+    ],
+    [
+      'listbox/src/LionListbox',
+      '    get _focusableNode(): HTMLElement;',
+      '    get _focusableNode(): HTMLInputElement | HTMLTextAreaElement | import("../../form-core/types/FormControlMixinTypes.js").HTMLElementWithValue;',
+    ],
+  ]) {
+    const target = `${packageRoot}dist-types/components/${file}.d.ts`;
+    // eslint-disable-next-line no-await-in-loop
+    const before = await fs.promises.readFile(target, 'utf8');
+    let after = restoreFocusContract(before, sourceSignature, publishedSignature);
+    if (file === 'select-rich/src/LionSelectRich') {
+      after = suppressLegacyFocusOverrideError(after);
+      if (suppressLegacyFocusOverrideError(after) !== after) {
+        throw new Error('Select-rich focus error suppression is not idempotent');
+      }
+    }
+    if (restoreFocusContract(after, sourceSignature, publishedSignature) !== after) {
+      throw new Error('Focus contract normalization is not idempotent');
+    }
+    // eslint-disable-next-line no-await-in-loop
+    await fs.promises.writeFile(
+      target,
+      after.replace('     * @returns {HTMLElement}\n', ''),
+      'utf8',
+    );
   }
 
   // eslint-disable-next-line no-console

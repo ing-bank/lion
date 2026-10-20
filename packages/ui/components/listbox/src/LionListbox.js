@@ -21,7 +21,8 @@ export class LionListbox extends ListboxMixin(
   }
 
   /**
-   * Public to preserve the Lion 0.21.1 extension contract.
+   * Public to preserve the Lion 0.21.1 extension contract. The implementation return type
+   * permits SelectRich's override; declaration postprocessing restores the published union.
    * @configure FocusMixin
    * @returns {HTMLElement}
    */

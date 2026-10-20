@@ -88,11 +88,7 @@ export class LionSelectRich extends SlotMixin(ScopedElementsMixin(OverlayMixin(L
     );
   }
 
-  /**
-   * Must remain public: narrowing the public Listbox member causes TS2415.
-   * Unlike Listbox, this override was protected in Lion 0.21.1.
-   * @configure FocusMixin
-   */
+  /** @configure FocusMixin */
   get _focusableNode() {
     return this._invokerNode;
   }
@@ -343,7 +339,15 @@ export class LionSelectRich extends SlotMixin(ScopedElementsMixin(OverlayMixin(L
   /** @private */
   __invokerOnClick() {
     if (!this.disabled && !this.readOnly && !this.singleOption && !this.__blockListShow) {
-      this._overlayCtrl.toggle();
+      if (this._overlayCtrl) {
+        this._overlayCtrl.toggle();
+      } else {
+        this.updateComplete.then(() => {
+          if (this.isConnected) {
+            this._overlayCtrl.toggle();
+          }
+        });
+      }
     }
   }
 

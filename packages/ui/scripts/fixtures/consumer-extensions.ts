@@ -19,7 +19,13 @@ export function focusCombobox(combobox: LionCombobox): void {
 }
 
 export class ConsumerCombobox extends LionCombobox {
-  override get _focusableNode(): HTMLElement {
+  override get _focusableNode() {
+    return super._focusableNode;
+  }
+}
+
+export class ConsumerProtectedSelect extends LionSelectRich {
+  protected override get _focusableNode() {
     return super._focusableNode;
   }
 }
