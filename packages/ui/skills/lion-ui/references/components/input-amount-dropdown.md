@@ -5,7 +5,7 @@
 ## Input Amount Dropdown: Use Cases
 
 ```js script
-import { html } from '@mdjs/mdjs-preview';
+import { html } from 'lit';
 import { loadDefaultFeedbackMessages } from '@lion/ui/validate-messages.js';
 import { LionInputAmountDropdown } from '@lion/ui/input-amount-dropdown.js';
 import '@lion/ui/define/lion-input-amount-dropdown.js';

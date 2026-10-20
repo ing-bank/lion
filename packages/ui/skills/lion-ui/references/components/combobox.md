@@ -21,11 +21,11 @@ availability of the pop-up.
 > Fore more information, consult [Combobox wai-aria design pattern](https://www.w3.org/TR/wai-aria-practices/#combobox)
 
 ```js script
-import { html } from '@mdjs/mdjs-preview';
-import { listboxData } from '../listbox/src/listboxData.js';
+import { html } from 'lit';
+
 import '@lion/ui/define/lion-combobox.js';
 import '@lion/ui/define/lion-option.js';
-import { lazyRender } from './src/lazyRender.js';
+
 ```
 
 ```js preview-story
@@ -86,16 +86,14 @@ availability of the popup.
 > Fore more information, consult [Combobox wai-aria design pattern](https://www.w3.org/TR/wai-aria-practices/#combobox)
 
 ```js script
-import { LitElement, html, repeat } from '@mdjs/mdjs-preview';
-import { listboxData, listboxComplexData } from '../listbox/src/listboxData.js';
+import { LitElement, html } from 'lit';
+
 import { LionCombobox } from '@lion/ui/combobox.js';
 import { Required } from '@lion/ui/form-core.js';
 import '@lion/ui/define/lion-button.js';
 import '@lion/ui/define/lion-combobox.js';
 import '@lion/ui/define/lion-option.js';
-import './src/demo-selection-display.js';
-import { lazyRender } from './src/lazyRender.js';
-import levenshtein from './src/levenshtein.js';
+
 import { loadDefaultFeedbackMessages } from '@lion/ui/validate-messages.js';
 loadDefaultFeedbackMessages();
 ```
@@ -626,11 +624,8 @@ See the [listbox documentation](../listbox/overview.md) for more information.
 ## Combobox: Extensions
 
 ```js script
-import { html } from '@mdjs/mdjs-preview';
-import './src/md-combobox/md-combobox.js';
-import './src/gh-combobox/gh-combobox.js';
-import './src/wa-combobox/wa-combobox.js';
-import './src/google-combobox/google-combobox.js';
+import { html } from 'lit';
+
 ```
 
 Below several extensions can be found. They illustrate that complex UI components can be created

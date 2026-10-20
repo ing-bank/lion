@@ -18,7 +18,7 @@ Valid characters are digits and separators. Formatting happens on-blur.
 If there are no valid characters in the input whatsoever, it will provide an error feedback.
 
 ```js script
-import { html } from '@mdjs/mdjs-preview';
+import { html } from 'lit';
 import '@lion/ui/define/lion-input-amount.js';
 ```
 
@@ -61,7 +61,7 @@ import '@lion/ui/define/lion-input-amount.js';
 ## Input Amount: Use Cases
 
 ```js script
-import { html } from '@mdjs/mdjs-preview';
+import { html } from 'lit';
 import { MaxLength } from '@lion/ui/form-core.js';
 import { loadDefaultFeedbackMessages } from '@lion/ui/validate-messages.js';
 

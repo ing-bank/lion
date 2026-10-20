@@ -5,7 +5,7 @@
 ## How To: Extend a native input
 
 ```js script
-import { html } from '@mdjs/mdjs-preview';
+import { html } from 'lit';
 import { LionInput } from '@lion/ui/input.js';
 import { LionInputDate } from '@lion/ui/input-date.js';
 import { loadDefaultFeedbackMessages } from '@lion/ui/validate-messages.js';

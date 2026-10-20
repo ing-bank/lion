@@ -13,7 +13,7 @@ A web component that enhances the functionality of the native `<input type="radi
 You should use our `radio` inside this element.
 
 ```js script
-import { html } from '@mdjs/mdjs-preview';
+import { html } from 'lit';
 import '@lion/ui/define/lion-radio-group.js';
 import '@lion/ui/define/lion-radio.js';
 ```
@@ -58,7 +58,7 @@ import '@lion/ui/define/lion-radio.js';
 ## Radio Group: Use Cases
 
 ```js script
-import { html } from '@mdjs/mdjs-preview';
+import { html } from 'lit';
 import '@lion/ui/define/lion-radio-group.js';
 import '@lion/ui/define/lion-radio.js';
 ```

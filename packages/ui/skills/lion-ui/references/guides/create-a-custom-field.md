@@ -5,7 +5,7 @@
 ## How To: Create a custom field
 
 ```js script
-import { html, css, LitElement } from '@mdjs/mdjs-preview';
+import { html, css, LitElement } from 'lit';
 import { LionField } from '@lion/ui/form-core.js';
 import '@lion/ui/define/lion-field.js';
 import '@lion/ui/define/lion-validation-feedback.js';

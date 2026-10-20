@@ -11,7 +11,7 @@
 A web component based on the generic text input field. Its purpose is to provide a way for users to fill in an email.
 
 ```js script
-import { html } from '@mdjs/mdjs-preview';
+import { html } from 'lit';
 import '@lion/ui/define/lion-input-email.js';
 ```
 
@@ -44,7 +44,7 @@ import '@lion/ui/define/lion-input-email.js';
 ## Input Email: Use Cases
 
 ```js script
-import { html } from '@mdjs/mdjs-preview';
+import { html } from 'lit';
 import { Validator } from '@lion/ui/form-core.js';
 import '@lion/ui/define/lion-input-email.js';
 ```

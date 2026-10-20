@@ -5,7 +5,7 @@
 ## Overlays: Edge cases
 
 ```js script
-import { html, render, LitElement } from '@mdjs/mdjs-preview';
+import { html, render, LitElement } from 'lit';
 import { ref, createRef } from 'lit/directives/ref.js';
 import './assets/demo-el-using-overlaymixin.js';
 import './assets/applyDemoOverlayStyles.js';
@@ -259,7 +259,7 @@ Please check the [system rationals](./rationale.md) folder, where we go more in-
 ## Overlays: Use Cases
 
 ```js script
-import { html, render, LitElement } from '@mdjs/mdjs-preview';
+import { html, render, LitElement } from 'lit';
 import { renderLitAsNode } from '@lion/ui/helpers.js';
 import {
   ArrowMixin,
@@ -741,7 +741,7 @@ By default, there are only a few `OverlayMixin` methods you need to override to 
 - `_teardownOpenCloseListeners`, use this lifecycle hook to ensure that the listeners are removed when the OverlayController is tearing down. For example when the Web Component is disconnected from the DOM.
 
 ```js
-import { LitElement } from '@mdjs/mdjs-preview';
+import { LitElement } from 'lit';
 import { OverlayMixin } from '@lion/ui/overlays.js';
 
 class MyOverlayWC extends OverlayMixin(LitElement) {
@@ -1198,7 +1198,7 @@ After a cost/benefit analysis, we choose to be temporarily incompatible with AXE
 ## Configuration: Positioning
 
 ```js script
-import { html, render, LitElement } from '@mdjs/mdjs-preview';
+import { html, render, LitElement } from 'lit';
 import { ref, createRef } from 'lit/directives/ref.js';
 import './assets/demo-el-using-overlaymixin.js';
 import './assets/applyDemoOverlayStyles.js';
@@ -1304,7 +1304,7 @@ export const placementGlobal = () => {
 ## Overlays: Configuration
 
 ```js script
-import { html } from '@mdjs/mdjs-preview';
+import { html } from 'lit';
 import './assets/demo-el-using-overlaymixin.js';
 import './assets/applyDemoOverlayStyles.js';
 import { withDropdownConfig, withModalDialogConfig, withTooltipConfig } from '@lion/ui/overlays.js';

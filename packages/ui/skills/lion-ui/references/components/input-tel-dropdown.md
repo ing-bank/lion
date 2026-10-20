@@ -11,7 +11,7 @@
 Extension of Input Tel that prefixes a dropdown list that shows all possible regions / countries.
 
 ```js script
-import { html } from '@mdjs/mdjs-preview';
+import { html } from 'lit';
 import '@lion/ui/define/lion-input-tel-dropdown.js';
 import { loadDefaultFeedbackMessages } from '@lion/ui/validate-messages.js';
 ```
@@ -50,7 +50,7 @@ import '@lion/ui/define/lion-input-tel-dropdown.js';
 ## Input Tel Dropdown: Use Cases
 
 ```js script
-import { html } from '@mdjs/mdjs-preview';
+import { html } from 'lit';
 import { ref, createRef } from 'lit/directives/ref.js';
 import { loadDefaultFeedbackMessages } from '@lion/ui/validate-messages.js';
 import { PhoneUtilManager } from '@lion/ui/input-tel.js';
@@ -212,9 +212,9 @@ export const formatCountryCodeStyle = () => {
 ## Input Tel Dropdown: Extensions
 
 ```js script
-import { html } from '@mdjs/mdjs-preview';
+import { html } from 'lit';
 import '@lion/ui/define/lion-select-rich.js';
-import './src/intl-input-tel-dropdown.js';
+
 import { loadDefaultFeedbackMessages } from '@lion/ui/validate-messages.js';
 ```
 

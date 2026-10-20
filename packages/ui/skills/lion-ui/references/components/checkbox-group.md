@@ -14,7 +14,7 @@ Its purpose is to provide a way for users to check **multiple** options amongst 
 > You should use our `checkbox` elements as children in checkbox group.
 
 ```js script
-import { html } from '@mdjs/mdjs-preview';
+import { html } from 'lit';
 import '@lion/ui/define/lion-checkbox-group.js';
 import '@lion/ui/define/lion-checkbox.js';
 ```
@@ -51,7 +51,7 @@ import '@lion/ui/define/lion-checkbox.js';
 ## Checkbox Group: Use Cases
 
 ```js script
-import { html } from '@mdjs/mdjs-preview';
+import { html } from 'lit';
 import '@lion/ui/define/lion-checkbox-group.js';
 import '@lion/ui/define/lion-checkbox-indeterminate.js';
 import '@lion/ui/define/lion-checkbox.js';

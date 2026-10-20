@@ -14,7 +14,7 @@ You cannot use interactive elements inside the options. Avoid very long names to
 Sets of options where each option name starts with the same word or phrase can also significantly degrade usability for keyboard and screen reader users.
 
 ```js script
-import { html } from '@mdjs/mdjs-preview';
+import { html } from 'lit';
 import '@lion/ui/define/lion-select.js';
 ```
 
@@ -56,7 +56,7 @@ import '@lion/ui/define/lion-select.js';
 ## Select: Use Cases
 
 ```js script
-import { html } from '@mdjs/mdjs-preview';
+import { html } from 'lit';
 import { Required } from '@lion/ui/form-core.js';
 import { loadDefaultFeedbackMessages } from '@lion/ui/validate-messages.js';
 import '@lion/ui/define/lion-select.js';

@@ -11,7 +11,7 @@
 <p class="lion-paragraph--emphasis">The Switch is used to toggle a property or feature on or off.</p>
 
 ```js script
-import { html as previewHtml } from '@mdjs/mdjs-preview';
+import { html as previewHtml } from 'lit';
 import '@lion/ui/define/lion-switch.js';
 ```
 
@@ -87,7 +87,7 @@ class MyComponent extends ScopedElementsMixin(LitElement) {
 ## Switch: Use Cases
 
 ```js script
-import { html } from '@mdjs/mdjs-preview';
+import { html } from 'lit';
 import { Validator } from '@lion/ui/form-core.js';
 import { LionSwitch } from '@lion/ui/switch.js';
 import '@lion/ui/define/lion-switch.js';

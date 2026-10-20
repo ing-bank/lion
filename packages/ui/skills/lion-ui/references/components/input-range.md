@@ -11,7 +11,7 @@
 A web component based on the native range input. Its purpose is to provide a way for users to select one value from a range of values.
 
 ```js script
-import { html } from '@mdjs/mdjs-preview';
+import { html } from 'lit';
 import '@lion/ui/define/lion-input-range.js';
 ```
 
@@ -44,7 +44,7 @@ import '@lion/ui/define/lion-input-range.js';
 ## Input Range: Use Cases
 
 ```js script
-import { html } from '@mdjs/mdjs-preview';
+import { html } from 'lit';
 import '@lion/ui/define/lion-input-range.js';
 ```
 

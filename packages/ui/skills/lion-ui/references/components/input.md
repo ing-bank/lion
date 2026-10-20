@@ -9,7 +9,7 @@
 ## Input: Overview
 
 ```js script
-import { html } from '@mdjs/mdjs-preview';
+import { html } from 'lit';
 import '@lion/ui/define/lion-input.js';
 ```
 
@@ -48,7 +48,7 @@ import '@lion/ui/define/lion-input.js';
 ## Input: Use Cases
 
 ```js script
-import { html } from '@mdjs/mdjs-preview';
+import { html } from 'lit';
 import '@lion/ui/define/lion-input.js';
 ```
 

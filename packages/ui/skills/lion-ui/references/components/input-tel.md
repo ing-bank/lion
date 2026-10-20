@@ -11,7 +11,7 @@
 Input field for entering phone numbers, including validation, formatting and mobile keyboard support.
 
 ```js script
-import { html } from '@mdjs/mdjs-preview';
+import { html } from 'lit';
 import { ref, createRef } from 'lit/directives/ref.js';
 
 import { PhoneUtilManager } from '@lion/ui/input-tel.js';
@@ -74,14 +74,14 @@ import '@lion/ui/define/lion-input-tel.js';
 ## Input Tel: Use Cases
 
 ```js script
-import { html } from '@mdjs/mdjs-preview';
+import { html } from 'lit';
 import { ref, createRef } from 'lit/directives/ref.js';
 import { Unparseable } from '@lion/ui/form-core.js';
 import { localize } from '@lion/ui/localize.js';
 import { loadDefaultFeedbackMessages } from '@lion/ui/validate-messages.js';
 import { PhoneUtilManager } from '@lion/ui/input-tel.js';
 import '@lion/ui/define/lion-input-tel.js';
-import './src/h-region-code-table.js';
+
 import '../../../docs/fundamentals/systems/form/assets/h-output.js';
 
 // TODO: make each example load/use the dependencies by default
