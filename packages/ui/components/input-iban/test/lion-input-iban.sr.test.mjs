@@ -77,6 +77,9 @@ describe('<lion-input-iban> screen reader', () => {
   it('announces an empty IBAN field', async () => {
     await fixtureIban();
 
+    // A real reader follows OS focus, so `sr.focus` is what makes it talk about
+    // this field; the virtual reader has its own cursor, so it also walks to it.
+    await sr.focus('lion-input-iban');
     await sr.next();
     await sr.next();
 
@@ -92,6 +95,7 @@ describe('<lion-input-iban> screen reader', () => {
   it('announces the formatted IBAN once the field is committed', async () => {
     await fixtureIban();
 
+    await sr.focus('lion-input-iban');
     await sr.next();
     await sr.next();
     await sr.type('NL17INGB0002822608');
@@ -110,6 +114,7 @@ describe('<lion-input-iban> screen reader', () => {
   it('announces the invalid state once an invalid IBAN is committed', async () => {
     const el = await fixtureIban();
 
+    await sr.focus('lion-input-iban');
     await sr.next();
     await sr.next();
     await sr.type('FOO');

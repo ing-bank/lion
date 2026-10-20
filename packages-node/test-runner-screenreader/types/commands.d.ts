@@ -7,6 +7,11 @@ export function exact(...phrases: string[]): Extract<SrPhraseList, { mode: 'exac
 export function contains(...phrases: string[]): Extract<SrPhraseList, { mode: 'contains' }>;
 
 export interface ScreenreaderCommands {
+  /**
+   * Focus the control a component delegates focus to, so the screen reader talks
+   * about that control (a real reader follows OS focus).
+   */
+  focus(selector: string): void;
   /** Start the screen reader bound to this run, returns which reader is active. */
   initialize(): Promise<SrReader>;
   /** Stop the screen reader. */

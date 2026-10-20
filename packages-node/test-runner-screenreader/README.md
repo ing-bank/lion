@@ -40,10 +40,11 @@ describe('<lion-input-iban> screen reader', () => {
         <label slot="label">IBAN</label>
       </lion-input-iban>
     `);
-    await sr.next();
+    await sr.focus('lion-input-iban'); // real readers follow OS focus
+    await sr.next(); // the virtual reader walks its own cursor
     await sr.expect({
-      virtual: contains('IBAN', 'textbox'),
-      nvda: contains('IBAN', 'edit'),
+      virtual: contains('textbox, IBAN, not disabled, not invalid'),
+      nvda: contains('IBAN, edit,'),
       voiceover: contains('IBAN', 'text field'),
     });
   });
@@ -137,6 +138,7 @@ passed.
 
 | command                  | returns             | description                                     |
 | ------------------------ | ------------------- | ----------------------------------------------- |
+| `sr.focus(selector)`     | `void`              | anchor the reader on a control (see below)      |
 | `sr.initialize()`        | `Promise<Reader>`   | start the reader bound to this run              |
 | `sr.stop()`              | `Promise<void>`     | stop the reader                                 |
 | `sr.reset()`             | `Promise<void>`     | clear the phrase log so a test sees one state   |
@@ -154,12 +156,23 @@ passed.
 | `exact(...phrases)`      | `SrPhraseList`      | phrase log has to match one to one              |
 | `contains(...phrases)`   | `SrPhraseList`      | phrases have to appear in this order            |
 
-Note on `sr.reset()`: the virtual reader restarts its document; VoiceOver goes
-back to the first item through `keyboardCommands.moveToFirst`; NVDA has no such
-command, so it is stopped and started again - with the restart verified and
-retried once, so a reader that does not come back fails loudly instead of timing
-out every following test. That is the price of every test observing one state
-instead of the transcript of its neighbours.
+Note on `sr.reset()`: it only clears the logs. A real reader is left running and is
+not repositioned. VoiceOver has `keyboardCommands.moveToFirst`, NVDA has no such
+command, and restarting NVDA between tests means start/stop bookkeeping on a reader
+that throws on a double start ("NVDA is already running") and on stopping one that
+is not running ("NVDA is not running"). The virtual reader restarts its document.
+
+Because a real reader is not repositioned, a test says what it is about:
+`sr.focus('lion-input-iban')` focuses the control a component delegates focus to
+(its inner input, which Lion fields keep in the light DOM), and NVDA and VoiceOver
+follow that OS focus. The virtual reader has its own cursor instead of OS focus, so
+a test that needs it to walk to the control also calls `sr.next()`. Both are the
+same two lines per test, and neither depends on where the reader was left after the
+previous test.
+
+Note on waits: `sr.waitFor()` defaults to 15s, below the 20s after which the browser
+side gives up on a test runner command, so a phrase that never comes is reported as
+that phrase and not as a transport error.
 
 ## License
 

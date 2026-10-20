@@ -153,7 +153,6 @@ function createVirtualProxy(page) {
 function createScreenReader({ screenReader, getPage }) {
   /** @type {any} */
   let instance = null;
-  let resets = 0;
 
   /**
    * A screen reader that was just started does not always answer yet: in CI NVDA
@@ -230,28 +229,17 @@ function createScreenReader({ screenReader, getPage }) {
   };
 
   /**
-   * NVDA has no "go to the start of the document" command, so it is stopped and
-   * started again - waiting for it to answer again before the run continues.
-   */
-  const restart = async () => {
-    await stop();
-    await start();
-  };
-
-  /**
-   * Bring the reader back to the start of the document and empty the logs, so
-   * every test observes one state instead of the transcript of its neighbours.
+   * Empty the logs, so every test observes one state instead of the transcript of
+   * its neighbours. A real reader is left running and is not repositioned: it has
+   * no "go to the start of the document" command (VoiceOver does, NVDA does not),
+   * and restarting it between tests means start/stop bookkeeping on a reader that
+   * throws on a double start ("NVDA is already running") or on stopping one that is
+   * not running ("NVDA is not running"). A test anchors itself on the control it
+   * asserts about with `sr.focus()` instead.
    */
   const reset = async () => {
-    resets += 1;
     if (screenReader === 'virtual') {
       await startVirtualReader(getPage());
-    } else if (resets > 1 && instance?.keyboardCommands?.moveToFirst) {
-      // VoiceOver can go back to the start of the document itself, so it does
-      // not need to be restarted between tests.
-      await instance.perform(instance.keyboardCommands.moveToFirst);
-    } else if (resets > 1 && instance) {
-      await restart();
     }
     await instance?.clearSpokenPhraseLog?.();
     await instance?.clearItemTextLog?.();

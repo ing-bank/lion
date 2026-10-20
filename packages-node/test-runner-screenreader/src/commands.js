@@ -58,8 +58,42 @@ function assertComplete(expectation, reader) {
   }
 }
 
+/**
+ * Focus the control a component delegates focus to (its inner input), so the
+ * screen reader talks about that control. A real reader follows OS focus: this
+ * is how a test chooses the subject of its expectation, instead of depending on
+ * wherever the reader's own cursor happened to be after the previous test.
+ *
+ * @param {string} selector
+ */
+export function srFocus(selector) {
+  const element = /** @type {HTMLElement | null} */ (document.querySelector(selector));
+  if (!element) {
+    throw new Error(`srFocus: no element matches "${selector}".`);
+  }
+  // Lion fields keep their input in the light DOM (the shadow root holds the
+  // slots), so look in both.
+  const focusable = 'input, select, textarea, [tabindex]:not([tabindex="-1"])';
+  const delegate = /** @type {HTMLElement} */ (
+    element.shadowRoot?.querySelector(focusable) ?? element.querySelector(focusable) ?? element
+  );
+  delegate.focus();
+  // A component that delegates focus reports itself as the active element while
+  // its inner control holds the focus.
+  const focused =
+    document.activeElement === delegate ||
+    document.activeElement === element ||
+    element.contains(document.activeElement) ||
+    element.shadowRoot?.activeElement === delegate;
+  if (!focused) {
+    throw new Error(`srFocus: "${selector}" did not take focus.`);
+  }
+}
+
 /** @type {import('../types/commands.js').ScreenreaderCommands} */
 const sr = {
+  focus: srFocus,
+
   async initialize() {
     const result = /** @type {{ reader: SrReader }} */ (
       await executeServerCommand('sr-initialize')
