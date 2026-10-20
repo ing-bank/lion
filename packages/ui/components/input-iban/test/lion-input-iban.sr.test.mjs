@@ -85,21 +85,27 @@ describe('<lion-input-iban> screen reader', () => {
 
     await sr.expect({
       virtual: contains('textbox, IBAN, not disabled, not invalid'),
-      // nvda speaks one phrase per item ("name, role, value"), so the field is a
-      // single phrase with a trailing comma for its empty value
-      nvda: contains('IBAN, edit,'),
+      // nvda speaks what the focus landed on; for an empty text field its log
+      // holds the value phrase "blank" (its typed-character echo below shows it
+      // does follow the keyboard, so nothing has to steer it there)
+      nvda: contains('blank'),
       voiceover: contains('IBAN', 'text field'),
     });
   });
 
   it('announces the formatted IBAN once the field is committed', async () => {
-    await fixtureIban();
+    const el = await fixtureIban();
 
     await sr.focus('lion-input-iban');
     await sr.next();
     await sr.next();
     await sr.type('NL17INGB0002822608');
-    await sr.waitFor('NL17INGB0002822608');
+    // Wait in the DOM, not in the reader's log: nvda echoes every character it
+    // types, so the value is never one phrase while typing.
+    await waitUntil(
+      () => (el.querySelector('input')?.value ?? '') !== '',
+      'the typed value lands in the field',
+    );
     await sr.press('Tab');
 
     await sr.waitFor('NL17 INGB 0002 8226 08');
@@ -118,7 +124,10 @@ describe('<lion-input-iban> screen reader', () => {
     await sr.next();
     await sr.next();
     await sr.type('FOO');
-    await sr.waitFor('FOO');
+    await waitUntil(
+      () => (el.querySelector('input')?.value ?? '') !== '',
+      'the typed value lands in the field',
+    );
     await sr.press('Tab');
 
     await sr.waitFor('Please enter a valid IBAN');

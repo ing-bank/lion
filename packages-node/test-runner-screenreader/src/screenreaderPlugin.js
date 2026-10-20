@@ -394,6 +394,21 @@ export function screenreaderPlugin(options) {
         return { found: true, phraseLog };
       }
 
+      if (command === 'sr-focus') {
+        // NVDA and the virtual reader do not need help here: NVDA announces what
+        // the keyboard focus lands on (its log shows the field, and its
+        // per-character echo shows it follows the keyboard), and the virtual
+        // reader has its own cursor that a test walks with sr.next(). VoiceOver
+        // does not follow the keyboard focus, so its cursor would stay where it
+        // was - on the Finder window that the setup leaves mounted, which is what
+        // ends up in its log as "guidepup-voiceover-preferences-... Volume".
+        const instance = readerFor(session);
+        if (instance?.keyboardCommands?.moveCursorToKeyboardFocus) {
+          await instance.perform(instance.keyboardCommands.moveCursorToKeyboardFocus);
+        }
+        return { focused: true };
+      }
+
       if (command === 'sr-observe') {
         recordObservation(session.id, /** @type {any} */ (payload));
         return { success: true };

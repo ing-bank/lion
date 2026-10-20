@@ -88,6 +88,7 @@ export function srFocus(selector) {
   if (!focused) {
     throw new Error(`srFocus: "${selector}" did not take focus.`);
   }
+  return executeServerCommand('sr-focus', { selector });
 }
 
 /** @type {import('../types/commands.js').ScreenreaderCommands} */
