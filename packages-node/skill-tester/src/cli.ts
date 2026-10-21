@@ -358,7 +358,9 @@ async function main(): Promise<void> {
     );
   }
 
-  if (options.docs) {
+  // `--ledger <path>` must write on its own: gating the write on `--docs` silently dropped it (the
+  // same failure mode as a path-valued `--ledger` eating the next flag).
+  if (options.ledgerPath || options.docs) {
     const here = path.dirname(fileURLToPath(import.meta.url));
     const root = path.resolve(here, '../../..');
     const ledgerFile = options.ledgerPath
@@ -372,13 +374,15 @@ async function main(): Promise<void> {
     const withKinds = [...loadLionUiScenarios({ repoRoot: root }), ...manualScenarios];
     const ledger = updateLedger(loadLedger(ledgerFile), report, withKinds, skillRevisionOf(root));
     writeLedger(ledgerFile, ledger);
-    writeQualityPage(pageFile, ledger);
-    console.log(
-      green(
-        `\nResults page: ${path.relative(root, pageFile)} ` +
-          `(${ledger.entries.length} row(s) in ${path.relative(root, ledgerFile)})`,
-      ),
-    );
+    if (options.docs) writeQualityPage(pageFile, ledger);
+    if (options.docs) {
+      console.log(
+        green(
+          `\nResults page: ${path.relative(root, pageFile)} ` +
+            `(${ledger.entries.length} row(s) in ${path.relative(root, ledgerFile)})`,
+        ),
+      );
+    }
   }
 
   process.exitCode = report.overall.mean * 100 >= options.passThreshold ? 0 : 1;
