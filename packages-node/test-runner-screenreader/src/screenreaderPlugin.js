@@ -486,7 +486,8 @@ export function screenreaderPlugin(options) {
           await instance.perform(keyboardCommands.moveCursorToKeyboardFocus);
           await instance.perform(keyboardCommands.hearItemDescription);
         }
-        await readerFor(session).waitForSpeechToSettle();
+        // the wrapper owns this (readerFor gives the reader instance)
+        await stateFor(session).reader.waitForSpeechToSettle();
         return { focused: true };
       }
 
