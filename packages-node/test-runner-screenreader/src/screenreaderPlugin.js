@@ -485,10 +485,9 @@ export function screenreaderPlugin(options) {
           // "VoiceOver is on the field" from "VoiceOver says nothing".
           await instance.perform(keyboardCommands.moveCursorToKeyboardFocus);
           await instance.perform(keyboardCommands.hearItemDescription);
-          // VoiceOver's cursor is not its keyboard focus: put the keyboard focus on the
-          // item its cursor is on, so typing lands in the field instead of going nowhere
-          // (typing never reached the input in CI).
-          await instance.perform(keyboardCommands.moveKeyboardFocusToCursor);
+          // Do not add more commands here: a server command has to answer within 20s
+          // (@web/dev-server-core) and VoiceOver is slow, so an anchor with a third
+          // command and the settle below exceeded it in CI.
         }
         // the wrapper owns this (readerFor gives the reader instance)
         await stateFor(session).reader.waitForSpeechToSettle();
