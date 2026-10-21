@@ -31,7 +31,8 @@
     "eval:runware": "node examples/run.mjs runware",
     "skill:index": "node scripts/render-skill-index.mjs",
     "test": "node --test --test-concurrency=1 \"test-node/*.test.ts\"",
-    "test:node": "node --test --test-concurrency=1 \"test-node/*.test.ts\""
+    "test:node": "node --test --test-concurrency=1 \"test-node/*.test.ts\"",
+    "test:skills-check": "node --test --test-concurrency=1 test-node/entrypointCoverage.test.ts test-node/componentApiCoverage.test.ts test-node/synonymRouting.test.ts test-node/docNoise.test.ts"
   },
   "dependencies": {
     "diff": "^9.0.0",

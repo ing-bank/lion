@@ -39,6 +39,7 @@
     "screenshots-comparison:generate-screenshots-diff": "node ./scripts/screenshots-comparison/generate-screenshots-diff.js --target-branch master",
     "screenshots-comparison:update-baseline": "node ./scripts/screenshots-comparison/update-baseline.js --target-branch master",
     "skills:generate": "npm run skills:generate -w packages/ui",
+    "skills:check": "npm run skills:generate && git diff --exit-code -- packages/ui/skills && npm run test:skills-check -w packages-node/skill-tester",
     "skills:link": "npm run skills:link -w packages/ui",
     "start": "rocket start",
     "start:astro": "astro dev",
