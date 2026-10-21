@@ -4,10 +4,26 @@
     --bg-color: light-dark(#ffffff, #000000);
     --text-primary: light-dark(#111111, #ffffff);
     --text-secondary: light-dark(#5a5a5a, #888888);
-    /* Warm-yellow lineage; the light value is darkened so it passes AA on white. */
-    --highlight-color: light-dark(#7a5c00, #CCCCCC);
-    --highlight-color-hover: light-dark(#6b4d00, #ffca2c);
-    --on-highlight: light-dark(#ffffff, #000000); 
+    /*
+     * The accent is the dark theme's yellow, in both themes. #FFC107 is 1.6:1 on the light paper,
+     * so it can carry a fill, a border, an underline or a graphic, but never the ink itself:
+     *
+     *   fill / border / underline / graphic          -> --accent-yellow
+     *   text or icon sitting on the page surface     -> --accent-on-surface (readable ink) with the
+     *                                                   yellow as an outline or underline, or as
+     *                                                   --accent-chip-surface: a near-black rounded
+     *                                                   square carrying yellow text (12.6:1)
+     *
+     * --highlight-color keeps its name and every former fill site; the former ink sites now name
+     * --accent-on-surface, which is why no rule paints brown text on the light surface any more.
+     */
+    --accent-yellow: #FFC107;
+    --accent-ink: light-dark(#111111, #111111);
+    --accent-on-surface: light-dark(#111111, #FFC107);
+    --accent-chip-surface: #111111;
+    --highlight-color: #FFC107;
+    --highlight-color-hover: color-mix(in srgb, #FFC107 85%, #ffffff);
+    --on-highlight: var(--accent-ink); 
     --border-color: light-dark(#dcdcdc, #222222);
     --card-bg: light-dark(#f6f6f6, #0a0a0a);
     --font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
@@ -28,7 +44,7 @@
     
     /* Focus states */
     --focus-border-color-inner: light-dark(#111111, #ffffff);
-    --focus-border-color-outer: light-dark(#7a5c00, #FFC107);
+    --focus-border-color-outer: var(--accent-yellow);
     
     /* Additional backgrounds */
     --bg-subtle: light-dark(#f2f2f2, #111111);
@@ -40,7 +56,23 @@
      * values are the ones that shipped and they must not drift: a 30%-black header on a white page
      * would put dark text on a dark bar.
      */
-    --header-bg: light-dark(rgba(255, 255, 255, 0.6), rgba(0, 0, 0, 0.3));
+    /*
+     * The fixed bar is the page seen through a blur. At 60%/30% the blur supplied the legibility and
+     * the page showed through as a grey cloud (measured on the built portal, scrolled 600px: the band
+     * behind the nav labels had sd 44.7 in light and 52.4 on /components/, with dark glyph ghosts at
+     * luma 88-104 in the bar). The scrim now carries the legibility and the blur only adds texture.
+     */
+    --header-bg: light-dark(rgba(251, 251, 251, 0.9), rgba(17, 17, 17, 0.85));
+    /*
+     * The chrome (fixed bar + footer) is a neutral grey rather than the page colour: at #ffffff
+     * on a #ffffff page the bar only existed as a blur, and the footer had no surface at all, so
+     * neither read as a separate layer. Same value family in both themes - #e8e8e8 lifted out of
+     * white, #111111 lifted out of black - which is what gives the page its contrast against the
+     * chrome. The light value was #f2f2f2 first; one step darker (#e8e8e8) reads as a real surface
+     * and still passes AA for the secondary ink: #5a5a5a on #e8e8e8 is 5.63:1 (16.87:1 was #111
+     * on #f2f2f2, now 15.41:1).
+     */
+    --chrome-bg: light-dark(#e8e8e8, #111111);
     --header-border: light-dark(rgba(0, 0, 0, 0.08), rgba(255, 255, 255, 0.08));
     --overlay-subtle: light-dark(rgba(0, 0, 0, 0.04), rgba(255, 255, 255, 0.05));
     --overlay-border: light-dark(rgba(0, 0, 0, 0.12), rgba(255, 255, 255, 0.1));
@@ -61,7 +93,9 @@
      */
     --code-keyword: light-dark(#5a5a5a, #777777);
     --code-type: light-dark(#5a5a5a, #999999);
-    --code-number: light-dark(#8a4b00, #FFAB70);
+    /* Was a brown (#8a4b00). A number is code text, so it takes the readable accent ink rather
+     * than the yellow, which is 1.63:1 on the light code surface. */
+    --code-number: light-dark(#111111, #FFAB70);
 }
 
 * {
@@ -89,7 +123,7 @@ body {
 
 *:focus-visible,
 .pagefind-ui--reset *:focus-visible{
-    outline-color: var(--highlight-color);
+    outline-color: var(--accent-on-surface);
     outline-style: dotted;
     outline-width: var(--border-width-lg);
     outline-offset: 2px;
@@ -145,8 +179,10 @@ body {
     width: 100%;
     z-index: 100;
     background: var(--header-bg);
-    backdrop-filter: blur(20px) saturate(180%);
-    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    /* 20px smeared glyph shapes into grey clouds; saturate(180%) amplified the colour showing
+     * through (116 distinct colours behind the bar on /components/ dark). */
+    backdrop-filter: blur(12px) saturate(120%);
+    -webkit-backdrop-filter: blur(12px) saturate(120%);
     border-bottom: 1px solid var(--header-border);
     min-height: 85px;
 }
@@ -161,6 +197,27 @@ main {
     align-items: center;
 }
 
+/*
+ * Mobile: the nav collapses to the hamburger, and the burger belongs on the right - the logo keeps
+ * the left edge, the theme switch sits next to the burger. Order only, so the DOM keeps reading
+ * logo -> nav -> theme switch for the desktop row (which is where the links and command icons live).
+ */
+@media (max-width: 1023px) {
+    /* The switch group and the burger are two controls, not one block: give them a gutter. */
+    .site-header .container {
+        gap: 12px;
+    }
+
+    .site-header .container > .site-nav {
+        order: 3;
+    }
+
+    .site-header .container > .theme-switch {
+        order: 2;
+        margin-left: auto;
+    }
+}
+
 .logo {
     display: flex;
     align-items: center;
@@ -171,36 +228,23 @@ main {
     text-decoration: none;
     letter-spacing: -0.02em;
 }
-
-.logo img {
-    display: block;
-}
-
 /*
- * public/logo.svg and public/lionui-text.svg are hard-coded white, so both disappear on a light
- * background. Inverting a monochrome *asset* is what an asset-level filter is for; inverting the
- * root element is not (it creates a containing block for position:fixed descendants — .site-header
- * is fixed — plus a stacking context, and it regressed --text-secondary below WCAG AA).
- * hue-rotate keeps the dandelion accent in the wordmark instead of flipping it to blue.
- * Follow-up: ship the wordmark as inline SVG so it can use currentColor and this filter can go.
+ * The wordmark is an inline SVG (src/components/LionWordmark.astro). The <·> mark that used to sit
+ * before it in the topbar, and the asset-level invert that made it legible in light mode, are gone
+ * with it - the wordmark follows currentColor on its own.
  */
-@media (prefers-color-scheme: light) {
-    :root:not(:has(#theme-dark:checked)) .logo img {
-        filter: invert(1) hue-rotate(180deg);
-    }
-}
-
-:root:has(#theme-light:checked) .logo img {
-    filter: invert(1) hue-rotate(180deg);
-}
-
 .logo-text-svg {
     height: 36px;
     width: auto;
 }
 
 .highlight-text {
-    color: var(--highlight-color);
+    /* Accent as a word inside the hero headline: the near-black rounded square from the brief,
+     * because yellow text on the light paper is 1.6:1. */
+    color: var(--accent-yellow);
+    background-color: var(--accent-chip-surface);
+    border-radius: 4px;
+    padding: 0 0.15em;
     margin-left: 2px;
 }
 
@@ -220,7 +264,12 @@ main {
 }
 
 .main-nav a:hover {
-    color: var(--highlight-color);
+    /* Outline treatment: readable ink, the accent carried by the underline. */
+    color: var(--accent-on-surface);
+    text-decoration: underline;
+    text-decoration-color: var(--accent-yellow);
+    text-decoration-thickness: 2px;
+    text-underline-offset: 3px;
 }
 
 .search-link {
@@ -235,7 +284,12 @@ main {
 }
 
 .search-link:hover {
-    color: var(--highlight-color);
+    /* Outline treatment: readable ink, the accent carried by the underline. */
+    color: var(--accent-on-surface);
+    text-decoration: underline;
+    text-decoration-color: var(--accent-yellow);
+    text-decoration-thickness: 2px;
+    text-underline-offset: 3px;
     background-color: rgba(255, 193, 7, 0.1);
 }
 
@@ -380,12 +434,14 @@ main {
 .pill {
     display: inline-block;
     font-size: 0.8rem;
-    color: var(--highlight-color);
-    border: 1px solid var(--highlight-color);
+    /* Near-black rounded square with yellow text (12.6:1 in light), not a yellow label: the accent
+     * cannot be readable text on the light surface. */
+    color: var(--accent-yellow);
+    background: var(--accent-chip-surface);
+    border: 1px solid var(--accent-yellow);
     padding: 4px 12px;
-    border-radius: 100px;
+    border-radius: 4px;
     margin-bottom: 24px;
-    background: rgba(255, 193, 7, 0.1);
 }
 
 .hero h1 {
@@ -428,7 +484,8 @@ main {
 }
 
 .btn-primary {
-    background-color: var(--highlight-color);
+    /* Yellow fill, near-black ink: 12.6:1, where the old brown fill carried white ink at 6.25:1. */
+    background-color: var(--accent-yellow);
     color: var(--on-highlight);
 }
 
@@ -444,9 +501,10 @@ main {
 }
 
 .btn-secondary:hover {
-    border-color: var(--highlight-color);
-    color: var(--highlight-color);
-    background-color: rgba(255, 193, 7, 0.05);
+    /* Outline treatment: the accent is the border, the ink stays readable. */
+    border-color: var(--accent-yellow);
+    color: var(--accent-on-surface);
+    background-color: color-mix(in srgb, var(--accent-yellow) 5%, transparent);
 }
 
 .arrow {
@@ -493,7 +551,12 @@ main {
 }
 
 .feature-card:hover h3 {
-    color: var(--highlight-color);
+    /* Outline treatment: readable ink, the accent carried by the underline. */
+    color: var(--accent-on-surface);
+    text-decoration: underline;
+    text-decoration-color: var(--accent-yellow);
+    text-decoration-thickness: 2px;
+    text-underline-offset: 3px;
 }
 
 .feature-card h3 {
@@ -513,7 +576,9 @@ main {
 /* Footer */
 .site-footer {
     padding: 80px 0;
-    border-top: 1px solid var(--border-color);
+    /* Was transparent, i.e. the page colour continued into the footer. */
+    background: var(--chrome-bg);
+    border-top: 1px solid var(--header-border);
 }
 
 .footer-row {
@@ -546,7 +611,12 @@ main {
 }
 
 .footer-links a:hover {
-    color: var(--highlight-color);
+    /* Outline treatment: readable ink, the accent carried by the underline. */
+    color: var(--accent-on-surface);
+    text-decoration: underline;
+    text-decoration-color: var(--accent-yellow);
+    text-decoration-thickness: 2px;
+    text-underline-offset: 3px;
 }
 
 /* Responsive */
@@ -727,7 +797,7 @@ main {
 .docs-content a {
     color: var(--text-primary);
     text-decoration: underline;
-    text-decoration-color: var(--highlight-color);
+    text-decoration-color: var(--accent-yellow);
     text-underline-offset: 8px;
     text-decoration-thickness: 1px;
     text-decoration-style: dashed;
@@ -736,7 +806,7 @@ main {
 
 .docs-content a:hover {
     text-decoration: none;
-    background-color: var(--highlight-color);
+    background-color: var(--accent-yellow);
     color: var(--on-highlight);
     padding: 2px 4px;
     margin: -2px -4px;
@@ -783,7 +853,7 @@ main {
 }
 
 .docs-content blockquote {
-    border-left: 4px solid var(--highlight-color);
+    border-left: 4px solid var(--accent-yellow);
     padding-left: 16px;
     margin-left: 0;
     margin-bottom: 16px;
@@ -839,7 +909,8 @@ main {
 }
 
 .astro-code [style="color:#032F62;--shiki-dark:#9ECBFF"] {
-    color: var(--highlight-color) !important;
+    /* Code text, so it is accent-as-ink: readable in light, the accent in dark. */
+    color: var(--accent-on-surface) !important;
 }
 
 .astro-code [style="color:#6F42C1;--shiki-dark:#B392F0"] {
@@ -850,10 +921,10 @@ main {
     color: var(--code-keyword) !important;
 }
 .astro-code [style="color:#22863A;--shiki-dark:#85E89D"] {
-    color: var(--highlight-color) !important;
+    color: var(--accent-on-surface) !important;
 }
 .astro-code [style="color:#22863A;--shiki-dark:#85E89D"] {
-    color: var(--highlight-color) !important;
+    color: var(--accent-on-surface) !important;
 }
 .astro-code [style="color:#005CC5;--shiki-dark:#79B8FF"] {
     color: var(--code-keyword) !important;

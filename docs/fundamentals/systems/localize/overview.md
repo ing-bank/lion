@@ -3,7 +3,7 @@ parts:
   - Overview
   - Localize
   - Systems
-title: 'Localize: Overview'
+title: 'Overview'
 eleventyNavigation:
   key: Systems >> Localize >> Overview
   title: Overview
@@ -11,7 +11,7 @@ eleventyNavigation:
   parent: Systems >> Localize
 ---
 
-# Localize: Overview
+# Overview
 
 Is meant to translate text into multiple languages.
 In it's simplest form it is a function that returns the translated text for a namespace + key.

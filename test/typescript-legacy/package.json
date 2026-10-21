@@ -1,0 +1,8 @@
+{
+  "name": "@lion/consumer-types-legacy",
+  "private": true,
+  "type": "module",
+  "devDependencies": {
+    "typescript": "4.7.4"
+  }
+}

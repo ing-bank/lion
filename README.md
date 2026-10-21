@@ -121,29 +121,38 @@ example `+594890123456`, which the previous `awesome-phonenumber@7.8.0` rejected
 We keep this workaround until the next upstream awesome-phonenumber release
 incorporating the required metadata is available.
 
-The artifact lives in `packages/ui/vendor/awesome-phonenumber-7.9.0-tlouisse.libphonenumber-9.0.41.tgz`.
-`@lion/ui` uses a package-relative `file:vendor/...` dependency and bundles the
-installed `awesome-phonenumber` package when published. This preserves normal
-consumer installation and lazy imports without access to the Lion checkout.
-The private root also declares the same tarball as a development dependency so
-npm installs it during a clean workspace install rather than assuming the
-workspace already contains its bundled dependencies. The legacy docs dependency
-keeps its separate registry version.
-The temporary `prepack` helper verifies the checksum and installs only the tarball
-in an isolated temporary prefix using npm's offline mode (without running dependency
-scripts or writing a lockfile). It copies that installed package into the local
-bundle and removes the temporary prefix, because npm packing does not include
-hoisted workspace bundles. Other Lion dependencies remain unchanged.
-The original MIT license and Google's Apache-2.0 notices remain in the artifact
-and bundled package. See [vendor provenance](packages/ui/vendor/README.md) for the
-source commit, checksum, and reproducible packaging instructions.
+The private workspace `packages-node/awesome-phonenumber` contains pinned fork
+and Google JavaScript sources, not a prebuilt distribution. Its build verifies
+source checksums, compiles with Closure ADVANCED and bundles ESM with Rollup using
+the fork's inputs and options. `npm run types --workspace @lion/ui` and `npm pack`
+build and copy the generated library into `packages/ui/generated/awesome-phonenumber`.
+Root postinstall builds these assets before source-analysis tools and browser tests;
+prepack also emits UI declarations for a fresh checkout.
+Wireit caches unchanged inputs; no source downloads occur during builds.
+`@lion/ui` has no awesome-phonenumber runtime or bundled dependency.
+Its package-private `#awesome-phonenumber` import maps types, ESM and CommonJS
+to the shipped assets, requiring no consumer browser import map.
+The legacy docs dependency keeps its separate registry version.
+MIT and Google's Apache-2.0 notices accompany both sources and generated assets.
+See [source provenance and build requirements](packages-node/awesome-phonenumber/README.md).
+
+Run `npm run test:node --workspace @lion/ui` to pack Lion, install it into a fresh
+consumer outside the checkout with no overrides, and verify ESM, CommonJS,
+TypeScript 7 and 4.7.4, licenses, provenance, and French Guiana metadata. It also
+checks deterministic source rebuilds and rejection of modified sources.
+The install needs registry access for Lion's ordinary dependencies, not the phone
+library. `npm run lint:phone-number-up-to-date` verifies the maintained source
+inventory rather than incorrectly claiming registry freshness.
 
 Once the next upstream awesome-phonenumber release includes the required
 metadata, restore the normal registry dependency in `packages/ui/package.json`,
-remove `awesome-phonenumber` from `bundledDependencies`, remove the vendor asset
-and its `files` entry, remove the root development dependency, and regenerate
-`package-lock.json`. Remove the temporary `prepack` lifecycle and
-`scripts/prepare-vendored-phone.js` helper as well. Keep the metadata
+replace `#awesome-phonenumber` runtime/JSDoc imports with the registry name, and
+remove the private workspace, UI `imports` mapping, generated `files` entry and
+build/prepack hooks/helpers, including the root postinstall phone-build step.
+Remove the generated directory, source-lint integration, snapshot newline rule
+and third-party formatter/linter exclusions, then regenerate `package-lock.json`.
+Update the packaging test to check the registry dependency instead of generated
+assets. Keep the metadata
 regression test and rerun the phone tests, typechecks, and packed-consumer install
 check before removing this workaround documentation.
 
@@ -257,11 +266,39 @@ Read our [contribution guide](https://github.com/ing-bank/lion/blob/master/CONTR
 
 ## Site deployment
 
-We use [GitHub Pages](https://docs.github.com/en/pages) to host our static website. Collaborators with push permission to the repository branch [`gh-pages`](https://github.com/ing-bank/lion/tree/gh-pages) can trigger a deploy by simply running:
+The site is published to the [`gh-pages` branch](https://github.com/ing-bank/lion/tree/gh-pages) and served at <https://lion.js.org>. Collaborators with push permission to that branch can trigger a deploy with:
 
 ```bash
 npm run deploy
 ```
+
+That builds the portal (`npm run build:portal` = `build:astro` + `build:update-links`, output in `_site/`) and pushes `_site/` to `gh-pages`. The published layout:
+
+- **The Astro portal owns the site root** (`/`), so every route the portal serves comes from `_site/`.
+- **The legacy rocket site lives at `/prev` and is frozen.** `npm run build:rocket` cannot run in this repository: `rocket.config.mjs` imports `@rocket/core`, which is in neither `package.json` nor `package-lock.json`. `/prev` is therefore the last published rocket tree, kept as it was (its root-absolute urls re-prefixed to `/prev`), and it is never regenerated.
+- `next/index.html` redirects to `/` for links that still point at the pre-2026-04-23 layout.
+- `gh-pages` deletes every file that is not in the directory it is given, so the deploy runs with `-a` (`--add`, never remove): without it a deploy silently drops `/prev` and that redirect. Astro's assets are content-hashed, so leftovers from earlier builds are inert; prune them by hand if the branch ever needs it.
+
+### Branch previews (test versions of the portal)
+
+A branch preview is the portal built with another base url, published in a folder that carries
+the branch name. Nothing links to it, so it can be shared before a branch is merged.
+
+```bash
+npm run portal:preview                     # HEAD -> https://lion.js.org/next-preview/<branch-slug>/
+npm run portal:preview -- --no-push        # build and stage locally, do not publish
+npm run portal:preview -- --no-build       # reuse the _site/ that is already there
+npm run portal:preview -- --branch=feat/x  # preview another branch
+```
+
+The portal resolves all of its urls against `import.meta.env.BASE_URL` (set through
+`ASTRO_BASE_URL`), so a preview is the ordinary build with a different prefix; no other source
+changes are involved. `next-preview/index.html` lists the previews that are currently published.
+
+The shared Pages site is public: a preview url is unlisted but not access controlled. For content
+that may not be public, stage it locally and expose it on the tailnet instead (`npm run
+portal:preview -- --target=local`, then serve `~/portal-previews` from a static server behind
+`tailscale serve`; the printed url is only reachable from devices in the tailnet).
 
 ## Contact
 

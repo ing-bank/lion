@@ -3,7 +3,7 @@ parts:
   - Use Cases
   - Ajax
   - Tools
-title: 'Ajax: Use Cases'
+title: 'Use Cases'
 eleventyNavigation:
   key: Tools >> Ajax >> Use Cases
   title: Use Cases
@@ -11,7 +11,7 @@ eleventyNavigation:
   parent: Tools >> Ajax
 ---
 
-# Ajax: Use Cases
+# Use Cases
 
 ```js script
 import { html } from '@mdjs/mdjs-preview';

@@ -1,0 +1,13 @@
+{
+  "name": "awesome-phonenumber",
+  "version": "7.9.0-tlouisse.libphonenumber-9.0.41",
+  "sourceRepository": "https://github.com/tlouisse/awesome-phonenumber",
+  "sourceCommit": "b4b6439136053624351f1c0fd8eb200ee867f37f",
+  "libphonenumberRepository": "https://github.com/google/libphonenumber",
+  "libphonenumberVersion": "v9.0.41",
+  "libphonenumberCommit": "b68df884d42d5e9860fc1956a99ce6afae361100",
+  "closureCompilerVersion": "20251104.0.0",
+  "closureLibraryVersion": "20230802.0.0",
+  "rollupVersion": "4.57.1",
+  "commonjsPluginVersion": "29.0.0"
+}

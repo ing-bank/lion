@@ -1,5 +1,5 @@
 ---
-title: 'Progress Indicator: Examples'
+title: 'Examples'
 parts:
   - Progress Indicator
   - Examples
@@ -10,7 +10,7 @@ eleventyNavigation:
   title: Examples
 ---
 
-# Progress Indicator: Examples
+# Examples
 
 ```js script
 import { html } from '@mdjs/mdjs-preview';

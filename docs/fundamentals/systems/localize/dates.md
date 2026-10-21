@@ -3,7 +3,7 @@ parts:
   - Format Dates
   - Localize
   - Systems
-title: 'Localize: Format Dates'
+title: 'Format Dates'
 eleventyNavigation:
   key: Systems >> Localize >> Format Dates
   title: Format Dates
@@ -11,7 +11,7 @@ eleventyNavigation:
   parent: Systems >> Localize
 ---
 
-# Localize: Format Dates
+# Format Dates
 
 ## Features
 

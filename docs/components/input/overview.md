@@ -1,5 +1,5 @@
 ---
-title: 'Input: Overview'
+title: 'Overview'
 parts:
   - Input
   - Overview
@@ -10,7 +10,7 @@ eleventyNavigation:
   title: Overview
 ---
 
-# Input: Overview
+# Overview
 
 ```js script
 import { html } from '@mdjs/mdjs-preview';

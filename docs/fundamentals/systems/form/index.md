@@ -2,7 +2,7 @@
 parts:
   - Form
   - Systems
-title: 'Systems: Form'
+title: 'Form'
 eleventyNavigation:
   key: Systems >> Form
   title: Form
@@ -10,6 +10,6 @@ eleventyNavigation:
   parent: Systems
 ---
 
-# Systems: Form
+# Form
 
 -> go to Overview

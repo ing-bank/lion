@@ -1,5 +1,5 @@
 ---
-title: 'Drawer: Use Cases'
+title: 'Use Cases'
 parts:
   - Drawer
   - Use Cases
@@ -10,7 +10,7 @@ eleventyNavigation:
   title: Use Cases
 ---
 
-# Drawer: Use Cases
+# Use Cases
 
 ```js script
 import { html } from '@mdjs/mdjs-preview';

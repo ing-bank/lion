@@ -2,7 +2,7 @@
 parts:
   - How To
   - Create a custom field
-title: 'How To: Create a custom field'
+title: 'Create a custom field'
 eleventyNavigation:
   key: 'How To: Create a custom field'
   order: 20
@@ -10,7 +10,7 @@ eleventyNavigation:
   title: Create a custom field
 ---
 
-# How To: Create a custom field
+# Create a custom field
 
 ```js script
 import { html, css, LitElement } from '@mdjs/mdjs-preview';

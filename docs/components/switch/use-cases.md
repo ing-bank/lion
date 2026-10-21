@@ -1,5 +1,5 @@
 ---
-title: 'Switch: Use Cases'
+title: 'Use Cases'
 parts:
   - Switch
   - Use Cases
@@ -10,7 +10,7 @@ eleventyNavigation:
   title: Use Cases
 ---
 
-# Switch: Use Cases
+# Use Cases
 
 ```js script
 import { html } from '@mdjs/mdjs-preview';

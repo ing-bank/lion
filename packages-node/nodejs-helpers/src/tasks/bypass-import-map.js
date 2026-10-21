@@ -29,7 +29,7 @@ const getMatchingPatternAndReplacement = (source, fileDir, packageDir, importMap
   if (!pattern || !replacement) {
     return { pattern: '', replacement: '' };
   }
-  const fileToPackageRelativeDir = path.relative(fileDir, packageDir) || '.';
+  const fileToPackageRelativeDir = path.relative(fileDir, packageDir).replace(/\\/g, '/') || '.';
   // TODO: Is there a case where replacement does not start with ./, check spec.
   const updatedReplacement = replacement.replace('./', `${fileToPackageRelativeDir}/`);
   return { pattern, replacement: updatedReplacement };
@@ -104,7 +104,7 @@ const bypassImportMapForFile = async (filePath, packageDir, importMap) => {
 };
 
 /**
- * Normalizes the import map by removing the stars
+ * Normalizes string and ESM conditional import targets by removing the stars
  *
  * @param {object} imports packageJson.imports
  * @returns {object}
@@ -113,8 +113,19 @@ const normalizeImportMap = imports => {
   // @ts-ignore
   const removeFirstStar = str => str.replace('*', '');
   return Object.entries(imports || {}).reduce((accumulator, [key, value]) => {
+    const target =
+      value && typeof value === 'object'
+        ? Object.entries(value).find(
+            ([condition]) => condition === 'import' || condition === 'default',
+          )?.[1]
+        : value;
+    if (typeof target !== 'string') {
+      throw new Error(
+        `Unsupported import map target for "${key}": expected a string or an import/default string target`,
+      );
+    }
     // @ts-ignore
-    accumulator[removeFirstStar(key)] = removeFirstStar(value);
+    accumulator[removeFirstStar(key)] = removeFirstStar(target);
     return accumulator;
   }, {});
 };
@@ -139,9 +150,11 @@ export const bypassImportMap = async (packageDir, options = {}) => {
   if (!imports) {
     return Promise.resolve();
   }
-  const ignoredPatterns = ignoredDirs.map(dir => `!${path.join(packageDir, dir)}`);
-  const searchPatterns = [path.join(packageDir, '**', '*.js'), ...ignoredPatterns];
-  const filePaths = await globby(searchPatterns);
+  const filePaths = await globby('**/*.js', {
+    cwd: packageDir,
+    absolute: true,
+    ignore: ignoredDirs.map(dir => `${dir.replace(/\\/g, '/')}/**`),
+  });
   const importMap = normalizeImportMap(imports);
   // @ts-ignore
   return asyncConcurrentForEach(filePaths, filePath =>

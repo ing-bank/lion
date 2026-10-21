@@ -1,7 +1,13 @@
 import { PhoneUtilManager } from '../src/PhoneUtilManager.js';
 
 const originalLoadComplete = PhoneUtilManager.loadComplete;
-const originalIsLoaded = Object.getOwnPropertyDescriptor(PhoneUtilManager, 'isLoaded')?.get;
+const originalIsLoadedGetter = (() => {
+  const getter = Object.getOwnPropertyDescriptor(PhoneUtilManager, 'isLoaded')?.get;
+  if (typeof getter !== 'function') {
+    throw new Error('PhoneUtilManager.isLoaded must be a getter');
+  }
+  return getter;
+})();
 
 export function mockPhoneUtilManager() {
   /** @type {(value: any) => void} */
@@ -19,10 +25,12 @@ export function mockPhoneUtilManager() {
   return { resolveLoaded };
 }
 
+/**
+ * Restore the mocked phone utility state.
+ * Restores the real loaded-state getter, not a snapshot taken when this module was imported.
+ * @returns {void}
+ */
 export function restorePhoneUtilManager() {
   PhoneUtilManager.loadComplete = originalLoadComplete;
-  Object.defineProperty(PhoneUtilManager, 'isLoaded', {
-    // @ts-ignore
-    get: () => originalIsLoaded.call(PhoneUtilManager),
-  });
+  Object.defineProperty(PhoneUtilManager, 'isLoaded', { get: originalIsLoadedGetter });
 }

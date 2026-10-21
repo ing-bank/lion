@@ -1,5 +1,5 @@
 ---
-title: 'Tabs: Examples'
+title: 'Examples'
 parts:
   - Tabs
   - Examples
@@ -10,7 +10,7 @@ eleventyNavigation:
   title: Examples
 ---
 
-# Tabs: Examples
+# Examples
 
 ```js script
 import { LitElement, html } from '@mdjs/mdjs-preview';

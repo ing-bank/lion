@@ -3,7 +3,7 @@ parts:
   - Rationale
   - Overlays
   - Systems
-title: 'Overlays: Rationale'
+title: 'Rationale'
 eleventyNavigation:
   key: Systems >> Overlays >> Rationale
   title: Rationale
@@ -11,7 +11,7 @@ eleventyNavigation:
   parent: Systems >> Overlays
 ---
 
-# Overlays: Rationale
+# Rationale
 
 This page describes the goal and duties of the overlay system, mainly by identifying all different
 appearances and types of overlays.

@@ -2,7 +2,7 @@
 parts:
   - TypeScript
   - Rationales
-title: 'Rationales: TypeScript'
+title: 'TypeScript'
 eleventyNavigation:
   key: Rationales >> TypeScript
   title: TypeScript
@@ -10,7 +10,7 @@ eleventyNavigation:
   parent: Rationales
 ---
 
-# Rationales: TypeScript
+# TypeScript
 
 [TypeScript](https://www.typescriptlang.org) is superset of JavaScript and a popular tool for getting strongly typed syntax and better autocompletion in JavaScript.
 
@@ -50,6 +50,66 @@ In order to ignore type issues coming from Lion, please use the [skipLibCheck](h
 Lion uses [package.json export maps](https://nodejs.org/api/packages.html#exports) to provide proper module resolution and type definitions. The export map ensures that when you import from Lion packages, TypeScript can correctly resolve both the JavaScript modules and their corresponding type definitions.
 
 The export map works by defining explicit entry points for each package, mapping import paths to their actual file locations. For types, this means that when you import `@lion/ui/button.js`, TypeScript knows to look for the corresponding type definitions in the `dist-types` directory.
+
+## Subclass extension points and Lion 0.22
+
+`_focusableNode` is a protected getter in `FocusMixin`: subclasses can override it or
+access it through `this` and `super`. It is not a public DOM-query API. Lion 0.22 made
+the `LionField` and `LionListbox` overrides protected too; their earlier emitted
+declarations exposed them publicly, despite the protected mixin contract.
+
+For focusing a control, the supported public API is `control.focus()`, which delegates
+to its focusable node; `control.blur()` delegates similarly. This is not a replacement
+for every direct node access: event listeners, DOM inspection, focus options, and
+access to another component's internals need a separate downstream review. Subclass
+configuration remains supported without making the getter public.
+
+`slots` is a getter, both at runtime and in `SlotHost`. On TypeScript 4.7, intersecting
+a subclass constructor with another `Constructor<SlotHost>` can collapse the inherited
+getter into a property and reject a further getter override with `TS2611`. `SlotMixin`
+preserves the superclass type when its host is already present, matching its runtime
+deduplication; this allows extending `SlotMixin(LionSelectRich)` without that duplicate.
+
+Its overloads preserve an already-slotted base and describe a newly applied host
+separately. Unlike an unresolved conditional return type, this keeps a generic
+constructor recognizable when composing `ValidateMixin(SlotMixin(base))`. The
+newly applied host has one combined `LitElement & SlotHost` prototype rather than
+two intersected prototype declarations; base constructors and their static members
+remain part of the return type.
+
+`LionOption.styles` returns Lit's `CSSResultArray`, including nested style arrays.
+Subclasses may therefore return `[super.styles, additionalStyles]`, as supported
+by Lit at runtime, without flattening the inherited array solely for type checking.
+
+Downstream mixin signatures must also avoid reintroducing an already inherited
+`SlotHost`. For a mixin that **requires** a slotted base and only adds `FieldHost`
+members, the signature can retain those members without redeclaring the slot host:
+
+```ts
+import type { Constructor } from '@open-wc/dedupe-mixin';
+import type { LitElement } from 'lit';
+import type { SlotHost } from '@lion/ui/types/core.js';
+
+declare class FieldHost {
+  extraFieldOption: boolean;
+}
+
+declare function FieldMixin<T extends Constructor<LitElement & SlotHost>>(
+  base: T,
+): T & Constructor<FieldHost>;
+```
+
+Do not simply remove `SlotHost` from a mixin that must add slot support to an unslotted
+base, or drop other host members from its return type. Its signature must describe the
+actual composition. Neither `skipLibCheck` nor suppressing a downstream getter error
+corrects that signature.
+
+The consumer declaration gate (`npm run types-check-consumer --workspace @lion/ui`)
+checks the copied package's entry points, subclass extensions and JSDoc-typed generic
+mixin composition on the current compiler, plus the extension fixtures on pinned
+TypeScript 4.7.4. The older compiler is
+isolated in the private `test/typescript-legacy` workspace so it cannot replace the
+compiler used to build Lion.
 
 ## Type correction for JSDoc (no longer needed)
 

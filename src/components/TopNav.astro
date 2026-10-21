@@ -4,6 +4,8 @@ import { getCollection } from "astro:content";
 import { UIMainNav as UIPortalMainNav } from './UIMainNav/ui-main-nav.js';
 
 import SearchModal from './SearchModal.astro';
+import LionWordmark from '../components/LionWordmark.astro';
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 
 interface Props {
   variant?: string;
@@ -71,42 +73,123 @@ function convertCollectionTreeToNavigation(collectionTree, baseUrl = '/', isSort
     }
   });
 
-  // we need to prune the children that are not active
-  navigation.forEach((navigationNode) => {
-    if (
-        navigationNode.children?.length > 0
-        && !Astro.url.pathname.startsWith(navigationNode.url)
-    ) {
-      delete navigationNode.children;
-    }
-  });
-
   return navigation;
+}
+
+/**
+ * The nav renders nested levels from `nextLevel` (see UIMainNav), and an item that has it is
+ * expandable. The collection tree is deeper than a fly-out can carry - a components subtree alone is
+ * a whole documentation tree - so the menu stops after a few levels.
+ *
+ * It used to stop one level earlier, which left real pages without a row: "Core" could not open
+ * (its /overview, /slotmixin children were cut), so a page you can only reach through the menu was
+ * not in the menu. Two levels below the top items now, which is what "all pages" needs - the deepest
+ * rows are the leaf pages themselves.
+ */
+const MAX_DEPTH = 2;
+
+function pruneDeeperThan(nodes, depth = 0) {
+  for (const node of nodes) {
+    if (!node.children?.length) continue;
+    if (depth >= MAX_DEPTH) {
+      delete node.children;
+      continue;
+    }
+    pruneDeeperThan(node.children, depth + 1);
+  }
+
+  return nodes;
+}
+
+const slug = value =>
+  value
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-|-$/g, '');
+
+/**
+ * `children` is what the server side uses to mark the active trail; `nextLevel` is what the
+ * component renders and what makes an item a toggle. The key keeps the popover ids unique - one
+ * level 2 panel per parent, and a popovertarget can only address one id.
+ */
+function toNavLevels(items, { topLevelLinksUnderneath = true } = {}) {
+  return items.map(item => {
+    const children = item.children || [];
+    const node = { ...item };
+    delete node.children;
+
+    /*
+     * A sub-section's own page is an empty shell: /fundamentals/systems renders a heading and no
+     * content (measured: 943 characters of inline CSS and no prose, against 3970 characters on
+     * /fundamentals/systems/core/overview), because the collection puts the content on the first
+     * child. `redirect` from the collection tree is exactly that first child, so a row that has a
+     * level links to it and the link lands on a page with something on it.
+     *
+     * Only below the top level: /fundamentals, /guides and /blog are real pages of their own. It
+     * applies to a row whether or not it has a level of its own - "Systems" (a folder) and "Core" (a
+     * leaf in the pruned tree, but its collection node still knows its first child) both land on a page
+     * with content this way.
+     */
+    if (!topLevelLinksUnderneath && item.redirect) {
+      node.url = item.redirect;
+    }
+
+    if (children.length) {
+      node.nextLevel = {
+        key: slug(item.name),
+        // Nested levels are disclosures: they expand *downward* inside the fly-out instead of
+        // opening another full-height panel. Level 1 is the panel (the component opens it with
+        // mode 'popover'); its children are inline.
+        items: toNavLevels(children, { topLevelLinksUnderneath: false }),
+      };
+
+      /*
+       * A top-level row is a toggle, not a link: the section's own page moves into the level as its
+       * first entry ("overview"), so the link is one tap away - underneath, where the menu is read.
+       * It is done here, at build time, and not in the mobile layout's processor: a transformation
+       * that only runs on the client gives the same item two different shapes in the server and the
+       * client render, and the parts that differ get new elements on hydration - which is what left
+       * the level toggles bound to elements that were no longer in the document.
+       *
+       * The desktop processor takes the link back (its rows are flat links), and `overview: true` is
+       * what marks the entry it moved.
+       */
+      if (topLevelLinksUnderneath && node.url) {
+        node.nextLevel.items = [
+          { name: 'overview', url: node.url, overview: true },
+          ...node.nextLevel.items,
+        ];
+        delete node.url;
+      }
+    }
+    return node;
+  });
 }
 
 async function getNavigation(collectionName, baseUrl = '/', isSortedAlphabetically = true, filter = () => true) {
   const collectionTree = await buildCollectionTree(collectionName, filter);
+  const navigation = convertCollectionTreeToNavigation(collectionTree, baseUrl, isSortedAlphabetically);
 
-  return convertCollectionTreeToNavigation(collectionTree, baseUrl, isSortedAlphabetically);
+  return pruneDeeperThan(navigation);
 }
 
 const components = await getNavigation(
   "lionComponents",
-  `${import.meta.env.BASE_URL}/components`
+  `${base}/components`
 );
 const fundamentals = await getNavigation(
   "lionFundamentals",
-  `${import.meta.env.BASE_URL}/fundamentals`,
+  `${base}/fundamentals`,
   false
 );
 const guides = await getNavigation(
   "lionGuides",
-  `${import.meta.env.BASE_URL}/guides`,
+  `${base}/guides`,
   false
 );
 const blogEntries = await getNavigation(
   "lionBlog",
-  `${import.meta.env.BASE_URL}/blog`,
+  `${base}/blog`,
   false,
   entry => entry.data?.published
 );
@@ -119,31 +202,27 @@ const blogEntries = await getNavigation(
 const navData = [
   // {
   //   name: "home",
-  //   url: import.meta.env.BASE_URL,
+  //   url: base,
   //   iconId: 'lion-portal:portal:home'
   // },
   {
     name: "fundamentals",
-    url: `${import.meta.env.BASE_URL}/fundamentals`,
-    iconId: 'lion-portal:portal:sdk',
+    url: `${base}/fundamentals`,
     children: fundamentals,
   },
   {
     name: "guides",
-    url: `${import.meta.env.BASE_URL}/guides`,
-    iconId: 'lion-portal:portal:extension',
+    url: `${base}/guides`,
     children: guides,
   },
   {
     name: "components",
-    url: `${import.meta.env.BASE_URL}/components`,
-    iconId: 'lion-portal:portal:deployedCode',
+    url: `${base}/components`,
     children: components,
   },
   {
     name: "blog",
-    url: `${import.meta.env.BASE_URL}/blog`,
-    iconId: 'lion-portal:portal:deployedCode',
+    url: `${base}/blog`,
     children: blogEntries,
   },
 ];
@@ -191,7 +270,7 @@ let activeItem;
 function setActive(navData, currentUrl) {
   // for home page we need to check with the exact match
   const isActive = (navItem) => {
-    if (navItem.url === import.meta.env.BASE_URL) {
+    if (navItem.url === base) {
       // homepage
       return `${navItem.url}/` === currentUrl;
     }
@@ -221,8 +300,11 @@ const { variant } = Astro.props;
 
 <style>
   .site-header {
-    background: var(--background-primary);
-    border-bottom: 1px solid var(--border-color, #e2e8f0);
+    /* Was `background: var(--background-primary)` - a token that exists nowhere in the project, so
+     * the bar computed to rgba(0,0,0,0): a pure backdrop-filter with no scrim behind it, which is
+     * what made it look smudgy. The themed scrim from styles.css is the intended surface. */
+    background: var(--header-bg);
+    border-bottom: 1px solid var(--header-border, var(--border-color, #e2e8f0));
   }
 
   .logo {
@@ -252,15 +334,14 @@ const { variant } = Astro.props;
 
 <header class="site-header">
     <div class="container">
-        <a href=`${import.meta.env.BASE_URL}` class="logo">
-            <img src=`${import.meta.env.BASE_URL}/logo.svg` alt="Lion Logo" width="32" height="32">
-            <img src=`${import.meta.env.BASE_URL}/lionui-text.svg` alt="lion ui" height="16" class="logo-text-svg">
+        <a href=`${base}` class="logo" aria-label="Lion">
+            <LionWordmark />
         </a>
         
-        <div>
+        <div class="site-nav">
           <UIPortalMainNav 
             client:load 
-            nav-data={JSON.stringify({ items: navData })} 
+            nav-data={JSON.stringify({ items: toNavLevels(navData) })} 
             variant={variant || ''}
           />
         </div>

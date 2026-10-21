@@ -44,12 +44,20 @@ const iconIds = {
     </svg>
   `,
 
+  /*
+   * No entries for the section items: the menu is label-only, and `templates.icon` renders nothing
+   * for an id that is not in this map, so those rows carry no icon node at all - nothing is rendered
+   * and then hidden in CSS. Search and GitHub keep theirs: those two icons carry meaning instead of
+   * repeating the label next to them.
+   */
+
   // GitHub SVG template literal
   'lion:portal:github': html`
     <svg
       width="20"
       height="20"
-      viewBox="0 0 24 24"
+      viewBox="-1.5 -1.5 27 27"
+      data-filled="true"
       fill="currentColor"
       stroke="none"
       stroke-width="2"
@@ -152,38 +160,64 @@ export class UIMainNavPartDirective extends UIPartDirective {
       const { level, isToggleTarget, levelConfig } = localContext;
 
       UIMainNavPartDirective.setLevel(element, level);
-      element.setAttribute('id', `level-${level}`);
-      context.registerRef(`level-${level}`, element);
+      // `level-2` alone collides: every item that has children renders a level 2 panel, and a
+      // popovertarget can only address one id. levelConfig.key (set when the tree is built) makes
+      // both the panel id and its invoker's popovertarget unique per parent.
+      const levelId = levelConfig?.key ? `level-${level}-${levelConfig.key}` : `level-${level}`;
+      element.setAttribute('id', levelId);
+      context.registerRef(levelId, element);
 
       const { showVia = 'disclosure', initialOpen, visuallyHidden = false } = levelConfig || {};
 
-      const invoker = context.refs[level === 1 ? 'l1-invoker' : `level-invoker-l${level}`];
-      if (!(isToggleTarget && invoker)) return;
+      /*
+       * The invoker is looked up through onRegisterRef, not read once: a panel's setup runs a single
+       * time and the invoker for it can be registered on a later render (the mobile layout re-renders
+       * the tree from its templateContextProcessor), in which case reading `refs` here returned
+       * undefined and the panel kept its early return forever - clicking a section then opened
+       * nothing (measured: no data-open, no aria-expanded on the top level invokers).
+       *
+       * The key carries the level's own key as well: every item with children renders a level 2 panel,
+       * and a shared `level-invoker-l2` name meant each panel bound to whichever invoker registered
+       * last. Same reason the panel id is keyed.
+       */
+      const invokerKey =
+        level === 1
+          ? 'l1-invoker'
+          : `level-invoker-l${level}${levelConfig?.key ? `-${levelConfig.key}` : ''}`;
 
-      if (localContext.levelConfig.hideToggle) {
-        return;
-      }
+      // levelConfig is undefined for the level 0 wrapper the burger lives in.
+      if (!isToggleTarget || levelConfig?.hideToggle) return;
 
-      if (level === 1) {
+      const attachToggle = invoker => {
+        if (!invoker) return;
+
+        if (level === 1) {
+          new VisibilityToggleCtrl(options?.host, {
+            visuallyHidden: false,
+            initialOpen: false,
+            target: element,
+            mode: 'popover',
+            invoker,
+            level: 1,
+          });
+          return;
+        }
+
         new VisibilityToggleCtrl(options?.host, {
-          visuallyHidden: false,
-          initialOpen: false,
           target: element,
-          mode: 'popover',
+          visuallyHidden,
+          mode: showVia,
+          initialOpen,
           invoker,
-          level: 1,
+          level,
         });
-        return;
-      }
+      };
 
-      new VisibilityToggleCtrl(options?.host, {
-        target: element,
-        visuallyHidden,
-        mode: showVia,
-        initialOpen,
-        invoker,
-        level,
-      });
+      if (context.refs[invokerKey]) {
+        attachToggle(context.refs[invokerKey]);
+      } else {
+        context.onRegisterRef(invokerKey, attachToggle);
+      }
     },
     /**
      * @param {ElementPart} litPart
@@ -231,6 +265,10 @@ export class UIMainNavPartDirective extends UIPartDirective {
       UIMainNavPartDirective.setLevel(element, localContext.level);
       assertAnchor(element);
       element.setAttribute('data-part', 'anchor');
+      // The "overview" entry a top level row moves into its level (see toNavLevels in TopNav.astro).
+      if (localContext.item?.overview) {
+        element.setAttribute('data-overview', '');
+      }
       element.setAttribute('href', localContext.item.url);
       if (localContext.item.target) {
         element.setAttribute('target', localContext.item.target);
@@ -247,9 +285,24 @@ export class UIMainNavPartDirective extends UIPartDirective {
       assertButton(element);
       UIMainNavPartDirective.setLevel(element, localContext.level);
       element.setAttribute('data-part', 'level-invoker');
-      element.setAttribute('popovertarget', `level-${localContext.level + 1}`);
+      /*
+       * One invoker per parent, so the ref key carries the level's own key: every item with children
+       * renders a level 2 panel, and a single shared `level-invoker-l2` ref meant each panel bound to
+       * whichever invoker happened to register last - clicking a section then toggled nothing at all
+       * (measured: no data-open after a click on "components"). Same reason the panel id is keyed.
+       */
+      const targetKey = localContext.item?.nextLevel?.key;
+      const levelKey = targetKey ? `-${targetKey}` : '';
+      // popovertarget only when the level opens as a popover: in the default disclosure mode the
+      // element is not a popover, so the attribute would address nothing.
+      if (localContext.item?.nextLevel?.showVia === 'popover') {
+        element.setAttribute('popovertarget', `level-${localContext.level + 1}${levelKey}`);
+      }
       element.setAttribute('type', 'button');
-      context.registerRef(`level-invoker-l${localContext.level + 1}`, element);
+      if (localContext.item?.name) {
+        element.setAttribute('aria-label', `Show ${localContext.item.name}`);
+      }
+      context.registerRef(`level-invoker-l${localContext.level + 1}${levelKey}`, element);
       if (isServer) return;
 
       element.addEventListener('click', async event => {
@@ -494,17 +547,16 @@ export class UIMainNav extends UIBaseElement {
      */
     navLevel(context, { levelConfig, level, isToggleTarget, hasActiveChild }) {
       const { templates, part, translations } = context;
-      const hasBackButton = isToggleTarget && level > 1;
+      // Only a level that *replaces* the previous one needs a way back. Inline levels expand
+      // downward, so the expander itself is the way back and the button would be noise.
+      const hasBackButton = isToggleTarget && level > 1 && levelConfig?.showVia === 'popover';
 
       return html`<!-- -->
         <div ${part('level', { levelConfig, level, isToggleTarget, hasActiveChild })}>
           ${hasBackButton
             ? html`<!-- -->
                 <button ${part('level-back-btn', { level })}>
-                  ${templates.icon(context, {
-                    item: { iconId: 'lion:portal:chevronLeft' },
-                    level: 0,
-                  })}
+                  <span data-part="back-chevron" aria-hidden="true"></span>
                   ${translations.levelBackBtn}
                 </button>`
             : nothing}
@@ -518,7 +570,10 @@ export class UIMainNav extends UIBaseElement {
                       ? templates.navLevel(context, {
                           hasActiveChild: item.hasActiveChild,
                           levelConfig: item.nextLevel,
-                          isToggleTarget: !item.url,
+                          // An item may be both a link and a parent (the portal's top level items
+                          // are): the panel is a popover either way, so the link keeps working and
+                          // the chevron next to it expands the level.
+                          isToggleTarget: true,
                           level: level + 1,
                         })
                       : nothing}
@@ -529,6 +584,16 @@ export class UIMainNav extends UIBaseElement {
     },
     navItem(context, { item, level }) {
       const { part, templates } = context;
+
+      if (item.url && item.nextLevel) {
+        // Link + expander: the anchor navigates to the section, the button reveals its levels. The
+        // chevron itself is drawn by the stylesheet (::after), so this stays icon-free.
+        return html`<!-- -->
+          <a ${part('anchor', { item, level })}>
+            ${templates.icon(context, { item, level })}<span>${item.name}</span>
+          </a>
+          <button ${part('level-invoker', { item, level })}></button>`;
+      }
 
       if (item.url) {
         // N.B. taken care of by directive
@@ -639,6 +704,37 @@ UIMainNav.provideDesign({
         color: var(--text-secondary);
       }
 
+      /*
+       * The burger is the mobile counterpart of the theme switch labels: the same 32px box, the same
+       * circle and the same hover treatment, so the two controls read as one group on the right of
+       * the bar instead of a small icon pressed against the switch. Measured before: the burger box
+       * was 20x26 and its left edge sat exactly on the switch's right edge (0px apart).
+       */
+      [data-part='l1-invoker'] {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        /* border-box: the global reset in styles.css does not reach into the shadow root, so without
+         * this the 1px border made the burger 34px against the switch labels' 32px. */
+        box-sizing: border-box;
+        width: 2rem;
+        height: 2rem;
+        padding: 0;
+        border: 1px solid transparent;
+        border-radius: 50%;
+        background: transparent;
+        color: var(--text-secondary);
+        cursor: pointer;
+        transition:
+          color 0.2s,
+          background-color 0.2s;
+      }
+
+      [data-part='l1-invoker']:hover {
+        color: var(--text-primary);
+        background: var(--overlay-subtle);
+      }
+
       [data-part='icon'] {
         width: 1.25rem;
         height: 1.25rem;
@@ -652,6 +748,15 @@ UIMainNav.provideDesign({
         stroke: currentColor;
       }
 
+      /*
+       * A filled glyph must not be stroked: the rule above doubles the ink of a solid path, which
+       * measured 24 x 23.4 inside the 24 x 24 viewBox - about 17% larger than the stroked icons next
+       * to it, so the octocat read as oddly scaled. Its viewBox carries the optical margin instead.
+       */
+      [data-part='icon'] svg[data-filled] {
+        stroke: none;
+      }
+
       [data-part='command-invoker']:hover,
       [data-part='level-invoker']:hover,
       [data-part='anchor']:hover {
@@ -659,23 +764,24 @@ UIMainNav.provideDesign({
         text-decoration: none;
       }
 
-      [data-part='anchor'][data-level='1'][aria-current='page'] {
-        color: var(--highlight-color);
+      [data-part='anchor'][data-level='1'][aria-current='page'],
+      [data-part='anchor'][data-level='1'][aria-current='page']:hover {
+        /* Outline treatment: the accent cannot be the ink on a light surface, so the current page
+         * is marked by a yellow outline around readable text. */
+        color: var(--accent-on-surface);
+        outline: 2px solid var(--accent-yellow);
+        outline-offset: 2px;
+        border-radius: 4px;
         font-weight: 500;
       }
 
-      [data-part='anchor'][data-level='1'][aria-current='page']:hover {
-        color: var(--highlight-color);
-      }
-
-      [data-part='icon'][data-level='1'] + span {
-        clip: rect(0 0 0 0);
-        clip-path: inset(50%);
-        height: 1px;
-        overflow: hidden;
-        position: absolute;
-        white-space: nowrap;
-        width: 1px;
+      /*
+       * The burger is mirrored. Its three lines are drawn 24, 16 and 22 units long, all anchored to
+       * the left edge, so the original leans left; flipping it horizontally puts the longest line at
+       * the outer edge of the bar.
+       */
+      [data-part='l1-invoker'] [data-part='icon'] {
+        transform: scaleX(-1);
       }
 
       [data-part='command-invoker'],
@@ -782,15 +888,349 @@ UIMainNav.provideDesign({
           }
           */
 
+          /*
+           * Spacing: one rhythm for the whole fly-out. The rows are 0.25rem apart, the row itself
+           * carries its padding (0.6rem 0.75rem) and bleeds 0.75rem into the panel's own 1.5rem
+           * padding, so the label stays on the 24px gutter while a hover or current state covers the
+           * full width of the panel instead of only the text.
+           */
           [data-part='list'] {
             flex-direction: column;
+            /* The UA gives a <ul> padding-inline-start: 40px, which held the fly-out items 40px away
+             * from the panel edge (measured: items at x=104 with a 64px panel padding, i.e. the text
+             * sat too close to the 283px panel's right edge). */
+            padding: 0;
+            gap: 0.25rem;
           }
 
-          [data-level][data-open] {
-            background-color: black;
+          /*
+           * Full bleed, once: the top-level row spans the panel edge to edge, so a hover or current
+           * state covers the whole width instead of stopping at the gutter, and its own padding keeps
+           * the label on the 24px line.
+           *
+           * Only level 1 carries the negative margin. A deeper row lives inside a level that is
+           * already edge to edge, so bleeding it again added another 24px per level - measured row
+           * widths 367, 415 and 463px inside a 320px panel, with the rows starting 24, 48 and 72px
+           * left of the panel. Deeper rows bleed nothing and take their indent from their padding.
+           */
+          [data-part='listitem'] {
+            border-radius: 8px;
+          }
+
+          [data-part='listitem'][data-level='1'] {
+            margin-inline: -1.5rem;
+          }
+
+          /*
+           * The "overview" entry: the section's own page, which the toggle above it moved down here.
+           * It is a label for the level rather than one more item, so it reads like a muted
+           * small-caps heading and carries its own space below - the level's items start after it.
+           */
+          [data-part='anchor'][data-overview] {
+            color: var(--text-secondary);
+            font-size: 0.78rem;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+          }
+
+          [data-part='listitem']:has(> [data-part='anchor'][data-overview]) {
+            margin-bottom: 0.5rem;
+            border-bottom: 1px solid var(--border-color);
+          }
+
+          /* A collapsed branch that holds the current page: the toggle carries the accent, because the
+           * current entry itself is a level down and out of sight. */
+          [data-part='listitem'][data-has-active-child] > [data-part='level-invoker'] {
+            color: var(--accent-on-surface);
+          }
+
+          [data-part='listitem'] > [data-part='anchor'],
+          [data-part='listitem'] > [data-part='command-invoker'],
+          [data-part='listitem'] > [data-part='level-invoker'] {
+            padding: 0.6rem 1.5rem;
+            border-radius: 8px;
+          }
+
+          /* The selection states are the row's, not the text's: hover, focus and the current page
+           * fill the whole width between the panel's gutters. */
+          [data-part='listitem']:hover,
+          [data-part='listitem']:focus-within {
+            background-color: var(--overlay-subtle);
+          }
+
+          /*
+           * The row that holds the current page: an item with its own page reports it on the anchor
+           * (aria-current), a top-level row that is now a toggle carries data-active from the nav data
+           * instead.
+           */
+          [data-part='listitem']:has(> [data-part='anchor'][aria-current='page']),
+          [data-part='listitem'][data-active] {
+            background-color: color-mix(in srgb, var(--accent-yellow) 16%, transparent);
+            box-shadow: inset 3px 0 0 0 var(--accent-yellow);
+          }
+
+          [data-part='listitem']:has(> [data-part='anchor'][aria-current='page'])
+            > [data-part='anchor'] {
+            box-shadow: none;
+            outline: none;
+            text-decoration: none;
+            font-weight: 600;
+          }
+
+          /*
+           * Fly-out animation: a fade with a small scale, not a slide. The panel is anchored to the
+           * left edge, so it settles from 0.97 into place from that edge (transform-origin) instead of
+           * travelling sideways - a slide out of an off-screen edge left nothing to see while the
+           * backdrop faded, and the reverse read as a jump rather than a recede.
+           *
+           * Only the entry is animated. Closing has no duration at all (see --_flyout-duration-out),
+           * so going back out of the menu is a state change rather than a movement that has to finish
+           * first; the two states therefore do not need mirrored transitions.
+           */
+          :host {
+            --_flyout-duration-in: 0.24s;
+            /* Deliberately 0s: the panel and its backdrop are gone in the frame the close lands in. */
+            --_flyout-duration-out: 0s;
+            --_flyout-ease-in: cubic-bezier(0.2, 0, 0.2, 1);
+            --_flyout-ease-out: cubic-bezier(0.2, 0, 0.2, 1);
+            /* Only the entry moves: coming in the panel settles out of the edge (0.97 -> 1). */
+            --_flyout-scale-in: 0.97;
+            --_flyout-scale-out: 1;
+          }
+
+          @media (prefers-reduced-motion: reduce) {
+            :host {
+              --_flyout-duration-in: 0.01s;
+              --_flyout-scale-in: 1;
+              --_flyout-scale-out: 1;
+            }
+          }
+
+          :host(:not([data-prevent-animations])) [popover] {
+            transition:
+              opacity var(--_flyout-duration-out) var(--_flyout-ease-out),
+              scale var(--_flyout-duration-out) var(--_flyout-ease-out),
+              overlay var(--_flyout-duration-out) allow-discrete,
+              display var(--_flyout-duration-out) allow-discrete;
+            opacity: 0;
+            scale: var(--_flyout-scale-out);
+          }
+
+          :host(:not([data-prevent-animations])) [popover]:popover-open {
+            transition:
+              opacity var(--_flyout-duration-in) var(--_flyout-ease-in),
+              scale var(--_flyout-duration-in) var(--_flyout-ease-in),
+              overlay var(--_flyout-duration-in) allow-discrete,
+              display var(--_flyout-duration-in) allow-discrete;
+            /* The panel grows out of the edge it is attached to. */
+            transform-origin: left center;
+            opacity: 1;
+            scale: 1;
+
+            @starting-style {
+              opacity: 0;
+              scale: var(--_flyout-scale-in);
+            }
+          }
+
+          [popover]::backdrop {
+            background: light-dark(rgba(0, 0, 0, 0.28), rgba(0, 0, 0, 0.5));
+            opacity: 0;
+            transition: opacity var(--_flyout-duration-out) var(--_flyout-ease-out) allow-discrete;
+
+            @starting-style {
+              opacity: 0;
+            }
+          }
+
+          [popover]:popover-open::backdrop {
+            opacity: 1;
+          }
+
+          [data-level='1'][data-open] {
+            /*
+             * Was background-color: black — the dark theme's surface spelled as a colour literal:
+             * in light mode the fly-out stayed black while its own ink stayed dark, so the panel
+             * rendered dark-on-dark (panel colour rgb(0,0,0) on rgb(0,0,0) = 1.00:1, its links
+             * rgb(90,90,90) on rgb(0,0,0) = 3.04:1, both below AA).
+             */
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            border-right: 1px solid var(--border-color);
             position: fixed;
             height: 100vh;
-            padding: 4rem;
+            /* A drawer reads better at a fixed share of the viewport, capped so it does not swallow a
+             * tablet screen. Was content-sized (163px), then min-width 15rem, then min(20rem, 88vw). */
+            width: min(22rem, 90vw);
+            padding: 2rem 1.5rem;
+            overflow-y: auto;
+          }
+
+          /*
+           * Levels deeper than the first unfold *downward*, in place: no extra panel, no scroll
+           * jump, no covering the parent. Level 0 (the hamburger's own wrapper) and level 1 (the
+           * fly-out) must stay out of this: level 0 is not a panel and went invisible (opacity 0)
+           * when these rules caught it. Closed, a level carries the hidden attribute, so the
+           * opening is a
+           * grid-rows transition from 0fr, which is the one way to animate to an unknown height.
+           *
+           * Only the unfolding is animated. Collapsing runs on --_flyout-duration-out (0s, see the
+           * fly-out above), so going back with the back-chevron folds the level away in the frame it
+           * is clicked: a transition is read from the state an element moves *into*, which is why the
+           * entry duration lives on the [data-open] rule below.
+           */
+          [data-part='level']:not([data-level='0']):not([data-level='1']) {
+            display: grid;
+            grid-template-rows: 0fr;
+            position: static;
+            width: auto;
+            height: auto;
+            padding: 0;
+            border: none;
+            background: none;
+            overflow: hidden;
+            opacity: 0;
+            transition:
+              grid-template-rows var(--_flyout-duration-out) var(--_flyout-ease-out),
+              opacity var(--_flyout-duration-out) var(--_flyout-ease-out),
+              display var(--_flyout-duration-out) var(--_flyout-ease-out) allow-discrete;
+          }
+
+          [data-part='level']:not([data-level='0']):not([data-level='1'])[data-open] {
+            grid-template-rows: 1fr;
+            opacity: 1;
+            transition:
+              grid-template-rows var(--_flyout-duration-in) var(--_flyout-ease-in),
+              opacity var(--_flyout-duration-in) var(--_flyout-ease-in),
+              display var(--_flyout-duration-in) var(--_flyout-ease-in) allow-discrete;
+
+            @starting-style {
+              grid-template-rows: 0fr;
+              opacity: 0;
+            }
+          }
+
+          /* The grid row needs to be allowed to be shorter than its content. */
+          [data-part='level']:not([data-level='0']):not([data-level='1']) > [data-part='list'] {
+            min-height: 0;
+          }
+
+          /*
+           * Levels inside a level. The indent is *not* a padding on the nested list: the rows bleed
+           * the panel's 1.5rem padding to be full width (see [data-part='listitem'] below), so
+           * padding the list made every level's rows 1.25rem wider than the one above it - measured
+           * 347, 375 and 403px inside a 320px panel, i.e. the deepest labels ran out of the panel.
+           *
+           * The list stays flush and the indent is added to the row's own padding per depth, so a
+           * deeper label starts further in while every row keeps the panel's width.
+           */
+          [data-part='list'] [data-part='list'] {
+            padding-left: 0;
+            margin-top: 0.25rem;
+            gap: 0.15rem;
+          }
+
+          [data-part='listitem'][data-level='2'] > [data-part='anchor'],
+          [data-part='listitem'][data-level='2'] > [data-part='command-invoker'],
+          [data-part='listitem'][data-level='2'] > [data-part='level-invoker'] {
+            padding-left: 2.75rem;
+          }
+
+          [data-part='listitem'][data-level='3'] > [data-part='anchor'],
+          [data-part='listitem'][data-level='3'] > [data-part='command-invoker'],
+          [data-part='listitem'][data-level='3'] > [data-part='level-invoker'] {
+            padding-left: 4rem;
+          }
+
+          [data-part='listitem'][data-level='4'] > [data-part='anchor'],
+          [data-part='listitem'][data-level='4'] > [data-part='command-invoker'],
+          [data-part='listitem'][data-level='4'] > [data-part='level-invoker'] {
+            padding-left: 5.25rem;
+          }
+
+          [data-part='level-invoker'] {
+            justify-content: flex-start;
+            width: auto;
+            flex: 0 0 auto;
+          }
+
+          /*
+           * A row: the label (anchor or toggle button) takes the line, the expander chevron sits at
+           * the end of it. Without this the empty chevron button wrapped onto its own line under
+           * every item that has children.
+           */
+          [data-part='listitem'] {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 0.25rem;
+          }
+
+          /* The nested level takes its own line, full width: without this it sits in the same flex
+           * row as the label and squeezes the chevron away from the right edge. */
+          [data-part='level']:not([data-level='0']):not([data-level='1']) {
+            flex: 1 0 100%;
+          }
+
+          [data-part='listitem'] > [data-part='anchor'],
+          [data-part='listitem'] > [data-part='command-invoker'],
+          [data-part='listitem'] > [data-part='level-invoker'] {
+            flex: 0 1 auto;
+          }
+
+          [data-part='listitem'] > [data-part='anchor'] {
+            flex: 1 1 auto;
+          }
+
+          /* An item that is only a toggle (a folder without its own page) keeps the whole line. */
+          [data-part='listitem']:not(:has(> [data-part='anchor'])) > [data-part='level-invoker'],
+          [data-part='listitem']:not(:has(> [data-part='anchor'])) > [data-part='command-invoker'] {
+            flex: 1 1 auto;
+          }
+
+          [data-part='level-invoker']::after {
+            content: '';
+            width: 0.45rem;
+            height: 0.45rem;
+            margin-left: auto;
+            border-right: 1.5px solid currentColor;
+            border-bottom: 1.5px solid currentColor;
+            transform: rotate(-45deg);
+            transition: transform var(--_flyout-duration-in) var(--_flyout-ease-in);
+          }
+
+          [data-part='listitem']:has(> [data-part='level'][data-open])
+            [data-part='level-invoker']::after {
+            transform: rotate(45deg);
+          }
+
+          /* The back chevron is drawn here (the portal iconset has no chevronLeft, so the button
+           * used to render an empty icon slot next to its label). */
+          [data-part='back-chevron'] {
+            width: 0.45rem;
+            height: 0.45rem;
+            border-left: 1.5px solid currentColor;
+            border-bottom: 1.5px solid currentColor;
+            transform: rotate(45deg);
+          }
+
+          [data-part='level-back-btn'] {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+            padding: 0.5rem 0;
+            border: none;
+            background: transparent;
+            color: var(--text-secondary);
+            font: inherit;
+            cursor: pointer;
+            text-transform: capitalize;
+          }
+
+          [data-part='level-back-btn']:hover {
+            color: var(--text-primary);
           }
         `,
       ],
@@ -829,23 +1269,43 @@ UIMainNav.provideDesign({
           }
 
           [data-part='anchor'][aria-current='page'] {
-            color: var(--highlight-color);
+            color: var(--accent-on-surface);
+            text-decoration: underline;
+            text-decoration-color: var(--accent-yellow);
+            text-decoration-thickness: 2px;
+            text-underline-offset: 3px;
           }
         `,
       ],
       breakpoint: '1024px',
       container: globalThis,
-      templateContextProcessor: (/** @type {{ data: { navData: any; }; }} */ context) => ({
-        ...context,
-        data: {
-          ...context.data,
-          navData: {
-            ...context.data.navData,
-            hideToggle: true,
-            shouldHandleScrollLock: false,
+      templateContextProcessor: (/** @type {{ data: { navData: any; }; }} */ context) => {
+        // The desktop row is one flat line of links, so the levels are stripped here: the mobile
+        // layout is the only one that renders a tree.
+        const stripLevels = items =>
+          items.map(({ nextLevel, ...item }) => {
+            // A top-level item's own page lives as the first entry of its level (see toNavLevels in
+            // TopNav.astro, which is what turns the row into a toggle in the fly-out). The desktop
+            // row is a link itself, so it takes the url back.
+            const [first] = nextLevel?.items ?? [];
+            // `overview` is the marker TopNav puts on the entry it moved into the level.
+            const withLink = first?.overview && first.url ? { ...item, url: first.url } : item;
+            return withLink;
+          });
+
+        return {
+          ...context,
+          data: {
+            ...context.data,
+            navData: {
+              ...context.data.navData,
+              items: stripLevels(context.data.navData.items),
+              hideToggle: true,
+              shouldHandleScrollLock: false,
+            },
           },
-        },
-      }),
+        };
+      },
     },
   }),
 });

@@ -13,3 +13,7 @@ _demos
 /docs/_merged_includes/
 
 /packages/ui/_legacy-changelogs
+/packages/ui/generated/
+/packages-node/awesome-phonenumber/upstream/
+/packages-node/awesome-phonenumber/build/
+/packages-node/awesome-phonenumber/dist/

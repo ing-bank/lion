@@ -1,5 +1,5 @@
 ---
-title: 'Input Date: Overview'
+title: 'Overview'
 parts:
   - Input Date
   - Overview
@@ -10,7 +10,7 @@ eleventyNavigation:
   title: Overview
 ---
 
-# Input Date: Overview
+# Overview
 
 A web component based on the generic text input field. Its purpose is to provide a way for users to fill in a date.
 

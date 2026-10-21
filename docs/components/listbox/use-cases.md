@@ -1,5 +1,5 @@
 ---
-title: 'Listbox: Use Cases'
+title: 'Use Cases'
 parts:
   - Listbox
   - Use Cases
@@ -10,7 +10,7 @@ eleventyNavigation:
   title: Use Cases
 ---
 
-# Listbox: Use Cases
+# Use Cases
 
 ```js script
 import { html } from '@mdjs/mdjs-preview';

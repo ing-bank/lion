@@ -3,7 +3,7 @@ parts:
   - Rationale
   - Localize
   - Systems
-title: 'Localize: Rationale'
+title: 'Rationale'
 eleventyNavigation:
   key: Systems >> Localize >> Rationale
   title: Rationale
@@ -11,7 +11,7 @@ eleventyNavigation:
   parent: Systems >> Localize
 ---
 
-# Localize: Rationale
+# Rationale
 
 ## Requirements
 

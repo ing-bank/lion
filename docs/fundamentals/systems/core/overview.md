@@ -3,7 +3,7 @@ parts:
   - Overview
   - Core
   - Systems
-title: 'Core: Overview'
+title: 'Overview'
 eleventyNavigation:
   key: Systems >> Core >> Overview
   title: Overview
@@ -11,7 +11,7 @@ eleventyNavigation:
   parent: Systems >> Core
 ---
 
-# Core: Overview
+# Overview
 
 The core package is mostly for in-depth usage.
 It handles the version of `lit-element` and `lit-html`.

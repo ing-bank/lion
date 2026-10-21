@@ -1,5 +1,5 @@
 ---
-title: 'Form: Use Cases'
+title: 'Use Cases'
 parts:
   - Form
   - Use Cases
@@ -10,7 +10,7 @@ eleventyNavigation:
   title: Use Cases
 ---
 
-# Form: Use Cases
+# Use Cases
 
 ```js script
 import { html as previewHtml } from '@mdjs/mdjs-preview';

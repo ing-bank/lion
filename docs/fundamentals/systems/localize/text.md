@@ -3,7 +3,7 @@ parts:
   - Translate Text
   - Localize
   - Systems
-title: 'Localize: Translate Text'
+title: 'Translate Text'
 eleventyNavigation:
   key: Systems >> Localize >> Translate Text
   title: Translate Text
@@ -11,7 +11,7 @@ eleventyNavigation:
   parent: Systems >> Localize
 ---
 
-# Localize: Translate Text
+# Translate Text
 
 ## As a function
 

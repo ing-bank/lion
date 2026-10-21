@@ -1,5 +1,5 @@
 ---
-title: 'Input Datepicker: Overview'
+title: 'Overview'
 parts:
   - Input Datepicker
   - Overview
@@ -10,7 +10,7 @@ eleventyNavigation:
   title: Overview
 ---
 
-# Input Datepicker: Overview
+# Overview
 
 A web component based on the date text input field. Its purpose is to provide a way for users to fill in a date with a datepicker.
 For an input field with a big range, such as `birthday-input`, a datepicker is not the best choice due to the high variance between possible inputs.

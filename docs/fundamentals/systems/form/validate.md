@@ -3,7 +3,7 @@ parts:
   - Validate
   - Form
   - Systems
-title: 'Form: Validate'
+title: 'Validate'
 eleventyNavigation:
   key: Systems >> Form >> Validate
   title: Validate
@@ -11,7 +11,7 @@ eleventyNavigation:
   parent: Systems >> Form
 ---
 
-# Form: Validate
+# Validate
 
 ```js script
 import { html } from '@mdjs/mdjs-preview';

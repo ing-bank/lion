@@ -65,6 +65,7 @@ export declare class SlotHost {
  * `SlotMixin`, when attached to the DOM it creates content for defined slots in the Light DOM.
  * The content element is created using a factory function and is assigned a slot name from the key.
  * Existing slot content is not overridden.
+ * Reapplying the deduped mixin preserves the superclass type, including overridden accessors.
  *
  * The purpose is to have the default content in the Light DOM rather than hidden in Shadow DOM
  * like default slot content works natively.
@@ -78,11 +79,15 @@ export declare class SlotHost {
  *   };
  * }
  */
+declare function SlotMixinImplementation<T extends Constructor<LitElement & SlotHost>>(
+  superclass: T,
+): T;
 declare function SlotMixinImplementation<T extends Constructor<LitElement>>(
   superclass: T,
 ): T &
-  Constructor<SlotHost> &
-  Pick<typeof SlotHost, keyof typeof SlotHost> &
-  Pick<typeof LitElement, keyof typeof LitElement>;
+  Constructor<SlotHost> & { prototype: LitElement & SlotHost } & Pick<
+    typeof LitElement,
+    Exclude<keyof typeof LitElement, 'prototype'>
+  >;
 
 export type SlotMixin = typeof SlotMixinImplementation;

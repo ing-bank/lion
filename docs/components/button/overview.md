@@ -1,5 +1,5 @@
 ---
-title: 'Button: Overview'
+title: 'Overview'
 parts:
   - Overview
   - Button
@@ -10,7 +10,7 @@ eleventyNavigation:
   parent: Button
 ---
 
-# Button: Overview
+# Overview
 
 A button web component that is easily stylable and accessible.
 

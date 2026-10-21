@@ -1,5 +1,5 @@
 ---
-title: 'Form: Overview'
+title: 'Overview'
 parts:
   - Form
   - Overview
@@ -10,7 +10,7 @@ eleventyNavigation:
   title: Overview
 ---
 
-# Form: Overview
+# Overview
 
 ```js script
 import { html } from '@mdjs/mdjs-preview';

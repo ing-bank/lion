@@ -1,6 +1,6 @@
 {
   "name": "@lion/ui",
-  "version": "0.23.0",
+  "version": "0.25.0",
   "description": "A package of extendable web components",
   "license": "MIT",
   "author": "ing-bank",
@@ -81,27 +81,30 @@
     "dist-types",
     "docs",
     "exports",
-    "vendor",
+    "generated/awesome-phonenumber",
     "vscode.css-custom-data.json",
     "vscode.html-custom-data.json",
     "web-types.json",
-    "!custom-elements-manifest.config.js"
+    "!custom-elements-manifest.config.js",
+    "!dist-types/scripts",
+    "!scripts"
   ],
   "scripts": {
+    "build:phone": "wireit",
     "create-npm-publish-docs": "node ./scripts/create-docs-for-npm-publish.js",
     "custom-elements-manifest": "node ./scripts/cem.js",
     "debug": "cd ../../ && npm run debug",
     "debug:firefox": "cd ../../ && npm run debug:firefox",
     "debug:webkit": "cd ../../ && npm run debug:webkit",
     "generate-lion-exports": "node ./scripts/generate-lion-exports.js",
-    "prepack": "node ./scripts/prepare-vendored-phone.js",
+    "prepack": "node scripts/prepare-phone-build.js",
     "prepublishOnly": "npm run types && npm run create-npm-publish-docs && npm run publish-docs && npm run custom-elements-manifest && npm run generate-lion-exports",
     "publish-docs": "node ../../packages-node/publish-docs/src/cli.js --github-url https://github.com/ing-bank/lion/ --git-root-dir ../../",
     "test": "cd ../../ && npm run test:browser",
+    "test:node": "node --test test-node/phone-packaging.test.js test-node/prepack.test.js test-node/declarations.test.js",
     "types": "wireit",
     "types-check-consumer": "node ./scripts/check-consumer-types.js",
-    "types-check-only": "tsc --project tsconfig-check-only.json",
-    "types-restore-visibility": "node ./scripts/types-restore-visibility.js"
+    "types-check-only": "tsc --project tsconfig-check-only.json"
   },
   "sideEffects": [
     "exports/define/**/*.js",
@@ -116,13 +119,9 @@
     "@open-wc/scoped-elements": "^3.0.6",
     "@popperjs/core": "^2.11.8",
     "autosize": "^6.0.0",
-    "awesome-phonenumber": "file:vendor/awesome-phonenumber-7.9.0-tlouisse.libphonenumber-9.0.41.tgz",
     "ibantools": "^4.3.9",
-    "lit": "^3.1.2",
+    "lit": "^3.3.3",
     "singleton-manager": "^1.8.0"
-  },
-  "bundledDependencies": {
-    "0": "awesome-phonenumber"
   },
   "keywords": [
     "design-system",
@@ -133,19 +132,43 @@
     "access": "public"
   },
   "customElements": "custom-elements.json",
+  "imports": {
+    "#awesome-phonenumber": {
+      "types": "./generated/awesome-phonenumber/index.d.ts",
+      "import": "./generated/awesome-phonenumber/index-esm.mjs",
+      "require": "./generated/awesome-phonenumber/index.js",
+      "default": "./generated/awesome-phonenumber/index-esm.mjs"
+    }
+  },
   "web-types": "./web-types.json",
   "wireit": {
-    "types": {
-      "command": "tsc --build --pretty && npm run types-restore-visibility && npm run types-check-consumer",
+    "build:phone": {
+      "command": "node scripts/copy-phone-build.js",
       "dependencies": [
-        "../singleton-manager:types"
+        "../../packages-node/awesome-phonenumber:build"
+      ],
+      "files": [
+        "scripts/copy-phone-build.js"
+      ],
+      "output": [
+        "generated/awesome-phonenumber/**"
+      ]
+    },
+    "types": {
+      "command": "tsc --build --pretty && node scripts/postprocess-declarations.js && npm run types-check-consumer",
+      "dependencies": [
+        "../singleton-manager:types",
+        "build:phone"
       ],
       "files": [
         "exports/**/*.js",
         "components/**/*",
         "tsconfig.json",
-        "scripts/types-restore-visibility.js",
-        "scripts/check-consumer-types.js"
+        "package.json",
+        "scripts/postprocess-declarations.js",
+        "scripts/check-consumer-types.js",
+        "scripts/fixtures/consumer-extensions.ts",
+        "../../test/typescript-legacy/package.json"
       ],
       "output": [
         "dist-types/**"

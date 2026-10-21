@@ -81,22 +81,22 @@
     border-radius: 12px;
     background-color: var(--card-bg);
     transition: all 0.2s;
-    border: 1px solid var(--highlight-color);
+    border: 1px solid var(--accent-yellow);
     margin-right: 1rem;
     margin-top: 1rem;
 }
 
 .component-card:hover .card-icon {
     background: var(--card-bg);
-    border-color: var(--highlight-color);
-    color: var(--highlight-color);
+    border-color: var(--accent-yellow);
+    color: var(--accent-on-surface);
 }
 
 .card-icon svg {
     width: 24px;
     height: 24px;
     stroke-width: 1.5;
-    stroke: var(--highlight-color);
+    stroke: var(--accent-yellow);
 }
 
 .component-card h3 {
@@ -108,7 +108,11 @@
 }
 
 .component-card:hover h3 {
-    color: var(--highlight-color);
+    color: var(--accent-on-surface);
+    text-decoration: underline;
+    text-decoration-color: var(--accent-yellow);
+    text-decoration-thickness: 2px;
+    text-underline-offset: 3px;
 }
 
 .component-card p {
@@ -118,7 +122,11 @@
 }
 
 .main-nav a.active {
-    color: var(--highlight-color);
+    color: var(--accent-on-surface);
+    text-decoration: underline;
+    text-decoration-color: var(--accent-yellow);
+    text-decoration-thickness: 2px;
+    text-underline-offset: 4px;
 }
 
 /* Documentation Layout */
@@ -149,7 +157,11 @@
 }
 
 .back-link:hover {
-    color: var(--highlight-color);
+    color: var(--accent-on-surface);
+    text-decoration: underline;
+    text-decoration-color: var(--accent-yellow);
+    text-decoration-thickness: 2px;
+    text-underline-offset: 3px;
 }
 
 .component-nav h3 {
@@ -183,13 +195,18 @@
 }
 
 .component-nav a:hover {
-    background-color: #f1f5f9;
-    color: var(--highlight-color);
+    background-color: var(--overlay-subtle);
+    color: var(--accent-on-surface);
+    text-decoration: underline;
+    text-decoration-color: var(--accent-yellow);
+    text-decoration-thickness: 2px;
+    text-underline-offset: 3px;
 }
 
 .component-nav a.active {
-    background-color: var(--highlight-color);
-    color: white;
+    /* Yellow fill with near-black ink, not white on yellow (1.6:1). */
+    background-color: var(--accent-yellow);
+    color: var(--accent-ink);
 }
 
 /* Docs Content moved to styles.css */
@@ -212,8 +229,10 @@
     /* Same translucent-bar recipe as the site header; was hard-coded rgba(0,0,0,0.3), which put a
      * dark bar behind light-mode secondary text. */
     background: var(--header-bg);
-    backdrop-filter: blur(20px) saturate(180%);
-    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    /* 20px smeared glyph shapes into grey clouds; saturate(180%) amplified the colour showing
+     * through (116 distinct colours behind the bar on /components/ dark). */
+    backdrop-filter: blur(12px) saturate(120%);
+    -webkit-backdrop-filter: blur(12px) saturate(120%);
     border-bottom: 1px solid var(--header-border);
 }
 
@@ -299,7 +318,7 @@ ui-portal-inpage-nav {
 .docs-content__header .card-icon {
     width: 48px;
     height: 48px;
-    background: var(--highlight-color);
+    background: var(--accent-yellow);
     border-radius: 8px;
     display: flex;
     align-items: center;

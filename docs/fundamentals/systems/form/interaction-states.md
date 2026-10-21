@@ -3,7 +3,7 @@ parts:
   - Interaction States
   - Form
   - Systems
-title: 'Form: Interaction States'
+title: 'Interaction States'
 eleventyNavigation:
   key: Systems >> Form >> Interaction States
   title: Interaction States
@@ -11,7 +11,7 @@ eleventyNavigation:
   parent: Systems >> Form
 ---
 
-# Form: Interaction States
+# Interaction States
 
 ```js script
 import { html, render } from '@mdjs/mdjs-preview';

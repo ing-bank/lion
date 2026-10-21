@@ -1,5 +1,5 @@
 ---
-title: 'Checkbox Group: Use Cases'
+title: 'Use Cases'
 parts:
   - Checkbox Group
   - Use Cases
@@ -10,7 +10,7 @@ eleventyNavigation:
   title: Use Cases
 ---
 
-# Checkbox Group: Use Cases
+# Use Cases
 
 ```js script
 import { html } from '@mdjs/mdjs-preview';

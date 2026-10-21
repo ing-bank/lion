@@ -1,5 +1,5 @@
 ---
-title: 'Fieldset: Overview'
+title: 'Overview'
 parts:
   - Fieldset
   - Overview
@@ -10,7 +10,7 @@ eleventyNavigation:
   title: Overview
 ---
 
-# Fieldset: Overview
+# Overview
 
 ```js script
 import { html } from '@mdjs/mdjs-preview';

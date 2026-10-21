@@ -3,7 +3,7 @@ parts:
   - Overview
   - Extend Docs
   - Node Tools
-title: 'Extend Docs: Overview'
+title: 'Overview'
 eleventyNavigation:
   key: Node Tools >> Extend Docs >> Overview
   title: Overview
@@ -11,7 +11,7 @@ eleventyNavigation:
   parent: Node Tools >> Extend Docs
 ---
 
-# Extend Docs: Overview
+# Overview
 
 When maintaining your own extension layer of lion you most likely want to maintain a similar documentation.
 Copying and rewriting imports/tags the markdown files works but also means that whenever something change you need copy and rewrite again.

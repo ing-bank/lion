@@ -1,17 +1,16 @@
 import { builtinModules } from 'module';
 import path from 'path';
 
-import { nodeResolve } from '@rollup/plugin-node-resolve';
+import { ResolverFactory } from 'oxc-resolver';
 
 import { isRelativeSourcePath } from '#utils/relative-source-path.js';
-import { LogService } from '#core/LogService.js';
 import { toPosixPath } from '#utils/to-posix-path.js';
 import { memoize } from '#utils/memoize.js';
 
 /**
- * @typedef {import('#types/index.js').PathRelativeFromProjectRoot} PathRelativeFromProjectRoot
  * @typedef {import('#types/index.js').PathFromSystemRoot} PathFromSystemRoot
  * @typedef {import('#types/index.js').SpecifierSource} SpecifierSource
+ * @typedef {{customResolveOptions?: {preserveSymlinks:boolean}; modulePaths?: string[]}} ResolveOptions
  */
 
 /**
@@ -24,23 +23,27 @@ function isBuiltin(importee) {
   );
 }
 
+const baseResolver = new ResolverFactory({
+  // The rules the previous @rollup/plugin-node-resolve setup used: honour `exports` maps with the
+  // ESM conditions, prefer the `module` entry over `main`, and guess `.mjs`/`.js`/`.json`.
+  extensions: ['.js', '.mjs', '.json'],
+  conditionNames: ['import', 'module', 'default'],
+  mainFields: ['module', 'main'],
+});
+
 /**
- * Solution inspired by es-dev-server:
- * https://github.com/open-wc/open-wc/blob/master/packages/es-dev-server/src/utils/resolve-module-imports.js
+ * @param {ResolveOptions} opts
  */
-const fakePluginContext = {
-  meta: {
-    // rollupVersion needed in plugin context => nodeResolvePackageJson.peerDependencies.rollup
-    rollupVersion: '^2.42.0',
-  },
-  resolve: () => {},
-  /**
-   * @param {string[]} msg
-   */
-  warn(...msg) {
-    LogService.warn('[resolve-import-path]: ', ...msg);
-  },
-};
+function getResolver(opts) {
+  const { modulePaths, customResolveOptions } = opts;
+  if (!modulePaths && !customResolveOptions) {
+    return baseResolver;
+  }
+  return baseResolver.cloneWithOptions({
+    ...(modulePaths ? { modules: modulePaths } : {}),
+    ...(customResolveOptions ? { symlinks: !customResolveOptions.preserveSymlinks } : {}),
+  });
+}
 
 /**
  * Based on importee (in a statement "import {x} from '@lion/core'", "@lion/core" is an
@@ -48,44 +51,63 @@ const fakePluginContext = {
  * name without an extension.
  * @param {SpecifierSource} importee source like '@lion/core' or '../helpers/index.js'
  * @param {PathFromSystemRoot} importer importing file, like '/my/project/importing-file.js'
- * @param {{customResolveOptions?: {preserveSymlinks:boolean}; modulePaths?: string[]}} [opts] nodeResolve options
+ * @param {ResolveOptions} [opts]
  * @returns {Promise<PathFromSystemRoot|null|'[node-builtin]'>} the resolved file system path, like '/my/project/node_modules/@lion/core/index.js'
  */
-async function resolveImportPathFn(importee, importer, opts = {}) {
+async function resolveWithOxcResolver(importee, importer, opts = {}) {
   if (isBuiltin(importee)) {
     return '[node-builtin]';
   }
 
-  const rollupResolve = nodeResolve({
-    rootDir: path.dirname(importer),
-    // allow resolving polyfills for nodejs libs
-    preferBuiltins: false,
-    // extensions: ['.mjs', '.js', '.json', '.node'],
-    ...opts,
-  });
-
-  const preserveSymlinks =
-    (opts?.customResolveOptions && opts.customResolveOptions.preserveSymlinks) || false;
-  // @ts-expect-error
-  rollupResolve.buildStart.call(fakePluginContext, { preserveSymlinks });
-
-  const resolveIdHook = rollupResolve.resolveId;
-  const resolveIdHandler =
-    typeof resolveIdHook === 'function' ? resolveIdHook : resolveIdHook?.handler;
-  const pluginContext = /** @type {import('rollup').PluginContext} */ (
-    /** @type {unknown} */ (fakePluginContext)
-  );
-  const result = await resolveIdHandler?.call(pluginContext, importee, importer, {
-    isEntry: false,
-  });
-
-  if (!result || typeof result === 'string' || !result.id) {
-    // LogService.warn(
-    //   `[resolveImportPath] importee ${importee} not found in filesystem for importer '${importer}'.`,
-    // );
+  // oxc-resolver resolves from a directory, not from the importing file.
+  const result = getResolver(opts).sync(path.dirname(importer), importee);
+  if (!result || result.error || !result.path) {
     return null;
   }
-  return toPosixPath(result.id);
+  return /** @type {PathFromSystemRoot} */ (toPosixPath(result.path));
+}
+
+/**
+ * Provides the resolver that turns an import specifier into a file system path.
+ *
+ * `oxc-resolver` is the default: the rules and the outcome are the ones the previous
+ * @rollup/plugin-node-resolve setup produced, at a fraction of the cost (a fresh plugin instance
+ * per call versus a reused native resolver). It is native and reads the real file system only, so
+ * the suites that mock the file system (mock-fs) swap in a JS resolver via `setResolver` - the same
+ * shape as `fsAdapter` swapping the file system. Those suites therefore exercise the JS resolver;
+ * resolve-import-path.test.js asserts the oxc path itself.
+ */
+class ImportResolver {
+  constructor() {
+    /** @type {typeof resolveWithOxcResolver} */
+    this.resolve = resolveWithOxcResolver;
+  }
+
+  /**
+   * Call this for mocking or compatibility with non-node environments.
+   * @param {typeof resolveWithOxcResolver} resolve
+   */
+  setResolver(resolve) {
+    this.resolve = resolve;
+  }
+
+  /**
+   * When done testing, call this to restore the default resolver.
+   */
+  restoreResolver() {
+    this.resolve = resolveWithOxcResolver;
+  }
+}
+
+export const importResolver = new ImportResolver();
+
+/**
+ * @param {SpecifierSource} importee
+ * @param {PathFromSystemRoot} importer
+ * @param {ResolveOptions} [opts]
+ */
+async function resolveImportPathFn(importee, importer, opts) {
+  return importResolver.resolve(importee, importer, opts);
 }
 
 export const resolveImportPath = memoize(resolveImportPathFn);

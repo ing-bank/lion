@@ -10,10 +10,10 @@ import { localizeNamespaceLoader } from './localizeNamespaceLoader.js';
 
 /**
  * @typedef {import('../types/index.js').RegionCode} RegionCode
- * @typedef {import('awesome-phonenumber').PhoneNumberFormat} PhoneNumberFormat
- * @typedef {import('awesome-phonenumber').PhoneNumberTypes} PhoneNumberTypes
+ * @typedef {import('#awesome-phonenumber').PhoneNumberFormat} PhoneNumberFormat
+ * @typedef {import('#awesome-phonenumber').PhoneNumberTypes} PhoneNumberTypes
  * @typedef {import('../../form-core/types/FormatMixinTypes.js').FormatOptions} FormatOptions
- * @typedef {* & typeof import('awesome-phonenumber')} AwesomePhoneNumber
+ * @typedef {* & typeof import('#awesome-phonenumber')} AwesomePhoneNumber
  * @typedef {FormatOptions & {regionCode: RegionCode; formatStrategy: PhoneNumberFormat; formatCountryCodeStyle: string;}} FormatOptionsTel
  */
 

@@ -3,11 +3,12 @@
   "name": "@lion/root",
   "license": "MIT",
   "scripts": {
-    "build": "npm run build:astro && npm run build:rocket && npm run build:astro:update-links && mv dist _site/next",
-    "build:astro": "astro telemetry disable && ASTRO_BASE_URL=/next astro build --force",
-    "build:astro:update-links": "node ./src/utils/rewrite-links.mjs",
+    "build": "npm run build:astro && npm run build:rocket && npm run build:update-links",
+    "build:astro": "astro telemetry disable && astro build --force",
     "build:clean": "find src/pages -path \"*/_demos/*.js\" -type f -delete && rm -rf node_modules/_lion_docs && npm run build",
     "build:rocket": "rocket build",
+    "build:portal": "npm run build:astro && npm run build:update-links",
+    "build:update-links": "node ./src/utils/rewrite-links.mjs",
     "bundlesize": "rollup -c bundlesize/rollup.config.js && bundlesize",
     "changeset": "changeset",
     "custom-elements-manifest": "npm run custom-elements-manifest --workspaces --if-present && node ./scripts/create-api-tables.mjs",
@@ -16,22 +17,23 @@
     "debug:no-scoped-registries-polyfill": "npm run debug -- --no-scoped-registries-polyfill",
     "debug:webkit": "web-test-runner --watch --config web-test-runner-webkit.config.mjs",
     "debug:sr": "web-test-runner --watch --config web-test-runner-sr.config.mjs",
-    "predeploy": "npm run build",
-    "deploy": "gh-pages -d _site -r git@github.com:ing-bank/lion --nojekyll",
+    "predeploy": "npm run build:portal",
+    "deploy": "gh-pages -d _site -a -r git@github.com:ing-bank/lion --nojekyll",
     "dev": "astro dev --force",
     "format": "npm run format:eslint && npm run format:prettier",
     "format:eslint": "eslint --ext .js,.html . --fix",
     "format:prettier": "prettier \"**/*.{js,md,astro}\" \"packages/*/package.json\" \"package.json\" --write",
-    "postinstall": "npx patch-package && npm run custom-elements-manifest",
+    "postinstall": "npx patch-package && npm run build:phone --workspace @lion/ui && npm run custom-elements-manifest",
     "lint": "run-p lint:*",
     "lint:eslint": "eslint --ext .js,.html .",
-    "lint:markdownlint": "git ls-files '*.md' | xargs markdownlint --ignore '{.github/**/*.md,.changeset/*.md,**/CHANGELOG.md,packages/ui/_legacy-changelogs/*.md}'",
+    "lint:markdownlint": "git ls-files '*.md' | xargs markdownlint --ignore '{.github/**/*.md,.changeset/*.md,**/CHANGELOG.md,packages/ui/_legacy-changelogs/*.md,packages-node/awesome-phonenumber/upstream/**}'",
     "lint:phone-number-up-to-date": "node ./scripts/lint-phone-number-lib.js",
     "lint:prettier": "prettier \"**/*.js\" --list-different || (echo '↑↑ these files are not prettier formatted ↑↑' && exit 1)",
     "lint:types": "npm run types",
     "lint:versions": "node ./scripts/lint-versions.js",
     "prepare": "husky install",
     "preview": "npx serve _site",
+    "portal:preview": "node ./scripts/deploy-portal-preview.mjs",
     "release": "changeset publish",
     "repo:clean-slate": "git clean -dfX",
     "repo:diff-package-lock": "npx diff-package-lock",
@@ -53,11 +55,12 @@
   },
   "workspaces": [
     "packages/*",
-    "packages-node/*"
+    "packages-node/*",
+    "test/typescript-legacy"
   ],
   "dependencies": {
     "@playwright/test": "^1.61.0",
-    "lit": "^3.3.2",
+    "lit": "^3.3.3",
     "playwright": "^1.61.0"
   },
   "devDependencies": {
@@ -101,7 +104,6 @@
     "astro": "^6.0.8",
     "astro-pagefind": "^1.8.5",
     "astro-seo": "^0.7.5",
-    "awesome-phonenumber": "file:packages/ui/vendor/awesome-phonenumber-7.9.0-tlouisse.libphonenumber-9.0.41.tgz",
     "bundlesize": "^1.0.0-beta.2",
     "cem-plugin-vs-code-custom-data-generator": "^1.4.2",
     "chai": "^4.5.0",
@@ -153,6 +155,20 @@
         "Version of 'sharp' package we get via '@rocket/cli' is too old to be built on a Mac.",
         "But updating package '@rocket-cli' causes our portal to break. Reason unknown.",
         "So, we override the sharp version in here until '@rocket-cli' can be updated."
+      ],
+      "lit, lit-element, lit-html, @lit/reactive-element": [
+        "The workspace installed lit several times over: the root 3.x plus 2.8.0 copies inside @lion/*",
+        "and @rocket/*. Which copy an Astro island's module graph resolved varied per page load, and the",
+        "injected @lit-labs/ssr-client hydration support patches exactly one LitElement - so on some loads",
+        "an island rendered a second copy of its template beside the server-rendered shadow root instead of",
+        "hydrating it (a duplicated table of contents, 3 of 6 page loads). The portal and @lion/ui run the",
+        "single 3.3.3 copy."
+      ],
+      "//@lion/core, @rocket/engine, @rocket/drawer": [
+        "This repo is hybrid: it still runs on rocket next to astro, and those packages are the lit 2 era",
+        "(they declare lit ^2.x). They keep the lit line they were built and tested against, so the",
+        "collapse above only covers the portal and @lion/ui - a lit 3 upgrade of the rocket side is a",
+        "separate migration, not a side effect of this one."
       ]
     },
     "olderVersions": {
@@ -235,8 +251,48 @@
     "pug-code-gen": "3.0.3",
     "astro": "^6.0.8",
     "@lit-labs/ssr": "4.1.0",
-    "@lit-labs/ssr-client": "1.1.7",
-    "@lit-labs/ssr-dom-shim": "1.6.0"
+    "@lit-labs/ssr-client": "1.1.8",
+    "@lit-labs/ssr-dom-shim": "1.6.0",
+    "lit": "$lit",
+    "lit-element": "4.2.2",
+    "lit-html": "3.3.3",
+    "@lit/reactive-element": "$@lit/reactive-element",
+    "@lion/core": {
+      "lit": "2.8.0",
+      "lit-element": "3.3.3",
+      "lit-html": "2.8.0",
+      "@lit/reactive-element": "1.6.3"
+    },
+    "@lion/listbox": {
+      "lit": "2.8.0",
+      "lit-element": "3.3.3",
+      "lit-html": "2.8.0",
+      "@lit/reactive-element": "1.6.3"
+    },
+    "@lion/overlays": {
+      "lit": "2.8.0",
+      "lit-element": "3.3.3",
+      "lit-html": "2.8.0",
+      "@lit/reactive-element": "1.6.3"
+    },
+    "@rocket/engine": {
+      "lit": "2.8.0",
+      "lit-element": "3.3.3",
+      "lit-html": "2.8.0",
+      "@lit/reactive-element": "1.6.3"
+    },
+    "@rocket/search": {
+      "lit": "2.8.0",
+      "lit-element": "3.3.3",
+      "lit-html": "2.8.0",
+      "@lit/reactive-element": "1.6.3"
+    },
+    "@rocket/drawer": {
+      "lit": "2.8.0",
+      "lit-element": "3.3.3",
+      "lit-html": "2.8.0",
+      "@lit/reactive-element": "1.6.3"
+    }
   },
   "prettier": {
     "printWidth": 100,

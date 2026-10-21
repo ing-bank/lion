@@ -1,5 +1,5 @@
 ---
-title: 'Input Amount: Use Cases'
+title: 'Use Cases'
 parts:
   - Input Amount
   - Use Cases
@@ -10,7 +10,7 @@ eleventyNavigation:
   title: Use Cases
 ---
 
-# Input Amount: Use Cases
+# Use Cases
 
 ```js script
 import { html } from '@mdjs/mdjs-preview';

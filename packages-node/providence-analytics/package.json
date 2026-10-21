@@ -54,22 +54,18 @@
     "types": "wireit"
   },
   "dependencies": {
-    "@rollup/plugin-node-resolve": "^16.0.3",
+    "oxc-resolver": "^1.12.0",
     "oxc-parser": "0.137.0",
     "parse5": "^8.0.0",
     "semver": "^7.7.3"
   },
   "optionalDependencies": {
     "@babel/parser": "^7.29.0",
-    "@babel/plugin-syntax-import-assertions": "^7.28.6",
     "@swc/core": "~1.10.12"
   },
   "devDependencies": {
-    "@babel/parser": "^7.29.0",
-    "@babel/plugin-syntax-import-assertions": "^7.28.6",
     "@babel/traverse": "^7.29.0",
-    "@swc/core": "~1.10.12",
-    "@types/inquirer": "^9.0.9",
+    "@rollup/plugin-node-resolve": "^16.0.3",
     "@types/mocha": "^10.0.10",
     "@web/dev-server": "^0.4.6",
     "@web/dev-server-core": "^0.7.5",
@@ -95,8 +91,13 @@
   },
   "comments": {
     "dependencies": {
-      "@rollup/plugin-node-resolve": "Move to devDep (for mocking require.resolve) later and use require.resolve for prod later",
+      "@babel/parser": "Lazily imported by AstService (the `--fallback-to-babel` parser) and referenced from the emitted declarations, so optional",
+      "@web/dev-server": "Only the optional dashboard (`providence dashboard`) needs it. Dev-only: an optionalDependencies edge here flips 153 lock entries to `devOptional` and breaks packages/ui's type gate in CI (TS2322/TS2345 in ScopedElementsMixin.js); plain `dependencies` is green but adds the 194-package @web/dev-server closure to every consumer. See the PR for the measurements",
+      "@rollup/plugin-node-resolve": "Dev-only: the suites mock the file system with mock-fs, which a native resolver cannot see, so test-helpers swaps it in through importResolver.setResolver",
+      "@swc/core": "Lazily imported by AstService for the `swc` ast type - every shipped analyzer uses `oxc`, the base Analyzer defaults to `babel` - and referenced from the emitted declarations, so optional",
+
       "oxc-parser": "Pin it as long as the api is unstable, to prevent unpredictable behavior",
+      "oxc-resolver": "Resolves import specifiers from a directory (exporter.sync(dir, specifier)) with the ESM conditions and `module` field, at ~0.008ms/call versus ~1.7ms/call for a fresh @rollup/plugin-node-resolve instance",
       "semver": "Only needed for one check. Create internal util later"
     }
   },

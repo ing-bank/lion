@@ -1,6 +1,8 @@
 ---
 import { getCollection, type CollectionEntry } from "astro:content";
 import ComponentsOverviewLayout from "../../layouts/ComponentsOverviewLayout.astro";
+import { humanise } from "../../utils/humanise.mjs";
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 
 // Define component interface
 interface ComponentCard {
@@ -45,12 +47,12 @@ const components: ComponentCard[] = lionComponents
   })
   .map((component: CollectionEntry<"lionComponents">): ComponentCard => {
     const componentName = component.id.split('/')[0];
-    const displayName = component.data?.title || componentName.charAt(0).toUpperCase() + componentName.slice(1);
-    
+    const displayName = humanise(componentName);
+
     return {
       name: displayName,
       description: component.data?.description || `${displayName} component with accessible design and flexible styling.`,
-      href: `${import.meta.env.BASE_URL}/components/${component.id}`,
+      href: `${base}/components/${component.id}`,
       icon: getComponentIcon(componentName)
     };
   })

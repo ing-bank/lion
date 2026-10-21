@@ -2,7 +2,7 @@
 parts:
   - Providence Analytics
   - Node Tools
-title: 'Node Tools: Providence Analytics'
+title: 'Providence Analytics'
 eleventyNavigation:
   key: Node Tools >> Providence Analytics
   title: Providence Analytics
@@ -10,4 +10,4 @@ eleventyNavigation:
   parent: Node Tools
 ---
 
-# Node Tools: Providence Analytics
+# Providence Analytics

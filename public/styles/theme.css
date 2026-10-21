@@ -34,20 +34,38 @@
   --heading-gradient-to: #777777;
   --hero-gradient-from: #111111;
   --hero-gradient-to: #777777;
-  --grid-line-color: #ececec;
+  --grid-line-color: #f5f5f5;
 }
 
 /*
+ * The dark gradient/grid values, declared once and referenced by both selectors below, so the
+ * "no duplicated colour values" rule of this file still holds for the fallback path.
+ */
+:root {
+  --_dark-heading-gradient-from: #ffffff;
+  --_dark-heading-gradient-to: #777777;
+  --_dark-hero-gradient-from: #ffffff;
+  --_dark-hero-gradient-to: #888888;
+  --_dark-grid-line-color: #0b0b0b;
+}
+
+/*
+ * Every state is keyed twice: on the radio (`:has()`) for a visitor without JavaScript, and on the
+ * `data-theme` attribute that src/components/ThemeInit.astro sets before the first paint. The
+ * attribute matters because on a reload the radios do not exist yet, and it is the only way the
+ * choice can survive a navigation on a static MPA.
+ *
  * System-resolved dark — only while "Auto" is the selected option. An explicit light or dark
  * choice is never touched by the OS preference.
  */
 @media (prefers-color-scheme: dark) {
-  :root:has(#theme-auto:checked) {
-    --heading-gradient-from: #ffffff;
-    --heading-gradient-to: #777777;
-    --hero-gradient-from: #ffffff;
-    --hero-gradient-to: #888888;
-    --grid-line-color: #111111;
+  :root:has(#theme-auto:checked),
+  :root[data-theme='auto'] {
+    --heading-gradient-from: var(--_dark-heading-gradient-from);
+    --heading-gradient-to: var(--_dark-heading-gradient-to);
+    --hero-gradient-from: var(--_dark-hero-gradient-from);
+    --hero-gradient-to: var(--_dark-hero-gradient-to);
+    --grid-line-color: var(--_dark-grid-line-color);
   }
 }
 
@@ -55,21 +73,24 @@
  * Explicit choices. Same specificity as the system block above, declared after it, so an explicit
  * choice always wins regardless of what the OS says.
  */
-:root:has(#theme-auto:checked) {
+:root:has(#theme-auto:checked),
+:root[data-theme='auto'] {
   color-scheme: light dark;
 }
 
-:root:has(#theme-dark:checked) {
+:root:has(#theme-dark:checked),
+:root[data-theme='dark'] {
   color-scheme: dark;
 
-  --heading-gradient-from: #ffffff;
-  --heading-gradient-to: #777777;
-  --hero-gradient-from: #ffffff;
-  --hero-gradient-to: #888888;
-  --grid-line-color: #111111;
+  --heading-gradient-from: var(--_dark-heading-gradient-from);
+  --heading-gradient-to: var(--_dark-heading-gradient-to);
+  --hero-gradient-from: var(--_dark-hero-gradient-from);
+  --hero-gradient-to: var(--_dark-hero-gradient-to);
+  --grid-line-color: var(--_dark-grid-line-color);
 }
 
-:root:has(#theme-light:checked) {
+:root:has(#theme-light:checked),
+:root[data-theme='light'] {
   color-scheme: light;
 }
 
@@ -111,12 +132,14 @@
   transition: color 0.2s, border-color 0.2s, background-color 0.2s;
 }
 
-/* "Auto" is a word rather than an icon, so it gets a pill instead of a circle. */
+/* "Auto" is a word rather than an icon, so it gets a pill instead of a circle. The word is
+ * smaller than the surrounding labels on purpose: it has to sit inside the same 32px row. */
 .theme-switch label[for='theme-auto'] {
   width: auto;
-  padding: 0 10px;
+  padding: 0 8px;
   border-radius: 999px;
-  font-size: 0.75rem;
+  font-size: 0.625rem;
+  line-height: 1;
 }
 
 .theme-switch label:hover {

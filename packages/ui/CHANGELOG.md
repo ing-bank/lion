@@ -1,5 +1,73 @@
 # @lion/ui
 
+## 0.25.0
+
+### Minor Changes
+
+- 5b7a9bd: `restorePhoneUtilManager()` now restores the real `PhoneUtilManager.isLoaded` getter and original `loadComplete` promise. Its public name and
+  zero-argument signature are unchanged. Previously it restored a boolean captured at module import,
+  often `false`, accidentally leaving real parsing and formatting disabled after mock cleanup.
+
+  Tests using the real parser should await the real `PhoneUtilManager.loadComplete` before mocking
+  or after restoration and assert the actual normalized model/display values. For example, the
+  loaded parser normalizes `+32 6 12345678` to `+32612345678`, displayed as `(+32)612345678` with
+  parentheses formatting. Tests intentionally exercising the unloaded/no-parsing state should keep
+  an explicit `mockPhoneUtilManager()` scoped to those assertions and restore it afterward.
+
+  This helper correction does not change production parsing or formatting code and does not affect
+  production users who do not use these test helpers. The awesome-phonenumber/libphonenumber metadata
+  updates introduced in the 0.23.x line are separate: real-loaded comparisons for the fixtures above
+  produced identical results before and after the upgrade. Their changed test expectations are
+  exposed by fixing mock restoration, not evidence that all telephone outputs are identical across
+  metadata versions.
+
+### Patch Changes
+
+- b60e2fd: Restore public listbox focus-node access and legacy TypeScript slot-accessor overrides.
+  The select-rich focus-node override is also public to match its restored public base member.
+  Keep custom overlay invokers clickable when no focusable light-DOM descendant exists,
+  and allow removing overlay content after teardown without retaining detached wrappers.
+  Keep declaration postprocessing in a single build-only script, excluded from the npm package.
+
+## 0.24.0
+
+### Minor Changes
+
+- 1c0f886: Update lit to 3.3.3, with one copy of it for the astro side.
+
+  `lit` moves from `^3.1.2` to `^3.3.3`, and the portal's line is pinned to a single copy in the root
+  `overrides` (`lit` 3.3.3 with `lit-element` 4.2.2, `lit-html` 3.3.3, `@lit/reactive-element` 2.1.2).
+  Before this the install carried several lit lines at once - the root 3.x next to 2.8.0 copies inside
+  `@lion/*` and `@rocket/*` - and which one an Astro island's module graph resolved varied per page
+  load, while `@lit-labs/ssr-client`'s hydration support patches exactly one `LitElement`. When it had
+  patched a copy that the element did not extend, the island rendered a second copy of its template
+  beside the server-rendered shadow root instead of hydrating it: a duplicated table of contents on the
+  docs pages, on 3 out of 6 page loads. One copy for the portal means the support reaches its islands,
+  and server-rendered pages hydrate their markup the way they are meant to.
+
+  The lit 2 era packages keep the line they were built against. This repo still runs on rocket next to
+  astro, so `@lion/*` (except `@lion/ui`) and `@rocket/*` are scoped in the same `overrides` to `lit`
+  2.8.0 with `lit-html` 2.8.0, `lit-element` 3.3.3 and `@lit/reactive-element` 1.6.3 - upgrading those
+  to lit 3 is a migration of its own, not a side effect of this one. The resolution was checked for the
+  combination that would break them: 0 of the 8 lit copies in the tree pair a `lit` 2.8.0 with a
+  `lit-html` 3.x.
+
+## 0.23.1
+
+### Patch Changes
+
+- 45117d6: Fix generic validation mixin composition through SlotMixin while preserving deduped
+  subclass accessors, constructor arguments and static members. Allow LionOption
+  subclasses to return nested Lit style arrays without changing runtime behavior.
+- 6bcedef: Preserve the superclass type when reapplying `SlotMixin` to an already slotted component.
+  This prevents TypeScript 4.7 from treating `slots` as a property instead of an accessor when
+  subclassing, for example, `SlotMixin(LionSelectRich)`. Runtime behavior is unchanged.
+- 534c957: Fix npm installation failures by rebuilding the temporary phone-number fork from
+  pinned sources and shipping the generated library inside Lion, without a phone
+  runtime or bundled dependency. Preserve libphonenumber v9.0.41 metadata, including
+  French Guiana premium-rate numbers. Internal imports need no consumer configuration.
+- 462d544: Fix the issue that showing overlay scrolls the page to the top on Safari
+
 ## 0.23.0
 
 ### Minor Changes
@@ -51,7 +119,7 @@
   `skipLibCheck` reported `TS7008: Member '...' implicitly has an 'any' type` (42 such errors in a
   representative consumer, 0 before).
 
-  The affected members are restored by `scripts/types-restore-visibility.js`, which is wired into
+  The affected members are restored by `scripts/postprocess-declarations.js`, which is wired into
   `wireit.types` right after `tsc` and re-attaches the modifier from the emitted JSDoc: the six Lit reactive properties, which cannot take a field
   without shadowing the accessor Lit installs (everything else is declared in the sources now), byte-for-byte the
   TS 4.9.5 output (`private x;`, `protected y: T;`). It touches no source and

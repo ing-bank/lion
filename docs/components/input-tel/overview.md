@@ -1,5 +1,5 @@
 ---
-title: 'Input Tel: Overview'
+title: 'Overview'
 parts:
   - Input Tel
   - Overview
@@ -10,7 +10,7 @@ eleventyNavigation:
   title: Overview
 ---
 
-# Input Tel: Overview
+# Overview
 
 Input field for entering phone numbers, including validation, formatting and mobile keyboard support.
 

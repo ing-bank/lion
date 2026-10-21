@@ -1,5 +1,5 @@
 ---
-title: 'Tabs: Overview'
+title: 'Overview'
 parts:
   - Tabs
   - Overview
@@ -10,7 +10,7 @@ eleventyNavigation:
   title: Overview
 ---
 
-# Tabs: Overview
+# Overview
 
 A web component that allows users to quickly move between a small number of equally important views.
 

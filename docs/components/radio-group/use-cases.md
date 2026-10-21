@@ -1,5 +1,5 @@
 ---
-title: 'Radio Group: Use Cases'
+title: 'Use Cases'
 parts:
   - Radio Group
   - Use Cases
@@ -10,7 +10,7 @@ eleventyNavigation:
   title: Use Cases
 ---
 
-# Radio Group: Use Cases
+# Use Cases
 
 ```js script
 import { html } from '@mdjs/mdjs-preview';

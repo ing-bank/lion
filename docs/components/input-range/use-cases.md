@@ -1,5 +1,5 @@
 ---
-title: 'Input Range: Use Cases'
+title: 'Use Cases'
 parts:
   - Input Range
   - Use Cases
@@ -10,7 +10,7 @@ eleventyNavigation:
   title: Use Cases
 ---
 
-# Input Range: Use Cases
+# Use Cases
 
 ```js script
 import { html } from '@mdjs/mdjs-preview';

@@ -1,5 +1,5 @@
 ---
-title: 'Input File: Overview'
+title: 'Overview'
 parts:
   - Input File
   - Overview
@@ -10,7 +10,7 @@ eleventyNavigation:
   title: Overview
 ---
 
-# Input File: Overview
+# Overview
 
 A web component based on the file input field.
 

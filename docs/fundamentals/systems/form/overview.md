@@ -3,7 +3,7 @@ parts:
   - Overview
   - Form
   - Systems
-title: 'Form: Overview'
+title: 'Overview'
 eleventyNavigation:
   key: Systems >> Form >> Overview
   title: Overview
@@ -11,7 +11,7 @@ eleventyNavigation:
   parent: Systems >> Form
 ---
 
-# Form: Overview
+# Overview
 
 This page should be used as a starting point when first using the Form System.
 It provides an overview of its essential building blocks and provides links to detailed explanations of most of its core concepts.

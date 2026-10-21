@@ -1,5 +1,5 @@
 ---
-title: 'Switch: Overview'
+title: 'Overview'
 parts:
   - Switch
   - Overview
@@ -10,7 +10,7 @@ eleventyNavigation:
   title: Overview
 ---
 
-# Switch: Overview
+# Overview
 
 <p class="lion-paragraph--emphasis">The Switch is used to toggle a property or feature on or off.</p>
 

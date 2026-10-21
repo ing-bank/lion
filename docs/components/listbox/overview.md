@@ -1,5 +1,5 @@
 ---
-title: 'Listbox: Overview'
+title: 'Overview'
 parts:
   - Listbox
   - Overview
@@ -10,7 +10,7 @@ eleventyNavigation:
   title: Overview
 ---
 
-# Listbox: Overview
+# Overview
 
 A widget that presents a list of options and allows a user to select one or more of them.
 A listbox that allows a single option to be chosen is a `single-select listbox`; one that allows

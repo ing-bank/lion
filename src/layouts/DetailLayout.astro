@@ -2,6 +2,10 @@
 import { SEO } from "astro-seo";
 import TopNav from "../components/TopNav.astro";
 import { UIPortalInpageNav } from "../components/ui-portal-inpage-nav.js";
+import ThemeInit from '../components/ThemeInit.astro';
+import LionWordmark from '../components/LionWordmark.astro';
+import { humanise } from '../utils/humanise.mjs';
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 
 const site = Astro.site || Astro.url.origin;
 const canonicalURL = new URL(Astro.url.pathname, site).toString();
@@ -36,7 +40,7 @@ const {
   sectionName,
   itemName,
   description = "Accessible component with various states and styles.",
-  backLink = `${import.meta.env.BASE_URL}/${activeNavItem}/`,
+  backLink = `${base}/${activeNavItem}/`,
   backLinkLabel = `← Back to ${sectionName}`,
   items = [],
   itemsByCategory = new Map(),
@@ -44,6 +48,23 @@ const {
 } = Astro.props;
 
 const currentPath = Astro.url.pathname;
+
+/*
+ * Breadcrumb: the ancestors of this page, section first. The docs titles used to carry their parent
+ * as a prefix ("Principles: Definitions and Terms"), which is what this trail replaces - the parent
+ * is one crumb up instead of being repeated in the heading ("Guides" then "Principles" for
+ * /guides/principles/definitions-and-terms, and it goes as deep as the page: /fundamentals/systems/
+ * core/overview shows Fundamentals, Systems, Core).
+ *
+ * Labels come from the url segments, so they follow the folder names the sidebar uses.
+ */
+const relativePath = currentPath.startsWith(base) ? currentPath.slice(base.length) : currentPath;
+const pathSegments = relativePath.split('/').filter(Boolean);
+const breadcrumbSegments = pathSegments.slice(1, -1); // drop the section and the page itself
+const breadcrumbTrail = breadcrumbSegments.map((segment, index) => ({
+  label: humanise(segment),
+  url: `${base}/${pathSegments[0]}/${breadcrumbSegments.slice(0, index + 1).join('/')}`,
+}));
 
 // If items are provided but not categorized, put them all in the first category
 let componentsByCategory = itemsByCategory;
@@ -63,6 +84,52 @@ if (items.length > 0 && componentsByCategory.size === 0) {
     height: 100vh;
     overflow-y: auto;
 
+  }
+
+  /*
+   * Breadcrumb: small and muted, with the page title below it doing the announcing. The separator is
+   * drawn rather than typed, so it does not read as part of either label.
+   */
+  .docs-breadcrumb {
+    font-size: 0.8rem;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    color: var(--text-secondary);
+    margin-bottom: 0.5rem;
+  }
+
+  .docs-breadcrumb ol {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+    margin: 0;
+    padding: 0;
+  }
+
+  .docs-breadcrumb li {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .docs-breadcrumb li:not(:first-child)::before {
+    content: '/';
+    color: var(--border-color);
+  }
+
+  .docs-breadcrumb a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .docs-breadcrumb a:hover,
+  .docs-breadcrumb a:focus-visible {
+    color: var(--accent-on-surface);
+    text-decoration: underline;
+    text-decoration-color: var(--accent-yellow);
+    text-underline-offset: 3px;
   }
 
   .component-nav h3 {
@@ -150,14 +217,14 @@ if (items.length > 0 && componentsByCategory.size === 0) {
   }
 
   .component-link:hover {
-    background-color: rgba(255, 193, 7, 0.05);
-    color: var(--highlight-color);
+    background-color: color-mix(in srgb, var(--accent-yellow) 5%, transparent);
+    color: var(--accent-on-surface);
   }
 
   .component-link.active {
-    color: var(--highlight-color);
-    background-color: rgba(255, 193, 7, 0.1);
-    border-left-color: var(--highlight-color);
+    color: var(--accent-on-surface);
+    background-color: color-mix(in srgb, var(--accent-yellow) 10%, transparent);
+    border-left-color: var(--accent-yellow);
     font-weight: 500;
   }
 
@@ -207,15 +274,16 @@ if (items.length > 0 && componentsByCategory.size === 0) {
     <meta name="view-transition" content="same-origin" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="color-scheme" content="light dark" />
+    <ThemeInit />
     <title>{title}</title>
-    <link rel="icon" type="image/svg+xml" href=`${import.meta.env.BASE_URL}/favicon.svg` />
+    <link rel="icon" type="image/svg+xml" href=`${base}/favicon.svg` />
     <meta name="generator" content={Astro.generator} />
-    
-    <link rel="stylesheet" href={`${import.meta.env.BASE_URL}/styles/theme.css`} />
-    <link rel="stylesheet" href=`${import.meta.env.BASE_URL}/styles/styles.css`>
-    <link rel="stylesheet" href=`${import.meta.env.BASE_URL}/styles/components.css`>
-    <link rel="stylesheet" href=`${import.meta.env.BASE_URL}/styles/transitions.css`>
-    <link rel="stylesheet" href=`${import.meta.env.BASE_URL}/styles/scroll-animations.css`>
+
+    <link rel="stylesheet" href={`${base}/styles/theme.css`} />
+    <link rel="stylesheet" href=`${base}/styles/styles.css`>
+    <link rel="stylesheet" href=`${base}/styles/components.css`>
+    <link rel="stylesheet" href=`${base}/styles/transitions.css`>
+    <link rel="stylesheet" href=`${base}/styles/scroll-animations.css`>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -243,7 +311,7 @@ if (items.length > 0 && componentsByCategory.size === 0) {
 <body>
     <div class="scroll-progress"></div>
     <div class="grid-background"></div>
-    
+
     <TopNav activeNavItem={activeNavItem} />
 
     <main>
@@ -255,7 +323,7 @@ if (items.length > 0 && componentsByCategory.size === 0) {
                         <h3>{sectionName}</h3>
                         <ul>
                             {Array.from(componentsByCategory.entries()).map(([category, categoryItems]) => {
-                                const hasActiveItem = categoryItems.some(item => 
+                                const hasActiveItem = categoryItems.some(item =>
                                   currentPath.replace(/\/$/, '').toLowerCase().endsWith(item.href.replace(/\/$/, '').toLowerCase())
                                 );
                                 return (
@@ -270,7 +338,7 @@ if (items.length > 0 && componentsByCategory.size === 0) {
                                             const isActive = currentPath.replace(/\/$/, '').toLowerCase().endsWith(item.href.replace(/\/$/, '').toLowerCase());
                                             return (
                                                 <li class="component-item">
-                                                    <a href={`${import.meta.env.BASE_URL}${item.href.replace(/\/$/, '')}`} class={`component-link ${isActive ? 'active' : ''}`} data-category={category} aria-current={isActive ? "page" : undefined}>
+                                                    <a href={`${base}${item.href.replace(/\/$/, '')}`} class={`component-link ${isActive ? 'active' : ''}`} data-category={category} aria-current={isActive ? "page" : undefined}>
                                                         {item.label}
                                                     </a>
                                                 </li>
@@ -285,6 +353,16 @@ if (items.length > 0 && componentsByCategory.size === 0) {
                 </aside>
 
                 <div class="docs-content" data-pagefind-body>
+                    {breadcrumbTrail.length > 0 && (
+                        <nav class="docs-breadcrumb" aria-label="Breadcrumb">
+                            <ol>
+                                <li><a href={backLink}>{sectionName}</a></li>
+                                {breadcrumbTrail.map(crumb => (
+                                    <li><a href={crumb.url}>{crumb.label}</a></li>
+                                ))}
+                            </ol>
+                        </nav>
+                    )}
                     <slot />
                 </div>
 
@@ -299,14 +377,14 @@ if (items.length > 0 && componentsByCategory.size === 0) {
         <div class="container">
             <div class="footer-row">
                 <div class="footer-brand">
-                    <img src=`${import.meta.env.BASE_URL}/lionui-text.svg` alt="lion ui" height="16" class="logo-text-svg">
-                    <p class="copyright">&copy; 2025 Lion Project. MIT License.</p>
+                    <LionWordmark />
+                    <p class="copyright">&copy; {new Date().getFullYear()} Lion Project. MIT License.</p>
                 </div>
                 <div class="footer-links">
-                    <a href=`${import.meta.env.BASE_URL}/blog/`>Blog</a>
+                    <a href=`${base}/blog/`>Blog</a>
                     <a href="https://github.com/ing-bank/lion/issues">Help</a>
                     <a href="https://github.com/ing-bank/lion">GitHub</a>
-                    <a href=`${import.meta.env.BASE_URL}/about/slack/`>Slack</a>
+                    <a href=`/prev/about/slack/`>Slack</a>
                     <a href="https://github.com/ing-bank/lion/blob/master/CONTRIBUTING.md">Contribute</a>
                 </div>
             </div>
@@ -319,7 +397,7 @@ if (items.length > 0 && componentsByCategory.size === 0) {
   document.querySelectorAll('.category-toggle').forEach(toggle => {
     const category = toggle.getAttribute('data-category');
     const submenu = document.querySelector(`.category-submenu[data-category="${category}"]`);
-    
+
     // Restore previous state from localStorage, or use current aria-expanded state
     const savedState = localStorage.getItem(`category-${category}`);
     if (savedState === 'collapsed') {
@@ -334,14 +412,14 @@ if (items.length > 0 && componentsByCategory.size === 0) {
         submenu?.classList.add('collapsed');
       }
     }
-    
+
     // Toggle handler
     toggle.addEventListener('click', (e) => {
       e.preventDefault();
       const isExpanded = toggle.getAttribute('aria-expanded') === 'true';
       toggle.setAttribute('aria-expanded', String(!isExpanded));
       submenu?.classList.toggle('collapsed');
-      
+
       // Persist state
       localStorage.setItem(`category-${category}`, !isExpanded ? 'expanded' : 'collapsed');
     });
