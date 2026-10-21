@@ -86,8 +86,9 @@ const testRunnerHtmlWithPolyfill = testRunnerImport =>
 export default {
   nodeResolve: true,
   testFramework: {
-    // a real reader needs time to start and to speak
-    config: { timeout: '30000' },
+    // A real reader needs time to start and to speak: VoiceOver speaks slower than the
+    // commands that cause it, and a test that commits a value anchors itself three times.
+    config: { timeout: isRealReader ? '90000' : '30000' },
   },
   testRunnerHtml: process.argv.includes('--no-scoped-registries-polyfill')
     ? undefined

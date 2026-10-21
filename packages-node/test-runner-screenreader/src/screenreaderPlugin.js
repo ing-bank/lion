@@ -190,7 +190,7 @@ function createScreenReader({ screenReader, getPage, appId }) {
    * text field" hint), so a test that reads the log right after the anchor can miss the
    * announcement. Wait until the reader has spoken and stopped adding phrases.
    */
-  const waitForSpeechToSettle = async (timeout = 5000) => {
+  const waitForSpeechToSettle = async (timeout = 3000) => {
     const deadline = Date.now() + timeout;
     let previousSize = -1;
     while (Date.now() < deadline) {
