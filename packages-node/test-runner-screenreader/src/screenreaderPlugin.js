@@ -518,20 +518,14 @@ export function screenreaderPlugin(options) {
             return;
           }
           // VoiceOver types into the item it entered, not into the item it is on, so it
-          // enters the field first. It also waits for the speech of every keystroke: one
-          // command for an 18 character IBAN took longer than the 20s a test runner command
-          // waits, so the text goes in small chunks and each chunk waits for the first
-          // phrase only ('initial' capture - the option guidepup's own example uses).
+          // enters the field first, and it does not wait for the speech of the typing:
+          // waiting per keystroke took longer than 20s, which is a hard limit in the dev
+          // server for a server command to answer ("Did not receive a server response ...
+          // within 20000ms", @web/dev-server-core webSocketsPlugin) and is not
+          // configurable. What VoiceOver says about the committed value is asserted after
+          // the field is re-entered, which is captured.
           await reader.perform(commands.interactWithItem);
-          const chunkSize = 4;
-          /** @type {Promise<void>[]} */
-          const chunks = [];
-          for (let index = 0; index < text.length; index += chunkSize) {
-            chunks.push(reader.type(text.slice(index, index + chunkSize), { capture: 'initial' }));
-          }
-          for (const chunk of chunks) {
-            await chunk;
-          }
+          await reader.type(text, { capture: false });
         },
         'sr-act': () => readerFor(session).act(),
         'sr-interact': () => readerFor(session).interact(),
