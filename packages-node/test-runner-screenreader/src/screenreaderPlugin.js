@@ -12,8 +12,39 @@ import { fileURLToPath } from 'url';
 import { normalizePhrases } from './comparePhrases.js';
 import { recordObservation, resetObservations } from './transcripts.js';
 
-const DEFAULT_WAIT_TIMEOUT = 15000;
+/**
+ * The browser gives up on a server command after 20000ms - hardcoded in `@web/dev-server-core`'s
+ * `webSocketsPlugin`, not configurable through the test runner config - and a command that answers
+ * later fails the test with a transport error instead of a message about the reader step that was
+ * slow. Everything one `sr.*` command does has to fit in the budget below.
+ */
+export const SR_COMMAND_HARD_LIMIT_MS = 20000;
+/** What a single `sr.*` command may take; kept in sync by `npm run lint:sr-command-budget`. */
+export const SR_COMMAND_BUDGET_MS = 15000;
+
+const DEFAULT_WAIT_TIMEOUT = SR_COMMAND_BUDGET_MS;
 const WAIT_POLL_INTERVAL = 50;
+
+/**
+ * A command that runs past the budget is on its way to the hard limit, where the test fails with
+ * "Did not receive a server response ... within 20000ms" and no clue about what was slow. Report it
+ * while the run is still readable (waiting for a reader to speak is the usual cause).
+ *
+ * @param {string} command
+ * @param {number} durationMs
+ */
+function reportCommandBudget(command, durationMs) {
+  if (durationMs < SR_COMMAND_BUDGET_MS) {
+    return;
+  }
+  // eslint-disable-next-line no-console
+  console.warn(
+    `[sr-budget] ${command} took ${(durationMs / 1000).toFixed(1)}s, over the ${
+      SR_COMMAND_BUDGET_MS / 1000
+    }s budget. The browser waits ${SR_COMMAND_HARD_LIMIT_MS / 1000}s for a command ` +
+      '(@web/dev-server-core), so look for a step that waits for the reader to speak.',
+  );
+}
 
 /** @type {readonly SrReader[]} */
 const READERS = ['virtual', 'nvda', 'voiceover'];
@@ -401,157 +432,170 @@ export function screenreaderPlugin(options) {
     }
   };
 
+  /**
+   * @param {{ command: string, payload?: any, session: TestSession }} args
+   */
+  const runCommand = async ({ command, payload, session }) => {
+    if (command === 'sr-initialize') {
+      await initialize(session);
+      return { reader: screenReader };
+    }
+
+    if (command === 'sr-stop') {
+      await stateFor(session).reader.stop();
+      sessionStates.delete(session.id);
+      return { success: true };
+    }
+
+    if (command === 'sr-reader') {
+      return screenReader;
+    }
+
+    if (command === 'sr-reset') {
+      await stateFor(session).reader.reset();
+      return { success: true };
+    }
+
+    if (command === 'sr-phraseLog') {
+      const phraseLog = await readerFor(session).spokenPhraseLog();
+      return normalizePhrases(phraseLog);
+    }
+
+    if (command === 'sr-itemText') {
+      return readerFor(session).itemText();
+    }
+
+    if (command === 'sr-waitFor') {
+      const instance = readerFor(session);
+      const timeout = payload?.timeout ?? DEFAULT_WAIT_TIMEOUT;
+      const deadline = Date.now() + timeout;
+      const needle = String(payload?.phrase ?? '').toLowerCase();
+      /** @type {string[]} */
+      let phraseLog = normalizePhrases(await instance.spokenPhraseLog());
+      while (
+        !phraseLog.some(
+          /** @param {string} phrase */ phrase => phrase.toLowerCase().includes(needle),
+        )
+      ) {
+        if (Date.now() > deadline) {
+          return { found: false, phraseLog };
+        }
+        await new Promise(resolve => {
+          setTimeout(resolve, WAIT_POLL_INTERVAL);
+        });
+        phraseLog = normalizePhrases(await instance.spokenPhraseLog());
+      }
+      return { found: true, phraseLog };
+    }
+
+    if (command === 'sr-focus') {
+      // NVDA and the virtual reader do not need help here: NVDA announces what
+      // the keyboard focus lands on (its log shows the field, and its
+      // per-character echo shows it follows the keyboard), and the virtual
+      // reader has its own cursor that a test walks with sr.next(). VoiceOver
+      // does not follow the keyboard focus, so its cursor would stay where it
+      // was - on the Finder window that the setup leaves mounted, which is what
+      // ends up in its log as "guidepup-voiceover-preferences-... Volume".
+      if (screenReader === 'virtual') {
+        // The virtual reader has no OS focus to follow: give it a fresh walk of
+        // the page, so the sr.next() steps a test uses to reach the control start
+        // from the top again. The phrase log is left alone, so the test still
+        // asserts over everything that was said before.
+        await startVirtualReader(/** @type {any} */ (session.browser).getPage(session.id));
+        return { focused: true };
+      }
+      const instance = readerFor(session);
+      const keyboardCommands = instance?.keyboardCommands;
+      if (keyboardCommands?.moveCursorToKeyboardFocus) {
+        // Moving the cursor alone does not speak, so ask for the announced item
+        // as well - otherwise the log stays empty and the test cannot tell
+        // "VoiceOver is on the field" from "VoiceOver says nothing".
+        await instance.perform(keyboardCommands.moveCursorToKeyboardFocus);
+        await instance.perform(keyboardCommands.hearItemDescription);
+        // Do not add more commands here: a server command has to answer within 20s
+        // (@web/dev-server-core) and VoiceOver is slow, so an anchor with a third
+        // command and the settle below exceeded it in CI.
+      }
+      // the wrapper owns this (readerFor gives the reader instance)
+      await stateFor(session).reader.waitForSpeechToSettle();
+      return { focused: true };
+    }
+
+    if (command === 'sr-observe') {
+      recordObservation(session.id, /** @type {any} */ (payload));
+      return { success: true };
+    }
+
+    if (command === 'sr-next' || command === 'sr-previous') {
+      const instance = readerFor(session);
+      const count = Math.max(1, payload?.count ?? 1);
+      const move = command === 'sr-next' ? instance.next : instance.previous;
+      for (let i = 0; i < count; i += 1) {
+        await move.call(instance);
+      }
+      return { success: true };
+    }
+
+    /** @type {Record<string, () => Promise<any>>} */
+    const oneShot = {
+      'sr-press': async () => {
+        const reader = readerFor(session);
+        const key = String(payload?.key ?? '');
+        if (!reader.keyboardCommands?.interactWithItem) {
+          await reader.press(key);
+          return;
+        }
+        // VoiceOver: press with the browser's own keyboard, like sr.type() does. A key
+        // press through VoiceOver did not commit the value in CI (no formatted value, no
+        // error state was announced after Tab).
+        const page = /** @type {any} */ (session.browser).getPage(session.id);
+        await page.keyboard.press(key);
+      },
+      'sr-type': async () => {
+        const reader = readerFor(session);
+        const text = String(payload?.text ?? '');
+        const commands = reader.keyboardCommands;
+        if (!commands?.interactWithItem) {
+          await reader.type(text);
+          return;
+        }
+        // VoiceOver: type with the browser's own keyboard. Playwright sends real key events,
+        // so the field receives the text, while typing *through* VoiceOver waits for the
+        // speech of every keystroke - longer than the 20s a server command may take - and
+        // never reached the input in CI. VoiceOver is on the field (sr.focus()), which is
+        // enough for the keys to land; entering the field with interactWithItem first made
+        // the run hang past the time the whole test suite is allowed to take.
+        const page = /** @type {any} */ (session.browser).getPage(session.id);
+        await page.keyboard.type(text);
+      },
+      'sr-act': () => readerFor(session).act(),
+      'sr-interact': () => readerFor(session).interact(),
+      'sr-stopInteracting': () => readerFor(session).stopInteracting(),
+    };
+    const oneShotHandler = oneShot[command];
+    if (oneShotHandler) {
+      await oneShotHandler();
+      return { success: true };
+    }
+
+    throw new Error(`Unknown screen reader command: ${command}`);
+  };
+
   return {
     name: 'screenreader-commands',
 
-    async executeCommand({ command, payload, session }) {
-      if (!command.startsWith('sr-')) {
+    async executeCommand(args) {
+      if (!args.command.startsWith('sr-')) {
         return undefined;
       }
-
-      if (command === 'sr-initialize') {
-        await initialize(session);
-        return { reader: screenReader };
+      const startedAt = Date.now();
+      try {
+        return await runCommand(args);
+      } finally {
+        // A command that runs over its budget is reported here instead of turning into a
+        // transport error later on.
+        reportCommandBudget(args.command, Date.now() - startedAt);
       }
-
-      if (command === 'sr-stop') {
-        await stateFor(session).reader.stop();
-        sessionStates.delete(session.id);
-        return { success: true };
-      }
-
-      if (command === 'sr-reader') {
-        return screenReader;
-      }
-
-      if (command === 'sr-reset') {
-        await stateFor(session).reader.reset();
-        return { success: true };
-      }
-
-      if (command === 'sr-phraseLog') {
-        const phraseLog = await readerFor(session).spokenPhraseLog();
-        return normalizePhrases(phraseLog);
-      }
-
-      if (command === 'sr-itemText') {
-        return readerFor(session).itemText();
-      }
-
-      if (command === 'sr-waitFor') {
-        const instance = readerFor(session);
-        const timeout = payload?.timeout ?? DEFAULT_WAIT_TIMEOUT;
-        const deadline = Date.now() + timeout;
-        const needle = String(payload?.phrase ?? '').toLowerCase();
-        /** @type {string[]} */
-        let phraseLog = normalizePhrases(await instance.spokenPhraseLog());
-        while (
-          !phraseLog.some(
-            /** @param {string} phrase */ phrase => phrase.toLowerCase().includes(needle),
-          )
-        ) {
-          if (Date.now() > deadline) {
-            return { found: false, phraseLog };
-          }
-          await new Promise(resolve => {
-            setTimeout(resolve, WAIT_POLL_INTERVAL);
-          });
-          phraseLog = normalizePhrases(await instance.spokenPhraseLog());
-        }
-        return { found: true, phraseLog };
-      }
-
-      if (command === 'sr-focus') {
-        // NVDA and the virtual reader do not need help here: NVDA announces what
-        // the keyboard focus lands on (its log shows the field, and its
-        // per-character echo shows it follows the keyboard), and the virtual
-        // reader has its own cursor that a test walks with sr.next(). VoiceOver
-        // does not follow the keyboard focus, so its cursor would stay where it
-        // was - on the Finder window that the setup leaves mounted, which is what
-        // ends up in its log as "guidepup-voiceover-preferences-... Volume".
-        if (screenReader === 'virtual') {
-          // The virtual reader has no OS focus to follow: give it a fresh walk of
-          // the page, so the sr.next() steps a test uses to reach the control start
-          // from the top again. The phrase log is left alone, so the test still
-          // asserts over everything that was said before.
-          await startVirtualReader(/** @type {any} */ (session.browser).getPage(session.id));
-          return { focused: true };
-        }
-        const instance = readerFor(session);
-        const keyboardCommands = instance?.keyboardCommands;
-        if (keyboardCommands?.moveCursorToKeyboardFocus) {
-          // Moving the cursor alone does not speak, so ask for the announced item
-          // as well - otherwise the log stays empty and the test cannot tell
-          // "VoiceOver is on the field" from "VoiceOver says nothing".
-          await instance.perform(keyboardCommands.moveCursorToKeyboardFocus);
-          await instance.perform(keyboardCommands.hearItemDescription);
-          // Do not add more commands here: a server command has to answer within 20s
-          // (@web/dev-server-core) and VoiceOver is slow, so an anchor with a third
-          // command and the settle below exceeded it in CI.
-        }
-        // the wrapper owns this (readerFor gives the reader instance)
-        await stateFor(session).reader.waitForSpeechToSettle();
-        return { focused: true };
-      }
-
-      if (command === 'sr-observe') {
-        recordObservation(session.id, /** @type {any} */ (payload));
-        return { success: true };
-      }
-
-      if (command === 'sr-next' || command === 'sr-previous') {
-        const instance = readerFor(session);
-        const count = Math.max(1, payload?.count ?? 1);
-        const move = command === 'sr-next' ? instance.next : instance.previous;
-        for (let i = 0; i < count; i += 1) {
-          await move.call(instance);
-        }
-        return { success: true };
-      }
-
-      /** @type {Record<string, () => Promise<any>>} */
-      const oneShot = {
-        'sr-press': async () => {
-          const reader = readerFor(session);
-          const key = String(payload?.key ?? '');
-          if (!reader.keyboardCommands?.interactWithItem) {
-            await reader.press(key);
-            return;
-          }
-          // VoiceOver: press with the browser's own keyboard, like sr.type() does. A key
-          // press through VoiceOver did not commit the value in CI (no formatted value, no
-          // error state was announced after Tab).
-          const page = /** @type {any} */ (session.browser).getPage(session.id);
-          await page.keyboard.press(key);
-        },
-        'sr-type': async () => {
-          const reader = readerFor(session);
-          const text = String(payload?.text ?? '');
-          const commands = reader.keyboardCommands;
-          if (!commands?.interactWithItem) {
-            await reader.type(text);
-            return;
-          }
-          // VoiceOver: type with the browser's own keyboard. Playwright sends real key events,
-          // so the field receives the text, while typing *through* VoiceOver waits for the
-          // speech of every keystroke - longer than the 20s a server command may take - and
-          // never reached the input in CI. VoiceOver is on the field (sr.focus()), which is
-          // enough for the keys to land; entering the field with interactWithItem first made
-          // the run hang past the time the whole test suite is allowed to take.
-          const page = /** @type {any} */ (session.browser).getPage(session.id);
-          await page.keyboard.type(text);
-        },
-        'sr-act': () => readerFor(session).act(),
-        'sr-interact': () => readerFor(session).interact(),
-        'sr-stopInteracting': () => readerFor(session).stopInteracting(),
-      };
-      const oneShotHandler = oneShot[command];
-      if (oneShotHandler) {
-        await oneShotHandler();
-        return { success: true };
-      }
-
-      throw new Error(`Unknown screen reader command: ${command}`);
     },
   };
 }

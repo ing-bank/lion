@@ -135,6 +135,27 @@ first divergence at index 2:
 The reporter prints the transcripts of a whole test file, including the runs that
 passed.
 
+## Known limits
+
+A server command has to answer within **20000ms**. That limit is hardcoded in
+`@web/dev-server-core`'s `webSocketsPlugin` (a late answer fails the test with "Did not receive a
+server response ... within 20000ms") and cannot be raised through the test runner config, so one
+`sr.*` step has to fit in it. What makes a step slow:
+
+- waiting for a reader to speak inside the command (that is why `sr.waitFor` defaults to 15s and
+  why a reader that speaks slowly is a problem: VoiceOver's speech lags the command that caused it);
+- typing or pressing **through** a reader that waits for the speech of every keystroke - VoiceOver
+  typing an 18 character IBAN exceeded the limit, so its typing and pressing go through the
+  browser's keyboard instead;
+- an anchor that runs several reader commands: `sr.focus()` does one for VoiceOver (move the
+  cursor, then ask for the announced item) plus a settle, and a third command pushed it over.
+
+`npm run lint:sr-command-budget` keeps the numbers we control on the safe side: the budget and
+hard limit constants, the wait default, literal wait timeouts in the tests, and the test timeout
+versus the time the whole suite may take. Every command that runs past the budget is also reported
+at runtime (`[sr-budget] sr-type took 16.4s ...`), which is the only way to catch a _reader_ that
+got slower.
+
 ## Commands
 
 | command                  | returns             | description                                     |
@@ -180,7 +201,7 @@ a test that needs it to walk to the control also calls `sr.next()`. Both are the
 same two lines per test, and neither depends on where the reader was left after the
 previous test.
 
-`containsLike` exists for what a reader *decorates*: a live region announcement
+`containsLike` exists for what a reader _decorates_: a live region announcement
 arrives as `"polite: Error,, Please enter a valid IBAN."`, where the politeness and the
 joined additions phrase are not what a user hears. The message itself is asserted with
 `containsLike('Please enter a valid IBAN')`; use `contains` when the whole phrase is
