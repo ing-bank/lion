@@ -71,14 +71,18 @@ async function waitUntil(condition, description, timeout = 5000) {
 let activeReader;
 
 /**
- * Point the reader at the IBAN field. A real reader follows OS focus; the virtual
- * reader has its own cursor, so it also walks to the field. Walking with a real reader
- * would move it off the field again (VoiceOver then types into whatever it is on, not
- * into the field).
+ * Point the reader at the IBAN field.
+ *
+ * The virtual reader has its own cursor, and NVDA says nothing about a field the focus
+ * landed on either (in CI its log for the focused field was empty and "blank" arrived
+ * when its cursor walked onto it), so both walk there. VoiceOver must not: walking moves
+ * it off the field again and it then types into whatever it is on - in CI it typed into
+ * the button next to the field, the field stayed empty, and the wait for the typed value
+ * timed out.
  */
 async function anchorOnIbanField() {
   await sr.focus('lion-input-iban');
-  if (activeReader === 'virtual') {
+  if (activeReader !== 'voiceover') {
     await sr.next();
     await sr.next();
   }
