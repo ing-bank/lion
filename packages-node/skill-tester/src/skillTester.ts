@@ -374,13 +374,16 @@ export async function runSkillTester(config: SkillTesterConfig): Promise<SkillTe
         // skill directory, and their on-disk size summed. The prompt-token count in usage is an upper
         // bound on the disclosure cost; this is the disclosure itself.
         const skillReads = new Map<string, number>();
+        // Reads of dependencies (node_modules) are a *failure* signal: the skill did not answer the
+        // question, so the model went to the library source. They cost tokens and turns, and each one
+        // is evidence that the documentation is missing something the skill should carry.
+        const dependencyReads = new Map<string, number>();
         for (const m of (agentRun as { transcript?: unknown[] }).transcript ?? []) {
           const toolCalls =
             (m as { tool_calls?: { function?: { name?: string; arguments?: string } }[] })
               .tool_calls ?? [];
           for (const tc of toolCalls) {
-            if (tc.function?.name !== 'read_file' || skillReads.has(tc.function.arguments))
-              continue;
+            if (tc.function?.name !== 'read_file') continue;
             let requestedPath = '';
             try {
               requestedPath =
@@ -394,20 +397,29 @@ export async function runSkillTester(config: SkillTesterConfig): Promise<SkillTe
             const normalised = requestedPath.split('\\').join('/');
             const sandboxSkillDir = `.skill/${skillOrAgent.name}/`;
             const realSkillMarker = `skills/${skillOrAgent.name}/`;
-            if (!normalised.startsWith(sandboxSkillDir) && !normalised.includes(realSkillMarker)) {
-              continue;
-            }
+            const isSkill =
+              normalised.startsWith(sandboxSkillDir) || normalised.includes(realSkillMarker);
+            // Reading a dependency (node_modules) is a failure signal: the skill did not answer the
+            // question, so the model went to the library source - it costs tokens and turns, and it is
+            // evidence of a documentation gap the skill should carry instead.
+            const isDependency = normalised.includes('node_modules/');
+            if (!isSkill && !isDependency) continue;
             let bytes = 0;
             try {
               bytes = fs.statSync(path.resolve(sandboxRoot, requestedPath)).size;
             } catch {
               // A read of a file that no longer exists still happened; count it as zero bytes.
             }
-            skillReads.set(normalised, bytes);
+            (isSkill ? skillReads : dependencyReads).set(normalised, bytes);
           }
         }
         const skillFilesRead = skillReads.size;
         const skillBytesRead = [...skillReads.values()].reduce((sum, bytes) => sum + bytes, 0);
+        const dependencyFilesRead = dependencyReads.size;
+        const dependencyBytesRead = [...dependencyReads.values()].reduce(
+          (sum, bytes) => sum + bytes,
+          0,
+        );
 
         const gates = runGates(sandboxRoot, {
           allowedLionUiSpecifiers: allowedSpecifiers,
@@ -441,7 +453,10 @@ export async function runSkillTester(config: SkillTesterConfig): Promise<SkillTe
             `${scenario.name} → ${score.percent}% ` +
             gray(
               `(${agentRun.turns} turns, ${agentRun.toolCalls} tool calls, ` +
-                `RAG read ${skillFilesRead} skill file(s) / ${(skillBytesRead / 1024).toFixed(0)} KB)`,
+                `RAG read ${skillFilesRead} skill file(s) / ${(skillBytesRead / 1024).toFixed(0)} KB` +
+                  (dependencyFilesRead > 0
+                    ? `, FAIL ${dependencyFilesRead} dependency file(s) / ${(dependencyBytesRead / 1024).toFixed(0)} KB - a docs gap)`
+                    : ')'),
             ),
         );
 
@@ -473,6 +488,8 @@ export async function runSkillTester(config: SkillTesterConfig): Promise<SkillTe
             finalMessage: agentRun.finalMessage,
             skillFilesRead,
             skillBytesRead,
+            dependencyFilesRead,
+            dependencyBytesRead,
           },
         });
       }

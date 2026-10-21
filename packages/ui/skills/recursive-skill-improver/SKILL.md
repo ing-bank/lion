@@ -80,6 +80,13 @@ performance.
 
 ## Analyze agent evidence
 
+The harness also reports reads **outside** the skill. A read of a dependency (`node_modules/**`) is a
+**failure**, not neutral: it means the skill did not answer the question, so the model went to the
+library source — at the cost of tokens and turns. Treat every such read as a documentation gap and fold
+the missing knowledge into the skill. The run line prints `FAIL <n> dependency file(s)`, the run record
+lists it under findings with the scenario that triggered it, and the ledger carries
+`dependencyFilesRead` / `dependencyBytesRead` per cell.
+
 Read the run's transcript/logs and complete
 [references/run-record.md](references/run-record.md). Flag every occurrence of
 these behaviors:

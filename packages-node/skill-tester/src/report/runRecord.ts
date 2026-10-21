@@ -187,6 +187,18 @@ export function renderRunRecord({
         `| ${run.agentRun.toolErrors} tool error(s) | ${run.scenario}:${run.sample} | ${run.model} | avoidable retries | navigation / adherence |`,
       );
     }
+    // Reading a dependency means the skill did not answer the question: the model went to the library
+    // source. It costs tokens and turns, so it is reported as a failure that must drive a docs update.
+    for (const run of report.runs.filter(
+      run => ((run.agentRun as { dependencyFilesRead?: number }).dependencyFilesRead ?? 0) > 0,
+    )) {
+      const dependencyFilesRead = (run.agentRun as { dependencyFilesRead?: number })
+        .dependencyFilesRead as number;
+      lines.push(
+        `| ${dependencyFilesRead} dependency file(s) read from node_modules | ` +
+          `${run.scenario}:${run.sample} | ${run.model} | docs gap - the skill did not answer it | documentation |`,
+      );
+    }
     for (const run of report.runs) {
       for (const gate of run.score.gates.filter(gate => !gate.passed)) {
         lines.push(

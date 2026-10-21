@@ -57,6 +57,12 @@ split it.
 
 ## Step 1 — Diagnose the gap
 
+Evidence of a gap comes from three places, and the third is the one people forget: a failed check or
+behaviour assertion, a no-op (not attempted), and **a read of a dependency**. Reading `node_modules/**`
+means the skill did not answer the question, so the model went to the library source — it costs tokens
+and turns, and the knowledge it recovered belongs in the skill. Treat every dependency read as a gap to
+close, not as the model being thorough.
+
 **First, classify the failure type — not every failure is missing knowledge.**
 For each failure, check whether the correct rule already exists in a skill
 that was in play, then route accordingly:
