@@ -67,9 +67,26 @@ async function waitUntil(condition, description, timeout = 5000) {
   }
 }
 
+/** @type {import('@lion/test-runner-screenreader').SrReader} */
+let activeReader;
+
+/**
+ * Point the reader at the IBAN field. A real reader follows OS focus; the virtual
+ * reader has its own cursor, so it also walks to the field. Walking with a real reader
+ * would move it off the field again (VoiceOver then types into whatever it is on, not
+ * into the field).
+ */
+async function anchorOnIbanField() {
+  await sr.focus('lion-input-iban');
+  if (activeReader === 'virtual') {
+    await sr.next();
+    await sr.next();
+  }
+}
+
 describe('<lion-input-iban> screen reader', () => {
   before(async () => {
-    await sr.initialize();
+    activeReader = await sr.initialize();
   });
 
   after(async () => {
@@ -83,11 +100,7 @@ describe('<lion-input-iban> screen reader', () => {
   it('announces an empty IBAN field', async () => {
     await fixtureIban();
 
-    // A real reader follows OS focus, so `sr.focus` is what makes it talk about
-    // this field; the virtual reader has its own cursor, so it also walks to it.
-    await sr.focus('lion-input-iban');
-    await sr.next();
-    await sr.next();
+    await anchorOnIbanField();
 
     await sr.expect({
       virtual: contains('textbox, IBAN, not disabled, not invalid'),
@@ -102,9 +115,7 @@ describe('<lion-input-iban> screen reader', () => {
   it('announces the formatted IBAN once the field is committed', async () => {
     const el = await fixtureIban();
 
-    await sr.focus('lion-input-iban');
-    await sr.next();
-    await sr.next();
+    await anchorOnIbanField();
     await sr.type('NL17INGB0002822608');
     // Wait in the DOM, not in the reader's log: nvda echoes every character it
     // types, so the value is never one phrase while typing.
@@ -118,9 +129,7 @@ describe('<lion-input-iban> screen reader', () => {
     // with its new value: a real reader follows the focus, the virtual reader walks.
     await sr.press('Tab');
     await sr.press('Shift+Tab');
-    await sr.focus('lion-input-iban');
-    await sr.next();
-    await sr.next();
+    await anchorOnIbanField();
 
     // The value as both real readers say it ("NL 17 INGB ..."; the DOM formatting has
     // no space after the country code), so the wait cannot be about the exact string.
@@ -137,9 +146,7 @@ describe('<lion-input-iban> screen reader', () => {
   it('announces the invalid state once an invalid IBAN is committed', async () => {
     const el = await fixtureIban();
 
-    await sr.focus('lion-input-iban');
-    await sr.next();
-    await sr.next();
+    await anchorOnIbanField();
     await sr.type('FOO');
     await waitUntil(
       () => (el.querySelector('input')?.value ?? '') !== '',
@@ -147,9 +154,7 @@ describe('<lion-input-iban> screen reader', () => {
     );
     await sr.press('Tab');
     await sr.press('Shift+Tab');
-    await sr.focus('lion-input-iban');
-    await sr.next();
-    await sr.next();
+    await anchorOnIbanField();
 
     await sr.waitFor('Please enter a valid IBAN');
 
