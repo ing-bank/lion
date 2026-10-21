@@ -98,7 +98,14 @@ function shiftHeadings(markdown, levels) {
 function mergeDocPages(dirPath) {
   const files = fs
     .readdirSync(dirPath)
-    .filter(f => f.endsWith('.md') && f !== 'index.md' && f !== 'api-table.md');
+    // `index.md` is just an Eleventy nav redirect and `api-table.md` is recomputed from the CEM.
+    // `extensions.md` (subclassing/extension) and `migration.md` are deliberately excluded for now:
+    // they belong to flows the skill does not support yet. Both will get explicit support later.
+    .filter(
+      f =>
+        f.endsWith('.md') &&
+        !['index.md', 'api-table.md', 'extensions.md', 'migration.md'].includes(f),
+    );
 
   const pages = files.map(file => {
     const raw = fs.readFileSync(path.join(dirPath, file), 'utf8');

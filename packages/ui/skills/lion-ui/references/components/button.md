@@ -182,39 +182,6 @@ export const mainAndIconButton = () => html`
 `;
 ```
 
----
-
-## Button: Extensions
-
-```js script
-import { html } from 'lit';
-import './assets/bootstrap-button.js';
-```
-
-### Bootstrap button
-
-```js preview-story
-const capitalize = s => s[0].toUpperCase() + s.slice(1);
-
-export const bootstrapButton = () => {
-  const variants = [
-    'primary',
-    'secondary',
-    'success',
-    'danger',
-    'warning',
-    'info',
-    'light',
-    'dark',
-    'link',
-  ];
-
-  return html`<div>
-    ${variants.map(v => html`<bootstrap-button variant="${v}">${capitalize(v)}</bootstrap-button>`)}
-  </div>`;
-};
-```
-
 ## API Reference
 
 ### class: `LionButton`, `lion-button`
