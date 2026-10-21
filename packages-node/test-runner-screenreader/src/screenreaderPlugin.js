@@ -511,7 +511,19 @@ export function screenreaderPlugin(options) {
 
       /** @type {Record<string, () => Promise<any>>} */
       const oneShot = {
-        'sr-press': () => readerFor(session).press(payload?.key),
+        'sr-press': async () => {
+          const reader = readerFor(session);
+          const key = String(payload?.key ?? '');
+          if (!reader.keyboardCommands?.interactWithItem) {
+            await reader.press(key);
+            return;
+          }
+          // VoiceOver: press with the browser's own keyboard, like sr.type() does. A key
+          // press through VoiceOver did not commit the value in CI (no formatted value, no
+          // error state was announced after Tab).
+          const page = /** @type {any} */ (session.browser).getPage(session.id);
+          await page.keyboard.press(key);
+        },
         'sr-type': async () => {
           const reader = readerFor(session);
           const text = String(payload?.text ?? '');
