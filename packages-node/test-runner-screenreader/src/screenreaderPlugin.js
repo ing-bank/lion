@@ -185,6 +185,33 @@ function createScreenReader({ screenReader, getPage, appId }) {
   };
 
   /**
+   * VoiceOver announces the anchor in more than one phrase and its speech lags the
+   * command that caused it ("IBAN edit text" arrives after the "you are currently on a
+   * text field" hint), so a test that reads the log right after the anchor can miss the
+   * announcement. Wait until the reader has spoken and stopped adding phrases.
+   */
+  const waitForSpeechToSettle = async (timeout = 5000) => {
+    const deadline = Date.now() + timeout;
+    let previousSize = -1;
+    while (Date.now() < deadline) {
+      let size = 0;
+      try {
+        const phraseLog = await instance?.spokenPhraseLog?.();
+        size = Array.isArray(phraseLog) ? phraseLog.length : 0;
+      } catch {
+        // mid-speech the log can be momentarily unavailable
+      }
+      if (size > 0 && size === previousSize) {
+        return;
+      }
+      previousSize = size;
+      await new Promise(resolve => {
+        setTimeout(resolve, 200);
+      });
+    }
+  };
+
+  /**
    * VoiceOver's cursor does not start inside the browser. The machine setup leaves a
    * mounted preferences volume in the Finder, and VoiceOver reads that instead: its
    * log holds "guidepup-voiceover-preferences-macos-15 Volume" for every phrase. This
@@ -286,6 +313,7 @@ function createScreenReader({ screenReader, getPage, appId }) {
     reset,
     stop,
     navigateToWebContent,
+    waitForSpeechToSettle,
   };
 }
 
@@ -458,6 +486,7 @@ export function screenreaderPlugin(options) {
           await instance.perform(keyboardCommands.moveCursorToKeyboardFocus);
           await instance.perform(keyboardCommands.hearItemDescription);
         }
+        await readerFor(session).waitForSpeechToSettle();
         return { focused: true };
       }
 
