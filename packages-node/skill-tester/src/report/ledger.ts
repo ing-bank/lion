@@ -34,6 +34,9 @@ export type LedgerEntry = {
   /** The input/output split, kept because a cost needs both rates. */
   promptTokens: number;
   completionTokens: number;
+  /** Reads of dependencies (node_modules) in this cell - a failure signal, not neutral. */
+  dependencyFilesRead?: number;
+  dependencyBytesRead?: number;
   /** USD for the whole cell, or undefined when the model has no published rate. */
   cost?: number;
   ranAt: string;
@@ -107,6 +110,17 @@ export function updateLedger(
       tokens: runs.reduce((sum, run) => sum + run.agentRun.totalTokens, 0),
       promptTokens: runs.reduce((sum, run) => sum + (run.agentRun.promptTokens ?? 0), 0),
       completionTokens: runs.reduce((sum, run) => sum + (run.agentRun.completionTokens ?? 0), 0),
+      // Dependency reads are persisted per cell so a docs gap stays visible across revisions.
+      dependencyFilesRead: runs.reduce(
+        (sum, run) =>
+          sum + ((run.agentRun as { dependencyFilesRead?: number }).dependencyFilesRead ?? 0),
+        0,
+      ),
+      dependencyBytesRead: runs.reduce(
+        (sum, run) =>
+          sum + ((run.agentRun as { dependencyBytesRead?: number }).dependencyBytesRead ?? 0),
+        0,
+      ),
       ...(() => {
         const cost = costOf(
           summary.model,
