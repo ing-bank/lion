@@ -511,13 +511,27 @@ export function screenreaderPlugin(options) {
         'sr-press': () => readerFor(session).press(payload?.key),
         'sr-type': async () => {
           const reader = readerFor(session);
+          const text = String(payload?.text ?? '');
           const commands = reader.keyboardCommands;
-          if (commands?.interactWithItem) {
-            // VoiceOver types into the item it entered, not into the item it is on, so
-            // it enters the field first (NVDA and the virtual reader type straight away).
-            await reader.perform(commands.interactWithItem);
+          if (!commands?.interactWithItem) {
+            await reader.type(text);
+            return;
           }
-          await reader.type(payload?.text);
+          // VoiceOver types into the item it entered, not into the item it is on, so it
+          // enters the field first. It also waits for the speech of every keystroke: one
+          // command for an 18 character IBAN took longer than the 20s a test runner command
+          // waits, so the text goes in small chunks and each chunk waits for the first
+          // phrase only ('initial' capture - the option guidepup's own example uses).
+          await reader.perform(commands.interactWithItem);
+          const chunkSize = 4;
+          /** @type {Promise<void>[]} */
+          const chunks = [];
+          for (let index = 0; index < text.length; index += chunkSize) {
+            chunks.push(reader.type(text.slice(index, index + chunkSize), { capture: 'initial' }));
+          }
+          for (const chunk of chunks) {
+            await chunk;
+          }
         },
         'sr-act': () => readerFor(session).act(),
         'sr-interact': () => readerFor(session).interact(),
