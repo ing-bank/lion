@@ -7,13 +7,20 @@
  */
 
 /**
+ * The object replacement character (U+FFFC) is what a reader logs where it could not
+ * resolve a text node (NVDA did that for the label of an empty field once); it is not
+ * speech, so it is dropped along with the whitespace pads.
+ */
+const OBJECT_REPLACEMENT = /\uFFFC/g;
+
+/**
  * @param {string[]} phrases
  * @returns {string[]} the same phrases, with runs of whitespace collapsed and
  *   empty entries dropped: a screen reader that says nothing is not saying ""
  */
 export function normalizePhrases(phrases) {
   return phrases
-    .map(phrase => String(phrase).replace(/\s+/g, ' ').trim())
+    .map(phrase => String(phrase).replace(OBJECT_REPLACEMENT, '').replace(/\s+/g, ' ').trim())
     .filter(phrase => phrase.length > 0);
 }
 

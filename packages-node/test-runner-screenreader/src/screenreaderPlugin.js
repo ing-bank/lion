@@ -508,8 +508,13 @@ export function screenreaderPlugin(options) {
 
       /** @type {Record<string, () => Promise<any>>} */
       const oneShot = {
-        'sr-press': () => readerFor(session).press(payload?.key),
-        'sr-type': () => readerFor(session).type(payload?.text),
+        // Typing and pressing do not wait for the speech they cause: guidepup waiting per
+        // keystroke took longer than the test runner waits for a command to answer
+        // (VoiceOver typing an 18 character IBAN hit the 20s limit). What the reader said
+        // is read from the log afterwards, and the navigation commands that assert the
+        // field stay captured.
+        'sr-press': () => readerFor(session).press(payload?.key, { capture: false }),
+        'sr-type': () => readerFor(session).type(payload?.text, { capture: false }),
         'sr-act': () => readerFor(session).act(),
         'sr-interact': () => readerFor(session).interact(),
         'sr-stopInteracting': () => readerFor(session).stopInteracting(),
