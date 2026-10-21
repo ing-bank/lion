@@ -157,6 +157,9 @@ export function updateLedger(
         behaviourPassed: 0,
         behaviourTotal: 0,
         attempts: 0,
+        // A scenario with no comparable run has no reads to report; keep the entry shape uniform.
+        dependencyFilesRead: 0,
+        dependencyBytesRead: 0,
         redoable: report.redoable.filter(
           run => run.model === model && run.scenario === scenario.name,
         ).length,

@@ -19,6 +19,7 @@ import fsGlob from './fsGlob.ts';
 import { resolveLlmConfig, resolveProvider, describeOpenAiCredentialSource } from './config.ts';
 import { runAgent as runOpenAiCompatibleAgent } from './llm/agentRunner.ts';
 import type { AgentEvent } from './llm/agentRunner.ts';
+import { countReads } from './scoring/reads.ts';
 import { runCopilotAgent } from './llm/copilotRunner.ts';
 import {
   aggregate,
@@ -373,46 +374,10 @@ export async function runSkillTester(config: SkillTesterConfig): Promise<SkillTe
         // is already in memory, so the read_file tool calls are recovered from it, filtered to the
         // skill directory, and their on-disk size summed. The prompt-token count in usage is an upper
         // bound on the disclosure cost; this is the disclosure itself.
-        const skillReads = new Map<string, number>();
-        // Reads of dependencies (node_modules) are a *failure* signal: the skill did not answer the
-        // question, so the model went to the library source. They cost tokens and turns, and each one
-        // is evidence that the documentation is missing something the skill should carry.
-        const dependencyReads = new Map<string, number>();
-        for (const m of (agentRun as { transcript?: unknown[] }).transcript ?? []) {
-          const toolCalls =
-            (m as { tool_calls?: { function?: { name?: string; arguments?: string } }[] })
-              .tool_calls ?? [];
-          for (const tc of toolCalls) {
-            if (tc.function?.name !== 'read_file') continue;
-            let requestedPath = '';
-            try {
-              requestedPath =
-                (JSON.parse(tc.function?.arguments ?? '{}') as { path?: string }).path ?? '';
-            } catch {
-              continue;
-            }
-            if (!requestedPath) continue;
-            // The skill is read from its sandbox copy (`.skill/<name>/...`), not the repo path, so the
-            // filter must match that marker; resolving against the process cwd silently counted zero.
-            const normalised = requestedPath.split('\\').join('/');
-            const sandboxSkillDir = `.skill/${skillOrAgent.name}/`;
-            const realSkillMarker = `skills/${skillOrAgent.name}/`;
-            const isSkill =
-              normalised.startsWith(sandboxSkillDir) || normalised.includes(realSkillMarker);
-            // Reading a dependency (node_modules) is a failure signal: the skill did not answer the
-            // question, so the model went to the library source - it costs tokens and turns, and it is
-            // evidence of a documentation gap the skill should carry instead.
-            const isDependency = normalised.includes('node_modules/');
-            if (!isSkill && !isDependency) continue;
-            let bytes = 0;
-            try {
-              bytes = fs.statSync(path.resolve(sandboxRoot, requestedPath)).size;
-            } catch {
-              // A read of a file that no longer exists still happened; count it as zero bytes.
-            }
-            (isSkill ? skillReads : dependencyReads).set(normalised, bytes);
-          }
-        }
+        const { skillReads, dependencyReads } = countReads(
+          (agentRun as { transcript?: unknown[] }).transcript,
+          { skillName: skillOrAgent.name, sandboxRoot },
+        );
         const skillFilesRead = skillReads.size;
         const skillBytesRead = [...skillReads.values()].reduce((sum, bytes) => sum + bytes, 0);
         const dependencyFilesRead = dependencyReads.size;
