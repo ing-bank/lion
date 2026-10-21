@@ -521,15 +521,14 @@ export function screenreaderPlugin(options) {
             await reader.type(text);
             return;
           }
-          // VoiceOver types into the item it entered, not into the item it is on, so it
-          // enters the field first, and it does not wait for the speech of the typing:
-          // waiting per keystroke took longer than 20s, which is a hard limit in the dev
-          // server for a server command to answer ("Did not receive a server response ...
-          // within 20000ms", @web/dev-server-core webSocketsPlugin) and is not
-          // configurable. What VoiceOver says about the committed value is asserted after
-          // the field is re-entered, which is captured.
+          // VoiceOver: enter the field, then type with the browser's own keyboard. Playwright
+          // sends real key events, so the field receives the text, while typing *through*
+          // VoiceOver waits for the speech of every keystroke - longer than the 20s a server
+          // command may take - and never reached the input in CI. What VoiceOver says about
+          // the committed value is asserted afterwards, which is captured.
           await reader.perform(commands.interactWithItem);
-          await reader.type(text, { capture: false });
+          const page = /** @type {any} */ (session.browser).getPage(session.id);
+          await page.keyboard.type(text);
         },
         'sr-act': () => readerFor(session).act(),
         'sr-interact': () => readerFor(session).interact(),
