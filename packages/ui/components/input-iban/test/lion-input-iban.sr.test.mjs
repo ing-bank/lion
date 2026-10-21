@@ -105,6 +105,11 @@ describe('<lion-input-iban> screen reader', () => {
     await fixtureIban();
 
     await anchorOnIbanField();
+    if (activeReader === 'voiceover') {
+      // VoiceOver announces the field in two phrases and its speech lags the anchor; without
+      // this the label phrase is a race (it was missing in one CI run and present in another).
+      await sr.waitFor('IBAN edit text');
+    }
 
     await sr.expect({
       virtual: contains('textbox, IBAN, not disabled, not invalid'),
