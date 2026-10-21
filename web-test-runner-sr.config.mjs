@@ -94,6 +94,9 @@ export default {
     ? undefined
     : testRunnerHtmlWithPolyfill,
   browsers: [createBrowserLauncher()],
+  // VoiceOver speaks slower than the commands that cause it; without this a slow real reader
+  // run is reported as "browser tests did not finish" instead of per test.
+  testsFinishTimeout: isRealReader ? 300000 : 120000,
   groups: process.argv.includes('--files') ? undefined : groups,
   reporters: [
     defaultReporter({ reportTestResults: true, reportTestProgress: true }),

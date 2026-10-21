@@ -520,12 +520,12 @@ export function screenreaderPlugin(options) {
             await reader.type(text);
             return;
           }
-          // VoiceOver: enter the field, then type with the browser's own keyboard. Playwright
-          // sends real key events, so the field receives the text, while typing *through*
-          // VoiceOver waits for the speech of every keystroke - longer than the 20s a server
-          // command may take - and never reached the input in CI. What VoiceOver says about
-          // the committed value is asserted afterwards, which is captured.
-          await reader.perform(commands.interactWithItem);
+          // VoiceOver: type with the browser's own keyboard. Playwright sends real key events,
+          // so the field receives the text, while typing *through* VoiceOver waits for the
+          // speech of every keystroke - longer than the 20s a server command may take - and
+          // never reached the input in CI. VoiceOver is on the field (sr.focus()), which is
+          // enough for the keys to land; entering the field with interactWithItem first made
+          // the run hang past the time the whole test suite is allowed to take.
           const page = /** @type {any} */ (session.browser).getPage(session.id);
           await page.keyboard.type(text);
         },
