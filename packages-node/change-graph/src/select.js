@@ -84,9 +84,19 @@ export const TEST_GLOBS = {
 
 /**
  * @param {string} file repo-relative
+ * @returns {string} the path in git's form: forward slashes, no `./`
+ */
+export function toPosix(file) {
+  return path.normalize(file).split(path.sep).join('/');
+}
+
+/**
+ * @param {string} file repo-relative
  */
 function isAlwaysFull(file) {
-  const normalized = path.normalize(file);
+  // Git always names files with forward slashes; the lists above are written that way too, so
+  // normalise to that form instead of to the platform's separator.
+  const normalized = toPosix(file);
   return (
     ALWAYS_FULL_FILES.includes(normalized) ||
     ALWAYS_FULL_DIRS.some(dir => normalized.startsWith(dir))
