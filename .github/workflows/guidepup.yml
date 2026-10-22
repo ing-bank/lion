@@ -1,0 +1,104 @@
+name: SR automation
+
+on:
+  push:
+    paths:
+      - 'packages/ui/components/**/test/*.sr.test.js'
+      - 'packages-node/test-runner-screenreader/**'
+      - 'web-test-runner-sr.config.mjs'
+      - '.github/workflows/guidepup.yml'
+  workflow_dispatch:
+
+jobs:
+  # The change graph answers which screen reader tests this branch can affect. The reader jobs only
+  # start when there is something to run, so a change that cannot touch a component test does not
+  # cost a macOS or Windows runner at all.
+  select:
+    name: Which screen reader tests are affected
+    runs-on: ubuntu-latest
+    outputs:
+      files: ${{ steps.affected.outputs.files }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22.x
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Select the affected screen reader tests
+        id: affected
+        run: |
+          set -o pipefail
+          git fetch --no-tags origin master
+          # A crashing selection must fail this job, never end up as "nothing to run".
+          selected="$(node packages-node/change-graph/src/cli.js --mode=pr --base=origin/master --include-sr --format=args \
+            | tr ' ' '\n' | grep '\.sr\.test\.js$' || true \
+            | tr '\n' ' ')"
+          echo "files=${selected}" >> "$GITHUB_OUTPUT"
+          echo "affected: ${selected:-none}"
+
+  voiceover:
+    name: VoiceOver (macos)
+    needs: select
+    if: needs.select.outputs.files != ''
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22.x
+
+      # guidepup/setup-action is no longer supported ("use the @guidepup/setup
+      # CLI directly"). `setup` configures the machine, `install` adds the screen
+      # reader assets that belong to this project's guidepup version - both are
+      # needed, and the assets step has to run after the project is installed.
+      - name: Setup screen reader environment
+        run: npx -y --min-release-age=0 --ignore-scripts=false @guidepup/setup@0.29.2 setup --ci
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install screen reader assets
+        run: npx -y --min-release-age=0 --ignore-scripts=false @guidepup/setup@0.29.2 install
+
+      - name: Playwright
+        run: npx playwright install --with-deps
+
+      - name: Run screen reader tests
+        run: npm run test:sr -- --voiceover --files "${{ needs.select.outputs.files }}"
+
+  nvda:
+    name: NVDA (windows)
+    needs: select
+    if: needs.select.outputs.files != ''
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22.x
+
+      - name: Setup screen reader environment
+        run: npx -y --min-release-age=0 --ignore-scripts=false @guidepup/setup@0.29.2 setup --ci
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install screen reader assets
+        run: npx -y --min-release-age=0 --ignore-scripts=false @guidepup/setup@0.29.2 install
+
+      - name: Playwright
+        run: npx playwright install --with-deps
+
+      - name: Run screen reader tests
+        run: npm run test:sr -- --nvda --files "${{ needs.select.outputs.files }}"
