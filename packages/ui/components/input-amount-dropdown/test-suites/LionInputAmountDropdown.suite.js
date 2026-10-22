@@ -224,6 +224,23 @@ export function runInputAmountDropdownSuite({ klass } = { klass: LionInputAmount
         spy.restore();
       });
 
+      it('renders preferred currencies in the order provided via `preferredCurrencies`', async () => {
+        // 'allowedCurrencies' deliberately lists JPY before USD, so a correct result cannot
+        // be produced by accidentally following the 'allowedCurrencies' order
+        const el = await fixture(html` <${tag}
+          .allowedCurrencies="${['EUR', 'GBP', 'JPY', 'USD']}"
+          .preferredCurrencies="${['USD', 'JPY']}"
+          ></${tag}> `);
+
+        const preferredCodes =
+          // @ts-expect-error [allow-protected]
+          el._templateDataDropdown.data.regionMetaListPreferred.map(
+            (/** @type {{ currencyCode: string }} */ { currencyCode }) => currencyCode,
+          );
+
+        expect(preferredCodes).to.eql(['USD', 'JPY']);
+      });
+
       it('can override "all-currencies-label"', async () => {
         const el = fixtureSync(html` <${tag}
           .preferredCurrencies="${['GBP']}"

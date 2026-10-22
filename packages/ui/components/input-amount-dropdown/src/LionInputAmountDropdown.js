@@ -554,17 +554,21 @@ export class LionInputAmountDropdown extends LionInputAmount {
     this.__regionMetaList = [];
     this.__regionMetaListPreferred = [];
 
-    this._allowedOrAllCurrencies.forEach(currencyCode => {
-      const destinationList = this.preferredCurrencies.includes(currencyCode)
-        ? this.__regionMetaListPreferred
-        : this.__regionMetaList;
-
-      destinationList.push({
+    this.__regionMetaListPreferred = this.preferredCurrencies
+      .filter(c => this._allowedOrAllCurrencies.includes(c))
+      .map(currencyCode => ({
         currencyCode,
         nameForLocale: this.__namesForLocale?.of(currencyCode),
         currencySymbol: this._currencyUtil.getCurrencySymbol(currencyCode, this._langIso ?? ''),
-      });
-    });
+      }));
+
+    this.__regionMetaList = this._allowedOrAllCurrencies
+      .filter(c => !this.preferredCurrencies.includes(c))
+      .map(currencyCode => ({
+        currencyCode,
+        nameForLocale: this.__namesForLocale?.of(currencyCode),
+        currencySymbol: this._currencyUtil.getCurrencySymbol(currencyCode, this._langIso ?? ''),
+      }));
   }
 
   /**
