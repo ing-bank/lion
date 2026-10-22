@@ -41,8 +41,18 @@ export const ALWAYS_FULL_FILES = [
   '.changeset/config.json',
 ];
 
-/** Directories whose change means "run everything". */
-export const ALWAYS_FULL_DIRS = ['.github/workflows/', '.github/actions/'];
+/**
+ * Directories whose change means "run everything". The screen reader test runner is listed for the
+ * same reason as `@web/test-runner`: its code runs inside every test the flow selects.
+ */
+export const ALWAYS_FULL_DIRS = [
+  '.github/workflows/',
+  '.github/actions/',
+  'packages-node/test-runner-screenreader/',
+];
+
+/** The screen reader tests need a desktop reader, so they are never part of the browser set. */
+export const SR_TEST_EXCLUDE = '**/*.sr.test.js';
 
 /**
  * Dependencies that run *inside* every test, so their change means everything runs. Formatting-only
@@ -101,13 +111,16 @@ export function packageOf(request) {
 /**
  * @param {string} cwd
  * @param {string[]} globs
+ * @param {string[]} [exclude]
  * @returns {string[]} repo-relative test files
  */
-export function listTestFiles(cwd, globs) {
-  return globs
-    .flatMap(glob => fs.globSync(glob, { cwd }))
-    .map(file => path.normalize(file))
-    .sort();
+export function listTestFiles(cwd, globs, exclude = []) {
+  // Globs overlap (`packages/*/test/**` and `packages/ui/components/**/test/**`), so dedupe.
+  return [
+    ...new Set(
+      globs.flatMap(glob => fs.globSync(glob, { cwd, exclude })).map(file => path.normalize(file)),
+    ),
+  ].sort();
 }
 
 /**
@@ -202,13 +215,16 @@ export async function selectTests(options = {}) {
   const cwd = options.cwd ?? process.cwd();
   const mode = options.mode ?? 'local';
   const root = repoRoot(cwd);
+  // `buildImportGraph` and the selection below work on the repository root; the screen reader tests
+  // are only part of the set when they are asked for, and they are a separate runner.
   const globs = [...TEST_GLOBS.browser, ...(options.includeSr ? TEST_GLOBS.sr : [])];
+  const exclude = options.includeSr ? [] : [SR_TEST_EXCLUDE];
   /** @type {string[]} */
   const reasons = [];
   /** @type {string[]} */
   let changedFiles = options.changedFiles ?? [];
 
-  const allTestFiles = listTestFiles(cwd, globs);
+  const allTestFiles = listTestFiles(cwd, globs, exclude);
   const testFiles = new Set(allTestFiles);
 
   if (!options.full && changedFiles.length === 0) {

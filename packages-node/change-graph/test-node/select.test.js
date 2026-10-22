@@ -27,6 +27,7 @@ async function createFixture() {
     'packages/a/src/a.js': "import './shared.js';\nexport const a = 1;\n",
     'packages/a/src/shared.js': 'export const shared = 1;\n',
     'packages/a/test/a.test.js': "import '../src/a.js';\n",
+    'packages/a/test/a.sr.test.js': "import '../src/a.js';\n",
     'packages/b/src/b.js': "import '../../a/src/shared.js';\nexport const b = 1;\n",
     'packages/b/test/b.test.js': "import '../src/b.js';\n",
     'packages/b/test/other.test.js': "import '../src/b.js';\n",
@@ -58,13 +59,40 @@ describe('change-graph selection', () => {
     await fs.rm(root, { recursive: true, force: true });
   });
 
-  it('lists the test files of the repository', () => {
-    const testFiles = listTestFiles(root, ['packages/*/test/*.test.js']);
+  it('lists the test files once, and keeps the screen reader tests out of the browser set', () => {
+    // Overlapping globs must not hand the runner the same file twice.
+    const testFiles = listTestFiles(
+      root,
+      ['packages/*/test/*.test.js', 'packages/*/test/*.test.js'],
+      ['**/*.sr.test.js'],
+    );
     expect(testFiles).to.deep.equal([
       path.normalize('packages/a/test/a.test.js'),
       path.normalize('packages/b/test/b.test.js'),
       path.normalize('packages/b/test/other.test.js'),
     ]);
+    expect(listTestFiles(root, ['packages/*/test/*.sr.test.js'])).to.deep.equal([
+      path.normalize('packages/a/test/a.sr.test.js'),
+    ]);
+  });
+
+  it('adds the screen reader tests only when they are asked for', async () => {
+    const without = await selectTests({ cwd: root, changedFiles: ['packages/a/src/a.js'] });
+    expect(without.testFiles).to.not.include(path.normalize('packages/a/test/a.sr.test.js'));
+    const withSr = await selectTests({
+      cwd: root,
+      changedFiles: ['packages/a/src/a.js'],
+      includeSr: true,
+    });
+    expect(withSr.testFiles).to.include(path.normalize('packages/a/test/a.sr.test.js'));
+  });
+
+  it('runs everything when the screen reader test runner itself changed', async () => {
+    const selection = await selectTests({
+      cwd: root,
+      changedFiles: ['packages-node/test-runner-screenreader/src/commands.js'],
+    });
+    expect(selection.full).to.equal(true);
   });
 
   it('selects every unit that reaches a changed file', async () => {

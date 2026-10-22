@@ -10,8 +10,40 @@ on:
   workflow_dispatch:
 
 jobs:
+  # The change graph answers which screen reader tests this branch can affect. The reader jobs only
+  # start when there is something to run, so a change that cannot touch a component test does not
+  # cost a macOS or Windows runner at all.
+  select:
+    name: Which screen reader tests are affected
+    runs-on: ubuntu-latest
+    outputs:
+      files: ${{ steps.affected.outputs.files }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22.x
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Select the affected screen reader tests
+        id: affected
+        run: |
+          git fetch --no-tags origin master
+          selected="$(node packages-node/change-graph/src/cli.js --mode=pr --base=origin/master --include-sr --format=args \
+            | tr ' ' '\n' | grep '\.sr\.test\.js$' | tr '\n' ' ')"
+          echo "files=${selected}" >> "$GITHUB_OUTPUT"
+          echo "affected: ${selected:-none}"
+
   voiceover:
     name: VoiceOver (macos)
+    needs: select
+    if: needs.select.outputs.files != ''
     runs-on: macos-15
     steps:
       - uses: actions/checkout@v4
@@ -38,10 +70,12 @@ jobs:
         run: npx playwright install --with-deps
 
       - name: Run screen reader tests
-        run: npm run test:sr -- --voiceover
+        run: npm run test:sr -- --voiceover --files "${{ needs.select.outputs.files }}"
 
   nvda:
     name: NVDA (windows)
+    needs: select
+    if: needs.select.outputs.files != ''
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v4
@@ -64,4 +98,4 @@ jobs:
         run: npx playwright install --with-deps
 
       - name: Run screen reader tests
-        run: npm run test:sr -- --nvda
+        run: npm run test:sr -- --nvda --files "${{ needs.select.outputs.files }}"
