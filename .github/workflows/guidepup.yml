@@ -3,7 +3,7 @@ name: SR automation
 on:
   push:
     paths:
-      - 'packages/ui/components/**/test/*.sr.test.mjs'
+      - 'packages/ui/components/**/test/*.sr.test.js'
       - 'packages-node/test-runner-screenreader/**'
       - 'web-test-runner-sr.config.mjs'
       - '.github/workflows/guidepup.yml'
@@ -26,13 +26,13 @@ jobs:
       # reader assets that belong to this project's guidepup version - both are
       # needed, and the assets step has to run after the project is installed.
       - name: Setup screen reader environment
-        run: npx @guidepup/setup setup --ci
+        run: npx -y --min-release-age=0 --ignore-scripts=false @guidepup/setup@0.29.2 setup --ci
 
       - name: Install dependencies
         run: npm ci
 
       - name: Install screen reader assets
-        run: npx @guidepup/setup install
+        run: npx -y --min-release-age=0 --ignore-scripts=false @guidepup/setup@0.29.2 install
 
       - name: Playwright
         run: npx playwright install --with-deps
@@ -52,13 +52,13 @@ jobs:
           node-version: 22.x
 
       - name: Setup screen reader environment
-        run: npx @guidepup/setup setup --ci
+        run: npx -y --min-release-age=0 --ignore-scripts=false @guidepup/setup@0.29.2 setup --ci
 
       - name: Install dependencies
         run: npm ci
 
       - name: Install screen reader assets
-        run: npx @guidepup/setup install
+        run: npx -y --min-release-age=0 --ignore-scripts=false @guidepup/setup@0.29.2 install
 
       - name: Playwright
         run: npx playwright install --with-deps
