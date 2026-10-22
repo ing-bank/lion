@@ -9,11 +9,13 @@
   },
   "scripts": {
     "test": "npm run test:node",
-    "test:node": "mocha './test-node/**/*.test.js' --timeout 8000"
+    "test:node": "mocha './test-node/**/*.test.js' --timeout 8000",
+    "change-graph": "node ./src/cli.js"
   },
   "dependencies": {
     "oxc-parser": "0.137.0",
-    "oxc-resolver": "^1.12.0"
+    "oxc-resolver": "^1.12.0",
+    "yaml": "^2.5.1"
   },
   "license": "MIT",
   "author": "ing-bank",
@@ -25,5 +27,8 @@
   },
   "files": [
     "src"
-  ]
+  ],
+  "bin": {
+    "change-graph": "./src/cli.js"
+  }
 }
