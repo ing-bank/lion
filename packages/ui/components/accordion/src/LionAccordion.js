@@ -58,6 +58,7 @@ export class LionAccordion extends LitElement {
           margin: 0;
           visibility: hidden;
           display: none;
+          contain: layout;
         }
 
         .accordion ::slotted(.content[expanded]) {
