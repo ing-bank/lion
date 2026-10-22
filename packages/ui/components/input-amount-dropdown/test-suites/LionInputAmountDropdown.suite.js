@@ -232,11 +232,9 @@ export function runInputAmountDropdownSuite({ klass } = { klass: LionInputAmount
           .preferredCurrencies="${['USD', 'JPY']}"
           ></${tag}> `);
 
-        const preferredCodes =
-          // @ts-expect-error [allow-protected]
-          el._templateDataDropdown.data.regionMetaListPreferred.map(
-            (/** @type {{ currencyCode: string }} */ { currencyCode }) => currencyCode,
-          );
+        const preferredCodes = el._templateDataDropdown.data.regionMetaListPreferred.map(
+          (/** @type {{ currencyCode: string }} */ { currencyCode }) => currencyCode,
+        );
 
         expect(preferredCodes).to.eql(['USD', 'JPY']);
       });
