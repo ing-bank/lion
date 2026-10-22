@@ -5,7 +5,7 @@
  * that starts and then goes away ("NVDA is not running") is visible per second
  * instead of as a timeout halfway through a test.
  *
- * Usage: node scripts/screenreader-smoke.mjs nvda|voiceover [seconds]
+ * Usage: node scripts/screenreader-smoke.js nvda|voiceover [seconds]
  */
 const readerName = process.argv[2] ?? 'nvda';
 const seconds = Number(process.argv[3] ?? 10);

@@ -35,7 +35,7 @@ function reportReaderHealth() {
   }
   const script = fileURLToPath(
     new URL(
-      'packages-node/test-runner-screenreader/scripts/screenreader-smoke.mjs',
+      'packages-node/test-runner-screenreader/scripts/screenreader-smoke.js',
       import.meta.url,
     ),
   );
@@ -68,7 +68,7 @@ function createBrowserLauncher() {
   });
 }
 
-const groups = [{ name: 'sr', files: 'packages/ui/components/**/test/*.sr.test.mjs' }];
+const groups = [{ name: 'sr', files: 'packages/ui/components/**/test/*.sr.test.js' }];
 
 /**
  * @type {import('@web/test-runner').TestRunnerConfig['testRunnerHtml']}

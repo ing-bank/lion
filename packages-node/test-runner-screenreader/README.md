@@ -9,7 +9,7 @@ screen reader test flow, not to be published yet.
 A component gets one screen reader test file next to its other tests:
 
 ```
-packages/ui/components/input-iban/test/lion-input-iban.sr.test.mjs
+packages/ui/components/input-iban/test/lion-input-iban.sr.test.js
 ```
 
 It is a normal Web Test Runner test file (`describe`, `it`, `fixture`), with the
@@ -75,7 +75,7 @@ Rules the flow enforces:
 
 ```bash
 npm run test:sr                        # local, virtual reader (any OS)
-npm run test:sr -- --files "packages/ui/components/input-iban/test/*.sr.test.mjs"
+npm run test:sr -- --files "packages/ui/components/input-iban/test/*.sr.test.js"
 npm run test:sr -- --nvda              # windows + NVDA
 npm run test:sr -- --voiceover         # macOS + VoiceOver
 ```

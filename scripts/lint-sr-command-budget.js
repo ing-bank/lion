@@ -97,11 +97,9 @@ for (const [file, waitMs] of [
 }
 
 /** 3. literal wait timeouts in the screen reader tests */
-const testFiles = execFileSync(
-  'git',
-  ['ls-files', 'packages/ui/components/**/test/*.sr.test.mjs'],
-  { encoding: 'utf8' },
-)
+const testFiles = execFileSync('git', ['ls-files', 'packages/ui/components/**/test/*.sr.test.js'], {
+  encoding: 'utf8',
+})
   .split('\n')
   .filter(Boolean);
 
