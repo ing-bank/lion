@@ -34,9 +34,12 @@ jobs:
       - name: Select the affected screen reader tests
         id: affected
         run: |
+          set -o pipefail
           git fetch --no-tags origin master
+          # A crashing selection must fail this job, never end up as "nothing to run".
           selected="$(node packages-node/change-graph/src/cli.js --mode=pr --base=origin/master --include-sr --format=args \
-            | tr ' ' '\n' | grep '\.sr\.test\.js$' | tr '\n' ' ')"
+            | tr ' ' '\n' | grep '\.sr\.test\.js$' || true \
+            | tr '\n' ' ')"
           echo "files=${selected}" >> "$GITHUB_OUTPUT"
           echo "affected: ${selected:-none}"
 

@@ -11,7 +11,9 @@ import { listTestFiles, packageOf, selectTests } from '../src/select.js';
  * A tiny repository: two components that share a file, both with a test, and a lockfile.
  */
 async function createFixture() {
-  const root = await fs.mkdtemp(path.join(os.tmpdir(), 'change-graph-'));
+  // realpath: on Windows `os.tmpdir()` can hand out the short (8.3) form while git reports long
+  // paths, and then `path.relative` between the two is nonsense.
+  const root = await fs.realpath(await fs.mkdtemp(path.join(os.tmpdir(), 'change-graph-')));
   const files = {
     'package.json': JSON.stringify({ name: 'fixture', private: true, workspaces: ['packages/*'] }),
     'package-lock.json': JSON.stringify({
