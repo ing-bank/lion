@@ -5,12 +5,17 @@ import { ResolverFactory } from 'oxc-resolver';
 
 const DEFAULT_EXTENSIONS = ['.js', '.ts', '.mjs', '.cjs', '.json'];
 
+/**
+ * @param {string} directory
+ * @param {(filePath: string) => boolean} predicate
+ * @returns {Promise<string[]>}
+ */
 async function walkFiles(directory, predicate) {
   let entries;
   try {
     entries = await fs.readdir(directory, { withFileTypes: true });
   } catch (error) {
-    if (error.code === 'ENOENT') return [];
+    if (/** @type {{ code?: string }} */ (error).code === 'ENOENT') return [];
     throw error;
   }
   const nested = await Promise.all(
@@ -91,7 +96,7 @@ export async function buildImportGraph({
   const graph = new Map();
   const pending = await walkFiles(root, include);
   while (pending.length) {
-    const filePath = pending.pop();
+    const filePath = /** @type {string} */ (pending.pop());
     if (!graph.has(filePath)) {
       const dependencies = new Set();
       graph.set(filePath, dependencies);

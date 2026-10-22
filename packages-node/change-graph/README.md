@@ -38,3 +38,49 @@ The ing-web specific wiring lives in the consumer, not in this package: `scripts
 ```sh
 npm run test:node --workspace change-graph
 ```
+
+## Selecting the tests a change can affect
+
+`selectTests` (and the `change-graph` CLI) turns a change set into the test files that have to run.
+
+```sh
+npx change-graph --mode=local                      # working tree against HEAD
+npx change-graph --mode=pr --base=origin/master     # this branch against its merge base
+npx change-graph --mode=release --format=json       # since the last release tag of each package
+npx change-graph --full                             # everything: the "run all" escape hatch
+```
+
+The selected test files go to **stdout** and the reasons to **stderr**, so a workflow can feed the
+list straight to a runner and still show why something ran:
+
+```yaml
+- run: |
+    files="$(npx change-graph --mode=pr --base=origin/master --include-sr --format=args)"
+    npm run test:sr -- --files "$files"
+```
+
+Where the change set comes from:
+
+| mode      | change set                                    | why                                                              |
+| --------- | --------------------------------------------- | ---------------------------------------------------------------- |
+| `local`   | `git diff HEAD` **plus untracked files**      | a brand new component is untracked until it is added             |
+| `pr`      | `git diff --merge-base base...HEAD`           | three-dot: the target branch's own commits are not "this change" |
+| `release` | since the newest tag of every touched package | this repo tags per package, not per repository                   |
+
+What a unit is: the **test directory of a test file**. A changed source file affects every unit that
+reaches it, transitively; a changed test file affects its own unit; a changed file nothing can reach
+is reported as a reason instead of being skipped.
+
+Dependencies are compared on the semantic fields of the lockfile only (`version`, `resolved`,
+`integrity`, `resolution`), for npm and pnpm. npm rewrites the `dev`/`devOptional` flags of hundreds
+of entries on every install, which says nothing about what a test consumes. A dependency that runs
+_inside_ every test (the test runner, playwright, mocha, `@open-wc/testing`, wireit, patch-package)
+means a full run; so do the files that change how tests run (the root `package.json`, the lockfiles,
+the `web-test-runner*` configs, `.github/workflows/`).
+
+Anything that cannot be resolved - no merge base, an unreadable lockfile - is a **full run with a
+reason**, never a silent skip. `--full` is the explicit version of the same thing, and the runtime
+that uses this selection is expected to honour it.
+
+The screen reader tests (`*.sr.test.js`) are only selected with `--include-sr`: they need a real
+NVDA or VoiceOver desktop, so they run in their own workflow.

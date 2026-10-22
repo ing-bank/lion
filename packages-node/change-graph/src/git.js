@@ -21,8 +21,14 @@ import path from 'node:path';
  */
 function git(cwd, args) {
   // A lockfile is well over a megabyte and `git show` prints it in one go; the default buffer of
-  // execFileSync truncates (and then throws) instead of returning the content.
-  return execFileSync('git', args, { cwd, encoding: 'utf8', maxBuffer: 128 * 1024 * 1024 }).trim();
+  // execFileSync truncates (and then throws) instead of returning the content. stderr is captured
+  // instead of inherited: a merge base that does not exist is a normal outcome here.
+  return execFileSync('git', args, {
+    cwd,
+    encoding: 'utf8',
+    maxBuffer: 128 * 1024 * 1024,
+    stdio: ['ignore', 'pipe', 'pipe'],
+  }).trim();
 }
 
 /**

@@ -19,12 +19,18 @@ import {
   selectRecordedEntries,
 } from '../src/index.js';
 
+/** @param {string} value */
 const refs = value => [...value.matchAll(/var\((--[\w-]+)\)/g)].map(match => match[1]);
 
 describe('change-graph', () => {
+  /** @type {string} */
   let root;
   before(async () => {
     root = await fs.realpath(await fs.mkdtemp(path.join(os.tmpdir(), 'change-graph-')));
+    /**
+     * @param {string} file
+     * @param {string} content
+     */
     const write = async (file, content) => {
       await fs.mkdir(path.dirname(path.join(root, file)), { recursive: true });
       await fs.writeFile(path.join(root, file), content);
@@ -61,8 +67,9 @@ describe('change-graph', () => {
 
   it('resolves import aliases and self-references and stops at external packages', async () => {
     const graph = await buildImportGraph({ root });
+    /** @param {string} file */
     const deps = file =>
-      [...graph.get(path.join(root, file))].map(f =>
+      [...(graph.get(path.join(root, file)) ?? new Set())].map(f =>
         path.relative(root, f).split(path.sep).join('/'),
       );
     expect(deps('components/a/A.js').sort()).to.deep.equal(['exports/lib.js', 'shared/util.js']);
@@ -74,6 +81,7 @@ describe('change-graph', () => {
 
   it('flags every unit that can reach a changed file', async () => {
     const graph = await buildImportGraph({ root });
+    /** @param {string} file @returns {string | null} */
     const unitOf = file => {
       const [directory, unit] = path.relative(root, file).split(path.sep);
       return directory === 'components' ? unit : null;
@@ -96,6 +104,12 @@ describe('change-graph', () => {
   });
 
   describe('reference tree', () => {
+    /**
+     * @param {string} selector
+     * @param {string} property
+     * @param {string} value
+     * @param {string} source
+     */
     const node = (selector, property, value, source) => ({ selector, property, value, source });
     const graph = new Map([
       ['--c', [node(':host', '--c', 'var(--a)', 'c.js')]],

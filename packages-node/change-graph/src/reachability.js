@@ -5,10 +5,12 @@
  * @returns {Set<T>}
  */
 export function collectReachable(graph, entry) {
+  /** @type {Set<T>} */
   const reached = new Set();
+  /** @type {T[]} */
   const pending = [entry];
   while (pending.length) {
-    const current = pending.pop();
+    const current = /** @type {T} */ (pending.pop());
     if (!reached.has(current)) {
       reached.add(current);
       pending.push(...(graph.get(current) ?? []));

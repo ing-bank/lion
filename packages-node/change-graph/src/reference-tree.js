@@ -40,10 +40,12 @@ export function resolveReferenceTrace(graph, property, selector, options, visite
  * @param {{ getReferences: (value: string) => string[]; predicate: (property: string) => boolean }} options
  */
 export function reachesProperty(graph, seeds, { getReferences, predicate }) {
+  /** @type {string[]} */
   const pending = [...seeds];
+  /** @type {Set<string>} */
   const visited = new Set();
   while (pending.length) {
-    const property = pending.pop();
+    const property = /** @type {string} */ (pending.pop());
     if (!visited.has(property)) {
       visited.add(property);
       if (predicate(property)) return true;
@@ -65,10 +67,14 @@ export function reachesProperty(graph, seeds, { getReferences, predicate }) {
  * }} options
  */
 export function collectReferenceInputs({ graph, seeds, getReferences, accept }) {
+  /** @type {Map<string, Record<string, string>>} */
   const selected = new Map();
+  /** @type {{ property: string; scope: Record<string, string> }[]} */
   const pending = [...seeds];
   while (pending.length) {
-    const { property, scope } = pending.pop();
+    const { property, scope } = /** @type {{ property: string; scope: Record<string, string> }} */ (
+      pending.pop()
+    );
     for (const node of graph.get(property) ?? []) {
       if (accept(node, scope)) {
         const key = `${Object.values(scope).join('\n')}\n${node.source}\n${node.selector}\n${
@@ -89,6 +95,7 @@ export function collectReferenceInputs({ graph, seeds, getReferences, accept }) 
       }
     }
   }
+  /** @param {Record<string, string>} input */
   const sortKey = input => {
     const { source, selector, property, value, ...scope } = input;
     return `${Object.values(scope).join('\n')}\n${selector}\n${property}\n${source}`;

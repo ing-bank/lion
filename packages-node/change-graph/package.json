@@ -10,7 +10,8 @@
   "scripts": {
     "test": "npm run test:node",
     "test:node": "mocha './test-node/**/*.test.js' --timeout 8000",
-    "change-graph": "node ./src/cli.js"
+    "change-graph": "node ./src/cli.js",
+    "types": "tsc --build"
   },
   "dependencies": {
     "oxc-parser": "0.137.0",

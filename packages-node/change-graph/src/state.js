@@ -1,6 +1,11 @@
 /**
  * Merge freshly computed entries into the previous state. Only `components` are updated
  * (all when omitted); others keep their previous entry.
+ *
+ * @param {Record<string, Record<string, unknown>>} next
+ * @param {Record<string, Record<string, unknown>>} previous
+ * @param {string[]} [components]
+ * @param {string} [verifiedAt]
  */
 export function selectRecordedEntries(next, previous, components, verifiedAt) {
   if (!components) {
@@ -20,7 +25,11 @@ export function selectRecordedEntries(next, previous, components, verifiedAt) {
   );
 }
 
-/** 0 when clean (or recording), 1 when anything is stale. */
+/**
+ * 0 when clean (or recording), 1 when anything is stale.
+ *
+ * @param {{ stale: unknown[]; record?: boolean }} options
+ */
 export function getExitCode({ stale, record = false }) {
   return record || stale.length === 0 ? 0 : 1;
 }

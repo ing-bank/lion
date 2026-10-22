@@ -117,7 +117,7 @@ export function listTestFiles(cwd, globs) {
 function listSourceFiles(cwd) {
   return fs.globSync(['packages/**/*.js', 'packages/**/*.ts', 'packages-node/**/*.js'], {
     cwd,
-    ignore: ['**/node_modules/**'],
+    exclude: ['**/node_modules/**'],
   });
 }
 
@@ -194,141 +194,146 @@ function safeRead(file) {
   }
 }
 
+/**
+ * @param {SelectionOptions} [options]
+ * @returns {Promise<Selection>}
+ */
 export async function selectTests(options = {}) {
-    const cwd = options.cwd ?? process.cwd();
-    const mode = options.mode ?? 'local';
-    const root = repoRoot(cwd);
-    const globs = [...TEST_GLOBS.browser, ...(options.includeSr ? TEST_GLOBS.sr : [])];
-    /** @type {string[]} */
-    const reasons = [];
-    /** @type {string[]} */
-    let changedFiles = options.changedFiles ?? [];
+  const cwd = options.cwd ?? process.cwd();
+  const mode = options.mode ?? 'local';
+  const root = repoRoot(cwd);
+  const globs = [...TEST_GLOBS.browser, ...(options.includeSr ? TEST_GLOBS.sr : [])];
+  /** @type {string[]} */
+  const reasons = [];
+  /** @type {string[]} */
+  let changedFiles = options.changedFiles ?? [];
 
-    const allTestFiles = listTestFiles(cwd, globs);
-    const testFiles = new Set(allTestFiles);
+  const allTestFiles = listTestFiles(cwd, globs);
+  const testFiles = new Set(allTestFiles);
 
-    if (!options.full && changedFiles.length === 0) {
-      if (mode === 'local') {
-        const local = changedFilesLocal(cwd);
-        changedFiles = local.files;
-        if (local.untracked.length > 0) {
-          reasons.push(`${local.untracked.length} untracked file(s) count as changed`);
-        }
-      } else if (mode === 'pr') {
-        try {
-          changedFiles = changedFilesForPullRequest(cwd, options.base ?? 'origin/master');
-        } catch (error) {
-          return {
-            mode,
-            full: true,
-            reasons: [
-              ...reasons,
-              `run everything: ${error instanceof Error ? error.message : error}`,
-            ],
-            changedFiles: [],
-            changedDependencies: [],
-            testFiles: allTestFiles,
-            units: [],
-            graph: { files: 0 },
-          };
-        }
-      } else {
-        const release = changedFilesSinceRelease(cwd, listSourceFiles(cwd));
-        changedFiles = release.files;
-        reasons.push(...release.reasons);
+  if (!options.full && changedFiles.length === 0) {
+    if (mode === 'local') {
+      const local = changedFilesLocal(cwd);
+      changedFiles = local.files;
+      if (local.untracked.length > 0) {
+        reasons.push(`${local.untracked.length} untracked file(s) count as changed`);
       }
-    }
-
-    const alwaysFull = changedFiles.filter(isAlwaysFull);
-    const changedDependencies = changedDependenciesForMode(cwd, mode, options.base);
-    const tooling = [...changedDependencies.keys()].filter(name =>
-      TOOLING_DEPENDENCIES.some(dependency => name === dependency),
-    );
-
-    const graph = await buildImportGraph({
-      root: path.join(root, 'packages'),
-      include: filePath => /\.(?:js|ts|mjs)$/.test(filePath) && !filePath.includes('node_modules'),
-    });
-    /** @type {(filePath: string) => string | null} */
-    const unitOf = filePath => {
-      // Both sides of the comparison are relative to the repository root: the list of test files is.
-      const relative = path.normalize(path.relative(root, filePath));
-      return testFiles.has(relative) ? path.dirname(relative) : null;
-    };
-    const unitFiles = collectUnitFiles(graph, unitOf);
-
-    if (options.full === true) {
-      reasons.push('run everything was requested');
-    }
-    if (alwaysFull.length > 0) {
-      reasons.push(`run everything: ${alwaysFull.join(', ')} changed`);
-    }
-    if (tooling.length > 0) {
-      reasons.push(`run everything: test tooling changed (${tooling.join(', ')})`);
-    }
-    if (options.full === true || alwaysFull.length > 0 || tooling.length > 0) {
-      return {
-        mode,
-        full: true,
-        reasons,
-        changedFiles,
-        changedDependencies: [...changedDependencies.keys()],
-        testFiles: allTestFiles,
-        units: [...unitFiles.keys()].sort(),
-        graph: { files: graph.size },
-      };
-    }
-
-    // A changed dependency affects the files that import it, and through them the units reaching them.
-    /** @type {string[]} */
-    const dependencyTargets = [];
-    for (const [name, why] of changedDependencies) {
-      const importers = [];
-      for (const file of graph.keys()) {
-        const source = safeRead(file);
-        if (!source) {
-          continue;
-        }
-        try {
-          if (getModuleRequests(file, source).some(request => packageOf(request) === name)) {
-            importers.push(file);
-          }
-        } catch {
-          // an unparsable file simply does not import the dependency
-        }
+    } else if (mode === 'pr') {
+      try {
+        changedFiles = changedFilesForPullRequest(cwd, options.base ?? 'origin/master');
+      } catch (error) {
+        return {
+          mode,
+          full: true,
+          reasons: [
+            ...reasons,
+            `run everything: ${error instanceof Error ? error.message : error}`,
+          ],
+          changedFiles: [],
+          changedDependencies: [],
+          testFiles: allTestFiles,
+          units: [],
+          graph: { files: 0 },
+        };
       }
-      if (importers.length > 0) {
-        reasons.push(`${why} -> ${importers.length} file(s) import it`);
-        dependencyTargets.push(...importers);
-      }
+    } else {
+      const release = changedFilesSinceRelease(cwd, listSourceFiles(cwd));
+      changedFiles = release.files;
+      reasons.push(...release.reasons);
     }
+  }
 
-    const changedInGraph = changedFiles
-      .map(file => path.join(root, file))
-      .filter(file => graph.has(file));
-    const missing = changedFiles.length - changedInGraph.length;
-    if (missing > 0) {
-      reasons.push(`${missing} changed file(s) are not in the graph (docs, tooling)`);
-    }
+  const alwaysFull = changedFiles.filter(isAlwaysFull);
+  const changedDependencies = changedDependenciesForMode(cwd, mode, options.base);
+  const tooling = [...changedDependencies.keys()].filter(name =>
+    TOOLING_DEPENDENCIES.some(dependency => name === dependency),
+  );
 
-    const changedTestUnits = changedFiles
-      .map(file => unitOf(path.join(root, file)))
-      .filter(Boolean);
-    const units = [
-      ...new Set([
-        ...findAffectedUnits(unitFiles, [...changedInGraph, ...dependencyTargets]),
-        ...changedTestUnits,
-      ]),
-    ].sort();
+  const graph = await buildImportGraph({
+    root: path.join(root, 'packages'),
+    include: filePath => /\.(?:js|ts|mjs)$/.test(filePath) && !filePath.includes('node_modules'),
+  });
+  /** @type {(filePath: string) => string | null} */
+  const unitOf = filePath => {
+    // Both sides of the comparison are relative to the repository root: the list of test files is.
+    const relative = path.normalize(path.relative(root, filePath));
+    return testFiles.has(relative) ? path.dirname(relative) : null;
+  };
+  const unitFiles = collectUnitFiles(graph, unitOf);
 
+  if (options.full === true) {
+    reasons.push('run everything was requested');
+  }
+  if (alwaysFull.length > 0) {
+    reasons.push(`run everything: ${alwaysFull.join(', ')} changed`);
+  }
+  if (tooling.length > 0) {
+    reasons.push(`run everything: test tooling changed (${tooling.join(', ')})`);
+  }
+  if (options.full === true || alwaysFull.length > 0 || tooling.length > 0) {
     return {
       mode,
-      full: false,
+      full: true,
       reasons,
       changedFiles,
       changedDependencies: [...changedDependencies.keys()],
-      testFiles: allTestFiles.filter(file => units.includes(path.dirname(file))),
-      units,
+      testFiles: allTestFiles,
+      units: [...unitFiles.keys()].sort(),
       graph: { files: graph.size },
     };
   }
+
+  // A changed dependency affects the files that import it, and through them the units reaching them.
+  /** @type {string[]} */
+  const dependencyTargets = [];
+  for (const [name, why] of changedDependencies) {
+    const importers = [];
+    for (const file of graph.keys()) {
+      const source = safeRead(file);
+      if (!source) {
+        continue;
+      }
+      try {
+        if (getModuleRequests(file, source).some(request => packageOf(request) === name)) {
+          importers.push(file);
+        }
+      } catch {
+        // an unparsable file simply does not import the dependency
+      }
+    }
+    if (importers.length > 0) {
+      reasons.push(`${why} -> ${importers.length} file(s) import it`);
+      dependencyTargets.push(...importers);
+    }
+  }
+
+  const changedInGraph = changedFiles
+    .map(file => path.join(root, file))
+    .filter(file => graph.has(file));
+  const missing = changedFiles.length - changedInGraph.length;
+  if (missing > 0) {
+    reasons.push(`${missing} changed file(s) are not in the graph (docs, tooling)`);
+  }
+
+  const changedTestUnits = changedFiles.flatMap(file => {
+    const unit = unitOf(path.join(root, file));
+    return unit ? [unit] : [];
+  });
+  const units = [
+    ...new Set([
+      ...findAffectedUnits(unitFiles, [...changedInGraph, ...dependencyTargets]),
+      ...changedTestUnits,
+    ]),
+  ].sort();
+
+  return {
+    mode,
+    full: false,
+    reasons,
+    changedFiles,
+    changedDependencies: [...changedDependencies.keys()],
+    testFiles: allTestFiles.filter(file => units.includes(path.dirname(file))),
+    units,
+    graph: { files: graph.size },
+  };
+}
