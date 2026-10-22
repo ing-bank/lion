@@ -1,0 +1,17 @@
+{
+  "name": "@lion-tools/smart-baseline",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Generic baseline-worktree comparison: run any spec in the current worktree and a baseline worktree at the previous state, storing only the minimum info to reproduce a formerly accepted baseline. Performance agnostic.",
+  "type": "module",
+  "exports": {
+    ".": "./compare-measures.mjs"
+  },
+  "scripts": {
+    "measure": "node compare-measures.mjs",
+    "measure:single": "node run-measure.mjs"
+  },
+  "devDependencies": {
+    "@web/test-runner-playwright": "^0.11.0"
+  }
+}
