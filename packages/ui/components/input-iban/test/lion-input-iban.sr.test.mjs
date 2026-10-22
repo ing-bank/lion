@@ -169,9 +169,12 @@ describe('<lion-input-iban> screen reader', () => {
 
     await sr.expect({
       virtual: contains('textbox, IBAN, FOO, not disabled, invalid'),
-      // nvda says the state and the message in the field phrase: "IBAN, edit, invalid
-      // entry, Error, Please enter a valid IBAN., selected FOO"
-      nvda: containsLike('invalid entry, Error, Please enter a valid IBAN.'),
+      // The wording a real reader packs the state and the message into varies run to run:
+      // nvda said "IBAN, edit, invalid entry, Error, Please enter a valid IBAN., selected FOO"
+      // in one run and only "Error,Please enter a valid IBAN." in the next. What has to hold is
+      // that the message is announced; the invalid state itself is pinned by the virtual phrase
+      // above and by the DOM assertions below.
+      nvda: containsLike('Please enter a valid IBAN'),
       voiceover: containsLike('invalid'),
     });
 

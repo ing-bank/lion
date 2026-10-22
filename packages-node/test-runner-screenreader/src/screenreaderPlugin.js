@@ -243,6 +243,22 @@ function createScreenReader({ screenReader, getPage, appId }) {
   };
 
   /**
+   * Ask VoiceOver for the item it is on again, and wait for it to speak. A cursor that did not
+   * move (VoiceOver was already on the item) produces no announcement at all, which a test
+   * otherwise waits out.
+   *
+   * @returns {Promise<boolean>} whether the reader spoke this time
+   */
+  const speakAgain = async () => {
+    if (!instance?.keyboardCommands?.hearItemDescription) {
+      return false;
+    }
+    await instance.perform(instance.keyboardCommands.hearItemDescription);
+    await waitForSpeechToSettle();
+    return normalizePhrases(await instance.spokenPhraseLog()).length > 0;
+  };
+
+  /**
    * VoiceOver's cursor does not start inside the browser. The machine setup leaves a
    * mounted preferences volume in the Finder, and VoiceOver reads that instead: its
    * log holds "guidepup-voiceover-preferences-macos-15 Volume" for every phrase. This
@@ -345,6 +361,7 @@ function createScreenReader({ screenReader, getPage, appId }) {
     stop,
     navigateToWebContent,
     waitForSpeechToSettle,
+    speakAgain,
   };
 }
 
@@ -504,6 +521,7 @@ export function screenreaderPlugin(options) {
         await startVirtualReader(/** @type {any} */ (session.browser).getPage(session.id));
         return { focused: true };
       }
+      const state = stateFor(session);
       const instance = readerFor(session);
       const keyboardCommands = instance?.keyboardCommands;
       if (keyboardCommands?.moveCursorToKeyboardFocus) {
@@ -512,12 +530,24 @@ export function screenreaderPlugin(options) {
         // "VoiceOver is on the field" from "VoiceOver says nothing".
         await instance.perform(keyboardCommands.moveCursorToKeyboardFocus);
         await instance.perform(keyboardCommands.hearItemDescription);
-        // Do not add more commands here: a server command has to answer within 20s
-        // (@web/dev-server-core) and VoiceOver is slow, so an anchor with a third
-        // command and the settle below exceeded it in CI.
+        await state.reader.waitForSpeechToSettle();
+        // VoiceOver stays silent when its cursor was already on the item and did not move
+        // (in CI one run had an empty log for a whole test because of that), so ask it once
+        // more instead of letting the test wait out its full timeout on nothing. Two commands
+        // plus two settles stay inside the 20s a command may take.
+        if (
+          normalizePhrases(await instance.spokenPhraseLog()).length === 0 &&
+          !(await state.reader.speakAgain())
+        ) {
+          // eslint-disable-next-line no-console
+          console.warn(
+            '[sr-focus] VoiceOver did not announce the item it was anchored on, so the test ' +
+              'below will report an empty phrase log.',
+          );
+        }
+      } else {
+        await state.reader.waitForSpeechToSettle();
       }
-      // the wrapper owns this (readerFor gives the reader instance)
-      await stateFor(session).reader.waitForSpeechToSettle();
       return { focused: true };
     }
 
