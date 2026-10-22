@@ -208,6 +208,7 @@ export class LionSelectedFileList extends LocalizeMixin(ScopedElementsMixin(LitE
           margin-block-start: 0;
           margin-block-end: 0;
           padding-inline-start: 0;
+          contain: layout;
         }
 
         .sr-only {

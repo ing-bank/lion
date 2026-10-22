@@ -5,5 +5,5 @@
     "rootDir": "."
   },
   "include": ["exports", "components"],
-  "exclude": ["dist-types"]
+  "exclude": ["dist-types", "**/*.visual.test.js"]
 }

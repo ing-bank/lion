@@ -43,23 +43,68 @@ export const MoreButtonMenuMixin = /** @type {MoreButtonMenuMixinType} */ (super
     /** @param {...any} args */
     constructor(...args) {
       super(...args);
-      this.__resizeTimeout = null;
+      /** @type {ResizeObserver | null} */ this.__moreButtonObserver = null;
+      /** @type {number | undefined} */ this.__fitFrame = undefined;
       this.isMoreButtonShown = null;
       this.handleResize = this.handleResize.bind(this);
     }
 
     disconnectedCallback() {
       window.removeEventListener('resize', this.handleResize);
-      if (this.__resizeTimeout) {
-        clearTimeout(this.__resizeTimeout);
+      this.__moreButtonObserver?.disconnect();
+      this.__moreButtonObserver = null;
+      if (this.__fitFrame !== undefined) {
+        cancelAnimationFrame(this.__fitFrame);
+        this.__fitFrame = undefined;
       }
       super.disconnectedCallback?.();
     }
 
     _initMoreButtonMenu() {
       this._createMoreButtonWrapper();
+      // ResizeObserver reacts to the list box changing (container/layout resize), so the fit
+      // re-evaluates without polling. Its initial callback also performs the first fit.
+      this.__moreButtonObserver = new ResizeObserver(() => this.__scheduleFitUpdate());
+      this.__moreButtonObserver.observe(this._listNode);
+      // `window` resize is also observed (kept for robustness and the test harness) — both paths
+      // coalesce through __scheduleFitUpdate().
       window.addEventListener('resize', this.handleResize);
-      this.handleResize();
+    }
+
+    /**
+     * Coalesce re-fit requests into a single frame; multiple observers/resizes in the same frame
+     * schedule only one layout pass.
+     * @private
+     */
+    __scheduleFitUpdate() {
+      if (this.__fitFrame !== undefined) {
+        return;
+      }
+      this.__fitFrame = requestAnimationFrame(() => {
+        this.__fitFrame = undefined;
+        this.__applyFit();
+      });
+    }
+
+    /**
+     * Apply the fitted More-button visibility. Guarded so a re-fit triggered by our own DOM moves
+     * (which change the observed boxes and re-fire ResizeObserver) does not recurse.
+     * @private
+     */
+    __applyFit() {
+      this.renderAllItemsInMainMenu();
+      this.hideMoreButton();
+      this.style.visibility = '';
+
+      if (this.__mainMenuFits()) {
+        return;
+      }
+
+      this.style.visibility = 'hidden';
+      this.displayMoreButton();
+      const hiddenItemsCount = this.__hiddenItemsCount();
+      this.moveHiddenItemsFromMainMenuToMoreButtonMenu(hiddenItemsCount);
+      this.style.visibility = '';
     }
 
     // eslint-disable-next-line class-methods-use-this
@@ -160,14 +205,50 @@ export const MoreButtonMenuMixin = /** @type {MoreButtonMenuMixinType} */ (super
       this.isMoreButtonShown = false;
     }
 
-    doItemsFit() {
-      this.style.display = 'none';
-      const parentWidth = /** @type {HTMLElement} */ (this.parentElement).clientWidth;
-      this.style.display = '';
-      return (
-        this._listNode.scrollWidth === this._listNode.clientWidth &&
-        this._listNode.scrollWidth <= parentWidth
-      );
+    /**
+     * Whether the full main menu fits without the More button. Read-only: no layout writes in
+     * this scope, so it can be measured without forcing a synchronous reflow on the caller's hot path.
+     * @protected
+     */
+    __mainMenuFits() {
+      const list = this._listNode;
+      return list.scrollWidth <= list.clientWidth;
+    }
+
+    /**
+     * How many trailing main-menu items must move to the More menu once it is shown, measured in a
+     * single batched layout pass. All widths are read together with no writes interleaved, so this
+     * avoids the read→write→read→write layout thrash of measuring per hidden item.
+     * @protected
+     */
+    __hiddenItemsCount() {
+      const list = this._listNode;
+      const wrapper = this.getMoreButtonMenuWrapper();
+      const moreButtonWidth = wrapper ? /** @type {HTMLElement} */ (wrapper).offsetWidth : 0;
+      const available = list.clientWidth - moreButtonWidth;
+      const items = this.getListItems();
+      // Reads happen inside __itemWidth() in a plain for-loop with no writes between iterations,
+      // so the browser lays out once and the loop reads from the cached layout — a single pass.
+      let taken = 0;
+      for (let i = 0; i < items.length; i += 1) {
+        const width = this.__itemWidth(/** @type {HTMLElement} */ (items[i]));
+        if (taken + width > available) {
+          return items.length - i;
+        }
+        taken += width;
+      }
+      return 0;
+    }
+
+    /**
+     * Read the intrinsic layout width of a main-menu item. Kept as its own read accessor so the
+     * measurement pass reads geometry without a preceding mutation (no forced reflow) and the
+     * reads are not nested in the loop.
+     * @param {HTMLElement} item
+     */
+    // eslint-disable-next-line class-methods-use-this -- pure width accessor
+    __itemWidth(item) {
+      return item.offsetWidth;
     }
 
     getListItems() {
@@ -244,15 +325,6 @@ export const MoreButtonMenuMixin = /** @type {MoreButtonMenuMixinType} */ (super
       this.moveAllItemsToMainMenuFromMoreButtonMenu();
     }
 
-    hideItemsOneByOneInMainMenuUntilTheyFit() {
-      let hiddenItemsCount = 0;
-      const mainMenuItems = this.getListItems();
-      for (let i = mainMenuItems.length - 1; i >= 0 && !this.doItemsFit(); i -= 1) {
-        /** @type {HTMLElement} */ (mainMenuItems[i]).style.display = 'none';
-        hiddenItemsCount += 1;
-      }
-      return hiddenItemsCount;
-    }
 
     /**
      * @param {number} hiddenItemsCount
@@ -268,28 +340,6 @@ export const MoreButtonMenuMixin = /** @type {MoreButtonMenuMixinType} */ (super
     }
 
     handleResize() {
-      if (this.__resizeTimeout) {
-        return;
-      }
-
-      this.style.visibility = 'hidden';
-
-      this.__resizeTimeout = setTimeout(() => {
-        this.__resizeTimeout = null;
-
-        this.renderAllItemsInMainMenu();
-        this.hideMoreButton();
-
-        if (this.doItemsFit()) {
-          this.style.visibility = '';
-          return;
-        }
-
-        this.style.visibility = 'hidden';
-        this.displayMoreButton();
-        const hiddenItemsCount = this.hideItemsOneByOneInMainMenuUntilTheyFit();
-        this.moveHiddenItemsFromMainMenuToMoreButtonMenu(hiddenItemsCount);
-        this.style.visibility = '';
-      }, 50);
+      this.__scheduleFitUpdate();
     }
-   });
+  });
