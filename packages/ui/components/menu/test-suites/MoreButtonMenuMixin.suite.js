@@ -1,5 +1,12 @@
 import { LitElement } from 'lit';
-import { expect, html, fixture as _fixture, unsafeStatic, defineCE } from '@open-wc/testing';
+import {
+  expect,
+  html,
+  fixture as _fixture,
+  unsafeStatic,
+  defineCE,
+  aTimeout,
+} from '@open-wc/testing';
 import { sendMouse, resetMouse } from '@web/test-runner-commands';
 import sinon from 'sinon';
 import { getDeepActiveElement } from '@lion/ui/overlays.js';
@@ -111,8 +118,13 @@ export function runMoreButtonMenuMixinSuite(customConfig) {
       /** @param {HTMLElement & { updateComplete: Promise<unknown> }} el */
       const waitResizeEventDebounce = async el => {
         await el.updateComplete;
-        // wait for resize event debouncer
-        clock?.tick(55);
+        // The fit is coalesced through requestAnimationFrame and (for real size changes) a
+        // ResizeObserver callback; await two frames plus a short real timeout so slow observers
+        // (e.g. WebKit's initial ResizeObserver callback) have delivered before asserting.
+        await new Promise(resolve => {
+          requestAnimationFrame(() => requestAnimationFrame(() => resolve(undefined)));
+        });
+        await aTimeout(50);
       };
 
       beforeEach(() => {
@@ -293,6 +305,110 @@ export function runMoreButtonMenuMixinSuite(customConfig) {
         expect(isMoreButtonMenuShown(el)).to.equal(true);
         await clickOnMoreButton(el);
         expect(isMoreButtonMenuShown(el)).to.equal(false);
+      });
+
+      it('proves overflowed items are never visible while the More menu is closed', async () => {
+        const el = await fixture(html`
+          <${tag} 
+            .itemWrap="${true}"
+            ?data-has-full-width-flyout="${l1Config.hasFullWidthFlyout}"
+            .config="${l1Config.openableConfig}"
+            .bar="${l1Config.isBar}"
+            ._activeMode="${'tabbable-disclosure'}" 
+            style="min-width: 170px; max-width: 170px;"
+          >
+            <div role="listitem" id="item1" style="min-width: 50px; max-width: 50px;">
+              <a href="#">Item 1</a>
+            </div>
+            <div role="listitem" id="item2" style="min-width: 50px; max-width: 50px;">
+              <a href="#">Item 2</a>
+            </div>
+            <div role="listitem" id="item3" style="min-width: 50px; max-width: 50px;">
+              <a href="#">Item 3</a>
+            </div>
+            <div role="listitem" id="item4" style="min-width: 50px; max-width: 50px;">
+              <a href="#">Item 4</a>
+            </div>
+            <div slot="more-button" style="min-width: 50px; max-width: 50px;">
+              <button>More</button>
+            </div>
+          </${tag}>
+        `);
+
+        await waitResizeEventDebounce(el);
+        expect(isMoreButtonShown(el)).to.equal(true);
+
+        const overflowItems = getDirectListItemsUnderMoreButtonMenu(el);
+        expect(overflowItems.length).to.equal(2); // Item 3 and Item 4
+        const menu = /** @type {HTMLElement} */ (getMoreButtonMenu(el));
+
+        // Closed: the panel is `overflow:hidden; width:0; height:0` so it paints nothing, and every
+        // overflowed item lives inside it — the guarantee a consumer relies on: they are never
+        // visible (nor taking layout space) while the More menu is closed.
+        const closedRect = menu.getBoundingClientRect();
+        expect(closedRect.width).to.equal(0);
+        expect(closedRect.height).to.equal(0);
+        for (const item of overflowItems) {
+          expect(menu.contains(item)).to.equal(true);
+        }
+
+        // Opening the More menu expands the panel out of 0x0, so the same contained items become
+        // part of the visible menu (visible exactly when they should be).
+        await clickOnMoreButton(el);
+        expect(isMoreButtonMenuShown(el)).to.equal(true);
+        const openRect = menu.getBoundingClientRect();
+        expect(openRect.width).to.be.above(0);
+        expect(openRect.height).to.be.above(0);
+        for (const item of overflowItems) {
+          expect(menu.contains(item)).to.equal(true);
+        }
+
+        // Closing it again clips the panel (and its contained overflow) back out of view.
+        await clickOnMoreButton(el);
+        expect(isMoreButtonMenuShown(el)).to.equal(false);
+        const recClosedRect = menu.getBoundingClientRect();
+        expect(recClosedRect.width).to.equal(0);
+        expect(recClosedRect.height).to.equal(0);
+      });
+
+      it('re-fits on a real container resize via ResizeObserver (no window resize event)', async () => {
+        const el = await fixture(html`
+          <${tag} 
+            .itemWrap="${true}"
+            ?data-has-full-width-flyout="${l1Config.hasFullWidthFlyout}"
+            .config="${l1Config.openableConfig}"
+            .bar="${l1Config.isBar}"
+            ._activeMode="${'tabbable-disclosure'}" 
+            style="min-width: 170px; max-width: 170px;"
+          >
+            <div role="listitem" id="item1" style="min-width: 50px; max-width: 50px;">
+              <a href="#">Item 1</a>
+            </div>
+            <div role="listitem" id="item2" style="min-width: 50px; max-width: 50px;">
+              <a href="#">Item 2</a>
+            </div>
+            <div role="listitem" id="item3" style="min-width: 50px; max-width: 50px;">
+              <a href="#">Item 3</a>
+            </div>
+            <div role="listitem" id="item4" style="min-width: 50px; max-width: 50px;">
+              <a href="#">Item 4</a>
+            </div>
+            <div slot="more-button" style="min-width: 50px; max-width: 50px;">
+              <button>More</button>
+            </div>
+          </${tag}>
+        `);
+
+        await waitResizeEventDebounce(el);
+        // At 170px the 4 items overflow, so the More button is shown.
+        expect(isMoreButtonShown(el)).to.equal(true);
+
+        // Grow the container so all items fit. No `resize` event is dispatched — the refit must be
+        // driven by the ResizeObserver reacting to the list box change.
+        el.style.maxWidth = 'none';
+        el.style.width = '360px';
+        await waitResizeEventDebounce(el);
+        expect(isMoreButtonShown(el)).to.equal(false);
       });
 
       it('should remove `More` button when making font smaller', async () => {

@@ -123,8 +123,13 @@ export function runLionMenuInteractionsSuite({ klass = LionMenu } = {}) {
     /** @param {LionMenu} el */
     const waitResizeEventDebounce = async el => {
       await el.updateComplete;
-      // wait for resize event debouncer
-      clock?.tick(55);
+      // The fit is coalesced through requestAnimationFrame and (for real size changes) a
+      // ResizeObserver callback; await two frames plus a short real timeout so slow observers
+      // (e.g. WebKit's initial ResizeObserver callback) have delivered before asserting.
+      await new Promise(resolve => {
+        requestAnimationFrame(() => requestAnimationFrame(() => resolve(undefined)));
+      });
+      await aTimeout(50);
     };
 
     /**
