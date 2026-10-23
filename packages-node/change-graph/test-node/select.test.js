@@ -89,6 +89,14 @@ describe('change-graph selection', () => {
     expect(withSr.testFiles).to.include(path.normalize('packages/a/test/a.sr.test.js'));
   });
 
+  it('does not spend a full run on documentation inside an always-full directory', async () => {
+    const selection = await selectTests({
+      cwd: root,
+      changedFiles: ['packages-node/test-runner-screenreader/README.md'],
+    });
+    expect(selection.full).to.equal(false);
+  });
+
   it('runs everything when the screen reader test runner itself changed', async () => {
     const selection = await selectTests({
       cwd: root,

@@ -4,6 +4,22 @@ Web Test Runner plugin and commands for testing what a screen reader speaks, via
 [Guidepup](https://www.guidepup.dev/). Private tooling: it exists to run the Lion
 screen reader test flow, not to be published yet.
 
+## Why this exists
+
+About 15 years ago it was normal not to write unit tests for frontend code: a manual tester clicked
+through all functionality before a release. In a frontend optimised for continuous delivery that is
+unthinkable. Screen reader output is still in that era - it is hand-checked on the components
+somebody happens to work on, so regressions reach the users who depend on it most.
+
+This flow moves that check into the pipeline. The spoken output of a **real NVDA** (windows) and a
+**real VoiceOver** (macos) becomes an assertion, one file per component, and both readers are
+blocking gates; `virtual` stays for the fast local loop. What it found on its first component:
+while typing, `<lion-input-iban>` is announced unformatted and **not** invalid (by design, no
+nagging halfway through an IBAN), and on commit the invalid state plus the message are what a user
+hears. Both are pinned now.
+
+An empty spoken phrase log is a hard failure, never a pass.
+
 ## What the flow looks like
 
 A component gets one screen reader test file next to its other tests:

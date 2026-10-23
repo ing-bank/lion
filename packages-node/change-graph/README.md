@@ -4,6 +4,22 @@ A small, codebase-agnostic engine that answers **"which units (components, packa
 
 It has no knowledge of any particular repository. Everything repo-specific (what a unit is, which files count, which values reference each other, how themes are scoped) is passed in by the consumer.
 
+## Why
+
+A pipeline that runs everything on every change is the safe default, and it is why one shared file
+costs a full run: a change to a base mixin selects every unit that reaches it, whether or not the
+change can be observed. The expensive part is not the test runner, it is what CI charges for it -
+the screen reader jobs are the extreme case, because they need a desktop, a real reader and a
+machine setup step before the first assertion.
+
+Measured on the Lion repository (import graph over `packages/`: 2049 files, built in about a second):
+
+| change                                                    | selection                                                                                |
+| --------------------------------------------------------- | ---------------------------------------------------------------------------------------- |
+| `form-core/src/validate/ValidateMixin.js` (a shared base) | 29 of 53 units, 94 of 173 test files                                                     |
+| `input-iban/src/LionInputIban.js`                         | 2 units, 12 test files (with `--include-sr`)                                             |
+| nothing a component test can reach                        | no reader runner at all: one ~60s selection job instead of ≈7 min macOS + ≈7 min Windows |
+
 ## Layers
 
 1. **Core (impact)**

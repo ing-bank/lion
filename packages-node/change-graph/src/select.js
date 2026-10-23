@@ -97,6 +97,9 @@ function isAlwaysFull(file) {
   // Git always names files with forward slashes; the lists above are written that way too, so
   // normalise to that form instead of to the platform's separator.
   const normalized = toPosix(file);
+  // Documentation cannot change what a test observes (the runner's code can), so a markdown change
+  // inside an always-full directory stays a selection instead of spending reader runners on prose.
+  if (/\.(?:md|mdx)$/.test(normalized)) return false;
   return (
     ALWAYS_FULL_FILES.includes(normalized) ||
     ALWAYS_FULL_DIRS.some(dir => normalized.startsWith(dir))
