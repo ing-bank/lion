@@ -551,6 +551,15 @@ export function screenreaderPlugin(options) {
         });
         words = normalizePhrases(await instance.spokenPhraseLog());
       }
+      if (words.length === 0) {
+        // Not an error - the first wait of the file does the same asking - but it is the signal
+        // that this reader started without saying anything, which is worth seeing in the log.
+        // eslint-disable-next-line no-console
+        console.warn(
+          `[sr-warm-up] VoiceOver announced nothing within ${WARM_UP_MS}ms; the first wait of the ` +
+            'file will ask again.',
+        );
+      }
       return { warmed: words.length > 0 };
     }
 
