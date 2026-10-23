@@ -9,7 +9,11 @@
  * npx change-graph --mode=release                   # since the last release tag of each package
  * npx change-graph --full                           # everything (the "run all" escape hatch)
  * npx change-graph --include-sr --format=args       # screen reader tests too, as one line of args
+ * npx change-graph --no-cache                       # ignore the memoised result of a previous run
  * ```
+ *
+ * Parallel tools (lint, node tests, browser tests, screen reader tests) share one memoised result per
+ * state of the working tree; `cached=true` in the summary on stderr tells you which call computed it.
  *
  * The selected test files go to stdout (one per line, or space separated with `--format=args`) and
  * the reasons go to stderr, so a workflow can pass the list straight to the runner:
@@ -52,6 +56,7 @@ try {
     cwd: typeof flags.cwd === 'string' ? flags.cwd : undefined,
     full: flags.full === true,
     includeSr: flags['include-sr'] === true,
+    cache: flags['no-cache'] !== true,
     changedFiles:
       typeof flags.files === 'string' && flags.files ? flags.files.split(',') : undefined,
   });
@@ -64,7 +69,7 @@ for (const reason of selection.reasons) {
   console.error(`[change-graph] ${reason}`);
 }
 console.error(
-  `[change-graph] mode=${selection.mode} full=${selection.full} changed=${selection.changedFiles.length} deps=${selection.changedDependencies.length} units=${selection.units.length} graph=${selection.graph.files} files`,
+  `[change-graph] mode=${selection.mode} full=${selection.full} cached=${selection.cached} changed=${selection.changedFiles.length} deps=${selection.changedDependencies.length} units=${selection.units.length} graph=${selection.graph.files} files`,
 );
 
 if (format === 'json') {

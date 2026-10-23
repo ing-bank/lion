@@ -48,6 +48,17 @@ export function repoRoot(cwd) {
 }
 
 /**
+ * The commit HEAD points at. Part of the cache key: the same bytes on top of another commit are
+ * another change (a rebase, a different base, a moved tag).
+ *
+ * @param {string} cwd
+ * @returns {string}
+ */
+export function headRevision(cwd) {
+  return git(cwd, ['rev-parse', 'HEAD']);
+}
+
+/**
  * @param {string} cwd
  * @returns {{ files: string[], untracked: string[] }}
  */

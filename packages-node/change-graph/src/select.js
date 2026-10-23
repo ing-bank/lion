@@ -21,9 +21,19 @@ import {
   changedFilesLocal,
   changedFilesSinceRelease,
   fileAtRevision,
+  headRevision as gitHead,
   repoRoot,
 } from './git.js';
 import { changedPackagesInLockfile, lockfileFlavour } from './lockfile.js';
+import {
+  acquireLock,
+  cacheDirFor,
+  cacheKeyFor,
+  readCache,
+  releaseLock,
+  waitForCache,
+  writeCache,
+} from './cache.js';
 
 /** Files that change how tests run: their change means "run everything". */
 export const ALWAYS_FULL_FILES = [
@@ -81,6 +91,18 @@ export const TEST_GLOBS = {
   browser: ['packages/*/test/**/*.test.js', 'packages/ui/components/**/test/**/*.test.js'],
   sr: ['packages/ui/components/**/test/*.sr.test.js'],
 };
+
+/**
+ * @param {string} cwd
+ * @returns {string} the revision the change set is relative to (`''` outside a repository)
+ */
+function headOf(cwd) {
+  try {
+    return gitHead(cwd);
+  } catch {
+    return '';
+  }
+}
 
 /**
  * @param {string} file repo-relative
@@ -189,6 +211,9 @@ export function changedDependenciesForMode(cwd, mode, base) {
  * @property {string} [base] the target branch for `mode: 'pr'`
  * @property {boolean} [includeSr] also consider the screen reader tests
  * @property {boolean} [full] run everything
+ * @property {boolean} [cache] reuse a previous computation (default true)
+ * @property {string} [cacheDir] where those results live (default `node_modules/.cache/change-graph`)
+ * @property {number} [lockWaitMs] how long to wait for a tool that is computing this very key (3000)
  * @property {string[]} [changedFiles] an explicit change set (CI can pass one, tests use it)
  */
 
@@ -196,6 +221,8 @@ export function changedDependenciesForMode(cwd, mode, base) {
  * @typedef {object} Selection
  * @property {string} mode
  * @property {boolean} full
+ * @property {boolean} cached
+ * @property {string | null} cacheKey
  * @property {string[]} reasons
  * @property {string[]} changedFiles
  * @property {string[]} changedDependencies
@@ -254,6 +281,8 @@ export async function selectTests(options = {}) {
         return {
           mode,
           full: true,
+          cached: false,
+          cacheKey: null,
           reasons: [
             ...reasons,
             `run everything: ${error instanceof Error ? error.message : error}`,
@@ -278,6 +307,77 @@ export async function selectTests(options = {}) {
     TOOLING_DEPENDENCIES.some(dependency => name === dependency),
   );
 
+  if (options.full === true) {
+    reasons.push('run everything was requested');
+  }
+  if (alwaysFull.length > 0) {
+    reasons.push(`run everything: ${alwaysFull.join(', ')} changed`);
+  }
+  if (tooling.length > 0) {
+    reasons.push(`run everything: test tooling changed (${tooling.join(', ')})`);
+  }
+
+  /** The test directories of the files that will run, without building the graph. */
+  const unitsOfFiles = (/** @type {string[]} */ files) =>
+    [...new Set(files.map(file => path.dirname(file)))].sort();
+
+  // A full run does not need the graph at all, and it is nothing to memoise either: every tool is
+  // going to run every test no matter what it asks.
+  if (options.full === true || alwaysFull.length > 0 || tooling.length > 0) {
+    return {
+      mode,
+      full: true,
+      cached: false,
+      cacheKey: null,
+      reasons,
+      changedFiles,
+      changedDependencies: [...changedDependencies.keys()],
+      testFiles: allTestFiles,
+      units: unitsOfFiles(allTestFiles),
+      graph: { files: 0 },
+    };
+  }
+
+  // Tools start in parallel (lint, node tests, browser tests, screen reader tests), so the first one
+  // computes and the rest read the same answer back: the key is the base revision plus the bytes of
+  // every touched file, not the git status.
+  const cacheDir = cacheDirFor(root, options.cacheDir);
+  const useCache = options.cache !== false && process.env.CHANGE_GRAPH_NO_CACHE !== '1';
+  const cacheKey = useCache
+    ? await cacheKeyFor(root, {
+        mode,
+        base: options.base ?? null,
+        includeSr: options.includeSr === true,
+        globs,
+        exclude,
+        alwaysFullFiles: ALWAYS_FULL_FILES,
+        alwaysFullDirs: ALWAYS_FULL_DIRS,
+        tooling: TOOLING_DEPENDENCIES,
+        head: headOf(cwd),
+        files: changedFiles,
+        dependencies: [...changedDependencies].sort(([a], [b]) => a.localeCompare(b)),
+      })
+    : null;
+
+  if (cacheKey) {
+    const usable = (/** @type {Record<string, any> | null} */ cached) =>
+      Boolean(cached && cached.mode === mode && Array.isArray(cached.testFiles));
+
+    const cached = readCache(cacheDir, cacheKey);
+    if (usable(cached)) {
+      return { .../** @type {Selection} */ (cached), cached: true, cacheKey };
+    }
+
+    // Another tool is already computing exactly this. Wait for its answer instead of building the
+    // same import graph a second time; if it does not arrive in time, compute it ourselves.
+    if (!acquireLock(cacheDir, cacheKey)) {
+      const fromOther = await waitForCache(cacheDir, cacheKey, options.lockWaitMs ?? 3000);
+      if (usable(fromOther)) {
+        return { .../** @type {Selection} */ (fromOther), cached: true, cacheKey };
+      }
+    }
+  }
+
   const graph = await buildImportGraph({
     root: path.join(root, 'packages'),
     include: filePath => /\.(?:js|ts|mjs)$/.test(filePath) && !filePath.includes('node_modules'),
@@ -289,28 +389,6 @@ export async function selectTests(options = {}) {
     return testFiles.has(relative) ? path.dirname(relative) : null;
   };
   const unitFiles = collectUnitFiles(graph, unitOf);
-
-  if (options.full === true) {
-    reasons.push('run everything was requested');
-  }
-  if (alwaysFull.length > 0) {
-    reasons.push(`run everything: ${alwaysFull.join(', ')} changed`);
-  }
-  if (tooling.length > 0) {
-    reasons.push(`run everything: test tooling changed (${tooling.join(', ')})`);
-  }
-  if (options.full === true || alwaysFull.length > 0 || tooling.length > 0) {
-    return {
-      mode,
-      full: true,
-      reasons,
-      changedFiles,
-      changedDependencies: [...changedDependencies.keys()],
-      testFiles: allTestFiles,
-      units: [...unitFiles.keys()].sort(),
-      graph: { files: graph.size },
-    };
-  }
 
   // A changed dependency affects the files that import it, and through them the units reaching them.
   /** @type {string[]} */
@@ -355,9 +433,12 @@ export async function selectTests(options = {}) {
     ]),
   ].sort();
 
-  return {
+  /** @type {Selection} */
+  const selection = {
     mode,
     full: false,
+    cached: false,
+    cacheKey,
     reasons,
     changedFiles,
     changedDependencies: [...changedDependencies.keys()],
@@ -365,4 +446,9 @@ export async function selectTests(options = {}) {
     units,
     graph: { files: graph.size },
   };
+  if (cacheKey) {
+    writeCache(cacheDir, cacheKey, selection);
+    releaseLock(cacheDir, cacheKey);
+  }
+  return selection;
 }

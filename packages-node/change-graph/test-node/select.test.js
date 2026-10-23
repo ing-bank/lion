@@ -4,6 +4,14 @@ import os from 'node:os';
 import path from 'node:path';
 import { expect } from 'chai';
 
+import {
+  acquireLock,
+  cacheDirFor,
+  readCache,
+  releaseLock,
+  waitForCache,
+  writeCache,
+} from '../src/cache.js';
 import { changedPackagesInLockfile, packageNameOfLockKey } from '../src/lockfile.js';
 import { listTestFiles, packageOf, selectTests } from '../src/select.js';
 
@@ -176,6 +184,178 @@ describe('change-graph selection', () => {
     const selection = await selectTests({ cwd: root, mode: 'pr', base: 'no-such-branch' });
     expect(selection.full).to.equal(true);
     expect(selection.reasons.join(' ')).to.include('no merge base');
+  });
+});
+
+describe('change-graph selection cache', () => {
+  /** @type {string} */
+  let root;
+  /** @type {string} */
+  let cacheDir;
+
+  before(async () => {
+    root = await createFixture();
+    cacheDir = path.join(root, '.cache');
+  });
+
+  after(async () => {
+    await fs.rm(root, { recursive: true, force: true });
+  });
+
+  it('reuses the computation of the tool that ran before it', async () => {
+    const options = { cwd: root, changedFiles: ['packages/a/src/a.js'], cacheDir };
+    const first = await selectTests(options);
+    const second = await selectTests(options);
+    expect(first.cached).to.equal(false);
+    expect(second.cached).to.equal(true);
+    expect(second.cacheKey).to.equal(first.cacheKey);
+    expect(second.testFiles).to.deep.equal(first.testFiles);
+    expect(second.units).to.deep.equal(first.units);
+    expect(second.reasons).to.deep.equal(first.reasons);
+  });
+
+  it('tells the tools apart in the key', async () => {
+    const unitTests = await selectTests({
+      cwd: root,
+      changedFiles: ['packages/a/src/shared.js'],
+      cacheDir,
+    });
+    const withSr = await selectTests({
+      cwd: root,
+      changedFiles: ['packages/a/src/shared.js'],
+      includeSr: true,
+      cacheDir,
+    });
+    expect(withSr.cached).to.equal(false);
+    expect(withSr.cacheKey).to.not.equal(unitTests.cacheKey);
+  });
+
+  it('recomputes when a touched file keeps its name but changes content', async () => {
+    const options = { cwd: root, changedFiles: ['packages/b/src/b.js'], cacheDir };
+    const first = await selectTests(options);
+    await fs.writeFile(path.join(root, 'packages/b/src/b.js'), 'export const b = 2;\n');
+    const second = await selectTests(options);
+    expect(second.cached).to.equal(false);
+    expect(second.cacheKey).to.not.equal(first.cacheKey);
+  });
+
+  it('recomputes when the same change sits on another commit', async () => {
+    const options = { cwd: root, changedFiles: ['packages/a/test/a.test.js'], cacheDir };
+    const first = await selectTests(options);
+    execFileSync(
+      'git',
+      [
+        '-c',
+        'user.name=t',
+        '-c',
+        'user.email=t@example.com',
+        'commit',
+        '-qm',
+        'another base',
+        '--allow-empty',
+      ],
+      {
+        cwd: root,
+      },
+    );
+    const second = await selectTests(options);
+    expect(second.cached).to.equal(false);
+    expect(second.cacheKey).to.not.equal(first.cacheKey);
+  });
+
+  it('lets tools that start together agree without corrupting each other', async () => {
+    const options = { cwd: root, changedFiles: ['packages/a/src/shared.js'], cacheDir };
+    const results = await Promise.all([
+      selectTests(options),
+      selectTests(options),
+      selectTests(options),
+      selectTests(options),
+    ]);
+    const [first] = results;
+    for (const result of results) {
+      expect(result.testFiles).to.deep.equal(first.testFiles);
+      expect(result.units).to.deep.equal(first.units);
+    }
+    // Every tool that read a stored answer found a complete one.
+    const stored = readCache(cacheDir, /** @type {string} */ (first.cacheKey));
+    expect(stored).to.be.an('object');
+    expect(/** @type {any} */ (stored).testFiles).to.deep.equal(first.testFiles);
+  });
+
+  it('never reads a stored result when caching is off', async () => {
+    const options = {
+      cwd: root,
+      changedFiles: ['packages/b/test/b.test.js'],
+      cacheDir,
+      cache: false,
+    };
+    await selectTests(options);
+    const second = await selectTests(options);
+    expect(second.cached).to.equal(false);
+    expect(second.cacheKey).to.equal(null);
+  });
+
+  it('ignores a stored result that cannot be used', async () => {
+    const options = { cwd: root, changedFiles: ['packages/b/test/other.test.js'], cacheDir };
+    const first = await selectTests(options);
+    await fs.writeFile(
+      path.join(cacheDir, `${first.cacheKey}.json`),
+      JSON.stringify({ mode: 'local' }),
+    );
+    const second = await selectTests(options);
+    expect(second.cached).to.equal(false);
+    expect(second.testFiles).to.deep.equal(first.testFiles);
+  });
+
+  it('keeps the cache out of the repository when there is no node_modules', () => {
+    expect(cacheDirFor(root, undefined).startsWith(root)).to.equal(false);
+    expect(cacheDirFor(root, '/tmp/somewhere')).to.equal('/tmp/somewhere');
+  });
+});
+
+describe('change-graph cache primitives', () => {
+  /** @type {string} */
+  let dir;
+
+  before(async () => {
+    dir = await fs.realpath(await fs.mkdtemp(path.join(os.tmpdir(), 'change-graph-lock-')));
+  });
+
+  after(async () => {
+    await fs.rm(dir, { recursive: true, force: true });
+  });
+
+  it('lets one tool compute while the others wait for its result', async () => {
+    expect(acquireLock(dir, 'one')).to.equal(true);
+    // Whoever holds the claim is the one that computes; the others do not build the same graph.
+    expect(acquireLock(dir, 'one')).to.equal(false);
+    setTimeout(() => writeCache(dir, 'one', { mode: 'local', testFiles: ['a'] }), 30);
+    const waited = await waitForCache(dir, 'one', 2000);
+    expect(waited?.testFiles).to.deep.equal(['a']);
+    expect(acquireLock(dir, 'one')).to.equal(false);
+    releaseLock(dir, 'one');
+    expect(acquireLock(dir, 'one')).to.equal(true);
+    releaseLock(dir, 'one');
+  });
+
+  it('gives up waiting instead of hanging on a tool that never answers', async () => {
+    const start = Date.now();
+    expect(await waitForCache(dir, 'never', 60)).to.equal(null);
+    expect(Date.now() - start).to.be.lessThan(2000);
+  });
+
+  it('takes over a claim that is too old to belong to a running tool', async () => {
+    const file = path.join(dir, 'stale.lock');
+    await fs.writeFile(file, '1');
+    const long = new Date(Date.now() - 60_000);
+    await fs.utimes(file, long, long);
+    expect(acquireLock(dir, 'stale')).to.equal(true);
+    releaseLock(dir, 'stale');
+  });
+
+  it('reads nothing when a stored result is not valid json', async () => {
+    await fs.writeFile(path.join(dir, 'broken.json'), '{oops');
+    expect(readCache(dir, 'broken')).to.equal(null);
   });
 });
 

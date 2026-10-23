@@ -3,6 +3,7 @@ export * from './import-graph.js';
 export * from './reachability.js';
 export * from './reference-tree.js';
 export * from './state.js';
+export * from './cache.js';
 export * from './git.js';
 export * from './lockfile.js';
 export * from './select.js';

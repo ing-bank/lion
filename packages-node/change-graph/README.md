@@ -100,3 +100,20 @@ that uses this selection is expected to honour it.
 
 The screen reader tests (`*.sr.test.js`) are only selected with `--include-sr`: they need a real
 NVDA or VoiceOver desktop, so they run in their own workflow.
+
+### Reusing the computation between tools
+
+`lint`, `test:node`, `test:browser` and the screen reader flow all ask the same question about the
+same working tree, and they usually ask it at the same time (`run-p`). The answer is memoised per
+state of the tree, keyed on a **content** hash: the base revision, every touched file _and its bytes_,
+the semantic lockfile changes, the test globs, and a version of this logic. Not the git status -
+the same content after an edit has to hit, and a touched file that is byte-identical must not miss.
+
+The first tool to ask claims the key and writes the result atomically; the others wait briefly for
+that answer instead of building the same import graph again, and compute it themselves if it never
+arrives. Measured in this repository, four tools started together on a cold cache: one computation,
+1.7s total, byte-identical output; warm, a call is ~0.4s instead of ~1.6s.
+
+`--no-cache` (or `CHANGE_GRAPH_NO_CACHE=1`) turns it off. Results live in
+`node_modules/.cache/change-graph`, outside the repository when there is no `node_modules`. Anything
+that cannot be hashed means no caching - never a stale answer.
