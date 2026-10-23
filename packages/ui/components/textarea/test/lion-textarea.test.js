@@ -158,6 +158,22 @@ describe('<lion-textarea>', () => {
     expect(_inputNode.getAttribute('placeholder')).to.equal('foo');
   });
 
+  it('uses the textarea when another element is slotted as input before it', async () => {
+    const el = await fixture(`<lion-textarea></lion-textarea>`);
+    const textarea = /** @type {HTMLTextAreaElement} */ (el.querySelector('textarea'));
+    // Browser extensions like LanguageTool add an element with slot="input" before the textarea
+    const mirror = document.createElement('lt-mirror');
+    mirror.setAttribute('slot', 'input');
+    el.insertBefore(mirror, textarea);
+
+    const { _inputNode } = getFormControlMembers(el);
+    expect(_inputNode.localName).to.equal('textarea');
+
+    textarea.value = 'foo';
+    textarea.dispatchEvent(new Event('input', { bubbles: true }));
+    expect(el.modelValue).to.equal('foo');
+  });
+
   it('fires resize textarea when a visibility change has been detected', async () => {
     const el = await fixture(`
       <div style="display: none">
