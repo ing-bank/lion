@@ -168,12 +168,23 @@ export class LionCombobox extends LocalizeMixin(OverlayMixin(CustomChoiceGroupMi
   get modelValue() {
     const choiceGroupModelValue = super.modelValue;
     if (choiceGroupModelValue !== '') {
+      // window.TRACE?.(this) &&
+      //   console.error(
+      //     `LionComboBox.get modelValue()`,
+      //     choiceGroupModelValue,
+      //     '(choiceGroupModelValue)',
+      //   );
       return choiceGroupModelValue;
     }
     // Since the FormatMixin can't be applied to a [FormGroup](https://github.com/ing-bank/lion/blob/master/packages/ui/components/form-core/src/form-group/FormGroupMixin.js)
     // atm, we treat it in a way analogue to InteractionStateMixin (basically same apis, w/o Mixin applied).
     // Hence, modelValue has no reactivity by default and we need to call parser manually here...
-    return this.parser(this.value);
+    const xx = this.parser(this.value);
+
+    // window.TRACE?.(this) &&
+    //   console.error(`LionComboBox.get modelValue()`, this.value, xx, super.modelValue);
+
+    return xx;
   }
 
   // Duplicating from ChoiceGroupMixin, because you cannot independently inherit/override getter + setter.
@@ -182,6 +193,7 @@ export class LionCombobox extends LocalizeMixin(OverlayMixin(CustomChoiceGroupMi
    * @override ChoiceGroupMixin
    */
   set modelValue(value) {
+    window.TRACE?.(this) && console.error(`LionComboBox.set modelValue()`, value);
     super.modelValue = value;
   }
 
@@ -627,10 +639,12 @@ export class LionCombobox extends LocalizeMixin(OverlayMixin(CustomChoiceGroupMi
       changedProperties.has('__shouldAutocompleteNextUpdate') &&
       this.__shouldAutocompleteNextUpdate
     ) {
-      // Only update list in render cycle
-      this._handleAutocompletion();
-      this.__shouldAutocompleteNextUpdate = false;
-      this.__listboxContentChanged = false;
+      this.registrationComplete.then(() => {
+        // Only update list in render cycle
+        this._handleAutocompletion();
+        this.__shouldAutocompleteNextUpdate = false;
+        this.__listboxContentChanged = false;
+      });
     }
 
     if (typeof this._selectionDisplayNode?.onComboboxElementUpdated === 'function') {
@@ -941,6 +955,8 @@ export class LionCombobox extends LocalizeMixin(OverlayMixin(CustomChoiceGroupMi
       !isSelectionEmpty && this._inputNode.value.length !== this._inputNode.selectionStart;
 
     const inputValue = this._inputNode.value;
+    window.TRACE?.(this) &&
+      console.error(`LionComboBox._handleAutocompletion()`, `'${inputValue}'`);
     const inputSelectionStart = this._inputNode.selectionStart;
     const curValue =
       hasSelection && inputSelectionStart ? inputValue.slice(0, inputSelectionStart) : inputValue;
@@ -1040,6 +1056,8 @@ export class LionCombobox extends LocalizeMixin(OverlayMixin(CustomChoiceGroupMi
       option.removeAttribute('aria-hidden');
     });
 
+    // window.TRACE?.(this) && console.error(`LionComboBox._handleAutocompletion()`);
+
     // [7]. If no autofill took place, we are left with the previously matched option; correct this
     if (autoselect && !hasAutoFilled && !this.multipleChoice) {
       // This means there is no match for checkedIndex
@@ -1047,7 +1065,19 @@ export class LionCombobox extends LocalizeMixin(OverlayMixin(CustomChoiceGroupMi
       if (prevValue !== curValue) {
         this.activeIndex = -1;
       }
-      this.modelValue = this.parser(inputValue);
+      const xx = this.parser(inputValue);
+
+      window.TRACE?.(this) &&
+        console.error(
+          `LionComboBox._handleAutocompletion()`,
+          'this.modelValue =',
+          xx,
+          '(',
+          inputValue,
+          ')',
+        );
+
+      this.modelValue = xx;
     }
 
     // [7b]. Fire model-value-changed for custom (unmatched) values, regardless of autocomplete mode.

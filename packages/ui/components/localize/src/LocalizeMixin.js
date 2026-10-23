@@ -36,6 +36,7 @@ const LocalizeMixinImplementation = /** @type {LocalizeMixin} */ (superclass =>
       super(...restArgs);
 
       this._localizeManager = getLocalizeManager();
+      this.__localeUpdated = false;
 
       /** @private */
       this.__boundLocalizeOnLocaleChanged =
@@ -66,7 +67,18 @@ const LocalizeMixinImplementation = /** @type {LocalizeMixin} */ (superclass =>
      * @returns {Promise.<void>}
      */
     async scheduleUpdate() {
-      if (Object.getPrototypeOf(this).constructor.waitForLocalizeNamespaces) {
+      const areLocalizeNamespacesLoaded = this._localizeManager.areNamespacesInCache(
+        this.__getUniqueNamespaces(),
+      );
+
+      if (areLocalizeNamespacesLoaded) {
+        this.onLocaleReady();
+      }
+
+      if (
+        !areLocalizeNamespacesLoaded &&
+        Object.getPrototypeOf(this).constructor.waitForLocalizeNamespaces
+      ) {
         await this.localizeNamespacesLoaded;
       }
       super.scheduleUpdate();
@@ -74,7 +86,12 @@ const LocalizeMixinImplementation = /** @type {LocalizeMixin} */ (superclass =>
 
     connectedCallback() {
       super.connectedCallback();
-      if (this.localizeNamespacesLoaded) {
+      const areLocalizeNamespacesLoaded = this._localizeManager.areNamespacesInCache(
+        this.__getUniqueNamespaces(),
+      );
+      if(areLocalizeNamespacesLoaded) {
+        this.__localizeMessageSync = true;
+      } else if (this.localizeNamespacesLoaded) {
         this.localizeNamespacesLoaded.then(() => this.onLocaleReady());
       }
       this._localizeManager.addEventListener(
@@ -151,6 +168,7 @@ const LocalizeMixinImplementation = /** @type {LocalizeMixin} */ (superclass =>
      */
     __localizeOnLocaleChanging() {
       this.__localizeStartLoadingNamespaces();
+      this.__localeUpdated = false;
     }
 
     /**
@@ -162,7 +180,10 @@ const LocalizeMixinImplementation = /** @type {LocalizeMixin} */ (superclass =>
     }
 
     onLocaleReady() {
+      if(!this.__localeUpdated) {
       this.onLocaleUpdated();
+        this.__localeUpdated = true;
+      }
     }
 
     /**
@@ -171,8 +192,11 @@ const LocalizeMixinImplementation = /** @type {LocalizeMixin} */ (superclass =>
      */
     // eslint-disable-next-line no-unused-vars
     onLocaleChanged(newLocale, oldLocale) {
+      if(!this.__localeUpdated) {
       this.onLocaleUpdated();
+        this.__localeUpdated = true;
       this.requestUpdate();
+      }
     }
 
     // eslint-disable-next-line class-methods-use-this
