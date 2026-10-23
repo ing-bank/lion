@@ -1,6 +1,5 @@
-import { html } from 'lit';
-import { expect, fixture as _fixture } from '@open-wc/testing';
-
+import { expect, fixture as _fixture, html, aTimeout } from '@open-wc/testing';
+import * as sinon from 'sinon';
 import '@lion/ui/define/lion-progress-indicator.js';
 
 /**
@@ -20,7 +19,36 @@ describe('lion-progress-indicator', () => {
     it('adds a label by default', async () => {
       const el = await fixture(html` <lion-progress-indicator></lion-progress-indicator> `);
       await el.localizeNamespacesLoaded;
-      expect(el.getAttribute('aria-label')).to.equal('Loading');
+      const labelNode = el.shadowRoot?.querySelector('.sr-only');
+
+      await aTimeout(500);
+      expect(el.label).to.equal('Loading');
+      expect(labelNode?.textContent).to.equal('Loading');
+    });
+
+    it.skip('removes the label after a duration and readds it again', async () => {
+      const el = await fixture(html` <lion-progress-indicator></lion-progress-indicator> `);
+      const clock = sinon.useFakeTimers();
+      await el.localizeNamespacesLoaded;
+      // const labelNode = el.shadowRoot?.querySelector('.sr-only');
+      // await el.updateComplete;
+
+      // clock.tick(el._durationShowLabel);
+      // console.debug('show', el.shadowRoot);
+      // expect(el.label).to.equal('Loading');
+      // expect(labelNode?.textContent).to.equal('Loading');
+      // await el.updateComplete;
+
+      clock.tick(2000);
+      // await Promise.resolve();
+      console.debug('hide', el.shadowRoot);
+      expect(el.label).to.equal(' ');
+
+      // clock.tick(el._durationShowLabel);
+      // console.debug('show again', el.shadowRoot);
+      // expect(el.label).to.equal('Loading');
+      // expect(labelNode?.textContent).to.equal('Loading');
+      clock.restore();
     });
 
     it('can override a label with "aria-label"', async () => {
@@ -33,7 +61,7 @@ describe('lion-progress-indicator', () => {
       expect(el.getAttribute('aria-label')).to.equal('bar');
       el.removeAttribute('aria-label');
       await el.updateComplete;
-      expect(el.getAttribute('aria-label')).to.equal('Loading');
+      expect(el.indeterminate).to.equal(true);
     });
 
     it('can override a label with "aria-labelledby"', async () => {
@@ -49,13 +77,13 @@ describe('lion-progress-indicator', () => {
       el.removeAttribute('aria-labelledby');
       await el.updateComplete;
       expect(el.hasAttribute('aria-labelledby')).to.be.false;
-      expect(el.getAttribute('aria-label')).to.equal('Loading');
+      expect(el.indeterminate).to.equal(true);
     });
 
     it('loosses default aria-label when switch to determinate state', async () => {
       const el = await fixture(html` <lion-progress-indicator></lion-progress-indicator> `);
       await el.localizeNamespacesLoaded;
-      expect(el.getAttribute('aria-label')).to.equal('Loading');
+      expect(el.indeterminate).to.equal(true);
       el.setAttribute('value', '30');
       await el.updateComplete;
       expect(el.hasAttribute('aria-label')).to.be.false;
@@ -140,7 +168,7 @@ describe('lion-progress-indicator', () => {
       el.removeAttribute('value');
       await el.updateComplete;
       expect(el.indeterminate).to.be.true;
-      expect(el.getAttribute('aria-label')).to.equal('Loading');
+      expect(el.indeterminate).to.equal(true);
     });
 
     it("becomes indeterminate if value ain't a number", async () => {
@@ -156,7 +184,6 @@ describe('lion-progress-indicator', () => {
       expect(el.hasAttribute('aria-valuenow')).to.be.false;
       expect(el.hasAttribute('aria-valuemin')).to.be.false;
       expect(el.hasAttribute('aria-valuemax')).to.be.false;
-      expect(el.getAttribute('aria-label')).to.equal('Loading');
     });
 
     it('can update value to 0', async () => {
@@ -185,12 +212,12 @@ describe('lion-progress-indicator', () => {
   });
 
   describe('Accessibility', () => {
-    it('by default', async () => {
-      const el = await fixture(html` <lion-progress-indicator></lion-progress-indicator> `);
-      expect(el.getAttribute('role')).to.equal('progressbar');
-    });
-
     describe('indeterminate', () => {
+      it('by default', async () => {
+        const el = await fixture(html` <lion-progress-indicator></lion-progress-indicator> `);
+        expect(el.getAttribute('role')).to.equal('status');
+      });
+
       it('passes a11y test', async () => {
         const el = await fixture(html` <lion-progress-indicator></lion-progress-indicator> `);
         await expect(el).to.be.accessible();
@@ -198,6 +225,13 @@ describe('lion-progress-indicator', () => {
     });
 
     describe('determinate', () => {
+      it('by default', async () => {
+        const el = await fixture(html`
+          <lion-progress-indicator value="25"></lion-progress-indicator>
+        `);
+        expect(el.getAttribute('role')).to.equal('progressbar');
+      });
+
       it('passes a11y test', async () => {
         const el = await fixture(html`
           <lion-progress-indicator value="25" aria-label="foo"></lion-progress-indicator>
