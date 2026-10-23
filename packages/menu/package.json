@@ -1,0 +1,49 @@
+{
+  "name": "@lion/menu",
+  "version": "0.0.0",
+  "description": "A menu that is easily styleable and accessible in all contexts",
+  "license": "MIT",
+  "author": "ing-bank",
+  "homepage": "https://github.com/ing-bank/lion/",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ing-bank/lion.git",
+    "directory": "packages/menu"
+  },
+  "main": "index.js",
+  "module": "index.js",
+  "files": [
+    "*.d.ts",
+    "*.js",
+    "docs",
+    "src",
+    "test",
+    "test-helpers",
+    "translations",
+    "types"
+  ],
+  "scripts": {
+    "debug": "cd ../../ && yarn debug --group menu",
+    "debug:firefox": "cd ../../ && yarn debug:firefox --group menu",
+    "debug:webkit": "cd ../../ && yarn debug:webkit --group menu",
+    "prepublishOnly": "../../scripts/npm-prepublish.js",
+    "test": "cd ../../ && yarn test:browser --group menu"
+  },
+  "sideEffects": [
+    "lion-menu.js",
+    "lion-menu-content.js"
+  ],
+  "dependencies": {
+    "@lion/core": "0.13.0",
+    "@lion/listbox": "0.2.0",
+    "@lion/overlays": "0.21.0"
+  },
+  "keywords": [
+    "lion",
+    "menu",
+    "web-components"
+  ],
+  "publishConfig": {
+    "access": "public"
+  }
+}
