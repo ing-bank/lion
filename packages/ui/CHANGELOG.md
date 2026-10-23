@@ -1,5 +1,12 @@
 # @lion/ui
 
+## 0.25.1
+
+### Patch Changes
+
+- df9d634: [input-amount] fix rounding of big numbers (20+ digits) resulting in `NaN`
+- 1f9f7f9: [core] make the ScopedElementsMixin typings independent of how npm hoists lit-element
+
 ## 0.25.0
 
 ### Minor Changes
