@@ -21,6 +21,19 @@ export function supportsScopedRegistry() {
 }
 
 /**
+ * @open-wc/scoped-elements types its mixin against the lit-element it resolves itself: relative to
+ * its own directory. Whenever npm stores a second lit-element copy under
+ * 'node_modules/@open-wc/scoped-elements/node_modules' (which it does once the root copy no longer
+ * satisfies its lit-element range) that copy wins, our LitElementConstructor then refers to another
+ * class declaration, and TypeScript relates two classes that each carry Lit's private __childPart
+ * (TS2322/TS2345) - making a lockfile/hoisting detail decide whether the type gate passes.
+ * Restating the mixin in our own types keeps this file independent of how lit gets hoisted.
+ */
+const OpenWcScopedElementsMixinV3 = /**
+ * @type {<T extends LitElementConstructor>(superclass: T) => T & ScopedElementsHostConstructor}
+ */ (OpenWcLitScopedElementsMixin);
+
+/**
  * This file is a combination of '@open-wc/scoped-elements@v3/lit-element.js' and '@open-wc/scoped-elements@v3/html-element.js'.
  * To make the polyfill an opt-in, some code from '@open-wc/scoped-elements@v2' is added as well.
  * This can be a great help for ssr scenarios, allowing elements to be consumed without needing knowledge about internal
@@ -53,7 +66,7 @@ export function supportsScopedRegistry() {
  */
 const ScopedElementsMixinImplementation = superclass =>
   /** @type {ScopedElementsHost} */
-  class ScopedElementsHost extends OpenWcLitScopedElementsMixin(superclass) {
+  class ScopedElementsHost extends OpenWcScopedElementsMixinV3(superclass) {
     constructor() {
       super();
 

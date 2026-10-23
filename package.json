@@ -6,8 +6,8 @@
     "build": "npm run build:astro && npm run build:rocket && npm run build:update-links",
     "build:astro": "astro telemetry disable && astro build --force",
     "build:clean": "find src/pages -path \"*/_demos/*.js\" -type f -delete && rm -rf node_modules/_lion_docs && npm run build",
-    "build:rocket": "rocket build",
     "build:portal": "npm run build:astro && npm run build:update-links",
+    "build:rocket": "rocket build",
     "build:update-links": "node ./src/utils/rewrite-links.mjs",
     "bundlesize": "rollup -c bundlesize/rollup.config.js && bundlesize",
     "changeset": "changeset",
@@ -30,9 +30,9 @@
     "lint:prettier": "prettier \"**/*.js\" --list-different || (echo '↑↑ these files are not prettier formatted ↑↑' && exit 1)",
     "lint:types": "npm run types",
     "lint:versions": "node ./scripts/lint-versions.js",
+    "portal:preview": "node ./scripts/deploy-portal-preview.mjs",
     "prepare": "husky install",
     "preview": "npx serve _site",
-    "portal:preview": "node ./scripts/deploy-portal-preview.mjs",
     "release": "changeset publish",
     "repo:clean-slate": "git clean -dfX",
     "repo:diff-package-lock": "npx diff-package-lock",
@@ -44,7 +44,6 @@
     "temporary-disabled__lint:types": "npm run types",
     "test": "run-p test:browser test:node",
     "test:browser": "web-test-runner --coverage",
-    "test:browserstack": "web-test-runner --config ./web-test-runner-browserstack.config.js",
     "test:node": "npm run test:node --workspaces --if-present",
     "test:screenshots": "npx rimraf screenshots/.diff/ && npx rimraf screenshots/.current/ && mocha --require scripts/screenshots/bootstrap.js --exit --timeout 10000 \"packages/**/test/*.screenshots-test.js\"",
     "test:screenshots:update": "cross-env UPDATE_SCREENSHOTS=true npm run test:screenshots",
@@ -91,9 +90,7 @@
     "@types/fs-extra": "^11.0.4",
     "@types/glob": "^8.1.0",
     "@types/mocha": "^10.0.9",
-    "@web/dev-server-legacy": "^2.1.1",
     "@web/test-runner": "^0.19.0",
-    "@web/test-runner-browserstack": "^0.7.2",
     "@web/test-runner-commands": "^0.9.0",
     "@web/test-runner-playwright": "^0.11.0",
     "@web/test-runner-visual-regression": "^0.10.0",
@@ -207,9 +204,6 @@
       ],
       "publish-docs/fs-extra | @types/fs-extra": [
         "Copy can be achieved via node's fs module"
-      ],
-      "@web/dev-server-legacy": [
-        "Only needed for browserstack config. Can be achieved via @web/dev-server"
       ],
       "@lit/reactive-element": [
         "We make sure latest version is hoisted and resolved, until we move to astro (when we can regenerate the package-lock.json file w/o breaking Rocket)."
