@@ -1,9 +1,9 @@
 {
+  "private": true,
   "name": "@lion/awesome-phonenumber",
   "version": "7.9.0-tlouisse.libphonenumber-9.0.41",
-  "private": true,
-  "type": "module",
   "license": "MIT",
+  "type": "module",
   "scripts": {
     "build": "wireit"
   },
