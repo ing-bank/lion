@@ -112,6 +112,10 @@ const sr = {
       await executeServerCommand('sr-initialize')
     );
     activeReader = result.reader;
+    // A file's first assertion otherwise pays for the reader's cold start, and for VoiceOver that
+    // can be an announcement about something else than the item under test. Its own command, so it
+    // has its own time budget; a no-op for NVDA and the virtual reader.
+    await executeServerCommand('sr-warm-up');
     return result.reader;
   },
 

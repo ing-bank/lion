@@ -151,6 +151,21 @@ first divergence at index 2:
 The reporter prints the transcripts of a whole test file, including the runs that
 passed.
 
+## Two things a real reader needs
+
+Both came out of CI runs, not out of theory:
+
+- **A wait asks again.** VoiceOver can spend the announcement that follows a focus change on its
+  help banner ("You are currently on a text field, inside of web content. …") instead of on the item,
+  and then go quiet. The test then waits out its timeout for a line the reader is not going to say
+  without another interaction. `sr.waitFor` therefore re-asks for the current item every 4 seconds
+  while it is still waiting - out of the same 15s budget, so the command still answers inside the 20s
+  the browser allows. For NVDA (which has no such command) it is a no-op.
+- **A file warms the reader up.** `sr.initialize()` runs a warm-up command after starting the reader
+  (VoiceOver only): it asks for the current item once, with its own time budget, so a file's first
+  assertion does not pay for the cold start and for the announcement above. The phrases this produces
+  are cleared by the first `sr.reset()` of the file, like any other.
+
 ## Known limits
 
 A server command has to answer within **20000ms**. That limit is hardcoded in

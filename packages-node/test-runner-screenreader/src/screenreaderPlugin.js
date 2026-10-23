@@ -23,6 +23,16 @@ export const SR_COMMAND_HARD_LIMIT_MS = 20000;
 export const SR_COMMAND_BUDGET_MS = 15000;
 
 const DEFAULT_WAIT_TIMEOUT = SR_COMMAND_BUDGET_MS;
+/**
+ * VoiceOver can spend the announcement after a focus change on its help banner instead of on the
+ * item it is on, and then stays silent: a test that waits for the item line would wait it out. Every
+ * REASK_AFTER_MS of waiting costs one re-ask (one command plus a settle, ~REASK_COST_MS), still
+ * inside the same budget.
+ */
+const REASK_AFTER_MS = 4000;
+const REASK_COST_MS = 3000;
+/** How long the warm-up waits for VoiceOver's first announcement of a file (its own command). */
+const WARM_UP_MS = 8000;
 const WAIT_POLL_INTERVAL = 50;
 
 /**
@@ -484,18 +494,28 @@ export function screenreaderPlugin(options) {
 
     if (command === 'sr-waitFor') {
       const instance = readerFor(session);
+      const state = stateFor(session);
       const timeout = payload?.timeout ?? DEFAULT_WAIT_TIMEOUT;
-      const deadline = Date.now() + timeout;
+      const started = Date.now();
+      const deadline = started + timeout;
       const needle = String(payload?.phrase ?? '').toLowerCase();
+      /** @param {string[]} log */
+      const spoke = log =>
+        log.some(/** @param {string} phrase */ phrase => phrase.toLowerCase().includes(needle));
       /** @type {string[]} */
       let phraseLog = normalizePhrases(await instance.spokenPhraseLog());
-      while (
-        !phraseLog.some(
-          /** @param {string} phrase */ phrase => phrase.toLowerCase().includes(needle),
-        )
-      ) {
-        if (Date.now() > deadline) {
+      let nextReask = REASK_AFTER_MS;
+      while (!spoke(phraseLog)) {
+        const now = Date.now();
+        if (now > deadline) {
           return { found: false, phraseLog };
+        }
+        // The reader is talking about something else and has gone quiet: ask it again for the item
+        // it is on, out of the same budget. A reader that is still speaking keeps its turn, and for
+        // NVDA (which has no such command) this is a no-op.
+        if (now - started >= nextReask && now + REASK_COST_MS < deadline) {
+          nextReask += REASK_AFTER_MS;
+          await state.reader.speakAgain();
         }
         await new Promise(resolve => {
           setTimeout(resolve, WAIT_POLL_INTERVAL);
@@ -503,6 +523,35 @@ export function screenreaderPlugin(options) {
         phraseLog = normalizePhrases(await instance.spokenPhraseLog());
       }
       return { found: true, phraseLog };
+    }
+
+    if (command === 'sr-warm-up') {
+      // VoiceOver only: it is the reader whose first announcement can be the help banner instead of
+      // the item, and whose cold start a file's first assertion would otherwise pay for. NVDA and
+      // the virtual reader answer immediately, so warming them up would only cost time. The phrases
+      // this produces are cleared by the first sr.reset() of the file, like any other.
+      if (screenReader !== 'voiceover') {
+        return { warmed: false };
+      }
+      const instance = readerFor(session);
+      const state = stateFor(session);
+      const commands = instance?.keyboardCommands;
+      const deadline = Date.now() + WARM_UP_MS;
+      if (commands?.moveCursorToKeyboardFocus) {
+        await instance.perform(commands.moveCursorToKeyboardFocus);
+        if (commands?.hearItemDescription) {
+          await instance.perform(commands.hearItemDescription);
+        }
+        await state.reader.waitForSpeechToSettle();
+      }
+      let words = normalizePhrases(await instance.spokenPhraseLog());
+      while (words.length === 0 && Date.now() < deadline) {
+        await new Promise(resolve => {
+          setTimeout(resolve, WAIT_POLL_INTERVAL);
+        });
+        words = normalizePhrases(await instance.spokenPhraseLog());
+      }
+      return { warmed: words.length > 0 };
     }
 
     if (command === 'sr-focus') {
