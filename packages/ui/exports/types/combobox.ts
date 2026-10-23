@@ -1,1 +1,1 @@
-export { SelectionDisplay } from '../../components/combobox/types/SelectionDisplay.js';
+export * from '../../components/combobox/types/index.js';
