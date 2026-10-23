@@ -252,8 +252,19 @@ function writeEntrypointReference() {
   // invites a wrong import).
   const isHelper = specifier =>
     /(test-helpers|test-suites|-suites\.js|define-helpers|\/testing)/.test(specifier);
+  // Two more specifiers exist on disk but are not consumer API:
+  //  - `form-integrations.js` is an empty stub (its whole body is "// empty file for node.resolve");
+  //  - `helpers.js` is an internal utilities module, not part of the documented surface;
+  //  - the `*-no-side-effects.js` variants are redundant advice: the default entrypoints are already
+  //    side effect free (lazy initialisation), so naming the variants would only invite a pointless
+  //    choice. They are therefore not mentioned at all.
+  const isNonApi = specifier =>
+    specifier === '@lion/ui/form-integrations.js' ||
+    specifier === '@lion/ui/helpers.js' ||
+    specifier.endsWith('-no-side-effects.js');
   const classes = specifiers.filter(
-    specifier => !specifier.startsWith('@lion/ui/define/') && !isHelper(specifier),
+    specifier =>
+      !specifier.startsWith('@lion/ui/define/') && !isHelper(specifier) && !isNonApi(specifier),
   );
   const listed = classes.length + define.length;
 
