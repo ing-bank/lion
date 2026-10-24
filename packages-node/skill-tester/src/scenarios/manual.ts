@@ -272,6 +272,12 @@ export const mortgageCalculatorScenario: TestScenario = {
   checks: [
     { type: 'exists', file: 'src/my-mortgage-calculator.js' },
     {
+      type: 'matches',
+      file: 'src/my-mortgage-calculator.js',
+      pattern: 'export class MyMortgageCalculator',
+      description: 'exports the class `MyMortgageCalculator`',
+    },
+    {
       type: 'notMatches',
       file: 'src/my-mortgage-calculator.js',
       pattern: '@lion/ui/define/',
