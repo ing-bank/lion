@@ -83,24 +83,61 @@ export function srFocus(selector) {
   if (!element) {
     throw new Error(`srFocus: no element matches "${selector}".`);
   }
-  // Lion fields keep their input in the light DOM (the shadow root holds the
-  // slots), so look in both.
-  const focusable = 'input, select, textarea, [tabindex]:not([tabindex="-1"])';
-  const delegate = /** @type {HTMLElement} */ (
-    element.shadowRoot?.querySelector(focusable) ?? element.querySelector(focusable) ?? element
-  );
-  delegate.focus();
-  // A component that delegates focus reports itself as the active element while
-  // its inner control holds the focus.
-  const focused =
-    document.activeElement === delegate ||
+  // Lion fields keep their input in the light DOM (the shadow root holds the slots), so look in both,
+  // and probe rather than guess: components delegate the focus in different ways (`lion-checkbox-group`
+  // forwards from the host, `lion-combobox` to its inner `lion-input`, `lion-input-file` to a button),
+  // and a custom element without a tabindex is not focusable at all. The first candidate that actually
+  // takes the focus wins, so a component that changes its internals does not break the anchor.
+  const focusable =
+    'input, select, textarea, button, a[href], [tabindex], [contenteditable="true"], ' +
+    'lion-input, lion-textarea, lion-select, lion-checkbox, lion-radio, lion-switch, lion-option';
+  /**
+   * The first focusable element, looking through the shadow roots of the descendants as well:
+   * `lion-combobox` focuses its inner `lion-input`, whose real `<input>` lives one shadow root deeper.
+   *
+   * @param {DocumentFragment | Element} root
+   * @param {number} [depth]
+   * @returns {HTMLElement | null}
+   */
+  const deepFocusable = (root, depth = 0) => {
+    const direct = root.querySelector(focusable);
+    if (direct instanceof HTMLElement) {
+      return direct;
+    }
+    if (depth > 3) {
+      return null;
+    }
+    for (const host of root.querySelectorAll('*')) {
+      if (host.shadowRoot) {
+        const found = deepFocusable(host.shadowRoot, depth + 1);
+        if (found) {
+          return found;
+        }
+      }
+    }
+    return null;
+  };
+  const candidates = [
+    element.shadowRoot?.querySelector(focusable),
+    element.querySelector(focusable),
+    deepFocusable(element.shadowRoot ?? element),
+    /** @type {any} */ (element)._focusableNode,
+    /** @type {any} */ (element)._inputNode,
+    element,
+  ].filter(candidate => candidate instanceof HTMLElement);
+  const holdsFocus = candidate =>
+    document.activeElement === candidate ||
     document.activeElement === element ||
     element.contains(document.activeElement) ||
-    element.shadowRoot?.activeElement === delegate;
-  if (!focused) {
-    throw new Error(`srFocus: "${selector}" did not take focus.`);
+    element.shadowRoot?.activeElement === candidate;
+  for (const candidate of candidates) {
+    // eslint-disable-next-line no-await-in-loop
+    /** @type {HTMLElement} */ (candidate).focus();
+    if (holdsFocus(candidate)) {
+      return executeServerCommand('sr-focus', { selector });
+    }
   }
-  return executeServerCommand('sr-focus', { selector });
+  throw new Error(`srFocus: "${selector}" did not take focus.`);
 }
 
 /** @type {import('../types/commands.js').ScreenreaderCommands} */
