@@ -1,4 +1,4 @@
-import { fixture } from '@open-wc/testing';
+import { expect, fixture } from '@open-wc/testing';
 import { html } from 'lit';
 import sr, { contains, containsLike } from '@lion/test-runner-screenreader/commands.js';
 import '@lion/ui/define/lion-switch.js';
@@ -43,7 +43,12 @@ describe('<lion-switch> screen reader', () => {
   });
 
   it('announces the switch with its state', async () => {
-    await fixtureComponent();
+    const el = await fixtureComponent();
+    // The wiring itself, independent of how a reader phrases it: axe fails the run when a
+    // label, role or state stops being exposed (a reader that words things differently is not
+    // a regression, a control that lost its name is).
+    const component = /** @type {HTMLElement} */ (el.querySelector('lion-switch'));
+    await expect(component).to.be.accessible();
 
     await sr.focus('lion-switch');
     if (activeReader === 'nvda') {

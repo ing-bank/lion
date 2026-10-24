@@ -49,6 +49,10 @@ describe('<lion-checkbox-group> screen reader', () => {
 
   it('announces the group and the checkbox inside it', async () => {
     const el = await fixtureComponent();
+    // axe, so the wiring stays pinned no matter how a reader phrases the announcement.
+    await expect(
+      /** @type {HTMLElement} */ (el.querySelector('lion-checkbox-group')),
+    ).to.be.accessible();
 
     await sr.focus('lion-checkbox-group');
     // The virtual reader and NVDA speak about what their cursor is on, so both walk onto the control;

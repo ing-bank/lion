@@ -49,6 +49,10 @@ describe('<lion-radio-group> screen reader', () => {
 
   it('announces the radio group, its name and the position in the set', async () => {
     const el = await fixtureComponent();
+    // axe, so the wiring stays pinned no matter how a reader phrases the announcement.
+    await expect(
+      /** @type {HTMLElement} */ (el.querySelector('lion-radio-group')),
+    ).to.be.accessible();
 
     await sr.focus('lion-radio-group');
     // The virtual reader and NVDA speak about what their cursor is on, so both walk onto the control;

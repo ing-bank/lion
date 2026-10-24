@@ -1,4 +1,4 @@
-import { fixture } from '@open-wc/testing';
+import { expect, fixture } from '@open-wc/testing';
 import { html } from 'lit';
 import sr, { contains, containsLike } from '@lion/test-runner-screenreader/commands.js';
 import '@lion/ui/define/lion-textarea.js';
@@ -43,7 +43,12 @@ describe('<lion-textarea> screen reader', () => {
   });
 
   it('announces the text area with its label', async () => {
-    await fixtureComponent();
+    const el = await fixtureComponent();
+    // The wiring itself, independent of how a reader phrases it: axe fails the run when a
+    // label, role or state stops being exposed (a reader that words things differently is not
+    // a regression, a control that lost its name is).
+    const component = /** @type {HTMLElement} */ (el.querySelector('lion-textarea'));
+    await expect(component).to.be.accessible();
 
     await sr.focus('lion-textarea');
     // The virtual reader and NVDA speak about what their cursor is on, so both walk onto the control;

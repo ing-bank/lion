@@ -1,4 +1,4 @@
-import { fixture } from '@open-wc/testing';
+import { expect, fixture } from '@open-wc/testing';
 import { html } from 'lit';
 import sr, { contains, containsLike } from '@lion/test-runner-screenreader/commands.js';
 import '@lion/ui/define/lion-listbox.js';
@@ -19,6 +19,7 @@ async function fixtureComponent() {
     await fixture(html`
       <div>
         <lion-listbox name="lb-list">
+          <label slot="label">List</label>
           <lion-option .choiceValue=${'a'}>Item A</lion-option>
           <lion-option .choiceValue=${'b'}>Item B</lion-option>
         </lion-listbox>
@@ -47,23 +48,36 @@ describe('<lion-listbox> screen reader', () => {
   });
 
   it('announces the listbox and its options with their position', async () => {
-    await fixtureComponent();
+    const el = await fixtureComponent();
+    // The wiring itself, independent of how a reader phrases it: axe fails the run when a
+    // label, role or state stops being exposed (a reader that words things differently is not
+    // a regression, a control that lost its name is).
+    const component = /** @type {HTMLElement} */ (el.querySelector('lion-listbox'));
+    await expect(component).to.be.accessible();
 
     await sr.focus('lion-listbox');
     // The virtual reader and NVDA speak about what their cursor is on, so both walk onto the control;
     // VoiceOver followed the focus that sr.focus() set. Same split as the input-iban test.
     if (activeReader !== 'voiceover') {
-      await sr.next();
-      await sr.next();
+      // Walk until the listbox itself is in the log: the label is announced before it, so the number
+      // of steps depends on the markup.
+      for (let step = 0; step < 6; step += 1) {
+        // eslint-disable-next-line no-await-in-loop
+        if ((await sr.phraseLog()).some(phrase => phrase.startsWith('option,'))) {
+          break;
+        }
+        // eslint-disable-next-line no-await-in-loop
+        await sr.next();
+      }
     }
 
     await sr.expect({
       virtual: contains(
-        'listbox, orientated vertically, not disabled, not invalid, not multi-selectable',
+        'listbox, List, orientated vertically, not disabled, not invalid, not multi-selectable',
         'option, Item A, not selected, not disabled, position 1, set size 2',
       ),
-      nvda: containsLike('Item A'),
-      voiceover: containsLike('list box'),
+      nvda: containsLike('List'),
+      voiceover: containsLike('List'),
     });
   });
 });
