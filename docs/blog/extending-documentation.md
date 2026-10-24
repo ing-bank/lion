@@ -4,7 +4,7 @@ published: true
 description: Extending a component library and its documentation for a speedy design system
 date: 2020-12-01
 tags: javascript, documentation, demos
-cover_image: https://miro.medium.com/max/2000/1*NZ6tdtJHHJjxtPmIFxWpGw.jpeg
+cover_image: /blog/images/extending-documentation.svg
 eleventyNavigation:
   key: Extending Lion Documentation
   title: Extending Lion Documentation
