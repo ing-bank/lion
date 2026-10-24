@@ -121,6 +121,19 @@ export default {
   nodeResolve: true,
   testRunnerHtml,
   concurrency: 1,
+  // How much of the library's own functionality the produced component actually exercised. Only
+  // @lion/ui is instrumented: the question is what the answer *uses*, not how much of the model's own
+  // file ran. The threshold is deliberately 0 for now - the number is reported first, and a ratchet
+  // (never worse than the previous revision) is the plan rather than an absolute percentage.
+  coverageConfig: {
+    // No include: the patterns are matched against the served module URLs, so a filesystem glob
+    // silently collects nothing (measured: a 0-byte lcov). Cover what the test loaded and attribute
+    // the files afterwards. @lion/ui is a workspace symlink, so its modules appear as /packages/ui/**.
+    exclude: ['**/node_modules/**', '**/packages/ui/**/test*/**', '**/*.d.ts'],
+    reportDir: '.wtr-coverage',
+    reporters: ['json-summary'],
+    threshold: { statements: 0, branches: 0, functions: 0, lines: 0 },
+  },
 };
 `;
 }
@@ -233,7 +246,7 @@ function runChunk({
   const configFile = path.join(configDir, `suite-${chunkIndex}.config.mjs`);
   fs.writeFileSync(configFile, wtrConfigSource(relativeTestFiles));
 
-  const run = spawnSync(harnessBinary(repoRoot) as string, ['--config', configFile], {
+  const run = spawnSync(harnessBinary(repoRoot) as string, ['--config', configFile, '--coverage'], {
     cwd: repoRoot,
     encoding: 'utf8',
     timeout: timeoutMs,
