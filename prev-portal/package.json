@@ -1,0 +1,46 @@
+{
+  "private": true,
+  "name": "lion-prev-portal",
+  "version": "0.0.0",
+  "description": "Local-only build of the legacy rocket portal that is published under /prev.",
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "build": "node ./build.mjs build",
+    "start": "node ./build.mjs start"
+  },
+  "devDependencies": {
+    "@mdjs/core": "^0.21.1",
+    "@rocket/blog": "0.4.0",
+    "@rocket/cli": "0.10.2",
+    "@rocket/core": "^0.1.2",
+    "@rocket/launch": "^0.6.0",
+    "@rocket/search": "^0.5.1",
+    "@web/rollup-plugin-copy": "^0.2.0",
+    "globby": "^11.0.4",
+    "gray-matter": "^4.0.3",
+    "plugins-manager": "^0.3.1",
+    "remark-rehype": "^8.1.0",
+    "sax-wasm": "2.2.4",
+    "slash": "3.0.0"
+  },
+  "overrides": {
+    "sax-wasm": "2.2.4",
+    "@mdjs/core": "$@mdjs/core",
+    "@mdjs/mdjs-preview": "0.6.0",
+    "@mdjs/mdjs-story": "0.4.0",
+    "remark-rehype": "$remark-rehype",
+    "@rocket/search": {
+      "lit": "2.8.0",
+      "lit-element": "3.3.3",
+      "lit-html": "2.8.0",
+      "@lit/reactive-element": "1.6.3"
+    },
+    "@rocket/drawer": {
+      "lit": "2.8.0",
+      "lit-element": "3.3.3",
+      "lit-html": "2.8.0",
+      "@lit/reactive-element": "1.6.3"
+    }
+  }
+}

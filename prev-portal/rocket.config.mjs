@@ -30,6 +30,9 @@ class LionTitleMetaPlugin {
 
 export default {
   presets: [rocketLaunch(), rocketBlog()],
+  // The pages live in the repository root (`docs/`) because the astro portal reads the same
+  // tree; only this config moved out of it.
+  inputDir: '../docs',
   pathPrefix: '/prev/',
   outputDir: '_site/prev',
   eleventy(eleventyConfig) {

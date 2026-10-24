@@ -275,7 +275,12 @@ npm run deploy
 That builds the portal (`npm run build:portal` = `build:astro` + `build:update-links`, output in `_site/`) and pushes `_site/` to `gh-pages`. The published layout:
 
 - **The Astro portal owns the site root** (`/`), so every route the portal serves comes from `_site/`.
-- **The legacy rocket site lives at `/prev` and is frozen.** `npm run build:rocket` cannot run in this repository: `rocket.config.mjs` imports `@rocket/core`, which is in neither `package.json` nor `package-lock.json`. `/prev` is therefore the last published rocket tree, kept as it was (its root-absolute urls re-prefixed to `/prev`), and it is never regenerated.
+- **The legacy rocket site lives at `/prev` and is frozen.** Its build moved out of the root
+  workspace into [`prev-portal/`](./prev-portal/README.md): the rocket tree is unmaintained and used
+  to be installed on every `npm install` in this repo, so it is not covered by the `workspaces`
+  globs and no pipeline installs or builds it. `cd prev-portal && npm install && npm run build`
+  writes `_site/prev` by hand. `/prev` is therefore the last published rocket tree, kept as it was
+  (its root-absolute urls re-prefixed to `/prev`), and nothing regenerates it automatically.
 - `next/index.html` redirects to `/` for links that still point at the pre-2026-04-23 layout.
 - `gh-pages` deletes every file that is not in the directory it is given, so the deploy runs with `-a` (`--add`, never remove): without it a deploy silently drops `/prev` and that redirect. Astro's assets are content-hashed, so leftovers from earlier builds are inert; prune them by hand if the branch ever needs it.
 
