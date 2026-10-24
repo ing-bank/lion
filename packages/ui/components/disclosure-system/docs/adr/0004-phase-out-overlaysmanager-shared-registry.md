@@ -71,8 +71,27 @@ The shape carries primitives and ids only — no DOM nodes, no controller instan
 | `requestShowOnly(id)`        | dispatches `request-hide` for the other entries and records which ids were blocked |
 | `events`                     | the only channel for cross-version coordination                                    |
 
+### Scope: per realm, and inert without a DOM
+
+`globalThis` is the carrier precisely because it exists everywhere, including Node: the state must not need
+a DOM to be held, or the layer cannot be used for SSR. But "global" has to be scoped correctly:
+
+| environment                     | registry                                                                                                                                                                                                                |
+| ------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| a browser document              | one per realm, stored on `globalThis` under the symbol, so every version and every duplicated bundle on that page shares it                                                                                             |
+| an iframe or another `Document` | its own `globalThis` → its own registry. Separate pages must not share a scroll lock or a stacking order                                                                                                                |
+| SSR / Node, no `document`       | **not registered globally.** A process-wide registry would leak overlays between concurrent requests and let one request's body state affect another's render. The registry is created per render and discarded with it |
+| hydration                       | entries are runtime state and never serialized; the client registry starts empty and fills as components connect                                                                                                        |
+
+So `register()` never touches the document (usable during SSR), the features that perform document side
+effects — scroll lock, body metrics, inert siblings — check for a DOM and stay inert on the server, and
+nothing in the registry has to match between server and client.
+
 ## Rules
 
+- **The registry is realm-scoped and never serialized.** One per realm in a browser, a per-render one
+  under SSR, nothing persisted: sharing across processes or requests would leak page-wide state between
+  unrelated documents.
 - **The registry is the only source of global state.** No attribute, no `querySelector`, no
   `element.closest(...)` decides anything. Local dev-only markers may still exist, but nothing reads them.
 - **Entries are data.** The registry never holds a controller instance — only an id, flags, order. It can
@@ -127,12 +146,15 @@ The shape carries primitives and ids only — no DOM nodes, no controller instan
    one test — two module identities sharing the registry through the global key, one of them with an
    overlay rendered inside a shadow root — end with exactly one scroll lock and one metric capture, and
    no DOM query is involved.
-3. **Blocking and elevation through the registry.** `request-hide` / `restore` and `seq` order. Gate: three
+3. **Server safety.** Import the layer in Node, register a controller with no DOM, render, and assert that
+   nothing was stored globally, that two consecutive renders do not leak into each other, and that no
+   document side effect was attempted. Gate: a Node-side test, with the browser suites unchanged.
+4. **Blocking and elevation through the registry.** `request-hide` / `restore` and `seq` order. Gate: three
    overlays from two "versions" → one shown, two blocked, restored in order; elevation follows `seq`.
-4. **Facade.** `OverlaysManager` is implemented on the registry; the singleton registration moves behind
+5. **Facade.** `OverlaysManager` is implemented on the registry; the singleton registration moves behind
    `<html data-lion-overlays="singleton">`. Gate: the old public API still passes its suite.
-5. **Removal in a major.** Delete the facade and the singleton dependency from the overlay layer, with a
+6. **Removal in a major.** Delete the facade and the singleton dependency from the overlay layer, with a
    changeset describing the migration.
 
-Steps 1–3 are additive and can land before any behaviour switches; step 4 is where multi-version consumers
+Steps 1–4 are additive and can land before any behaviour switches; step 5 is where multi-version consumers
 start to profit.
