@@ -97,28 +97,6 @@ describe('<lion-tooltip> screen reader', () => {
     await sr.reset();
   });
 
-  it('diagnose: what the reader says at the start of this file', async () => {
-    await fixtureTooltip();
-    await sr.focus('button[slot="invoker"]');
-    const log = await sr.phraseLog();
-    const item = await sr.itemText();
-    if (activeReader === 'nvda') {
-      throw new Error(
-        JSON.stringify(
-          {
-            log,
-            item,
-            active: document.activeElement?.tagName,
-            titles: [...document.querySelectorAll('*')].length,
-          },
-          null,
-          1,
-        ),
-      );
-    }
-    expect(log).to.be.an('array');
-  });
-
   it('announces the tooltip as the description of its invoker', async () => {
     const el = await fixtureTooltip();
     const invoker = /** @type {HTMLElement} */ (el.querySelector('[slot="invoker"]'));
@@ -137,9 +115,14 @@ describe('<lion-tooltip> screen reader', () => {
     expect(content.id).to.not.equal(null);
 
     // The description is announced with the control it belongs to; a reader that speaks about what
-    // its cursor is on (the virtual one, and NVDA in CI) has to be walked onto the invoker first.
-    // Two steps: the document, then the button - and the phrase is "button, Info, <description>", so
-    // it is not a phrase that starts with the invoker's label.
+    // its cursor is on has to be anchored on the invoker first. NVDA needs more than the walk: on a
+    // page this small its cursor starts outside the web content (empty log, empty current item, in
+    // CI, while the browser focus was on the invoker). Tabbing away and back is what makes it
+    // announce the control and its description - the trick the input-iban test uses as well.
+    if (activeReader === 'nvda') {
+      await sr.press('Tab');
+      await sr.press('Shift+Tab');
+    }
     await walkUntilSpoken('Info');
 
     await sr.expect({
