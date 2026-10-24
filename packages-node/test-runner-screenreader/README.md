@@ -151,6 +151,19 @@ first divergence at index 2:
 The reporter prints the transcripts of a whole test file, including the runs that
 passed.
 
+## Scoping a run to a file list
+
+`--files` takes **one pattern per flag**:
+
+```sh
+npm run test:sr -- --voiceover --files packages/ui/components/dialog/test/lion-dialog.sr.test.js \
+                            --files packages/ui/components/tooltip/test/lion-tooltip.sr.test.js
+```
+
+A space-separated list inside one `--files` is a single pattern, and a pattern that matches nothing
+fails the run with "Could not find any test files" - passing the list unquoted (or looping as above)
+is what works, which is also what the screen reader workflow does with the change graph's output.
+
 ## Two things a real reader needs
 
 Both came out of CI runs, not out of theory:

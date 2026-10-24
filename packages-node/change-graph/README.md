@@ -71,8 +71,13 @@ list straight to a runner and still show why something ran:
 
 ```yaml
 - run: |
-    files="$(npx change-graph --mode=pr --base=origin/master --include-sr --format=args)"
-    npm run test:sr -- --files "$files"
+    # One `--files` per path: the test runner takes a single pattern per flag, so a
+    # space-separated list would be one pattern that matches nothing.
+    args=""
+    for file in $(npx change-graph --mode=pr --base=origin/master --include-sr --format=args); do
+      args="$args --files $file"
+    done
+    npm run test:sr -- $args
 ```
 
 Where the change set comes from:

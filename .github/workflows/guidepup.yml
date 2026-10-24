@@ -38,9 +38,12 @@ jobs:
           git fetch --no-tags origin master
           # A crashing selection must fail this job, never end up as "nothing to run".
           selected="$(node packages-node/change-graph/src/cli.js --mode=pr --base=origin/master --include-sr --format=args \
-            | tr ' ' '\n' | grep '\.sr\.test\.js$' || true \
-            | tr '\n' ' ')"
-          echo "files=${selected}" >> "$GITHUB_OUTPUT"
+            | tr ' ' '\n' | grep '\.sr\.test\.js$' || true)"
+          # One `--files` per path: the runner takes a single pattern per flag, so a
+          # space-separated list would be one pattern that matches nothing.
+          args=""
+          for file in $selected; do args="$args --files $file"; done
+          echo "files=${args}" >> "$GITHUB_OUTPUT"
           echo "affected: ${selected:-none}"
 
   voiceover:
@@ -73,7 +76,7 @@ jobs:
         run: npx playwright install --with-deps
 
       - name: Run screen reader tests
-        run: npm run test:sr -- --voiceover --files "${{ needs.select.outputs.files }}"
+        run: npm run test:sr -- --voiceover ${{ needs.select.outputs.files }}
 
   nvda:
     name: NVDA (windows)
@@ -101,4 +104,4 @@ jobs:
         run: npx playwright install --with-deps
 
       - name: Run screen reader tests
-        run: npm run test:sr -- --nvda --files "${{ needs.select.outputs.files }}"
+        run: npm run test:sr -- --nvda ${{ needs.select.outputs.files }}
