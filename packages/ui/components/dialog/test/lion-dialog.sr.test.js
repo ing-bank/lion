@@ -82,7 +82,7 @@ async function anchorOnInvoker() {
  * The log is the signal, not the current item: the overlay moves nodes around, and a DOM mutation
  * resets the virtual reader's cursor, so `itemText()` can be empty while the log already says plenty.
  *
- * @param {string} prefix
+ * @param {string} fragment
  */
 async function walkUntilSpoken(fragment) {
   if (activeReader === 'voiceover') {

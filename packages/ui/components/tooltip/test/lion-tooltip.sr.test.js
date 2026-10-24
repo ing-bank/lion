@@ -39,7 +39,8 @@ let activeReader;
  * Walk the virtual reader (and NVDA, whose cursor is what speaks) until the log holds a phrase
  * starting with `prefix`.
  *
- * @param {string} prefix
+ * @param {string} fragment
+ * @param {{ atStart?: boolean }} [options]
  */
 async function walkUntilSpoken(fragment, { atStart = false } = {}) {
   if (activeReader === 'voiceover') {
