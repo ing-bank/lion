@@ -151,11 +151,14 @@ the old surface to extensions that have not migrated. Until that package exists,
 `hide()`, `_showComplete`, `_hideComplete`) and the old events are mapped onto the state machine without
 re-timing anything.
 
-The last two roadmap items are both about the same boundary: the overlay registry currently still uses
-the global `singletonManager` key `@lion/ui::overlays::0.x`, which makes every 0.x version on a page share
-one manager instance. ADR 0004 proposes to move that registry to the DOM (a manager id on the injected
-`<style data-overlays>`, `data-overlay-manager` on managed elements, shown-state and coordination events on
-`document`), so two versions of ing-web can run side by side without sharing JavaScript objects.
+The last two roadmap items are about the same boundary: the overlay layer still registers its
+`OverlaysManager` in the global `singletonManager` (key `@lion/ui::overlays::0.x`), so every 0.x version on
+a page shares one manager instance — and the scroll lock, body-size compensation, elevation and blocking
+can only be correct when _all_ overlays are known, including those of another version. ADR 0004 proposes to
+phase the manager out and keep one shared registry of live overlays **in the DOM**:
+`data-overlay-registry` / `data-overlay-state` / `data-overlay-flags` / `data-overlay-elevation` on the host
+element, queries instead of manager lists, and `lion-overlays-request-hide` on a sibling element instead of
+a method call into another version's controller.
 
 Distribution choice: **subpath exports inside `@lion/ui`**, not a new package. The existing import path
 (`@lion/ui/overlays.js`) must keep resolving, so a separate package would need that path to re-export
