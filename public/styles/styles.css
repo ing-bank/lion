@@ -118,7 +118,17 @@ body {
     background-color: var(--bg-color);
     color: var(--text-primary);
     line-height: 1.5;
-    overflow-x: hidden;
+    /*
+     * `clip`, not `hidden`. `overflow-x: hidden` on <body> makes body itself a scroll container
+     * (computed overflow measures `hidden auto`), so the scrollport stops being the viewport: the
+     * root scroller no longer moves, and everything that resolves against it - position: sticky,
+     * the scroll() and view() timelines in scroll-animations.css, and the browser's own
+     * scroll-into-view for an in-page-link jump - resolves against <body> instead. On the docs and
+     * blog pages that is the difference between the sticky in-page nav following the reader and
+     * the browser scrolling the wrong box. `clip` cuts the horizontal overflow off just the same
+     * and creates no scroll container, so the viewport stays the scroller.
+     */
+    overflow-x: clip;
 }
 
 *:focus-visible,
@@ -574,6 +584,19 @@ main {
 }
 
 /* Footer */
+/*
+ * The footer lockup is greyscale, site-wide. The wordmark's accent half is the header's signal -
+ * there it separates "lion" from "uı" against the bar - and in the footer it lands a second
+ * yellow mark next to the accent links, so the mark reads as two competing highlights. One grey
+ * instead: still a lockup, still legible, no second accent. The header keeps its yellow.
+ * `stroke` is cleared with the fill: the light-theme outline exists to separate #FFC107 from the
+ * bar, and a grey mark on the chrome surface has 5.6:1 without it.
+ */
+.site-footer .wordmark-accent {
+    fill: var(--text-secondary);
+    stroke: none;
+}
+
 .site-footer {
     padding: 80px 0;
     /* Was transparent, i.e. the page colour continued into the footer. */
