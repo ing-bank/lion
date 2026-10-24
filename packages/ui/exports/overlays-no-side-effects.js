@@ -1,1 +1,1 @@
-export { OverlaysManager } from '../components/overlays/src/OverlaysManager.js';
+export { OverlaysManager } from '../components/disclosure-system/src/OverlaysManager.js';

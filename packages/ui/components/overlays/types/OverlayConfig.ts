@@ -11,12 +11,14 @@ export type ViewportPlacement =
   | 'bottom-left'
   | 'left';
 
+// N.B. 'before-show'/'before-hide' are the hooks the overlay features run their (async) lifecycle in.
 export type OverlayPhase =
   | 'setup'
   | 'init'
   | 'teardown'
   | 'before-show'
   | 'show'
+  | 'before-hide'
   | 'hide'
   | 'add'
   | 'remove';
@@ -28,7 +30,9 @@ export interface OverlayConfig {
   // Positioning
 
   /** Determines the positioning anchore (viewport vs invokerNode/referenceNode). */
-  placementMode?: 'global' | 'local' | undefined;
+  // N.B. 'none' = collapsible only (no dom wrapping, no positioning),
+  // 'custom' = the consumer takes full control of the positioning.
+  placementMode?: 'global' | 'local' | 'none' | 'custom';
   /** Popper configuration. Will be used when placementMode is 'local' */
   popperConfig?: Partial<Options>;
   /** Viewport positioning configuration. Will be used when placementMode is 'global' */
@@ -105,7 +109,7 @@ export interface OverlayConfig {
   /**
    * Whether the overlay content should receive focus when shown.
    */
-  elementToFocusOnShow?: boolean;
+  elementToFocusOnShow?: boolean | HTMLElement;
 
   /*
    * By default, we function either as overlay or disclosure. In some cases, this should be dynamically set (think of responsive changes).
@@ -122,4 +126,6 @@ export interface OverlayConfig {
   syncChildrenCloseState?: boolean;
 
   _shouldTeardownDomStructure?: boolean;
+
+  arrow?: boolean | Element;
 }
