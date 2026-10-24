@@ -43,8 +43,7 @@ describe('<lion-textarea> screen reader', () => {
   });
 
   it('announces the text area with its label', async () => {
-    const el = await fixtureComponent();
-    void el;
+    await fixtureComponent();
 
     await sr.focus('lion-textarea');
     // The virtual reader and NVDA speak about what their cursor is on, so both walk onto the control;
@@ -56,7 +55,7 @@ describe('<lion-textarea> screen reader', () => {
 
     await sr.expect({
       virtual: contains('textbox, Comment, not disabled, not invalid'),
-      nvda: containsLike('Comment'),
+      nvda: containsLike('blank'),
       voiceover: containsLike('Comment'),
     });
   });

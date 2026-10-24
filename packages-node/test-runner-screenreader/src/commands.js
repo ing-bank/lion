@@ -117,6 +117,7 @@ export function srFocus(selector) {
     }
     return null;
   };
+  /** @type {HTMLElement[]} */
   const candidates = [
     element.shadowRoot?.querySelector(focusable),
     element.querySelector(focusable),
@@ -125,6 +126,7 @@ export function srFocus(selector) {
     /** @type {any} */ (element)._inputNode,
     element,
   ].filter(candidate => candidate instanceof HTMLElement);
+  /** @param {HTMLElement} candidate */
   const holdsFocus = candidate =>
     document.activeElement === candidate ||
     document.activeElement === element ||

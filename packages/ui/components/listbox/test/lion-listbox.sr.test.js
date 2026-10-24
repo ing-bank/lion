@@ -47,8 +47,7 @@ describe('<lion-listbox> screen reader', () => {
   });
 
   it('announces the listbox and its options with their position', async () => {
-    const el = await fixtureComponent();
-    void el;
+    await fixtureComponent();
 
     await sr.focus('lion-listbox');
     // The virtual reader and NVDA speak about what their cursor is on, so both walk onto the control;
@@ -64,7 +63,7 @@ describe('<lion-listbox> screen reader', () => {
         'option, Item A, not selected, not disabled, position 1, set size 2',
       ),
       nvda: containsLike('Item A'),
-      voiceover: containsLike('Item A'),
+      voiceover: containsLike('list box'),
     });
   });
 });

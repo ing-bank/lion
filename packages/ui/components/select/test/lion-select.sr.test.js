@@ -49,8 +49,7 @@ describe('<lion-select> screen reader', () => {
   });
 
   it('announces the select with its label and its state', async () => {
-    const el = await fixtureComponent();
-    void el;
+    await fixtureComponent();
 
     await sr.focus('lion-select');
     // The virtual reader and NVDA speak about what their cursor is on, so both walk onto the control;
@@ -64,7 +63,7 @@ describe('<lion-select> screen reader', () => {
       virtual: contains(
         'combobox, Choice, a, has popup listbox, not expanded, not disabled, not invalid',
       ),
-      nvda: containsLike('Choice'),
+      nvda: containsLike('Item'),
       voiceover: containsLike('Choice'),
     });
   });

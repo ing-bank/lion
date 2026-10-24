@@ -43,10 +43,16 @@ describe('<lion-switch> screen reader', () => {
   });
 
   it('announces the switch with its state', async () => {
-    const el = await fixtureComponent();
-    void el;
+    await fixtureComponent();
 
     await sr.focus('lion-switch');
+    if (activeReader === 'nvda') {
+      // NVDA said nothing about the switch in CI: on a page this small its cursor skips the element the
+      // browser focus is on. Tabbing away and back makes it announce it, like the tooltip and
+      // input-iban tests do.
+      await sr.press('Tab');
+      await sr.press('Shift+Tab');
+    }
     // The virtual reader and NVDA speak about what their cursor is on, so both walk onto the control;
     // VoiceOver followed the focus that sr.focus() set. Same split as the input-iban test.
     if (activeReader !== 'voiceover') {
