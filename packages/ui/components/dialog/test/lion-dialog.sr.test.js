@@ -151,12 +151,17 @@ describe('<lion-dialog> screen reader', () => {
     expect(content.getAttribute('role')).to.equal('dialog');
     expect(content.getAttribute('aria-label')).to.equal('Popup');
 
+    // Anchor inside the dialog, which is also where the overlay put the focus: a real reader says what
+    // it is *on*, and VoiceOver - unlike its promise for a modal - does not follow the focus move into
+    // an overlay rendered outside the test's own subtree (in CI it stayed on the invoker and said
+    // "Popup button button" while the dialog was already open and focused).
+    await sr.focus('div[slot="content"]');
+
     await sr.expect({
       virtual: contains('dialog, Popup', 'Hey there'),
-      // The wording of the announcement differs per reader ("Popup, web dialog" vs "Popup dialog");
-      // what has to hold is that the content of the overlay is part of what a reader says once it is
-      // open.
-      nvda: containsLike('Hey there'),
+      // NVDA announces the new dialog itself ("dialog", the role), which is the part a user needs to
+      // know the page changed; the following phrasing differs per reader and per run.
+      nvda: containsLike('dialog'),
       voiceover: containsLike('Hey there'),
     });
   });

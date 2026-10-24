@@ -35,6 +35,45 @@ async function fixtureTooltip() {
 /** @type {SrReader} */
 let activeReader;
 
+/**
+ * Walk the virtual reader (and NVDA, whose cursor is what speaks) until the log holds a phrase
+ * starting with `prefix`.
+ *
+ * @param {string} prefix
+ */
+async function walkUntilPhrase(prefix) {
+  if (activeReader === 'voiceover') {
+    return;
+  }
+  for (let step = 0; step < 8; step += 1) {
+    const log = await sr.phraseLog();
+    if (log.some(phrase => phrase.startsWith(prefix))) {
+      return;
+    }
+    // eslint-disable-next-line no-await-in-loop
+    await sr.next();
+  }
+  throw new Error(`the reader never said anything starting with "${prefix}"`);
+}
+
+/**
+ * @param {() => boolean} condition
+ * @param {string} description
+ * @param {number} [timeout]
+ */
+async function waitUntil(condition, description, timeout = 5000) {
+  const deadline = Date.now() + timeout;
+  while (!condition()) {
+    if (Date.now() > deadline) {
+      throw new Error(`Timed out after ${timeout}ms waiting until ${description}`);
+    }
+    // eslint-disable-next-line no-await-in-loop
+    await new Promise(resolve => {
+      setTimeout(resolve, 50);
+    });
+  }
+}
+
 describe('<lion-tooltip> screen reader', () => {
   before(async () => {
     activeReader = await sr.initialize();
@@ -56,10 +95,23 @@ describe('<lion-tooltip> screen reader', () => {
     await sr.focus('button[slot="invoker"]');
 
     // The wiring the announcement depends on: the content is a tooltip and the invoker points at it,
-    // so the description belongs to the button instead of floating somewhere on the page.
+    // so the description belongs to the button instead of floating somewhere on the page. The
+    // overlay needs a moment (its hover interaction has a delay) before it is wired up.
+    await waitUntil(
+      () => invoker.getAttribute('aria-describedby') === content.id,
+      'the invoker points at the tooltip content',
+    );
     expect(content.getAttribute('role')).to.equal('tooltip');
-    expect(invoker.getAttribute('aria-describedby')).to.equal(content.id);
     expect(content.id).to.not.equal(null);
+
+    // The description is announced with the control it belongs to; a reader that speaks about what
+    // its cursor is on (the virtual one, and NVDA in CI) has to be walked onto the invoker first.
+    // Two steps: the document, then the button - and the phrase is "button, Info, <description>", so
+    // it is not a phrase that starts with the invoker's label.
+    if (activeReader !== 'voiceover') {
+      await sr.next();
+      await sr.next();
+    }
 
     await sr.expect({
       virtual: contains('button, Info, This is a tooltip'),
@@ -74,18 +126,9 @@ describe('<lion-tooltip> screen reader', () => {
     await fixtureTooltip();
 
     await sr.focus('button[slot="invoker"]');
-    if (activeReader === 'virtual') {
-      // The description is announced with the invoker; walking on also passes the tooltip content
-      // itself, so a user who keeps browsing finds it again.
-      for (let step = 0; step < 4; step += 1) {
-        // eslint-disable-next-line no-await-in-loop
-        if ((await sr.itemText()) === 'This is a tooltip') {
-          break;
-        }
-        // eslint-disable-next-line no-await-in-loop
-        await sr.next();
-      }
-    }
+    // The description is announced with the invoker; walking on also passes the tooltip content
+    // itself, so a user who keeps browsing finds it again.
+    await walkUntilPhrase('tooltip,');
 
     await sr.expect({
       virtual: contains('tooltip, This is a tooltip'),
