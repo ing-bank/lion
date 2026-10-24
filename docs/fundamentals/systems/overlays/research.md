@@ -204,10 +204,17 @@ and on `@lion/ui@0.21.1` — and the full chromium suite 3869/0.
    leaked modal or listener becomes a hard failure. Gate: nested `hidesOnEsc` green 5 runs in a row.
 4. Element surface on platform names, config in one serializable object; `closedby`, `anchor`, `modal`
    as attributes.
-5. Remove the duplicate legacy implementation (`packages/ui/components/overlays/src/OverlayMixin.js`,
-   `OverlayController.js` — 500 and 1695 lines) or reduce it to a re-export, so exactly one
-   implementation can run. Today `dedupeMixin` decides which copy wins by load order, which is itself
-   a source of nondeterminism.
+5. **Done.** The duplicate implementation is gone: 8,020 lines removed from
+   `packages/ui/components/overlays/src/` (OverlayMixin, OverlayController, ArrowMixin, OverlaysManager,
+   singleton, styles, configurations) and from the duplicated tests. `overlays/src/OverlayController.js`
+   remains as a three-line re-export, because the generated types of `menu/` and `input-*-dropdown/`
+   import that exact path; that keeps those files byte-identical to master and keeps deep imports
+   working. Exactly one implementation runs now, instead of `dedupeMixin` deciding by load order.
+
+6. **Next.** Generate the mixin surface from the controller, per the principle in
+   `docs/guides/principles/controller-to-mixin.md`: one transform, deterministic output, and types taken
+   from the controller so a renamed member is a build error instead of a runtime mismatch. Gate: the
+   dialog suite, the my-ui matrix and the disclosure tests pass unchanged against the generated surface.
 
 ## 7. Risks and open questions
 
