@@ -1,6 +1,7 @@
 ---
 import { getCollection, getEntry, render } from "astro:content";
 import BlogDetailLayout from "../../layouts/BlogDetailLayout.astro";
+import { inlineCover } from "../../utils/blog-covers.js";
 
 export async function getStaticPaths() {
     const entries = await getCollection("lionBlog", entry => entry.data?.published);
@@ -25,6 +26,9 @@ const site  = Astro.locals;
 const { headings = [] } = entry.rendered?.metadata;
 
 const { Content } = await render(entry);
+// Inline when the cover is an illustration (see src/utils/blog-covers.js), so the theme's custom
+// properties reach it; a raster cover keeps rendering as an <img>.
+const cover = inlineCover(cover_image);
 ---
 
 <BlogDetailLayout title={title} description={description} headings={headings}>
@@ -42,7 +46,11 @@ const { Content } = await render(entry);
     </div>
   </div>
 
-  {cover_image && <img src={cover_image} alt={title} class="blog-cover-image" />}
+  {cover ? (
+    <div class="blog-cover" aria-label={title} role="img" set:html={cover} />
+  ) : (
+    cover_image && <img src={cover_image} alt={title} class="blog-cover-image" />
+  )}
 
   <div class="blog-article-content">
     <Content />
