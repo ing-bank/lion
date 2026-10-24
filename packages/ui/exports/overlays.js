@@ -1,6 +1,5 @@
 export { OverlaysManager } from '../components/disclosure-system/src/OverlaysManager.js';
 
-// export { OverlayController } from '../components/overlays/src/OverlayController.js';
 export { DisclosureController as OverlayController } from '../components/disclosure-system/src/DisclosureController.js';
 export { OverlayMixin } from '../components/disclosure-system/src/OverlayMixin.js';
 export { ArrowMixin } from '../components/disclosure-system/src/ArrowMixin.js';
@@ -22,7 +21,6 @@ export {
   setSiblingsInert,
 } from '../components/overlays/src/utils/inert-siblings.js';
 
-// export { overlays } from '../components/overlays/src/singleton.js';
 export { overlays } from '../components/disclosure-system/src/singleton.js';
 
 /**
