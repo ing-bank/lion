@@ -1,20 +1,21 @@
-# Phase out `OverlaysManager`; keep one shared registry of live overlays
+# Phase out `OverlaysManager`; keep one shared, version-neutral registry
 
 Status: proposed
 
-## What the manager actually does
+## What the manager does today
 
-`OverlaysManager` owns two unrelated things and glues them together through a global singleton:
+`OverlaysManager` glues two unrelated jobs together through a global singleton:
 
-1. **Knowledge** — which overlays are live (`list`), which are shown (`shownList`), which one blocks the
-   others (`blockingMap`), and what the stacking order is (`elevation`).
-2. **Side effects on the document** — scroll lock, body metrics and scrollbar compensation, show-only
-   (blocking) and inert siblings.
+1. **Knowledge** — which overlays are live (`list`), shown (`shownList`), blocking (`blockingMap`) and the
+   stacking order (`elevation`).
+2. **Document side effects** — scroll lock, body metrics and scrollbar compensation, show-only, inert
+   siblings.
 
-Part 2 can only be correct with knowledge of _every_ overlay on the page: a scroll lock may only be
-released when the last overlay closes, body metrics must be captured once and restored once, and the
-topmost overlay must be known for elevation — **including overlays that belong to another version of Lion
-or of a Lion extension**. That is why part 1 is registered globally today:
+Job 2 is only correct with knowledge of _every_ overlay on the page: a scroll lock may be released only
+when the last overlay closes, metrics must be captured once and restored once, and elevation needs the
+whole order — including overlays that belong to another version of Lion or of a Lion extension. That need
+is why job 1 is registered in `singletonManager` under `@lion/ui::overlays::0.x`, which makes all 0.x
+versions share one instance of _one_ version's class:
 
 ```js
 // components/disclosure-system/src/singleton.js
@@ -22,99 +23,112 @@ singletonManager.set('@lion/ui::overlays::0.x', new OverlaysManager());
 export const overlays = lazifyInstantiation(getOverlaysManager);
 ```
 
-`singleton-manager` keeps that in `globalThis[Symbol.for('lion::SingletonManagerClassStorage')]`, one map
-keyed by a string, with `0.x` meaning "all 0.x versions share it". So on a multi-version page, one
-version's manager instance holds the other version's controllers and calls version-specific members on
-them.
+## The three constraints
 
-The decision: **remove the manager as the owner, keep the knowledge.**
+1. **The knowledge must be shared across versions.** A per-version registry cannot coordinate a page-wide
+   scroll lock or a page-wide stacking order.
+2. **Global state may not be read from the DOM.** `querySelectorAll` is expensive on every transition, it
+   misses everything inside a shadow root, and it fails for a host element that is not in the document tree
+   at that moment (overlay content is regularly rendered elsewhere). A registry built on querying elements
+   is unreliable by construction.
+3. **A version may not execute another version's class internals.** That is what breaks today: a foreign
+   manager reads and calls members of controllers it did not create.
 
-## The registry: one DOM structure every version can read
+## Decision
 
-No instance, no singleton, no shared object. Every live overlay projects its own entry onto its host
-element, and what used to be method calls becomes selectors:
+**One shared registry object with a small, documented, version-neutral shape: plain data plus one event
+target.** No DOM queries, no attributes, no foreign instances.
 
-```html
-<lion-dialog
-  data-overlay-registry="o7"
-  data-overlay-state="open"
-  data-overlay-flags="preventsScroll blocksOthers"
-  data-overlay-elevation="3"
-></lion-dialog>
-```
-
-| what the manager held            | the query that replaces it                                                                              |
-| -------------------------------- | ------------------------------------------------------------------------------------------------------- |
-| `list`                           | `document.querySelectorAll('[data-overlay-registry]')`                                                  |
-| `shownList`                      | `document.querySelectorAll('[data-overlay-state="open"]')`                                              |
-| how many overlays prevent scroll | `[data-overlay-state="open"][data-overlay-flags~="preventsScroll"]`                                     |
-| `elevation`                      | the position of an entry among the open ones (topmost = highest), computed by the controller that opens |
-| `blockingMap`                    | `[data-overlay-blocked-by="o7"]` on the entries that were blocked                                       |
-
-The registry lives on the elements themselves on purpose: it is visible in devtools, it survives module
-duplication, and a version that knows nothing about our events can still be understood by reading
-attributes.
-
-## Cross-version coordination: ask, never call
-
-A version may not call a method on another version's controller. It asks the _element_, and the owning
-version answers:
+It is obtained through a global key, so duplicated copies of the module converge on the same object:
 
 ```js
-sibling.dispatchEvent(
-  new CustomEvent('lion-overlays-request-hide', {
-    bubbles: true,
-    detail: { requestedBy: myId, reason: 'showOnly' },
-  }),
-);
+const registry =
+  globalThis[Symbol.for('lion::overlays::registry')] ||
+  (globalThis[Symbol.for('lion::overlays::registry')] = createRegistry());
 ```
 
-The owning controller listens on its own host element, hides itself, and its projection updates
-`data-overlay-state` — which is how every other version, including ones that do not know the event,
-still sees what happened. Document-level `lion-overlays-before-show` (cancelable), `lion-overlays-show`
-and `lion-overlays-hide` are the notification contract; attributes are the fallback.
+The first version on the page wins; every later version **adopts** the existing object. If the object it
+finds does not have the shape that version knows, it leaves it alone and falls back to today's singleton
+manager behaviour, so an older and a newer version can still share a page.
+
+The shape carries primitives and ids only — no DOM nodes, no controller instances:
+
+```js
+{
+  seq: 0,                                     // monotonic stacking order
+  entries: Map<id, { flags, modal, openedAt, blocked: [id] }>,
+  events: new EventTarget(),                  // shown | hidden | request-hide | restore | teardown
+  styles: new Set(),                          // reference count for the shared <style data-overlays>
+}
+```
+
+| what a controller uses       | meaning                                                                            |
+| ---------------------------- | ---------------------------------------------------------------------------------- |
+| `register({ flags, modal })` | returns an `id`; the controller keeps owning its own state and DOM                 |
+| `unregister(id)`             | on close or teardown; the entry disappears                                         |
+| `countOf(flag)`              | derived from `entries`, e.g. how many live overlays prevent scroll                 |
+| `order(id)`                  | position in `seq` order, used for `elevation`                                      |
+| `requestShowOnly(id)`        | dispatches `request-hide` for the other entries and records which ids were blocked |
+| `events`                     | the only channel for cross-version coordination                                    |
+
+## Rules
+
+- **The registry is the only source of global state.** No attribute, no `querySelector`, no
+  `element.closest(...)` decides anything. Local dev-only markers may still exist, but nothing reads them.
+- **Entries are data.** The registry never holds a controller instance — only an id, flags, order. It can
+  therefore be created by one version and used by another without either version's internals leaking.
+- **Coordination is asking.** The registry dispatches on its own `EventTarget`; a version listens with a
+  handler it created itself and then acts on **its own** controllers. Nothing in the registry calls a
+  method on a foreign class.
+- **`register` / `unregister` are the only mutations.** Counters are derived, so two versions cannot
+  disagree about how many overlays prevent scroll: there is one map and one number computed from it.
+- **Teardown unregisters**, and the shared stylesheet is reference-counted by the entries instead of by
+  whichever version created it first.
 
 ## Behaviour mapping
 
-| today on `OverlaysManager`                        | after                                                                                                                                                  |
-| ------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `list`, `add`, `remove`                           | registry entries; the existing per-version static list (`DisclosureController.list`) keeps serving version-scoped needs such as the hidden-popup check |
-| `shownList`, `show`, `hide`                       | `data-overlay-state` + `data-overlay-elevation`, written by the controller when it projects                                                            |
-| `elevation`                                       | computed from all open entries, not assigned by one owner                                                                                              |
-| `requestToPreventScroll`, `requestToEnableScroll` | a `scroll-lock` feature queries the registry: lock when it is the first open entry with the flag, release when the last one of _any_ version closes    |
-| `requestToKeepBodySize`                           | the same feature: body metrics and scrollbar compensation, captured once and restored once, guarded by the same cross-version count                    |
-| `requestToShowOnly`, `retractRequestToShowOnly`   | `lion-overlays-request-hide` to the other entries plus `data-overlay-blocked-by`, so the blocked set is restored exactly                               |
-| `siblingsInert`                                   | derived from the registry: any open entry that is modal                                                                                                |
-| `teardown()`                                      | each controller tears itself down and removes its entry; the shared `<style data-overlays>` is reference-counted by entries                            |
-| `singleton.js` registration                       | removed from the new layer; kept as a deprecated facade behind `<html data-lion-overlays="singleton">`                                                 |
+| today on `OverlaysManager`                        | after                                                                                                                                                      |
+| ------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `list`, `add`, `remove`                           | `registry.entries`, plus the existing per-version static list (`DisclosureController.list`) for version-scoped needs such as the hidden-popup check        |
+| `shownList`, `show`, `hide`                       | entry `openedAt` / `seq`, owned by the controller that opens; `elevation` from `registry.order(id)`                                                        |
+| `requestToPreventScroll`, `requestToEnableScroll` | a `scroll-lock` feature: capture and lock when `countOf('preventsScroll')` goes 0 → 1, restore when it goes 1 → 0 — page-wide, because the count is shared |
+| `requestToKeepBodySize`                           | the same feature, behind the same shared count: metrics captured once and restored once                                                                    |
+| `requestToShowOnly`, `retractRequestToShowOnly`   | `registry.requestShowOnly(id)` → `request-hide` events plus `blocked` ids on the entry; `restore` for the way back                                         |
+| `siblingsInert`                                   | derived from entries: any live entry that is modal                                                                                                         |
+| `teardown()`                                      | each controller unregisters itself; `styles` empties and the style tag is removed                                                                          |
+| `singleton.js` registration                       | gone from the new layer; kept as a deprecated facade behind `<html data-lion-overlays="singleton">`                                                        |
 
-## What stays for backwards compatibility
+## Backwards compatibility
 
-- `OverlaysManager` stays as a **deprecated facade** for one major, implemented on the registry and the
-  events, so `overlays.list`, `overlays.shownList`, `overlays.add(...)`,
-  `overlays.requestToPreventScroll()` keep working.
+- `OverlaysManager` stays as a **deprecated facade** for one major, implemented on the registry, so
+  `overlays.list`, `overlays.shownList`, `overlays.add(...)`, `overlays.requestToPreventScroll()` keep
+  working for existing code.
 - `import { overlays } from '@lion/ui/overlays.js'` keeps resolving.
 - No consumer changes; only the place where the truth lives changes.
 
-## Why this is better
+## Considered options
 
-- The knowledge is version-agnostic: the DOM is the same object for every version, classes are not.
-- A version never executes code from another version's class.
-- The manager's two responsibilities are separated — state in the registry, side effects in features —
-  which also makes scroll lock and body compensation testable without a manager.
-- It is observable: devtools show which overlays are live, open, blocking, and with which elevation.
+- **Global state in DOM attributes, read with `querySelectorAll`.** Rejected: expensive per transition,
+  unreliable inside shadow roots and for content outside the document tree, and it needs extra attributes
+  to tell a live overlay from a hidden one.
+- **A `window` property holding a manager instance.** Rejected: the same class-instance fusion as
+  `singletonManager`, in a more visible hiding place.
+- **Keying `singleton-manager` by exact version.** Rejected: two managers mean two scroll locks and two
+  stacking orders — coordination bugs instead of version bugs.
+- **A shared registry without an adopt-and-fall-back rule.** Rejected: a version on the page that predates
+  this change would be invisible to the new one.
 
 ## Plan, with a gate per step
 
-1. **Registry projection.** Every controller writes its entry (id, state, flags, elevation) while the
-   manager still runs as today. Gate: existing suites unchanged (dialog, the private my-ui matrix), plus a
-   test that the registry query equals `manager.list` / `manager.shownList`.
-2. **Features read the registry.** Scroll lock and body metrics become query-based; the manager's counters
-   are derived from the registry during the transition. Gate: a foreign entry (a plain element carrying
-   registry attributes) must prevent a second version from double-locking and double-compensating — the
-   multi-version case in one test.
-3. **Blocking via events.** Show-only becomes `lion-overlays-request-hide` + `data-overlay-blocked-by`.
-   Gate: three overlays from two "versions" → one shown, two blocked, restored in order.
+1. **Registry next to the manager.** Controllers register and unregister; the manager's lists and counters
+   are derived from it while it still runs as today. Gate: existing suites unchanged (dialog, the private
+   my-ui matrix) plus a test that `manager.list` / `manager.shownList` equal the registry contents.
+2. **Features read the registry.** Scroll lock and body metrics become count-based. Gate: two "versions" in
+   one test — two module identities sharing the registry through the global key, one of them with an
+   overlay rendered inside a shadow root — end with exactly one scroll lock and one metric capture, and
+   no DOM query is involved.
+3. **Blocking and elevation through the registry.** `request-hide` / `restore` and `seq` order. Gate: three
+   overlays from two "versions" → one shown, two blocked, restored in order; elevation follows `seq`.
 4. **Facade.** `OverlaysManager` is implemented on the registry; the singleton registration moves behind
    `<html data-lion-overlays="singleton">`. Gate: the old public API still passes its suite.
 5. **Removal in a major.** Delete the facade and the singleton dependency from the overlay layer, with a

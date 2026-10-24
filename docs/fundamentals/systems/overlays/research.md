@@ -155,10 +155,13 @@ The last two roadmap items are about the same boundary: the overlay layer still 
 `OverlaysManager` in the global `singletonManager` (key `@lion/ui::overlays::0.x`), so every 0.x version on
 a page shares one manager instance — and the scroll lock, body-size compensation, elevation and blocking
 can only be correct when _all_ overlays are known, including those of another version. ADR 0004 proposes to
-phase the manager out and keep one shared registry of live overlays **in the DOM**:
-`data-overlay-registry` / `data-overlay-state` / `data-overlay-flags` / `data-overlay-elevation` on the host
-element, queries instead of manager lists, and `lion-overlays-request-hide` on a sibling element instead of
-a method call into another version's controller.
+phase the manager out and keep one shared registry of live overlays: a version-neutral data object
+(`entries`, `seq`, one `EventTarget`) reached through `globalThis[Symbol.for('lion::overlays::registry')]`,
+adopted by later versions, with counters derived from the entries instead of stored per version.
+Deliberately **not** DOM attributes or `querySelectorAll`: global state must not be read from the DOM, since
+selectors are expensive on every transition, miss shadow roots and fail for content outside the document
+tree. Cross-version coordination goes through the registry's own event target, so no version ever calls a
+method on another version's controller.
 
 Distribution choice: **subpath exports inside `@lion/ui`**, not a new package. The existing import path
 (`@lion/ui/overlays.js`) must keep resolving, so a separate package would need that path to re-export
