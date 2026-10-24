@@ -84,19 +84,21 @@ async function anchorOnInvoker() {
  *
  * @param {string} prefix
  */
-async function walkUntilPhrase(prefix) {
-  if (activeReader !== 'virtual') {
+async function walkUntilSpoken(fragment) {
+  if (activeReader === 'voiceover') {
     return;
   }
-  for (let step = 0; step < 8; step += 1) {
+  // A fragment, not a prefix: NVDA says "dialog" where the virtual reader says "dialog, Popup", and
+  // the page still holds the previous test file's fixtures, so the cursor needs room to walk.
+  for (let step = 0; step < 20; step += 1) {
     const log = await sr.phraseLog();
-    if (log.some(phrase => phrase.startsWith(prefix))) {
+    if (log.some(phrase => phrase.includes(fragment))) {
       return;
     }
     // eslint-disable-next-line no-await-in-loop
     await sr.next();
   }
-  throw new Error(`the virtual reader never said anything starting with "${prefix}"`);
+  throw new Error(`the reader never said anything containing "${fragment}"`);
 }
 
 /**
@@ -145,7 +147,7 @@ describe('<lion-dialog> screen reader', () => {
     );
     // Walk to the innermost content: the dialog's own phrase comes before it, and `contains` wants
     // them in order.
-    await walkUntilPhrase('Hey there');
+    await walkUntilSpoken('Hey there');
 
     // The overlay, not the test, decides what the reader is told: a dialog with its accessible name.
     expect(content.getAttribute('role')).to.equal('dialog');

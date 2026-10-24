@@ -41,19 +41,28 @@ let activeReader;
  *
  * @param {string} prefix
  */
-async function walkUntilPhrase(prefix) {
+async function walkUntilSpoken(fragment, { atStart = false } = {}) {
   if (activeReader === 'voiceover') {
     return;
   }
-  for (let step = 0; step < 8; step += 1) {
+  // A fragment by default: a reader announces "button, Info, <description>" as one phrase. `atStart`
+  // is for the tooltip content itself, which the virtual reader announces as its own item and which
+  // would otherwise already be "found" inside the invoker's phrase. The page still holds the previous
+  // test file's fixtures (an overlay host lives in the body), so the cursor needs room to walk.
+  for (let step = 0; step < 20; step += 1) {
     const log = await sr.phraseLog();
-    if (log.some(phrase => phrase.startsWith(prefix))) {
+    const spoken = atStart
+      ? log.some(phrase => phrase.startsWith(fragment))
+      : log.some(phrase => phrase.includes(fragment));
+    if (spoken) {
       return;
     }
     // eslint-disable-next-line no-await-in-loop
     await sr.next();
   }
-  throw new Error(`the reader never said anything starting with "${prefix}"`);
+  throw new Error(
+    `the reader never said anything ${atStart ? 'starting with' : 'containing'} "${fragment}"`,
+  );
 }
 
 /**
@@ -108,10 +117,7 @@ describe('<lion-tooltip> screen reader', () => {
     // its cursor is on (the virtual one, and NVDA in CI) has to be walked onto the invoker first.
     // Two steps: the document, then the button - and the phrase is "button, Info, <description>", so
     // it is not a phrase that starts with the invoker's label.
-    if (activeReader !== 'voiceover') {
-      await sr.next();
-      await sr.next();
-    }
+    await walkUntilSpoken('Info');
 
     await sr.expect({
       virtual: contains('button, Info, This is a tooltip'),
@@ -128,7 +134,9 @@ describe('<lion-tooltip> screen reader', () => {
     await sr.focus('button[slot="invoker"]');
     // The description is announced with the invoker; walking on also passes the tooltip content
     // itself, so a user who keeps browsing finds it again.
-    await walkUntilPhrase('tooltip,');
+    await walkUntilSpoken(activeReader === 'virtual' ? 'tooltip,' : 'This is a tooltip', {
+      atStart: activeReader === 'virtual',
+    });
 
     await sr.expect({
       virtual: contains('tooltip, This is a tooltip'),
