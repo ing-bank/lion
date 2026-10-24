@@ -1,0 +1,98 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <style>
+      #wrap { width: 780px; }
+      .fallback { color: var(--muted-foreground); font: 13px/1.5 inherit; }
+    </style>
+  </head>
+  <body>
+    <div id="wrap">
+      <pre class="mermaid">
+flowchart TD
+  D["Source of truth<br/>docs: components, fundamentals/systems, guides/how-to"]
+  G["npm run skills:generate"]
+  S["packages/ui/skills/lion-ui<br/>SKILL.md + references"]
+  SB["Scaffold sandbox<br/>starter files, cleared first"]
+  AG["Agent loop<br/>read skill refs, write the deliverable"]
+  GA{"Gates: syntax, import-policy, modified"}
+  CH["Convention checks + goldens"]
+  BH["Behaviour<br/>web-test-runner + Chromium, batched"]
+  CL{"Outcome"}
+  ZERO["Score 0"]
+  NA["not attempted"]
+  RD["redo"]
+  WR["counts against the skill"]
+  OK["counts for the skill"]
+  REP["Run records<br/>.tmp/skill-tester/reports"]
+  LED["results/ledger.json<br/>skillRevision + model + scenario"]
+  PG["quality.md<br/>static MD table page"]
+  SITE["Docs site build<br/>eleventyNavigation"]
+  CI["CI sweep<br/>scheduled or manual"]
+  LINT["Scenario linter<br/>prompt vs check vs golden"]
+  FIX["Fix prompt, assertion or doc"]
+
+  D --> G
+  G --> S
+  S --> SB
+  SB --> AG
+  AG --> GA
+  GA -->|no| ZERO
+  GA -->|yes| CH
+  CH --> BH
+  BH --> CL
+  CL -->|never wrote| NA
+  CL -->|endpoint 429 or 5xx| RD
+  CL -->|wrong answer| WR
+  CL -->|works| OK
+  ZERO --> REP
+  NA --> REP
+  RD --> REP
+  WR --> REP
+  OK --> REP
+  REP --> LED
+  LED --> PG
+  PG --> SITE
+  CI -.-> SB
+  LINT -.-> SB
+  PG -.->|findings| FIX
+  FIX --> D
+      </pre>
+    </div>
+    <p class="fallback" id="fallback" hidden>
+      Mermaid could not load the diagram library — the source above is the diagram.
+    </p>
+    <script type="module">
+      const root = getComputedStyle(document.documentElement);
+      const val = (name, fallback) => root.getPropertyValue(name).trim() || fallback;
+      const foreground = val('--foreground', '#e6e6e6');
+      const border = val('--border', '#555');
+      try {
+        const { default: mermaid } = await import(
+          'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs'
+        );
+        mermaid.initialize({
+          startOnLoad: true,
+          theme: 'base',
+          themeVariables: {
+            fontFamily: 'inherit',
+            fontSize: '13px',
+            primaryColor: 'transparent',
+            primaryTextColor: foreground,
+            primaryBorderColor: border,
+            secondaryTextColor: foreground,
+            tertiaryTextColor: foreground,
+            lineColor: border,
+            clusterBkg: 'transparent',
+            clusterBorder: border,
+            edgeLabelBackground: 'transparent',
+            noteTextColor: foreground,
+          },
+        });
+      } catch {
+        document.getElementById('fallback').hidden = false;
+      }
+    </script>
+  </body>
+</html>

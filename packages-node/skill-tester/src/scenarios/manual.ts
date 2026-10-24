@@ -1,0 +1,321 @@
+/**
+ * Hand-authored scenarios.
+ *
+ * These complement the generated per-component/system scenarios with tasks that exercise the
+ * golden-file and behaviour paths on concrete, bounded repairs.
+ *
+ * A note on goldens: a golden that nobody executed is the most reliable way to make a benchmark
+ * measure fiction, so `expectedTransformedFiles` is always paired with `goldenProvenance` and
+ * pinned by a test that runs it through the gates, its checks *and* the behaviour tier.
+ */
+
+import type { TestScenario } from './types.ts';
+
+/**
+ * Replace a native `<form>` (and its native submit handling) with `lion-form`, the way the
+ * `lion-ui` skill's forms guidance requires.
+ */
+export const nativeFormToLionFormScenario: TestScenario = {
+  name: 'integration/native-form-to-lion-form',
+  kind: 'integration',
+  description: 'Migrate a native form to lion-form with a lion-form submit handler.',
+  prompt: [
+    'Rewrite `src/login-form.js` so the form is wrapped in `lion-form` and uses `@lion/ui` form',
+    'controls instead of native `<input>` elements. Keep the same fields (email + password) and the',
+    'same submit behaviour. Rewrite that file only — nothing else.',
+  ].join(' '),
+  targetFile: 'src/login-form.js',
+  files: {
+    'src/login-form.js': [
+      'export function LoginForm() {',
+      '  return html`',
+      '    <form @submit=${onSubmit}>',
+      '      <input name="email" label="Email" />',
+      '      <input name="password" type="password" label="Password" />',
+      '      <button type="submit">Sign in</button>',
+      '    </form>',
+      '  `;',
+      '}',
+      '',
+    ].join('\n'),
+  },
+  checks: [
+    { type: 'exists', file: 'src/login-form.js' },
+    {
+      type: 'notMatches',
+      file: 'src/login-form.js',
+      pattern: '@lion/ui/define/',
+      description: 'does not register elements globally through a define entrypoint',
+    },
+    {
+      type: 'notMatches',
+      file: 'src/login-form.js',
+      pattern: '@lion/ui/(components|src)/',
+      description: 'does not deep-import from @lion/ui internals',
+    },
+    {
+      type: 'matches',
+      file: 'src/login-form.js',
+      pattern: '<lion-form',
+      description: 'uses the <lion-form> element',
+    },
+    {
+      type: 'matches',
+      file: 'src/login-form.js',
+      pattern: '<form(\\s|>)',
+      description: 'keeps the native <form> that lion-form slots into it',
+    },
+    {
+      type: 'notMatches',
+      file: 'src/login-form.js',
+      pattern: `<input(\\s|/|>)`,
+      description: 'no longer renders native <input> elements',
+    },
+    {
+      type: 'noUnusedImports',
+      file: 'src/login-form.js',
+      description: 'imports nothing it does not use',
+    },
+    {
+      type: 'noExtraFiles',
+      file: 'src/login-form.js',
+      description: 'creates no files other than the deliverable',
+    },
+  ],
+};
+
+/**
+ * Repair a near-miss IBAN field.
+ *
+ * The starting file is a plausible wrong answer rather than an empty one: it renders a native
+ * `<input>` (no validation, not a lion form control) and reaches into `@lion/ui` internals with a
+ * deep import — the exact thing the skill's rules forbid ("Never deep-import from
+ * `@lion/ui/components/<x>/src/*`"), so the import-policy gate has real teeth here.
+ *
+ * The prompt is bounded: the class name, the export and the field name are invariants. The golden
+ * follows the skill's canonical structure, including the native `<form>` that `lion-form` slots.
+ */
+export const ibanFieldScenario: TestScenario = {
+  name: 'repair/iban-field',
+  kind: 'repair',
+  description: 'Repair an IBAN field: deep import, native input, no form registration.',
+  prompt: [
+    'Repair `src/iban-field.js`. It renders a native `<input>` and reaches into `@lion/ui`',
+    'internals with a deep import. Make it render a `lion-input-iban` inside a `lion-form`,',
+    'registering the field on the form under the name `account`. Keep the class name `IbanField`',
+    'and its named export. Rewrite only that file — nothing else.',
+  ].join(' '),
+  targetFile: 'src/iban-field.js',
+  files: {
+    'src/iban-field.js': [
+      "import { LitElement, html } from 'lit';",
+      "import { LionInputIban } from '@lion/ui/components/input-iban/src/LionInputIban.js';",
+      '',
+      'export class IbanField extends LitElement {',
+      '  render() {',
+      "    return html`<input name=\"account\" />`;",
+      '  }',
+      '}',
+      '',
+    ].join('\n'),
+  },
+  expectedTransformedFiles: {
+    'src/iban-field.js': [
+      "import { LitElement, html } from 'lit';",
+      "import { ScopedElementsMixin } from '@open-wc/scoped-elements/lit-element.js';",
+      "import { LionForm } from '@lion/ui/form.js';",
+      "import { LionInputIban } from '@lion/ui/input-iban.js';",
+      '',
+      'export class IbanField extends ScopedElementsMixin(LitElement) {',
+      '  static scopedElements = {',
+      "    'lion-form': LionForm,",
+      "    'lion-input-iban': LionInputIban,",
+      '  };',
+
+      '  render() {',
+      '    return html`',
+      '      <lion-form>',
+      '        <form>',
+      '          <lion-input-iban name="account" label="Account"></lion-input-iban>',
+      '        </form>',
+      '      </lion-form>',
+      '    `;',
+      '  }',
+      '}',
+      '',
+    ].join('\n'),
+  },
+  goldenProvenance: [
+    'Authored by us and executed, not merely reviewed: the golden passes both gates, every check',
+    'below, and the behaviour test file in headless Chromium.',
+    '`test-node/scenarios.test.ts` ("the repair/iban-field golden passes the gates, its checks and',
+    'the behaviour tier") pins this, so the golden cannot silently rot.',
+  ].join(' '),
+  checks: [
+    { type: 'exists', file: 'src/iban-field.js' },
+    {
+      type: 'matches',
+      file: 'src/iban-field.js',
+      pattern: '@lion/ui/input-iban\\.js',
+      description: 'imports the IBAN field through its documented class entrypoint',
+    },
+    {
+      type: 'notMatches',
+      file: 'src/iban-field.js',
+      pattern: '@lion/ui/define/',
+      description: 'does not register elements globally through a define entrypoint',
+    },
+    {
+      type: 'notMatches',
+      file: 'src/iban-field.js',
+      pattern: '@lion/ui/components/',
+      description: 'no longer deep-imports from @lion/ui internals',
+    },
+    {
+      type: 'matches',
+      file: 'src/iban-field.js',
+      pattern: '<lion-form',
+      description: 'renders a <lion-form>',
+    },
+    {
+      type: 'matches',
+      file: 'src/iban-field.js',
+      pattern: '<lion-input-iban',
+      description: 'renders a <lion-input-iban>',
+    },
+    {
+      type: 'matches',
+      file: 'src/iban-field.js',
+      pattern: 'name="account"',
+      description: 'keeps the field name "account"',
+    },
+    {
+      type: 'matches',
+      file: 'src/iban-field.js',
+      pattern: 'export class IbanField',
+      description: 'keeps the `IbanField` export',
+    },
+    {
+      type: 'noUnusedImports',
+      file: 'src/iban-field.js',
+      description: 'imports nothing it does not use',
+    },
+    {
+      type: 'noExtraFiles',
+      file: 'src/iban-field.js',
+      description: 'creates no files other than the deliverable',
+    },
+  ],
+  behaviour: {
+    description: 'the produced component upgrades and registers the field on a lion-form',
+    testSource: [
+      "import { expect } from '@open-wc/testing';",
+      "import { IbanField } from './src/iban-field.js';",
+      '',
+      "describe('iban-field', () => {",
+      "  it('upgrades and registers the field on a lion-form', async () => {",
+      '    // The exported class is not self-registering, and the scenario only requires the',
+      '    // `IbanField` export as an invariant, so register it before instantiating it.',
+      "    if (!customElements.get('iban-field')) {",
+      "      customElements.define('iban-field', IbanField);",
+      '    }',
+      "    const el = document.createElement('iban-field');",
+      '    document.body.appendChild(el);',
+      '    await el.updateComplete;',
+      '',
+      "    const form = el.shadowRoot.querySelector('lion-form');",
+      "    expect(form, 'renders a <lion-form>').to.not.equal(null);",
+      '',
+      "    const field = el.shadowRoot.querySelector('lion-input-iban');",
+      "    expect(field, 'renders a <lion-input-iban>').to.not.equal(null);",
+      '',
+      '    await form.updateComplete;',
+      "    // Borrowed from the repository's own lion-form tests, which assert registration through",
+      '    // `form.formElements.<name>` rather than a `.form` property on the field.',
+      '    expect(',
+      '      form.formElements.account,',
+      `      'field is registered on the form under the name "account"',`,
+      '    ).to.not.equal(undefined);',
+      '  });',
+      '});',
+      '',
+    ].join('\n'),
+  },
+};
+
+/**
+ * A composite task: a small form with several controls and a calculated result.
+ *
+ * Where the single-component scenarios ask "can the model find one component", this asks whether the
+ * skill carries enough to compose several of them into something a user would recognise — the shape of
+ * task a real app developer brings. The prompt states a user outcome, never a list of elements: the
+ * model chooses the fields, the form wrapper and the action itself, and the checks stay outcome-based
+ * (import policy, no subclassing, nothing unused) rather than naming the elements it should have picked.
+ */
+export const mortgageCalculatorScenario: TestScenario = {
+  name: 'integration/mortgage-calculator',
+  kind: 'integration',
+  description: 'A small mortgage calculator: several inputs, a form and a calculated result.',
+  prompt: [
+    'Create `src/my-mortgage-calculator.js`. Create that file only — nothing else.',
+    'It must export a class named `MyMortgageCalculator`.',
+    'Goal: a small mortgage calculator. The user fills in the loan amount, the yearly interest rate and',
+    'the term in years, presses a button, and sees the monthly payment.',
+  ].join(' '),
+  targetFile: 'src/my-mortgage-calculator.js',
+  files: {
+    'src/my-mortgage-calculator.js': [
+      '// TODO: implement the mortgage calculator in this file.',
+      '',
+    ].join('\n'),
+  },
+  checks: [
+    { type: 'exists', file: 'src/my-mortgage-calculator.js' },
+    {
+      type: 'matches',
+      file: 'src/my-mortgage-calculator.js',
+      pattern: 'export class MyMortgageCalculator',
+      description: 'exports the class `MyMortgageCalculator`',
+    },
+    {
+      type: 'notMatches',
+      file: 'src/my-mortgage-calculator.js',
+      pattern: '@lion/ui/define/',
+      description: 'does not register elements globally through a define entrypoint',
+    },
+    {
+      type: 'notMatches',
+      file: 'src/my-mortgage-calculator.js',
+      pattern: '@lion/ui/(components|src)/',
+      description: 'does not deep-import from @lion/ui internals',
+    },
+    {
+      type: 'matches',
+      file: 'src/my-mortgage-calculator.js',
+      pattern: '@lion/ui/',
+      description: 'builds on @lion/ui instead of hand-rolling the controls',
+    },
+    {
+      type: 'notMatches',
+      file: 'src/my-mortgage-calculator.js',
+      pattern: 'extends\\s+Lion',
+      description: 'consumes lion rather than subclassing it',
+    },
+    {
+      type: 'noUnusedImports',
+      file: 'src/my-mortgage-calculator.js',
+      description: 'imports nothing it does not use',
+    },
+    {
+      type: 'noExtraFiles',
+      file: 'src/my-mortgage-calculator.js',
+      description: 'no files beyond "src/my-mortgage-calculator.js" were created',
+    },
+  ],
+};
+
+export const manualScenarios: TestScenario[] = [
+  nativeFormToLionFormScenario,
+  ibanFieldScenario,
+  mortgageCalculatorScenario,
+];

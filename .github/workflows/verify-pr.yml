@@ -25,6 +25,11 @@ jobs:
       - name: Lint
         run: npm run lint
 
+      # Deterministic and model-free: regenerating the skill must reproduce the committed tree byte for
+      # byte, and the coverage gates (entrypoints, component API, synonym routing, doc noise) must hold.
+      - name: Skill consistency
+        run: npm run skills:check
+
       # - name: Bundlesize
       #   run: npm run bundlesize
 
