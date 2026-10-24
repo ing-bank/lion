@@ -243,7 +243,73 @@ export const ibanFieldScenario: TestScenario = {
   },
 };
 
+/**
+ * A composite task: a small form with several controls and a calculated result.
+ *
+ * Where the single-component scenarios ask "can the model find one component", this asks whether the
+ * skill carries enough to compose several of them into something a user would recognise — the shape of
+ * task a real app developer brings. The prompt states a user outcome, never a list of elements: the
+ * model chooses the fields, the form wrapper and the action itself, and the checks stay outcome-based
+ * (import policy, no subclassing, nothing unused) rather than naming the elements it should have picked.
+ */
+export const mortgageCalculatorScenario: TestScenario = {
+  name: 'integration/mortgage-calculator',
+  kind: 'integration',
+  description: 'A small mortgage calculator: several inputs, a form and a calculated result.',
+  prompt: [
+    'Create `src/my-mortgage-calculator.js`. Create that file only — nothing else.',
+    'It must export a class named `MyMortgageCalculator`.',
+    'Goal: a small mortgage calculator. The user fills in the loan amount, the yearly interest rate and',
+    'the term in years, presses a button, and sees the monthly payment.',
+  ].join(' '),
+  targetFile: 'src/my-mortgage-calculator.js',
+  files: {
+    'src/my-mortgage-calculator.js': [
+      '// TODO: implement the mortgage calculator in this file.',
+      '',
+    ].join('\n'),
+  },
+  checks: [
+    { type: 'exists', file: 'src/my-mortgage-calculator.js' },
+    {
+      type: 'notMatches',
+      file: 'src/my-mortgage-calculator.js',
+      pattern: '@lion/ui/define/',
+      description: 'does not register elements globally through a define entrypoint',
+    },
+    {
+      type: 'notMatches',
+      file: 'src/my-mortgage-calculator.js',
+      pattern: '@lion/ui/(components|src)/',
+      description: 'does not deep-import from @lion/ui internals',
+    },
+    {
+      type: 'matches',
+      file: 'src/my-mortgage-calculator.js',
+      pattern: '@lion/ui/',
+      description: 'builds on @lion/ui instead of hand-rolling the controls',
+    },
+    {
+      type: 'notMatches',
+      file: 'src/my-mortgage-calculator.js',
+      pattern: 'extends\\s+Lion',
+      description: 'consumes lion rather than subclassing it',
+    },
+    {
+      type: 'noUnusedImports',
+      file: 'src/my-mortgage-calculator.js',
+      description: 'imports nothing it does not use',
+    },
+    {
+      type: 'noExtraFiles',
+      file: 'src/my-mortgage-calculator.js',
+      description: 'no files beyond "src/my-mortgage-calculator.js" were created',
+    },
+  ],
+};
+
 export const manualScenarios: TestScenario[] = [
   nativeFormToLionFormScenario,
   ibanFieldScenario,
+  mortgageCalculatorScenario,
 ];
