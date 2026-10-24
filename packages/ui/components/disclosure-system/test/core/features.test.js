@@ -45,7 +45,7 @@ describe('Disclosure features', () => {
     await disclosure.show();
     expect(document.body.style.overflow).to.equal('hidden');
 
-    await disclosure.close();
+    await disclosure.hide();
     expect(document.body.style.overflow).to.equal(overflowBefore);
     expect(disclosure.resources).to.deep.equal([]);
   });
@@ -67,7 +67,7 @@ describe('Disclosure features', () => {
       expect(content.style.positionAnchor).to.equal('--my-anchor');
       expect(content.style.positionArea).to.equal('bottom');
     }
-    await disclosure.close();
+    await disclosure.hide();
     expect(content.style.positionAnchor).to.equal('');
     expect(content.style.positionArea).to.equal('');
   });
@@ -106,7 +106,7 @@ describe('Disclosure context switching (same disclosure, different shape)', () =
     // only the always-on a11y feature is left: the esc listener went with the old descriptor
     expect(disclosure.resources.length).to.equal(1);
 
-    await disclosure.close();
+    await disclosure.hide();
     element.remove();
   });
 });

@@ -60,7 +60,7 @@ Hidde de Vries and Scott O'Hara documented precisely where the platform stops:
 | no answer to **context switching** at all                                                                                                                                                                                                                                                    | §4: a descriptor swap morphs the same disclosure between collapsible, overlay and modal                                                   |
 
 Everything above is a _feature_: it is loaded only when the descriptor asks for it. A disclosure that
-merely opens and closes pays for none of it (measured: core 0.84 KB gzip, features 0.22–0.45 KB each).
+merely opens and closes pays for none of it (measured: core entry 0.88 KB gzip, features 0.26–0.45 KB each).
 
 ## 3. Accessibility: what we do, and what we deliberately do not
 

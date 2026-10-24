@@ -14,11 +14,11 @@ A disclosure whose content is rendered above the page instead of in the flow.
 _Avoid_: popup, layer, floating element, popper
 
 **Invoker**:
-The element that asks a disclosure to show, close or toggle.
+The element that asks a disclosure to show, hide or toggle.
 _Avoid_: trigger, opener, target, button
 
 **Content**:
-The element that a disclosure reveals and closes.
+The element that a disclosure reveals and hides.
 _Avoid_: panel, body, slot content, dialog content
 
 **Anchor**:
@@ -34,7 +34,7 @@ _Avoid_: placement mode, popper positioning, floating
 The state of a disclosure whose content is revealed. It is a state, not an action.
 _Avoid_: opened, shown, visible, expanded, active
 
-**show / close / toggle**:
+**show / hide / toggle**:
 The three actions that change `open`.
 _Avoid_: open(), hide(), activate, dismiss, display
 

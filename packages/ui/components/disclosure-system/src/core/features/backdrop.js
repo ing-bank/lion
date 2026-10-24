@@ -40,7 +40,7 @@ export function installBackdrop(disclosure, descriptor) {
   function onClick(event) {
     if (!descriptor.lightDismiss) return;
     if (event.composedPath().includes(node)) return;
-    disclosure.close();
+    disclosure.hide();
   }
 
   backdrop.addEventListener('pointerdown', onClick);

@@ -38,7 +38,7 @@ describe('Disclosure gap features', () => {
     expect(content.getAttribute('role')).to.be.null;
     expect(invoker.getAttribute('aria-expanded')).to.be.null;
 
-    await disclosure.close();
+    await disclosure.hide();
   });
 
   it('sets the semantics the descriptor declares and keeps aria-expanded in sync', async () => {
@@ -55,7 +55,7 @@ describe('Disclosure gap features', () => {
     expect(invoker.getAttribute('aria-details')).to.equal('the-content');
     expect(invoker.getAttribute('aria-expanded')).to.equal('true');
 
-    await disclosure.close();
+    await disclosure.hide();
     expect(invoker.getAttribute('aria-expanded')).to.equal('false');
   });
 
@@ -64,7 +64,7 @@ describe('Disclosure gap features', () => {
     await plain.show();
     document.dispatchEvent(new PointerEvent('pointerdown'));
     expect(plain.open).to.be.true;
-    await plain.close();
+    await plain.hide();
 
     const light = new Disclosure({ element, content, descriptor: { lightDismiss: true } });
     await light.show();
@@ -80,7 +80,7 @@ describe('Disclosure gap features', () => {
     await plain.show();
     document.dispatchEvent(new FocusEvent('focusout', { bubbles: true }));
     expect(plain.open).to.be.true;
-    await plain.close();
+    await plain.hide();
 
     const eager = new Disclosure({ element, content, descriptor: { dismissOnFocusOut: true } });
     await eager.show();
@@ -129,7 +129,7 @@ describe('Disclosure gap features', () => {
     const backdrop = element.querySelector('.disclosure-backdrop');
     expect(backdrop).not.to.be.null;
 
-    await disclosure.close();
+    await disclosure.hide();
     expect(element.querySelector('.disclosure-backdrop')).to.be.null;
 
     const dialog = document.createElement('dialog');
@@ -142,7 +142,7 @@ describe('Disclosure gap features', () => {
     await modal.show();
     expect(dialog.hasAttribute('data-backdrop'), 'the platform paints ::backdrop itself').to.be
       .true;
-    await modal.close();
+    await modal.hide();
     dialog.remove();
   });
 });

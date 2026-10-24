@@ -21,3 +21,10 @@ across elements, controllers, docs and the platform — and it removes the colli
 
 The legacy adapter maps `opened` → `open` and `hide()` → `close()`. Public code keeps working,
 new code reads like the platform.
+
+## Amendment
+
+The action pair is `show()` / `hide()`, not `show()` / `close()`: `closed` is a state, and an action must
+be a true opposite of another action (`show`/`hide`, `open`/`close`). The core therefore exposes
+`hide()` as the canonical action, and `close()` stays as a deprecated alias so code that already calls it
+keeps working. See `docs/guides/principles/terminology.md`.

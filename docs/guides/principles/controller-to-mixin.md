@@ -27,7 +27,7 @@ Everything a mixin may do with the controller:
 | member                                     | direction    | meaning                                                                                |
 | ------------------------------------------ | ------------ | -------------------------------------------------------------------------------------- |
 | `open`                                     | read         | state, read from the controller — never derived from the DOM                           |
-| `show()`, `close()`, `toggle()`            | call         | actions; they decide _whether_ a transition may happen                                 |
+| `show()`, `hide()`, `toggle()`             | call         | actions; they decide _whether_ a transition may happen                                 |
 | `descriptor` / config object               | data in      | a plain, serializable object describing behaviour (roles, closure policy, positioning) |
 | `toggle` event (and state-specific events) | out          | the controller notifies; the mixin reflects it into properties/attributes              |
 | `controller` accessor                      | escape hatch | for the rare consumer that needs the machine itself, e.g. `sync()`                     |

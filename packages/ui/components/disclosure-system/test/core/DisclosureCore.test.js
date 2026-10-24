@@ -49,7 +49,7 @@ describe('Disclosure (core)', () => {
     expect(element.hasAttribute('open')).to.be.true;
     expect(invariants(disclosure).projected).to.be.true;
 
-    await disclosure.close();
+    await disclosure.hide();
     expect(seen).to.deep.equal(['before:open', 'after:open', 'before:closed', 'after:closed']);
     expect(element.hasAttribute('open')).to.be.false;
     expect(content.hasAttribute('open')).to.be.false;
@@ -67,7 +67,7 @@ describe('Disclosure (core)', () => {
     const disclosure = new Disclosure({ element, content });
     await disclosure.show();
     const observedWhileOpen = disclosure.epoch;
-    await disclosure.close();
+    await disclosure.hide();
 
     // the consumer update that was pending while it was open still carries `true`
     await disclosure.sync(true, observedWhileOpen);

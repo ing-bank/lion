@@ -161,19 +161,30 @@ export class Disclosure {
   }
 
   /**
+   * The action that produces the `closed` state. It is called `hide` because the state word is `open`:
+   * one word per concept, and action pairs are true opposites (`show`/`hide`), aligned with the platform
+   * (`showPopover()`/`hidePopover()`). See docs/guides/principles/terminology.md.
    * @returns {Promise<void>}
    */
-  async close() {
+  async hide() {
     if (this.#state === 'closed' || this.#state === 'closing') return;
     if (!this.#emit('closed')) return;
     this.#to('closed');
   }
 
   /**
+   * @deprecated use `hide()`. Kept so nothing that already calls `close()` breaks.
+   * @returns {Promise<void>}
+   */
+  async close() {
+    return this.hide();
+  }
+
+  /**
    * @returns {Promise<void>}
    */
   async toggle() {
-    return this.open ? this.close() : this.show();
+    return this.open ? this.hide() : this.show();
   }
 
   /**
@@ -186,7 +197,7 @@ export class Disclosure {
    */
   sync(open, observedEpoch) {
     if (observedEpoch !== undefined && observedEpoch < this.#epoch) return undefined;
-    return open ? this.show() : this.close();
+    return open ? this.show() : this.hide();
   }
 
   /**
@@ -194,7 +205,7 @@ export class Disclosure {
    * @returns {Promise<void>}
    */
   async teardown() {
-    await this.close();
+    await this.hide();
     this.#releaseAll();
     this.#element?.removeAttribute('open');
   }

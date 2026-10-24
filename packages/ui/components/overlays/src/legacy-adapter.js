@@ -102,7 +102,7 @@ export class LegacyDisclosure {
   /** @returns {Promise<void>} */
   async hide() {
     this.#arm(false);
-    await this.#disclosure.close();
+    await this.#disclosure.hide();
     this.#settlePending();
     return this.#whenClosed;
   }

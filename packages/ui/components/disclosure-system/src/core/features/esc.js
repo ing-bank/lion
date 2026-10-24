@@ -32,7 +32,7 @@ export function installEsc(disclosure, descriptor) {
     // Only the topmost open disclosure reacts: a non-modal tip must not swallow the Escape that
     // belongs to the modal dialog behind it, and a non-modal must not close before the tip on top.
     if (!isTopmost(disclosure)) return;
-    disclosure.close();
+    disclosure.hide();
   }
 
   pushToStack(disclosure, Boolean(descriptor.modal));

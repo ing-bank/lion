@@ -3,7 +3,7 @@ parts:
   - Research
   - Overlays
   - Systems
-title: 'Research: predictable open/close'
+title: 'Research: predictable open/closed'
 eleventyNavigation:
   key: Systems >> Overlays >> Research
   title: Research
@@ -59,23 +59,28 @@ platform itself:
   `show-popover`, `hide-popover`, `show-modal`, `close`, `toggle-popover`. There is deliberately **no
   `open` command**.
 
-Therefore: `open` = state (property, attribute, `:open`); `show` / `close` / `toggle` = actions.
+Therefore: `open` / `closed` = state (property, attribute, `:open`); `show` / `hide` / `toggle` = actions.
+
+The platform mixes its own pair — `showPopover()` with `close()`, and an Invoker Command literally named
+`close` — but we do not adopt that for our own API: `show`/`hide` are opposites, `open` stays the only
+state word, and `close()` is kept as a documented alias for code that already calls it
+(`docs/guides/principles/terminology.md`).
 One word per concept, identical on the controller, on the host element, in the docs and in the
 platform. See ADR
 [0001](https://github.com/ing-bank/lion/blob/master/packages/ui/components/disclosure-system/docs/adr/0001-open-is-state-show-close-toggle-are-actions.md).
 
-| concept                     | platform / spec                                                              | legacy alias (compat layer)                                                                                               |
-| --------------------------- | ---------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------- |
-| `open`                      | `open` attribute/property, `:open`                                           | `opened`, `isShown`                                                                                                       |
-| `show` / `close` / `toggle` | `showPopover/hidePopover/togglePopover`, `showModal/close`, invoker commands | `show()` / `hide()` / `toggle()`                                                                                          |
-| `beforetoggle` / `toggle`   | `ToggleEvent` with `newState` / `oldState`                                   | `before-show\|show\|before-hide\|hide` and the host events `before-opened\|opened-changed\|before-closed\|closed-changed` |
-| `invoker`                   | `commandfor`, `interestfor`                                                  | `invokerNode`, `slot="invoker"`                                                                                           |
-| `content`                   | slotted element / popover target                                             | `contentNode`                                                                                                             |
-| `anchor`                    | CSS `anchor-name`, `position-anchor`, `position-area`                        | `placementMode: 'local'`                                                                                                  |
-| `backdrop`                  | `::backdrop`                                                                 | backdrop element                                                                                                          |
-| `modal`                     | `showModal()`                                                                | `trapsKeyboardFocus`                                                                                                      |
-| `closedby`                  | `closedby="any \| closest \| none"`                                          | `hidesOnEsc` + `hidesOnOutsideEsc`                                                                                        |
-| scroll lock                 | no platform API (own feature)                                                | `preventsScroll`                                                                                                          |
+| concept                    | platform / spec                                                              | legacy alias (compat layer)                                                                                               |
+| -------------------------- | ---------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------- |
+| `open`                     | `open` attribute/property, `:open`                                           | `opened`, `isShown`                                                                                                       |
+| `show` / `hide` / `toggle` | `showPopover/hidePopover/togglePopover`, `showModal/close`, invoker commands | `show()` / `hide()` / `toggle()`                                                                                          |
+| `beforetoggle` / `toggle`  | `ToggleEvent` with `newState` / `oldState`                                   | `before-show\|show\|before-hide\|hide` and the host events `before-opened\|opened-changed\|before-closed\|closed-changed` |
+| `invoker`                  | `commandfor`, `interestfor`                                                  | `invokerNode`, `slot="invoker"`                                                                                           |
+| `content`                  | slotted element / popover target                                             | `contentNode`                                                                                                             |
+| `anchor`                   | CSS `anchor-name`, `position-anchor`, `position-area`                        | `placementMode: 'local'`                                                                                                  |
+| `backdrop`                 | `::backdrop`                                                                 | backdrop element                                                                                                          |
+| `modal`                    | `showModal()`                                                                | `trapsKeyboardFocus`                                                                                                      |
+| `closedby`                 | `closedby="any \| closest \| none"`                                          | `hidesOnEsc` + `hidesOnOutsideEsc`                                                                                        |
+| scroll lock                | no platform API (own feature)                                                | `preventsScroll`                                                                                                          |
 
 ## 3. The three layers
 
@@ -90,7 +95,7 @@ packages/ui/components/disclosure-system/                  ← clean layer, stan
 
 packages/ui/components/overlays/                            ← compatibility layer (unchanged import path)
   index.js                   export { OverlayController, OverlayMixin, ArrowMixin }
-  legacy-adapter.js          alias → canonical mapping (open ⇄ opened, hide → close, 4 events → 2)
+  legacy-adapter.js          alias → canonical mapping (open ⇄ opened, show/hide unchanged, 4 events → 2)
   legacy-timing.js           old timing quirks, dynamically imported only for legacy consumers
 
 packages/ui/exports/overlays.js            → compatibility layer (existing path, identical behaviour)
@@ -181,8 +186,8 @@ Host elements follow the platform names and keep their configuration in **one se
 
 ```js
 el.open; // state (boolean), reflects the [open] attribute
-el.show(); // actions, mirroring show-popover / close / toggle-popover
-el.close();
+el.show(); // actions, mirroring show-popover / hide-popover / toggle-popover
+el.hide();
 el.toggle();
 el.descriptor; // serializable: { closedby, modal, anchor, scrollLock, … }
 el.addEventListener('beforetoggle', e => e.detail.newState);

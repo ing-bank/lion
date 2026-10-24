@@ -33,7 +33,7 @@ export function installDismiss(disclosure, descriptor) {
    */
   function onPointerDown(event) {
     if (isInside(event)) return;
-    disclosure.close();
+    disclosure.hide();
   }
 
   /**
@@ -50,7 +50,7 @@ export function installDismiss(disclosure, descriptor) {
     ) {
       return;
     }
-    disclosure.close();
+    disclosure.hide();
   }
 
   const listeningToPointer = Boolean(descriptor.lightDismiss);
