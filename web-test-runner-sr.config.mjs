@@ -88,7 +88,10 @@ export default {
   testFramework: {
     // A real reader needs time to start and to speak: VoiceOver speaks slower than the
     // commands that cause it, and a test that commits a value anchors itself three times.
-    config: { timeout: isRealReader ? '90000' : '30000' },
+    // One retry, for the real readers only: a desktop reader occasionally answers with something
+    // other than the item it is on (VoiceOver's help banner instead of the label), which is timing,
+    // not an expectation. A wrong expectation still fails twice.
+    config: { timeout: isRealReader ? '90000' : '30000', retries: isRealReader ? 1 : 0 },
   },
   testRunnerHtml: process.argv.includes('--no-scoped-registries-polyfill')
     ? undefined

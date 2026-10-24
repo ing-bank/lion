@@ -36,6 +36,23 @@ async function fixtureTooltip() {
 let activeReader;
 
 /**
+ * Anchor the reader on the tooltip's invoker.
+ *
+ * A real reader speaks about what it is on, so `sr.focus()` (which puts the browser focus - and with
+ * it VoiceOver's cursor - on the invoker) is the anchor. NVDA needs one more step: on a page this
+ * small its cursor starts outside the web content (empty log and empty current item in CI, while the
+ * browser focus was on the invoker), and tabbing away and back is what makes it announce the control
+ * it is on - the trick the input-iban test uses to re-announce a field as well.
+ */
+async function anchorOnInvoker() {
+  await sr.focus('button[slot="invoker"]');
+  if (activeReader === 'nvda') {
+    await sr.press('Tab');
+    await sr.press('Shift+Tab');
+  }
+}
+
+/**
  * Walk the virtual reader (and NVDA, whose cursor is what speaks) until the log holds a phrase
  * starting with `prefix`.
  *
@@ -102,7 +119,7 @@ describe('<lion-tooltip> screen reader', () => {
     const invoker = /** @type {HTMLElement} */ (el.querySelector('[slot="invoker"]'));
     const content = /** @type {HTMLElement} */ (el.querySelector('[slot="content"]'));
 
-    await sr.focus('button[slot="invoker"]');
+    await anchorOnInvoker();
 
     // The wiring the announcement depends on: the content is a tooltip and the invoker points at it,
     // so the description belongs to the button instead of floating somewhere on the page. The
@@ -115,14 +132,7 @@ describe('<lion-tooltip> screen reader', () => {
     expect(content.id).to.not.equal(null);
 
     // The description is announced with the control it belongs to; a reader that speaks about what
-    // its cursor is on has to be anchored on the invoker first. NVDA needs more than the walk: on a
-    // page this small its cursor starts outside the web content (empty log, empty current item, in
-    // CI, while the browser focus was on the invoker). Tabbing away and back is what makes it
-    // announce the control and its description - the trick the input-iban test uses as well.
-    if (activeReader === 'nvda') {
-      await sr.press('Tab');
-      await sr.press('Shift+Tab');
-    }
+    // its cursor is on has to be walked onto the invoker to say it out loud.
     await walkUntilSpoken('Info');
 
     await sr.expect({
@@ -137,7 +147,7 @@ describe('<lion-tooltip> screen reader', () => {
   it('keeps the tooltip reachable as content of its own', async () => {
     await fixtureTooltip();
 
-    await sr.focus('button[slot="invoker"]');
+    await anchorOnInvoker();
     // The description is announced with the invoker; walking on also passes the tooltip content
     // itself, so a user who keeps browsing finds it again.
     await walkUntilSpoken(activeReader === 'virtual' ? 'tooltip,' : 'This is a tooltip', {
