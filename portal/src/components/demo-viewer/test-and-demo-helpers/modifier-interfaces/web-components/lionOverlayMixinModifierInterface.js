@@ -1,7 +1,7 @@
 /* eslint-disable no-param-reassign, no-unused-vars */
 import { defineModifierInterfaceOnConstructor } from '../applyModifierInterface.js';
 // eslint-disable-next-line import/no-relative-packages
-import { _addOverlayMixinPostProcessor } from '../../../../../../packages/ui/components/overlays/src/OverlayMixin.js';
+import { _addOverlayMixinPostProcessor } from '../../../../../../../packages/ui/components/overlays/src/OverlayMixin.js';
 
 /**
  * @typedef {import('../ModifierInterface.js').ModifierInterface} ModifierInterface

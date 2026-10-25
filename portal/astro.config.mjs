@@ -31,7 +31,10 @@ const mdjsSetupConfig = {
 export default defineConfig({
   base,
   trailingSlash: 'never',
-  outDir: '_site',
+  // The portal is its own (non-workspace) package, yet it renders the repository's own site:
+  // the pages are the library's `docs/` tree (see src/content.config.ts) and the built site lands
+  // in the repository root, where the root deploy and the preview script expect it.
+  outDir: '../_site',
   integrations: [lit(), pagefind()],
   markdown: {
     // ing-web

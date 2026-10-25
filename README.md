@@ -272,13 +272,18 @@ The site is published to the [`gh-pages` branch](https://github.com/ing-bank/lio
 npm run deploy
 ```
 
-That builds the portal (`npm run build:portal` = `build:astro` + `build:update-links`, output in `_site/`) and pushes `_site/` to `gh-pages`. The published layout:
+That builds the portal (`npm --prefix portal run build` = `astro build` + the link pass, output in `_site/`) and pushes `_site/` to `gh-pages`. The published layout:
 
 - **The Astro portal owns the site root** (`/`), so every route the portal serves comes from `_site/`.
-- **The legacy rocket site lives at `/prev` and is frozen.** Its build moved out of the root
-  workspace into [`prev-portal/`](./prev-portal/README.md): the rocket tree is unmaintained and used
-  to be installed on every `npm install` in this repo, so it is not covered by the `workspaces`
-  globs and no pipeline installs or builds it. `cd prev-portal && npm install && npm run build`
+- **The portal is its own package, outside the workspace** ([`portal/`](./portal/README.md)): the astro
+  toolchain is only needed to build the website, so no root `npm install` (CI included) pulls it in
+  any more - a compromised package in that tree cannot run scripts during this repo's install. The
+  root `npm run build` delegates to it, and `npm run deploy` still publishes `_site/`.
+  Run `npm install` at the root once first: the portal renders the library from this checkout and the
+  demos in `docs/` resolve their imports from the repository's `node_modules`.
+- **The legacy rocket site lives at `/prev` and is frozen.** Its build lives next to the portal in
+  [`prev-portal/`](./prev-portal/README.md): the rocket tree is unmaintained, so it is kept out of the
+  workspace too and no pipeline installs or builds it. `cd prev-portal && npm install && npm run build`
   writes `_site/prev` by hand. `/prev` is therefore the last published rocket tree, kept as it was
   (its root-absolute urls re-prefixed to `/prev`), and nothing regenerates it automatically.
 - `next/index.html` redirects to `/` for links that still point at the pre-2026-04-23 layout.
@@ -290,10 +295,11 @@ A branch preview is the portal built with another base url, published in a folde
 the branch name. Nothing links to it, so it can be shared before a branch is merged.
 
 ```bash
-npm run portal:preview                     # HEAD -> https://lion.js.org/next-preview/<branch-slug>/
-npm run portal:preview -- --no-push        # build and stage locally, do not publish
-npm run portal:preview -- --no-build       # reuse the _site/ that is already there
-npm run portal:preview -- --branch=feat/x  # preview another branch
+cd portal
+npm run preview                       # HEAD -> https://lion.js.org/next-preview/<branch-slug>/
+npm run preview -- --no-push          # build and stage locally, do not publish
+npm run preview -- --no-build         # reuse the _site/ that is already there
+npm run preview -- --branch=feat/x    # preview another branch
 ```
 
 The portal resolves all of its urls against `import.meta.env.BASE_URL` (set through
@@ -302,7 +308,7 @@ changes are involved. `next-preview/index.html` lists the previews that are curr
 
 The shared Pages site is public: a preview url is unlisted but not access controlled. For content
 that may not be public, stage it locally and expose it on the tailnet instead (`npm run
-portal:preview -- --target=local`, then serve `~/portal-previews` from a static server behind
+preview -- --target=local`, then serve `~/portal-previews` from a static server behind
 `tailscale serve`; the printed url is only reachable from devices in the tailnet).
 
 ## Contact

@@ -1,5 +1,6 @@
 import fs from 'node:fs/promises';
-import { globby } from 'globby';
+import path from 'node:path';
+import { fsGlob } from 'providence-analytics/utils.js';
 
 // Astro owns the site root (base '/') and the legacy rocket site lives under '/prev'. A branch
 // preview publishes the same astro output under '/next-preview/<branch>' instead (see
@@ -13,12 +14,16 @@ import { globby } from 'globby';
 // links), and it is a no-op when the portal owns the root, which is the production build.
 const base = (process.env.ASTRO_BASE_URL || '/').replace(/\/$/, '');
 
+// Both outputs are astro's outDir: the repository root's `_site/`. This file sits in
+// portal/src/utils/, so the site directory is resolved from the file rather than from the cwd, and
+// the script works both through the portal's own build script and from the repository root.
+const SITE = path.resolve(import.meta.dirname, '..', '..', '..', '_site');
+const inSite = relativePath => path.join(SITE, relativePath);
+
 // Get all HTML files from the astro output directory
-const astroFiles = base
-  ? await globby(['_site/**/*.html', '_site/*.html'], { ignore: ['_site/prev/**'] })
-  : [];
+const astroFiles = base ? (await fsGlob(['**/*.html', '!prev/**'], { cwd: SITE })).map(inSite) : [];
 // ... and from the Rocket output directory (_site/prev)
-const rocketFiles = await globby(['_site/prev/**/*.html', '_site/prev/*.html']);
+const rocketFiles = (await fsGlob('prev/**/*.html', { cwd: SITE })).map(inSite);
 
 let DEBUG = false;
 

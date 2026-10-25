@@ -9,19 +9,22 @@ const require = createRequire(import.meta.url);
 const DEBUG = 1;
 const DEBUG_COMPONENTS = ['extend-a-native-input', 'combobox/overview'];
 const SHOW_MODULE_NOT_FOUND = false;
-const ROOT_DIR = path.basename(path.resolve(import.meta.dirname, '..', '..', '..'));
+// The portal package lives in portal/, while the docs and the library packages it resolves imports
+// from live at the repository root: portal/src/utils/remark-plugins -> <repo>.
+const REPO_ROOT = path.resolve(import.meta.dirname, '..', '..', '..', '..');
+const PORTAL_ROOT = path.resolve(import.meta.dirname, '..', '..');
+const LION_PACKAGES_DIR = path.join(REPO_ROOT, 'packages');
+const LION_DOCS_DIR = path.join(REPO_ROOT, 'docs');
 
 const resolveLionImport = moduleResolvedPath => {
-  const lionDirectorPackages = path.join(ROOT_DIR, 'packages');
-  if (moduleResolvedPath.includes(lionDirectorPackages)) {
+  if (moduleResolvedPath.includes(LION_PACKAGES_DIR)) {
     // it can be from a local package, e.g. @lion/ui
-    return `/@lion${moduleResolvedPath.split(`/${lionDirectorPackages}`)[1]}`;
+    return `/@lion${moduleResolvedPath.split(LION_PACKAGES_DIR)[1]}`;
   }
 
-  const lionDirectoryDocs = path.join(ROOT_DIR, 'docs');
-  if (moduleResolvedPath.includes(lionDirectoryDocs)) {
+  if (moduleResolvedPath.includes(LION_DOCS_DIR)) {
     // it can be from a local package, e.g. @lion/ui
-    return `/${NODE_MODULES_LION_DOCS}${moduleResolvedPath.split(`/${lionDirectoryDocs}`)[1]}`;
+    return `/${NODE_MODULES_LION_DOCS}${moduleResolvedPath.split(LION_DOCS_DIR)[1]}`;
   }
 
   return moduleResolvedPath.split(NODE_MODULES_PATH)[1];
@@ -78,8 +81,11 @@ async function processImports(source, inputPath) {
       } else {
         const isDynamicImport = importSrc.startsWith("'");
         if (isDynamicImport) {
+          // The demo plumbing (@mdjs/mdjs-story/define, @mdjs/mdjs-preview/define) belongs to the
+          // portal's own dependency tree, while the demo files live in the library's docs/ tree, so
+          // both places are searched - the portal first.
           const resolvedPath = require.resolve(importSrc.replace(/'/g, ''), {
-            paths: [path.dirname(inputPath)],
+            paths: [PORTAL_ROOT, path.dirname(inputPath)],
           });
 
           resolvedImportFullPath = `'${NODE_MODULES_PATH}${resolveLionImport(resolvedPath)}'`;
