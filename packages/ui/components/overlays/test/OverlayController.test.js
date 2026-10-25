@@ -238,21 +238,17 @@ describe('OverlayController', () => {
           contentNode: await createZNode('auto', { mode: 'global' }),
         });
         await ctrl.show();
-        // @ts-expect-error find out why config would/could be undfined
-        expect(ctrl.content.style.zIndex).to.equal(`${ctrl.config.zIndex + 1}`);
+        expect(ctrl.content.style.zIndex).to.equal('10000');
         ctrl.updateConfig({ contentNode: await createZNode('auto', { mode: 'inline' }) });
         await ctrl.show();
-        // @ts-expect-error find out why config would/could be undfined
-        expect(ctrl.content.style.zIndex).to.equal(`${ctrl.config.zIndex + 1}`);
+        expect(ctrl.content.style.zIndex).to.equal('10000');
 
         ctrl.updateConfig({ contentNode: await createZNode('0', { mode: 'global' }) });
         await ctrl.show();
-        // @ts-expect-error find out why config would/could be undfined
-        expect(ctrl.content.style.zIndex).to.equal(`${ctrl.config.zIndex + 1}`);
+        expect(ctrl.content.style.zIndex).to.equal('10000');
         ctrl.updateConfig({ contentNode: await createZNode('0', { mode: 'inline' }) });
         await ctrl.show();
-        // @ts-expect-error find out why config would/could be undfined
-        expect(ctrl.content.style.zIndex).to.equal(`${ctrl.config.zIndex + 1}`);
+        expect(ctrl.content.style.zIndex).to.equal('10000');
       });
 
       it("doesn't set a z-index when contentNode already has >= 1", async () => {
@@ -282,8 +278,7 @@ describe('OverlayController', () => {
         expect(ctrl.contentNode.style.zIndex).to.equal('');
         await ctrl.show();
         expect(ctrl.contentNode.style.zIndex).to.equal('');
-        // @ts-expect-error find out why config would/could be undfined
-        expect(ctrl.content.style.zIndex).to.equal(`${ctrl.config.zIndex + 1}`);
+        expect(ctrl.content.style.zIndex).to.equal('10000');
       });
 
       it('does not touch contentNode.style.zIndex when computed zIndex is "auto"', async () => {
