@@ -1,0 +1,62 @@
+{
+  "private": true,
+  "name": "lion-portal",
+  "version": "0.0.0",
+  "description": "The Lion Astro portal (lion.js.org). Deliberately outside the workspaces.",
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "build": "astro build --force && node ./src/utils/rewrite-links.mjs",
+    "dev": "astro dev --force",
+    "postinstall": "patch-package --patch-dir ../patches",
+    "links": "node ./src/utils/rewrite-links.mjs",
+    "preview": "node ./scripts/deploy-portal-preview.mjs",
+    "sync": "astro sync"
+  },
+  "devDependencies": {
+    "@bundled-es-modules/message-format": "^6.2.4",
+    "@lion/astro-lit": "file:../packages-node/astro-lit",
+    "@lion/ui": "file:../packages/ui",
+    "@lit-labs/ssr": "^4.1.0",
+    "@lit/reactive-element": "^2.1.2",
+    "@mdjs/core": "^0.21.1",
+    "@mdjs/mdjs-preview": "^0.6.0",
+    "@mdjs/mdjs-story": "^0.4.0",
+    "@open-wc/dedupe-mixin": "^2.0.1",
+    "@open-wc/scoped-elements": "^3.0.6",
+    "@popperjs/core": "^2.11.8",
+    "@webcomponents/scoped-custom-element-registry": "^0.0.10",
+    "@webcomponents/template-shadowroot": "^0.2.1",
+    "astro": "^6.0.8",
+    "astro-pagefind": "^1.8.5",
+    "astro-seo": "^0.7.5",
+    "autosize": "^6.0.0",
+    "css-tree": "^3.1.0",
+    "es-module-lexer": "^1.7.0",
+    "ibantools": "^4.3.9",
+    "lit": "^3.3.3",
+    "lit-element": "^4.2.2",
+    "lit-html": "^3.3.3",
+    "parse5": "^8.0.0",
+    "patch-package": "^8.0.1",
+    "postinstall-postinstall": "^2.1.0",
+    "providence-analytics": "file:../packages-node/providence-analytics",
+    "singleton-manager": "file:../packages/singleton-manager",
+    "unist-util-visit": "^5.0.0"
+  },
+  "overrides": {
+    "lit": "$lit",
+    "lit-element": "$lit-element",
+    "lit-html": "$lit-html",
+    "@lit/reactive-element": "$@lit/reactive-element",
+    "@lit-labs/ssr": "^4.1.0",
+    "@lit-labs/ssr-client": "1.1.8",
+    "@lit-labs/ssr-dom-shim": "1.6.0",
+    "@mdjs/core": "$@mdjs/core",
+    "@mdjs/mdjs-story": "$@mdjs/mdjs-story",
+    "@mdjs/mdjs-preview": {
+      ".": "$@mdjs/mdjs-preview",
+      "@lion/ui": "file:../packages/ui"
+    }
+  }
+}

@@ -1,4 +1,9 @@
-# Astro Starter Kit: Minimal
+# Astro notes (maintainers)
+
+> Historical notes from the astro migration. The paths referenced below are the pre-portal ones: the
+> portal now lives in `portal/` (`portal/src`, `portal/public`) and its commands are run from there
+> (`cd portal && npm run dev|build|preview`). Kept for the reasoning, not as a current how-to.
+
 
 ```
 npm create astro@latest -- --template minimal

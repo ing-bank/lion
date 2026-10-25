@@ -1,5 +1,5 @@
 import { expect } from '@open-wc/testing';
-import { updateNavData } from './updateNavData.js';
+import { updateNavData } from '../../portal/src/components/UIMainNav/updateNavData.js';
 
 describe('updateNavData', () => {
   it('adds `active` state for current url', () => {

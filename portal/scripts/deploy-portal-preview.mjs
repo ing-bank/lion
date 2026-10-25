@@ -2,13 +2,13 @@
 /**
  * Publish a test version of the astro portal under a folder that carries the branch name.
  *
- *   npm run portal:preview                       # build HEAD, publish to gh-pages, print the url
- *   npm run portal:preview -- --no-push          # build and stage, but do not push
- *   npm run portal:preview -- --no-build         # reuse the _site/ that is already there
- *   npm run portal:preview -- --branch=feat/x    # preview a branch other than HEAD
- *   npm run portal:preview -- --target=local     # stage in ~/portal-previews, no push
- *   npm run portal:preview -- --target=local --serve
- *                                                # ... and expose it on the tailnet (private url)
+ *   cd portal && npm run preview                    # build HEAD, publish to gh-pages, print the url
+ *   cd portal && npm run preview -- --no-push        # build and stage, but do not push
+ *   cd portal && npm run preview -- --no-build       # reuse the _site/ that is already there
+ *   cd portal && npm run preview -- --branch=feat/x  # preview a branch other than HEAD
+ *   cd portal && npm run preview -- --target=local   # stage in ~/portal-previews, no push
+ *   cd portal && npm run preview -- --target=local --serve
+ *                                                    # ... and expose it on the tailnet (private url)
  *
  * The portal reads its prefix from import.meta.env.BASE_URL, so a preview is the normal build
  * with a different ASTRO_BASE_URL (see astro.config.mjs). Every preview gets its own folder:
@@ -26,7 +26,7 @@ import os from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
+const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..', '..');
 const SITE = '_site'; // astro's outDir (astro.config.mjs) and the published site root
 const PREVIEW_DIR = 'next-preview'; // folder on the published site that groups all previews
 const PAGES_HOST = 'https://lion.js.org';
@@ -67,12 +67,10 @@ async function main() {
   console.log(`portal preview: branch=${branch} commit=${commit} slug=${slug} base=${base} target=${target}`);
 
   if (!flag('no-build')) {
-    // astro build only: the branch preview is the portal, not the legacy rocket site.
-    // _site is astro's outDir ('outDir' in astro.config.mjs) and the deployed site root, so drop
-    // it first: a previous full build may have left the rocket output ('_site/prev') in there.
+    // the portal build (astro + the link pass) runs with the preview's base url; it is the whole
+    // site, so drop the previous output first: a full build may have left _site/prev in there.
     await fsp.rm(SITE, { recursive: true, force: true });
-    run('npx', ['astro', 'build', '--force'], { ASTRO_BASE_URL: base });
-    run('node', ['src/utils/rewrite-links.mjs'], { ASTRO_BASE_URL: base });
+    run('npm', ['--prefix', 'portal', 'run', 'build'], { ASTRO_BASE_URL: base });
   }
 
   const dist = path.join(ROOT, SITE);

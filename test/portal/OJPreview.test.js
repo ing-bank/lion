@@ -1,5 +1,5 @@
 import { expect } from '@open-wc/testing';
-import { OJPreview } from '../OJPreview/OJPreview.js';
+import { OJPreview } from '../../portal/src/components/demo-viewer/OJPreview/OJPreview.js';
 
 /**
  * @typedef {import('../OJPreview/OJPreview.js').OJPreview} OJPreviewType

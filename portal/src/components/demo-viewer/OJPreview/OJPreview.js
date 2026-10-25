@@ -8,7 +8,7 @@ import { LionSwitch } from '@lion/ui/switch.js';
 // eslint-disable-next-line import/no-extraneous-dependencies, import/no-relative-packages
 import { MdJsPreview } from '@mdjs/mdjs-preview';
 // eslint-disable-next-line import/no-relative-packages
-import { ScopedElementsMixin } from '../../../../packages/ui/components/core/src/ScopedElementsMixin.js';
+import { ScopedElementsMixin } from '../../../../../packages/ui/components/core/src/ScopedElementsMixin.js';
 
 import {
   cssClassModifierInterfaceRegistry,
