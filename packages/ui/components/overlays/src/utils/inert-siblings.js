@@ -8,7 +8,12 @@
  * @param {HTMLElement} element
  */
 export function setSiblingsInert(element) {
-  const parentChildren = /** @type {HTMLCollection} */ (element.parentElement?.children);
+  const parentChildren = element.parentElement?.children;
+  // An overlay that is not in the document (yet, or any more) has no siblings to mark: this is a
+  // public function, so it does not throw for that.
+  if (!parentChildren) {
+    return;
+  }
   for (let i = 0; i < parentChildren.length; i += 1) {
     const sibling = parentChildren[i];
 
@@ -24,7 +29,12 @@ export function setSiblingsInert(element) {
  * @param {HTMLElement} element
  */
 export function unsetSiblingsInert(element) {
-  const parentChildren = /** @type {HTMLCollection} */ (element.parentElement?.children);
+  const parentChildren = element.parentElement?.children;
+  // An overlay that is not in the document (yet, or any more) has no siblings to mark: this is a
+  // public function, so it does not throw for that.
+  if (!parentChildren) {
+    return;
+  }
   for (let i = 0; i < parentChildren.length; i += 1) {
     const sibling = parentChildren[i];
 
