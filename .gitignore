@@ -30,7 +30,6 @@ yarn-error.log
 ## build artifacts
 /lib/
 /build/
-/bundlesize/dist/
 **/custom-elements.json
 **/web-types.json
 dist

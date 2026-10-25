@@ -25,9 +25,6 @@ jobs:
       - name: Lint
         run: npm run lint
 
-      # - name: Bundlesize
-      #   run: npm run bundlesize
-
   browser-tests:
     name: Browser tests
     runs-on: ubuntu-latest
