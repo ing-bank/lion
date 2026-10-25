@@ -9,12 +9,14 @@ The first set ships in `public/blog/images/*.svg`; the palette they are painted 
 
 ## The style in one line
 
-> Flat abstract vector editorial illustration in a casual hand-drawn business style: minimal
-> geometric shapes, slightly wobbly ink outlines, flat solid fills, one yellow accent, a mostly
-> black plate, and a lot of empty space around a small centred subject.
+> Classical engraving plate: fine hatching and stipple line work in white on a black page, huge
+> geometric construction circles and squares behind the scene, an abstract repeating background
+> pattern, several overlapping silhouette figure studies, and exactly one yellow accent.
 
-In three words: **abstract, casual, business**. The drawing is a metaphor for the post, never a
-literal screenshot, a mascot or a scene with faces.
+In three words: **engraved, technical, anatomical**. The drawing is a metaphor for the post, never a
+literal screenshot, a mascot (except where a content mark is called for, below) or a scene with
+faces. The Vitruvian Man is the reference: a proportional study where the diagram - circle, square,
+radii, measure lines - is as much the subject as the figure.
 
 ## Palette
 
@@ -53,16 +55,29 @@ Rules that follow from the table:
   width, doing the work the post describes - pushing, carrying, stacking, measuring, pulling one
   layer out. They are what makes the drawing about people and teams rather than about objects, and
   they are never detailed: no faces, no skin tone.
-- **Line work, not flat blobs.** Thin white contour lines, cross-hatching, dashed guide lines,
-  dimension lines with tick marks and small arrow heads, a ruler or a ground line to stand on.
-  The drawing should read as a technical sketch of a scene, at 20-35% coverage of the plate
-  (measured: 9-35% across the set).
-- **No text.** Not the post title, not a label, not a number on a dimension line: an image model
-  garbles lettering and invents stray digits on rulers and gauges (`120`, `97` turned up on a first
-  pass). Words belong in the headline, never in the artwork.
+- **Line work, not flat blobs.** Fine parallel hatching, cross-hatching and stipple for every shaded
+  mass, thin white contour lines for every edge, and visible construction geometry: huge
+  overlapping circles and squares, radii, chords, proportional guides and dashed measure lines that
+  cut through the scene like an anatomy plate.
+- **A pattern in the background, different per post.** The abstract pattern is part of the brief,
+  not decoration: concentric circles with radii, diagonal hatch bands, a dotted grid, a radial
+  sunburst, a blueprint grid with corner ticks, horizontal rules, speed chevrons, an isometric cube
+  grid, contour lines. One pattern per drawing keeps the set varied while the style stays one
+  language.
+- **Vary the composition.** Nine drawings in a row read as a template if they are all built the same
+  way. Give each one a different archetype - great-circle diagram, wall with one door, long table,
+  flying arc, grid being arranged, tower being dismantled, assembly line, funnel, bench - and rotate
+  where the accent lands.
+- **Figures carry the metaphor, in overlapping poses.** Several white silhouette studies spread
+  across the width, each drawn with limbs extended at more than one angle the way an anatomy plate
+  shows a body in two positions at once.
 - **One accent idea.** Yellow marks the one thing the metaphor turns on - the open door, the
   keystone link, the stopwatch, the box everything funnels into. A drawing with five yellow things
   has no accent.
+- **No text.** Not the post title, not a label, not a digit on a ruler or a clock face: an image
+  model garbles lettering and invents stray numerals (`120` and `97` turned up on a ruler, `1-12` on
+  a stopwatch). Words belong in the headline, and the only lettering allowed in a cover is a
+  content mark composited from an official logo (below).
 - Rules of thumb: three or four shape families per drawing (blocks, discs, sheets, figures), a
   foreground object for the eye to land on, a clear left-to-right direction of work, no frame and
   no border.
@@ -74,6 +89,27 @@ arrows, stacks of thin sheets, rulers and tick marks, and rows of silhouetted fi
 Avoid: light bulbs, rockets, gears alone, handshakes, hands with visible skin, briefcases, target
 darts, generic stock composition, any logo or brand mark, any lettering.
 
+## Content marks: the official logo, composited not generated
+
+When a post is about a named technology, the cover gets one mark so the reference is unambiguous -
+the TypeScript 7 cover carries the TypeScript badge and the Go gopher. Both are **composited into
+the traced SVG**, never drawn by the model: a diffusion pass renders an approximate glyph and
+garbles short lettering, and a traced mascot came back as one solid white blob.
+
+- **TypeScript badge** (`svgv/typescript-7.svg`): the rounded square and the "TS" glyph are lifted
+  from the official 2020 mark's own geometry (Wikimedia `Typescript_logo_2020.svg`), recoloured to
+  `.illo-accent` for the square and `.illo-accent-ink` for the glyph. The glyph is deliberately NOT
+  `.illo-ink`: that class turns dark in the light theme and the letters would vanish into the yellow.
+  `--illo-accent-ink` is `var(--accent-ink)`, i.e. `#111111` in both themes.
+- **Go gopher**: hand-authored vector (`refs/gopher-hand.svg`, ~15 shapes) rather than traced -
+  round body, two ears, eyes and buck teeth as knock-outs, mitten arms, feet. Traced at 150px it
+  collapsed into a blob; at the cover's scale a drawn mark is both cleaner and smaller.
+- **Licensing is on the page, not on the drawing.** The TypeScript logo is a Microsoft trademark and
+  the Go gopher is Renée French's, licensed CC BY 3.0. Nominative use in an article about migrating
+  to TypeScript 7 / the Go compiler is the ordinary case, but if these covers are reused elsewhere,
+  credit both (a caption or a credit line in the post footer) or swap the mark for a house-drawn
+  stand-in. Never ship the marks in a context that implies endorsement.
+
 ## Prompt template
 
 Paste as-is and put the scene in the first sentence. `{scene}` is the metaphor; delete nothing else
@@ -81,17 +117,19 @@ Paste as-is and put the scene in the first sentence. `{scene}` is the metaphor; 
 - the style and negative clauses are what hold the palette.
 
 ```
-{scene} The page is solid black (hex 111111) from edge to edge, and everything is drawn on top of
-it in white, light grey and saturated Lion yellow hex FFC107. White ink line work on a black page,
-never black ink on white paper. Hand-drawn technical-editorial vector style: many thin pale contour
-lines, light cross-hatching, dashed guide lines, dimension lines with tick marks and small arrow
-heads, flat solid fills, no gradients. The composition fills the entire frame edge to edge: the
-scene spans the full canvas, shapes are distributed left, centre and right, the tallest shapes touch
-the top edge, a ground line sits on the bottom edge and a band of small repeated hatch marks runs
-across the width - no small lonely object in the middle, no large empty margins. Several plain
-solid white silhouettes with simple rounded heads and limbs, in different working poses, spread
-across the width, doing the work the scene describes; no facial features, no skin tone. No text, no
-letters, no digits, no numbers, no measurement numerals, no logos, no signage anywhere.
+{scene} The page is solid black (hex 111111) from edge to edge. Everything is drawn on it in white,
+light grey and saturated Lion yellow hex FFC107, as a classical engraving plate: fine parallel hatch
+lines, dense stipple shading, thin white contour outlines, and visible geometric CONSTRUCTION LINES -
+huge overlapping circles and squares, radii, chords and proportional guide lines drawn in thin white
+strokes behind and through the scene, like a Renaissance anatomy study diagram. An abstract repeating
+background pattern covers the whole frame (name it in the scene). The scene spans the frame edge to
+edge: objects and figures are distributed left, centre and right, the tallest shapes reach the top
+edge, a ground line runs along the bottom edge, no small lonely object in the middle, no large empty
+margins. Human figures: white silhouette studies with simple rounded heads and limbs, each figure
+shown in several OVERLAPPING POSES with arms and legs extended at different angles, like the limbs
+of an anatomy plate, spread across the whole width and doing the work the scene describes. No facial
+features, no skin tone. No text, no letters, no digits, no numbers, no numerals, no logos, no signage
+anywhere.
 ```
 
 Negative prompt:
@@ -122,7 +160,10 @@ the theme. The conversion is four steps and is scripted, not hand-drawn:
 3. Trace with VTracer (`mode: spline`, `hierarchical: stacked`, `filter_speckle: 6`,
    `layer_difference: 20`, `path_precision: 0`), then rewrite every `fill` into the matching
    `.illo-*` class and give the root a real `viewBox` - VTracer writes `width`/`height` only, and
-   without a viewBox the drawing renders at natural size, cropped.
+   without a viewBox the drawing renders at natural size, cropped. Then prune: a hatch-heavy
+   drawing traces to 100-360 paths, and dropping every non-plate path whose bounding box is under
+   ~90 px² takes the specks out without touching the strokes (measured: 7-28 paths per cover).
+   Composited content marks go in after the prune, so they are never touched by it.
 4. Prove it: render the file in the browser in both themes and check the computed fills
    (`--illo-accent` must resolve to `rgb(255, 193, 7)`) plus a look at the sheet at card size.
 
