@@ -248,6 +248,35 @@ describe('FormControlMixin', () => {
   });
 
   describe('Accessibility', () => {
+    it('does not reference a label element that has nothing to say', async () => {
+      // Lion renders a <label slot="label"> even when nothing labels the control; pointing
+      // aria-labelledby at an empty element makes the accessible name resolve to nothing
+      // (axe: "ARIA input fields must have an accessible name").
+      const el = /** @type {FormControlMixinClass} */ (
+        await fixture(html` <${tag}><label slot="label"></label>${inputSlot}</${tag}> `)
+      );
+      await el.updateComplete;
+      await el.updateComplete;
+      const { _inputNode } = getFormControlMembers(el);
+      expect(_inputNode.hasAttribute('aria-labelledby')).to.be.false;
+    });
+
+    it('starts referencing the label as soon as it carries text', async () => {
+      const el = /** @type {FormControlMixinClass} */ (
+        await fixture(html`<${tag}>${inputSlot}</${tag}>`)
+      );
+      await el.updateComplete;
+      await el.updateComplete;
+      const { _inputNode } = getFormControlMembers(el);
+      expect(_inputNode.hasAttribute('aria-labelledby')).to.be.false;
+
+      el.label = 'Email address';
+      await el.updateComplete;
+      // @ts-ignore allow protected accessors in tests
+      const inputId = el._inputId;
+      expect(_inputNode.getAttribute('aria-labelledby')).to.contain(`label-${inputId}`);
+    });
+
     it('does not duplicate aria-describedby and aria-labelledby ids on reconnect', async () => {
       const wrapper = /** @type {HTMLElement} */ (
         await fixture(html`

@@ -244,6 +244,14 @@ Lion Web Components aims to be future-proof and use well-supported proven techno
 - [ES modules](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/import)
 - Lots and lots of tests
 
+## Supported browsers
+
+Lion needs the native modal dialog: a modal overlay is opened with `<dialog>.showModal()`, and the browser is
+then what keeps the keyboard focus inside it and makes the rest of the page unreachable (for a screen reader
+too). There is no fallback for a browser that cannot do this, so IE11 and Safari 15 and older are not
+supported. Safari 16 is the oldest supported browser; Chrome, Edge and Firefox are supported for their last
+four versions. This is recorded in [`.browserslistrc`](./.browserslistrc).
+
 ## Rationale
 
 We know from experience that making high quality, accessible UI components is hard and time consuming:

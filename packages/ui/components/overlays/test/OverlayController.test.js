@@ -18,7 +18,7 @@ import {
 import { isActiveElement } from '../../core/test-helpers/isActiveElement.js';
 import { createShadowHost } from '../test-helpers/createShadowHost.js';
 import { _adoptStyleUtils } from '../src/utils/adopt-styles.js';
-import { simulateTab } from '../src/utils/simulate-tab.js';
+import { simulateTab } from './helpers/simulate-tab.js';
 import { browserDetection } from '../../core/src/browserDetection.js';
 
 /**

@@ -19,6 +19,22 @@ import { FormRegisteringMixin } from './registration/FormRegisteringMixin.js';
  */
 
 /**
+ * Whether a node contributes a name: text, an aria-label, an aria-labelledby or a title. An empty
+ * label element does not.
+ *
+ * @param {Element} node
+ * @returns {boolean}
+ */
+function hasAccessibleNameContent(node) {
+  return (
+    (node.textContent ?? '').trim() !== '' ||
+    node.hasAttribute('aria-label') ||
+    node.hasAttribute('aria-labelledby') ||
+    node.hasAttribute('title')
+  );
+}
+
+/**
  * #FormControlMixin :
  *
  * This Mixin is a shared fundament for all form components, it's applied on:
@@ -307,6 +323,13 @@ const FormControlMixinImplementation = /** @type {FormControlMixin} */ (supercla
 
       if (changedProperties.has('label') && this.__label !== undefined && this._labelNode) {
         this._labelNode.textContent = this.label;
+        // Whether the label can be referenced depends on its content, and a label set through the
+        // property arrives after the first render.
+        this.__reflectAriaAttr(
+          'aria-labelledby',
+          this._ariaLabelledNodes,
+          this.__reorderAriaLabelledNodes,
+        );
       }
 
       if (
@@ -422,8 +445,23 @@ const FormControlMixinImplementation = /** @type {FormControlMixin} */ (supercla
           // eslint-disable-next-line no-param-reassign
           nodes = [...orderedInsideNodes, ...outsideNodes];
         }
-        const string = nodes.map(n => n.id).join(' ');
-        this._inputNode.setAttribute(attrName, string);
+        // Reference only nodes that exist - and, for a *name*, only nodes that actually carry one. Lion
+        // renders an empty <label slot="label"> even when a consumer supplies no label text, so pointing
+        // aria-labelledby at it makes the accessible name resolve to an empty element (axe: "ARIA input
+        // fields must have an accessible name"). Nothing to reference means no attribute, not an empty
+        // one.
+        const usable = nodes.filter(
+          node =>
+            node.id &&
+            node.isConnected &&
+            (attrName !== 'aria-labelledby' || hasAccessibleNameContent(node)),
+        );
+        const string = usable.map(n => n.id).join(' ');
+        if (string) {
+          this._inputNode.setAttribute(attrName, string);
+        } else {
+          this._inputNode.removeAttribute(attrName);
+        }
       }
     }
 
