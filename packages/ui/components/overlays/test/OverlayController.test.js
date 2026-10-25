@@ -282,6 +282,7 @@ describe('OverlayController', () => {
         expect(ctrl.contentNode.style.zIndex).to.equal('');
         await ctrl.show();
         expect(ctrl.contentNode.style.zIndex).to.equal('');
+        // @ts-expect-error find out why config would/could be undfined
         expect(ctrl.content.style.zIndex).to.equal(`${ctrl.config.zIndex + 1}`);
       });
 
