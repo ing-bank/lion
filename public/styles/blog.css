@@ -550,8 +550,16 @@ body.blog-page {
 .lion-illo {
     --illo-field: light-dark(#e8e8e8, #111111);
     --illo-ink: light-dark(#111111, #ffffff);
-    --illo-light: light-dark(#8a8a8a, #dcdcdc);
-    --illo-mute: #808080;
+    /*
+     * The two grey steps are darker in the light theme than their dark-theme partners. On the light
+     * plate the greys are the line work and the secondary figures, and #8a8a8a on #e8e8e8 is 2.6:1 -
+     * thin strokes at that contrast wash out (the earlier set measured exactly that: the detail
+     * disappeared in light mode while the silhouettes stayed). #6b6b6b is 4.35:1 and #5a5a5a is
+     * 5.63:1 against the light plate, while the dark theme keeps its own values (#dcdcdc on #111 is
+     * 13.7:1).
+     */
+    --illo-light: light-dark(#6b6b6b, #dcdcdc);
+    --illo-mute: light-dark(#5a5a5a, #808080);
     --illo-accent: var(--accent-yellow);
     display: block;
     width: 100%;
