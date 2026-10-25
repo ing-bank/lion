@@ -2,7 +2,7 @@ import { execFileSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import { defaultReporter } from '@web/test-runner';
 import { playwrightLauncher } from '@web/test-runner-playwright';
-import { screenreaderPlugin, screenreaderReporter } from '@lion/test-runner-screenreader';
+import { screenreaderPlugin, screenreaderReporter } from 'test-runner-sr';
 
 const READERS = ['virtual', 'nvda', 'voiceover'];
 
@@ -34,10 +34,7 @@ function reportReaderHealth() {
     return;
   }
   const script = fileURLToPath(
-    new URL(
-      'packages-node/test-runner-screenreader/scripts/screenreader-smoke.js',
-      import.meta.url,
-    ),
+    new URL('packages-node/test-runner-sr/scripts/screenreader-smoke.js', import.meta.url),
   );
   console.log(`\n[preflight] ${screenReader} on this machine:`);
   try {

@@ -1,6 +1,6 @@
 import { expect, fixture } from '@open-wc/testing';
 import { html } from 'lit';
-import sr, { contains, containsLike } from '@lion/test-runner-screenreader/commands.js';
+import sr, { contains, containsLike } from 'test-runner-sr/commands.js';
 import '@lion/ui/define/lion-switch.js';
 
 /**
@@ -9,7 +9,7 @@ import '@lion/ui/define/lion-switch.js';
  * A switch that is not announced as a switch (with checked state) reads as a plain text label.
  *
  * @typedef {import('@lion/ui/switch.js').LionSwitch} Switch
- * @typedef {import('@lion/test-runner-screenreader').SrReader} SrReader
+ * @typedef {import('test-runner-sr').SrReader} SrReader
  */
 
 /** @returns {Promise<Switch>} */

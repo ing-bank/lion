@@ -58,7 +58,7 @@ export const ALWAYS_FULL_FILES = [
 export const ALWAYS_FULL_DIRS = [
   '.github/workflows/',
   '.github/actions/',
-  'packages-node/test-runner-screenreader/',
+  'packages-node/test-runner-sr/',
 ];
 
 /** The screen reader tests need a desktop reader, so they are never part of the browser set. */

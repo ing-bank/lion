@@ -65,7 +65,7 @@ const READERS = ['virtual', 'nvda', 'voiceover'];
  */
 const FALLBACK_VIRTUAL_BUNDLE_PATHS = [
   '/node_modules/@guidepup/virtual-screen-reader/lib/esm/index.browser.js',
-  '/node_modules/@lion/test-runner-screenreader/node_modules/@guidepup/virtual-screen-reader/lib/esm/index.browser.js',
+  '/node_modules/test-runner-sr/node_modules/@guidepup/virtual-screen-reader/lib/esm/index.browser.js',
 ];
 
 /**

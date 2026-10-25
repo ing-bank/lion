@@ -1,4 +1,4 @@
-# @lion/test-runner-screenreader
+# test-runner-sr
 
 Web Test Runner plugin and commands for testing what a screen reader speaks, via
 [Guidepup](https://www.guidepup.dev/). Private tooling: it exists to run the Lion
@@ -34,7 +34,7 @@ expectations written inline in the test:
 ```js
 import { expect, fixture } from '@open-wc/testing';
 import { html } from 'lit';
-import sr, { contains, exact } from '@lion/test-runner-screenreader/commands.js';
+import sr, { contains, exact } from 'test-runner-sr/commands.js';
 import '@lion/ui/define/lion-input-iban.js';
 
 describe('<lion-input-iban> screen reader', () => {

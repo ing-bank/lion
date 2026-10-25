@@ -52,7 +52,7 @@ export interface ScreenreaderPluginOptions {
 
 /**
  * Web Test Runner plugin that exposes the `sr-*` commands used by
- * `@lion/test-runner-screenreader/commands.js`.
+ * `test-runner-sr/commands.js`.
  */
 export function screenreaderPlugin(options: ScreenreaderPluginOptions): TestRunnerPlugin;
 

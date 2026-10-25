@@ -1,6 +1,6 @@
 import { expect, fixture } from '@open-wc/testing';
 import { html } from 'lit';
-import sr, { contains, containsLike } from '@lion/test-runner-screenreader/commands.js';
+import sr, { contains, containsLike } from 'test-runner-sr/commands.js';
 import '@lion/ui/define/lion-select.js';
 
 /**
@@ -9,7 +9,7 @@ import '@lion/ui/define/lion-select.js';
  * The state is the part that matters: a user has to hear that there is a popup listbox and that it is collapsed.
  *
  * @typedef {import('@lion/ui/select.js').LionSelect} Select
- * @typedef {import('@lion/test-runner-screenreader').SrReader} SrReader
+ * @typedef {import('test-runner-sr').SrReader} SrReader
  */
 
 /** @returns {Promise<Select>} */

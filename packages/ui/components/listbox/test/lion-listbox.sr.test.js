@@ -1,6 +1,6 @@
 import { expect, fixture } from '@open-wc/testing';
 import { html } from 'lit';
-import sr, { contains, containsLike } from '@lion/test-runner-screenreader/commands.js';
+import sr, { contains, containsLike } from 'test-runner-sr/commands.js';
 import '@lion/ui/define/lion-listbox.js';
 import '@lion/ui/define/lion-option.js';
 
@@ -10,7 +10,7 @@ import '@lion/ui/define/lion-option.js';
  * The options carry position and set size, so a user knows how long the list is while walking it.
  *
  * @typedef {import('@lion/ui/listbox.js').LionListbox} Listbox
- * @typedef {import('@lion/test-runner-screenreader').SrReader} SrReader
+ * @typedef {import('test-runner-sr').SrReader} SrReader
  */
 
 /** @returns {Promise<Listbox>} */

@@ -1,6 +1,6 @@
 import { expect, fixture } from '@open-wc/testing';
 import { html } from 'lit';
-import sr, { contains, containsLike } from '@lion/test-runner-screenreader/commands.js';
+import sr, { contains, containsLike } from 'test-runner-sr/commands.js';
 import '@lion/ui/define/lion-textarea.js';
 
 /**
@@ -9,7 +9,7 @@ import '@lion/ui/define/lion-textarea.js';
  * A text area is announced as a textbox as well; what differs is what a user can do with it, not how it is named.
  *
  * @typedef {import('@lion/ui/textarea.js').LionTextarea} Textarea
- * @typedef {import('@lion/test-runner-screenreader').SrReader} SrReader
+ * @typedef {import('test-runner-sr').SrReader} SrReader
  */
 
 /** @returns {Promise<Textarea>} */

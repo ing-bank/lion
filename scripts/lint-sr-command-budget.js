@@ -18,7 +18,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 const { execFileSync } = require('node:child_process');
 
-const FLOW_DIR = path.join(__dirname, '..', 'packages-node', 'test-runner-screenreader');
+const FLOW_DIR = path.join(__dirname, '..', 'packages-node', 'test-runner-sr');
 const PLUGIN = path.join(FLOW_DIR, 'src', 'screenreaderPlugin.js');
 const COMMANDS = path.join(FLOW_DIR, 'src', 'commands.js');
 const SR_CONFIG = path.join(__dirname, '..', 'web-test-runner-sr.config.mjs');
@@ -151,7 +151,7 @@ if (problems.length > 0) {
     console.error(`  ✖  ${problem}`);
   }
   console.error(
-    '\nSee packages-node/test-runner-screenreader/README.md ("Known limits") for what makes a\n' +
+    '\nSee packages-node/test-runner-sr/README.md ("Known limits") for what makes a\n' +
       'command slow: waiting for a reader to speak, typing through VoiceOver, or an anchor that\n' +
       'runs several reader commands.\n',
   );

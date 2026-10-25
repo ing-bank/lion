@@ -1,6 +1,6 @@
 import { expect, fixture } from '@open-wc/testing';
 import { html } from 'lit';
-import sr, { contains, containsLike } from '@lion/test-runner-screenreader/commands.js';
+import sr, { contains, containsLike } from 'test-runner-sr/commands.js';
 import '@lion/ui/define/lion-radio-group.js';
 import '@lion/ui/define/lion-radio.js';
 
@@ -10,7 +10,7 @@ import '@lion/ui/define/lion-radio.js';
  * The position and set size are what tell a user how many options there are, not the visual layout.
  *
  * @typedef {import('@lion/ui/radio-group.js').LionRadioGroup} RadioGroup
- * @typedef {import('@lion/test-runner-screenreader').SrReader} SrReader
+ * @typedef {import('test-runner-sr').SrReader} SrReader
  */
 
 /** @returns {Promise<RadioGroup>} */

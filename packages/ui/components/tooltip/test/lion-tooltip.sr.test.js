@@ -1,6 +1,6 @@
 import { expect, fixture } from '@open-wc/testing';
 import { html } from 'lit';
-import sr, { contains, containsLike } from '@lion/test-runner-screenreader/commands.js';
+import sr, { contains, containsLike } from 'test-runner-sr/commands.js';
 import '@lion/ui/define/lion-tooltip.js';
 
 /**
@@ -13,7 +13,7 @@ import '@lion/ui/define/lion-tooltip.js';
  * DOM assertions verify independently of the wording.
  *
  * @typedef {import('@lion/ui/tooltip.js').LionTooltip} LionTooltip
- * @typedef {import('@lion/test-runner-screenreader').SrReader} SrReader
+ * @typedef {import('test-runner-sr').SrReader} SrReader
  */
 
 /** @returns {Promise<LionTooltip>} */

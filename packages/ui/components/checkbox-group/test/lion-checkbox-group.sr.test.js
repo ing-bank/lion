@@ -1,6 +1,6 @@
 import { expect, fixture } from '@open-wc/testing';
 import { html } from 'lit';
-import sr, { contains, containsLike } from '@lion/test-runner-screenreader/commands.js';
+import sr, { contains, containsLike } from 'test-runner-sr/commands.js';
 import '@lion/ui/define/lion-checkbox-group.js';
 import '@lion/ui/define/lion-checkbox.js';
 
@@ -10,7 +10,7 @@ import '@lion/ui/define/lion-checkbox.js';
  * A group has to be announced as a group with its own name, or a user hears loose checkboxes without knowing what they belong to.
  *
  * @typedef {import('@lion/ui/checkbox-group.js').LionCheckboxGroup} CheckboxGroup
- * @typedef {import('@lion/test-runner-screenreader').SrReader} SrReader
+ * @typedef {import('test-runner-sr').SrReader} SrReader
  */
 
 /** @returns {Promise<CheckboxGroup>} */

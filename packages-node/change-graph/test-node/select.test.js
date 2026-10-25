@@ -100,7 +100,7 @@ describe('change-graph selection', () => {
   it('does not spend a full run on documentation inside an always-full directory', async () => {
     const selection = await selectTests({
       cwd: root,
-      changedFiles: ['packages-node/test-runner-screenreader/README.md'],
+      changedFiles: ['packages-node/test-runner-sr/README.md'],
     });
     expect(selection.full).to.equal(false);
   });
@@ -108,7 +108,7 @@ describe('change-graph selection', () => {
   it('runs everything when the screen reader test runner itself changed', async () => {
     const selection = await selectTests({
       cwd: root,
-      changedFiles: ['packages-node/test-runner-screenreader/src/commands.js'],
+      changedFiles: ['packages-node/test-runner-sr/src/commands.js'],
     });
     expect(selection.full).to.equal(true);
   });

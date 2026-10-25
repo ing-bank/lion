@@ -4,7 +4,7 @@ on:
   push:
     paths:
       - 'packages/ui/components/**/test/*.sr.test.js'
-      - 'packages-node/test-runner-screenreader/**'
+      - 'packages-node/test-runner-sr/**'
       - 'web-test-runner-sr.config.mjs'
       - '.github/workflows/guidepup.yml'
   workflow_dispatch:

@@ -1,6 +1,6 @@
 {
   "private": true,
-  "name": "@lion/test-runner-screenreader",
+  "name": "test-runner-sr",
   "version": "0.1.0",
   "description": "Web Test Runner plugin and commands for screen reader testing with Guidepup",
   "license": "MIT",
@@ -9,7 +9,7 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/ing-bank/lion.git",
-    "directory": "packages-node/test-runner-screenreader"
+    "directory": "packages-node/test-runner-sr"
   },
   "type": "module",
   "exports": {

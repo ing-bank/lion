@@ -1,6 +1,6 @@
 import { expect, fixture } from '@open-wc/testing';
 import { html } from 'lit';
-import sr, { contains, containsLike } from '@lion/test-runner-screenreader/commands.js';
+import sr, { contains, containsLike } from 'test-runner-sr/commands.js';
 import '@lion/ui/define/lion-input-iban.js';
 
 /**
@@ -67,7 +67,7 @@ async function waitUntil(condition, description, timeout = 5000) {
   }
 }
 
-/** @type {import('@lion/test-runner-screenreader').SrReader} */
+/** @type {import('test-runner-sr').SrReader} */
 let activeReader;
 
 /**

@@ -1,6 +1,6 @@
 import { expect, fixture } from '@open-wc/testing';
 import { html } from 'lit';
-import sr, { contains, containsLike } from '@lion/test-runner-screenreader/commands.js';
+import sr, { contains, containsLike } from 'test-runner-sr/commands.js';
 import '@lion/ui/define/lion-input.js';
 
 /**
@@ -9,7 +9,7 @@ import '@lion/ui/define/lion-input.js';
  * The base control every other input builds on: a wrong label or role here is heard in fifteen components.
  *
  * @typedef {import('@lion/ui/input.js').LionInput} Input
- * @typedef {import('@lion/test-runner-screenreader').SrReader} SrReader
+ * @typedef {import('test-runner-sr').SrReader} SrReader
  */
 
 /** @returns {Promise<Input>} */
