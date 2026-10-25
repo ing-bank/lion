@@ -159,11 +159,43 @@ Zach Leatherman's, the Chromium mark is CC BY, and the access symbol is a public
 mark. Keep the credit line in the post footer when a cover is reused, and never drop one of these
 marks into a context that implies the project endorses something.
 
+## Engineering approaches (the current direction)
+
+The first rounds drew people carrying blocks; the set now draws _machines and drawings_. The
+engraving technique stays, the allegorical subject matter is gone: no gods, no statues, no winged
+helmets, no robes, no caduceus, none of the classical dressing, even though the line work is
+classical. Six approaches are in rotation so the feed does not read as one template:
+
+| approach                | subject                             | what carries it                                                                                                  |
+| ----------------------- | ----------------------------------- | ---------------------------------------------------------------------------------------------------------------- |
+| **engineering drawing** | the subject in orthographic section | 45-degree section hatching, dimension lines with plain tick marks, exploded callout circles, a construction grid |
+| **isometric cutaway**   | the housing opened up               | interior cavities in cross-hatch, shafts and bearings, flow arrows through passages, bolted flanges              |
+| **instruments macro**   | precision tools at full frame       | calipers, micrometer, slide rule, a dial gauge with a blank face, stipple on polished steel                      |
+| **flow schematic**      | ducts, valves, vessels              | arrowheads, gate valves, blank dials, rows of identical modules feeding one vessel                               |
+| **kinetic**             | machinery in motion                 | concentric arcs, hatched waveform bands, dotted trajectories, a flywheel and a cam, speed lines, no housings     |
+| **industrial poster**   | the plant as a composition          | stacked blocks and gantries receding, hatched sky bands, diagonal walkways, one big unlettered dial              |
+
+Small silhouetted engineers in overalls and hard hats keep the human scale; they are still the only
+figures allowed. Every prompt names its approach, its subject, and the exclusions (mythology, text,
+digits) at the end.
+
+## The accent is measured, not requested
+
+Asking for `#FFC107` in the prompt is not what makes the cover carry it: the model comes back a few
+points off (measured around `#f5c33a`). So the accent is corrected after the render - mask the yellow
+family (`R-B > 60`, `G > 120`, `R > 140`), measure its mean, and shift the whole family so the mean
+lands on `#FFC107` exactly. Shifting rather than filling keeps the highlights and the shadows the
+engraving put around the accent, and the step prints the before/after mean per cover so the claim is
+checkable in the log rather than asserted.
+
 ## Checklist before shipping a drawing
 
 - [ ] Plate is one black field; the scene spans the canvas with no large empty margins.
 - [ ] Fine hatching and stipple carry every shaded mass; construction geometry is visible.
-- [ ] Exactly one yellow accent, arriving as line work rather than a filled block.
+- [ ] Exactly one yellow accent, arriving as line work rather than a filled block, and its mean
+      measured back at `#FFC107` rather than assumed from the prompt.
+- [ ] The subject is engineering (section, cutaway, instrument, schematic, kinetics, plant), with no
+      classical or mythological dressing even though the line work is an old engraving.
 - [ ] No text, no digits, no numerals, no skin tone, no second hue.
 - [ ] Several overlapping figure studies, spread across the width.
 - [ ] Any logo or mascot went through the blend recipe and reads correctly letter for letter.

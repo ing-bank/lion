@@ -4,7 +4,7 @@ published: true
 description: A library of performant, accessible & flexible Web Components
 date: 2020-08-10
 tags: [javascript, tests, demos]
-cover_image: /blog/images/ing-open-sources-lion.jpg
+cover_image: /blog/images/ing-open-sources-lion.png
 eleventyNavigation:
   key: ING open sources Lion
   title: ING open sources Lion
