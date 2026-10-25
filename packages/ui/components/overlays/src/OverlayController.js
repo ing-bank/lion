@@ -530,8 +530,10 @@ export class OverlayController extends EventTarget {
    */
   set elevation(value) {
     this.__elevation = value;
-    // @ts-expect-error find out why config would/could be undfined
-    this.__wrappingDialogNode.style.zIndex = `${this.config.zIndex + value}`;
+    const baseZIndex = this.config?.zIndex ?? 9999;
+    if (this.__wrappingDialogNode) {
+      this.__wrappingDialogNode.style.zIndex = `${baseZIndex + value}`;
+    }
   }
 
   /**
