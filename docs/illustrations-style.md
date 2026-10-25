@@ -137,6 +137,28 @@ TypeScript 7 and the Go compiler is the ordinary case; if these covers are reuse
 both (a caption or a credit line in the post footer) or swap the mark for a house-drawn stand-in.
 Never ship the marks in a context that implies endorsement.
 
+## Which mark each cover carries
+
+Every cover gets one recognizable element, found with an image search and engraved into the plate the
+way the recipe above describes. The post and its mark:
+
+| post                           | recognizable element                                           | source                         |
+| ------------------------------ | -------------------------------------------------------------- | ------------------------------ |
+| The Accessibility of Lion      | International Symbol of Access                                 | Wikimedia Commons              |
+| Controlling exports            | npm mark, as a sign on the wall of boxes                       | Wikimedia Commons              |
+| Extending Lion Documentation   | Storybook wordmark                                             | storybookjs/brand              |
+| ING open sources Lion          | Lit flame                                                      | lit/lit                        |
+| Introducing lions website      | Eleventy opossum                                               | 11ty/11ty-logo                 |
+| Lion without polyfills         | Chromium mark (browsers are why the polyfill existed)          | Wikimedia Commons              |
+| Introducing Lion UI            | the Lion mark itself                                           | this repo, `public/logo.svg`   |
+| Migrating Lion to TypeScript 7 | TypeScript badge (letters cut into the gear) and the Go gopher | Wikimedia, plus a drawn gopher |
+
+Licences to keep in mind if the covers are reused outside these posts: the npm logo is npm, Inc.'s,
+Storybook's brand assets are covered by their own brand terms, Lit is Google's, Eleventy's opossum is
+Zach Leatherman's, the Chromium mark is CC BY, and the access symbol is a public-domain-standard
+mark. Keep the credit line in the post footer when a cover is reused, and never drop one of these
+marks into a context that implies the project endorses something.
+
 ## Checklist before shipping a drawing
 
 - [ ] Plate is one black field; the scene spans the canvas with no large empty margins.
