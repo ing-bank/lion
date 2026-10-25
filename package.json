@@ -22,7 +22,7 @@
     "format:eslint": "eslint --ext .js,.html . --fix",
     "format:prettier": "prettier \"**/*.{js,md,astro}\" \"packages/*/package.json\" \"package.json\" --write",
     "postinstall": "npx patch-package && npm run build:phone --workspace @lion/ui && npm run custom-elements-manifest",
-    "lint": "run-p lint:*",
+    "lint": "wireit",
     "lint:eslint": "eslint --ext .js,.html .",
     "lint:markdownlint": "git ls-files '*.md' | xargs markdownlint --ignore '{.github/**/*.md,.changeset/*.md,**/CHANGELOG.md,packages/ui/_legacy-changelogs/*.md,packages-node/awesome-phonenumber/upstream/**,prev-portal/*.md}'",
     "lint:phone-number-up-to-date": "node ./scripts/lint-phone-number-lib.js",
@@ -40,7 +40,7 @@
     "start:astro": "astro dev",
     "start:prod": "npm run preview",
     "temporary-disabled__lint:types": "npm run types",
-    "test": "run-p test:browser test:node",
+    "test": "wireit",
     "test:browser": "web-test-runner --coverage",
     "test:node": "npm run test:node --workspaces --if-present",
     "test:screenshots": "npx rimraf screenshots/.diff/ && npx rimraf screenshots/.current/ && mocha --require scripts/screenshots/bootstrap.js --exit --timeout 10000 \"packages/**/test/*.screenshots-test.js\"",
@@ -59,7 +59,6 @@
     "playwright": "^1.61.0"
   },
   "devDependencies": {
-    "@astrojs/mdx": "^5.0.0",
     "@babel/core": "^7.29.6",
     "@bundled-es-modules/fetch-mock": "^6.5.2",
     "@changesets/cli": "^2.30.0",
@@ -72,7 +71,6 @@
     "@mdjs/core": "^0.21.1",
     "@mdjs/mdjs-preview": "^0.6.0",
     "@mdjs/mdjs-story": "^0.4.0",
-    "@open-wc/building-rollup": "^2.2.3",
     "@open-wc/dedupe-mixin": "^2.0.1",
     "@open-wc/eslint-config": "^12.0.3",
     "@open-wc/scoped-elements": "^3.0.5",
@@ -112,7 +110,6 @@
     "looks-same": "^9.0.1",
     "markdownlint-cli": "^0.49.1",
     "mocha": "^10.7.3",
-    "npm-run-all": "^4.1.5",
     "patch-package": "^8.0.1",
     "postinstall-postinstall": "^2.1.0",
     "prettier": "^3.3.3",
@@ -151,6 +148,12 @@
       "//@open-wc/dedupe-mixin": [
         "Declared at the root on purpose: it used to arrive hoisted through the legacy rocket dependency tree,",
         "while src/components/shared/UIBaseElement.js and LightRenderMixin.js import it by name."
+      ],
+      "@web/test-runner-commands": [
+        "@lit-labs/testing asks for ^0.6.1 while the root depends on ^0.9.0, so npm nested a second copy (0.6.6)",
+        "that dragged an entire old @web/test-runner stack in: @web/test-runner-core@0.10.29 ->",
+        "@web/dev-server-core@0.4.1 -> ip@1.1.9 (GHSA-2p57-rm9w-gvfp, high). The only api the ssr fixtures use",
+        "is executeServerCommand, which is unchanged, so one override dedupes it: -10 lock entries, ip gone."
       ]
     },
     "olderVersions": {
@@ -171,9 +174,6 @@
       ],
       "looks-same": [
         "Part of ./scripts/screenshots, which is not incorporated atm in automated test suite. TODO: re-evaluate solution and whether visual regression testing needs to be part of this repo"
-      ],
-      "@open-wc/building-rollup": [
-        "Can't be updated to 3.x, as v2 seems to be better compatible with rocket setup"
       ],
       "chai": [
         "Can't be updated to 5.x, because @web/dev-server-core test-helpers (having implicit dep on chai) is not compatible with chai >= 5.x"
@@ -244,12 +244,31 @@
       "lit-element": "3.3.3",
       "lit-html": "2.8.0",
       "@lit/reactive-element": "1.6.3"
-    }
+    },
+    "@web/test-runner-commands": "^0.9.0"
   },
   "prettier": {
     "printWidth": 100,
     "singleQuote": true,
     "arrowParens": "avoid",
     "trailingComma": "all"
+  },
+  "wireit": {
+    "lint": {
+      "dependencies": [
+        "lint:eslint",
+        "lint:markdownlint",
+        "lint:phone-number-up-to-date",
+        "lint:prettier",
+        "lint:types",
+        "lint:versions"
+      ]
+    },
+    "test": {
+      "dependencies": [
+        "test:browser",
+        "test:node"
+      ]
+    }
   }
 }
