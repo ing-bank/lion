@@ -6,10 +6,9 @@
     "build": "npm run build:astro && npm run build:rocket && npm run build:update-links",
     "build:astro": "astro telemetry disable && astro build --force",
     "build:clean": "find src/pages -path \"*/_demos/*.js\" -type f -delete && rm -rf node_modules/_lion_docs && npm run build",
-    "build:rocket": "rocket build",
     "build:portal": "npm run build:astro && npm run build:update-links",
+    "build:rocket": "rocket build",
     "build:update-links": "node ./src/utils/rewrite-links.mjs",
-    "bundlesize": "rollup -c bundlesize/rollup.config.js && bundlesize",
     "changeset": "changeset",
     "custom-elements-manifest": "npm run custom-elements-manifest --workspaces --if-present && node ./scripts/create-api-tables.mjs",
     "debug": "web-test-runner --watch --config web-test-runner-chrome.config.mjs",
@@ -30,9 +29,9 @@
     "lint:prettier": "prettier \"**/*.js\" --list-different || (echo '↑↑ these files are not prettier formatted ↑↑' && exit 1)",
     "lint:types": "npm run types",
     "lint:versions": "node ./scripts/lint-versions.js",
+    "portal:preview": "node ./scripts/deploy-portal-preview.mjs",
     "prepare": "husky install",
     "preview": "npx serve _site",
-    "portal:preview": "node ./scripts/deploy-portal-preview.mjs",
     "release": "changeset publish",
     "repo:clean-slate": "git clean -dfX",
     "repo:diff-package-lock": "npx diff-package-lock",
@@ -99,7 +98,6 @@
     "astro": "^6.0.8",
     "astro-pagefind": "^1.8.5",
     "astro-seo": "^0.7.5",
-    "bundlesize": "^1.0.0-beta.2",
     "cem-plugin-vs-code-custom-data-generator": "^1.4.2",
     "chai": "^4.5.0",
     "chai-as-promised": "^8.0.0",
@@ -131,12 +129,6 @@
     "unist-util-visit": "^5.0.0",
     "wireit": "^0.14.13"
   },
-  "bundlesize": [
-    {
-      "path": "./bundlesize/dist/*/*.js",
-      "maxSize": "20 kB"
-    }
-  ],
   "comments": {
     "overrides": {
       "//": [
