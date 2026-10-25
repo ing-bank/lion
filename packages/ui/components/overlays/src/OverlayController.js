@@ -824,6 +824,12 @@ export class OverlayController extends EventTarget {
       return;
     }
 
+    // When a separate wrapping dialog node is used, z-index is applied exclusively
+    // to that wrapper (this.__wrappingDialogNode), keeping contentNode untouched.
+    if (this.__wrappingDialogNode && this.__wrappingDialogNode !== this.contentNode) {
+      return;
+    }
+
     if (phase === 'init') {
       const zIndexNumber = Number(getComputedStyle(this.contentNode).zIndex);
       if (zIndexNumber < 1 || Number.isNaN(zIndexNumber)) {
