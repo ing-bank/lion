@@ -1,16 +1,10 @@
 ---
 import { getCollection, getEntry, render } from "astro:content";
 import BlogOverviewLayout from "../../layouts/BlogOverviewLayout.astro";
-import { inlineCover } from "../../utils/blog-covers.js";
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 
 const entries = await getCollection("lionBlog", entry => entry.data?.published);
 const entry = await getEntry('lionBlog', 'index');
-// Illustrations are rendered inline so the theme's custom properties reach them; an image cover
-// stays a background-image. See src/utils/blog-covers.js.
-const covers = Object.fromEntries(
-  entries.map((post) => [post.id, inlineCover(post.data.cover_image)])
-);
 
 const getUrl = (post) => {
   if (post.data?.url) {
@@ -28,29 +22,11 @@ const { Content } = await render(entry);
 <BlogOverviewLayout title="Lion Blog" description="Discover articles from the core team and contributors about Lion, tips and tricks included!">
   {entries.map((post) => (
     <article class="post-card" data-url={getUrl(post)}>
-      {post.data.cover_image && (
-        <div class="post-image">
-          {covers[post.id] ? (
-            <div
-              class="post-image__img post-illo"
-              aria-label={post.data.title}
-              role="img"
-              set:html={covers[post.id]}
-            />
-          ) : (
-            <div
-              class="post-image__img"
-              style={{
-                backgroundImage: `url('${post.data.cover_image}')`,
-                backgroundSize: 'cover',
-                backgroundPosition: 'center',
-              }}
-              aria-label={post.data.title}
-              role="img"
-            />
-          )}
-        </div>
-      )}
+      {post.data.cover_image && <div class="post-image"><div class="post-image__img" style={{
+        backgroundImage: `url('${post.data.cover_image}')`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center'
+      }} aria-label={post.data.title} role="img"/></div>}
 
       <div class="post-content">
         <div class="post-meta">

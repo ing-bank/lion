@@ -137,7 +137,7 @@ body.blog-page {
 .post-image .post-image__img {
     position: relative;
     width: 100%;
-    aspect-ratio: 16/9;
+    aspect-ratio: 2 / 1;
     background: light-dark(#ddd, #3a3a3a);
     border-bottom: 1px solid var(--blog-line);
     transition: filter 0.3s;
@@ -145,31 +145,92 @@ body.blog-page {
 }
 
 /*
- * Only the fallback (an image cover, set as a background-image inline) is greyed. An illustration
- * is a `.post-illo` and stays in colour: greying it would throw away the one accent the artwork is
- * built on, and the artwork already follows the theme on its own.
+ * The overview's track definition lives in BlogOverviewLayout (`repeat(auto-fill, minmax(300px,
+ * 1fr))`), which is what the section actually lays out with. The `repeat(12, 1fr)` that used to sit
+ * here was overridden by it on every page, and the `span 4` it implied was what a featured card
+ * could not be built on: a span larger than the track count grows implicit columns instead of
+ * widening the card.
  */
-.post-image .post-image__img:not(.post-illo) {
-    filter: grayscale(100%);
+
+/* Featured Post (spans every track in the row) */
+/*
+ * The newest post is the lead story: full width, illustration beside the text instead of above it.
+ * It is the same card, only laid out as a row - one grid rule and one flex direction - which is
+ * what the "journal" reading of the section needed: a cover, a lead, then the feed. `1 / -1` is
+ * what "full width" means in an auto-fill grid; `span 12` built twelve implicit tracks on top of
+ * the three or four real ones and clipped the text. The `:first-child` is document order, and the
+ * collection is what decides that order.
+ */
+.post-card:first-child {
+    grid-column: 1 / -1;
+    flex-direction: row;
 }
 
-/* The inline illustration fills its 16/9 box without a background or a border of its own. */
-.post-image .post-image__img.post-illo {
-    background: none;
-    display: grid;
-    place-items: center;
-    overflow: hidden;
+.post-card:first-child .post-image {
+    flex: 0 0 55%;
+    border-right: 1px solid var(--blog-line);
 }
 
-.post-image .post-image__img.post-illo .lion-illo {
-    transition: transform 0.4s cubic-bezier(0.2, 0, 0.2, 1);
+.post-card:first-child .post-image .post-image__img {
+    height: 100%;
+    aspect-ratio: auto;
+    border-bottom: none;
 }
 
-.post-card:hover .post-image__img.post-illo .lion-illo {
-    transform: scale(1.04);
+.post-card:first-child .post-content {
+    padding: 40px;
+    justify-content: center;
+    /* A flex item will not shrink below its content without this, and the lead card's copy is what
+     * overflowed the card. */
+    min-width: 0;
 }
 
+.post-card:first-child .post-title {
+    font-size: 2.1rem;
+    letter-spacing: -0.02em;
+    line-height: 1.15;
+}
 
+.post-card:first-child .post-excerpt {
+    font-size: 1.05rem;
+    flex: 0;
+}
+
+/* Regular Posts */
+.post-card {
+    background: var(--blog-paper);
+    border: 1px solid var(--blog-line);
+    display: flex;
+    flex-direction: column;
+    transition: all 0.2s;
+    cursor: pointer;
+}
+
+.post-card:hover {
+    border-color: var(--blog-text);
+    box-shadow: 5px 5px 0px light-dark(rgba(0, 0, 0, 0.05), rgba(0, 0, 0, 0.3));
+    transform: translateY(-2px);
+}
+
+.post-image {
+    position: relative;
+}
+
+.post-image .post-image__img {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 2 / 1;
+    background: light-dark(#ddd, #3a3a3a);
+    border-bottom: 1px solid var(--blog-line);
+    transition: filter 0.3s;
+    display: block;
+}
+
+/*
+ * Covers stay in colour. The set is drawn art and each drawing is built on one yellow accent, so
+ * greying it (the rule that used to sit here) threw the artwork away; the accent comes in on hover
+ * instead, as a 50% yellow tint over the cover plus the card lifting.
+ */
 .post-card:hover .post-image::after {
     inset: 0;
     position: absolute;
@@ -294,7 +355,7 @@ body.blog-page {
     }
 
     .post-image .post-image__img {
-        aspect-ratio: 16 / 10;
+        aspect-ratio: 2 / 1;
     }
 
     .post-content {
@@ -533,99 +594,4 @@ body.blog-page {
 ::view-transition-group(blog-title) {
     animation-duration: 0.4s;
     animation-timing-function: cubic-bezier(0.2, 0, 0.2, 1);
-}
-
-/* ==========================================================================
-   Cover illustrations (public/blog/images/<slug>.svg, inlined by src/utils/blog-covers.js)
-   ==========================================================================
-
-   The artwork carries no colour of its own. Every shape in the file is one of five classes and the
-   palette is declared here, so a cover follows the theme like the rest of the portal instead of
-   freezing at the hex it was drawn with, and the yellow is the portal's --accent-yellow (#FFC107,
-   the value styles.css declares) rather than a second yellow that merely looks close.
-
-   Light theme inverts the plate: the field becomes the chrome grey and the line work goes dark, so
-   the same file reads on the white paper as a black plate reads on the dark one.
-*/
-.lion-illo {
-    --illo-field: light-dark(#e8e8e8, #111111);
-    --illo-ink: light-dark(#111111, #ffffff);
-    /*
-     * The two grey steps are darker in the light theme than their dark-theme partners. On the light
-     * plate the greys are the line work and the secondary figures, and #8a8a8a on #e8e8e8 is 2.6:1 -
-     * thin strokes at that contrast wash out (the earlier set measured exactly that: the detail
-     * disappeared in light mode while the silhouettes stayed). #6b6b6b is 4.35:1 and #5a5a5a is
-     * 5.63:1 against the light plate, while the dark theme keeps its own values (#dcdcdc on #111 is
-     * 13.7:1).
-     */
-    --illo-light: light-dark(#6b6b6b, #dcdcdc);
-    --illo-mute: light-dark(#5a5a5a, #808080);
-    /*
-     * Ink for a mark that sits ON the accent (the TypeScript badge in the TypeScript 7 cover). It is
-     * not `.illo-ink`: that class is the drawing's line work and turns dark in the light theme,
-     * where it would land as light grey on yellow and the letters would disappear into the badge.
-     * `--accent-ink` is #111111 in both themes - the token styles.css already uses for text on the
-     * yellow chip.
-     */
-    --illo-accent-ink: var(--accent-ink);
-    --illo-accent: var(--accent-yellow);
-    display: block;
-    width: 100%;
-    height: auto;
-    /* The plate itself: the file's first path only covers the canvas, not the element. */
-    background: var(--illo-field);
-}
-
-.lion-illo .illo-field { fill: var(--illo-field); }
-.lion-illo .illo-ink { fill: var(--illo-ink); }
-.lion-illo .illo-light { fill: var(--illo-light); }
-.lion-illo .illo-mute { fill: var(--illo-mute); }
-.lion-illo .illo-accent-ink { fill: var(--illo-accent-ink); }
-.lion-illo .illo-accent { fill: var(--illo-accent); }
-
-/*
- * The artwork is 2:1. The box is 2:1 as well rather than the card's 16/9, so the drawing is never
- * letterboxed (a meet-preserving SVG in a taller box leaves two empty bands) and never cropped.
- */
-.post-image .post-image__img.post-illo {
-    aspect-ratio: 2 / 1;
-}
-
-/* Detail page: the cover is a full-width plate above the article. */
-.blog-cover {
-    display: block;
-    margin-bottom: 40px;
-    border: 1px solid var(--blog-line);
-    border-radius: 8px;
-    overflow: hidden;
-    view-transition-name: blog-image;
-}
-
-/*
- * In-page links must not land under the fixed bar (85px) - without this the heading a reader jumps
- * to sits behind the bar, and scrolling back up to it looks like the anchor "missed".
- */
-.blog-article-content :is(h1, h2, h3, h4, h5, h6) {
-    scroll-margin-top: 100px;
-}
-
-/* A card is marked as the live one with the accent rule on its leading edge, alongside the tint
- * over the illustration and the raised border. */
-.post-card {
-    position: relative;
-}
-
-.post-card::before {
-    content: '';
-    position: absolute;
-    inset: 0 auto 0 0;
-    width: 3px;
-    background: var(--accent-yellow);
-    transform: scaleY(0);
-    transform-origin: top;
-    transition: transform 0.25s cubic-bezier(0.2, 0, 0.2, 1);
-}
-
-.post-card:hover::before {
-    transform: scaleY(1);
 }

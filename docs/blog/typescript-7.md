@@ -4,7 +4,7 @@ published: true
 description: TypeScript 7 type-checks Lion's ~1,000 declaration files about six times faster. Consumers of @lion/ui notice almost nothing, and libraries built on top of it notice nothing at all.
 date: 2026-09-26
 tags: [javascript, typescript, performance]
-cover_image: /blog/images/typescript-7.svg
+cover_image: /blog/images/typescript-7.jpg
 eleventyNavigation:
   key: Migrating Lion to TypeScript 7
   title: Migrating Lion to TypeScript 7
