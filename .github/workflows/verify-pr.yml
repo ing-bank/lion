@@ -6,6 +6,7 @@ jobs:
   verify:
     name: Verify changes
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
       - uses: google/wireit@setup-github-actions-caching/v2
       - uses: actions/checkout@v4
@@ -28,6 +29,7 @@ jobs:
   browser-tests:
     name: Browser tests
     runs-on: ubuntu-latest
+    timeout-minutes: 60
     steps:
       - uses: google/wireit@setup-github-actions-caching/v2
       - uses: actions/checkout@v4
@@ -47,9 +49,49 @@ jobs:
       - name: Test
         run: npm run test:browser
 
+  browser-tests-safari16:
+    name: Browser tests (Safari 16)
+    # The job above runs whatever Playwright currently ships - WebKit 26 at the time of writing. This
+    # one gates the oldest WebKit we can reasonably claim: Safari 16, which is WebKit 16.4 in
+    # Playwright 1.35.1. That version's dependency list predates Ubuntu 24.04 (`libasound2`, `libffi7`
+    # and `libx264-163` were renamed or replaced there, so `--with-deps` cannot install), hence 22.04 -
+    # a runner Playwright 1.35 supports.
+    #
+    # It gates the PR: the suite holds on WebKit 16.4 except for one measured test of OverlayController
+    # (focus while tabbing), which skips itself on Safari through Lion's own core browser detection.
+    runs-on: ubuntu-22.04
+    timeout-minutes: 30
+    steps:
+      - uses: google/wireit@setup-github-actions-caching/v2
+      - uses: actions/checkout@v4
+
+      - name: Setup Node 24.x
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24.x
+          cache: npm
+
+      - name: Install Dependencies
+        run: npm install --ci
+
+      - name: Pin Playwright to the Safari 16 generation
+        # `--no-save --force`: the repository keeps Playwright current for the modern matrix, this job
+        # replaces it in the working tree only, so nothing else moves back to 2023. The CLI is called
+        # through its own `cli.js` because `npx playwright` can resolve a different binary.
+        run: |
+          npm install --no-save --force --no-audit --no-fund playwright@1.35.1
+          node node_modules/playwright/cli.js --version
+
+      - name: Playwright (webkit 16.4)
+        run: node node_modules/playwright/cli.js install --with-deps webkit
+
+      - name: Test (WebKit only)
+        run: npx web-test-runner --config web-test-runner-webkit.config.mjs
+
   node-tests:
     name: Node tests
     runs-on: ${{ matrix.os }}
+    timeout-minutes: 20
     strategy:
       matrix:
         node-version: [22.x]

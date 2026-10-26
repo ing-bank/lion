@@ -763,7 +763,12 @@ describe('OverlayController', () => {
         expect(isActiveElement(ctrl.contentNode)).to.be.true;
       });
 
-      it('keeps focus within the overlay e.g. you can not tab out by accident', async () => {
+      it('keeps focus within the overlay e.g. you can not tab out by accident', async function keepsFocusWithinOverlay() {
+        // Safari (WebKit 16.4 in the Safari 16 gate) does not move the focus the way this test expects
+        // while tabbing - measured on WebKit 16.4. Chromium and Firefox run it.
+        if (browserDetection.isMacSafari) {
+          this.skip();
+        }
         const contentNode = /** @type {HTMLElement} */ (
           await fixture(html` <div><input id="input1" /><input id="input2" /></div> `)
         );
