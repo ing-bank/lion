@@ -15,6 +15,7 @@ import { isActiveElement } from '../../core/test-helpers/isActiveElement.js';
 import '../test-helpers/test-router.js';
 import '@lion/ui/define/lion-dialog.js';
 import '@lion/ui/define/lion-tabs.js';
+import { isElementVisible } from '../../core/test-helpers/isElementVisible.js';
 
 /* eslint-disable lit-a11y/no-autofocus */
 
@@ -413,7 +414,7 @@ export function runDialogSuite(customConfig = {}) {
             ?.querySelector(cfg.tagString)
             ?.shadowRoot?.querySelector('dialog');
         // @ts-ignore
-        const isDialogVisible = () => getDialog()?.checkVisibility() === true;
+        const isDialogVisible = () => isElementVisible(getDialog());
         const isDialogRendered = () =>
           !!wrapperElement.shadowRoot?.querySelector(cfg.tagString)?.shadowRoot?.childNodes.length;
         getInvokerButton()?.click();

@@ -22,6 +22,7 @@ import {
 import { cache } from 'lit/directives/cache.js';
 import { resolveSuiteTag } from '../../core/test-helpers/resolveSuiteTag.js';
 import { isActiveElement } from '../../core/test-helpers/isActiveElement.js';
+import { isElementVisible } from '../../core/test-helpers/isElementVisible.js';
 
 /**
  * @typedef {import('../../form-core/types/FormControlMixinTypes.js').FormControlHost} FormControlHost
@@ -859,7 +860,7 @@ export function runSelectRichSuite(customConfig = {}) {
               ?.shadowRoot?.querySelector('dialog');
           const isDialogVisible = () =>
             // @ts-ignore
-            getDialog()?.checkVisibility() === true &&
+            isElementVisible(getDialog()) &&
             getDialog()?.querySelector('#overlay-content-node-wrapper[data-popper-placement]');
           await waitUntil(isSelectRichRendered);
           getInvoker()?.click();
@@ -993,7 +994,7 @@ export function runSelectRichSuite(customConfig = {}) {
               ?.shadowRoot?.querySelector('dialog');
           const isDialogVisible = () =>
             // @ts-ignore
-            getDialog()?.checkVisibility() === true &&
+            isElementVisible(getDialog()) &&
             getDialog()?.querySelector('#overlay-content-node-wrapper[data-popper-placement]');
           await waitUntil(isSelectRichRendered);
           getInvoker()?.click();
@@ -1131,7 +1132,7 @@ export function runSelectRichSuite(customConfig = {}) {
               ?.shadowRoot?.querySelector('dialog');
           const isDialogVisible = () =>
             // @ts-ignore
-            getDialog()?.checkVisibility() === true &&
+            isElementVisible(getDialog()) &&
             getDialog()?.querySelector('#overlay-content-node-wrapper[data-popper-placement]');
           await waitUntil(isSelectRichRendered);
           getInvoker()?.click();

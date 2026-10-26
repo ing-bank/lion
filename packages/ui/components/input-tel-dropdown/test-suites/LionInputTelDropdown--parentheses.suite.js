@@ -7,6 +7,7 @@ import { PhoneUtilManager } from '@lion/ui/input-tel.js';
 import { sendKeys, selectOption } from '@web/test-runner-commands';
 import { expect, unsafeStatic, fixture as _fixture, html, waitUntil } from '@open-wc/testing';
 import { resolveSuiteTag } from '../../core/test-helpers/resolveSuiteTag.js';
+import { isElementVisible } from '../../core/test-helpers/isElementVisible.js';
 
 /**
  * @typedef {import('lit').TemplateResult} TemplateResult
@@ -60,7 +61,7 @@ export function runInputTelDropdownParenthesesSuite(
       it('should set correct active region when selecting a country from dropdown ', async () => {
         const dropdownInvoker = config.getTelDropdownInvokerEl(el);
         // @ts-ignore
-        await waitUntil(() => dropdownInvoker?.checkVisibility());
+        await waitUntil(() => isElementVisible(dropdownInvoker));
         await config.selectNlOption(el);
         expect(el.activeRegion).to.equal('NL');
       });
@@ -68,7 +69,7 @@ export function runInputTelDropdownParenthesesSuite(
       it('updates dropdown value', async () => {
         const dropdown = config.getTelDropdownInvokerEl(el);
         // @ts-ignore
-        await waitUntil(() => dropdown?.checkVisibility());
+        await waitUntil(() => isElementVisible(dropdown));
         const input = el.querySelector('input');
         expect(input).to.exist;
         // @ts-ignore

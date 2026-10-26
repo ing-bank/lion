@@ -1,13 +1,11 @@
 /**
- * Proves the preferred contract: the caller hands the suite its CLASSES - a map whose keys are
- * Lion's tag names without the `lion-` prefix - and the suite runs against them. Kept in its own
- * file so it cannot share state with the `tagString` probe next to it.
+ * Proves the preferred contract: the caller hands the suite its CLASSES - a map whose keys are Lion's
+ * tag names without the `lion-` prefix. Lion's own element is the implicit default per key; an
+ * extension layer passes its own subclasses here instead.
  */
 import { LionTabs } from '@lion/ui/tabs.js';
 import { runTabsSuite } from '../test-suites/lion-tabs.suite.js';
 
-class MyTabs extends LionTabs {}
-
-describe('lion-tabs, run against a subclasser class (classes mode)', () => {
-  runTabsSuite({ classes: { host: MyTabs } });
+describe('lion-tabs.classes, run with an explicit classes map', () => {
+  runTabsSuite({ classes: { host: LionTabs } });
 });
