@@ -72,14 +72,11 @@ export function runDatepickerSuite({
     const openDatepickerButton = el._invokerNode;
     openDatepickerButton?.focus();
     openDatepickerButton?.click();
-    /**
-     * @returns {HTMLElement | null | undefined}
-     */
-    // The selected day comes from the page object (`calendarObj.selectedDayObj.buttonEl`): no tag and
-    // none of the calendar's markup is needed to find it.
-    const getSelectedDateEl = () => new InputObject(el).calendarObj?.selectedDayObj?.buttonEl;
-    await waitUntil(getSelectedDateEl);
-    getSelectedDateEl()?.focus();
+    await waitUntil(() => el.opened === true);
+
+    // Opening through the invoker leaves the focus on the calendar, which is what the arrow key needs:
+    // measured on Firefox, a day button focused by hand does not receive it, the selection stays put,
+    // `Enter` reaches the invoker and the popup reopens.
     await sendKeys({ press: 'ArrowLeft' });
     await sendKeys({ press: 'Enter' });
 
