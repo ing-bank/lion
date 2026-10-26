@@ -28,7 +28,7 @@
 
 import fs from 'fs';
 // eslint-disable-next-line import/no-extraneous-dependencies
-import { globby } from 'globby';
+import { fsGlob } from 'providence-analytics/utils.js';
 import url from 'url';
 
 const packageRoot = url.fileURLToPath(new URL('../', import.meta.url));
@@ -130,7 +130,7 @@ function restoreSlotAccessor(contents) {
 }
 
 async function main() {
-  const fileNames = await globby('dist-types/**/*.d.ts', { cwd: packageRoot });
+  const fileNames = await fsGlob('dist-types/**/*.d.ts', { cwd: packageRoot });
   let restored = 0;
   let touched = 0;
 

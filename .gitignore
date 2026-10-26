@@ -51,8 +51,6 @@ packages-node/awesome-phonenumber/build/
 /.tmp/
 /coverage/
 /storybook-static/
-/screenshots/.current/
-/screenshots/.diff/
 
 ## temp files
 local.log
