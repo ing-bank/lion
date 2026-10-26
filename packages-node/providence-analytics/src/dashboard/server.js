@@ -1,13 +1,15 @@
 import path from 'path';
-// eslint-disable-next-line import/no-extraneous-dependencies
-import { startDevServer } from '@web/dev-server';
+
+import { miniDevServer } from '#utils/mini-dev-server.js';
 import { ReportService } from '../program/core/ReportService.js';
 import { providenceConfUtil } from '../program/utils/providence-conf-util.js';
 import { getCurrentDir } from '../program/utils/get-current-dir.js';
 import { fsAdapter } from '../program/utils/fs-adapter.js';
+import { LogService } from '../program/core/LogService.js';
 
 /**
  * @typedef {import('../../types/index.js').ProvidenceCliConf} ProvidenceCliConf
+ * @typedef {import('../../types/index.js').MiniDevServerConfig} MiniDevServerConfig
  * @typedef {import('../../types/index.js').PackageJson} PackageJson
  * @typedef {{ fileName: string; content: unknown }} ResultFileEntry
  */
@@ -158,6 +160,10 @@ function createMiddleWares({ providenceConf, providenceConfRaw, searchTargetDeps
   ];
 }
 
+/**
+ * The dashboard config as a `@web/dev-server` shaped config: `miniDevServer` supports this subset.
+ * @returns {Promise<MiniDevServerConfig>} configuration for the dashboard development server
+ */
 export async function createDashboardServerConfig() {
   const conf =
     /** @type {{ providenceConf: Partial<ProvidenceCliConf>; providenceConfRaw: string }} */ (
@@ -167,7 +173,7 @@ export async function createDashboardServerConfig() {
   const { searchTargetDeps, resultFiles } = await getCachedProvidenceResults();
 
   // Needed for dev purposes (we call it from ./packages-node/providence-analytics/ instead of ./)
-  // Allows es-dev-server to find the right moduleDirs
+  // Allows the server to find the right moduleDirs
   const fromPackageRoot = process.argv.includes('--serve-from-package-root');
   const moduleRoot = fromPackageRoot ? path.resolve(process.cwd(), '../../') : process.cwd();
 
@@ -196,8 +202,12 @@ export const serverInstanceLoaded = new Promise(resolve => {
 // Export interface as object, so we can mock it easily inside tests
 export const dashboardServer = {
   start: async () => {
-    await startDevServer({ config: await createDashboardServerConfig() });
+    const devServer = await miniDevServer.startDevServer({
+      config: await createDashboardServerConfig(),
+    });
+    LogService.info(`Providence dashboard running on ${devServer.url}`);
     resolveLoaded();
+    return devServer;
   },
 };
 

@@ -12,7 +12,7 @@
     "@rollup/plugin-node-resolve": "16.0.3",
     "google-closure-compiler": "20251104.0.0",
     "google-closure-library": "20230802.0.0",
-    "rollup": "4.57.1"
+    "rollup": "4.59.0"
   },
   "wireit": {
     "build": {
