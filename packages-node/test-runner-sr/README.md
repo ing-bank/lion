@@ -179,6 +179,36 @@ Both came out of CI runs, not out of theory:
   assertion does not pay for the cold start and for the announcement above. The phrases this produces
   are cleared by the first `sr.reset()` of the file, like any other.
 
+## Why a screen reader test, and not a snapshot
+
+Four layers sit between the markup and the user, and only the last one can answer the question we care about.
+
+![Four layers from the DOM to what a screen reader says, with the AOM-to-speech connection marked as the last missing step](./sr-test-layers.svg)
+
+1. **DOM - what we write.** Static analysis (`expect(el).to.be.accessible()`, axe) reads this layer and stops
+   here: it can prove that a name, role or state is _exposed_, never what is _heard_.
+2. **ARIA + APG - the ideal.** A reader that supported every attribute would announce what the pattern
+   promises. The APG is explicit that this is the ideal and not a guarantee: its example pages "provide,
+   when available, a summary of assistive technology support of the ARIA used in those examples"
+   ([APG, About](https://www.w3.org/WAI/ARIA/apg/about/)).
+3. **AOM snapshot - closer.** The browser's accessibility tree shows that the DOM to AOM translation went
+   through (`controls: [panel]`, `expanded: false`), which is a real step closer than reading the DOM - but
+   it only proves that translation in _that_ browser and engine.
+4. **Screen reader - the truth.** AOM to speech is the last step, and nothing below it can stand in for it.
+
+`aria-controls` is the worked example, and it is worth saying out loud how bad it is: the spec defines it,
+the APG's patterns use it, Chromium exposes it in the AOM, and of the tested browser/AT combinations at
+[a11ysupport.io](https://a11ysupport.io/tech/aria/aria-controls_attribute) JAWS, NVDA, Narrator, Orca and
+VoiceOver convey its _presence_ as **none**; only JAWS offers a command to jump to the controlled element -
+and the JAWS setting that could speak the attribute was removed in JAWS 2020. The project's own note: "Most
+screen readers either do not support this attribute or the setting to convey the presence is turned off by
+default."
+
+Our own runs show the same gap from the other side: the **virtual** reader models the spec rather than a
+product and announces "1 control" for the combobox, while **NVDA** announced only "blank" and nothing about
+what the button controls. The W3C's [ARIA-AT](https://aria-at.w3.org/) project exists for exactly this last
+layer, and it is why the assertions in this flow are hand-written per real reader.
+
 ## What gets a screen reader test, and what does not
 
 A screen reader test costs a real-reader CI round (minutes, on two runners), so it earns its place only

@@ -1,0 +1,94 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="330" viewBox="0 0 900 330" font-family="system-ui, -apple-system, Segoe UI, sans-serif" role="img" aria-label="Four layers: the DOM, the ARIA and APG ideal, the browser AOM snapshot, and what a screen reader actually says. The arrow from the AOM to the screen reader is dashed and labelled the last missing step.">
+  <defs>
+    <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#2f6fda"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="900" height="330" fill="#ffffff"/>
+
+  <g font-size="11.5" fill="#6b7280">
+    <text x="8" y="20">what we write</text>
+    <text x="418" y="20">what the platform makes of it</text>
+    <text x="746" y="20">what the user hears</text>
+  </g>
+
+  <!-- 1 DOM -->
+  <rect x="8" y="34" width="200" height="172" rx="8" fill="#f7f8fa" stroke="#d3d7dd"/>
+  <text x="22" y="56" font-size="10.5" font-weight="600" letter-spacing=".5" fill="#6b7280">1 · DOM</text>
+  <g font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="11.5" fill="#1f2328">
+    <text x="20" y="82">&lt;button</text>
+    <text x="30" y="99">aria-controls="panel"</text>
+    <text x="30" y="116">aria-expanded="false"&gt;</text>
+  </g>
+  <g font-size="11.5" fill="#6b7280">
+    <text x="22" y="146">Static analysis (axe) reads</text>
+    <text x="22" y="162">this layer - and stops here.</text>
+    <text x="22" y="180">It never asks what is heard.</text>
+  </g>
+
+  <!-- 2 ARIA + APG -->
+  <rect x="232" y="34" width="200" height="172" rx="8" fill="#f7f8fa" stroke="#d3d7dd"/>
+  <text x="246" y="56" font-size="10.5" font-weight="600" letter-spacing=".5" fill="#6b7280">2 · ARIA + APG · THE IDEAL</text>
+  <g font-size="13" fill="#1f2328">
+    <text x="244" y="82">A reader that supports every</text>
+    <text x="244" y="99">attribute would say:</text>
+  </g>
+  <g font-size="11.5" fill="#6b7280">
+    <text x="244" y="124">&#8220;button, expanded,</text>
+    <text x="244" y="140">controls panel&#8221;</text>
+    <text x="244" y="166">The APG itself publishes AT</text>
+    <text x="244" y="178">support tables for its own</text>
+    <text x="244" y="190">examples.</text>
+  </g>
+
+  <!-- 3 AOM -->
+  <rect x="456" y="34" width="200" height="172" rx="8" fill="#f7f8fa" stroke="#d3d7dd"/>
+  <text x="470" y="56" font-size="10.5" font-weight="600" letter-spacing=".5" fill="#6b7280">3 · AOM SNAPSHOT · CLOSER</text>
+  <g font-size="13" fill="#1f2328">
+    <text x="468" y="82">The browser translates, and</text>
+    <text x="468" y="99">the snapshot shows it:</text>
+  </g>
+  <g font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="11.5" fill="#1f2328">
+    <text x="468" y="124">controls: [panel]</text>
+    <text x="468" y="141">expanded: false</text>
+  </g>
+  <g font-size="11.5" fill="#6b7280">
+    <text x="468" y="166">Proves the DOM &#8594; AOM</text>
+    <text x="468" y="178">translation, in this browser</text>
+    <text x="468" y="190">and this engine only.</text>
+  </g>
+
+  <!-- 4 screen reader -->
+  <rect x="680" y="34" width="212" height="172" rx="8" fill="none" stroke="#2f6fda" stroke-width="1.5" stroke-dasharray="6 4"/>
+  <text x="694" y="56" font-size="10.5" font-weight="600" letter-spacing=".5" fill="#6b7280">4 · SCREEN READER · TRUTH</text>
+  <text x="692" y="82" font-size="13" fill="#1f2328">What a user actually hears:</text>
+  <g font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="11.5" fill="#1f2328">
+    <text x="692" y="108">NVDA: &#8220;blank&#8221;</text>
+    <text x="692" y="125">VoiceOver: nothing about</text>
+    <text x="702" y="140">aria-controls</text>
+  </g>
+  <g font-size="11.5" fill="#6b7280">
+    <text x="692" y="166">The only layer where the</text>
+    <text x="692" y="178">answer to &#8220;does it work?&#8221;</text>
+    <text x="692" y="190">lives.</text>
+  </g>
+
+  <!-- pijlen -->
+  <g stroke="#2f6fda" stroke-width="1.5">
+    <line x1="210" y1="116" x2="230" y2="116" marker-end="url(#a)"/>
+    <line x1="434" y1="116" x2="454" y2="116" marker-end="url(#a)"/>
+    <line x1="658" y1="116" x2="678" y2="116" stroke-dasharray="6 4" marker-end="url(#a)"/>
+    <line x1="668" y1="280" x2="668" y2="204" stroke-dasharray="2 3"/>
+  </g>
+  <text x="668" y="296" font-size="11.5" font-weight="600" text-anchor="middle" fill="#2f6fda">the last missing step</text>
+
+  <!-- het gat -->
+  <rect x="8" y="228" width="884" height="94" rx="8" fill="#f7f8fa" stroke="#d3d7dd"/>
+  <text x="22" y="250" font-size="10.5" font-weight="600" letter-spacing=".5" fill="#6b7280">THE GAP BETWEEN THE LAYERS</text>
+  <g font-size="12.5" fill="#1f2328">
+    <text x="22" y="272">Attributes the spec defines and the APG prescribes can still be announced by nobody.</text>
+    <text x="22" y="290"><tspan font-family="ui-monospace, Menlo, monospace">aria-controls</tspan>: JAWS, NVDA, Narrator, Orca and VoiceOver convey its presence as &#8220;none&#8221;</text>
+    <text x="22" y="308">(a11ysupport.io); only JAWS can jump to the controlled element. No static tool can see that difference.</text>
+  </g>
+</svg>
