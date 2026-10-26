@@ -1,10 +1,11 @@
 /* eslint-disable lit-a11y/click-events-have-key-events */
-import { defineCE, expect, fixture, html, unsafeStatic, aTimeout } from '@open-wc/testing';
+import { expect, fixture, html, unsafeStatic, aTimeout } from '@open-wc/testing';
 import { sendMouse, resetMouse, sendKeys } from '@web/test-runner-commands';
 import { useFakeTimers } from 'sinon';
 import { css } from 'lit';
 import { getDeepActiveElement } from '@lion/ui/overlays.js';
 import { LionMenu } from '../src/LionMenu.js';
+import { resolveSuiteTag } from '../../core/test-helpers/resolveSuiteTag.js';
 
 const l2Style = css`
   [level='2'] > [slot='list'] {
@@ -45,9 +46,16 @@ const config = {
   },
 };
 
-export function runLionMenuInteractionsSuite({ klass = LionMenu } = {}) {
-  const tagString = defineCE(class extends klass {});
-  const tag = unsafeStatic(tagString);
+/**
+ * @param {{
+ *   classes?: Record<string, CustomElementConstructor>,
+ *   klass?: typeof LionMenu,
+ *   tagString?: string,
+ * }} [customConfig]
+ */
+export function runLionMenuInteractionsSuite({ classes = {}, klass = LionMenu, tagString } = {}) {
+  const tagName = resolveSuiteTag(classes.menu, tagString, klass);
+  const tag = unsafeStatic(tagName);
 
   describe('LionMenu interactions', () => {
     /** @type {import('sinon').SinonFakeTimers | null} */

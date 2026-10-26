@@ -1,11 +1,13 @@
 /* eslint-disable lit-a11y/click-events-have-key-events */
-import { defineCE, expect, fixture as _fixture, html, unsafeStatic } from '@open-wc/testing';
+import { expect, fixture as _fixture, html, unsafeStatic } from '@open-wc/testing';
 import { LionMenu } from '../src/LionMenu.js';
+import { resolveSuiteTag } from '../../core/test-helpers/resolveSuiteTag.js';
 
 /**
  * @typedef {import('lit').TemplateResult} TemplateResult
  *
  * @typedef {Object} TestConfig
+ * @property {Record<string, CustomElementConstructor>} [classes]
  * @property {string} tagString
  */
 
@@ -16,7 +18,7 @@ const fixture = /** @type {(arg: TemplateResult) => Promise<LionMenu>} */ (_fixt
  */
 export function runLionMenuSuite(customConfig) {
   const cfg = {
-    tagString: customConfig?.tagString || defineCE(LionMenu),
+    tagString: resolveSuiteTag(customConfig?.classes?.menu, customConfig?.tagString, LionMenu),
   };
 
   const { tagString } = cfg;

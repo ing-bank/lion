@@ -1,7 +1,8 @@
 import { LitElement } from 'lit';
-import { expect, html, fixture as _fixture, unsafeStatic, defineCE } from '@open-wc/testing';
+import { expect, html, fixture as _fixture, unsafeStatic } from '@open-wc/testing';
 import { InteractiveListMixin } from '../src/InteractiveListMixin.js';
 import { mimicKeyPress } from '../test-helpers/mimicKeyPress.js';
+import { resolveSuiteTag } from '../../core/test-helpers/resolveSuiteTag.js';
 
 class InteractiveListClass extends InteractiveListMixin(LitElement) {}
 
@@ -25,6 +26,7 @@ const supportedRoles = [
  * @typedef {import('lit').TemplateResult} TemplateResult
  *
  * * @typedef {Object} TestConfig
+ * @property {Record<string, CustomElementConstructor>} [classes]
  * @property {string} tagString
  */
 
@@ -35,7 +37,11 @@ const fixture = /** @type {(arg: TemplateResult) => Promise<LionMenu>} */ (_fixt
  */
 export function runInteractiveListMixinSuite(customConfig) {
   const cfg = {
-    tagString: customConfig?.tagString || defineCE(InteractiveListClass),
+    tagString: resolveSuiteTag(
+      customConfig?.classes?.['interactive-list'],
+      customConfig?.tagString,
+      InteractiveListClass,
+    ),
   };
 
   const { tagString } = cfg;

@@ -21,6 +21,7 @@ import sinon from 'sinon';
 
 import '@lion/ui/define/lion-field.js';
 import '@lion/ui/define/lion-validation-feedback.js';
+import { resolveSuiteTag } from '../../core/test-helpers/resolveSuiteTag.js';
 
 /**
  * @typedef {import('@lion/ui/form-core.js').LionField} LionField
@@ -31,6 +32,7 @@ import '@lion/ui/define/lion-validation-feedback.js';
  */
 export function runValidateMixinSuite(customConfig) {
   const cfg = {
+    classes: /** @type {Record<string, CustomElementConstructor>} */ ({}),
     tagString: null,
     ...customConfig,
   };
@@ -46,7 +48,7 @@ export function runValidateMixinSuite(customConfig) {
     }
   }
 
-  const tagString = cfg.tagString || defineCE(ValidateElement);
+  const tagString = resolveSuiteTag(cfg.classes['validate-mixin'], cfg.tagString, ValidateElement);
   const tag = unsafeStatic(tagString);
 
   describe('ValidateMixin', () => {
@@ -783,8 +785,9 @@ export function runValidateMixinSuite(customConfig) {
             .modelValue=${'dog'}
             .validators=${[asyncV]}
             .asyncValidateOn=${
-              /** @param {{ formControl: { isFocused: boolean } }} opts */ ({ formControl }) =>
-                !formControl.isFocused
+              /** @param {{ classes?: Record<string, CustomElementConstructor>, formControl: { isFocused: boolean } }} opts */ ({
+                formControl,
+              }) => !formControl.isFocused
             }
             >
           ${lightDom}

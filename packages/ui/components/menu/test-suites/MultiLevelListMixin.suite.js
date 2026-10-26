@@ -1,9 +1,10 @@
 import { LitElement } from 'lit';
-import { expect, html, fixture as _fixture, unsafeStatic, defineCE } from '@open-wc/testing';
+import { expect, html, fixture as _fixture, unsafeStatic } from '@open-wc/testing';
 import sinon from 'sinon';
 import { MultiLevelListMixin } from '../src/MultiLevelListMixin.js';
 import { InteractiveListMixin } from '../src/InteractiveListMixin.js';
 import { mimicKeyPress } from '../test-helpers/mimicKeyPress.js';
+import { resolveSuiteTag } from '../../core/test-helpers/resolveSuiteTag.js';
 
 class MultiLevelListClass extends MultiLevelListMixin(LitElement) {}
 class InteractiveListClass extends InteractiveListMixin(LitElement) {}
@@ -13,6 +14,7 @@ class InteractiveListClass extends InteractiveListMixin(LitElement) {}
  * @typedef {import('lit').TemplateResult} TemplateResult
  *
  * @typedef {Object} TestConfig
+ * @property {Record<string, CustomElementConstructor>} [classes]
  * @property {string} tagString
  * @property {string} tagChildString
  */
@@ -24,8 +26,16 @@ const fixture = /** @type {(arg: TemplateResult) => Promise<LionMenu>} */ (_fixt
  */
 export function runMultiLevelListMixinSuite(customConfig) {
   const cfg = {
-    tagString: customConfig?.tagString || defineCE(MultiLevelListClass),
-    tagChildString: customConfig?.tagChildString || defineCE(InteractiveListClass),
+    tagString: resolveSuiteTag(
+      customConfig?.classes?.['multi-level-list'],
+      customConfig?.tagString,
+      MultiLevelListClass,
+    ),
+    tagChildString: resolveSuiteTag(
+      customConfig?.classes?.['interactive-list'],
+      customConfig?.tagChildString,
+      InteractiveListClass,
+    ),
   };
 
   const { tagString, tagChildString } = cfg;

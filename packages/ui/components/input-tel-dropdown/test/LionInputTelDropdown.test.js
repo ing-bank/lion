@@ -69,7 +69,6 @@ runInputTelDropdownSuite({ klass: LionInputTelDropdown, hasParentheses: true });
 runInputTelDropdownParenthesesSuite();
 
 describe('WithFormControlInputTelDropdown', () => {
-  // @ts-expect-error
   // Runs it for LionSelectRich, which uses .modelValue/@model-value-changed instead of .value/@change
   runInputTelDropdownSuite({ klass: WithFormControlInputTelDropdown });
 

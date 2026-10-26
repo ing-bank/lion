@@ -11,12 +11,14 @@ import {
 import sinon from 'sinon';
 import { getFormControlMembers } from '@lion/ui/form-core-test-helpers.js';
 import { InteractionStateMixin, ValidateMixin, MinLength } from '@lion/ui/form-core.js';
+import { resolveSuiteTag } from '../../core/test-helpers/resolveSuiteTag.js';
 
 /**
  * @param {{tagString?: string, allowedModelValueTypes?: Array.<ArrayConstructor | ObjectConstructor | NumberConstructor | BooleanConstructor | StringConstructor | DateConstructor>}} [customConfig]
  */
 export function runInteractionStateMixinSuite(customConfig) {
   const cfg = {
+    classes: /** @type {Record<string, CustomElementConstructor>} */ ({}),
     tagString: null,
     allowedModelValueTypes: [Array, Object, Number, Boolean, String, Date],
     ...customConfig,
@@ -41,7 +43,11 @@ export function runInteractionStateMixinSuite(customConfig) {
       }
     }
 
-    cfg.tagString = cfg.tagString ? cfg.tagString : defineCE(IState);
+    cfg.tagString = resolveSuiteTag(
+      cfg.classes?.['interaction-state-mixin'],
+      cfg.tagString,
+      IState,
+    );
     const tag = unsafeStatic(cfg.tagString);
 
     it('sets states to false on init', async () => {
