@@ -6,10 +6,12 @@ import sinon from 'sinon';
 import { resolveSuiteTag } from '../../core/test-helpers/resolveSuiteTag.js';
 
 /**
+ * `tagString`, `klass` and the older role tag keys are deprecated: pass `classes` instead (Lion
+ * itself uses `classes` everywhere).
  * @param {{ classes?: Record<string, CustomElementConstructor>, klass?: typeof LionButtonSubmit, tagString?: string }} [customConfig]
  */
 export function LionButtonSubmitSuite({ classes = {}, klass = LionButtonSubmit, tagString } = {}) {
-  const tagStringButton = resolveSuiteTag(classes['button-submit'], tagString, klass);
+  const tagStringButton = resolveSuiteTag(classes.host, tagString, klass);
   const tagButton = unsafeStatic(tagStringButton);
 
   describe('LionButtonSubmit', () => {

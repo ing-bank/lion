@@ -9,5 +9,5 @@ import { runInputDateSuite } from '../test-suites/lion-input-date.suite.js';
 class MyInputDate extends LionInputDate {}
 
 describe('lion-input-date, run against a subclasser class (classes mode)', () => {
-  runInputDateSuite({ classes: { 'input-date': MyInputDate } });
+  runInputDateSuite({ classes: { host: MyInputDate } });
 });

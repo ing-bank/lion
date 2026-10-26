@@ -9,5 +9,5 @@ import { runStepsSuite } from '../test-suites/lion-steps.suite.js';
 class MySteps extends LionSteps {}
 
 describe('lion-steps, run against a subclasser class (classes mode)', () => {
-  runStepsSuite({ classes: { steps: MySteps } });
+  runStepsSuite({ classes: { host: MySteps } });
 });

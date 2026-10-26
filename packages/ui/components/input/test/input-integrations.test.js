@@ -3,33 +3,29 @@ import {
   runInteractionStateMixinSuite,
   runNativeTextFieldMixinSuite,
 } from '@lion/ui/form-core-test-suites.js';
-import { defineCE } from '@open-wc/testing';
-
 import { LionInput } from '@lion/ui/input.js';
 
-const fieldTagString = defineCE(
-  class extends LionInput {
-    get slots() {
-      return {
-        ...super.slots,
-        // LionInput needs to have an _inputNode defined in order to work...
-        input: () => document.createElement('input'),
-      };
-    }
-  },
-);
+class FieldInput extends LionInput {
+  get slots() {
+    return {
+      ...super.slots,
+      // LionInput needs to have an _inputNode defined in order to work...
+      input: () => document.createElement('input'),
+    };
+  }
+}
 
 describe('<lion-input> integrations', () => {
   runInteractionStateMixinSuite({
-    tagString: fieldTagString,
+    classes: { host: FieldInput },
   });
 
   runFormatMixinSuite({
-    tagString: fieldTagString,
+    classes: { host: FieldInput },
     modelValueType: String,
   });
 
   runNativeTextFieldMixinSuite({
-    tagString: fieldTagString,
+    classes: { host: FieldInput },
   });
 });

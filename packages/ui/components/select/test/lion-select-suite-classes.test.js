@@ -9,5 +9,5 @@ import { runSelectSuite } from '../test-suites/LionSelect.suite.js';
 class MySelect extends LionSelect {}
 
 describe('lion-select-suite-tag-string.test.js, run against a subclasser class (classes mode)', () => {
-  runSelectSuite({ classes: { select: MySelect } });
+  runSelectSuite({ classes: { host: MySelect } });
 });

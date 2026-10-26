@@ -9,5 +9,5 @@ import { runInputSuite } from '../test-suites/lion-input.suite.js';
 class MyInput extends LionInput {}
 
 describe('lion-input, run against a subclasser class (classes mode)', () => {
-  runInputSuite({ classes: { input: MyInput } });
+  runInputSuite({ classes: { host: MyInput } });
 });

@@ -9,5 +9,5 @@ import { runComboboxSuite } from '../test-suites/lion-combobox.suite.js';
 class MyCombobox extends LionCombobox {}
 
 describe('lion-combobox, run against a subclasser class (classes mode)', () => {
-  runComboboxSuite({ classes: { combobox: MyCombobox } });
+  runComboboxSuite({ classes: { host: MyCombobox } });
 });

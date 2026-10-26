@@ -17,6 +17,8 @@ const fixture = /** @type {(arg: TemplateResult) => Promise<LionInputDate>} */ (
  * Runs the `lion-input-date` behavioural suite, moved out of `test/lion-input-date.test.js` so a Subclasser can run
  * the same guarantees against its own element. Pass `tagString` to point it at your
  * registered tag; see docs/guides/principles/test-suites.md.
+ * `tagString`, `klass` and the older role tag keys are deprecated: pass `classes` instead (Lion
+ * itself uses `classes` everywhere).
  * @param {{ classes?: Record<string, CustomElementConstructor>, tagString?: string }} [customConfig]
  */
 export function runInputDateSuite(customConfig = {}) {
@@ -25,7 +27,7 @@ export function runInputDateSuite(customConfig = {}) {
     tagString: 'lion-input-date',
     ...customConfig,
   };
-  cfg.tagString = resolveSuiteTag(cfg.classes['input-date'], cfg.tagString, 'lion-input-date');
+  cfg.tagString = resolveSuiteTag(cfg.classes.host, cfg.tagString, 'lion-input-date');
   const tag = unsafeStatic(cfg.tagString);
 
   describe('<lion-input-date>', () => {

@@ -11,6 +11,8 @@ import { resolveSuiteTag } from '../../core/test-helpers/resolveSuiteTag.js';
  * Runs the `lion-radio` behavioural suite, moved out of `test/lion-radio.test.js` so a Subclasser can run
  * the same guarantees against its own element. Pass your own tag names to point it at them
  * (see docs/guides/principles/test-suites.md).
+ * `tagString`, `klass` and the older role tag keys are deprecated: pass `classes` instead (Lion
+ * itself uses `classes` everywhere).
  * @param {{ classes?: Record<string, CustomElementConstructor>, tagString?: string }} [customConfig]
  */
 export function runRadioSuite(customConfig = {}) {
@@ -19,7 +21,7 @@ export function runRadioSuite(customConfig = {}) {
     tagString: 'lion-radio',
     ...customConfig,
   };
-  cfg.tagString = resolveSuiteTag(cfg.classes.radio, cfg.tagString, 'lion-radio');
+  cfg.tagString = resolveSuiteTag(cfg.classes.host, cfg.tagString, 'lion-radio');
   const tag = unsafeStatic(cfg.tagString);
 
   describe('<lion-radio>', () => {

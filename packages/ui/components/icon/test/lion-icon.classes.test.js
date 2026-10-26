@@ -9,5 +9,5 @@ import { runIconSuite } from '../test-suites/lion-icon.suite.js';
 class MyIcon extends LionIcon {}
 
 describe('lion-icon, run against a subclasser class (classes mode)', () => {
-  runIconSuite({ classes: { icon: MyIcon } });
+  runIconSuite({ classes: { host: MyIcon } });
 });

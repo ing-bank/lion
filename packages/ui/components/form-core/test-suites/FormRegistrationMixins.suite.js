@@ -19,6 +19,8 @@ import { resolveSuiteTag } from '../../core/test-helpers/resolveSuiteTag.js';
  */
 
 /**
+ * `tagString`, `klass` and the older role tag keys are deprecated: pass `classes` instead (Lion
+ * itself uses `classes` everywhere).
  * @param {{
  *   classes?: Record<string, CustomElementConstructor>,
  *   suffix?: string,
@@ -36,7 +38,7 @@ export const runRegistrationSuite = customConfig => {
 
   describe(`FormRegistrationMixins ${cfg.suffix}`, () => {
     class RegistrarClass extends FormRegistrarMixin(cfg.baseElement) {}
-    cfg.parentTagString = resolveSuiteTag(cfg.classes?.parent, undefined, RegistrarClass);
+    cfg.parentTagString = resolveSuiteTag(cfg.classes?.host, undefined, RegistrarClass);
     class RegisteringClass extends FormRegisteringMixin(cfg.baseElement) {}
     cfg.childTagString = resolveSuiteTag(cfg.classes?.child, undefined, RegisteringClass);
     class PortalClass extends FormRegistrarPortalMixin(cfg.baseElement) {}

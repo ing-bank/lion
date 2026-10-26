@@ -9,5 +9,5 @@ import { runTooltipSuite } from '../test-suites/lion-tooltip.suite.js';
 class MyTooltip extends LionTooltip {}
 
 describe('lion-tooltip, run against a subclasser class (classes mode)', () => {
-  runTooltipSuite({ classes: { tooltip: MyTooltip } });
+  runTooltipSuite({ classes: { host: MyTooltip } });
 });

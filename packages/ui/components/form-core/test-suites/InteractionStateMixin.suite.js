@@ -14,7 +14,9 @@ import { InteractionStateMixin, ValidateMixin, MinLength } from '@lion/ui/form-c
 import { resolveSuiteTag } from '../../core/test-helpers/resolveSuiteTag.js';
 
 /**
- * @param {{tagString?: string, allowedModelValueTypes?: Array.<ArrayConstructor | ObjectConstructor | NumberConstructor | BooleanConstructor | StringConstructor | DateConstructor>}} [customConfig]
+ * `tagString`, `klass` and the older role tag keys are deprecated: pass `classes` instead (Lion
+ * itself uses `classes` everywhere).
+ * @param {{ classes?: Record<string, CustomElementConstructor>, tagString?: string, allowedModelValueTypes?: Array.<ArrayConstructor | ObjectConstructor | NumberConstructor | BooleanConstructor | StringConstructor | DateConstructor>}} [customConfig]
  */
 export function runInteractionStateMixinSuite(customConfig) {
   const cfg = {
@@ -43,11 +45,7 @@ export function runInteractionStateMixinSuite(customConfig) {
       }
     }
 
-    cfg.tagString = resolveSuiteTag(
-      cfg.classes?.['interaction-state-mixin'],
-      cfg.tagString,
-      IState,
-    );
+    cfg.tagString = resolveSuiteTag(cfg.classes?.host, cfg.tagString, IState);
     const tag = unsafeStatic(cfg.tagString);
 
     it('sets states to false on init', async () => {

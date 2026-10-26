@@ -9,5 +9,5 @@ import { runTextareaSuite } from '../test-suites/lion-textarea.suite.js';
 class MyTextarea extends LionTextarea {}
 
 describe('lion-textarea, run against a subclasser class (classes mode)', () => {
-  runTextareaSuite({ classes: { textarea: MyTextarea } });
+  runTextareaSuite({ classes: { host: MyTextarea } });
 });

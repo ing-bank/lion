@@ -13,11 +13,13 @@ const fixture = /** @type {(arg: TemplateResult|string) => Promise<LionInputEmai
  * Runs the `lion-input-email` behavioural suite, moved out of `test/lion-input-email.test.js` so a Subclasser can run
  * the same guarantees against its own element. Pass `tagString` to point it at your
  * registered tag; see docs/guides/principles/test-suites.md.
+ * `tagString`, `klass` and the older role tag keys are deprecated: pass `classes` instead (Lion
+ * itself uses `classes` everywhere).
  * @param {{ classes?: Record<string, CustomElementConstructor>, tagString?: string }} [customConfig]
  */
 export function runInputEmailSuite(customConfig = {}) {
   const tagString = resolveSuiteTag(
-    customConfig.classes?.['input-email'],
+    customConfig.classes?.host,
     customConfig.tagString,
     'lion-input-email',
   );

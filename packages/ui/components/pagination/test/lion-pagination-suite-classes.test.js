@@ -9,5 +9,5 @@ import { runPaginationSuite } from '../test-suites/LionPagination.suite.js';
 class MyPagination extends LionPagination {}
 
 describe('lion-pagination-suite-tag-string.test.js, run against a subclasser class (classes mode)', () => {
-  runPaginationSuite({ classes: { pagination: MyPagination } });
+  runPaginationSuite({ classes: { host: MyPagination } });
 });

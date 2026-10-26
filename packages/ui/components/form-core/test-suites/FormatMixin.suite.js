@@ -260,7 +260,7 @@ export function runFormatMixinSuite(customConfig) {
     let fooFormat;
 
     before(async () => {
-      cfg.tagString = resolveSuiteTag(cfg.classes?.['format-mixin'], cfg.tagString, FormatClass);
+      cfg.tagString = resolveSuiteTag(cfg.classes?.host, cfg.tagString, FormatClass);
       tag = unsafeStatic(cfg.tagString);
 
       fooFormat = await fixture(html`

@@ -18,7 +18,7 @@ const fixture = /** @type {(arg: TemplateResult) => Promise<LionMenu>} */ (_fixt
  */
 export function runLionMenuSuite(customConfig) {
   const cfg = {
-    tagString: resolveSuiteTag(customConfig?.classes?.menu, customConfig?.tagString, LionMenu),
+    tagString: resolveSuiteTag(customConfig?.classes?.host, customConfig?.tagString, LionMenu),
   };
 
   const { tagString } = cfg;

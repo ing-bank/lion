@@ -9,5 +9,5 @@ import { runDialogSuite } from '../test-suites/lion-dialog.suite.js';
 class MyDialog extends LionDialog {}
 
 describe('lion-dialog, run against a subclasser class (classes mode)', () => {
-  runDialogSuite({ classes: { dialog: MyDialog } });
+  runDialogSuite({ classes: { host: MyDialog } });
 });

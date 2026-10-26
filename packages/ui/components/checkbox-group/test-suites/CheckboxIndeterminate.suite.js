@@ -23,7 +23,9 @@ function getCheckboxIndeterminateMembers(el) {
 }
 
 /**
- * @param {{tagString?: string, groupTagString?: string, childTagString?: string}} [customConfig]
+ * `tagString`, `klass` and the older role tag keys are deprecated: pass `classes` instead (Lion
+ * itself uses `classes` everywhere).
+ * @param {{ classes?: Record<string, CustomElementConstructor>, tagString?: string, groupTagString?: string, childTagString?: string}} [customConfig]
  */
 export function runCheckboxIndeterminateSuite(customConfig) {
   const cfg = {
@@ -42,19 +44,17 @@ export function runCheckboxIndeterminateSuite(customConfig) {
   let childTag;
 
   before(async () => {
-    tag = unsafeStatic(
-      resolveSuiteTag(
-        cfg.classes['checkbox-indeterminate'],
-        cfg.tagString,
-        'lion-checkbox-indeterminate',
-      ),
+    // The suite queries the host by `cfg.tagString` too, so it has to hold the resolved tag.
+    cfg.tagString = resolveSuiteTag(cfg.classes.host, cfg.tagString, 'lion-checkbox-indeterminate');
+    cfg.groupTagString = resolveSuiteTag(
+      cfg.classes['checkbox-group'],
+      cfg.groupTagString,
+      'lion-checkbox-group',
     );
-    groupTag = unsafeStatic(
-      resolveSuiteTag(cfg.classes['checkbox-group'], cfg.groupTagString, 'lion-checkbox-group'),
-    );
-    childTag = unsafeStatic(
-      resolveSuiteTag(cfg.classes.checkbox, cfg.childTagString, 'lion-checkbox'),
-    );
+    cfg.childTagString = resolveSuiteTag(cfg.classes.checkbox, cfg.childTagString, 'lion-checkbox');
+    tag = unsafeStatic(cfg.tagString);
+    groupTag = unsafeStatic(cfg.groupTagString);
+    childTag = unsafeStatic(cfg.childTagString);
   });
 
   describe('CheckboxIndeterminate', async () => {

@@ -22,6 +22,8 @@ function getProtectedMembers(el) {
 /**
  * Runs the `<lion-collapsible>` behavioural suite. Pass `tagString` to run it against your own
  * registered element (see docs/guides/principles/test-suites.md).
+ * `tagString`, `klass` and the older role tag keys are deprecated: pass `classes` instead (Lion
+ * itself uses `classes` everywhere).
  * @param {{ classes?: Record<string, CustomElementConstructor>, tagString?: string }} [customConfig]
  */
 export function runCollapsibleSuite(customConfig = {}) {
@@ -31,7 +33,7 @@ export function runCollapsibleSuite(customConfig = {}) {
     ...customConfig,
   };
 
-  cfg.tagString = resolveSuiteTag(cfg.classes.collapsible, cfg.tagString, 'lion-collapsible');
+  cfg.tagString = resolveSuiteTag(cfg.classes.host, cfg.tagString, 'lion-collapsible');
   const tag = unsafeStatic(cfg.tagString);
   const fixture = /** @type {(arg: TemplateResult) => Promise<LionCollapsible>} */ (_fixture);
 

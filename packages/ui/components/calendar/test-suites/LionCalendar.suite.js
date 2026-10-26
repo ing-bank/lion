@@ -13,6 +13,8 @@ import sinon from 'sinon';
 import { resolveSuiteTag } from '../../core/test-helpers/resolveSuiteTag.js';
 
 /**
+ * `tagString`, `klass` and the older role tag keys are deprecated: pass `classes` instead (Lion
+ * itself uses `classes` everywhere).
  * @param {{ classes?: Record<string, CustomElementConstructor>, klass?: typeof LionCalendar, tagString?: string }} [customConfig]
  */
 /**
@@ -32,7 +34,7 @@ export function runCalendarSuite({
   // getters instead of the suite learning about that markup.
   CalendarObject = DefaultCalendarObject,
 } = {}) {
-  const tagStringCalendar = resolveSuiteTag(classes.calendar, tagString, klass);
+  const tagStringCalendar = resolveSuiteTag(classes.host, tagString, klass);
   const tagCalendar = unsafeStatic(tagStringCalendar);
 
   /**

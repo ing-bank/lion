@@ -9,5 +9,5 @@ import { runSelectInvokerSuite } from '../test-suites/lion-select-invoker.suite.
 class MySelectInvoker extends LionSelectInvoker {}
 
 describe('lion-select-invoker, run against a subclasser class (classes mode)', () => {
-  runSelectInvokerSuite({ classes: { 'select-invoker': MySelectInvoker } });
+  runSelectInvokerSuite({ classes: { host: MySelectInvoker } });
 });

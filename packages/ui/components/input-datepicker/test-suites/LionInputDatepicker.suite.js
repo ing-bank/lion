@@ -41,11 +41,7 @@ export function runDatepickerSuite({
   // learning about that markup. See docs/guides/principles/test-suites.md.
   InputObject = DefaultInputObject,
 } = {}) {
-  const datepickerTag = resolveSuiteTag(
-    classes['input-datepicker'],
-    datepickerTagName,
-    'lion-input-datepicker',
-  );
+  const datepickerTag = resolveSuiteTag(classes.host, datepickerTagName, 'lion-input-datepicker');
   const calendarTag = resolveSuiteTag(classes.calendar, calendarTagName, 'lion-calendar');
   const tag = unsafeStatic(datepickerTag);
 

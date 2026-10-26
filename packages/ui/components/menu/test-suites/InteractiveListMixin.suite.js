@@ -38,7 +38,7 @@ const fixture = /** @type {(arg: TemplateResult) => Promise<LionMenu>} */ (_fixt
 export function runInteractiveListMixinSuite(customConfig) {
   const cfg = {
     tagString: resolveSuiteTag(
-      customConfig?.classes?.['interactive-list'],
+      customConfig?.classes?.host,
       customConfig?.tagString,
       InteractiveListClass,
     ),

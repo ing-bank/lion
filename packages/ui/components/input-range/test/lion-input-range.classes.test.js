@@ -9,5 +9,5 @@ import { runInputRangeSuite } from '../test-suites/lion-input-range.suite.js';
 class MyInputRange extends LionInputRange {}
 
 describe('lion-input-range, run against a subclasser class (classes mode)', () => {
-  runInputRangeSuite({ classes: { 'input-range': MyInputRange } });
+  runInputRangeSuite({ classes: { host: MyInputRange } });
 });

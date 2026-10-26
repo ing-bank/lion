@@ -9,5 +9,5 @@ import { runSwitchButtonSuite } from '../test-suites/lion-switch-button.suite.js
 class MySwitchButton extends LionSwitchButton {}
 
 describe('lion-switch-button, run against a subclasser class (classes mode)', () => {
-  runSwitchButtonSuite({ classes: { 'switch-button': MySwitchButton } });
+  runSwitchButtonSuite({ classes: { host: MySwitchButton } });
 });

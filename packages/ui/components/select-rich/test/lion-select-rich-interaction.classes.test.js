@@ -9,5 +9,5 @@ import { runSelectRichInteractionSuite } from '../test-suites/lion-select-rich-i
 class MySelectRich extends LionSelectRich {}
 
 describe('lion-select-rich-interaction, run against a subclasser class (classes mode)', () => {
-  runSelectRichInteractionSuite({ classes: { 'select-rich-interaction': MySelectRich } });
+  runSelectRichInteractionSuite({ classes: { host: MySelectRich } });
 });

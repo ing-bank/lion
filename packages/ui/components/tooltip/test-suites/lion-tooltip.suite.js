@@ -17,6 +17,8 @@ import { resolveSuiteTag } from '../../core/test-helpers/resolveSuiteTag.js';
  * Runs the `lion-tooltip` behavioural suite, moved out of `test/lion-tooltip.test.js` so a Subclasser can run
  * the same guarantees against its own element. Pass `tagString` to point it at your
  * registered tag; see docs/guides/principles/test-suites.md.
+ * `tagString`, `klass` and the older role tag keys are deprecated: pass `classes` instead (Lion
+ * itself uses `classes` everywhere).
  * @param {{ classes?: Record<string, CustomElementConstructor>, tagString?: string }} [customConfig]
  */
 export function runTooltipSuite(customConfig = {}) {
@@ -25,7 +27,7 @@ export function runTooltipSuite(customConfig = {}) {
     tagString: 'lion-tooltip',
     ...customConfig,
   };
-  cfg.tagString = resolveSuiteTag(cfg.classes.tooltip, cfg.tagString, 'lion-tooltip');
+  cfg.tagString = resolveSuiteTag(cfg.classes.host, cfg.tagString, 'lion-tooltip');
   const tag = unsafeStatic(cfg.tagString);
 
   describe('lion-tooltip', () => {

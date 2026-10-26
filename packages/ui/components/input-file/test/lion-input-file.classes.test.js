@@ -9,5 +9,5 @@ import { runInputFileSuite } from '../test-suites/lion-input-file.suite.js';
 class MyInputFile extends LionInputFile {}
 
 describe('lion-input-file, run against a subclasser class (classes mode)', () => {
-  runInputFileSuite({ classes: { 'input-file': MyInputFile } });
+  runInputFileSuite({ classes: { host: MyInputFile } });
 });

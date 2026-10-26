@@ -42,7 +42,7 @@ const l1Config = {
 export function runMoreButtonMenuMixinSuite(customConfig) {
   const cfg = {
     tagString: resolveSuiteTag(
-      customConfig?.classes?.['more-button-menu'],
+      customConfig?.classes?.host,
       customConfig?.tagString,
       InteractiveListClass,
     ),

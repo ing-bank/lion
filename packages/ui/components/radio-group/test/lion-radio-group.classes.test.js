@@ -10,5 +10,5 @@ class MyRadioGroup extends LionRadioGroup {}
 class MyRadio extends LionRadio {}
 
 describe('lion-radio-group, run against a subclasser class (classes mode)', () => {
-  runRadioGroupSuite({ classes: { 'radio-group': MyRadioGroup, radio: MyRadio } });
+  runRadioGroupSuite({ classes: { host: MyRadioGroup, radio: MyRadio } });
 });

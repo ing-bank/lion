@@ -2,6 +2,7 @@ import '@lion/ui/define/lion-fieldset.js';
 import '@lion/ui/define/lion-checkbox-group.js';
 import '@lion/ui/define/lion-checkbox.js';
 import { expect, fixture, fixtureSync, html, unsafeStatic } from '@open-wc/testing';
+import { resolveSuiteTag } from '../../../core/test-helpers/resolveSuiteTag.js';
 
 /**
  *
@@ -9,19 +10,28 @@ import { expect, fixture, fixtureSync, html, unsafeStatic } from '@open-wc/testi
  */
 
 /**
- * @param {{ parentTagString?:string, childTagString?: string, choiceType?: string}} config
+ * `tagString`, `klass` and the older role tag keys are deprecated: pass `classes` instead (Lion
+ * itself uses `classes` everywhere).
+ * @param {{ classes?: Record<string, CustomElementConstructor>, parentTagString?:string, childTagString?: string, choiceType?: string}} config
  */
-export function runCustomChoiceGroupMixinSuite({
-  parentTagString,
-  childTagString,
-  choiceType,
-} = {}) {
+export function runCustomChoiceGroupMixinSuite({ classes = {}, choiceType } = {}) {
   const cfg = {
-    parentTagString: parentTagString || 'custom-choice-input-group',
-    childTagString: childTagString || 'custom-choice-input',
+    classes,
+    parentTagString: 'custom-choice-input-group',
+    childTagString: 'custom-choice-input',
     choiceType: choiceType || 'single',
   };
 
+  cfg.parentTagString = resolveSuiteTag(
+    cfg.classes?.host,
+    cfg.parentTagString,
+    'custom-choice-input-group',
+  );
+  cfg.childTagString = resolveSuiteTag(
+    cfg.classes?.child,
+    cfg.childTagString,
+    'custom-choice-input',
+  );
   const parentTag = unsafeStatic(cfg.parentTagString);
   const childTag = unsafeStatic(cfg.childTagString);
 

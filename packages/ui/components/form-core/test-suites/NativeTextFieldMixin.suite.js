@@ -15,7 +15,9 @@ import { isActiveElement } from '../../core/test-helpers/isActiveElement.js';
  */
 
 /**
- * @param {{tagString?: string, modelValueType?: modelValueType}} [customConfig]
+ * `tagString`, `klass` and the older role tag keys are deprecated: pass `classes` instead (Lion
+ * itself uses `classes` everywhere).
+ * @param {{ classes?: Record<string, CustomElementConstructor>, tagString?: string, modelValueType?: modelValueType}} [customConfig]
  */
 export function runNativeTextFieldMixinSuite(customConfig) {
   const cfg = {
@@ -34,11 +36,7 @@ export function runNativeTextFieldMixinSuite(customConfig) {
       }
     }
 
-    cfg.tagString = resolveSuiteTag(
-      cfg.classes?.['native-text-field-mixin'],
-      cfg.tagString,
-      NativeTextFieldClass,
-    );
+    cfg.tagString = resolveSuiteTag(cfg.classes?.host, cfg.tagString, NativeTextFieldClass);
     const tag = unsafeStatic(cfg.tagString);
 
     it('preserves the caret position on value change', async () => {

@@ -21,6 +21,8 @@ function hasBrowserResizeSupport() {
  * Runs the `lion-textarea` behavioural suite, moved out of `test/lion-textarea.test.js` so a Subclasser can run
  * the same guarantees against its own element. Pass `tagString` to point it at your
  * registered tag; see docs/guides/principles/test-suites.md.
+ * `tagString`, `klass` and the older role tag keys are deprecated: pass `classes` instead (Lion
+ * itself uses `classes` everywhere).
  * @param {{ classes?: Record<string, CustomElementConstructor>, tagString?: string }} [customConfig]
  */
 export function runTextareaSuite(customConfig = {}) {
@@ -29,7 +31,7 @@ export function runTextareaSuite(customConfig = {}) {
     tagString: 'lion-textarea',
     ...customConfig,
   };
-  cfg.tagString = resolveSuiteTag(cfg.classes.textarea, cfg.tagString, 'lion-textarea');
+  cfg.tagString = resolveSuiteTag(cfg.classes.host, cfg.tagString, 'lion-textarea');
   const tag = unsafeStatic(cfg.tagString);
 
   describe('<lion-textarea>', () => {

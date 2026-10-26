@@ -9,5 +9,5 @@ import { runSwitchSuite } from '../test-suites/lion-switch.suite.js';
 class MySwitch extends LionSwitch {}
 
 describe('lion-switch, run against a subclasser class (classes mode)', () => {
-  runSwitchSuite({ classes: { switch: MySwitch } });
+  runSwitchSuite({ classes: { host: MySwitch } });
 });

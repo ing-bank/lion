@@ -64,13 +64,17 @@ class WithFormControlInputTelDropdown extends ScopedElementsMixin(LionInputTelDr
 }
 
 runInputTelDropdownSuite();
-// @ts-ignore
-runInputTelDropdownSuite({ klass: LionInputTelDropdown, hasParentheses: true });
+runInputTelDropdownSuite({
+  classes: { host: LionInputTelDropdown },
+  hasParentheses: true,
+});
 runInputTelDropdownParenthesesSuite();
 
 describe('WithFormControlInputTelDropdown', () => {
   // Runs it for LionSelectRich, which uses .modelValue/@model-value-changed instead of .value/@change
-  runInputTelDropdownSuite({ klass: WithFormControlInputTelDropdown });
+  runInputTelDropdownSuite({
+    classes: { host: WithFormControlInputTelDropdown },
+  });
 
   it("it doesn't set the country as modelValue, only as viewValue", async () => {
     const el = /** @type {LionInputTelDropdown} */ (

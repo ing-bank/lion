@@ -8,12 +8,14 @@ import { resolveSuiteTag } from '../../core/test-helpers/resolveSuiteTag.js';
 /**
  * Runs the `LionButton` behavioural suite. `klass` is registered anonymously by the suite; pass
  * `tagString` for an element you registered yourself (see docs/guides/principles/test-suites.md).
+ * `tagString`, `klass` and the older role tag keys are deprecated: pass `classes` instead (Lion
+ * itself uses `classes` everywhere).
  * @param {{ classes?: Record<string, CustomElementConstructor>, klass?: typeof LionButton, tagString?: string }} [customConfig]
  */
 export function LionButtonSuite({ classes = {}, klass = LionButton, tagString } = {}) {
   // When a subclasser passes its own registered tag name, that element is tested as-is; otherwise
   // the suite registers an anonymous subclass so the Lion defaults stay covered.
-  const tagStringButton = resolveSuiteTag(classes.button, tagString, klass);
+  const tagStringButton = resolveSuiteTag(classes.host, tagString, klass);
   const tagButton = unsafeStatic(tagStringButton);
 
   describe('LionButton', () => {

@@ -9,5 +9,5 @@ import { runSelectRichSuite } from '../test-suites/lion-select-rich.suite.js';
 class MySelectRich extends LionSelectRich {}
 
 describe('lion-select-rich, run against a subclasser class (classes mode)', () => {
-  runSelectRichSuite({ classes: { 'select-rich': MySelectRich } });
+  runSelectRichSuite({ classes: { host: MySelectRich } });
 });

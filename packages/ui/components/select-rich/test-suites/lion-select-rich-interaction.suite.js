@@ -30,7 +30,7 @@ function mimicKeyPress(el, key, code = '') {
  */
 function expectOnlyGivenOneOptionToBeChecked(options, selectedIndex) {
   /**
-   * @param {{ checked: any; }} option
+   * @param {{ classes?: Record<string, CustomElementConstructor>,  checked: any; }} option
    * @param {any} i
    */
   options.forEach((option, i) => {
@@ -54,7 +54,7 @@ export function runSelectRichInteractionSuite(customConfig = {}) {
     tagString: 'lion-select-rich',
     ...customConfig,
   };
-  cfg.tagString = resolveSuiteTag(cfg.classes['select-rich'], cfg.tagString, 'lion-select-rich');
+  cfg.tagString = resolveSuiteTag(cfg.classes.host, cfg.tagString, 'lion-select-rich');
   const tag = unsafeStatic(cfg.tagString);
   const tagNameOptions = resolveSuiteTag(cfg.classes.options, cfg.optionsTagString, 'lion-options');
   const tagOptions = unsafeStatic(tagNameOptions);

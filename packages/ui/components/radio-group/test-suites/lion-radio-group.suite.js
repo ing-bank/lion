@@ -15,6 +15,8 @@ const fixture = /** @type {(arg: TemplateResult) => Promise<LionRadioGroup>} */ 
  * Runs the `lion-radio-group` behavioural suite, moved out of `test/lion-radio-group.test.js` so a Subclasser can run
  * the same guarantees against its own element. Pass your own tag names to point it at them
  * (see docs/guides/principles/test-suites.md).
+ * `tagString`, `klass` and the older role tag keys are deprecated: pass `classes` instead (Lion
+ * itself uses `classes` everywhere).
  * @param {{ classes?: Record<string, CustomElementConstructor>, tagString?: string, childTagString?: string }} [customConfig]
  */
 export function runRadioGroupSuite(customConfig = {}) {
@@ -24,7 +26,7 @@ export function runRadioGroupSuite(customConfig = {}) {
     childTagString: 'lion-radio',
     ...customConfig,
   };
-  cfg.tagString = resolveSuiteTag(cfg.classes['radio-group'], cfg.tagString, 'lion-radio-group');
+  cfg.tagString = resolveSuiteTag(cfg.classes.host, cfg.tagString, 'lion-radio-group');
   const tag = unsafeStatic(cfg.tagString);
   const childTag = unsafeStatic(
     resolveSuiteTag(cfg.classes.radio, cfg.childTagString, 'lion-radio'),

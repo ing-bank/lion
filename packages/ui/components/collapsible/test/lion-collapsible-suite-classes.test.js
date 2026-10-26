@@ -9,5 +9,5 @@ import { runCollapsibleSuite } from '../test-suites/LionCollapsible.suite.js';
 class MyCollapsible extends LionCollapsible {}
 
 describe('lion-collapsible-suite-tag-string.test.js, run against a subclasser class (classes mode)', () => {
-  runCollapsibleSuite({ classes: { collapsible: MyCollapsible } });
+  runCollapsibleSuite({ classes: { host: MyCollapsible } });
 });

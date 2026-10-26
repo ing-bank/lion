@@ -43,13 +43,22 @@ customElements.define(
   MultipleCustomChoiceGroupAllowCustom,
 );
 
-runChoiceGroupMixinSuite({ parentTagString: 'custom-choice-input-group' });
 runChoiceGroupMixinSuite({
+  classes: { host: CustomChoiceGroup },
+  // synthetic tag: not derivable from the class name, so the deprecated key names the element
+  parentTagString: 'custom-choice-input-group',
+});
+runChoiceGroupMixinSuite({
+  classes: { host: MultipleCustomChoiceGroup },
   parentTagString: 'multiple-custom-choice-input-group',
   choiceType: 'multiple',
 });
-runChoiceGroupMixinSuite({ parentTagString: 'allow-custom-choice-input-group' });
 runChoiceGroupMixinSuite({
+  classes: { host: CustomChoiceGroupAllowCustom },
+  parentTagString: 'allow-custom-choice-input-group',
+});
+runChoiceGroupMixinSuite({
+  classes: { host: MultipleCustomChoiceGroupAllowCustom },
   parentTagString: 'multiple-allow-custom-choice-input-group',
   choiceType: 'multiple',
 });

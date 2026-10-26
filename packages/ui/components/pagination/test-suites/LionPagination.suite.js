@@ -13,6 +13,8 @@ import { resolveSuiteTag } from '../../core/test-helpers/resolveSuiteTag.js';
 /**
  * Runs the `<lion-pagination>` behavioural suite. Pass `tagString` to run it against your own
  * registered element (see docs/guides/principles/test-suites.md).
+ * `tagString`, `klass` and the older role tag keys are deprecated: pass `classes` instead (Lion
+ * itself uses `classes` everywhere).
  * @param {{ classes?: Record<string, CustomElementConstructor>, tagString?: string }} [customConfig]
  */
 export function runPaginationSuite(customConfig = {}) {
@@ -22,7 +24,7 @@ export function runPaginationSuite(customConfig = {}) {
     ...customConfig,
   };
 
-  cfg.tagString = resolveSuiteTag(cfg.classes.pagination, cfg.tagString, 'lion-pagination');
+  cfg.tagString = resolveSuiteTag(cfg.classes.host, cfg.tagString, 'lion-pagination');
   const tag = unsafeStatic(cfg.tagString);
   const fixture = /** @type {(arg: TemplateResult) => Promise<LionPagination>} */ (_fixture);
 
