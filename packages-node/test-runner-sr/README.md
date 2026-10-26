@@ -183,7 +183,7 @@ Both came out of CI runs, not out of theory:
 
 Four layers sit between the markup and the user, and only the last one can answer the question we care about.
 
-![Four layers from the DOM to what a screen reader says, with the AOM-to-speech connection marked as the last missing step](./sr-test-layers.svg)
+![Four layers from the DOM to what a screen reader says, with the AOM-to-speech connection marked as the last missing step](./docs/sr-test-layers.svg)
 
 1. **DOM - what we write.** Static analysis (`expect(el).to.be.accessible()`, axe) reads this layer and stops
    here: it can prove that a name, role or state is _exposed_, never what is _heard_.

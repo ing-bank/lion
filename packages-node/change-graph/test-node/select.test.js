@@ -98,11 +98,16 @@ describe('change-graph selection', () => {
   });
 
   it('does not spend a full run on documentation inside an always-full directory', async () => {
-    const selection = await selectTests({
-      cwd: root,
-      changedFiles: ['packages-node/test-runner-sr/README.md'],
-    });
-    expect(selection.full).to.equal(false);
+    // Prose, and an asset under `docs/`, cannot change what a test observes. The runner's own code can -
+    // that is the next test.
+    for (const changedFiles of [
+      ['packages-node/test-runner-sr/README.md'],
+      ['packages-node/test-runner-sr/docs/sr-test-layers.svg'],
+    ]) {
+      // eslint-disable-next-line no-await-in-loop
+      const selection = await selectTests({ cwd: root, changedFiles });
+      expect(selection.full).to.equal(false);
+    }
   });
 
   it('runs everything when the screen reader test runner itself changed', async () => {
