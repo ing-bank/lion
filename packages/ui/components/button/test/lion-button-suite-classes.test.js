@@ -13,7 +13,7 @@ class MyButtonReset extends LionButtonReset {}
 class MyButtonSubmit extends LionButtonSubmit {}
 
 describe('lion-button-suite-tag-string.test.js, run against a subclasser class (classes mode)', () => {
-  LionButtonSuite({ classes: { button: MyButton } });
-  LionButtonResetSuite({ classes: { 'button-reset': MyButtonReset } });
-  LionButtonSubmitSuite({ classes: { 'button-submit': MyButtonSubmit } });
+  LionButtonSuite({ classes: { host: MyButton } });
+  LionButtonResetSuite({ classes: { host: MyButtonReset } });
+  LionButtonSubmitSuite({ classes: { host: MyButtonSubmit } });
 });

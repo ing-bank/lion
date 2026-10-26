@@ -11,7 +11,7 @@ export const runInputStepperIntegrationSuite = (klassOrConfig = LionInputStepper
     typeof klassOrConfig === 'function'
       ? { klass: klassOrConfig }
       : { klass: LionInputStepper, .../** @type {any} */ (klassOrConfig) };
-  const tagString = resolveSuiteTag(cfg.classes?.['input-stepper'], cfg.tagString, cfg.klass);
+  const tagString = resolveSuiteTag(cfg.classes?.host, cfg.tagString, cfg.klass);
   runInteractionStateMixinSuite({
     tagString,
     allowedModelValueTypes: [Number],

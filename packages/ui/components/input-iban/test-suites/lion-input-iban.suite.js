@@ -15,6 +15,8 @@ const fixture = /** @type {(arg: TemplateResult|string) => Promise<LionInputIban
  * Runs the `lion-input-iban` behavioural suite, moved out of `test/lion-input-iban.test.js` so a Subclasser can run
  * the same guarantees against its own element. Pass `tagString` to point it at your
  * registered tag; see docs/guides/principles/test-suites.md.
+ * `tagString`, `klass` and the older role tag keys are deprecated: pass `classes` instead (Lion
+ * itself uses `classes` everywhere).
  * @param {{ classes?: Record<string, CustomElementConstructor>, tagString?: string }} [customConfig]
  */
 export function runInputIbanSuite(customConfig = {}) {
@@ -23,7 +25,7 @@ export function runInputIbanSuite(customConfig = {}) {
     tagString: 'lion-input-iban',
     ...customConfig,
   };
-  cfg.tagString = resolveSuiteTag(cfg.classes['input-iban'], cfg.tagString, 'lion-input-iban');
+  cfg.tagString = resolveSuiteTag(cfg.classes.host, cfg.tagString, 'lion-input-iban');
   const tag = unsafeStatic(cfg.tagString);
 
   describe('<lion-input-iban>', () => {

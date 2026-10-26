@@ -27,6 +27,8 @@ import { isActiveElement } from '../../core/test-helpers/isActiveElement.js';
  * Runs the `lion-form` behavioural suite, moved out of `test/lion-form.test.js` so a Subclasser can run
  * the same guarantees against its own element. Pass `tagString` to point it at your registered
  * tag; see docs/guides/principles/test-suites.md.
+ * `tagString`, `klass` and the older role tag keys are deprecated: pass `classes` instead (Lion
+ * itself uses `classes` everywhere).
  * @param {{ classes?: Record<string, CustomElementConstructor>, checkboxGroupTagString?: string, checkboxTagString?: string, fieldsetTagString?: string, listboxTagString?: string, optionTagString?: string, radioGroupTagString?: string, radioTagString?: string, tagString?: string }} [customConfig]
  */
 export function runFormSuite(customConfig = {}) {
@@ -35,7 +37,7 @@ export function runFormSuite(customConfig = {}) {
     tagString: 'lion-form',
     ...customConfig,
   };
-  cfg.tagString = resolveSuiteTag(cfg.classes.form, cfg.tagString, 'lion-form');
+  cfg.tagString = resolveSuiteTag(cfg.classes.host, cfg.tagString, 'lion-form');
   const tag = unsafeStatic(cfg.tagString);
   const tagNameCheckboxGroup = resolveSuiteTag(
     cfg.classes['checkbox-group'],

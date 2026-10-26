@@ -9,5 +9,5 @@ import { runSelectedFileListSuite } from '../test-suites/lion-selected-file-list
 class MySelectedFileList extends LionSelectedFileList {}
 
 describe('lion-selected-file-list, run against a subclasser class (classes mode)', () => {
-  runSelectedFileListSuite({ classes: { 'selected-file-list': MySelectedFileList } });
+  runSelectedFileListSuite({ classes: { host: MySelectedFileList } });
 });

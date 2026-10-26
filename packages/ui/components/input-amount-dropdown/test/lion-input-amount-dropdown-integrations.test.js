@@ -1,12 +1,11 @@
 import { runFormatMixinSuite } from '@lion/ui/form-core-test-suites.js';
 
+import { LionInputAmountDropdown } from '@lion/ui/input-amount-dropdown.js';
 import '@lion/ui/define/lion-input-amount-dropdown.js';
-
-const tagString = 'lion-input-amount-dropdown';
 
 describe('<lion-input-amount-dropdown> integrations', () => {
   runFormatMixinSuite({
-    tagString,
+    classes: { host: LionInputAmountDropdown },
     modelValueType: Object,
     parser: value => value.replace('foo: ', ''),
     valueToggler: ({ toggleValue, viewValue }) => {

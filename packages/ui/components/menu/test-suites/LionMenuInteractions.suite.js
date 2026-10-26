@@ -47,6 +47,8 @@ const config = {
 };
 
 /**
+ * `tagString`, `klass` and the older role tag keys are deprecated: pass `classes` instead (Lion
+ * itself uses `classes` everywhere).
  * @param {{
  *   classes?: Record<string, CustomElementConstructor>,
  *   klass?: typeof LionMenu,
@@ -54,7 +56,7 @@ const config = {
  * }} [customConfig]
  */
 export function runLionMenuInteractionsSuite({ classes = {}, klass = LionMenu, tagString } = {}) {
-  const tagName = resolveSuiteTag(classes.menu, tagString, klass);
+  const tagName = resolveSuiteTag(classes.host, tagString, klass);
   const tag = unsafeStatic(tagName);
 
   describe('LionMenu interactions', () => {

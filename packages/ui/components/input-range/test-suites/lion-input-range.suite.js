@@ -13,6 +13,8 @@ const fixture = /** @type {(arg: TemplateResult|string) => Promise<LionInputRang
  * Runs the `lion-input-range` behavioural suite, moved out of `test/lion-input-range.test.js` so a Subclasser can run
  * the same guarantees against its own element. Pass `tagString` to point it at your
  * registered tag; see docs/guides/principles/test-suites.md.
+ * `tagString`, `klass` and the older role tag keys are deprecated: pass `classes` instead (Lion
+ * itself uses `classes` everywhere).
  * @param {{ classes?: Record<string, CustomElementConstructor>, tagString?: string }} [customConfig]
  */
 export function runInputRangeSuite(customConfig = {}) {
@@ -21,7 +23,7 @@ export function runInputRangeSuite(customConfig = {}) {
     tagString: 'lion-input-range',
     ...customConfig,
   };
-  cfg.tagString = resolveSuiteTag(cfg.classes['input-range'], cfg.tagString, 'lion-input-range');
+  cfg.tagString = resolveSuiteTag(cfg.classes.host, cfg.tagString, 'lion-input-range');
   const tag = unsafeStatic(cfg.tagString);
 
   describe('<lion-input-range>', () => {

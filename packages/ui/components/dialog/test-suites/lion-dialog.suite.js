@@ -28,6 +28,8 @@ const fixture = /** @type {(arg: TemplateResult) => Promise<LionDialog>} */ (_fi
  * Runs the `lion-dialog` behavioural suite, moved out of `test/lion-dialog.test.js` so a Subclasser can run
  * the same guarantees against its own element. Pass your own tag names to point it at them
  * (see docs/guides/principles/test-suites.md).
+ * `tagString`, `klass` and the older role tag keys are deprecated: pass `classes` instead (Lion
+ * itself uses `classes` everywhere).
  * @param {{ classes?: Record<string, CustomElementConstructor>, tabsTagString?: string, tagString?: string }} [customConfig]
  */
 export function runDialogSuite(customConfig = {}) {
@@ -36,7 +38,7 @@ export function runDialogSuite(customConfig = {}) {
     tagString: 'lion-dialog',
     ...customConfig,
   };
-  cfg.tagString = resolveSuiteTag(cfg.classes.dialog, cfg.tagString, 'lion-dialog');
+  cfg.tagString = resolveSuiteTag(cfg.classes.host, cfg.tagString, 'lion-dialog');
   const tag = unsafeStatic(cfg.tagString);
   const tagNameTabs = resolveSuiteTag(cfg.classes.tabs, cfg.tabsTagString, 'lion-tabs');
   const tagTabs = unsafeStatic(tagNameTabs);

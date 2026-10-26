@@ -19,6 +19,8 @@ import { resolveSuiteTag } from '../../core/test-helpers/resolveSuiteTag.js';
  */
 
 /**
+ * `tagString`, `klass` and the older role tag keys are deprecated: pass `classes` instead (Lion
+ * itself uses `classes` everywhere).
  * @param {{ classes?: Record<string, CustomElementConstructor>, tagString?: string }} [customConfig]
  */
 export function runValidateMixinFeedbackPart({ classes = {}, tagString: customTagString } = {}) {
@@ -38,11 +40,7 @@ export function runValidateMixinFeedbackPart({ classes = {}, tagString: customTa
       }
     }
 
-    const tagString = resolveSuiteTag(
-      classes['validate-mixin-feedback-part'],
-      customTagString,
-      ValidateElement,
-    );
+    const tagString = resolveSuiteTag(classes.host, customTagString, ValidateElement);
     const tag = unsafeStatic(tagString);
 
     class ContainsLowercaseA extends Validator {

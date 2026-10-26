@@ -13,6 +13,8 @@ import { resolveSuiteTag } from '../../core/test-helpers/resolveSuiteTag.js';
  * Runs the `lion-select-invoker` behavioural suite, moved out of `test/lion-select-invoker.test.js` so a Subclasser can run
  * the same guarantees against its own element. Pass `tagString` to point it at your registered
  * tag; see docs/guides/principles/test-suites.md.
+ * `tagString`, `klass` and the older role tag keys are deprecated: pass `classes` instead (Lion
+ * itself uses `classes` everywhere).
  * @param {{ classes?: Record<string, CustomElementConstructor>, tagString?: string }} [customConfig]
  */
 export function runSelectInvokerSuite(customConfig = {}) {
@@ -21,11 +23,7 @@ export function runSelectInvokerSuite(customConfig = {}) {
     tagString: 'lion-select-invoker',
     ...customConfig,
   };
-  cfg.tagString = resolveSuiteTag(
-    cfg.classes['select-invoker'],
-    cfg.tagString,
-    'lion-select-invoker',
-  );
+  cfg.tagString = resolveSuiteTag(cfg.classes.host, cfg.tagString, 'lion-select-invoker');
   const tag = unsafeStatic(cfg.tagString);
 
   describe('lion-select-invoker', () => {

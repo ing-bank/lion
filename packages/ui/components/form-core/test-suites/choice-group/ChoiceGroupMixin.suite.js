@@ -11,6 +11,7 @@ import { LionInput } from '@lion/ui/input.js';
 import { expect, fixture, fixtureSync, html, unsafeStatic } from '@open-wc/testing';
 import { LitElement } from 'lit';
 import sinon from 'sinon';
+import { resolveSuiteTag } from '../../../core/test-helpers/resolveSuiteTag.js';
 
 class ChoiceInputFoo extends ChoiceInputMixin(LionInput) {}
 customElements.define('choice-input-foo', ChoiceInputFoo);
@@ -27,16 +28,37 @@ class ChoiceInputGroup extends ChoiceGroupMixin(FormGroupMixin(LitElement)) {}
 customElements.define('choice-input-group', ChoiceInputGroup);
 
 /**
- * @param {{ parentTagString?:string, childTagString?: string, choiceType?: string}} config
+ * `tagString`, `klass` and the older role tag keys are deprecated: pass `classes` instead (Lion
+ * itself uses `classes` everywhere).
+ * @param {{ classes?: Record<string, CustomElementConstructor>, parentTagString?:string, childTagString?: string, choiceType?: string}} customConfig
  */
-export function runChoiceGroupMixinSuite({ parentTagString, childTagString, choiceType } = {}) {
+export function runChoiceGroupMixinSuite(customConfig = {}) {
   const cfg = {
-    parentTagString: parentTagString || 'choice-input-group',
-    childTagString: childTagString || 'choice-input',
+    classes: /** @type {Record<string, CustomElementConstructor>} */ ({}),
+    parentTagString: 'choice-input-group',
+    childTagString: 'choice-input',
     childTagStringFoo: 'choice-input-foo',
     childTagStringBar: 'choice-input-bar',
-    choiceType: choiceType || 'single',
+    choiceType: 'single',
+    ...customConfig,
   };
+
+  cfg.parentTagString = resolveSuiteTag(
+    cfg.classes?.host,
+    cfg.parentTagString,
+    'choice-input-group',
+  );
+  cfg.childTagString = resolveSuiteTag(cfg.classes?.child, cfg.childTagString, 'choice-input');
+  cfg.childTagStringFoo = resolveSuiteTag(
+    cfg.classes?.childFoo,
+    cfg.childTagStringFoo,
+    'choice-input-foo',
+  );
+  cfg.childTagStringBar = resolveSuiteTag(
+    cfg.classes?.childBar,
+    cfg.childTagStringBar,
+    'choice-input-bar',
+  );
 
   const parentTag = unsafeStatic(cfg.parentTagString);
   const childTag = unsafeStatic(cfg.childTagString);
@@ -517,7 +539,7 @@ export function runChoiceGroupMixinSuite({ parentTagString, childTagString, choi
         expect(counter).to.equal(3); // male becomes checked, other becomes unchecked
       }
 
-      if (choiceType === 'multiple') {
+      if (cfg.choiceType === 'multiple') {
         // not found values trigger no event
         el.modelValue = ['foo', 'male', 'female', 'other'];
         expect(counter).to.equal(2);

@@ -21,6 +21,8 @@ const fixture = /** @type {(arg: TemplateResult) => Promise<LionSwitchButton>} *
  * Runs the `lion-switch-button` behavioural suite, moved out of `test/lion-switch-button.test.js` so a Subclasser can run
  * the same guarantees against its own element. Pass `tagString` to point it at your
  * registered tag; see docs/guides/principles/test-suites.md.
+ * `tagString`, `klass` and the older role tag keys are deprecated: pass `classes` instead (Lion
+ * itself uses `classes` everywhere).
  * @param {{ classes?: Record<string, CustomElementConstructor>, tagString?: string }} [customConfig]
  */
 export function runSwitchButtonSuite(customConfig = {}) {
@@ -29,11 +31,7 @@ export function runSwitchButtonSuite(customConfig = {}) {
     tagString: 'lion-switch-button',
     ...customConfig,
   };
-  cfg.tagString = resolveSuiteTag(
-    cfg.classes['switch-button'],
-    cfg.tagString,
-    'lion-switch-button',
-  );
+  cfg.tagString = resolveSuiteTag(cfg.classes.host, cfg.tagString, 'lion-switch-button');
   const tag = unsafeStatic(cfg.tagString);
 
   describe('lion-switch-button', () => {

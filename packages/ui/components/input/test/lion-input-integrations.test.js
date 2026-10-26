@@ -3,17 +3,16 @@ import {
   runInteractionStateMixinSuite,
 } from '@lion/ui/form-core-test-suites.js';
 
+import { LionInput } from '@lion/ui/input.js';
 import '@lion/ui/define/lion-input.js';
-
-const tagString = 'lion-input';
 
 describe('<lion-input> integrations', () => {
   runInteractionStateMixinSuite({
-    tagString,
+    classes: { host: LionInput },
   });
 
   runFormatMixinSuite({
-    tagString,
+    classes: { host: LionInput },
     modelValueType: String,
   });
 });

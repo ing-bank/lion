@@ -50,6 +50,8 @@ async function checkWorkflow(steps, expected) {
  * Runs the `lion-steps` behavioural suite, moved out of `test/lion-steps.test.js` so a Subclasser can run
  * the same guarantees against its own element. Pass `tagString` to point it at your registered
  * tag; see docs/guides/principles/test-suites.md.
+ * `tagString`, `klass` and the older role tag keys are deprecated: pass `classes` instead (Lion
+ * itself uses `classes` everywhere).
  * @param {{ classes?: Record<string, CustomElementConstructor>, stepTagString?: string, tagString?: string }} [customConfig]
  */
 export function runStepsSuite(customConfig = {}) {
@@ -58,7 +60,7 @@ export function runStepsSuite(customConfig = {}) {
     tagString: 'lion-steps',
     ...customConfig,
   };
-  cfg.tagString = resolveSuiteTag(cfg.classes.steps, cfg.tagString, 'lion-steps');
+  cfg.tagString = resolveSuiteTag(cfg.classes.host, cfg.tagString, 'lion-steps');
   const tag = unsafeStatic(cfg.tagString);
   const tagNameStep = resolveSuiteTag(cfg.classes.step, cfg.stepTagString, 'lion-step');
   const tagStep = unsafeStatic(tagNameStep);

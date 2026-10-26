@@ -9,5 +9,5 @@ import { runTabsSuite } from '../test-suites/lion-tabs.suite.js';
 class MyTabs extends LionTabs {}
 
 describe('lion-tabs, run against a subclasser class (classes mode)', () => {
-  runTabsSuite({ classes: { tabs: MyTabs } });
+  runTabsSuite({ classes: { host: MyTabs } });
 });

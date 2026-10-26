@@ -4,6 +4,7 @@ import { expect, fixture, html, unsafeStatic } from '@open-wc/testing';
 
 import { getFormControlMembers } from '@lion/ui/form-core-test-helpers.js';
 import sinon from 'sinon';
+import { resolveSuiteTag } from '../../../core/test-helpers/resolveSuiteTag.js';
 
 class ChoiceInput extends ChoiceInputMixin(LionInput) {
   constructor() {
@@ -14,16 +15,21 @@ class ChoiceInput extends ChoiceInputMixin(LionInput) {
 customElements.define('choice-group-input', ChoiceInput);
 
 /**
- * @param {{ tagString?:string, tagType?: string}} config
+ * `tagString`, `klass` and the older role tag keys are deprecated: pass `classes` instead (Lion
+ * itself uses `classes` everywhere).
+ * @param {{ classes?: Record<string, CustomElementConstructor>, tagString?:string, tagType?: string}} config
  * @deprecated
  */
-export function runChoiceInputMixinSuite({ tagString } = {}) {
+export function runChoiceInputMixinSuite({ classes = {} } = {}) {
   const cfg = {
-    tagString: tagString || 'choice-group-input',
+    classes,
+    tagString: 'choice-group-input',
   };
 
+  cfg.tagString = resolveSuiteTag(cfg.classes?.host, cfg.tagString, 'choice-group-input');
+
   const tag = unsafeStatic(cfg.tagString);
-  describe(`ChoiceInputMixin: ${tagString}`, () => {
+  describe(`ChoiceInputMixin: ${cfg.tagString}`, () => {
     it('is hidden when attribute hidden is true', async () => {
       const el = /** @type {ChoiceInput} */ (await fixture(html`<${tag} hidden></${tag}>`));
       expect(el).not.to.be.displayed;

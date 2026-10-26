@@ -15,11 +15,15 @@ import {
 } from '@open-wc/testing';
 import sinon from 'sinon';
 import { getFormControlMembers } from '@lion/ui/form-core-test-helpers.js';
+import { resolveSuiteTag } from '../../../core/test-helpers/resolveSuiteTag.js';
 
 /**
- * @param {{ tagString?: string, childTagString?:string }} [cfg]
+ * `tagString`, `klass` and the older role tag keys are deprecated: pass `classes` instead (Lion
+ * itself uses `classes` everywhere).
+ * @param {{ classes?: Record<string, CustomElementConstructor>, tagString?: string, childTagString?:string }} [customConfig]
  */
-export function runFormGroupMixinSuite(cfg = {}) {
+export function runFormGroupMixinSuite(customConfig = {}) {
+  const cfg = { ...customConfig };
   class FormChild extends LionField {
     // @ts-ignore
     get slots() {
@@ -30,7 +34,8 @@ export function runFormGroupMixinSuite(cfg = {}) {
     }
   }
 
-  const childTagString = cfg.childTagString || defineCE(FormChild);
+  cfg.childTagString = resolveSuiteTag(cfg.classes?.child, cfg.childTagString, FormChild);
+  const { childTagString } = cfg;
 
   class FormGroup extends FormGroupMixin(LitElement) {
     constructor() {
@@ -42,7 +47,8 @@ export function runFormGroupMixinSuite(cfg = {}) {
     }
   }
 
-  const tagString = cfg.tagString || defineCE(FormGroup);
+  cfg.tagString = resolveSuiteTag(cfg.classes?.host, cfg.tagString, FormGroup);
+  const { tagString } = cfg;
   const tag = unsafeStatic(tagString);
   const childTag = unsafeStatic(childTagString);
   const inputSlots = html`

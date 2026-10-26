@@ -23,6 +23,8 @@ import { isActiveElement } from '../../core/test-helpers/isActiveElement.js';
  * Runs the `lion-combobox` behavioural suite, moved out of `test/lion-combobox.test.js` so a Subclasser can run
  * the same guarantees against its own element. Pass `tagString` to point it at your registered
  * tag; see docs/guides/principles/test-suites.md.
+ * `tagString`, `klass` and the older role tag keys are deprecated: pass `classes` instead (Lion
+ * itself uses `classes` everywhere).
  * @param {{ classes?: Record<string, CustomElementConstructor>, optionTagString?: string, tagString?: string }} [customConfig]
  */
 export function runComboboxSuite(customConfig = {}) {
@@ -31,7 +33,7 @@ export function runComboboxSuite(customConfig = {}) {
     tagString: 'lion-combobox',
     ...customConfig,
   };
-  cfg.tagString = resolveSuiteTag(cfg.classes.combobox, cfg.tagString, 'lion-combobox');
+  cfg.tagString = resolveSuiteTag(cfg.classes.host, cfg.tagString, 'lion-combobox');
   const hostTag = unsafeStatic(cfg.tagString);
   const tagNameOption = resolveSuiteTag(cfg.classes.option, cfg.optionTagString, 'lion-option');
   const tagOption = unsafeStatic(tagNameOption);

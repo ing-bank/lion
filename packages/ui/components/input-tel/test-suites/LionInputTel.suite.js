@@ -187,7 +187,7 @@ export function runInputTelSuite({
   hasParentheses = false,
 } = {}) {
   // @ts-ignore
-  const tagName = resolveSuiteTag(classes['input-tel'], tagString, klass);
+  const tagName = resolveSuiteTag(classes.host, tagString, klass);
   const tag = unsafeStatic(tagName);
 
   describe('LionInputTel', () => {

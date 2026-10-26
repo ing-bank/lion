@@ -28,7 +28,9 @@ import { resolveSuiteTag } from '../../core/test-helpers/resolveSuiteTag.js';
  */
 
 /**
- * @param {{tagString?: string | null, lightDom?: string}} [customConfig]
+ * `tagString`, `klass` and the older role tag keys are deprecated: pass `classes` instead (Lion
+ * itself uses `classes` everywhere).
+ * @param {{ classes?: Record<string, CustomElementConstructor>, tagString?: string | null, lightDom?: string}} [customConfig]
  */
 export function runValidateMixinSuite(customConfig) {
   const cfg = {
@@ -48,7 +50,7 @@ export function runValidateMixinSuite(customConfig) {
     }
   }
 
-  const tagString = resolveSuiteTag(cfg.classes['validate-mixin'], cfg.tagString, ValidateElement);
+  const tagString = resolveSuiteTag(cfg.classes.host, cfg.tagString, ValidateElement);
   const tag = unsafeStatic(tagString);
 
   describe('ValidateMixin', () => {

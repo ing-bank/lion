@@ -24,8 +24,8 @@ Every exported runner follows the same shape:
 ```js
 // call it at describe level, never inside an it(); it returns nothing
 describe('my-input', () => {
-  // keys are Lion's tag names without the `lion-` prefix; Lion's own element is the default
-  runInputSuite({ classes: { input: MyInput, field: MyField } });
+  // `host` is the element under test; the other keys are the roles the suite renders
+  runInputSuite({ classes: { host: MyInput, field: MyField } });
 });
 ```
 
@@ -38,12 +38,13 @@ describe('my-input', () => {
 1. **A runner registers tests, it does not run them.** It must be called while the runner is
    collecting tests (at module level or inside `describe()`), never inside an `it()`. The return
    value is always `undefined`.
-2. **The caller hands the suite its classes**, in a map whose keys are Lion's tag names without the
-   `lion-` prefix (`combobox`, `option`, `fieldset`, `input-datepicker`, …) and whose values are
+2. **The caller hands the suite its classes.** `host` is the element under test — the same key for
+   every runner — and the other keys are the roles the suite renders, named after Lion's tag names
+   without the `lion-` prefix (`option`, `options`, `fieldset`, `input-datepicker`, …). Values are
    constructors:
 
    ```js
-   runComboboxSuite({ classes: { combobox: MyCombobox, option: MyOption } });
+   runComboboxSuite({ classes: { host: MyCombobox, option: MyOption } });
    ```
 
    Lion's own element is the implicit default, so passing nothing runs your suite against Lion. For
@@ -61,18 +62,23 @@ describe('my-input', () => {
 
 3. **Role keys are the same language as Lion's tags.** A composite suite lists the roles it renders
    (`runFormSuite`: `checkbox-group`, `radio-group`, `fieldset`, `checkbox`, `listbox`, `option`,
-   `radio`; `runSelectRichSuite`: `select-rich`, `option`, `tabs`; `runRadioGroupSuite`:
-   `radio-group`, `radio`). A role you do not pass keeps Lion's own element. The older role keys
-   (`childTagString`, `groupTagString`, `optionTagString`, `datepickerTagName`, `calendarTagName`,
-   …) remain as the deprecated fallback for those roles.
+   `radio`; `runSelectRichSuite`: `option`, `tabs`; `runRadioGroupSuite`: `radio`). The element under
+   test is always `host`, and a role you do not pass keeps Lion's own element. The mixin suites name
+   their subject `host` like every other runner and name the elements they assemble (`parent`,
+   `child`, `portal`). The older
+   role keys (`childTagString`, `groupTagString`, `optionTagString`, `datepickerTagName`,
+   `calendarTagName`, …) remain as the deprecated fallback for those roles.
 4. **The caller supplies the test framework.** Suites use the ambient Mocha globals
    (`describe`/`it`/`beforeEach`) and `@open-wc/testing` fixtures; your test file needs the same
    module graph as Lion's own `test/` files (see `web-test-runner.config.mjs`, including the
    scoped-custom-element-registry polyfill for the scoped registry setup).
-5. **`classes` is the promised surface.** Each suite has a `*-classes.test.js` next to it that hands
-   the suite a subclasser's own classes and runs the whole suite against them, which is the path an
-   extension layer takes; the `*-tag-string.test.js` probe next to it covers the deprecated
-   fallback. `klass`, `tagString` and the role tag keys are not a contract.
+5. **`classes` is the promised surface, and Lion uses it internally too.** Every suite in this repo is
+   called with `classes` — `klass`, `tagString` and the role tag keys exist only so an external
+   caller written against the old shape keeps working, and they carry a deprecation note in the
+   JSDoc. Each suite has a `*-classes.test.js` next to it that hands it a subclasser's own classes and
+   runs the whole suite against them, which is the path an extension layer takes; the
+   `*-tag-string.test.js` probe next to it covers the fallback and is the only place that exercises
+   it.
 6. **A suite asserts through its page object, not through Lion's markup.** `runDatepickerSuite` takes
    `InputObject` (default `DatepickerInputObject`) and `runCalendarSuite` takes `CalendarObject`
    (default `CalendarObject`, both from the `*-test-helpers.js` entry points), and every node
@@ -168,6 +174,9 @@ The fixtures a suite needs from the caller are the exported `*-test-helpers.js` 
   registers that child in its own scope — its markup and lookups have to know the tag. A plain Lion
   subclass does not, which is why the in-repo probe passes the host only and the extension layer
   that motivated the feature exercises the child role in its own repository.
+- `runOverlayMixinSuite` and `runWithHoverInteractionSuite` take `{ tagString, tag }` as a _required_
+  input: the caller builds the element and hands over an `unsafeStatic` tag object, so there is no
+  Lion element to default to and no deprecated key to fold into `classes`. Every other runner (59 of 61) takes `classes`.
 - `fieldset` has no suite of its own because it has no behaviour of its own: its whole test file is
   `runFormGroupMixinSuite({ tagString: 'lion-fieldset' })` plus
   `runFormGroupMixinInputSuite({ tagString: 'lion-fieldset' })`.

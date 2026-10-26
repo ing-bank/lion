@@ -40,7 +40,7 @@ function mimicKeyPress(el, key, code = '') {
 }
 
 /**
- * @param { {tagString?:string, optionTagString?:string} } [customConfig]
+ * @param { { classes?: Record<string, CustomElementConstructor>, tagString?:string, optionTagString?:string} } [customConfig]
  */
 export function runListboxMixinSuite(customConfig = {}) {
   const cfg = {
@@ -50,7 +50,7 @@ export function runListboxMixinSuite(customConfig = {}) {
     ...customConfig,
   };
 
-  cfg.tagString = resolveSuiteTag(cfg.classes.listbox, cfg.tagString, 'lion-listbox');
+  cfg.tagString = resolveSuiteTag(cfg.classes.host, cfg.tagString, 'lion-listbox');
   const tag = unsafeStatic(cfg.tagString);
   const optionTag = unsafeStatic(cfg.optionTagString);
 

@@ -39,13 +39,15 @@ function getDropdownValue(dropdownEl) {
 }
 
 /**
+ * `tagString`, `klass` and the older role tag keys are deprecated: pass `classes` instead (Lion
+ * itself uses `classes` everywhere).
  * @param {{ classes?: Record<string, CustomElementConstructor>, klass?: typeof LionInputAmountDropdown, tagString?: string }} config
  */
 export function runInputAmountDropdownSuite(
   { classes = {}, klass, tagString } = { klass: LionInputAmountDropdown },
 ) {
   // @ts-ignore
-  const tagName = resolveSuiteTag(classes['input-amount-dropdown'], tagString, klass);
+  const tagName = resolveSuiteTag(classes.host, tagString, klass);
   const tag = unsafeStatic(tagName);
 
   describe('LionInputAmountDropdown', () => {

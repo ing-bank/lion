@@ -27,7 +27,7 @@ const fixture = /** @type {(arg: TemplateResult) => Promise<LionMenu>} */ (_fixt
 export function runMultiLevelListMixinSuite(customConfig) {
   const cfg = {
     tagString: resolveSuiteTag(
-      customConfig?.classes?.['multi-level-list'],
+      customConfig?.classes?.host,
       customConfig?.tagString,
       MultiLevelListClass,
     ),

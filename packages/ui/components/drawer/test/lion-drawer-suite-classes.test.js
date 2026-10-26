@@ -9,5 +9,5 @@ import { runDrawerSuite } from '../test-suites/LionDrawer.suite.js';
 class MyDrawer extends LionDrawer {}
 
 describe('lion-drawer-suite-tag-string.test.js, run against a subclasser class (classes mode)', () => {
-  runDrawerSuite({ classes: { drawer: MyDrawer } });
+  runDrawerSuite({ classes: { host: MyDrawer } });
 });

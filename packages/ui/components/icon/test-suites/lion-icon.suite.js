@@ -19,6 +19,8 @@ const fixture = /** @type {(arg: TemplateResult|string) => Promise<LionIcon>} */
  * Runs the `lion-icon` behavioural suite, moved out of `test/lion-icon.test.js` so a Subclasser can run
  * the same guarantees against its own element. Pass `tagString` to point it at your
  * registered tag; see docs/guides/principles/test-suites.md.
+ * `tagString`, `klass` and the older role tag keys are deprecated: pass `classes` instead (Lion
+ * itself uses `classes` everywhere).
  * @param {{ classes?: Record<string, CustomElementConstructor>, tagString?: string }} [customConfig]
  */
 export function runIconSuite(customConfig = {}) {
@@ -27,7 +29,7 @@ export function runIconSuite(customConfig = {}) {
     tagString: 'lion-icon',
     ...customConfig,
   };
-  cfg.tagString = resolveSuiteTag(cfg.classes.icon, cfg.tagString, 'lion-icon');
+  cfg.tagString = resolveSuiteTag(cfg.classes.host, cfg.tagString, 'lion-icon');
   const tag = unsafeStatic(cfg.tagString);
 
   describe('lion-icon', () => {

@@ -9,5 +9,5 @@ import { runFormSuite } from '../test-suites/lion-form.suite.js';
 class MyForm extends LionForm {}
 
 describe('lion-form, run against a subclasser class (classes mode)', () => {
-  runFormSuite({ classes: { form: MyForm } });
+  runFormSuite({ classes: { host: MyForm } });
 });

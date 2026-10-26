@@ -9,5 +9,5 @@ import { runInputEmailSuite } from '../test-suites/lion-input-email.suite.js';
 class MyInputEmail extends LionInputEmail {}
 
 describe('lion-input-email, run against a subclasser class (classes mode)', () => {
-  runInputEmailSuite({ classes: { 'input-email': MyInputEmail } });
+  runInputEmailSuite({ classes: { host: MyInputEmail } });
 });

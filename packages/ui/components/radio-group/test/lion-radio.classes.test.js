@@ -9,5 +9,5 @@ import { runRadioSuite } from '../test-suites/lion-radio.suite.js';
 class MyRadio extends LionRadio {}
 
 describe('lion-radio, run against a subclasser class (classes mode)', () => {
-  runRadioSuite({ classes: { radio: MyRadio } });
+  runRadioSuite({ classes: { host: MyRadio } });
 });

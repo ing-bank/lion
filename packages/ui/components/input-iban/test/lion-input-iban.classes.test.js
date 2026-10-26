@@ -9,5 +9,5 @@ import { runInputIbanSuite } from '../test-suites/lion-input-iban.suite.js';
 class MyInputIban extends LionInputIban {}
 
 describe('lion-input-iban, run against a subclasser class (classes mode)', () => {
-  runInputIbanSuite({ classes: { 'input-iban': MyInputIban } });
+  runInputIbanSuite({ classes: { host: MyInputIban } });
 });

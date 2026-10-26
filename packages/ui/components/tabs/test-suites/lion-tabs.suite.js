@@ -13,6 +13,8 @@ import '@lion/ui/define/lion-tabs.js';
  * Runs the `lion-tabs` behavioural suite, moved out of `test/lion-tabs.test.js` so a Subclasser can run
  * the same guarantees against its own element. Pass `tagString` to point it at your
  * registered tag; see docs/guides/principles/test-suites.md.
+ * `tagString`, `klass` and the older role tag keys are deprecated: pass `classes` instead (Lion
+ * itself uses `classes` everywhere).
  * @param {{ classes?: Record<string, CustomElementConstructor>, tagString?: string }} [customConfig]
  */
 export function runTabsSuite(customConfig = {}) {
@@ -21,7 +23,7 @@ export function runTabsSuite(customConfig = {}) {
     tagString: 'lion-tabs',
     ...customConfig,
   };
-  cfg.tagString = resolveSuiteTag(cfg.classes.tabs, cfg.tagString, 'lion-tabs');
+  cfg.tagString = resolveSuiteTag(cfg.classes.host, cfg.tagString, 'lion-tabs');
   const tag = unsafeStatic(cfg.tagString);
 
   const basicTabs = html`

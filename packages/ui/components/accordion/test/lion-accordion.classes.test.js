@@ -9,5 +9,5 @@ import { runAccordionSuite } from '../test-suites/lion-accordion.suite.js';
 class MyAccordion extends LionAccordion {}
 
 describe('lion-accordion, run against a subclasser class (classes mode)', () => {
-  runAccordionSuite({ classes: { accordion: MyAccordion } });
+  runAccordionSuite({ classes: { host: MyAccordion } });
 });

@@ -10,6 +10,8 @@ import { resolveSuiteTag } from '../../core/test-helpers/resolveSuiteTag.js';
 /**
  * Runs the `<lion-select>` behavioural suite. Pass `tagString` to run it against your own
  * registered element (see docs/guides/principles/test-suites.md).
+ * `tagString`, `klass` and the older role tag keys are deprecated: pass `classes` instead (Lion
+ * itself uses `classes` everywhere).
  * @param {{ classes?: Record<string, CustomElementConstructor>, tagString?: string }} [customConfig]
  */
 export function runSelectSuite(customConfig = {}) {
@@ -19,7 +21,7 @@ export function runSelectSuite(customConfig = {}) {
     ...customConfig,
   };
 
-  cfg.tagString = resolveSuiteTag(cfg.classes.select, cfg.tagString, 'lion-select');
+  cfg.tagString = resolveSuiteTag(cfg.classes.host, cfg.tagString, 'lion-select');
   const tag = unsafeStatic(cfg.tagString);
 
   describe('lion-select', () => {

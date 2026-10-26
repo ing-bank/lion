@@ -9,5 +9,5 @@ import { runProgressIndicatorSuite } from '../test-suites/lion-progress-indicato
 class MyProgressIndicator extends LionProgressIndicator {}
 
 describe('lion-progress-indicator, run against a subclasser class (classes mode)', () => {
-  runProgressIndicatorSuite({ classes: { 'progress-indicator': MyProgressIndicator } });
+  runProgressIndicatorSuite({ classes: { host: MyProgressIndicator } });
 });
