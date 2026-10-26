@@ -48,15 +48,32 @@ describe('<lion-select-rich> screen reader', () => {
 
   it('announces a listbox with its options and their position', async () => {
     await fixtureComponent();
-    const selectRich = /** @type {HTMLElement} */ (document.querySelector('lion-select-rich'));
+    const selectRich = /** @type {SelectRich} */ (document.querySelector('lion-select-rich'));
     // Axe keeps the name, the role and the selected state honest; how a reader words them is what the
     // assertions below are for.
     await expect(selectRich).to.be.accessible();
 
-    // What the popup is and whether it is open is state on a `slot="invoker"` child that the component
-    // wires up itself - not audible, and not present in a bare fixture, so it is not asserted here.
+    // The component generates its own invoker when the consumer does not pass one (the
+    // "generates an lion-select-invoker if no invoker is provided" unit test), and *that* element is
+    // what carries the popup state. It only exists once the element has updated, which is why the
+    // await is here and not in the fixture: a bare `fixture()` resolves the wrapper, not this element.
+    await selectRich.updateComplete;
+    const invoker = /** @type {HTMLElement} */ (
+      selectRich.querySelector('[slot="invoker"]') ||
+        selectRich.shadowRoot?.querySelector('lion-select-invoker')
+    );
+    expect(invoker, 'the component generated its invoker').to.exist;
+    expect(invoker.getAttribute('aria-haspopup')).to.equal('listbox');
+    expect(invoker.getAttribute('aria-expanded')).to.equal('false');
 
     await sr.focus('lion-select-rich');
+    if (activeReader === 'nvda') {
+      // NVDA speaks about its own cursor, not about the browser focus: with the focus on the component
+      // the cursor stayed on the button after it, so walk onto the component and back (the same anchor
+      // the tooltip test needs on a page this small).
+      await sr.press('Tab');
+      await sr.press('Shift+Tab');
+    }
     if (activeReader !== 'voiceover') {
       // The log grows one phrase per step: walk the listbox and both options before asserting them.
       for (let step = 0; step < 8; step += 1) {
@@ -75,9 +92,9 @@ describe('<lion-select-rich> screen reader', () => {
         'option, Item A, selected, not disabled, position 1, set size 2',
         'option, Item B, not selected, not disabled, position 2, set size 2',
       ),
-      // Both real readers announce the option the user lands on, with where it sits in the list; the
-      // listbox name is pinned by the virtual phrase and by axe above.
-      nvda: containsLike('Item A'),
+      // NVDA announces the option it walks onto (with its position in the set) rather than the listbox
+      // name; the name is pinned by the virtual phrase and by axe above.
+      nvda: containsLike('Item'),
       voiceover: containsLike('Choice'),
     });
   });

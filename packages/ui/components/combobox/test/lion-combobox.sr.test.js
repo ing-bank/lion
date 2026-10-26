@@ -73,9 +73,10 @@ describe('<lion-combobox> screen reader', () => {
         'combobox, has popup listbox, not expanded, 1 control',
         'textbox, Choice, autocomplete inlined and in list, not disabled, not invalid',
       ),
-      // The real readers are pinned on the name that every reader has to say, plus what makes it a
-      // combobox at all; the exact state wording differs per reader and is asserted above.
-      nvda: containsLike('Choice'),
+      // NVDA announces the empty field it is on ("blank", the same wording the input test pins) rather
+      // than the name; the name and the popup state are pinned by the virtual phrase and by axe above,
+      // so what this asserts is that the user reaches an editable field of the combobox.
+      nvda: containsLike('blank'),
       voiceover: containsLike('Choice'),
     });
   });

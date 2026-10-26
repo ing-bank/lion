@@ -209,8 +209,9 @@ makes it slower and flakier without making it stronger. Worked examples from thi
 - **`aria-haspopup` and `aria-expanded` on an invoker** - attributes on an element a reader does not
   vocalise as such, and not even present in a bare fixture, because `lion-select-rich` wires its invoker
   up itself.
-- **a disabled button** - whether the state reaches the platform as `aria-disabled` is an attribute; a
-  reader only hears the consequence ("unavailable", "dimmed"), and the virtual reader does not model it.
+- **a disabled button** - whether the state reaches the platform as `aria-disabled` (and leaves the tab
+  order) is an attribute; the existing `LionButton` suite asserts exactly that. A reader only hears the
+  consequence ("unavailable", "dimmed"), and the virtual reader does not model it.
 - **absence** - "the content behind a modal is not announced" has no `sr.expect` equivalent for the real
   readers, so a component test asserting the attribute is the honest version.
 
