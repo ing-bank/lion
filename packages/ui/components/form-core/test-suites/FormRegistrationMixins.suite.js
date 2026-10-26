@@ -7,6 +7,7 @@ import {
 import { defineCE, expect, fixture, html, unsafeStatic } from '@open-wc/testing';
 import { LitElement } from 'lit';
 import sinon from 'sinon';
+import { resolveSuiteTag } from '../../core/test-helpers/resolveSuiteTag.js';
 
 /**
  * @typedef {Object} customConfig
@@ -18,7 +19,14 @@ import sinon from 'sinon';
  */
 
 /**
- * @param {customConfig} customConfig
+ * @param {{
+ *   classes?: Record<string, CustomElementConstructor>,
+ *   suffix?: string,
+ *   parentTagString?: string,
+ *   childTagString?: string,
+ *   portalTagString?: string,
+ *   baseElement?: typeof LitElement,
+ * }} customConfig
  */
 export const runRegistrationSuite = customConfig => {
   const cfg = {
@@ -28,11 +36,11 @@ export const runRegistrationSuite = customConfig => {
 
   describe(`FormRegistrationMixins ${cfg.suffix}`, () => {
     class RegistrarClass extends FormRegistrarMixin(cfg.baseElement) {}
-    cfg.parentTagString = defineCE(RegistrarClass);
+    cfg.parentTagString = resolveSuiteTag(cfg.classes?.parent, undefined, RegistrarClass);
     class RegisteringClass extends FormRegisteringMixin(cfg.baseElement) {}
-    cfg.childTagString = defineCE(RegisteringClass);
+    cfg.childTagString = resolveSuiteTag(cfg.classes?.child, undefined, RegisteringClass);
     class PortalClass extends FormRegistrarPortalMixin(cfg.baseElement) {}
-    cfg.portalTagString = defineCE(PortalClass);
+    cfg.portalTagString = resolveSuiteTag(cfg.classes?.portal, undefined, PortalClass);
 
     const parentTag = unsafeStatic(cfg.parentTagString);
     const childTag = unsafeStatic(cfg.childTagString);

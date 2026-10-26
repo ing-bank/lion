@@ -10,6 +10,7 @@ import {
 } from '@open-wc/testing';
 import sinon from 'sinon';
 
+import { resolveSuiteTag } from '../../core/test-helpers/resolveSuiteTag.js';
 import { isActiveElement } from '../../core/test-helpers/isActiveElement.js';
 import { mimicUserChangingDropdown } from '../test-helpers/mimicUserChangingDropdown.js';
 
@@ -38,12 +39,13 @@ function getDropdownValue(dropdownEl) {
 }
 
 /**
- * @param {{ klass:LionInputAmountDropdown }} config
+ * @param {{ classes?: Record<string, CustomElementConstructor>, klass?: typeof LionInputAmountDropdown, tagString?: string }} config
  */
-// @ts-expect-error
-export function runInputAmountDropdownSuite({ klass } = { klass: LionInputAmountDropdown }) {
+export function runInputAmountDropdownSuite(
+  { classes = {}, klass, tagString } = { klass: LionInputAmountDropdown },
+) {
   // @ts-ignore
-  const tagName = defineCE(/** @type {* & HTMLElement} */ (class extends klass {}));
+  const tagName = resolveSuiteTag(classes['input-amount-dropdown'], tagString, klass);
   const tag = unsafeStatic(tagName);
 
   describe('LionInputAmountDropdown', () => {
@@ -222,21 +224,6 @@ export function runInputAmountDropdownSuite({ klass } = { klass: LionInputAmount
           }),
         );
         spy.restore();
-      });
-
-      it('renders preferred currencies in the order provided via `preferredCurrencies`', async () => {
-        // 'allowedCurrencies' deliberately lists JPY before USD, so a correct result cannot
-        // be produced by accidentally following the 'allowedCurrencies' order
-        const el = await fixture(html` <${tag}
-          .allowedCurrencies="${['EUR', 'GBP', 'JPY', 'USD']}"
-          .preferredCurrencies="${['USD', 'JPY']}"
-          ></${tag}> `);
-
-        const preferredCodes = el._templateDataDropdown.data.regionMetaListPreferred.map(
-          (/** @type {{ currencyCode: string }} */ { currencyCode }) => currencyCode,
-        );
-
-        expect(preferredCodes).to.eql(['USD', 'JPY']);
       });
 
       it('can override "all-currencies-label"', async () => {

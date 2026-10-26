@@ -18,6 +18,7 @@ import { sendKeys } from '@web/test-runner-commands';
 import sinon from 'sinon';
 import { getListboxMembers } from '../../../exports/listbox-test-helpers.js';
 import { getCachedFixture } from '../../core/test-helpers/getCachedFixture.js';
+import { resolveSuiteTag } from '../../core/test-helpers/resolveSuiteTag.js';
 
 /**
  * @typedef {import('../src/LionListbox.js').LionListbox} LionListbox
@@ -43,11 +44,13 @@ function mimicKeyPress(el, key, code = '') {
  */
 export function runListboxMixinSuite(customConfig = {}) {
   const cfg = {
+    classes: /** @type {Record<string, CustomElementConstructor>} */ ({}),
     tagString: 'lion-listbox',
     optionTagString: 'lion-option',
     ...customConfig,
   };
 
+  cfg.tagString = resolveSuiteTag(cfg.classes.listbox, cfg.tagString, 'lion-listbox');
   const tag = unsafeStatic(cfg.tagString);
   const optionTag = unsafeStatic(cfg.optionTagString);
 

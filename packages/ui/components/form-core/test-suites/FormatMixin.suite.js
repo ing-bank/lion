@@ -4,6 +4,7 @@ import { parseDate } from '@lion/ui/localize-no-side-effects.js';
 import { aTimeout, defineCE, expect, fixture, html, unsafeStatic } from '@open-wc/testing';
 import { LitElement } from 'lit';
 import sinon from 'sinon';
+import { resolveSuiteTag } from '../../core/test-helpers/resolveSuiteTag.js';
 
 const isLionInputStepper = (/** @type {FormatClass} */ el) => 'valueTextMapping' in el;
 
@@ -37,6 +38,7 @@ class FormatClass extends FormatMixin(LitElement) {
 
 /**
  * @typedef {object} FormatMixinSuiteConfig
+ * @property {Record<string, CustomElementConstructor>} [classes] - Optional. Elements you replace; keys are Lion's tag names without the `lion-` prefix
  * @property {string | null} [tagString] - Optional. Element tag name; if omitted, one will be auto-generated via defineCE()
  * @property {string | null} [childTagString] - Optional. Not currently used
  * @property {ArrayConstructor | ObjectConstructor | NumberConstructor | BooleanConstructor | StringConstructor | DateConstructor | 'iban' | 'email'} modelValueType - REQUIRED. The model value type for this component
@@ -258,9 +260,7 @@ export function runFormatMixinSuite(customConfig) {
     let fooFormat;
 
     before(async () => {
-      if (!cfg.tagString) {
-        cfg.tagString = defineCE(FormatClass);
-      }
+      cfg.tagString = resolveSuiteTag(cfg.classes?.['format-mixin'], cfg.tagString, FormatClass);
       tag = unsafeStatic(cfg.tagString);
 
       fooFormat = await fixture(html`
@@ -934,7 +934,7 @@ export function runFormatMixinSuite(customConfig) {
           it('updates return viewValue and caretIndex', async () => {
             /**
              * @param {string} viewValue
-             * @param {{ prevViewValue: string; currentCaretIndex: number; }} meta
+             * @param {{ classes?: Record<string, CustomElementConstructor>, prevViewValue: string; currentCaretIndex: number; }} meta
              */
             function myPreprocessor(viewValue, { currentCaretIndex }) {
               return { viewValue: `${viewValue}q`, caretIndex: currentCaretIndex + 1 };

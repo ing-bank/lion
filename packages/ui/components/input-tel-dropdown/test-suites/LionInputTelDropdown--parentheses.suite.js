@@ -5,14 +5,8 @@
 import { LionInputTelDropdown } from '@lion/ui/input-tel-dropdown.js';
 import { PhoneUtilManager } from '@lion/ui/input-tel.js';
 import { sendKeys, selectOption } from '@web/test-runner-commands';
-import {
-  expect,
-  defineCE,
-  unsafeStatic,
-  fixture as _fixture,
-  html,
-  waitUntil,
-} from '@open-wc/testing';
+import { expect, unsafeStatic, fixture as _fixture, html, waitUntil } from '@open-wc/testing';
+import { resolveSuiteTag } from '../../core/test-helpers/resolveSuiteTag.js';
 
 /**
  * @typedef {import('lit').TemplateResult} TemplateResult
@@ -34,15 +28,18 @@ const telDropdownConfig = {
 };
 
 /**
- * @param {{ klass:LionInputTelDropdown, config: TelDropdownConfig }} config
+ * @param {{ classes?: Record<string, CustomElementConstructor>, klass:typeof LionInputTelDropdown, config: TelDropdownConfig }} config
  */
 
 export function runInputTelDropdownParenthesesSuite(
   // @ts-ignore
-  { klass, config } = { klass: LionInputTelDropdown, config: telDropdownConfig },
+  { classes = {}, klass, tagString, config } = {
+    klass: LionInputTelDropdown,
+    config: telDropdownConfig,
+  },
 ) {
   // @ts-ignore
-  const tagName = defineCE(/** @type {* & HTMLElement} */ (class extends klass {}));
+  const tagName = resolveSuiteTag(classes['input-tel-dropdown'], tagString, klass);
   const tag = unsafeStatic(tagName);
 
   describe('LionInputTelDropdown suite with `parentheses`', () => {

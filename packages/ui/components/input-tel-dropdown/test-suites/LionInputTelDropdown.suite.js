@@ -8,12 +8,12 @@ import {
   fixture as _fixture,
   unsafeStatic,
   aTimeout,
-  defineCE,
   expect,
   html,
 } from '@open-wc/testing';
 import { nothing } from 'lit/html.js';
 
+import { resolveSuiteTag } from '../../core/test-helpers/resolveSuiteTag.js';
 import { isActiveElement } from '../../core/test-helpers/isActiveElement.js';
 
 /**
@@ -41,14 +41,16 @@ function getDropdownValue(dropdownEl) {
 }
 
 /**
- * @param {{ klass:LionInputTelDropdown, hasParentheses?: boolean }} config
+ * @param {{ classes?: Record<string, CustomElementConstructor>, klass?:typeof LionInputTelDropdown, tagString?: string, hasParentheses?: boolean }} config
  */
 export function runInputTelDropdownSuite(
-  // @ts-expect-error
-  { klass, hasParentheses } = { klass: LionInputTelDropdown, hasParentheses: false },
+  { classes = {}, klass, tagString, hasParentheses } = {
+    klass: LionInputTelDropdown,
+    hasParentheses: false,
+  },
 ) {
   // @ts-ignore
-  const tagName = defineCE(/** @type {* & HTMLElement} */ (class extends klass {}));
+  const tagName = resolveSuiteTag(classes['input-tel-dropdown'], tagString, klass);
   const tag = unsafeStatic(tagName);
 
   describe('LionInputTelDropdown', () => {

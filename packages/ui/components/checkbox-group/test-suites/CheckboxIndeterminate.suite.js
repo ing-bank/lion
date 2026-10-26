@@ -1,5 +1,6 @@
 import { expect, fixture, html, unsafeStatic } from '@open-wc/testing';
 import { getFormControlMembers } from '@lion/ui/form-core-test-helpers.js';
+import { resolveSuiteTag } from '../../core/test-helpers/resolveSuiteTag.js';
 
 /**
  * @typedef {import('../src/LionCheckbox.js').LionCheckbox} LionCheckbox
@@ -26,9 +27,10 @@ function getCheckboxIndeterminateMembers(el) {
  */
 export function runCheckboxIndeterminateSuite(customConfig) {
   const cfg = {
-    tagString: null,
-    groupTagString: null,
-    childTagString: null,
+    classes: /** @type {Record<string, CustomElementConstructor>} */ ({}),
+    tagString: 'lion-checkbox-indeterminate',
+    groupTagString: 'lion-checkbox-group',
+    childTagString: 'lion-checkbox',
     ...customConfig,
   };
 
@@ -40,12 +42,19 @@ export function runCheckboxIndeterminateSuite(customConfig) {
   let childTag;
 
   before(async () => {
-    // @ts-expect-error
-    tag = unsafeStatic(cfg.tagString);
-    // @ts-expect-error
-    groupTag = unsafeStatic(cfg.groupTagString);
-    // @ts-expect-error
-    childTag = unsafeStatic(cfg.childTagString);
+    tag = unsafeStatic(
+      resolveSuiteTag(
+        cfg.classes['checkbox-indeterminate'],
+        cfg.tagString,
+        'lion-checkbox-indeterminate',
+      ),
+    );
+    groupTag = unsafeStatic(
+      resolveSuiteTag(cfg.classes['checkbox-group'], cfg.groupTagString, 'lion-checkbox-group'),
+    );
+    childTag = unsafeStatic(
+      resolveSuiteTag(cfg.classes.checkbox, cfg.childTagString, 'lion-checkbox'),
+    );
   });
 
   describe('CheckboxIndeterminate', async () => {

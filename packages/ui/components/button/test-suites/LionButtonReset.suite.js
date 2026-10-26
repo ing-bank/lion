@@ -1,10 +1,14 @@
 /* eslint-disable lit-a11y/click-events-have-key-events */
 import { LionButtonReset } from '@lion/ui/button.js';
-import { aTimeout, defineCE, expect, fixture, html, unsafeStatic } from '@open-wc/testing';
+import { aTimeout, expect, fixture, html, unsafeStatic } from '@open-wc/testing';
 import sinon from 'sinon';
+import { resolveSuiteTag } from '../../core/test-helpers/resolveSuiteTag.js';
 
-export function LionButtonResetSuite({ klass = LionButtonReset } = {}) {
-  const tagStringButtonReset = defineCE(class extends klass {});
+/**
+ * @param {{ classes?: Record<string, CustomElementConstructor>, klass?: typeof LionButtonReset, tagString?: string }} [customConfig]
+ */
+export function LionButtonResetSuite({ classes = {}, klass = LionButtonReset, tagString } = {}) {
+  const tagStringButtonReset = resolveSuiteTag(classes['button-reset'], tagString, klass);
   const tagButtonReset = unsafeStatic(tagStringButtonReset);
 
   describe('LionButtonReset', () => {

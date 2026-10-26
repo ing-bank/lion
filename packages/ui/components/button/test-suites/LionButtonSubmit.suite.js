@@ -1,11 +1,15 @@
 /* eslint-disable lit-a11y/click-events-have-key-events */
 import { LionButtonSubmit } from '@lion/ui/button.js';
-import { aTimeout, defineCE, expect, fixture, html, unsafeStatic } from '@open-wc/testing';
+import { aTimeout, expect, fixture, html, unsafeStatic } from '@open-wc/testing';
 import { sendKeys } from '@web/test-runner-commands';
 import sinon from 'sinon';
+import { resolveSuiteTag } from '../../core/test-helpers/resolveSuiteTag.js';
 
-export function LionButtonSubmitSuite({ klass = LionButtonSubmit } = {}) {
-  const tagStringButton = defineCE(class extends klass {});
+/**
+ * @param {{ classes?: Record<string, CustomElementConstructor>, klass?: typeof LionButtonSubmit, tagString?: string }} [customConfig]
+ */
+export function LionButtonSubmitSuite({ classes = {}, klass = LionButtonSubmit, tagString } = {}) {
+  const tagStringButton = resolveSuiteTag(classes['button-submit'], tagString, klass);
   const tagButton = unsafeStatic(tagStringButton);
 
   describe('LionButtonSubmit', () => {

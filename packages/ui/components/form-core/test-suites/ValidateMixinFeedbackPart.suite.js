@@ -12,12 +12,16 @@ import {
   ValidateMixin,
   Validator,
 } from '@lion/ui/form-core.js';
+import { resolveSuiteTag } from '../../core/test-helpers/resolveSuiteTag.js';
 
 /**
  * @typedef {import('../types/validate/validate.js').FeedbackMessageData} FeedbackMessageData
  */
 
-export function runValidateMixinFeedbackPart() {
+/**
+ * @param {{ classes?: Record<string, CustomElementConstructor>, tagString?: string }} [customConfig]
+ */
+export function runValidateMixinFeedbackPart({ classes = {}, tagString: customTagString } = {}) {
   const localizeManager = getLocalizeManager();
 
   describe('Validity Feedback', () => {
@@ -34,7 +38,11 @@ export function runValidateMixinFeedbackPart() {
       }
     }
 
-    const tagString = defineCE(ValidateElement);
+    const tagString = resolveSuiteTag(
+      classes['validate-mixin-feedback-part'],
+      customTagString,
+      ValidateElement,
+    );
     const tag = unsafeStatic(tagString);
 
     class ContainsLowercaseA extends Validator {

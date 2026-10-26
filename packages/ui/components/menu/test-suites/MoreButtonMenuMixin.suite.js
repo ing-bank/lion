@@ -1,9 +1,10 @@
 import { LitElement } from 'lit';
-import { expect, html, fixture as _fixture, unsafeStatic, defineCE } from '@open-wc/testing';
+import { expect, html, fixture as _fixture, unsafeStatic } from '@open-wc/testing';
 import { sendMouse, resetMouse } from '@web/test-runner-commands';
 import sinon from 'sinon';
 import { getDeepActiveElement } from '@lion/ui/overlays.js';
 import { InteractiveListMixin } from '../src/InteractiveListMixin.js';
+import { resolveSuiteTag } from '../../core/test-helpers/resolveSuiteTag.js';
 
 class InteractiveListClass extends InteractiveListMixin(LitElement) {}
 
@@ -16,6 +17,7 @@ class InteractiveListClass extends InteractiveListMixin(LitElement) {}
  * @typedef {import('lit').TemplateResult} TemplateResult
  *
  * * @typedef {Object} TestConfig
+ * @property {Record<string, CustomElementConstructor>} [classes]
  * @property {string} tagString
  */
 
@@ -39,7 +41,11 @@ const l1Config = {
  */
 export function runMoreButtonMenuMixinSuite(customConfig) {
   const cfg = {
-    tagString: customConfig?.tagString || defineCE(InteractiveListClass),
+    tagString: resolveSuiteTag(
+      customConfig?.classes?.['more-button-menu'],
+      customConfig?.tagString,
+      InteractiveListClass,
+    ),
   };
 
   const { tagString } = cfg;

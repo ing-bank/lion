@@ -1,4 +1,4 @@
-import { defineCE, expect, fixture, html, triggerFocusFor, unsafeStatic } from '@open-wc/testing';
+import { expect, fixture, html, triggerFocusFor, unsafeStatic } from '@open-wc/testing';
 import { getFormControlMembers } from '@lion/ui/form-core-test-helpers.js';
 import { NativeTextFieldMixin } from '@lion/ui/form-core.js';
 import { sendKeys } from '@web/test-runner-commands';
@@ -6,6 +6,7 @@ import { browserDetection } from '@lion/ui/core.js';
 import { LitElement } from 'lit';
 import { spy } from 'sinon';
 
+import { resolveSuiteTag } from '../../core/test-helpers/resolveSuiteTag.js';
 import { isActiveElement } from '../../core/test-helpers/isActiveElement.js';
 
 /**
@@ -18,6 +19,7 @@ import { isActiveElement } from '../../core/test-helpers/isActiveElement.js';
  */
 export function runNativeTextFieldMixinSuite(customConfig) {
   const cfg = {
+    classes: /** @type {Record<string, CustomElementConstructor>} */ ({}),
     tagString: null,
     ...customConfig,
   };
@@ -32,7 +34,11 @@ export function runNativeTextFieldMixinSuite(customConfig) {
       }
     }
 
-    cfg.tagString = cfg.tagString ? cfg.tagString : defineCE(NativeTextFieldClass);
+    cfg.tagString = resolveSuiteTag(
+      cfg.classes?.['native-text-field-mixin'],
+      cfg.tagString,
+      NativeTextFieldClass,
+    );
     const tag = unsafeStatic(cfg.tagString);
 
     it('preserves the caret position on value change', async () => {

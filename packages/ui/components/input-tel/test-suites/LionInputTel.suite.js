@@ -3,7 +3,6 @@ import {
   fixture as _fixture,
   fixtureSync as _fixtureSync,
   html,
-  defineCE,
   unsafeStatic,
   aTimeout,
 } from '@open-wc/testing';
@@ -14,6 +13,7 @@ import { Unparseable } from '@lion/ui/form-core.js';
 import { LionInputTel, PhoneNumber, PhoneUtilManager } from '@lion/ui/input-tel.js';
 import { mockPhoneUtilManager, restorePhoneUtilManager } from '@lion/ui/input-tel-test-helpers.js';
 import { nothing } from 'lit/html.js';
+import { resolveSuiteTag } from '../../core/test-helpers/resolveSuiteTag.js';
 
 /**
  * @typedef {import('lit').TemplateResult} TemplateResult
@@ -177,12 +177,17 @@ function runActiveRegionTests({ tag, phoneUtilLoadedAfterInit }) {
 }
 
 /**
- * @param {{ klass: typeof LionInputTel, hasParentheses: boolean }} config
+ * @param {{ classes?: Record<string, CustomElementConstructor>, klass?: typeof LionInputTel, tagString?: string, hasParentheses?: boolean }} config
  */
 // @ts-ignore
-export function runInputTelSuite({ klass = LionInputTel, hasParentheses = false } = {}) {
+export function runInputTelSuite({
+  classes = {},
+  klass = LionInputTel,
+  tagString,
+  hasParentheses = false,
+} = {}) {
   // @ts-ignore
-  const tagName = defineCE(/** @type {* & HTMLElement} */ (class extends klass {}));
+  const tagName = resolveSuiteTag(classes['input-tel'], tagString, klass);
   const tag = unsafeStatic(tagName);
 
   describe('LionInputTel', () => {
