@@ -34,8 +34,8 @@
     "@babel/traverse": "^7.24.5",
     "@babel/types": "^7.24.5",
     "es-module-lexer": "^1.7.0",
-    "globby": "^16.1.0",
-    "prettier": "^3.2.5"
+    "prettier": "^3.2.5",
+    "providence-analytics": "^0.21.0"
   },
   "keywords": [
     "lion-tools",
