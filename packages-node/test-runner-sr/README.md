@@ -179,6 +179,45 @@ Both came out of CI runs, not out of theory:
   assertion does not pay for the cold start and for the announcement above. The phrases this produces
   are cleared by the first `sr.reset()` of the file, like any other.
 
+## What gets a screen reader test, and what does not
+
+A screen reader test costs a real-reader CI round (minutes, on two runners), so it earns its place only
+when the assertion is about what a user _hears_ and that cannot be derived from the DOM:
+
+- a control the user operates, where the announcement **is** the API: name, role, state, position in a
+  set (`button`, `checkbox-group`, `combobox`, `dialog`, `input`, `input-iban`, `listbox`, `radio-group`,
+  `select`, `select-rich`, `switch`, `textarea`, `tooltip`);
+- the wording a reader produces, keyed per reader where they differ (NVDA names the value, VoiceOver the
+  label), with `containsLike()` for phrases where politeness or a verb is decoration around the point.
+
+### What deliberately does not get one
+
+| category                   | examples                                                                                 | why                                                                                                                                                                                                                                                                                                                                                                          |
+| -------------------------- | ---------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| inherits a covered control | `input-amount`, `input-email`, `input-date`, `input-tel`, `input-stepper`, `input-range` | all six are `LocalizeMixin(LionInput)` and add no ARIA of their own, so their announcement is the one the `input` test pins. Caveat: that holds _only_ while the subclass adds nothing - `input-range` and `input-stepper` are the ones where the native input type can change what is announced (spinbutton/slider), so the first step there is a probe, not an assumption. |
+| not a component            | `core`, `helpers`, `form-core`, `validate-messages`, `localize`, `overlays`              | mixins, translations, utilities and test bundles have nothing to announce; the overlay system is covered through `dialog` and `tooltip`.                                                                                                                                                                                                                                     |
+| state instead of speech    | attribute wiring, focus position, `inert`/`aria-hidden`, absence                         | the reader only reflects those; see below.                                                                                                                                                                                                                                                                                                                                   |
+
+### When a traditional test is better
+
+Everything that is deterministic DOM behaviour belongs in a unit or component test: a screen reader test
+makes it slower and flakier without making it stronger. Worked examples from this branch:
+
+- **focus capture of a modal dialog** - the focus landing inside on open, and returning to the invoker on
+  close, is a focus position. Four component tests pin it (`lion-dialog.test.js`); the screen reader test
+  asserts the announcement.
+- **`aria-haspopup` and `aria-expanded` on an invoker** - attributes on an element a reader does not
+  vocalise as such, and not even present in a bare fixture, because `lion-select-rich` wires its invoker
+  up itself.
+- **a disabled button** - whether the state reaches the platform as `aria-disabled` is an attribute; a
+  reader only hears the consequence ("unavailable", "dimmed"), and the virtual reader does not model it.
+- **absence** - "the content behind a modal is not announced" has no `sr.expect` equivalent for the real
+  readers, so a component test asserting the attribute is the honest version.
+
+`expect(el).to.be.accessible()` (axe) already runs in the normal suite for 22 components, so a missing
+name, role or label fails there. What only a screen reader test can add is what the announcement actually
+says.
+
 ## Known limits
 
 A server command has to answer within **20000ms**. That limit is hardcoded in
@@ -193,6 +232,10 @@ server response ... within 20000ms") and cannot be raised through the test runne
   browser's keyboard instead;
 - an anchor that runs several reader commands: `sr.focus()` does one for VoiceOver (move the
   cursor, then ask for the announced item) plus a settle, and a third command pushed it over.
+
+The virtual reader does not vocalise `aria-disabled`, and in our run it did not reach a `disabled` button
+while walking either, so such an assertion is either a component test or a real-reader expectation. Local
+authoring follows the usual split: seed with `virtual`, pin the real wording from the CI log.
 
 `npm run lint:sr-command-budget` keeps the numbers we control on the safe side: the budget and
 hard limit constants, the wait default, literal wait timeouts in the tests, and the test timeout

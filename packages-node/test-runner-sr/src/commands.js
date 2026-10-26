@@ -122,6 +122,10 @@ export function srFocus(selector) {
     element.shadowRoot?.querySelector(focusable),
     element.querySelector(focusable),
     deepFocusable(element.shadowRoot ?? element),
+    // Also walk the *light* DOM of the element: a component's focusable node can live in a child
+    // element that it slotted itself (lion-combobox wraps a lion-input), and that child's shadow root
+    // is not reachable from our own shadow tree.
+    deepFocusable(element),
     /** @type {any} */ (element)._focusableNode,
     /** @type {any} */ (element)._inputNode,
     element,
