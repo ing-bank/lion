@@ -73,9 +73,9 @@ describe('<lion-tabs> screen reader', () => {
         'tabpanel, One',
         'tab, Two, not selected, 1 control, position 2, set size 2',
       ),
-      // The position in the set ("1 of 2") is what tells a user how much is left; the wording differs
-      // per reader, so the count is asserted through the virtual phrase and axe above.
-      nvda: containsLike('Tab'),
+      // NVDA announces the tab as "One, tab, selected, 1 of 2": the position in the set is what tells a
+      // user how much is left, and it is the part that survives the wording differences between readers.
+      nvda: containsLike('1 of 2'),
       voiceover: containsLike('One'),
     });
   });
