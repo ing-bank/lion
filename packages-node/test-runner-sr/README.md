@@ -220,6 +220,55 @@ when the assertion is about what a user _hears_ and that cannot be derived from 
 - the wording a reader produces, keyed per reader where they differ (NVDA names the value, VoiceOver the
   label), with `containsLike()` for phrases where politeness or a verb is decoration around the point.
 
+### Where the chain breaks - real examples, with sources
+
+The diagram shows three flows through the same four layers. Each break has real cases behind it:
+
+#### Between the DOM and the AOM - the browser never passes it on
+
+- `aria-label` or `aria-labelledby` on a **generic** element (`<div>`, `<span>`): there is no role for the
+  name to attach to, so there is nothing to announce - in VoiceOver on iOS, JAWS and Narrator in Chrome, and
+  TalkBack in Firefox ([Matuzovic, _Don't put aria-label on generic elements like
+  divs_](https://www.matuzo.at/blog/2026/aria-label-generic-elements)).
+- `aria-describedby` (or `aria-labelledby`) pointing at an element with `display: none`: the browser excludes
+  hidden nodes when it computes a name or description, so the description simply does not exist ([Stack
+  Overflow: aria-describedby not working with role=listitem on Safari with
+  VoiceOver](https://stackoverflow.com/questions/78544306/)).
+- Note how both of these are _invisible_ to a static check: valid attribute, valid id, correct pattern.
+
+#### Between the AOM and speech - the browser exposes it, the reader ignores it
+
+- `aria-controls`: in the tested combinations at [a11ysupport.io](https://a11ysupport.io/tech/aria/aria-controls_attribute)
+  JAWS, NVDA, Narrator, Orca and VoiceOver convey its presence as **none**, and only JAWS can jump to the
+  controlled element (the JAWS setting that could speak the attribute went away in JAWS 2020).
+- `aria-errormessage`: the tested combinations are "supported" for JAWS in Chrome/Edge and NVDA in Chrome,
+  and **none** for JAWS in Firefox, Narrator in Edge, NVDA in Edge and VoiceOver on macOS
+  ([a11ysupport.io](https://a11ysupport.io/tech/aria/aria-errormessage_attribute)) - i.e. an error can be
+  announced or silently missed depending on the pair, while the markup is identical.
+- `aria-activedescendant`: in the APG's own editable-combobox example, VoiceOver on macOS fails to convey
+  the referenced element as active ([a11ysupport.io test of that APG
+  example](https://a11ysupport.io/tests/apg__aria-1-2-combobox-with-list-autocomplete-example)).
+- `aria-sort` on a sortable column: partial at best, and no known support in Orca or TalkBack
+  ([a11ysupport.io](https://a11ysupport.io/tech/aria/aria-sort_attribute)).
+- A quirk rather than a gap: WebKit has a bug where VoiceOver does not announce "expanded" or "collapsed"
+  when `aria-expanded` is _toggled_ between true and false - the initial state is fine, the change is not
+  ([TetraLogical, compatibility notes](https://tetralogical.com/resources/accessible-components-library/compatibility/)).
+
+#### Quirks our own runs hit
+
+- NVDA announces the **value** of a text field ("blank") rather than its label, which is why the input and
+  combobox tests are written that way;
+- NVDA does not reach the items of a _closed_ menu, because they are not rendered - our menu test asserts
+  them after opening it;
+- VoiceOver's help banner occasionally steals an announcement: the one flaky step in this suite is the IBAN
+  error message, and that is what the log shows when it fails.
+
+#### Where the whole chain holds
+
+- a native `<button>` with a name; `role="switch"` with `aria-checked`; `aria-disabled`, which readers
+  announce as "unavailable" or "dimmed". These are the states a user needs most, and our own NVDA and
+  VoiceOver runs confirm them.
+
 ### What deliberately does not get one
 
 | category                   | examples                                                                                 | why                                                                                                                                                                                                                                                                                                                                                                          |
