@@ -215,6 +215,50 @@ export function runInteractionStateMixinSuite(customConfig) {
       expect(el.prefilled).to.be.true;
     });
 
+    // Edge Case
+    // Multiple Interactions: What happens if a user interacts with the input multiple times in quick succession? For instance, rapidly focusing and blurring the input. This could lead to unexpected behavior or race conditions.
+    it('handles rapid focus and blur interactions', async () => {
+      /** @type {HTMLElement & { touched: boolean, modelValue: any }} */
+      const el = await fixture(html`<${tag}></${tag}>`);
+      await triggerFocusFor(el);
+      await triggerBlurFor(el);
+      await triggerFocusFor(el);
+      await triggerBlurFor(el);
+      expect(el.touched).to.be.true;
+    });
+
+    // Edge Case
+    // Dynamic Value Changes: How does the mixin handle programmatic changes to the value? If the value of the input is changed programmatically (e.g., via JavaScript), does it correctly update the dirty or prefilled states?
+    it('updates states on programmatic value changes', async () => {
+      /** @type {HTMLElement & { dirty: boolean, modelValue: string, prefilled: boolean }} */
+      const el = await fixture(html`<${tag}></${tag}>`);
+      el.modelValue = 'test';
+      expect(el.dirty).to.be.true;
+      expect(el.prefilled).to.be.true;
+    });
+
+    // Edge Case
+    // Delayed Interactions: What if there's a delay in some interactions due to, for instance, asynchronous operations or animations? This could affect the timing of when states are set or updated.
+    it('handles delayed interactions correctly', async () => {
+      /** @type {HTMLElement & { touched: boolean }} */
+      const el = await fixture(html`<${tag}></${tag}>`);
+      await triggerFocusFor(el);
+      await new Promise(r => setTimeout(r, 1000));
+      await triggerBlurFor(el);
+      expect(el.touched).to.be.true;
+    });
+
+    // Edge Case
+    // Resetting State: How does the mixin handle resetting its state? If the input is reset to its initial state, does the mixin correctly reset its interaction states?
+    it('handles resetting its state after interactions', async () => {
+      /** @type {HTMLElement & { dirty: boolean, resetInteractionState: function, touched: boolean, modelValue: string }} */
+      const el = await fixture(html`<${tag}></${tag}>`);
+      el.modelValue = 'test';
+      el.resetInteractionState();
+      expect(el.dirty).to.be.false;
+      expect(el.touched).to.be.false;
+    });
+
     describe('Validation integration with states', () => {
       it('has .shouldShowFeedbackFor indicating for which type to show messages', async () => {
         const el = /** @type {IState} */ (
