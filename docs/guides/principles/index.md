@@ -34,3 +34,13 @@ Especially for subclassers we have some extra documentation:
 
 - [Subclasser APIs](./subclasser-apis.md)
 - [Extend documentation](../../blog/extending-documentation.md)
+
+## System author
+
+Rules for the code that makes the components work, applied to every system we reshape:
+
+- [A minimal controller to mixin contract](./controller-to-mixin.md)
+- [One word per concept](./terminology.md)
+- [Forward-thinking compatibility](./compatibility.md)
+- [Predictable timing](./predictable-timing.md)
+- [Performance and modularity](./performance-and-modularity.md)
