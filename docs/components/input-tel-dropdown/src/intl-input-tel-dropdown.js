@@ -97,14 +97,16 @@ export class IntlInputTelDropdown extends ScopedElementsMixin(LionInputTelDropdo
           @model-value-changed="${refs?.dropdown?.listeners['model-value-changed']}"
           style="${refs?.dropdown?.props?.style}"
         >
-          ${data?.regionMetaListPreferred?.length
-            ? html` ${repeat(
-                  data.regionMetaListPreferred,
-                  regionMeta => regionMeta.regionCode,
-                  regionMeta =>
-                    html`${this.templates.dropdownOption(templateDataForDropdown, regionMeta)} `,
-                )}<intl-separator></intl-separator>`
-            : ''}
+          ${
+            data?.regionMetaListPreferred?.length
+              ? html` ${repeat(
+                    data.regionMetaListPreferred,
+                    regionMeta => regionMeta.regionCode,
+                    regionMeta =>
+                      html`${this.templates.dropdownOption(templateDataForDropdown, regionMeta)} `,
+                  )}<intl-separator></intl-separator>`
+              : ''
+          }
           ${repeat(
             data.regionMetaList,
             regionMeta => regionMeta.regionCode,

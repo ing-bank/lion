@@ -103,9 +103,11 @@ export class LionSelectRich extends SlotMixin(ScopedElementsMixin(OverlayMixin(L
    */
   get _scrollTargetNode() {
     // TODO: should this be defined here or in extension layer?
-    return /** @type {HTMLElement} */ (
-      /** @type {HTMLElement & {_scrollTargetNode?: HTMLElement}} */ (this._overlayContentNode)
-        ._scrollTargetNode || this._overlayContentNode
+    return (
+      /** @type {HTMLElement} */ (
+        /** @type {HTMLElement & {_scrollTargetNode?: HTMLElement}} */ (this._overlayContentNode)
+          ._scrollTargetNode || this._overlayContentNode
+      )
     );
   }
 

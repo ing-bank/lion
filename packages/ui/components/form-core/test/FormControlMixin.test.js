@@ -22,11 +22,13 @@ describe('FormControlMixin', () => {
   const tag = unsafeStatic(tagString);
 
   it('is hidden when attribute hidden is true', async () => {
-    const el = await fixture(html`
+    const el = await fixture(
+      html`
     <${tag} hidden>
     <label slot="label">Email <span>address</span></label>
         ${inputSlot}
-    </${tag}>`);
+    </${tag}>`,
+    );
     expect(el).not.to.be.displayed;
   });
 
@@ -41,20 +43,24 @@ describe('FormControlMixin', () => {
       expect(elAttr.label).to.equal('Email address', 'as an attribute');
 
       const elProp = /** @type {FormControlMixinClass} */ (
-        await fixture(html`
+        await fixture(
+          html`
         <${tag}
           .label=${'Email address'}
         >${inputSlot}
-        </${tag}>`)
+        </${tag}>`,
+        )
       );
       expect(elProp.label).to.equal('Email address', 'as a property');
 
       const elElem = /** @type {FormControlMixinClass} */ (
-        await fixture(html`
+        await fixture(
+          html`
         <${tag}>
           <label slot="label"><b>Email</b> address</label>
           ${inputSlot}
-        </${tag}>`)
+        </${tag}>`,
+        )
       );
       expect(elElem.label).to.equal('Email address', 'as an element');
       // @ts-expect-error
@@ -63,11 +69,13 @@ describe('FormControlMixin', () => {
 
     it('has a label that supports inner html', async () => {
       const el = /** @type {FormControlMixinClass} */ (
-        await fixture(html`
+        await fixture(
+          html`
         <${tag}>
           <label slot="label">Email <span>address</span></label>
           ${inputSlot}
-        </${tag}>`)
+        </${tag}>`,
+        )
       );
       expect(el.label).to.equal('Email address');
       // @ts-expect-error
@@ -76,12 +84,14 @@ describe('FormControlMixin', () => {
 
     it('only takes label of direct child', async () => {
       const el = /** @type {FormControlMixinClass} */ (
-        await fixture(html`
+        await fixture(
+          html`
         <${tag}>
           <${tag} label="Email address">
             ${inputSlot}
           </${tag}>
-        </${tag}>`)
+        </${tag}>`,
+        )
       );
       expect(el.label).to.equal('');
     });
@@ -127,11 +137,13 @@ describe('FormControlMixin', () => {
      */
     it('supports "label-sr-only" to make label visually hidden, but accessible for screen reader users', async () => {
       const el = /** @type {FormControlMixinClass} */ (
-        await fixture(html`
+        await fixture(
+          html`
         <${tag} label-sr-only>
           <label slot="label">Email <span>address</span></label>
           ${inputSlot}
-        </${tag}>`)
+        </${tag}>`,
+        )
       );
 
       const expectedValues = {
@@ -167,20 +179,24 @@ describe('FormControlMixin', () => {
       expect(elAttr.helpText).to.equal('We will not send you any spam', 'as an attribute');
 
       const elProp = /** @type {FormControlMixinClass} */ (
-        await fixture(html`
+        await fixture(
+          html`
         <${tag}
           .helpText=${'We will not send you any spam'}
         >${inputSlot}
-        </${tag}>`)
+        </${tag}>`,
+        )
       );
       expect(elProp.helpText).to.equal('We will not send you any spam', 'as a property');
 
       const elElem = /** @type {FormControlMixinClass} */ (
-        await fixture(html`
+        await fixture(
+          html`
         <${tag}>
           <div slot="help-text">We will <b>not</b> send you any spam</div>
           ${inputSlot}
-        </${tag}>`)
+        </${tag}>`,
+        )
       );
       expect(elElem.helpText).to.equal('We will not send you any spam', 'as an element');
       // @ts-expect-error
@@ -189,11 +205,13 @@ describe('FormControlMixin', () => {
 
     it('can have a help-text that supports inner html', async () => {
       const el = /** @type {FormControlMixinClass} */ (
-        await fixture(html`
+        await fixture(
+          html`
         <${tag}>
           <div slot="help-text">We will not send you any <span>spam</span></div>
           ${inputSlot}
-        </${tag}>`)
+        </${tag}>`,
+        )
       );
       expect(el.helpText).to.equal('We will not send you any spam');
       // @ts-expect-error
@@ -202,12 +220,14 @@ describe('FormControlMixin', () => {
 
     it('only takes help-text of direct child', async () => {
       const el = /** @type {FormControlMixinClass} */ (
-        await fixture(html`
+        await fixture(
+          html`
         <${tag}>
           <${tag} help-text="We will not send you any spam">
             ${inputSlot}
           </${tag}>
-        </${tag}>`)
+        </${tag}>`,
+        )
       );
       expect(el.helpText).to.equal('');
     });
@@ -388,7 +408,8 @@ describe('FormControlMixin', () => {
       it(`supports centrally orchestrated labels/descriptions via addToAriaLabelledBy() /
       removeFromAriaLabelledBy() / addToAriaDescribedBy() / removeFromAriaDescribedBy()`, async () => {
         const wrapper = /** @type {HTMLElement} */ (
-          await fixture(html`
+          await fixture(
+            html`
           <div id="wrapper">
             <${tag}>
               ${inputSlot}
@@ -397,7 +418,8 @@ describe('FormControlMixin', () => {
             </${tag}>
             <div id="additionalLabel"> This also needs to be read whenever the input has focus</div>
             <div id="additionalDescription"> Same for this </div>
-          </div>`)
+          </div>`,
+          )
         );
         const el = /** @type {FormControlMixinClass} */ (wrapper.querySelector(tagString));
         const { _inputNode } = getFormControlMembers(el);
@@ -499,7 +521,8 @@ describe('FormControlMixin', () => {
       });
 
       it('respects provided order for external elements', async () => {
-        const wrapper = await fixture(html`
+        const wrapper = await fixture(
+          html`
         <div id="wrapper">
           <div id="externalLabelA">should go after input internals</div>
           <div id="externalDescriptionA">should go after input internals</div>
@@ -510,7 +533,8 @@ describe('FormControlMixin', () => {
           </${tag}>
           <div id="externalLabelB">should go after input internals</div>
           <div id="externalDescriptionB">should go after input internals</div>
-        </div>`);
+        </div>`,
+        );
         const el = /** @type {FormControlMixinClass} */ (wrapper.querySelector(tagString));
         const { _inputNode } = getFormControlMembers(el);
 

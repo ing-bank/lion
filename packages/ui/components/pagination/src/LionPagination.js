@@ -306,13 +306,17 @@ export class LionPagination extends LocalizeMixin(LitElement) {
     return html`
       <nav role="navigation" aria-label="${this.msgLit('lion-pagination:label')}">
         <ul>
-          ${this.current > 1
-            ? this._prevNextButtonTemplate('previous', this.current - 1)
-            : this._disabledButtonTemplate('previous')}
+          ${
+            this.current > 1
+              ? this._prevNextButtonTemplate('previous', this.current - 1)
+              : this._disabledButtonTemplate('previous')
+          }
           ${this._renderNavList()}
-          ${this.current < this.count
-            ? this._prevNextButtonTemplate('next', this.current + 1)
-            : this._disabledButtonTemplate('next')}
+          ${
+            this.current < this.count
+              ? this._prevNextButtonTemplate('next', this.current + 1)
+              : this._disabledButtonTemplate('next')
+          }
         </ul>
       </nav>
     `;

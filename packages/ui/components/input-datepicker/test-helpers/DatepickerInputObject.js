@@ -57,21 +57,27 @@ export class DatepickerInputObject {
   }
 
   get overlayHeadingEl() {
-    return /** @type {HTMLElement} */ (
-      this.overlayEl && this.el.shadowRoot?.querySelector('.calendar-overlay__heading')
+    return (
+      /** @type {HTMLElement} */ (
+        this.overlayEl && this.el.shadowRoot?.querySelector('.calendar-overlay__heading')
+      )
     );
   }
 
   get overlayCloseButtonEl() {
-    return /** @type {HTMLElement} */ (
-      this.calendarEl && this.el.shadowRoot?.querySelector('#close-button')
+    return (
+      /** @type {HTMLElement} */ (
+        this.calendarEl && this.el.shadowRoot?.querySelector('#close-button')
+      )
     );
   }
 
   get calendarEl() {
-    return /** @type {import('../../calendar/src/LionCalendar.js').LionCalendar} */ (
-      // @ts-ignore [allow-protected] in test
-      this.el && this.el._calendarNode
+    return (
+      /** @type {import('../../calendar/src/LionCalendar.js').LionCalendar} */ (
+        // @ts-ignore [allow-protected] in test
+        this.el && this.el._calendarNode
+      )
     );
   }
 

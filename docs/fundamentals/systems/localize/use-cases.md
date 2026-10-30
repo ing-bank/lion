@@ -289,12 +289,8 @@ If you want to optimize the page rendering and you can inline some of your local
 ```js
 // my-inlined-data.js
 import { localize } from '@lion/ui/localize.js';
-localize.addData('en-GB', 'my-namespace', {
-  /* data */
-});
-localize.addData('nl-NL', 'my-namespace', {
-  /* data */
-});
+localize.addData('en-GB', 'my-namespace', {/* data */});
+localize.addData('nl-NL', 'my-namespace', {/* data */});
 
 // my-app.js
 import './my-inlined-data.js'; // must be on top to be executed before any other code using the data

@@ -47,9 +47,11 @@ export class UIPortalFooterContent extends UIBaseElement {
           item =>
             html`<li>
               <a href="${item.url}">${item.name}</a>
-              ${item.children?.length
-                ? templates.navLevel(context, { children: item.children })
-                : nothing}
+              ${
+                item.children?.length
+                  ? templates.navLevel(context, { children: item.children })
+                  : nothing
+              }
             </li>`,
         )}
       </ul>`;

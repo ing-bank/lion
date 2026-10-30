@@ -84,17 +84,21 @@ export class LionValidationFeedback extends LocalizeMixin(LitElement) {
 
   render() {
     return html`
-      ${this.feedbackData &&
-      this.feedbackData.map(
-        ({ message, type, validator }) => html`
-          <span class="validation-feedback__type">
-            ${message && type
-              ? this._localizeManager.msg(`lion-form-core:validation${capitalize(type)}`)
-              : nothing}
-          </span>
-          ${this._messageTemplate({ message, type, validator })}
-        `,
-      )}
+      ${
+        this.feedbackData &&
+        this.feedbackData.map(
+          ({ message, type, validator }) => html`
+            <span class="validation-feedback__type">
+              ${
+                message && type
+                  ? this._localizeManager.msg(`lion-form-core:validation${capitalize(type)}`)
+                  : nothing
+              }
+            </span>
+            ${this._messageTemplate({ message, type, validator })}
+          `,
+        )
+      }
     `;
   }
 }

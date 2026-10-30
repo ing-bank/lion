@@ -212,16 +212,18 @@ export class LionInputAmountDropdown extends LionInputAmount {
           @change="${refs?.dropdown?.listeners?.change}"
           style="${ifDefined(refs?.dropdown?.props?.style)}"
         >
-          ${data?.regionMetaListPreferred?.length
-            ? html`
-                <optgroup label="${refs?.dropdown?.labels?.preferredCurrencies}">
-                  ${data.regionMetaListPreferred.map(renderOption)}
-                </optgroup>
-                <optgroup label="${refs?.dropdown?.labels?.allCurrencies}">
-                  ${data?.regionMetaList?.map(renderOption)}
-                </optgroup>
-              `
-            : html` ${data?.regionMetaList?.map(renderOption)}`}
+          ${
+            data?.regionMetaListPreferred?.length
+              ? html`
+                  <optgroup label="${refs?.dropdown?.labels?.preferredCurrencies}">
+                    ${data.regionMetaListPreferred.map(renderOption)}
+                  </optgroup>
+                  <optgroup label="${refs?.dropdown?.labels?.allCurrencies}">
+                    ${data?.regionMetaList?.map(renderOption)}
+                  </optgroup>
+                `
+              : html` ${data?.regionMetaList?.map(renderOption)}`
+          }
         </select>
       `;
     },

@@ -331,24 +331,30 @@ export class DemoNavigationBar extends ScopedElementsMixin(LitElement) {
             <a href="${this.logo.href || '#'}">
               <img src="${this.logo.src || ''}" alt="${this.logo.alt || ''}" />
             </a>
-            ${this.responsiveMode === 'mobile'
-              ? html`<button data-close data-level="1">✖️</button>`
-              : ''}
+            ${
+              this.responsiveMode === 'mobile'
+                ? html`<button data-close data-level="1">✖️</button>`
+                : ''
+            }
           </div>
           ${this._searchTemplate()}
         </div>
         <div class="nav-body">
           ${this._menulevelTemplate(this.menuSupportItems, 1, '')}
-          ${this.responsiveMode === 'desktop'
-            ? this._ctasTemplate(this.ctaPrimary, this.ctaSecondary)
-            : ''}
+          ${
+            this.responsiveMode === 'desktop'
+              ? this._ctasTemplate(this.ctaPrimary, this.ctaSecondary)
+              : ''
+          }
           ${this._menulevelTemplate(this.menuItems, 1, '', true)}
         </div>
-        ${this.responsiveMode === 'mobile'
-          ? html`<div class="nav-footer">
-              ${this._ctasTemplate(this.ctaPrimary, this.ctaSecondary)}
-            </div>`
-          : ''}
+        ${
+          this.responsiveMode === 'mobile'
+            ? html`<div class="nav-footer">
+                ${this._ctasTemplate(this.ctaPrimary, this.ctaSecondary)}
+              </div>`
+            : ''
+        }
       </nav>
     `;
   }
@@ -379,18 +385,22 @@ export class DemoNavigationBar extends ScopedElementsMixin(LitElement) {
    */
   _ctasTemplate(ctaPrimary, ctaSecondary) {
     return html`<div class="cta-items">
-      ${ctaSecondary?.href
-        ? html`<div class="cta-secondary">
-            <a id="${this._getId(ctaSecondary)}" href="${ctaSecondary.href}"
-              >${ctaSecondary.label}
-            </a>
-          </div>`
-        : ''}
-      ${ctaPrimary?.href
-        ? html`<div class="cta-primary">
-            <a id="${this._getId(ctaPrimary)}" href="${ctaPrimary.href}"> ${ctaPrimary.label}</a>
-          </div>`
-        : ''}
+      ${
+        ctaSecondary?.href
+          ? html`<div class="cta-secondary">
+              <a id="${this._getId(ctaSecondary)}" href="${ctaSecondary.href}"
+                >${ctaSecondary.label}
+              </a>
+            </div>`
+          : ''
+      }
+      ${
+        ctaPrimary?.href
+          ? html`<div class="cta-primary">
+              <a id="${this._getId(ctaPrimary)}" href="${ctaPrimary.href}"> ${ctaPrimary.label}</a>
+            </div>`
+          : ''
+      }
     </div>`;
   }
 
@@ -410,30 +420,40 @@ export class DemoNavigationBar extends ScopedElementsMixin(LitElement) {
       ?data-has-full-width-flyout="${cfgForLevel.hasFullWidthFlyout}"
       ._activeMode="${'tabbable-disclosure'}"
     >
-      ${level > 1 && this.responsiveMode === 'mobile'
-        ? html` <div role="listitem">
-            <button data-close data-level="${level}">&lt; ${prevText}</button>
-          </div>`
-        : ''}
+      ${
+        level > 1 && this.responsiveMode === 'mobile'
+          ? html` <div role="listitem">
+              <button data-close data-level="${level}">&lt; ${prevText}</button>
+            </div>`
+          : ''
+      }
       ${menuItemsForLevel.map(
         menuItem => html`
           <div role="listitem">
-            ${menuItem.sub
-              ? html` <button id="${this._getId(menuItem)}" data-invoker>${menuItem.title}</button>
-                  ${menuItem.sub
-                    ? this._menulevelTemplate(menuItem.sub, level + 1, menuItem.title)
-                    : ''}`
-              : html` <a id="${this._getId(menuItem)}" href="${menuItem.link || ''}"
-                  >${menuItem.title}</a
-                >`}
+            ${
+              menuItem.sub
+                ? html` <button id="${this._getId(menuItem)}" data-invoker>
+                      ${menuItem.title}
+                    </button>
+                    ${
+                      menuItem.sub
+                        ? this._menulevelTemplate(menuItem.sub, level + 1, menuItem.title)
+                        : ''
+                    }`
+                : html` <a id="${this._getId(menuItem)}" href="${menuItem.link || ''}"
+                    >${menuItem.title}</a
+                  >`
+            }
           </div>
         `,
       )}
-      ${itemWrap
-        ? html`<div slot="more-button">
-            <button>More</button>
-          </div>`
-        : nothing}
+      ${
+        itemWrap
+          ? html`<div slot="more-button">
+              <button>More</button>
+            </div>`
+          : nothing
+      }
     </lion-menu> `;
   }
 }

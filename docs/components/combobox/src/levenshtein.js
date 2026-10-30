@@ -60,7 +60,7 @@ export default function (a, b) {
 
   var len = vector.length - 1;
 
-  for (; x < lb - 3; ) {
+  for (; x < lb - 3;) {
     bx0 = b.charCodeAt(offset + (d0 = x));
     bx1 = b.charCodeAt(offset + (d1 = x + 1));
     bx2 = b.charCodeAt(offset + (d2 = x + 2));
@@ -81,7 +81,7 @@ export default function (a, b) {
     }
   }
 
-  for (; x < lb; ) {
+  for (; x < lb;) {
     bx0 = b.charCodeAt(offset + (d0 = x));
     dd = ++x;
     for (y = 0; y < len; y += 2) {

@@ -939,10 +939,12 @@ export function runFormGroupMixinSuite({
 
       it('0 is a valid value to be serialized', async () => {
         const fieldset = /**  @type {FormGroup} */ (
-          await fixture(html`
+          await fixture(
+            html`
       <${tag}>
         <${childTag} name="price"></${childTag}>
-      </${tag}>`)
+      </${tag}>`,
+          )
         );
         fieldset.formElements.price.modelValue = 0;
         expect(fieldset.serializedValue).to.deep.equal({ price: 0 });

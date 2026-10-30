@@ -349,9 +349,7 @@ class IntlSelectInvoker extends LionSelectInvoker {
    * @configure LitElement
    * @enhance LionSelectInvoker
    */
-  static styles = [
-    /** <your custom styles> see IntlSelectRich listed above */
-  ];
+  static styles = [/** <your custom styles> see IntlSelectRich listed above */];
 
   /**
    * 2. Take back control of slots (LionSelectInvoker adds slots you most likely don't want)

@@ -786,10 +786,11 @@ export function runOverlayMixinSuite({ tagString, tag, suffix = '' }) {
         // Check that the last container is the nested one with the intended content
         expect(el.contains(nestedEl)).to.be.true;
       } else {
-        const contentNode = /** @type {HTMLElement} */ (
-          // @ts-ignore [allow-protected] in tests
-          el._overlayContentNode.querySelector('#nestedContent')
-        );
+        const contentNode =
+          /** @type {HTMLElement} */ (
+            // @ts-ignore [allow-protected] in tests
+            el._overlayContentNode.querySelector('#nestedContent')
+          );
         expect(contentNode).to.not.be.null;
         expect(contentNode.innerText).to.equal('content of the nested overlay');
       }

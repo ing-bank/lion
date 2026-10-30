@@ -794,22 +794,26 @@ export class OJPreview extends ScopedElementsMixin(MdJsPreview) {
         </div> 
       -->
 
-      ${this._shouldShowModifierCombinationsMatrix
-        ? html`<div>${this.renderModifierCombinationsDialog({ modifiers })}</div>`
-        : nothing}
+      ${
+        this._shouldShowModifierCombinationsMatrix
+          ? html`<div>${this.renderModifierCombinationsDialog({ modifiers })}</div>`
+          : nothing
+      }
 
       <!-- TODO: Add theme selector when ready -->
 
-      ${this.isExpressive
-        ? html`
-            <div @model-value-changed="${this._switchSurface}">
-              ${this.renderSelect({
-                choices: surfaces,
-                name: 'Expressive surface',
-              })}
-            </div>
-          `
-        : nothing}
+      ${
+        this.isExpressive
+          ? html`
+              <div @model-value-changed="${this._switchSurface}">
+                ${this.renderSelect({
+                  choices: surfaces,
+                  name: 'Expressive surface',
+                })}
+              </div>
+            `
+          : nothing
+      }
       <div @input="${this._switchMode}">
         ${this.renderSingleChoice({
           choices: modes,
@@ -820,27 +824,31 @@ export class OJPreview extends ScopedElementsMixin(MdJsPreview) {
       <!-- TODO: enable when device tokens are in use -->
 
       <form @input="${syncBackToModel}">
-        ${variants?.length
-          ? html` <fieldset>
-              <legend>variants</legend>
-              ${variants.map(
-                /**
-                 * @param {any} param
-                 * @returns {any}
-                 */
-                ({ values, name }) =>
-                  this.renderSingleChoice({
-                    choices: values,
-                    name,
-                    // @ts-expect-error
-                    modelV: model.variants.find(v => v.name === name)?.value,
-                  }),
-              )}
-            </fieldset>`
-          : nothing}
-        ${states
-          ? this.renderMultiChoice({ choices: states, name: 'states', modelV: model.states })
-          : nothing}
+        ${
+          variants?.length
+            ? html` <fieldset>
+                <legend>variants</legend>
+                ${variants.map(
+                  /**
+                   * @param {any} param
+                   * @returns {any}
+                   */
+                  ({ values, name }) =>
+                    this.renderSingleChoice({
+                      choices: values,
+                      name,
+                      // @ts-expect-error
+                      modelV: model.variants.find(v => v.name === name)?.value,
+                    }),
+                )}
+              </fieldset>`
+            : nothing
+        }
+        ${
+          states
+            ? this.renderMultiChoice({ choices: states, name: 'states', modelV: model.states })
+            : nothing
+        }
       </form>
     </div>`;
   }
@@ -849,13 +857,15 @@ export class OJPreview extends ScopedElementsMixin(MdJsPreview) {
     const disableSizeForNow = true;
 
     return html`
-      ${!disableSizeForNow && this.simulatorUrl
-        ? html`
-            <div class="platform-size-controls">
-              ${this.renderPlatforms()} ${this.renderSizes()}
-            </div>
-          `
-        : ``}
+      ${
+        !disableSizeForNow && this.simulatorUrl
+          ? html`
+              <div class="platform-size-controls">
+                ${this.renderPlatforms()} ${this.renderSizes()}
+              </div>
+            `
+          : ``
+      }
 
       <div class="icon-toolbar" role="toolbar">
         <button
@@ -1125,11 +1135,13 @@ export class OJPreview extends ScopedElementsMixin(MdJsPreview) {
             </div>
           </div>
         </div>
-        ${this._shouldShowCodePreview
-          ? html`<div class="demo-viewer__section demo-viewer__section--code">
-              ${this.renderCodeblock()}
-            </div>`
-          : nothing}
+        ${
+          this._shouldShowCodePreview
+            ? html`<div class="demo-viewer__section demo-viewer__section--code">
+                ${this.renderCodeblock()}
+              </div>`
+            : nothing
+        }
       </div>
     `;
   }

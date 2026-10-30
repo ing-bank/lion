@@ -553,30 +553,34 @@ export class UIMainNav extends UIBaseElement {
 
       return html`<!-- -->
         <div ${part('level', { levelConfig, level, isToggleTarget, hasActiveChild })}>
-          ${hasBackButton
-            ? html`<!-- -->
-                <button ${part('level-back-btn', { level })}>
-                  <span data-part="back-chevron" aria-hidden="true"></span>
-                  ${translations.levelBackBtn}
-                </button>`
-            : nothing}
+          ${
+            hasBackButton
+              ? html`<!-- -->
+                  <button ${part('level-back-btn', { level })}>
+                    <span data-part="back-chevron" aria-hidden="true"></span>
+                    ${translations.levelBackBtn}
+                  </button>`
+              : nothing
+          }
           <ul ${part('list', { level })}>
             ${levelConfig.items.map(
               item =>
                 html`<!-- -->
                   <li ${part('listitem', { item, level })}>
                     ${templates.navItem(context, { item, level })}
-                    ${item.nextLevel
-                      ? templates.navLevel(context, {
-                          hasActiveChild: item.hasActiveChild,
-                          levelConfig: item.nextLevel,
-                          // An item may be both a link and a parent (the portal's top level items
-                          // are): the panel is a popover either way, so the link keeps working and
-                          // the chevron next to it expands the level.
-                          isToggleTarget: true,
-                          level: level + 1,
-                        })
-                      : nothing}
+                    ${
+                      item.nextLevel
+                        ? templates.navLevel(context, {
+                            hasActiveChild: item.hasActiveChild,
+                            levelConfig: item.nextLevel,
+                            // An item may be both a link and a parent (the portal's top level items
+                            // are): the panel is a popover either way, so the link keeps working and
+                            // the chevron next to it expands the level.
+                            isToggleTarget: true,
+                            level: level + 1,
+                          })
+                        : nothing
+                    }
                   </li>`,
             )}
           </ul>
