@@ -56,7 +56,7 @@ the tree ran lit 3.x, which meant a clean install would have skipped it and brok
 
 ### Why this patch exists
 
-Upstream `lit-labs/ssr` deliberately does not run *element directives* while
+Upstream `lit-labs/ssr` deliberately does not run _element directives_ while
 rendering on the server. A directive bound to an element part
 (`<div ${myDirective()}>`) is skipped entirely: its `update()` callback is never
 called, and nothing is emitted for it. Server-only (non-hydratable) templates
@@ -109,3 +109,44 @@ and the root `package.json` `overrides` pin it). When bumping `@lit-labs/ssr`:
 No longer used. The integration is inlined in `src/integrations/lit/` so it can
 track this repo's `@lit-labs/ssr` version and its patch instead of being pinned
 to whatever lit-labs/ssr range `@astrojs/lit` supports.
+
+## oxlint
+
+### Why the oxlint patch exists
+
+`oxlint` runs ESLint plugins (the `jsPlugins` option) through a JS shim
+(`oxlint/dist/lint.js`, generated from the upstream `apps/oxlint/src-js/plugins/*`
+sources). Two gaps in that shim silently break the plugins we need:
+
+1. `sourceCode.parserServices` is a **module-level frozen empty object**
+   (`ObjectFreeze({})`). Writes are dropped, so a plugin that stores per-file
+   state there (e.g. `eslint-plugin-lit-a11y` sets `shouldAnalyseHtmlTaggedLiterals`
+   and reads it back in `reportOverrides`) never sees its own flag: the rule runs,
+   finds violations and is then silenced - zero diagnostics, exit code 0, no error.
+2. `sourceCode.getJSDocComment(node)` throws `not supported at present (and
+   deprecated)` even though its own JSDoc documents `@returns ... or null`.
+   `eslint-plugin-wc`'s `no-typos` calls it for every class, so that rule crashes
+   the whole file.
+
+### What the oxlint patch changes
+
+- `parserServices` becomes a per-file object (a getter that lazily creates one,
+  reset alongside the other per-file state in `resetSourceAndAst()`), so JS plugins
+  can keep state per file without leaking it across files.
+- `getJSDocComment` returns `node.jsDoc`, the nearest leading `/** ... */` comment,
+  or `null` instead of throwing.
+
+### Updating the oxlint patch
+
+The patch is tied to an exact `oxlint` version (the filename carries it, and the
+root `package.json` pins `oxlint` without a range). When bumping `oxlint`:
+
+1. bump the version in `package.json` (`devDependencies`)
+2. `node_modules/oxlint` → reapply both changes above (the surrounding code moved
+   between releases, so `npx patch-package` will fail loudly if it cannot apply)
+3. run `npx patch-package oxlint` to regenerate the patch file
+4. run `npm run oxlint:check` and confirm the lit/wc/lit-a11y rules still report
+
+Both changes are upstream bugs and are proposed to `oxc-project/oxc`; this patch
+should be dropped as soon as they are released (drop the patch file, unpin the
+version).
