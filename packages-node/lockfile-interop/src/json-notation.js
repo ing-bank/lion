@@ -37,7 +37,9 @@ export function toJsonLines(value, level = 0) {
       // brace are written flush left, because a nested object gets its indent from its key
       itemLines[0] = `${pad(level + 1)}${itemLines[0]}`;
       itemLines[itemLines.length - 1] = `${itemLines[itemLines.length - 1]}${comma}`;
-      lines.push(...itemLines);
+      // Not `push(...itemLines)`: a large child line list exceeds the argument limit and throws
+      // `RangeError: Maximum call stack size exceeded`, which is how a real repo's lockfile fails.
+      for (const line of itemLines) lines.push(line);
     });
     lines.push(`${pad(level)}]`);
     return lines;
@@ -54,7 +56,8 @@ export function toJsonLines(value, level = 0) {
     const childLines = toJsonLines(child, level + 1);
     childLines[0] = `${pad(level + 1)}${JSON.stringify(key)}: ${childLines[0]}`;
     childLines[childLines.length - 1] = `${childLines[childLines.length - 1]}${comma}`;
-    lines.push(...childLines);
+    // See the array branch: spreading a large line list overflows the argument limit.
+    for (const line of childLines) lines.push(line);
   });
   lines.push(`${pad(level)}}`);
   return lines;

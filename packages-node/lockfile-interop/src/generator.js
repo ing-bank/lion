@@ -18,6 +18,7 @@ import { baseKey, isLocalLink, pnpmEdges, readPnpmLock, splitNameVersion } from 
  * @property {number} rootEntries
  * @property {number} linkedEntries
  * @property {number} skippedLocalLinks
+ * @property {number} cycleSkips
  */
 
 /**
@@ -67,6 +68,7 @@ export function generateNpmLock(options) {
   let duplicates = 0;
   let linkedEntries = 0;
   let skippedLocalLinks = 0;
+  let cycleSkips = 0;
 
   /**
    * @param {string} dir
@@ -93,9 +95,10 @@ export function generateNpmLock(options) {
   /**
    * @param {string} prefix
    * @param {string} nameVersion
+   * @param {Set<string>} ancestors the package records on the path above, by base key
    * @returns {void}
    */
-  const place = (prefix, nameVersion) => {
+  const place = (prefix, nameVersion, ancestors) => {
     const [name, version] = splitNameVersion(nameVersion);
     const key = `${prefix}node_modules/${name}`;
     if (packages[key]) return;
@@ -129,6 +132,7 @@ export function generateNpmLock(options) {
 
     packages[key] = entry;
     if (!prefix) rootVersions.set(name, version);
+    const below = new Set(ancestors).add(baseKey(nameVersion));
 
     for (const [dep, linkTarget] of localEdges) {
       // resolution reaches a workspace member through its own root link entry, so it needs no copy here
@@ -144,7 +148,15 @@ export function generateNpmLock(options) {
     }
 
     for (const [dep, depVersion] of Object.entries(dependencies)) {
-      place(`${key}/`, `${dep}@${depVersion}`);
+      const depKey = `${dep}@${depVersion}`;
+      // A dependency cycle would nest forever, and a copy of the same version above already
+      // satisfies this requirer: resolution walks up the tree, so that ancestor copy is the one a
+      // requirer would resolve to. `below` carries the path, so a cycle stops at its own ancestor.
+      if (below.has(baseKey(depKey))) {
+        cycleSkips += 1;
+      } else {
+        place(`${key}/`, depKey, below);
+      }
     }
   };
 
@@ -165,7 +177,7 @@ export function generateNpmLock(options) {
           linkedEntries += 1;
         }
       } else {
-        place('', `${name}@${spec.version}`);
+        place('', `${name}@${spec.version}`, new Set());
       }
     }
   }
@@ -197,7 +209,7 @@ export function generateNpmLock(options) {
             }
           }
         } else {
-          place(`${workspace.dir}/`, `${name}@${spec.version}`);
+          place(`${workspace.dir}/`, `${name}@${spec.version}`, new Set());
         }
       }
     }
@@ -222,6 +234,7 @@ export function generateNpmLock(options) {
       rootEntries: Object.keys(sorted).filter(key => key.startsWith('node_modules/')).length,
       linkedEntries,
       skippedLocalLinks,
+      cycleSkips,
     },
   };
 }
