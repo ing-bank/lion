@@ -1,6 +1,14 @@
 import { LionSelectRich } from '@lion/ui/select-rich.js';
 import { LionCombobox } from '@lion/ui/combobox.js';
 import { OverlayController } from '../../overlays/src/OverlayController.js';
+import { LionInputAmountDropdown } from '../src/LionInputAmountDropdown.js';
+
+declare global {
+  interface HTMLElementTagNameMap {
+    'lion-input-amount-dropdown': LionInputAmountDropdown;
+  }
+}
+
 
 type RefTemplateData = {
   ref?: { value?: HTMLElement };
@@ -232,3 +240,6 @@ export type RegionToCurrencyMap = Map<
  * Represents a set of all unique currency codes derived from the RegionToCurrencyMap values.
  */
 export type AllCurrenciesSet = Set<CurrencyCode>;
+
+export { LionInputAmountDropdown };
+
