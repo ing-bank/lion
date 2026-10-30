@@ -1,0 +1,34 @@
+{
+  "name": "@lion/lockfile-interop",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Keeps package-lock.json in sync with pnpm-lock.yaml: version-set drift guard plus an exact pnpm-lock to npm-lock generator",
+  "license": "MIT",
+  "author": "ing-bank",
+  "homepage": "https://github.com/ing-bank/lion/",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ing-bank/lion.git",
+    "directory": "packages-node/lockfile-interop"
+  },
+  "type": "module",
+  "exports": {
+    ".": "./src/index.js"
+  },
+  "main": "./src/index.js",
+  "bin": {
+    "lockfile-interop": "./src/cli.js"
+  },
+  "files": [
+    "src",
+    "README.md"
+  ],
+  "scripts": {
+    "lockfile:check": "node src/cli.js check",
+    "lockfile:generate": "node src/cli.js generate",
+    "test:node": "mocha 'test-node/**/*.test.js'"
+  },
+  "dependencies": {
+    "yaml": "^2.5.1"
+  }
+}
