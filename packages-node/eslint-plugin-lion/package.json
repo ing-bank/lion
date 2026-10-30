@@ -12,11 +12,14 @@
     "directory": "packages-node/eslint-plugin-lion"
   },
   "exports": {
-    ".": "./index.js"
+    ".": "./index.js",
+    "./compat/lit-a11y": "./compat/lit-a11y.js",
+    "./compat/wc": "./compat/wc.js"
   },
   "main": "index.js",
   "files": [
-    "*.js"
+    "*.js",
+    "compat/*.js"
   ],
   "keywords": [
     "oxlint",

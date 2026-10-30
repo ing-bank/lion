@@ -2,8 +2,14 @@
   "jsPlugins": [
     "eslint-plugin-lion",
     "eslint-plugin-lit",
-    "eslint-plugin-wc",
-    "eslint-plugin-lit-a11y",
+    {
+      "name": "wc",
+      "specifier": "eslint-plugin-lion/compat/wc"
+    },
+    {
+      "name": "lit-a11y",
+      "specifier": "eslint-plugin-lion/compat/lit-a11y"
+    },
     {
       "name": "import-js",
       "specifier": "eslint-plugin-import"
@@ -233,7 +239,7 @@
     "import/no-cycle": [
       "error",
       {
-        "maxDepth": "∞",
+        "maxDepth": "\u221e",
         "ignoreExternal": false,
         "allowUnsafeDynamicCyclicDependency": false,
         "disableScc": false
