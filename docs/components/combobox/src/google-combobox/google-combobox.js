@@ -94,9 +94,11 @@ export class GoogleOption extends LinkMixin(LionOption) {
 
   render() {
     return html`
-      ${!this.imageUrl
-        ? html` <div class="google-option__icon">${googleSearchIcon}</div>`
-        : html` <img class="google-option__icon" src="${this.imageUrl}" alt="" />`}
+      ${
+        !this.imageUrl
+          ? html` <div class="google-option__icon">${googleSearchIcon}</div>`
+          : html` <img class="google-option__icon" src="${this.imageUrl}" alt="" />`
+      }
       ${super.render()}
     `;
   }

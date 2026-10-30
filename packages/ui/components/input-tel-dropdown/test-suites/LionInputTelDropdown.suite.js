@@ -120,12 +120,13 @@ export function runInputTelDropdownSuite(
 
     describe('Dropdown display', () => {
       it('calls `templates.dropdown` with TemplateDataForDropdownInputTel object', async () => {
-        const el =
-          fixtureSync(html` <${tag} format-country-code-style="${hasParentheses ? 'parentheses' : nothing}" 
+        const el = fixtureSync(
+          html` <${tag} format-country-code-style="${hasParentheses ? 'parentheses' : nothing}" 
           .modelValue="${'+31612345678'}"
           .allowedRegions="${['NL', 'PH']}"
           .preferredRegions="${['PH']}"
-          ></${tag}> `);
+          ></${tag}> `,
+        );
         const spy = sinon.spy(
           /** @type {typeof LionInputTelDropdown} */ (el.constructor).templates,
           'dropdown',
@@ -183,10 +184,11 @@ export function runInputTelDropdownSuite(
       });
 
       it('can override "all-countries-label"', async () => {
-        const el =
-          fixtureSync(html` <${tag} format-country-code-style="${hasParentheses ? 'parentheses' : nothing}" 
+        const el = fixtureSync(
+          html` <${tag} format-country-code-style="${hasParentheses ? 'parentheses' : nothing}" 
           .preferredRegions="${['PH']}"
-          ></${tag}> `);
+          ></${tag}> `,
+        );
         const spy = sinon.spy(
           /** @type {typeof LionInputTelDropdown} */ (el.constructor).templates,
           'dropdown',
@@ -203,10 +205,11 @@ export function runInputTelDropdownSuite(
       });
 
       it('can override "preferred-countries-label"', async () => {
-        const el =
-          fixtureSync(html` <${tag} format-country-code-style="${hasParentheses ? 'parentheses' : nothing}" 
+        const el = fixtureSync(
+          html` <${tag} format-country-code-style="${hasParentheses ? 'parentheses' : nothing}" 
           .preferredRegions="${['PH']}"
-          ></${tag}> `);
+          ></${tag}> `,
+        );
         const spy = sinon.spy(
           /** @type {typeof LionInputTelDropdown} */ (el.constructor).templates,
           'dropdown',
@@ -273,12 +276,13 @@ export function runInputTelDropdownSuite(
       });
 
       it('has the correct nameForLocale, based on browser language', async () => {
-        const el =
-          fixtureSync(html` <${tag} format-country-code-style="${hasParentheses ? 'parentheses' : nothing}" 
+        const el = fixtureSync(
+          html` <${tag} format-country-code-style="${hasParentheses ? 'parentheses' : nothing}" 
           .modelValue="${'+31612345678'}"
           .allowedRegions="${['NL', 'PH']}"
           .preferredRegions="${['PH']}"
-          ></${tag}> `);
+          ></${tag}> `,
+        );
         const spy = sinon.spy(
           /** @type {typeof LionInputTelDropdown} */ (el.constructor).templates,
           'dropdown',

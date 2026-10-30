@@ -119,8 +119,7 @@ export function LionButtonResetSuite({ classes = {}, tagString } = {}) {
       const formSpyLater = /** @type {EventListener} */ (sinon.spy(e => e.preventDefault()));
 
       const el = /** @type {HTMLDivElement} */ (
-        await fixture(
-          html`
+        await fixture(html`
             <div @click="${outsideSpy}">
               <form @click="${formSpyEarly}">
                 <div @click="${insideSpy}">
@@ -128,8 +127,7 @@ export function LionButtonResetSuite({ classes = {}, tagString } = {}) {
                 </div>
               </form>
             </div>
-          `,
-        )
+          `)
       );
       const lionButton = /** @type {LionButtonReset} */ (el.querySelector(tagStringButtonReset));
       const form = /** @type {HTMLFormElement} */ (el.querySelector('form'));
@@ -149,13 +147,11 @@ export function LionButtonResetSuite({ classes = {}, tagString } = {}) {
 
     it('works when connected to different form', async () => {
       const form1El = /** @type {HTMLFormElement} */ (
-        await fixture(
-          html`
+        await fixture(html`
             <form>
               <${tagButtonReset}>foo</${tagButtonReset}>
             </form>
-          `,
-        )
+          `)
       );
       const lionButton = /** @type {LionButtonReset} */ (
         form1El.querySelector(tagStringButtonReset)

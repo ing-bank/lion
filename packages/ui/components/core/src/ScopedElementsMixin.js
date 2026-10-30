@@ -29,9 +29,10 @@ export function supportsScopedRegistry() {
  * (TS2322/TS2345) - making a lockfile/hoisting detail decide whether the type gate passes.
  * Restating the mixin in our own types keeps this file independent of how lit gets hoisted.
  */
-const OpenWcScopedElementsMixinV3 = /**
- * @type {<T extends LitElementConstructor>(superclass: T) => T & ScopedElementsHostConstructor}
- */ (OpenWcLitScopedElementsMixin);
+const OpenWcScopedElementsMixinV3 =
+  /**
+   * @type {<T extends LitElementConstructor>(superclass: T) => T & ScopedElementsHostConstructor}
+   */ (OpenWcLitScopedElementsMixin);
 
 /**
  * This file is a combination of '@open-wc/scoped-elements@v3/lit-element.js' and '@open-wc/scoped-elements@v3/html-element.js'.

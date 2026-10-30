@@ -957,13 +957,15 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
     return html`
       <slot name="input"> </slot>
       <slot name="after"> </slot>
-      ${this.enableDropZone && this._isDragAndDropSupported
-        ? this._dropZoneTemplate()
-        : html`
-            <div class="input-group__file-select-button">
-              <slot name="file-select-button"></slot>
-            </div>
-          `}
+      ${
+        this.enableDropZone && this._isDragAndDropSupported
+          ? this._dropZoneTemplate()
+          : html`
+              <div class="input-group__file-select-button">
+                <slot name="file-select-button"></slot>
+              </div>
+            `
+      }
     `;
   }
 

@@ -1,3 +1,5 @@
+/* oxlint-disable class-methods-use-this -- oxlint reports `this` inside a default parameter value; eslint does not */
+
 import { css, html } from 'lit';
 import { ifDefined } from 'lit/directives/if-defined.js';
 import { createRef, ref } from 'lit/directives/ref.js';
@@ -212,16 +214,18 @@ export class LionInputAmountDropdown extends LionInputAmount {
           @change="${refs?.dropdown?.listeners?.change}"
           style="${ifDefined(refs?.dropdown?.props?.style)}"
         >
-          ${data?.regionMetaListPreferred?.length
-            ? html`
-                <optgroup label="${refs?.dropdown?.labels?.preferredCurrencies}">
-                  ${data.regionMetaListPreferred.map(renderOption)}
-                </optgroup>
-                <optgroup label="${refs?.dropdown?.labels?.allCurrencies}">
-                  ${data?.regionMetaList?.map(renderOption)}
-                </optgroup>
-              `
-            : html` ${data?.regionMetaList?.map(renderOption)}`}
+          ${
+            data?.regionMetaListPreferred?.length
+              ? html`
+                  <optgroup label="${refs?.dropdown?.labels?.preferredCurrencies}">
+                    ${data.regionMetaListPreferred.map(renderOption)}
+                  </optgroup>
+                  <optgroup label="${refs?.dropdown?.labels?.allCurrencies}">
+                    ${data?.regionMetaList?.map(renderOption)}
+                  </optgroup>
+                `
+              : html` ${data?.regionMetaList?.map(renderOption)}`
+          }
         </select>
       `;
     },
@@ -229,7 +233,6 @@ export class LionInputAmountDropdown extends LionInputAmount {
      * @param {TemplateDataForDropdownInputAmount} templateDataForDropdown
      * @param {RegionMeta} contextData
      */
-    // eslint-disable-next-line class-methods-use-this
     dropdownOption: (
       templateDataForDropdown,
       { currencyCode, nameForLocale, currencySymbol },
@@ -576,7 +579,6 @@ export class LionInputAmountDropdown extends LionInputAmount {
    * @protected
    * @configure FormControlMixin: don't repropagate any children
    */
-  // eslint-disable-next-line class-methods-use-this
   _repropagationCondition() {
     return false;
   }

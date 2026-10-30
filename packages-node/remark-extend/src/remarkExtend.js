@@ -1,3 +1,5 @@
+/* oxlint-disable new-cap -- eslint's new-cap does not report a lowercase property as a constructor here */
+
 // unified works my modifying the original passed node
 /* eslint-disable no-param-reassign */
 const { visit } = require('unist-util-visit');

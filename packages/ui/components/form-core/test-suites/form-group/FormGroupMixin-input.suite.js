@@ -1,3 +1,5 @@
+/* oxlint-disable lion/camelcase -- the eslint disables in this suite do not match the oxlint rule id */
+
 import { LitElement } from 'lit';
 import '@lion/ui/define/lion-field.js';
 import '@lion/ui/define/lion-validation-feedback.js';
@@ -135,7 +137,6 @@ export function runFormGroupMixinInputSuite({
         /** @type {InstanceType<typeof FormGroup>} */ childAriaFixture,
         { cleanupPhase = false } = {},
       ) => {
-        /* eslint-disable camelcase */
         // Message elements: all elements pointed at by inputs
         const msg_l1_g = /** @type {InstanceType<typeof FormGroup>} */ (
           childAriaFixture.querySelector('#msg_l1_g')

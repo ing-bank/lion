@@ -86,9 +86,11 @@ export class UIPortalInpageNav extends LitElement {
           item =>
             html`<li data-part="listitem">
               <a data-part="anchor" data-level="${level}" href="#${item.url}">${item.name}</a>
-              ${item.children?.length
-                ? this._renderNavLevel({ children: item.children, level: level + 1 })
-                : nothing}
+              ${
+                item.children?.length
+                  ? this._renderNavLevel({ children: item.children, level: level + 1 })
+                  : nothing
+              }
             </li>`,
         )}
       </ul>

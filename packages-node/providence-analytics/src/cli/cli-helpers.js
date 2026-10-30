@@ -1,3 +1,5 @@
+/* oxlint-disable lion/camelcase -- the `eslint-disable-line camelcase` in this file does not match the oxlint rule id */
+
 /* eslint-disable no-shadow */
 import child_process from 'child_process'; // eslint-disable-line camelcase
 import path from 'path';
@@ -100,7 +102,6 @@ export async function pathsArrayFromCollectionName(
  */
 export function spawnProcess(processArgStr, opts) {
   const processArgs = processArgStr.split(' ');
-  // eslint-disable-next-line camelcase
   const proc = child_process.spawn(processArgs[0], processArgs.slice(1), opts);
   /** @type {string | undefined} */
   let output;

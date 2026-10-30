@@ -1059,11 +1059,13 @@ export function runValidateMixinSuite({
 
       it('can be stored for custom inputs', async () => {
         const el = /** @type {ValidateElement} */ (
-          await fixture(html`
+          await fixture(
+            html`
         <${preconfTag}
           .validators=${[new MinLength(3)]}
           .modelValue=${'12'}
-        ></${preconfTag}>`)
+        ></${preconfTag}>`,
+          )
         );
 
         expect(el.validationStates.error.AlwaysInvalid).to.be.true;
@@ -1082,10 +1084,12 @@ export function runValidateMixinSuite({
         const altPreconfTag = unsafeStatic(altPreconfTagString);
 
         const el = /** @type {ValidateElement} */ (
-          await fixture(html`
+          await fixture(
+            html`
           <${altPreconfTag}
             .modelValue=${'12'}
-          ></${altPreconfTag}>`)
+          ></${altPreconfTag}>`,
+          )
         );
 
         expect(el.validationStates.error.MinLength).to.be.true;
@@ -1095,10 +1099,12 @@ export function runValidateMixinSuite({
 
       it('can be requested via "._allValidators" getter', async () => {
         const el = /** @type {ValidateElement} */ (
-          await fixture(html`
+          await fixture(
+            html`
         <${preconfTag}
           .validators=${[new MinLength(3)]}
-        ></${preconfTag}>`)
+        ></${preconfTag}>`,
+          )
         );
         const { _allValidators } = getFormControlMembers(el);
 
@@ -1120,11 +1126,13 @@ export function runValidateMixinSuite({
     describe('State storage and reflection', () => {
       it('stores validity of individual Validators in ".validationStates.error[validator.validatorName]"', async () => {
         const el = /** @type {ValidateElement} */ (
-          await fixture(html`
+          await fixture(
+            html`
           <${tag}
             .modelValue=${'a'}
             .validators=${[new MinLength(3), new AlwaysInvalid()]}
-          >${lightDom}</${tag}>`)
+          >${lightDom}</${tag}>`,
+          )
         );
 
         expect(el.validationStates.error.MinLength).to.be.true;
@@ -1275,12 +1283,14 @@ export function runValidateMixinSuite({
     describe('Accessibility', () => {
       it.skip('calls "._inputNode.setCustomValidity(errorMessage)"', async () => {
         const el = /** @type {ValidateElement} */ (
-          await fixture(html`
+          await fixture(
+            html`
           <${tag}
             .modelValue=${'123'}
             .validators=${[new MinLength(3, { getMessage: async () => 'foo' })]}>
             <input slot="input">
-          </${tag}>`)
+          </${tag}>`,
+          )
         );
         const { _inputNode } = getFormControlMembers(el);
 

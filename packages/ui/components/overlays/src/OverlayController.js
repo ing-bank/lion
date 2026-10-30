@@ -315,8 +315,10 @@ export class OverlayController extends EventTarget {
    * @type {HTMLDialogElement | HTMLDivElement}
    */
   get content() {
-    return /** @type {HTMLDialogElement | HTMLDivElement} */ (
-      this.__wrappingDialogNode || this.contentNode
+    return (
+      /** @type {HTMLDialogElement | HTMLDivElement} */ (
+        this.__wrappingDialogNode || this.contentNode
+      )
     );
   }
 
@@ -362,8 +364,8 @@ export class OverlayController extends EventTarget {
    * @type {HTMLElement}
    */
   get contentWrapperNode() {
-    return /** @type {HTMLElement} */ (
-      this.__contentWrapperNode || this.config?.contentWrapperNode
+    return (
+      /** @type {HTMLElement} */ (this.__contentWrapperNode || this.config?.contentWrapperNode)
     );
   }
 
@@ -381,8 +383,10 @@ export class OverlayController extends EventTarget {
    * @type {HTMLElement}
    */
   get elementToFocusAfterHide() {
-    return /** @type {HTMLElement} */ (
-      this.__elementToFocusAfterHide || this.config?.elementToFocusAfterHide
+    return (
+      /** @type {HTMLElement} */ (
+        this.__elementToFocusAfterHide || this.config?.elementToFocusAfterHide
+      )
     );
   }
 

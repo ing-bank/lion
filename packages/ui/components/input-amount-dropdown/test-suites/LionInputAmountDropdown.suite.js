@@ -362,12 +362,10 @@ export function runInputAmountDropdownSuite(
       });
 
       it('keeps focus on dropdownElement after selection if selected via unopened dropdown', async () => {
-        const el = await fixture(
-          html` <${tag} .allowedCurrencies="${[
-            'GBP',
-            'EUR',
-          ]}" .modelValue="${{ currency: 'GBP', amount: 123 }}"></${tag}> `,
-        );
+        const el = await fixture(html` <${tag} .allowedCurrencies="${[
+          'GBP',
+          'EUR',
+        ]}" .modelValue="${{ currency: 'GBP', amount: 123 }}"></${tag}> `);
         const dropdownElement = el.refs.dropdown.value;
         // @ts-ignore
         mimicUserChangingDropdown(dropdownElement, 'EUR');

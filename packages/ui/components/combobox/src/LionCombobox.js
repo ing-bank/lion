@@ -353,8 +353,10 @@ export class LionCombobox extends LocalizeMixin(OverlayMixin(CustomChoiceGroupMi
    */
   get _inputNode() {
     if (this._ariaVersion === '1.1' && this._comboboxNode) {
-      return /** @type {HTMLInputElement} */ (
-        this._comboboxNode.querySelector('input') || this._comboboxNode
+      return (
+        /** @type {HTMLInputElement} */ (
+          this._comboboxNode.querySelector('input') || this._comboboxNode
+        )
       );
     }
     return /** @type {HTMLInputElement} */ (this._comboboxNode);
@@ -389,9 +391,11 @@ export class LionCombobox extends LocalizeMixin(OverlayMixin(CustomChoiceGroupMi
    * @protected
    */
   get _listboxNode() {
-    return /** @type {LionOptions} */ (
-      (this._overlayCtrl && this._overlayCtrl.contentNode) ||
+    return (
+      /** @type {LionOptions} */ (
+        (this._overlayCtrl && this._overlayCtrl.contentNode) ||
         Array.from(this.children).find(child => child.slot === 'listbox')
+      )
     );
   }
 

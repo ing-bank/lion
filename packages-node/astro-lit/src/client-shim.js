@@ -6,9 +6,8 @@
  * once the document is parsed.
  */
 async function polyfill() {
-  const { hydrateShadowRoots } = await import(
-    '@webcomponents/template-shadowroot/template-shadowroot.js'
-  );
+  const { hydrateShadowRoots } =
+    await import('@webcomponents/template-shadowroot/template-shadowroot.js');
   window.addEventListener('DOMContentLoaded', () => hydrateShadowRoots(document.body), {
     once: true,
   });

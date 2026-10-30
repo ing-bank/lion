@@ -181,8 +181,8 @@ export async function getSourceCodeFragmentOfDeclaration({
       if (!isReferenced) {
         finalNodePath = /** @type {SwcPath} */ (
           defaultExportPath.get('declaration') ||
-            defaultExportPath.get('decl') ||
-            defaultExportPath.get('expression')
+          defaultExportPath.get('decl') ||
+          defaultExportPath.get('expression')
         );
       } else {
         finalNodePath = /** @type {SwcPath} */ (

@@ -1,3 +1,5 @@
+/* oxlint-disable lion/camelcase -- the `eslint-disable-line camelcase` in this file does not match the oxlint rule id */
+
 /* eslint-disable no-unused-expressions */
 import { expect, fixture } from '@open-wc/testing';
 
@@ -5,7 +7,6 @@ import { weekdayNames } from '@lion/ui/calendar-test-helpers.js';
 import { createMultipleMonth } from '../../src/utils/createMultipleMonth.js';
 import { dataTemplate } from '../../src/utils/dataTemplate.js';
 
-// eslint-disable-next-line camelcase
 import snapshot_enGB_Sunday_201812 from './snapshots/monthTemplate_en-GB_Sunday_2018-12.js';
 
 describe('dataTemplate', () => {

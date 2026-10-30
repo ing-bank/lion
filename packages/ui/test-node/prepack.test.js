@@ -1,3 +1,5 @@
+/* oxlint-disable lion/camelcase -- the `eslint-disable-line camelcase` in this file does not match the oxlint rule id */
+
 import assert from 'node:assert/strict';
 import childProcess from 'node:child_process';
 import fs from 'node:fs/promises';
@@ -21,9 +23,7 @@ for (const [command, expectedTask] of [
       const { stdout, stderr } = await execFile(process.execPath, [script], {
         env: {
           ...process.env,
-          // eslint-disable-next-line camelcase
           npm_execpath: npmCli,
-          // eslint-disable-next-line camelcase
           npm_command: command,
         },
       });

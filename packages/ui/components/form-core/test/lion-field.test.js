@@ -150,10 +150,12 @@ describe('<lion-field>', () => {
 
   it('can be reset which restores original modelValue', async () => {
     const el = /** @type {LionField} */ (
-      await fixture(html`
+      await fixture(
+        html`
       <${tag} .modelValue="${'foo'}">
         ${inputSlot}
-      </${tag}>`)
+      </${tag}>`,
+      )
     );
     expect(el._initialModelValue).to.equal('foo');
     el.modelValue = 'bar';
@@ -177,13 +179,15 @@ describe('<lion-field>', () => {
       </lion-field>
       ~~~`, async () => {
       const el = /** @type {LionField} */ (
-        await fixture(html`<${tag}>
+        await fixture(
+          html`<${tag}>
             <label slot="label">My Name</label>
             ${inputSlot}
             <span slot="help-text">Enter your Name</span>
             <span slot="feedback">No name entered</span>
           </${tag}>
-        `)
+        `,
+        )
       );
       const nativeInput = getSlot(el, 'input');
       // @ts-ignore allow protected accessors in tests
@@ -196,14 +200,16 @@ describe('<lion-field>', () => {
     it(`allows additional slots (prefix, suffix, before, after) to be included in labelledby
     (via attribute data-label) and in describedby (via attribute data-description)`, async () => {
       const el = /** @type {LionField} */ (
-        await fixture(html`<${tag}>
+        await fixture(
+          html`<${tag}>
             ${inputSlot}
             <span slot="before" data-label>[before]</span>
             <span slot="after"  data-label>[after]</span>
             <span slot="prefix" data-description>[prefix]</span>
             <span slot="suffix" data-description>[suffix]</span>
           </${tag}>
-        `)
+        `,
+        )
       );
 
       const nativeInput = getSlot(el, 'input');

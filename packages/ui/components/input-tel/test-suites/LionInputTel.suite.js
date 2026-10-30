@@ -87,13 +87,11 @@ function runActiveRegionTests({ tag, phoneUtilLoadedAfterInit }) {
     });
 
     it('.modelValue takes precedence over .allowedRegions when both preconfigured and .modelValue updated', async () => {
-      const el = await fixture(
-        html` <${tag} .allowedRegions="${[
-          'DE',
-          'BE',
-          'NL',
-        ]}" .modelValue="${'+31612345678'}" ></${tag}> `,
-      );
+      const el = await fixture(html` <${tag} .allowedRegions="${[
+        'DE',
+        'BE',
+        'NL',
+      ]}" .modelValue="${'+31612345678'}" ></${tag}> `);
       if (resolvePhoneUtilLoaded) {
         resolvePhoneUtilLoaded(undefined);
         await el.updateComplete;
@@ -102,12 +100,10 @@ function runActiveRegionTests({ tag, phoneUtilLoadedAfterInit }) {
     });
 
     it('.modelValue takes precedence over .preferredRegions when both preconfigured and .modelValue updated', async () => {
-      const el = await fixture(
-        html` <${tag} .preferredRegions="${[
-          'DE',
-          'BE',
-        ]}" .modelValue="${'+31612345678'}" ></${tag}> `,
-      );
+      const el = await fixture(html` <${tag} .preferredRegions="${[
+        'DE',
+        'BE',
+      ]}" .modelValue="${'+31612345678'}" ></${tag}> `);
       if (resolvePhoneUtilLoaded) {
         resolvePhoneUtilLoaded(undefined);
         await el.updateComplete;
@@ -162,11 +158,9 @@ function runActiveRegionTests({ tag, phoneUtilLoadedAfterInit }) {
     it('returns undefined when locale not within allowed regions', async () => {
       const currentCode = getRegionCodeBasedOnLocale();
       const allowedRegions = ['NL', 'BE', 'DE'];
-      const el = await fixture(
-        html` <${tag} .allowedRegions="${allowedRegions.filter(
-          ar => ar !== currentCode,
-        )}"></${tag}> `,
-      );
+      const el = await fixture(html` <${tag} .allowedRegions="${allowedRegions.filter(
+        ar => ar !== currentCode,
+      )}"></${tag}> `);
       if (resolvePhoneUtilLoaded) {
         resolvePhoneUtilLoaded(undefined);
         await el.updateComplete;

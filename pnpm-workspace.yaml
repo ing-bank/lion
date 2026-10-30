@@ -1,0 +1,11 @@
+packages:
+  - "packages/*"
+  - "packages-node/*"
+  - "test/typescript-legacy"
+# The ported eslint plugins declare `eslint` as a peer; installing it would put eslint back in the
+# tree this toolchain removed. (npm reads none of these keys - they live here, not in .npmrc,
+# so npm does not warn about unknown config.)
+linkWorkspacePackages: true
+publicHoistPattern:
+  - '*'
+autoInstallPeers: false

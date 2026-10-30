@@ -1,3 +1,5 @@
+/* oxlint-disable lion/camelcase -- the `eslint-disable-line camelcase` in this file does not match the oxlint rule id */
+
 import child_process from 'child_process'; // eslint-disable-line camelcase
 import path from 'path';
 import { fsGlob } from '#utils/fs-glob.js';
@@ -319,7 +321,6 @@ export class InputDataService {
 
     if (isGitRepo) {
       try {
-        // eslint-disable-next-line camelcase
         const hash = child_process
           .execSync('git rev-parse HEAD', {
             cwd: projectPath,

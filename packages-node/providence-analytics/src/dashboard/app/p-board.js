@@ -1,3 +1,5 @@
+/* oxlint-disable class-methods-use-this -- oxlint reports `this` inside a default parameter value; eslint does not */
+
 /* eslint-disable lit-a11y/no-invalid-change-handler */
 /* eslint-disable max-classes-per-file */
 
@@ -447,7 +449,6 @@ class PBoard extends DecorateMixin(LitElement) {
   /**
    * @param {ExportSpecifier} content
    */
-  // eslint-disable-next-line class-methods-use-this
   _renderSpecifier(content) {
     let display;
     if (content.name === '[file]') {
@@ -468,7 +469,6 @@ class PBoard extends DecorateMixin(LitElement) {
    * @param {string} header
    * @returns {unknown}
    */
-  // eslint-disable-next-line class-methods-use-this
   _renderCellContent(content, header) {
     if (header === 'specifier') {
       return this._renderSpecifier(/** @type {ExportSpecifier} */ (content));

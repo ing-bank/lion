@@ -122,16 +122,18 @@ export class LionInputTelDropdown extends LionInputTel {
           @change="${refs?.dropdown?.listeners?.change}"
           style="${refs?.dropdown?.props?.style}"
         >
-          ${data?.regionMetaListPreferred?.length
-            ? html`
-                <optgroup label="${refs?.dropdown?.labels?.preferredCountries}">
-                  ${data.regionMetaListPreferred.map(renderOption)}
-                </optgroup>
-                <optgroup label="${refs?.dropdown?.labels?.allCountries}">
-                  ${data?.regionMetaList?.map(renderOption)}
-                </optgroup>
-              `
-            : html` ${data?.regionMetaList?.map(renderOption)}`}
+          ${
+            data?.regionMetaListPreferred?.length
+              ? html`
+                  <optgroup label="${refs?.dropdown?.labels?.preferredCountries}">
+                    ${data.regionMetaListPreferred.map(renderOption)}
+                  </optgroup>
+                  <optgroup label="${refs?.dropdown?.labels?.allCountries}">
+                    ${data?.regionMetaList?.map(renderOption)}
+                  </optgroup>
+                `
+              : html` ${data?.regionMetaList?.map(renderOption)}`
+          }
         </select>
       `;
     },

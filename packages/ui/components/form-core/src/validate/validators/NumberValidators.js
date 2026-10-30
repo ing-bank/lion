@@ -1,3 +1,5 @@
+/* oxlint-disable class-methods-use-this -- oxlint reports `this` inside a default parameter value; eslint does not */
+
 /* eslint-disable max-classes-per-file */
 import { Validator } from '../Validator.js';
 
@@ -18,7 +20,6 @@ export class IsNumber extends Validator {
   /**
    * @param {any} value
    */
-  // eslint-disable-next-line class-methods-use-this
   execute(value) {
     let isEnabled = false;
     if (!isNumber(value)) {

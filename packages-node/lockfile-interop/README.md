@@ -125,7 +125,7 @@ if (!result.ok) console.error(formatReport(result));
    ```
 
 3. **Act on the result.** Either regenerate the npm lock in that repo (`npm update --package-lock-only
-<pkg>` for the drifted packages, or a full `npm install --package-lock-only`) or pin the package in
+   <pkg>` for the drifted packages, or a full `npm install --package-lock-only`) or pin the package in
    `package.json` when the two managers genuinely disagree (peer-heavy packages are the usual case).
    `lockfile-interop report` prints the same comparison but always exits `0` — useful to read before
    deciding.

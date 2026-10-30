@@ -1,0 +1,11 @@
+[global]
+# MD076 (list-item-spacing) is not enforced: oxfmt's markdown writer inserts exactly the blank
+# line between list items that MD076 removes, so the two formatters in this repo would fight over
+# the same bytes. markdownlint never had the rule either.
+disable = ["MD013", "MD076", "ol-prefix", "fenced-code-language", "no-inline-html", "first-line-h1"]
+
+[MD025]
+front-matter-title = ""
+
+[no-trailing-punctuation]
+punctuation = ".,;。，；：！"

@@ -1,3 +1,5 @@
+/* oxlint-disable class-methods-use-this -- oxlint reports `this` inside a default parameter value; eslint does not */
+
 /* eslint-disable max-classes-per-file */
 import { Validator } from '../Validator.js';
 
@@ -14,7 +16,6 @@ export class IsString extends Validator {
   /**
    * @param {any} value
    */
-  // eslint-disable-next-line class-methods-use-this
   execute(value) {
     let hasError = false;
     if (!isString(value)) {
@@ -102,7 +103,6 @@ export class IsEmail extends Validator {
   /**
    * @param {any} value
    */
-  // eslint-disable-next-line class-methods-use-this
   execute(value) {
     let hasError = false;
     if (!isString(value) || !isEmailRegex.test(value.toLowerCase())) {
@@ -125,7 +125,6 @@ export class Pattern extends Validator {
   /**
    * @param {any} value
    */
-  // eslint-disable-next-line class-methods-use-this
   execute(value, pattern = this.param) {
     if (!(pattern instanceof RegExp)) {
       throw new Error(

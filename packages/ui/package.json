@@ -124,7 +124,8 @@
     "singleton-manager": "^1.8.0"
   },
   "devDependencies": {
-    "providence-analytics": "^0.21.0"
+    "providence-analytics": "^0.21.0",
+    "rollup": "^2.80.0"
   },
   "keywords": [
     "design-system",
