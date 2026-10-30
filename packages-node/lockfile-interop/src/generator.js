@@ -111,7 +111,12 @@ export function generateNpmLock(options) {
     /** @type {Record<string, unknown>} */
     const entry = {
       version,
-      resolved: record?.tarball ?? `https://registry.npmjs.org/${name}/-/${name}-${version}.tgz`,
+      // A scoped name appears once in a registry tarball URL: `@scope/pkg` -> `/pkg/-/pkg-1.0.0.tgz`.
+      // Repeating the scope in the file name produces a URL that 404s, which is how a lock written
+      // here failed `npm install` in CI.
+      resolved:
+        record?.tarball ??
+        `https://registry.npmjs.org/${name}/-/${name.split('/').pop()}-${version}.tgz`,
     };
     if (record?.integrity) entry.integrity = record.integrity;
     if (record?.engines) entry.engines = record.engines;
