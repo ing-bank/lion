@@ -60,8 +60,7 @@
     "semver": "^7.7.3"
   },
   "optionalDependencies": {
-    "@babel/parser": "^7.29.0",
-    "@swc/core": "~1.10.12"
+    "@babel/parser": "^7.29.0"
   },
   "devDependencies": {
     "@babel/traverse": "^7.29.0",
@@ -91,7 +90,6 @@
     "dependencies": {
       "@babel/parser": "Lazily imported by AstService (the `--fallback-to-babel` parser) and referenced from the emitted declarations, so optional",
       "@rollup/plugin-node-resolve": "Dev-only: the suites mock the file system with mock-fs, which a native resolver cannot see, so test-helpers swaps it in through importResolver.setResolver",
-      "@swc/core": "Lazily imported by AstService for the `swc` ast type - every shipped analyzer uses `oxc`, the base Analyzer defaults to `babel` - and referenced from the emitted declarations, so optional",
       "oxc-parser": "Pin it as long as the api is unstable, to prevent unpredictable behavior",
       "oxc-resolver": "Resolves import specifiers from a directory (exporter.sync(dir, specifier)) with the ESM conditions and `module` field, at ~0.008ms/call versus ~1.7ms/call for a fresh @rollup/plugin-node-resolve instance; miniDevServer (src/program/utils/mini-dev-server.js) reuses it to resolve bare specifiers for the browser",
       "semver": "Only needed for one check. Create internal util later"
