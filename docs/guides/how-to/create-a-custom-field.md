@@ -159,7 +159,7 @@ Then we follow the steps below:
 > because those properties will lose their reactivity (they won't be considered anymore in the
 > update loop of LitElement).
 > Whenever a .modelValue/.formattedValue/.serializedValue needs to be computed, use
-> [parser/formatter/serializer](../../docs/../fundamentals/systems/form/formatting-and-parsing.md)
+> [parser/formatter/serializer](../../fundamentals/systems/form/formatting-and-parsing.md)
 
 Implement with the following code:
 

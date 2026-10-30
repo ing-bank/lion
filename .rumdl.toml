@@ -1,0 +1,8 @@
+[global]
+disable = ["MD013", "ol-prefix", "fenced-code-language", "no-inline-html", "first-line-h1"]
+
+[MD025]
+front-matter-title = ""
+
+[no-trailing-punctuation]
+punctuation = ".,;。，；：！"
