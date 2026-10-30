@@ -11,12 +11,10 @@
     "debug:no-scoped-registries-polyfill": "npm run debug -- --no-scoped-registries-polyfill",
     "debug:webkit": "web-test-runner --watch --config web-test-runner-webkit.config.mjs",
     "deploy": "gh-pages -d _site -a -r git@github.com:ing-bank/lion --nojekyll",
-    "format": "npm run format:eslint && npm run format:oxfmt",
-    "format:eslint": "eslint --ext .js,.html . --fix",
+    "format": "npm run format:oxfmt",
     "format:oxfmt": "oxfmt \"**/*.{js,md}\" \"packages/*/package.json\"",
     "format:prettier": "prettier \"**/*.{js,md,astro}\" \"packages/*/package.json\" \"package.json\" --write",
     "lint": "wireit",
-    "lint:eslint": "eslint --ext .js,.html .",
     "lint:markdownlint": "git ls-files '*.md' | xargs markdownlint --ignore '{.github/**/*.md,.changeset/*.md,**/CHANGELOG.md,packages/ui/_legacy-changelogs/*.md,packages-node/awesome-phonenumber/upstream/**,prev-portal/*.md,portal/*.md}'",
     "lint:oxfmt": "oxfmt --check \"**/*.{js,md}\" \"packages/*/package.json\"",
     "lint:oxlint": "oxlint --config .oxlintrc.json --ignore-path .eslintignore .",
@@ -65,7 +63,6 @@
     "@lit/reactive-element": "^2.1.2",
     "@mdjs/core": "^0.21.1",
     "@open-wc/dedupe-mixin": "^2.0.1",
-    "@open-wc/eslint-config": "^12.0.3",
     "@open-wc/scoped-elements": "^3.0.5",
     "@open-wc/testing": "^4.0.0",
     "@open-wc/testing-helpers": "^3.0.1",
@@ -88,8 +85,6 @@
     "cross-env": "^7.0.3",
     "custom-element-jet-brains-integration": "^1.8.0",
     "es-module-lexer": "^1.7.0",
-    "eslint": "^8.57.1",
-    "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-import": "^2.31.0",
     "eslint-plugin-wc": "^2.2.0",
     "gh-pages": "^6.3.0",
@@ -237,7 +232,6 @@
   "wireit": {
     "lint": {
       "dependencies": [
-        "lint:eslint",
         "lint:markdownlint",
         "lint:oxfmt",
         "lint:oxlint",

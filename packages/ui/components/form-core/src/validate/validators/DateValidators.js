@@ -22,7 +22,6 @@ export class IsDate extends Validator {
   /**
    * @param {any} value
    */
-  // eslint-disable-next-line class-methods-use-this
   execute(value) {
     let hasError = false;
     if (!isDate(value)) {

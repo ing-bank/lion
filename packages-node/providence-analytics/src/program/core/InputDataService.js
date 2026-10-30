@@ -321,7 +321,6 @@ export class InputDataService {
 
     if (isGitRepo) {
       try {
-        // eslint-disable-next-line camelcase
         const hash = child_process
           .execSync('git rev-parse HEAD', {
             cwd: projectPath,

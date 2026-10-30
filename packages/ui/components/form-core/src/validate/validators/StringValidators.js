@@ -16,7 +16,6 @@ export class IsString extends Validator {
   /**
    * @param {any} value
    */
-  // eslint-disable-next-line class-methods-use-this
   execute(value) {
     let hasError = false;
     if (!isString(value)) {
@@ -104,7 +103,6 @@ export class IsEmail extends Validator {
   /**
    * @param {any} value
    */
-  // eslint-disable-next-line class-methods-use-this
   execute(value) {
     let hasError = false;
     if (!isString(value) || !isEmailRegex.test(value.toLowerCase())) {
@@ -127,7 +125,6 @@ export class Pattern extends Validator {
   /**
    * @param {any} value
    */
-  // eslint-disable-next-line class-methods-use-this
   execute(value, pattern = this.param) {
     if (!(pattern instanceof RegExp)) {
       throw new Error(

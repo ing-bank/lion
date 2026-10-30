@@ -8,8 +8,7 @@
       "name": "import-js",
       "specifier": "eslint-plugin-import"
     },
-    "eslint-plugin-no-only-tests",
-    "@stylistic/eslint-plugin"
+    "eslint-plugin-no-only-tests"
   ],
   "env": {
     "browser": true,
@@ -983,7 +982,31 @@
         "message": "`with` is disallowed in strict mode because it makes code impossible to predict and optimize."
       }
     ],
-    "@stylistic/spaced-comment": [
+    "import-js/order": [
+      "error",
+      {
+        "groups": [
+          [
+            "builtin",
+            "external",
+            "internal"
+          ]
+        ],
+        "distinctGroup": true,
+        "named": false,
+        "warnOnUnassignedImports": false
+      }
+    ],
+    "import-js/no-useless-path-segments": [
+      "error",
+      {
+        "commonjs": true
+      }
+    ],
+    "import-js/no-relative-packages": [
+      "error"
+    ],
+    "lion/spaced-comment": [
       "error",
       "always",
       {
@@ -1013,36 +1036,12 @@
         }
       }
     ],
-    "@stylistic/lines-between-class-members": [
+    "lion/lines-between-class-members": [
       "error",
       "always",
       {
         "exceptAfterSingleLine": false
       }
-    ],
-    "import-js/order": [
-      "error",
-      {
-        "groups": [
-          [
-            "builtin",
-            "external",
-            "internal"
-          ]
-        ],
-        "distinctGroup": true,
-        "named": false,
-        "warnOnUnassignedImports": false
-      }
-    ],
-    "import-js/no-useless-path-segments": [
-      "error",
-      {
-        "commonjs": true
-      }
-    ],
-    "import-js/no-relative-packages": [
-      "error"
     ]
   },
   "overrides": [

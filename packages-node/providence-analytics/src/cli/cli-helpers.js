@@ -102,7 +102,6 @@ export async function pathsArrayFromCollectionName(
  */
 export function spawnProcess(processArgStr, opts) {
   const processArgs = processArgStr.split(' ');
-  // eslint-disable-next-line camelcase
   const proc = child_process.spawn(processArgs[0], processArgs.slice(1), opts);
   /** @type {string | undefined} */
   let output;

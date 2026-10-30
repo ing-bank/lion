@@ -2,7 +2,6 @@
 
 // @ts-nocheck
 /* eslint-disable class-methods-use-this */
-/* eslint-disable import/no-relative-packages */
 import { LitElement, html, css, nothing } from 'lit';
 import { LionMenu } from '@lion/ui/menu.js';
 import { ScopedElementsMixin } from '../../../../packages/ui/components/core/src/ScopedElementsMixin.js';

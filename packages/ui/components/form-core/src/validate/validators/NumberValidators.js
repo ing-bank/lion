@@ -20,7 +20,6 @@ export class IsNumber extends Validator {
   /**
    * @param {any} value
    */
-  // eslint-disable-next-line class-methods-use-this
   execute(value) {
     let isEnabled = false;
     if (!isNumber(value)) {

@@ -449,7 +449,6 @@ class PBoard extends DecorateMixin(LitElement) {
   /**
    * @param {ExportSpecifier} content
    */
-  // eslint-disable-next-line class-methods-use-this
   _renderSpecifier(content) {
     let display;
     if (content.name === '[file]') {
@@ -470,7 +469,6 @@ class PBoard extends DecorateMixin(LitElement) {
    * @param {string} header
    * @returns {unknown}
    */
-  // eslint-disable-next-line class-methods-use-this
   _renderCellContent(content, header) {
     if (header === 'specifier') {
       return this._renderSpecifier(/** @type {ExportSpecifier} */ (content));

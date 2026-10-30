@@ -233,7 +233,6 @@ export class LionInputAmountDropdown extends LionInputAmount {
      * @param {TemplateDataForDropdownInputAmount} templateDataForDropdown
      * @param {RegionMeta} contextData
      */
-    // eslint-disable-next-line class-methods-use-this
     dropdownOption: (
       templateDataForDropdown,
       { currencyCode, nameForLocale, currencySymbol },
@@ -580,7 +579,6 @@ export class LionInputAmountDropdown extends LionInputAmount {
    * @protected
    * @configure FormControlMixin: don't repropagate any children
    */
-  // eslint-disable-next-line class-methods-use-this
   _repropagationCondition() {
     return false;
   }

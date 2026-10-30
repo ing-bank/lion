@@ -216,6 +216,93 @@ const RULES = {
   },
 
   /**
+   * ESLint's `spaced-comment`: `//comment` -> `// comment`. Only the two checks the repo's
+   * option object enables are implemented (`line.markers`, `block.markers`, `balanced` are
+   * not, so a marker comment without a space is not reported).
+   */
+  'spaced-comment': {
+    meta: {
+      type: 'layout',
+      schema: [
+        { enum: ['always', 'never'] },
+        {
+          type: 'object',
+          properties: {
+            line: { type: 'object' },
+            block: { type: 'object' },
+            markers: { type: 'array' },
+          },
+          additionalProperties: false,
+        },
+      ],
+      messages: {
+        expectedSpaceAfter: "Expected space or tab after '{{marker}}' in comment.",
+        unexpectedSpaceAfter: "Unexpected space or tab after '{{marker}}' in comment.",
+      },
+    },
+    create(context) {
+      const mode = (context.options && context.options[0]) || 'always';
+      const sourceCode = context.sourceCode || (context.getSourceCode && context.getSourceCode());
+      const check = comment => {
+        if (comment.type !== 'Line' && comment.type !== 'Block') return;
+        const marker = comment.type === 'Line' ? '//' : '/*';
+        const rest = comment.value;
+        if (rest === '') return;
+        const hasSpace = /^\s|^\*+\s|^\*+$/u.test(rest) || rest.startsWith('*');
+        if (mode === 'always' && !hasSpace) {
+          context.report({
+            node: null,
+            loc: comment.loc,
+            messageId: 'expectedSpaceAfter',
+            data: { marker },
+          });
+        }
+      };
+      return {
+        Program() {
+          for (const comment of sourceCode.getAllComments()) check(comment);
+        },
+      };
+    },
+  },
+
+  /**
+   * ESLint's `lines-between-class-members` with `["always", { exceptAfterSingleLine: false }]`:
+   * class members must be separated by a blank line.
+   */
+  'lines-between-class-members': {
+    meta: {
+      type: 'layout',
+      schema: [
+        { enum: ['always', 'never'] },
+        {
+          type: 'object',
+          properties: { exceptAfterSingleLine: { type: 'boolean' } },
+          additionalProperties: false,
+        },
+      ],
+      messages: { expected: 'Expected blank line between class members.' },
+    },
+    create(context) {
+      const mode = (context.options && context.options[0]) || 'always';
+      if (mode !== 'always') return {};
+      const sourceCode = context.sourceCode || (context.getSourceCode && context.getSourceCode());
+      return {
+        ClassBody(node) {
+          for (let i = 1; i < node.body.length; i += 1) {
+            const previous = node.body[i - 1];
+            const current = node.body[i];
+            const lineOf = offset => sourceCode.getLocFromIndex(offset).line;
+            if (lineOf(current.range[0]) - lineOf(previous.range[1]) < 2) {
+              context.report({ node: current, messageId: 'expected' });
+            }
+          }
+        },
+      };
+    },
+  },
+
+  /**
    * ESLint's `no-restricted-syntax`, hardcoded to the repo's three selectors
    * (`ForInStatement`, `LabeledStatement`, `WithStatement`) with ESLint's
    * messages, so the config keeps the same intent without a selector engine.
