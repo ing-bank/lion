@@ -27,22 +27,125 @@ const { headings = [] } = entry.rendered?.metadata;
 const { Content } = await render(entry);
 ---
 
+<style>
+  /*
+   * The lede is styled here, not in the layout, because the markup is owned here: Astro scopes a
+   * style block to the elements that component renders, and content passed through a slot does not
+   * inherit the layout's scope attribute. The layout keeps the page-level concerns (the container
+   * stacking, the text column and the in-page nav); everything below belongs to the lede block.
+   *
+   * The reading order is the Wired story's: cover, kicker, headline, standfirst, hairline, meta.
+   */
+  .blog-lede {
+    width: 100%;
+    min-width: 0;
+    margin: 2.5rem 0 0;
+  }
+
+  .blog-lede__cover {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 2 / 1;
+    object-fit: cover;
+    background: light-dark(#ddd, #3a3a3a);
+    margin: 0 0 2rem;
+  }
+
+  .blog-lede__kicker {
+    margin: 0 0 0.6rem;
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    /* The accent is only legible as ink on one theme at a time - this is the token that flips. */
+    color: var(--accent-on-surface);
+  }
+
+  /* Display scale and tight tracking: the headline carries the page on size, not on weight. */
+  .blog-lede h1 {
+    margin: 0 0 1rem;
+    font-size: clamp(2.1rem, 4.6vw, 3.4rem);
+    line-height: 1.05;
+    letter-spacing: -0.025em;
+    font-weight: 600;
+    color: var(--blog-text);
+    max-width: 24ch;
+    text-wrap: balance;
+  }
+
+  /* The standfirst: Wired sets its dek in bold grotesque at 22px, so it is the second-heaviest
+   * thing on the page - here in the secondary ink, so the headline keeps the contrast. */
+  .blog-lede__dek {
+    margin: 0 0 1.4rem;
+    font-size: clamp(1.05rem, 1.6vw, 1.375rem);
+    line-height: 1.35;
+    font-weight: 600;
+    color: var(--blog-text-secondary);
+    max-width: 54ch;
+  }
+
+  /* Date and tags share one hairline row instead of a pill each: the plainest possible furniture,
+   * so the only colour in the header is the kicker. */
+  .blog-lede__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem 0;
+    margin: 0 0 3rem;
+    padding-bottom: 1.25rem;
+    border-bottom: 1px solid var(--blog-line);
+    font-size: 0.9rem;
+    color: var(--blog-text-secondary);
+  }
+
+  .blog-lede__meta span + span {
+    margin-left: 0.9rem;
+    padding-left: 0.9rem;
+    border-left: 1px solid var(--blog-line);
+  }
+
+  @media (max-width: 700px) {
+    /* A 2:1 cover on a 390px viewport is a 195px band - too thin to read as a lede, so the phone
+     * gets 16:9 and the headline is free to run the full measure. */
+    .blog-lede__cover {
+      aspect-ratio: 16 / 9;
+      margin-bottom: 1.5rem;
+    }
+
+    /* 2rem keeps the phone headline strong without letting one long word run the whole measure,
+     * which is what the 2.1rem floor did on a 390px screen. */
+    .blog-lede h1 {
+      font-size: 2rem;
+      max-width: none;
+    }
+
+    .blog-lede__meta {
+      margin-bottom: 1.75rem;
+    }
+  }
+</style>
+
 <BlogDetailLayout title={title} description={description} headings={headings}>
-  <div slot="header" class="blog-detail-header">
-    <h1>{title}</h1>
-    <div class="blog-detail-meta">
-      <span class="blog-detail-meta-item">
-        {new Date(date || new Date()).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
-      </span>
-      {tagsArr.length > 0 && (
-        <span class="blog-detail-meta-item">
-          {tagsArr.join(', ')}
+  {/*
+    The lede: cover first, then the kicker, the headline and the standfirst - the order the Wired
+    story reads in. The date and the tags share one hairline row underneath instead of taking a pill
+    each, so the only colour in the header is the accent on the kicker.
+  */}
+  <div slot="header" class="blog-lede">
+    {cover_image && <img src={cover_image} alt="" class="blog-lede__cover" data-cover />}
+
+    <div class="blog-lede__text">
+      {tagsArr.length > 0 && <p class="blog-lede__kicker">{tagsArr[0]}</p>}
+      <h1>{title}</h1>
+      {description && <p class="blog-lede__dek">{description}</p>}
+      <div class="blog-lede__meta">
+        <span>
+          {new Date(date || new Date()).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
         </span>
-      )}
+        {tagsArr.length > 0 && <span>{tagsArr.join(', ')}</span>}
+      </div>
     </div>
   </div>
-
-  {cover_image && <img src={cover_image} alt={title} class="blog-cover-image" />}
 
   <div class="blog-article-content">
     <Content />
@@ -55,3 +158,4 @@ const { Content } = await render(entry);
     </p>
   </div>
 </BlogDetailLayout>
+

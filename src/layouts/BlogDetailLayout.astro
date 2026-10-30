@@ -30,13 +30,28 @@ const transformedHeadings = headings.map(h => ({
 ---
 
 <style>
+  /*
+   * The article reads lede-first, the way the Wired story does: the cover runs the full container
+   * width at the top, then a kicker, a display headline, a bold standfirst and a hairline, and only
+   * after that does the page split into the text column and the in-page nav.
+   *
+   * The lede block itself is styled in src/pages/blog/[...path].astro, next to the markup it belongs
+   * to - Astro scopes a style block to the elements its own component renders, and slotted content
+   * does not carry the layout's scope attribute, so rules for it cannot live here. What is left here
+   * is the page frame the header used to be nested inside of: the header sat in the 800px reading
+   * column, which is why the cover could never be wider than the text it illustrates.
+   */
+  .container.flex {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
   .blog-detail-layout {
     display: grid;
     grid-template-columns: minmax(0, 800px) 280px;
     gap: 3rem;
     align-items: start;
-    padding: 3rem 0;
-    margin: 0 auto;
+    width: 100%;
   }
 
   .blog-detail-content {
@@ -65,81 +80,21 @@ const transformedHeadings = headings.map(h => ({
     }
   }
 
-  .blog-detail-header {
-    margin-bottom: 80px;
-    padding-bottom: 50px;
-    border-bottom: none;
-    position: relative;
-    background: linear-gradient(135deg, rgba(255, 193, 7, 0.05) 0%, transparent 100%);
-    padding: 50px 40px 50px 0;
-    margin-left: -40px;
-    margin-right: -40px;
-    padding-left: 40px;
-  }
+  @media (max-width: 700px) {
+    /* A 2:1 cover on a 390px viewport is a 195px band - too thin to read as a lede, so the phone
+     * gets 16:9 and the title is free to run the full measure. */
+    .blog-lede__cover {
+      aspect-ratio: 16 / 9;
+      margin-bottom: 1.5rem;
+    }
 
-  .blog-detail-header::before {
-    content: '';
-    position: absolute;
-    left: 0;
-    top: 0;
-    bottom: 0;
-    width: 4px;
-    background: linear-gradient(to bottom, var(--blog-accent), transparent);
-  }
+    .blog-lede h1 {
+      max-width: none;
+    }
 
-  .blog-detail-header::after {
-    content: '';
-    position: absolute;
-    right: 0;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 100px;
-    height: 100px;
-    background: radial-gradient(circle, rgba(255, 193, 7, 0.1) 0%, transparent 70%);
-    border-radius: 50%;
-    filter: blur(20px);
-  }
-
-  .blog-detail-header h1 {
-    font-size: 3.8rem;
-    margin-bottom: 28px;
-    color: var(--blog-text);
-    line-height: 1.15;
-    font-weight: 800;
-    letter-spacing: -0.03em;
-    position: relative;
-    z-index: 1;
-  }
-
-  .blog-detail-meta {
-    font-size: 0.95rem;
-    color: var(--blog-text-secondary);
-    display: flex;
-    align-items: center;
-    gap: 24px;
-    margin-top: 20px;
-    flex-wrap: wrap;
-    position: relative;
-    z-index: 1;
-  }
-
-  .blog-detail-meta-item {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 6px 12px;
-    background: rgba(255, 193, 7, 0.08);
-    border-radius: 20px;
-    border: 1px solid rgba(255, 193, 7, 0.2);
-  }
-
-  .blog-detail-meta-item::before {
-    content: '';
-    display: none;
-  }
-
-  .blog-detail-meta-item:first-child::before {
-    display: none;
+    .blog-lede__meta {
+      margin-bottom: 1.75rem;
+    }
   }
 </style>
 
@@ -191,11 +146,12 @@ const transformedHeadings = headings.map(h => ({
 
     <main>
         <div class="container flex">
+            <div class="blog-lede" data-pagefind-body>
+                <slot name="header" />
+            </div>
+
             <div class="blog-detail-layout">
                 <div class="blog-detail-content" data-pagefind-body>
-                    <article class="blog-detail-header">
-                        <slot name="header" />
-                    </article>
                     <article class="blog-article">
                         <slot />
                     </article>
@@ -225,34 +181,5 @@ const transformedHeadings = headings.map(h => ({
             </div>
         </div>
     </footer>
-
-    <script>
-        // Interactive Blueprint Script
-        const groups = document.querySelectorAll('.blueprint-bg g');
-
-        groups.forEach(group => {
-            group.addEventListener('mouseenter', () => {
-                const dimensions = group.querySelectorAll('.dimension-line, .dimension-text, line[stroke-dasharray="2 2"], .angle-indicator');
-                dimensions.forEach(el => el.style.opacity = '1');
-            });
-
-            group.addEventListener('mouseleave', () => {
-                const dimensions = group.querySelectorAll('.dimension-line, .dimension-text, line[stroke-dasharray="2 2"], .angle-indicator');
-                dimensions.forEach(el => el.style.opacity = '0');
-            });
-        });
-
-        // Parallax effect
-        document.addEventListener('mousemove', (e) => {
-            const x = (window.innerWidth / 2 - e.pageX) / 50;
-            const y = (window.innerHeight / 2 - e.pageY) / 50;
-
-            const svg = document.querySelector('.blueprint-bg svg');
-            if(svg) {
-                svg.style.setProperty('--mouse-x', x + 'px');
-                svg.style.setProperty('--mouse-y', y + 'px');
-            }
-        });
-    </script>
 </body>
 </html>
