@@ -3,14 +3,14 @@ import { nothing } from 'lit';
 import { until } from 'lit/directives/until.js';
 import { unsafeStatic, aTimeout, expect, fixture as _fixture, fixtureSync } from '@open-wc/testing';
 import '@lion/ui/define/lion-icon.js';
-import { icons } from '@lion/ui/icon.js';
+import { LionIcon, icons } from '@lion/ui/icon.js';
 import hammerSvg from '../test/hammer.svg.js';
 import heartSvg from '../test/heart.svg.js';
 import { resolveSuiteTag } from '../../core/test-helpers/resolveSuiteTag.js';
 
 /**
+ * @typedef {import('@lion/ui/types/test-suites.js').SuiteElement} SuiteElement
  * @typedef {(strings: TemplateStringsArray, ... expr: string[]) => string} TaggedTemplateLiteral
- * @typedef {import('../src/LionIcon.js').LionIcon} LionIcon
  * @typedef {import('lit').TemplateResult} TemplateResult
  */
 const fixture = /** @type {(arg: TemplateResult|string) => Promise<LionIcon>} */ (_fixture);
@@ -21,16 +21,14 @@ const fixture = /** @type {(arg: TemplateResult|string) => Promise<LionIcon>} */
  * registered tag; see docs/guides/principles/test-suites.md.
  * `tagString`, `klass` and the older role tag keys are deprecated: pass `classes` instead (Lion
  * itself uses `classes` everywhere).
- * @param {{ classes?: Record<string, CustomElementConstructor>, tagString?: string }} [customConfig]
+ * @param {import('@lion/ui/types/test-suites.js').SuiteConfig<{host: SuiteElement}>} [customConfig]
  */
-export function runIconSuite(customConfig = {}) {
-  const cfg = {
-    classes: /** @type {Record<string, CustomElementConstructor>} */ ({}),
-    tagString: 'lion-icon',
-    ...customConfig,
-  };
-  cfg.tagString = resolveSuiteTag(cfg.classes.host, cfg.tagString, 'lion-icon');
-  const tag = unsafeStatic(cfg.tagString);
+export function runIconSuite({
+  classes: { host = LionIcon } = {},
+  tagString: legacyTagString,
+} = {}) {
+  const tagString = resolveSuiteTag(host, legacyTagString);
+  const tag = unsafeStatic(tagString);
 
   describe('lion-icon', () => {
     it('supports svg icon as a function which recieves a tag function as an argument and returns a tagged template literal', async () => {

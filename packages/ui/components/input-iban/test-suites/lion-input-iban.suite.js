@@ -1,12 +1,12 @@
 import { html } from 'lit/static-html.js';
 import { unsafeStatic, expect, fixture as _fixture } from '@open-wc/testing';
 import { getInputMembers } from '@lion/ui/input-test-helpers.js';
-import { IsCountryIBAN, formatIBAN, parseIBAN } from '@lion/ui/input-iban.js';
+import { LionInputIban, IsCountryIBAN, formatIBAN, parseIBAN } from '@lion/ui/input-iban.js';
 import '@lion/ui/define/lion-input-iban.js';
 import { resolveSuiteTag } from '../../core/test-helpers/resolveSuiteTag.js';
 
 /**
- * @typedef {import('../src/LionInputIban.js').LionInputIban} LionInputIban
+ * @typedef {import('@lion/ui/types/test-suites.js').SuiteElement} SuiteElement
  * @typedef {import('lit').TemplateResult} TemplateResult
  */
 const fixture = /** @type {(arg: TemplateResult|string) => Promise<LionInputIban>} */ (_fixture);
@@ -17,36 +17,34 @@ const fixture = /** @type {(arg: TemplateResult|string) => Promise<LionInputIban
  * registered tag; see docs/guides/principles/test-suites.md.
  * `tagString`, `klass` and the older role tag keys are deprecated: pass `classes` instead (Lion
  * itself uses `classes` everywhere).
- * @param {{ classes?: Record<string, CustomElementConstructor>, tagString?: string }} [customConfig]
+ * @param {import('@lion/ui/types/test-suites.js').SuiteConfig<{host: SuiteElement}>} [customConfig]
  */
-export function runInputIbanSuite(customConfig = {}) {
-  const cfg = {
-    classes: /** @type {Record<string, CustomElementConstructor>} */ ({}),
-    tagString: 'lion-input-iban',
-    ...customConfig,
-  };
-  cfg.tagString = resolveSuiteTag(cfg.classes.host, cfg.tagString, 'lion-input-iban');
-  const tag = unsafeStatic(cfg.tagString);
+export function runInputIbanSuite({
+  classes: { host = LionInputIban } = {},
+  tagString: legacyTagString,
+} = {}) {
+  const tagString = resolveSuiteTag(host, legacyTagString);
+  const tag = unsafeStatic(tagString);
 
   describe('<lion-input-iban>', () => {
     it('uses formatIBAN for formatting', async () => {
-      const el = await fixture(`<${cfg.tagString}></${cfg.tagString}>`);
+      const el = await fixture(`<${tagString}></${tagString}>`);
       expect(el.formatter).to.equal(formatIBAN);
     });
 
     it('uses parseIBAN for parsing', async () => {
-      const el = await fixture(`<${cfg.tagString}></${cfg.tagString}>`);
+      const el = await fixture(`<${tagString}></${tagString}>`);
       expect(el.parser).to.equal(parseIBAN);
     });
 
     it('has a type = text', async () => {
-      const el = await fixture(`<${cfg.tagString}></${cfg.tagString}>`);
+      const el = await fixture(`<${tagString}></${tagString}>`);
       const { _inputNode } = getInputMembers(el);
       expect(_inputNode.type).to.equal('text');
     });
 
     it('has validator "IsIBAN" applied by default', async () => {
-      const el = await fixture(`<${cfg.tagString}></${cfg.tagString}>`);
+      const el = await fixture(`<${tagString}></${tagString}>`);
       el.modelValue = 'FOO';
       expect(el.hasFeedbackFor).to.include('error');
       expect(el.validationStates).to.have.property('error');
@@ -77,22 +75,20 @@ export function runInputIbanSuite(customConfig = {}) {
     });
 
     it('is accessible', async () => {
-      const el = await fixture(
-        `<${cfg.tagString}><label slot="label">Label</label></${cfg.tagString}>`,
-      );
+      const el = await fixture(`<${tagString}><label slot="label">Label</label></${tagString}>`);
       await expect(el).to.be.accessible();
     });
 
     it('is accessible when readonly', async () => {
       const el = await fixture(
-        `<${cfg.tagString} readonly><label slot="label">Label</label></${cfg.tagString}>`,
+        `<${tagString} readonly><label slot="label">Label</label></${tagString}>`,
       );
       await expect(el).to.be.accessible();
     });
 
     it('is accessible when disabled', async () => {
       const el = await fixture(
-        `<${cfg.tagString} disabled><label slot="label">Label</label></${cfg.tagString}>`,
+        `<${tagString} disabled><label slot="label">Label</label></${tagString}>`,
       );
       await expect(el).to.be.accessible();
     });

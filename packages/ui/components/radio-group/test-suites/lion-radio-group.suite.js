@@ -1,12 +1,12 @@
 import { html } from 'lit/static-html.js';
 import { unsafeStatic, expect, fixture as _fixture } from '@open-wc/testing';
 import '@lion/ui/define/lion-radio-group.js';
+import { LionRadio, LionRadioGroup } from '@lion/ui/radio-group.js';
 import '@lion/ui/define/lion-radio.js';
 import { resolveSuiteTag } from '../../core/test-helpers/resolveSuiteTag.js';
 
 /**
- * @typedef {import('../src/LionRadioGroup.js').LionRadioGroup} LionRadioGroup
- * @typedef {import('../src/LionRadio.js').LionRadio} LionRadio
+ * @typedef {import('@lion/ui/types/test-suites.js').SuiteElement} SuiteElement
  * @typedef {import('lit').TemplateResult} TemplateResult
  */
 const fixture = /** @type {(arg: TemplateResult) => Promise<LionRadioGroup>} */ (_fixture);
@@ -17,20 +17,15 @@ const fixture = /** @type {(arg: TemplateResult) => Promise<LionRadioGroup>} */ 
  * (see docs/guides/principles/test-suites.md).
  * `tagString`, `klass` and the older role tag keys are deprecated: pass `classes` instead (Lion
  * itself uses `classes` everywhere).
- * @param {{ classes?: Record<string, CustomElementConstructor>, tagString?: string, childTagString?: string }} [customConfig]
+ * @param {import('@lion/ui/types/test-suites.js').SuiteConfig<{host: SuiteElement; radio: SuiteElement}, {childTagString?: any}>} [customConfig]
  */
-export function runRadioGroupSuite(customConfig = {}) {
-  const cfg = {
-    classes: /** @type {Record<string, CustomElementConstructor>} */ ({}),
-    tagString: 'lion-radio-group',
-    childTagString: 'lion-radio',
-    ...customConfig,
-  };
-  cfg.tagString = resolveSuiteTag(cfg.classes.host, cfg.tagString, 'lion-radio-group');
-  const tag = unsafeStatic(cfg.tagString);
-  const childTag = unsafeStatic(
-    resolveSuiteTag(cfg.classes.radio, cfg.childTagString, 'lion-radio'),
-  );
+export function runRadioGroupSuite({
+  classes: { host: hostEl = LionRadioGroup, radio: radioEl = LionRadio } = {},
+  tagString: legacyTagString,
+  childTagString: legacyChildTagString,
+} = {}) {
+  const tag = unsafeStatic(resolveSuiteTag(hostEl, legacyTagString));
+  const childTag = unsafeStatic(resolveSuiteTag(radioEl, legacyChildTagString));
 
   describe('<lion-radio-group>', () => {
     describe('resetGroup', () => {

@@ -3,10 +3,11 @@ import { unsafeStatic, aTimeout, expect, fixture as _fixture } from '@open-wc/te
 import sinon from 'sinon';
 import { getFormControlMembers } from '@lion/ui/form-core-test-helpers.js';
 import '@lion/ui/define/lion-textarea.js';
+import { LionTextarea } from '@lion/ui/textarea.js';
 import { resolveSuiteTag } from '../../core/test-helpers/resolveSuiteTag.js';
 
 /**
- * @typedef {import('../src/LionTextarea.js').LionTextarea} LionTextarea
+ * @typedef {import('@lion/ui/types/test-suites.js').SuiteElement} SuiteElement
  * @typedef {import('lit').TemplateResult} TemplateResult
  */
 
@@ -23,34 +24,32 @@ function hasBrowserResizeSupport() {
  * registered tag; see docs/guides/principles/test-suites.md.
  * `tagString`, `klass` and the older role tag keys are deprecated: pass `classes` instead (Lion
  * itself uses `classes` everywhere).
- * @param {{ classes?: Record<string, CustomElementConstructor>, tagString?: string }} [customConfig]
+ * @param {import('@lion/ui/types/test-suites.js').SuiteConfig<{host: SuiteElement}>} [customConfig]
  */
-export function runTextareaSuite(customConfig = {}) {
-  const cfg = {
-    classes: /** @type {Record<string, CustomElementConstructor>} */ ({}),
-    tagString: 'lion-textarea',
-    ...customConfig,
-  };
-  cfg.tagString = resolveSuiteTag(cfg.classes.host, cfg.tagString, 'lion-textarea');
-  const tag = unsafeStatic(cfg.tagString);
+export function runTextareaSuite({
+  classes: { host = LionTextarea } = {},
+  tagString: legacyTagString,
+} = {}) {
+  const tagString = resolveSuiteTag(host, legacyTagString);
+  const tag = unsafeStatic(tagString);
 
   describe('<lion-textarea>', () => {
     it(`can be used with the following declaration
     ~~~
-    <${cfg.tagString}></${cfg.tagString}>
+    <${tagString}></${tagString}>
     ~~~`, async () => {
-      const el = await fixture(`<${cfg.tagString}></${cfg.tagString}>`);
+      const el = await fixture(`<${tagString}></${tagString}>`);
       expect(el.querySelector('textarea')?.nodeName).to.equal('TEXTAREA');
     });
 
     it('has .rows=2 and .maxRows=6', async () => {
-      const el = await fixture(`<${cfg.tagString}></${cfg.tagString}>`);
+      const el = await fixture(`<${tagString}></${tagString}>`);
       expect(el.rows).to.equal(2);
       expect(el.maxRows).to.equal(6);
     });
 
     it('has .readOnly=false .rows=2 and rows="2" by default', async () => {
-      const el = await fixture(`<${cfg.tagString}>foo</${cfg.tagString}>`);
+      const el = await fixture(`<${tagString}>foo</${tagString}>`);
       const { _inputNode } = getFormControlMembers(el);
 
       expect(el.rows).to.equal(2);
@@ -63,7 +62,7 @@ export function runTextareaSuite(customConfig = {}) {
     });
 
     it('sync rows down to the native textarea', async () => {
-      const el = await fixture(`<${cfg.tagString} rows="8">foo</${cfg.tagString}>`);
+      const el = await fixture(`<${tagString} rows="8">foo</${tagString}>`);
       const { _inputNode } = getFormControlMembers(el);
       expect(el.rows).to.equal(8);
       expect(el.getAttribute('rows')).to.be.equal('8');
@@ -73,7 +72,7 @@ export function runTextareaSuite(customConfig = {}) {
     });
 
     it('sync readOnly to the native textarea', async () => {
-      const el = await fixture(`<${cfg.tagString} readonly>foo</${cfg.tagString}>`);
+      const el = await fixture(`<${tagString} readonly>foo</${tagString}>`);
       expect(el.readOnly).to.be.true;
       expect(el.querySelector('textarea')?.readOnly).to.be.true;
     });
@@ -83,7 +82,7 @@ export function runTextareaSuite(customConfig = {}) {
         return;
       }
 
-      const el = await fixture(`<${cfg.tagString}></${cfg.tagString}>`);
+      const el = await fixture(`<${tagString}></${tagString}>`);
       const { _inputNode } = getFormControlMembers(el);
       const computedStyle = window.getComputedStyle(_inputNode);
       expect(computedStyle.resize).to.equal('none');
@@ -95,7 +94,7 @@ export function runTextareaSuite(customConfig = {}) {
     });
 
     it('adjusts height based on content', async () => {
-      const el = await fixture(`<${cfg.tagString}></${cfg.tagString}>`);
+      const el = await fixture(`<${tagString}></${tagString}>`);
       const initialHeight = el.offsetHeight;
       el.modelValue = 'batman\nand\nrobin\nand\ncatwoman';
       await el.updateComplete;
@@ -162,7 +161,7 @@ export function runTextareaSuite(customConfig = {}) {
     });
 
     it('has an attribute that can be used to set the placeholder text of the textarea', async () => {
-      const el = await fixture(`<${cfg.tagString} placeholder="text"></${cfg.tagString}>`);
+      const el = await fixture(`<${tagString} placeholder="text"></${tagString}>`);
       const { _inputNode } = getFormControlMembers(el);
       expect(el.getAttribute('placeholder')).to.equal('text');
       expect(_inputNode.getAttribute('placeholder')).to.equal('text');
@@ -174,7 +173,7 @@ export function runTextareaSuite(customConfig = {}) {
     });
 
     it('uses the textarea when another element is slotted as input before it', async () => {
-      const el = await fixture(`<${cfg.tagString}></${cfg.tagString}>`);
+      const el = await fixture(`<${tagString}></${tagString}>`);
       const textarea = /** @type {HTMLTextAreaElement} */ (el.querySelector('textarea'));
       // Browser extensions like LanguageTool add an element with slot="input" before the textarea
       const mirror = document.createElement('lt-mirror');
@@ -192,7 +191,7 @@ export function runTextareaSuite(customConfig = {}) {
     it('fires resize textarea when a visibility change has been detected', async () => {
       const el = await fixture(`
         <div style="display: none">
-          <${cfg.tagString} placeholder="text"></${cfg.tagString}>
+          <${tagString} placeholder="text"></${tagString}>
         </div>
       `);
       const textArea = /** @type {LionTextarea} */ (el.firstElementChild);
@@ -205,12 +204,12 @@ export function runTextareaSuite(customConfig = {}) {
     });
 
     it('is accessible', async () => {
-      const el = await fixture(`<${cfg.tagString} label="Label"></${cfg.tagString}>`);
+      const el = await fixture(`<${tagString} label="Label"></${tagString}>`);
       await expect(el).to.be.accessible();
     });
 
     it('is accessible when disabled', async () => {
-      const el = await fixture(`<${cfg.tagString} label="Label" disabled></${cfg.tagString}>`);
+      const el = await fixture(`<${tagString} label="Label" disabled></${tagString}>`);
       await expect(el).to.be.accessible();
     });
   });

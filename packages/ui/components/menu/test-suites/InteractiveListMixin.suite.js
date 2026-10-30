@@ -25,26 +25,16 @@ const supportedRoles = [
  * @typedef {import('../src/LionMenu.js').LionMenu} LionMenu
  * @typedef {import('lit').TemplateResult} TemplateResult
  *
- * * @typedef {Object} TestConfig
- * @property {Record<string, CustomElementConstructor>} [classes]
- * @property {string} tagString
  */
 
 const fixture = /** @type {(arg: TemplateResult) => Promise<LionMenu>} */ (_fixture);
 
 /**
- * @param {TestConfig} [customConfig]
+ * @typedef {import('@lion/ui/types/test-suites.js').SuiteElement} SuiteElement
+ * @param {import('@lion/ui/types/test-suites.js').SuiteConfig<{host: SuiteElement}>} [customConfig]
  */
-export function runInteractiveListMixinSuite(customConfig) {
-  const cfg = {
-    tagString: resolveSuiteTag(
-      customConfig?.classes?.host,
-      customConfig?.tagString,
-      InteractiveListClass,
-    ),
-  };
-
-  const { tagString } = cfg;
+export function runInteractiveListMixinSuite({ classes = {}, tagString: legacyTagString } = {}) {
+  const tagString = resolveSuiteTag(classes?.host, legacyTagString, InteractiveListClass);
   const tag = unsafeStatic(tagString);
 
   describe('InteractiveListMixin', () => {

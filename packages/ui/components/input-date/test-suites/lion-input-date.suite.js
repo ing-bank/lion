@@ -5,10 +5,11 @@ import { MinDate, MaxDate } from '@lion/ui/form-core.js';
 import { unsafeStatic, expect, fixture as _fixture } from '@open-wc/testing';
 import { getInputMembers } from '@lion/ui/input-test-helpers.js';
 import '@lion/ui/define/lion-input-date.js';
+import { LionInputDate } from '@lion/ui/input-date.js';
 import { resolveSuiteTag } from '../../core/test-helpers/resolveSuiteTag.js';
 
 /**
- * @typedef {import('../src/LionInputDate.js').LionInputDate} LionInputDate
+ * @typedef {import('@lion/ui/types/test-suites.js').SuiteElement} SuiteElement
  * @typedef {import('lit').TemplateResult} TemplateResult
  */
 const fixture = /** @type {(arg: TemplateResult) => Promise<LionInputDate>} */ (_fixture);
@@ -19,16 +20,14 @@ const fixture = /** @type {(arg: TemplateResult) => Promise<LionInputDate>} */ (
  * registered tag; see docs/guides/principles/test-suites.md.
  * `tagString`, `klass` and the older role tag keys are deprecated: pass `classes` instead (Lion
  * itself uses `classes` everywhere).
- * @param {{ classes?: Record<string, CustomElementConstructor>, tagString?: string }} [customConfig]
+ * @param {import('@lion/ui/types/test-suites.js').SuiteConfig<{host: SuiteElement}>} [customConfig]
  */
-export function runInputDateSuite(customConfig = {}) {
-  const cfg = {
-    classes: /** @type {Record<string, CustomElementConstructor>} */ ({}),
-    tagString: 'lion-input-date',
-    ...customConfig,
-  };
-  cfg.tagString = resolveSuiteTag(cfg.classes.host, cfg.tagString, 'lion-input-date');
-  const tag = unsafeStatic(cfg.tagString);
+export function runInputDateSuite({
+  classes: { host = LionInputDate } = {},
+  tagString: legacyTagString,
+} = {}) {
+  const tagString = resolveSuiteTag(host, legacyTagString);
+  const tag = unsafeStatic(tagString);
 
   describe('<lion-input-date>', () => {
     const localizeManager = getLocalizeManager();

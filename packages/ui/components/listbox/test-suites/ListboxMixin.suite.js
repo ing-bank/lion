@@ -2,7 +2,7 @@ import { LitElement } from 'lit';
 import { ref } from 'lit/directives/ref.js';
 import { repeat } from 'lit/directives/repeat.js';
 import { Required } from '@lion/ui/form-core.js';
-import { LionOptions } from '@lion/ui/listbox.js';
+import { LionListbox, LionOption, LionOptions } from '@lion/ui/listbox.js';
 import '@lion/ui/define/lion-listbox.js';
 import '@lion/ui/define/lion-option.js';
 import {
@@ -21,8 +21,6 @@ import { getCachedFixture } from '../../core/test-helpers/getCachedFixture.js';
 import { resolveSuiteTag } from '../../core/test-helpers/resolveSuiteTag.js';
 
 /**
- * @typedef {import('../src/LionListbox.js').LionListbox} LionListbox
- * @typedef {import('../src/LionOption.js').LionOption} LionOption
  * @typedef {import('../../select-rich/src/LionSelectInvoker.js').LionSelectInvoker} LionSelectInvoker
  * @typedef {import('lit').TemplateResult} TemplateResult
  */
@@ -42,17 +40,15 @@ function mimicKeyPress(el, key, code = '') {
 /**
  * @param { { classes?: Record<string, CustomElementConstructor>, tagString?:string, optionTagString?:string} } [customConfig]
  */
-export function runListboxMixinSuite(customConfig = {}) {
-  const cfg = {
-    classes: /** @type {Record<string, CustomElementConstructor>} */ ({}),
-    tagString: 'lion-listbox',
-    optionTagString: 'lion-option',
-    ...customConfig,
-  };
-
-  cfg.tagString = resolveSuiteTag(cfg.classes.host, cfg.tagString, 'lion-listbox');
-  const tag = unsafeStatic(cfg.tagString);
-  const optionTag = unsafeStatic(cfg.optionTagString);
+export function runListboxMixinSuite({
+  classes: { host = LionListbox, option: roleOption = LionOption } = {},
+  tagString: legacyTagString,
+  optionTagString: legacyOptionTagString,
+} = {}) {
+  const hostTagString = resolveSuiteTag(host, legacyTagString);
+  const tag = unsafeStatic(hostTagString);
+  const optionTagString = resolveSuiteTag(roleOption, legacyOptionTagString);
+  const optionTag = unsafeStatic(optionTagString);
 
   describe('ListboxMixin', () => {
     // TODO: See if it is possible to get functionality from ChoiceGroup and/or Field suite(s)
@@ -150,7 +146,7 @@ export function runListboxMixinSuite(customConfig = {}) {
         expect(() => {
           el.addFormElement(invalidChild);
         }).to.throw(
-          `The ${cfg.tagString} name="foo" does not allow to register lion-option with .modelValue="Lara" - The modelValue should represent an Object { value: "foo", checked: false }`,
+          `The ${hostTagString} name="foo" does not allow to register lion-option with .modelValue="Lara" - The modelValue should represent an Object { value: "foo", checked: false }`,
         );
       });
 
@@ -428,9 +424,9 @@ export function runListboxMixinSuite(customConfig = {}) {
             <${optionTag} .choiceValue=${30} id="predefined">Item 3</${optionTag}>
           </${tag}>
         `);
-        expect(el.querySelectorAll(cfg.optionTagString)[0].id).to.exist;
-        expect(el.querySelectorAll(cfg.optionTagString)[1].id).to.exist;
-        expect(el.querySelectorAll(cfg.optionTagString)[2].id).to.equal('predefined');
+        expect(el.querySelectorAll(optionTagString)[0].id).to.exist;
+        expect(el.querySelectorAll(optionTagString)[1].id).to.exist;
+        expect(el.querySelectorAll(optionTagString)[2].id).to.equal('predefined');
       });
 
       it('has a reference to the active option', async () => {
@@ -1567,10 +1563,10 @@ export function runListboxMixinSuite(customConfig = {}) {
         let properlyInstantiated = false;
 
         try {
-          const el = document.createElement(cfg.tagString);
+          const el = document.createElement(hostTagString);
           const optionsEl = document.createElement('lion-options');
           optionsEl.slot = 'input';
-          const optionEl = document.createElement(cfg.optionTagString);
+          const optionEl = document.createElement(optionTagString);
           optionsEl.appendChild(optionEl);
           el.appendChild(optionsEl);
           properlyInstantiated = true;
@@ -1600,7 +1596,7 @@ export function runListboxMixinSuite(customConfig = {}) {
           child => child.nodeName !== 'STYLE',
         );
         expect(childrenOtherThanStyle.length).to.equal(2);
-        expect(childrenOtherThanStyle[0].tagName).to.equal(cfg.optionTagString.toUpperCase());
+        expect(childrenOtherThanStyle[0].tagName).to.equal(optionTagString.toUpperCase());
       });
     });
 

@@ -13,32 +13,25 @@ class InteractiveListClass extends InteractiveListMixin(LitElement) {}
  * @typedef {import('../src/LionMenu.js').LionMenu} LionMenu
  * @typedef {import('lit').TemplateResult} TemplateResult
  *
- * @typedef {Object} TestConfig
- * @property {Record<string, CustomElementConstructor>} [classes]
- * @property {string} tagString
- * @property {string} tagChildString
  */
 
 const fixture = /** @type {(arg: TemplateResult) => Promise<LionMenu>} */ (_fixture);
 
 /**
- * @param {TestConfig} [customConfig]
+ * @typedef {import('@lion/ui/types/test-suites.js').SuiteElement} SuiteElement
+ * @param {import('@lion/ui/types/test-suites.js').SuiteConfig<{host: SuiteElement; 'interactive-list': SuiteElement}>} [customConfig]
  */
-export function runMultiLevelListMixinSuite(customConfig) {
-  const cfg = {
-    tagString: resolveSuiteTag(
-      customConfig?.classes?.host,
-      customConfig?.tagString,
-      MultiLevelListClass,
-    ),
-    tagChildString: resolveSuiteTag(
-      customConfig?.classes?.['interactive-list'],
-      customConfig?.tagChildString,
-      InteractiveListClass,
-    ),
-  };
-
-  const { tagString, tagChildString } = cfg;
+export function runMultiLevelListMixinSuite({
+  classes = {},
+  tagString: legacyTagString,
+  tagChildString: legacyChildTagString,
+} = {}) {
+  const tagString = resolveSuiteTag(classes?.host, legacyTagString, MultiLevelListClass);
+  const tagChildString = resolveSuiteTag(
+    classes?.['interactive-list'],
+    legacyChildTagString,
+    InteractiveListClass,
+  );
   const tag = unsafeStatic(tagString);
   const tagChild = unsafeStatic(tagChildString);
 

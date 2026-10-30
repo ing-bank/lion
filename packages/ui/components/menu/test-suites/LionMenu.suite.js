@@ -6,23 +6,16 @@ import { resolveSuiteTag } from '../../core/test-helpers/resolveSuiteTag.js';
 /**
  * @typedef {import('lit').TemplateResult} TemplateResult
  *
- * @typedef {Object} TestConfig
- * @property {Record<string, CustomElementConstructor>} [classes]
- * @property {string} tagString
  */
 
 const fixture = /** @type {(arg: TemplateResult) => Promise<LionMenu>} */ (_fixture);
 
 /**
- * @param {TestConfig} [customConfig]
+ * @typedef {import('@lion/ui/types/test-suites.js').SuiteElement} SuiteElement
+ * @param {import('@lion/ui/types/test-suites.js').SuiteConfig<{host: SuiteElement}>} [customConfig]
  */
-export function runLionMenuSuite(customConfig) {
-  const cfg = {
-    tagString: resolveSuiteTag(customConfig?.classes?.host, customConfig?.tagString, LionMenu),
-  };
-
-  const { tagString } = cfg;
-  const tag = unsafeStatic(tagString);
+export function runLionMenuSuite({ classes = {}, tagString: legacyTagString } = {}) {
+  const tag = unsafeStatic(resolveSuiteTag(classes?.host, legacyTagString, LionMenu));
 
   describe('LionMenu', () => {
     it('sets the correct role to the listNode', async () => {

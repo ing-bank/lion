@@ -1,11 +1,14 @@
 import { expect, fixture, html, unsafeStatic } from '@open-wc/testing';
 import { getFormControlMembers } from '@lion/ui/form-core-test-helpers.js';
+import {
+  LionCheckbox,
+  LionCheckboxGroup,
+  LionCheckboxIndeterminate,
+} from '@lion/ui/checkbox-group.js';
 import { resolveSuiteTag } from '../../core/test-helpers/resolveSuiteTag.js';
 
 /**
- * @typedef {import('../src/LionCheckbox.js').LionCheckbox} LionCheckbox
- * @typedef {import('../src/LionCheckboxIndeterminate.js').LionCheckboxIndeterminate} LionCheckboxIndeterminate
- * @typedef {import('../src/LionCheckboxGroup.js').LionCheckboxGroup} LionCheckboxGroup
+ * @typedef {import('@lion/ui/types/test-suites.js').SuiteElement} SuiteElement
  */
 
 /**
@@ -25,37 +28,25 @@ function getCheckboxIndeterminateMembers(el) {
 /**
  * `tagString`, `klass` and the older role tag keys are deprecated: pass `classes` instead (Lion
  * itself uses `classes` everywhere).
- * @param {{ classes?: Record<string, CustomElementConstructor>, tagString?: string, groupTagString?: string, childTagString?: string}} [customConfig]
+ * @param {import('@lion/ui/types/test-suites.js').SuiteConfig<{'checkbox-group': SuiteElement; checkbox: SuiteElement; host: SuiteElement}, {childTagString?: any; groupTagString?: any}>} [customConfig]
  */
-export function runCheckboxIndeterminateSuite(customConfig) {
-  const cfg = {
-    classes: /** @type {Record<string, CustomElementConstructor>} */ ({}),
-    tagString: 'lion-checkbox-indeterminate',
-    groupTagString: 'lion-checkbox-group',
-    childTagString: 'lion-checkbox',
-    ...customConfig,
-  };
+export function runCheckboxIndeterminateSuite({
+  classes: {
+    host: hostEl = LionCheckboxIndeterminate,
+    'checkbox-group': groupEl = LionCheckboxGroup,
+    checkbox: childEl = LionCheckbox,
+  } = {},
+  tagString: legacyTagString,
+  groupTagString: legacyGroupTagString,
+  childTagString: legacyChildTagString,
+} = {}) {
+  const tagString = resolveSuiteTag(hostEl, legacyTagString);
+  const groupTagString = resolveSuiteTag(groupEl, legacyGroupTagString);
+  const childTagString = resolveSuiteTag(childEl, legacyChildTagString);
 
-  /** @type {{_$litStatic$: any}} */
-  let tag;
-  /** @type {{_$litStatic$: any}} */
-  let groupTag;
-  /** @type {{_$litStatic$: any}} */
-  let childTag;
-
-  before(async () => {
-    // The suite queries the host by `cfg.tagString` too, so it has to hold the resolved tag.
-    cfg.tagString = resolveSuiteTag(cfg.classes.host, cfg.tagString, 'lion-checkbox-indeterminate');
-    cfg.groupTagString = resolveSuiteTag(
-      cfg.classes['checkbox-group'],
-      cfg.groupTagString,
-      'lion-checkbox-group',
-    );
-    cfg.childTagString = resolveSuiteTag(cfg.classes.checkbox, cfg.childTagString, 'lion-checkbox');
-    tag = unsafeStatic(cfg.tagString);
-    groupTag = unsafeStatic(cfg.groupTagString);
-    childTag = unsafeStatic(cfg.childTagString);
-  });
+  const tag = unsafeStatic(tagString);
+  const groupTag = unsafeStatic(groupTagString);
+  const childTag = unsafeStatic(childTagString);
 
   describe('CheckboxIndeterminate', async () => {
     /** @type {{_$litStatic$: any}} */
@@ -85,7 +76,7 @@ export function runCheckboxIndeterminateSuite(customConfig) {
         </${groupTag}>
       `);
       const elIndeterminate = /**  @type {LionCheckboxIndeterminate} */ (
-        el.querySelector(`${cfg.tagString}`)
+        el.querySelector(`${tagString}`)
       );
 
       // Assert
@@ -105,7 +96,7 @@ export function runCheckboxIndeterminateSuite(customConfig) {
     `);
 
       const elIndeterminate = /**  @type {LionCheckboxIndeterminate} */ (
-        el.querySelector(`${cfg.tagString}`)
+        el.querySelector(`${tagString}`)
       );
       // Assert
       expect(elIndeterminate?.hasAttribute('indeterminate')).to.be.true;
@@ -125,7 +116,7 @@ export function runCheckboxIndeterminateSuite(customConfig) {
       `)
       );
       const elIndeterminate = /**  @type {LionCheckboxIndeterminate} */ (
-        el.querySelector(`${cfg.tagString}`)
+        el.querySelector(`${tagString}`)
       );
 
       // Assert
@@ -147,7 +138,7 @@ export function runCheckboxIndeterminateSuite(customConfig) {
       `)
       );
       const elIndeterminate = /**  @type {LionCheckboxIndeterminate} */ (
-        el.querySelector(`${cfg.tagString}`)
+        el.querySelector(`${tagString}`)
       );
 
       const { _subCheckboxes } = getCheckboxIndeterminateMembers(elIndeterminate);
@@ -174,7 +165,7 @@ export function runCheckboxIndeterminateSuite(customConfig) {
       `)
       );
       const elIndeterminate = /**  @type {LionCheckboxIndeterminate} */ (
-        el.querySelector(`${cfg.tagString}`)
+        el.querySelector(`${tagString}`)
       );
       const { _subCheckboxes } = getCheckboxIndeterminateMembers(elIndeterminate);
 
@@ -203,7 +194,7 @@ export function runCheckboxIndeterminateSuite(customConfig) {
       `)
       );
       const elIndeterminate = /**  @type {LionCheckboxIndeterminate} */ (
-        el.querySelector(`${cfg.tagString}`)
+        el.querySelector(`${tagString}`)
       );
       const { _subCheckboxes } = getCheckboxIndeterminateMembers(elIndeterminate);
 
@@ -230,7 +221,7 @@ export function runCheckboxIndeterminateSuite(customConfig) {
     `);
 
       const elIndeterminate = /**  @type {LionCheckboxIndeterminate} */ (
-        el.querySelector(`${cfg.tagString}`)
+        el.querySelector(`${tagString}`)
       );
 
       // Assert
@@ -248,7 +239,7 @@ export function runCheckboxIndeterminateSuite(customConfig) {
     `);
 
       const elIndeterminate = /**  @type {LionCheckboxIndeterminate} */ (
-        el.querySelector(`${cfg.tagString}`)
+        el.querySelector(`${tagString}`)
       );
 
       // Assert
@@ -267,7 +258,7 @@ export function runCheckboxIndeterminateSuite(customConfig) {
     `);
 
       const elIndeterminate = /**  @type {LionCheckboxIndeterminate} */ (
-        el.querySelector(`${cfg.tagString}`)
+        el.querySelector(`${tagString}`)
       );
 
       // Assert
@@ -287,7 +278,7 @@ export function runCheckboxIndeterminateSuite(customConfig) {
     `);
 
       const elIndeterminate = /**  @type {LionCheckboxIndeterminate} */ (
-        el.querySelector(`${cfg.tagString}`)
+        el.querySelector(`${tagString}`)
       );
 
       // Assert
@@ -308,7 +299,7 @@ export function runCheckboxIndeterminateSuite(customConfig) {
       `)
       );
       const elIndeterminate = /**  @type {LionCheckboxIndeterminate} */ (
-        el.querySelector(`${cfg.tagString}`)
+        el.querySelector(`${tagString}`)
       );
       const { _subCheckboxes, _inputNode } = getCheckboxIndeterminateMembers(elIndeterminate);
 
@@ -337,7 +328,7 @@ export function runCheckboxIndeterminateSuite(customConfig) {
       `)
       );
       const elIndeterminate = /**  @type {LionCheckboxIndeterminate} */ (
-        el.querySelector(`${cfg.tagString}`)
+        el.querySelector(`${tagString}`)
       );
       const { _subCheckboxes, _inputNode } = getCheckboxIndeterminateMembers(elIndeterminate);
 
@@ -366,7 +357,7 @@ export function runCheckboxIndeterminateSuite(customConfig) {
       `)
       );
       const elIndeterminate = /**  @type {LionCheckboxIndeterminate} */ (
-        el.querySelector(`${cfg.tagString}`)
+        el.querySelector(`${tagString}`)
       );
       const { _subCheckboxes, _inputNode } = getCheckboxIndeterminateMembers(elIndeterminate);
 
@@ -396,7 +387,7 @@ export function runCheckboxIndeterminateSuite(customConfig) {
       `)
       );
       const elIndeterminate = /**  @type {LionCheckboxIndeterminate} */ (
-        el.querySelector(`${cfg.tagString}`)
+        el.querySelector(`${tagString}`)
       );
       const { _subCheckboxes, _inputNode } = getCheckboxIndeterminateMembers(elIndeterminate);
 
@@ -426,7 +417,7 @@ export function runCheckboxIndeterminateSuite(customConfig) {
       `)
       );
       const elIndeterminate = /**  @type {LionCheckboxIndeterminate} */ (
-        el.querySelector(`${cfg.tagString}`)
+        el.querySelector(`${tagString}`)
       );
       const { _subCheckboxes, _inputNode } = getCheckboxIndeterminateMembers(elIndeterminate);
 
@@ -455,7 +446,7 @@ export function runCheckboxIndeterminateSuite(customConfig) {
       `)
       );
       const elIndeterminate = /**  @type {LionCheckboxIndeterminate} */ (
-        el.querySelector(`${cfg.tagString}`)
+        el.querySelector(`${tagString}`)
       );
       const { _subCheckboxes, _inputNode } = getCheckboxIndeterminateMembers(elIndeterminate);
 
@@ -484,7 +475,7 @@ export function runCheckboxIndeterminateSuite(customConfig) {
       `)
       );
       const elIndeterminate = /**  @type {LionCheckboxIndeterminate} */ (
-        el.querySelector(`${cfg.tagString}`)
+        el.querySelector(`${tagString}`)
       );
       const { _subCheckboxes, _inputNode } = getCheckboxIndeterminateMembers(elIndeterminate);
 
@@ -514,7 +505,7 @@ export function runCheckboxIndeterminateSuite(customConfig) {
       `)
       );
       const elIndeterminate = /**  @type {LionCheckboxIndeterminate} */ (
-        el.querySelector(`${cfg.tagString}`)
+        el.querySelector(`${tagString}`)
       );
       const { _subCheckboxes, _inputNode } = getCheckboxIndeterminateMembers(elIndeterminate);
 
@@ -608,12 +599,12 @@ export function runCheckboxIndeterminateSuite(customConfig) {
     `);
 
       const elIndeterminate = /**  @type {LionCheckboxIndeterminate} */ (
-        el.querySelector(`${cfg.tagString}`)
+        el.querySelector(`${tagString}`)
       );
       expect(elIndeterminate.hasAttribute('indeterminate')).to.be.false;
 
       // Act
-      const newChild = document.createElement(/** @type {string} */ (cfg.childTagString));
+      const newChild = document.createElement(/** @type {string} */ (childTagString));
       elIndeterminate.appendChild(newChild);
       await elIndeterminate.updateComplete;
 
@@ -634,7 +625,7 @@ export function runCheckboxIndeterminateSuite(customConfig) {
     `);
 
       const elIndeterminate = /**  @type {LionCheckboxIndeterminate} */ (
-        el.querySelector(`${cfg.tagString}`)
+        el.querySelector(`${tagString}`)
       );
       expect(elIndeterminate.hasAttribute('indeterminate')).to.be.true;
       expect(elIndeterminate.checked).to.be.false;
@@ -756,7 +747,7 @@ export function runCheckboxIndeterminateSuite(customConfig) {
       `)
       );
       const elIndeterminate = /**  @type {LionCheckboxIndeterminate} */ (
-        el.querySelector(`${cfg.tagString}`)
+        el.querySelector(`${tagString}`)
       );
       const { _subCheckboxes } = getCheckboxIndeterminateMembers(elIndeterminate);
 
@@ -784,7 +775,7 @@ export function runCheckboxIndeterminateSuite(customConfig) {
         </${groupTag}>
       `);
         const elIndeterminate = /**  @type {LionCheckboxIndeterminate} */ (
-          el.querySelector(`${cfg.tagString}`)
+          el.querySelector(`${tagString}`)
         );
 
         expect(elIndeterminate.mixedState).to.be.true;
@@ -821,10 +812,10 @@ export function runCheckboxIndeterminateSuite(customConfig) {
         </${groupTag}>
       `);
         const elIndeterminate = /**  @type {LionCheckboxIndeterminate} */ (
-          el.querySelector(`${cfg.tagString}`)
+          el.querySelector(`${tagString}`)
         );
         const checkboxEls = /** @type {LionCheckbox[]} */ (
-          Array.from(el.querySelectorAll(`${cfg.childTagString}`))
+          Array.from(el.querySelectorAll(`${childTagString}`))
         );
 
         expect(checkboxEls.map(checkboxEl => checkboxEl.checked)).to.eql([true, false, false]);
@@ -856,10 +847,10 @@ export function runCheckboxIndeterminateSuite(customConfig) {
         </${groupTag}>
       `);
         const elIndeterminate = /**  @type {LionCheckboxIndeterminate} */ (
-          el.querySelector(`${cfg.tagString}`)
+          el.querySelector(`${tagString}`)
         );
         const checkboxEls = /** @type {LionCheckbox[]} */ (
-          Array.from(el.querySelectorAll(`${cfg.childTagString}`))
+          Array.from(el.querySelectorAll(`${childTagString}`))
         );
 
         // Check when all child boxes in indeterminate state are unchecked
@@ -946,7 +937,7 @@ export function runCheckboxIndeterminateSuite(customConfig) {
           </${groupTag}>
         `);
         const elIndeterminate = /**  @type {LionCheckboxIndeterminate} */ (
-          el.querySelector(`${cfg.tagString}`)
+          el.querySelector(`${tagString}`)
         );
 
         expect(

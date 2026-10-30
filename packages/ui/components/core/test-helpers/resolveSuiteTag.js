@@ -66,12 +66,23 @@ function defineUniqueTag(klass) {
  * `tagString` (and the older role-level keys such as `optionTagString`) stay supported as the
  * deprecated fallback for callers that already registered a tag but have no class to hand.
  *
- * @param {CustomElementConstructor|undefined} customKlass the class for this role, if the caller gave one
- * @param {string|null|undefined} deprecatedTagString a tag the caller registered itself (deprecated)
- * @param {string|CustomElementConstructor} lionDefault Lion's own tag name or class
+ * A role may also be given as a tag: native elements are a platform tag (`h2`, `div`) and have no
+ * class of their own, so a caller hands the tag it wants rendered for that role.
+ *
+ * A suite declares Lion's own element for a role as the default on the role itself
+ * (`classes: { host = LionAccordion, invoker = 'h2' } = {}`), so it can call this with the role and
+ * the deprecated key only; `lionDefault` stays for suites whose default is only known further down.
+ *
+ * @param {CustomElementConstructor|string|undefined} customKlassOrTag the class or tag for this role, if the caller gave one
+ * @param {string|null} [deprecatedTagString] a tag the caller registered itself (deprecated)
+ * @param {string|CustomElementConstructor} [lionDefault] Lion's own tag name or class
  * @returns {string}
  */
-export function resolveSuiteTag(customKlass, deprecatedTagString, lionDefault) {
+export function resolveSuiteTag(customKlassOrTag, deprecatedTagString, lionDefault) {
+  if (typeof customKlassOrTag === 'string') {
+    return customKlassOrTag;
+  }
+  const customKlass = customKlassOrTag;
   if (customKlass) {
     // A class that maps to a registered tag wins; a class that does not still gives the caller's
     // element a chance to be named by the deprecated tag key, and only then is a subclass defined.
@@ -80,5 +91,7 @@ export function resolveSuiteTag(customKlass, deprecatedTagString, lionDefault) {
   if (deprecatedTagString) {
     return deprecatedTagString;
   }
-  return typeof lionDefault === 'string' ? lionDefault : defineUniqueTag(lionDefault);
+  return typeof lionDefault === 'string'
+    ? lionDefault
+    : defineUniqueTag(/** @type {CustomElementConstructor} */ (lionDefault));
 }

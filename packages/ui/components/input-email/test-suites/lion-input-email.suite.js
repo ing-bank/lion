@@ -1,10 +1,11 @@
 import { expect, fixture as _fixture } from '@open-wc/testing';
 import { getInputMembers } from '@lion/ui/input-test-helpers.js';
 import '@lion/ui/define/lion-input-email.js';
+import { LionInputEmail } from '@lion/ui/input-email.js';
 import { resolveSuiteTag } from '../../core/test-helpers/resolveSuiteTag.js';
 
 /**
- * @typedef {import('../src/LionInputEmail.js').LionInputEmail} LionInputEmail
+ * @typedef {import('@lion/ui/types/test-suites.js').SuiteElement} SuiteElement
  * @typedef {import('lit').TemplateResult} TemplateResult
  */
 const fixture = /** @type {(arg: TemplateResult|string) => Promise<LionInputEmail>} */ (_fixture);
@@ -15,14 +16,13 @@ const fixture = /** @type {(arg: TemplateResult|string) => Promise<LionInputEmai
  * registered tag; see docs/guides/principles/test-suites.md.
  * `tagString`, `klass` and the older role tag keys are deprecated: pass `classes` instead (Lion
  * itself uses `classes` everywhere).
- * @param {{ classes?: Record<string, CustomElementConstructor>, tagString?: string }} [customConfig]
+ * @param {import('@lion/ui/types/test-suites.js').SuiteConfig<{host: SuiteElement}>} [customConfig]
  */
-export function runInputEmailSuite(customConfig = {}) {
-  const tagString = resolveSuiteTag(
-    customConfig.classes?.host,
-    customConfig.tagString,
-    'lion-input-email',
-  );
+export function runInputEmailSuite({
+  classes: { host = LionInputEmail } = {},
+  tagString: legacyTagString,
+} = {}) {
+  const tagString = resolveSuiteTag(host, legacyTagString);
 
   describe('<lion-input-email>', () => {
     it('has a type = text', async () => {

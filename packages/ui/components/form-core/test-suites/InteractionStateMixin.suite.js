@@ -15,17 +15,16 @@ import { resolveSuiteTag } from '../../core/test-helpers/resolveSuiteTag.js';
 
 /**
  * `tagString`, `klass` and the older role tag keys are deprecated: pass `classes` instead (Lion
- * itself uses `classes` everywhere).
- * @param {{ classes?: Record<string, CustomElementConstructor>, tagString?: string, allowedModelValueTypes?: Array.<ArrayConstructor | ObjectConstructor | NumberConstructor | BooleanConstructor | StringConstructor | DateConstructor>}} [customConfig]
+ * Runs the interaction-state suite. The caller hands the element to run against; leaving `host` out
+ * keeps the element this suite builds from the mixin.
+ * @typedef {import('@lion/ui/types/test-suites.js').SuiteElement} SuiteElement
+ * @param {import('@lion/ui/types/test-suites.js').SuiteConfig<{host: SuiteElement}, {allowedModelValueTypes?: any[]}>} [customConfig]
  */
-export function runInteractionStateMixinSuite(customConfig) {
-  const cfg = {
-    classes: /** @type {Record<string, CustomElementConstructor>} */ ({}),
-    tagString: null,
-    allowedModelValueTypes: [Array, Object, Number, Boolean, String, Date],
-    ...customConfig,
-  };
-
+export function runInteractionStateMixinSuite({
+  classes = {},
+  allowedModelValueTypes = [Array, Object, Number, Boolean, String, Date],
+  tagString: legacyTagString,
+} = {}) {
   describe(`InteractionStateMixin`, async () => {
     class IState extends InteractionStateMixin(ValidateMixin(LitElement)) {
       connectedCallback() {
@@ -45,8 +44,8 @@ export function runInteractionStateMixinSuite(customConfig) {
       }
     }
 
-    cfg.tagString = resolveSuiteTag(cfg.classes?.host, cfg.tagString, IState);
-    const tag = unsafeStatic(cfg.tagString);
+    const tagString = resolveSuiteTag(classes?.host, legacyTagString, IState);
+    const tag = unsafeStatic(tagString);
 
     it('sets states to false on init', async () => {
       const el = /** @type {IState} */ (await fixture(html`<${tag}></${tag}>`));
@@ -130,7 +129,7 @@ export function runInteractionStateMixinSuite(customConfig) {
 
     // This method actually tests the implementation of the _isPrefilled method.
     it(`can determine "prefilled" based on different modelValue types
-      (${cfg.allowedModelValueTypes.map(t => t.name).join(', ')})`, async () => {
+      (${allowedModelValueTypes.map(t => t.name).join(', ')})`, async () => {
       /** @typedef {{_inputNode: HTMLElement}} inputNodeInterface */
 
       const el = /** @type {IState & inputNodeInterface} */ (
@@ -149,29 +148,29 @@ export function runInteractionStateMixinSuite(customConfig) {
       };
 
       // Prefilled
-      if (cfg.allowedModelValueTypes.includes(Array)) {
+      if (allowedModelValueTypes.includes(Array)) {
         changeModelValueAndLeave(['not-empty']);
         expect(el.prefilled, 'not empty array should be "prefilled"').to.be.true;
         changeModelValueAndLeave([]);
         expect(el.prefilled, 'empty array should not be "prefilled"').to.be.false;
       }
-      if (cfg.allowedModelValueTypes.includes(Object)) {
+      if (allowedModelValueTypes.includes(Object)) {
         changeModelValueAndLeave({ not: 'empty' });
         expect(el.prefilled, 'not empty object should be "prefilled"').to.be.true;
         changeModelValueAndLeave({});
         expect(el.prefilled, 'empty object should not be "prefilled"').to.be.false;
       }
-      if (cfg.allowedModelValueTypes.includes(Number)) {
+      if (allowedModelValueTypes.includes(Number)) {
         changeModelValueAndLeave(0);
         expect(el.prefilled, 'numbers should be "prefilled"').to.be.true;
       }
-      if (cfg.allowedModelValueTypes.includes(String)) {
+      if (allowedModelValueTypes.includes(String)) {
         changeModelValueAndLeave(false);
         expect(el.prefilled, 'booleans should be "prefilled"').to.be.true;
         changeModelValueAndLeave('');
         expect(el.prefilled, 'empty string should not be "prefilled"').to.be.false;
       }
-      if (cfg.allowedModelValueTypes.includes(Date)) {
+      if (allowedModelValueTypes.includes(Date)) {
         changeModelValueAndLeave(new Date());
         expect(el.prefilled, 'Dates should be "prefilled"').to.be.true;
       }

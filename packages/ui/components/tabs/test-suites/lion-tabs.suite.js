@@ -1,12 +1,13 @@
 import { html } from 'lit/static-html.js';
 import { unsafeStatic, expect, fixture } from '@open-wc/testing';
 import sinon from 'sinon';
+import { LionTabs } from '@lion/ui/tabs.js';
 import { resolveSuiteTag } from '../../core/test-helpers/resolveSuiteTag.js';
 import { isActiveElement } from '../../core/test-helpers/isActiveElement.js';
 import '@lion/ui/define/lion-tabs.js';
 
 /**
- * @typedef {import('../src/LionTabs.js').LionTabs} LionTabs
+ * @typedef {import('@lion/ui/types/test-suites.js').SuiteElement} SuiteElement
  */
 
 /**
@@ -15,16 +16,13 @@ import '@lion/ui/define/lion-tabs.js';
  * registered tag; see docs/guides/principles/test-suites.md.
  * `tagString`, `klass` and the older role tag keys are deprecated: pass `classes` instead (Lion
  * itself uses `classes` everywhere).
- * @param {{ classes?: Record<string, CustomElementConstructor>, tagString?: string }} [customConfig]
+ * @param {import('@lion/ui/types/test-suites.js').SuiteConfig<{host: SuiteElement}>} [customConfig]
  */
-export function runTabsSuite(customConfig = {}) {
-  const cfg = {
-    classes: /** @type {Record<string, CustomElementConstructor>} */ ({}),
-    tagString: 'lion-tabs',
-    ...customConfig,
-  };
-  cfg.tagString = resolveSuiteTag(cfg.classes.host, cfg.tagString, 'lion-tabs');
-  const tag = unsafeStatic(cfg.tagString);
+export function runTabsSuite({
+  classes: { host = LionTabs } = {},
+  tagString: legacyTagString,
+} = {}) {
+  const tag = unsafeStatic(resolveSuiteTag(host, legacyTagString));
 
   const basicTabs = html`
     <${tag}>

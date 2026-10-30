@@ -37,21 +37,6 @@ class FormatClass extends FormatMixin(LitElement) {
 }
 
 /**
- * @typedef {object} FormatMixinSuiteConfig
- * @property {Record<string, CustomElementConstructor>} [classes] - Optional. Elements you replace; keys are Lion's tag names without the `lion-` prefix
- * @property {string | null} [tagString] - Optional. Element tag name; if omitted, one will be auto-generated via defineCE()
- * @property {string | null} [childTagString] - Optional. Not currently used
- * @property {ArrayConstructor | ObjectConstructor | NumberConstructor | BooleanConstructor | StringConstructor | DateConstructor | 'iban' | 'email'} modelValueType - REQUIRED. The model value type for this component
- * @property {(opts: { toggleValue: boolean, viewValue: boolean }) => any} [valueToggler] - Optional. Provide different test values for toggleValue=false vs toggleValue=true. If not provided, defaults will be generated based on modelValueType.
- * @property {(el: FormatClass) => any} [getExpectedInitialModelValue] - Optional. Expected initial modelValue state when element is created without a value. If not provided, defaults will be generated based on modelValueType.
- * @property {(el: FormatClass) => any} [getExpectedInitialFormattedValue] - Optional. Expected initial formattedValue state when element is created without a value. If not provided, defaults will be generated based on modelValueType.
- * @property {(el: FormatClass) => any} [getExpectedInitialSerializedValue] - Optional. Expected initial serializedValue state when element is created without a value. If not provided, defaults will be generated based on modelValueType.
- * @property {(el: FormatClass) => any} [getExpectedModelValueForEmptyInputNode] - Optional. Expected modelValue after user clears the input node value. Defaults to empty string.
- * @property {(value: string, opts?: any) => any} [parser] - Optional. Parser override used by tests. When provided, it is applied before connectedCallback so fallback init sync uses it.
- * @property {number} [valueChangeCounterOffset] - Optional. Offset for model-value-changed event counter. Use 0 for most types, 1 for Date types where parseDate() creates new objects. If not provided, defaults will be generated based on modelValueType.
- */
-
-/**
  * Creates default valueToggler based on modelValueType for backwards compatibility
  * @param {ArrayConstructor | ObjectConstructor | NumberConstructor | BooleanConstructor | StringConstructor | DateConstructor | 'iban' | 'email'} modelValueType
  * @returns {(opts: { toggleValue: boolean, viewValue: boolean }) => any}
@@ -157,41 +142,60 @@ function createDefaultValueChangeCounterOffset(modelValueType) {
   return 0;
 }
 
-/**
- * @param {FormatMixinSuiteConfig} [customConfig]
- */
-export function runFormatMixinSuite(customConfig) {
-  const cfg = {
-    ...customConfig,
-  };
+/** @typedef {import('@lion/ui/types/test-suites.js').SuiteElement} SuiteElement */
 
-  // Validate that modelValueType is provided (required for generating defaults)
-  if (!cfg.modelValueType) {
+/**
+ * Runs the `FormatMixin` behavioural suite. The caller hands the element to run against (leaving
+ * `host` out keeps the element this suite builds from the mixin) and says what the model value type
+ * is; the expectations that follow from that type are generated, and every one of them can be
+ * overridden.
+ * @param {import('@lion/ui/types/test-suites.js').SuiteConfig<{host: SuiteElement}, {
+ *   modelValueType: ArrayConstructor | ObjectConstructor | NumberConstructor | BooleanConstructor | StringConstructor | DateConstructor | 'iban' | 'email',
+ *   valueToggler?: (opts: { toggleValue: boolean, viewValue: boolean }) => any,
+ *   getExpectedInitialModelValue?: (el: FormatClass) => any,
+ *   getExpectedInitialFormattedValue?: (el: FormatClass) => any,
+ *   getExpectedInitialSerializedValue?: (el: FormatClass) => any,
+ *   getExpectedModelValueForEmptyInputNode?: (el: FormatClass) => any,
+ *   parser?: (value: string, opts?: any) => any,
+ *   valueChangeCounterOffset?: number,
+ * }>} [customConfig]
+ */
+export function runFormatMixinSuite({
+  classes = {},
+  tagString: legacyTagString,
+  modelValueType,
+  valueToggler: customValueToggler,
+  getExpectedInitialModelValue: customGetExpectedInitialModelValue,
+  getExpectedInitialFormattedValue: customGetExpectedInitialFormattedValue,
+  getExpectedInitialSerializedValue: customGetExpectedInitialSerializedValue,
+  getExpectedModelValueForEmptyInputNode: customGetExpectedModelValueForEmptyInputNode,
+  parser: customParser,
+  valueChangeCounterOffset: customValueChangeCounterOffset,
+} = {}) {
+  if (!modelValueType) {
     throw new Error(
       'FormatMixinSuite: modelValueType is REQUIRED in config. ' +
         'Provide the model value type for this component (e.g., String, Number, Date, Object, Boolean, Array, "iban", "email").',
     );
   }
 
-  // Use provided values or generate defaults based on modelValueType
-  const valueToggler = cfg.valueToggler || createDefaultValueToggler(cfg.modelValueType);
+  const valueToggler = customValueToggler || createDefaultValueToggler(modelValueType);
   const getExpectedInitialModelValue =
-    cfg.getExpectedInitialModelValue ||
-    createDefaultGetExpectedInitialModelValue(cfg.modelValueType);
+    customGetExpectedInitialModelValue || createDefaultGetExpectedInitialModelValue(modelValueType);
   const getExpectedInitialFormattedValue =
-    cfg.getExpectedInitialFormattedValue ||
-    createDefaultGetExpectedInitialFormattedValue(cfg.modelValueType);
+    customGetExpectedInitialFormattedValue ||
+    createDefaultGetExpectedInitialFormattedValue(modelValueType);
   const getExpectedInitialSerializedValue =
-    cfg.getExpectedInitialSerializedValue ||
-    createDefaultGetExpectedInitialSerializedValue(cfg.modelValueType);
+    customGetExpectedInitialSerializedValue ||
+    createDefaultGetExpectedInitialSerializedValue(modelValueType);
   const getExpectedModelValueForEmptyInputNode =
-    cfg.getExpectedModelValueForEmptyInputNode || (() => '');
+    customGetExpectedModelValueForEmptyInputNode || (() => '');
   const defaultParser = (/** @type {string} */ value) => value.replace('foo: ', '');
-  const parser = cfg.parser || defaultParser;
+  const parser = customParser || defaultParser;
   const valueChangeCounterOffset =
-    cfg.valueChangeCounterOffset !== undefined
-      ? cfg.valueChangeCounterOffset
-      : createDefaultValueChangeCounterOffset(cfg.modelValueType);
+    customValueChangeCounterOffset !== undefined
+      ? customValueChangeCounterOffset
+      : createDefaultValueChangeCounterOffset(modelValueType);
 
   /**
    * Generates test values by delegating to the component's valueToggler function.
@@ -260,8 +264,7 @@ export function runFormatMixinSuite(customConfig) {
     let fooFormat;
 
     before(async () => {
-      cfg.tagString = resolveSuiteTag(cfg.classes?.host, cfg.tagString, FormatClass);
-      tag = unsafeStatic(cfg.tagString);
+      tag = unsafeStatic(resolveSuiteTag(classes?.host, legacyTagString, FormatClass));
 
       fooFormat = await fixture(html`
         <${tag}
@@ -587,7 +590,7 @@ export function runFormatMixinSuite(customConfig) {
 
       describe('Formatter', () => {
         it('only calls the formatter for valid values on `user-input-changed` ', async () => {
-          if (cfg.modelValueType === Object) {
+          if (modelValueType === Object) {
             return;
           }
 
@@ -852,7 +855,7 @@ export function runFormatMixinSuite(customConfig) {
         });
 
         it('does only calculate derived values as consequence of user input when preprocessed value is different from previous view value', async () => {
-          if (cfg.modelValueType === Object) return;
+          if (modelValueType === Object) return;
 
           const val = generateValueBasedOnType({ viewValue: true }) || 'init-value';
           if (typeof val !== 'string') return;

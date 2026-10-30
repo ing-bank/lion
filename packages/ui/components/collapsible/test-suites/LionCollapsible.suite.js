@@ -2,10 +2,10 @@ import { expect, fixture as _fixture, unsafeStatic } from '@open-wc/testing';
 import { html } from 'lit/static-html.js';
 
 import '@lion/ui/define/lion-collapsible.js';
+import { LionCollapsible } from '@lion/ui/collapsible.js';
 import { resolveSuiteTag } from '../../core/test-helpers/resolveSuiteTag.js';
 
 /**
- * @typedef {import('../src/LionCollapsible.js').LionCollapsible} LionCollapsible
  * @typedef {import('lit').TemplateResult} TemplateResult
  */
 
@@ -20,29 +20,35 @@ function getProtectedMembers(el) {
 }
 
 /**
- * Runs the `<lion-collapsible>` behavioural suite. Pass `tagString` to run it against your own
- * registered element (see docs/guides/principles/test-suites.md).
- * `tagString`, `klass` and the older role tag keys are deprecated: pass `classes` instead (Lion
- * itself uses `classes` everywhere).
- * @param {{ classes?: Record<string, CustomElementConstructor>, tagString?: string }} [customConfig]
+ * @typedef {import('@lion/ui/types/test-suites.js').SuiteElement} SuiteElement
  */
-export function runCollapsibleSuite(customConfig = {}) {
-  const cfg = {
-    classes: /** @type {Record<string, CustomElementConstructor>} */ ({}),
-    tagString: 'lion-collapsible',
-    ...customConfig,
-  };
 
-  cfg.tagString = resolveSuiteTag(cfg.classes.host, cfg.tagString, 'lion-collapsible');
-  const tag = unsafeStatic(cfg.tagString);
+/**
+ * Runs the `<lion-collapsible>` behavioural suite. The caller hands the elements it should run
+ * against; anything left out keeps Lion's own element. The two slots are native elements, so those
+ * roles take their tag (`invoker: 'button'`, `content: 'div'`).
+ * @param {import('@lion/ui/types/test-suites.js').SuiteConfig<{host: SuiteElement; invoker: SuiteElement; content: SuiteElement}>} [customConfig]
+ */
+export function runCollapsibleSuite({
+  classes: {
+    host: hostEl = LionCollapsible,
+    // the two slots are native elements, so their default is the tag
+    invoker: invokerEl = 'button',
+    content: contentEl = 'div',
+  } = {},
+  tagString,
+} = {}) {
+  const tag = unsafeStatic(resolveSuiteTag(hostEl, tagString));
+  const invokerRef = unsafeStatic(resolveSuiteTag(invokerEl));
+  const contentRef = unsafeStatic(resolveSuiteTag(contentEl));
   const fixture = /** @type {(arg: TemplateResult) => Promise<LionCollapsible>} */ (_fixture);
 
   const collapsibleTemplate = html`
-    <button slot="invoker">More about cars</button>
-    <div slot="content" style="font-size: 12px; line-height: 16px; font-family: Arial;">
+    <${invokerRef} slot="invoker">More about cars</${invokerRef}>
+    <${contentRef} slot="content" style="font-size: 12px; line-height: 16px; font-family: Arial;">
       Most definitions of cars say that they run primarily on roads, seat one to eight people, have
       four tires, and mainly transport people rather than goods.
-    </div>
+    </${contentRef}>
   `;
   let isCollapsibleOpen = false;
   /** @param {boolean} state */

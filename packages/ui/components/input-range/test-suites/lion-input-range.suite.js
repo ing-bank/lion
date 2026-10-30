@@ -1,10 +1,11 @@
 import { html } from 'lit/static-html.js';
 import { unsafeStatic, expect, fixture as _fixture, nextFrame } from '@open-wc/testing';
 import '@lion/ui/define/lion-input-range.js';
+import { LionInputRange } from '@lion/ui/input-range.js';
 import { resolveSuiteTag } from '../../core/test-helpers/resolveSuiteTag.js';
 
 /**
- * @typedef {import('../src/LionInputRange.js').LionInputRange} LionInputRange
+ * @typedef {import('@lion/ui/types/test-suites.js').SuiteElement} SuiteElement
  * @typedef {import('lit').TemplateResult} TemplateResult
  */
 const fixture = /** @type {(arg: TemplateResult|string) => Promise<LionInputRange>} */ (_fixture);
@@ -15,20 +16,18 @@ const fixture = /** @type {(arg: TemplateResult|string) => Promise<LionInputRang
  * registered tag; see docs/guides/principles/test-suites.md.
  * `tagString`, `klass` and the older role tag keys are deprecated: pass `classes` instead (Lion
  * itself uses `classes` everywhere).
- * @param {{ classes?: Record<string, CustomElementConstructor>, tagString?: string }} [customConfig]
+ * @param {import('@lion/ui/types/test-suites.js').SuiteConfig<{host: SuiteElement}>} [customConfig]
  */
-export function runInputRangeSuite(customConfig = {}) {
-  const cfg = {
-    classes: /** @type {Record<string, CustomElementConstructor>} */ ({}),
-    tagString: 'lion-input-range',
-    ...customConfig,
-  };
-  cfg.tagString = resolveSuiteTag(cfg.classes.host, cfg.tagString, 'lion-input-range');
-  const tag = unsafeStatic(cfg.tagString);
+export function runInputRangeSuite({
+  classes: { host = LionInputRange } = {},
+  tagString: legacyTagString,
+} = {}) {
+  const tagString = resolveSuiteTag(host, legacyTagString);
+  const tag = unsafeStatic(tagString);
 
   describe('<lion-input-range>', () => {
     it('has a type = range', async () => {
-      const el = await fixture(`<${cfg.tagString}></${cfg.tagString}>`);
+      const el = await fixture(`<${tagString}></${tagString}>`);
       expect(el._inputNode.type).to.equal('range');
     });
 
@@ -49,7 +48,7 @@ export function runInputRangeSuite(customConfig = {}) {
     });
 
     it('displays 2 tick labels (min and max values) by default', async () => {
-      const el = await fixture(`<${cfg.tagString} min="100" max="200"></${cfg.tagString}>`);
+      const el = await fixture(`<${tagString} min="100" max="200"></${tagString}>`);
       expect(el.shadowRoot?.querySelectorAll('.input-range__limits span').length).to.equal(2);
       expect(
         /** @type {HTMLElement} */ (
@@ -68,7 +67,7 @@ export function runInputRangeSuite(customConfig = {}) {
     });
 
     it('update min and max attributes when min and max property change', async () => {
-      const el = await fixture(`<${cfg.tagString} min="100" max="200"></${cfg.tagString}>`);
+      const el = await fixture(`<${tagString} min="100" max="200"></${tagString}>`);
       el.min = 120;
       el.max = 220;
       await nextFrame(); // sync to native element takes some time
@@ -78,7 +77,7 @@ export function runInputRangeSuite(customConfig = {}) {
 
     it('can hide the tick labels', async () => {
       const el = await fixture(
-        `<${cfg.tagString} min="100" max="200" no-min-max-labels></${cfg.tagString}>`,
+        `<${tagString} min="100" max="200" no-min-max-labels></${tagString}>`,
       );
       expect(el.shadowRoot?.querySelectorAll('.input-group__input')[0]).dom.to.equal(`
         <div class="input-group__input">
@@ -98,12 +97,12 @@ export function runInputRangeSuite(customConfig = {}) {
     });
 
     it('is accessible', async () => {
-      const el = await fixture(`<${cfg.tagString} label="range"></${cfg.tagString}>`);
+      const el = await fixture(`<${tagString} label="range"></${tagString}>`);
       await expect(el).to.be.accessible();
     });
 
     it('is accessible when disabled', async () => {
-      const el = await fixture(`<${cfg.tagString} label="range" disabled></${cfg.tagString}>`);
+      const el = await fixture(`<${tagString} label="range" disabled></${tagString}>`);
       await expect(el).to.be.accessible();
     });
 

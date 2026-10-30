@@ -1,10 +1,11 @@
 import { html } from 'lit/static-html.js';
 import { unsafeStatic, expect, fixture as _fixture } from '@open-wc/testing';
 import '@lion/ui/define/lion-progress-indicator.js';
+import { LionProgressIndicator } from '@lion/ui/progress-indicator.js';
 import { resolveSuiteTag } from '../../core/test-helpers/resolveSuiteTag.js';
 
 /**
- * @typedef {import('../src/LionProgressIndicator.js').LionProgressIndicator} LionProgressIndicator
+ * @typedef {import('@lion/ui/types/test-suites.js').SuiteElement} SuiteElement
  * @typedef {import('lit').TemplateResult} TemplateResult
  */
 
@@ -16,16 +17,13 @@ const fixture = /** @type {(arg: TemplateResult) => Promise<LionProgressIndicato
  * registered tag; see docs/guides/principles/test-suites.md.
  * `tagString`, `klass` and the older role tag keys are deprecated: pass `classes` instead (Lion
  * itself uses `classes` everywhere).
- * @param {{ classes?: Record<string, CustomElementConstructor>, tagString?: string }} [customConfig]
+ * @param {import('@lion/ui/types/test-suites.js').SuiteConfig<{host: SuiteElement}>} [customConfig]
  */
-export function runProgressIndicatorSuite(customConfig = {}) {
-  const cfg = {
-    classes: /** @type {Record<string, CustomElementConstructor>} */ ({}),
-    tagString: 'lion-progress-indicator',
-    ...customConfig,
-  };
-  cfg.tagString = resolveSuiteTag(cfg.classes.host, cfg.tagString, 'lion-progress-indicator');
-  const tag = unsafeStatic(cfg.tagString);
+export function runProgressIndicatorSuite({
+  classes: { host = LionProgressIndicator } = {},
+  tagString: legacyTagString,
+} = {}) {
+  const tag = unsafeStatic(resolveSuiteTag(host, legacyTagString));
 
   describe('lion-progress-indicator', () => {
     describe('indeterminate', async () => {

@@ -1,10 +1,11 @@
 import { html } from 'lit/static-html.js';
 import { unsafeStatic, expect, fixture, oneEvent } from '@open-wc/testing';
 import '@lion/ui/define/lion-step.js';
+import { LionStep } from '@lion/ui/steps.js';
 import { resolveSuiteTag } from '../../core/test-helpers/resolveSuiteTag.js';
 
 /**
- * @typedef {import('../src/LionStep.js').LionStep} LionStep
+ * @typedef {import('@lion/ui/types/test-suites.js').SuiteElement} SuiteElement
  */
 
 /**
@@ -13,16 +14,13 @@ import { resolveSuiteTag } from '../../core/test-helpers/resolveSuiteTag.js';
  * registered tag; see docs/guides/principles/test-suites.md.
  * `tagString`, `klass` and the older role tag keys are deprecated: pass `classes` instead (Lion
  * itself uses `classes` everywhere).
- * @param {{ classes?: Record<string, CustomElementConstructor>, tagString?: string }} [customConfig]
+ * @param {import('@lion/ui/types/test-suites.js').SuiteConfig<{host: SuiteElement}>} [customConfig]
  */
-export function runStepSuite(customConfig = {}) {
-  const cfg = {
-    classes: /** @type {Record<string, CustomElementConstructor>} */ ({}),
-    tagString: 'lion-step',
-    ...customConfig,
-  };
-  cfg.tagString = resolveSuiteTag(cfg.classes.host, cfg.tagString, 'lion-step');
-  const tag = unsafeStatic(cfg.tagString);
+export function runStepSuite({
+  classes: { host = LionStep } = {},
+  tagString: legacyTagString,
+} = {}) {
+  const tag = unsafeStatic(resolveSuiteTag(host, legacyTagString));
 
   describe('lion-step', () => {
     it('has a condition which allows it to become active (condition is true by default)', async () => {

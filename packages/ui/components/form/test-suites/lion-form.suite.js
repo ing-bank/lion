@@ -2,14 +2,18 @@ import { html } from 'lit/static-html.js';
 import { LionField, Required } from '@lion/ui/form-core.js';
 import '@lion/ui/define/lion-validation-feedback.js';
 import { LionFieldset } from '@lion/ui/fieldset.js';
+import { LionCheckbox, LionCheckboxGroup } from '@lion/ui/checkbox-group.js';
 import '@lion/ui/define/lion-checkbox-group.js';
+import { LionRadio, LionRadioGroup } from '@lion/ui/radio-group.js';
 import '@lion/ui/define/lion-radio-group.js';
 import '@lion/ui/define/lion-fieldset.js';
 import '@lion/ui/define/lion-checkbox.js';
+import { LionListbox, LionOption } from '@lion/ui/listbox.js';
 import '@lion/ui/define/lion-listbox.js';
 import '@lion/ui/define/lion-option.js';
 import '@lion/ui/define/lion-field.js';
 import '@lion/ui/define/lion-radio.js';
+import { LionForm } from '@lion/ui/form.js';
 import '@lion/ui/define/lion-form.js';
 import { spy } from 'sinon';
 import {
@@ -24,54 +28,51 @@ import { resolveSuiteTag } from '../../core/test-helpers/resolveSuiteTag.js';
 import { isActiveElement } from '../../core/test-helpers/isActiveElement.js';
 
 /**
+ * @typedef {import('@lion/ui/types/test-suites.js').SuiteElement} SuiteElement
  * Runs the `lion-form` behavioural suite, moved out of `test/lion-form.test.js` so a Subclasser can run
  * the same guarantees against its own element. Pass `tagString` to point it at your registered
  * tag; see docs/guides/principles/test-suites.md.
  * `tagString`, `klass` and the older role tag keys are deprecated: pass `classes` instead (Lion
  * itself uses `classes` everywhere).
- * @param {{ classes?: Record<string, CustomElementConstructor>, checkboxGroupTagString?: string, checkboxTagString?: string, fieldsetTagString?: string, listboxTagString?: string, optionTagString?: string, radioGroupTagString?: string, radioTagString?: string, tagString?: string }} [customConfig]
+ * @param {import('@lion/ui/types/test-suites.js').SuiteConfig<{'checkbox-group': SuiteElement; 'radio-group': SuiteElement; checkbox: SuiteElement; fieldset: SuiteElement; host: SuiteElement; listbox: SuiteElement; option: SuiteElement; radio: SuiteElement}, {checkboxGroupTagString?: any; checkboxTagString?: any; fieldsetTagString?: any; listboxTagString?: any; optionTagString?: any; radioGroupTagString?: any; radioTagString?: any}>} [customConfig]
  */
-export function runFormSuite(customConfig = {}) {
-  const cfg = {
-    classes: /** @type {Record<string, CustomElementConstructor>} */ ({}),
-    tagString: 'lion-form',
-    ...customConfig,
-  };
-  cfg.tagString = resolveSuiteTag(cfg.classes.host, cfg.tagString, 'lion-form');
-  const tag = unsafeStatic(cfg.tagString);
-  const tagNameCheckboxGroup = resolveSuiteTag(
-    cfg.classes['checkbox-group'],
-    cfg.checkboxGroupTagString,
-    'lion-checkbox-group',
-  );
+export function runFormSuite({
+  classes: {
+    host: hostEl = LionForm,
+    'checkbox-group': roleCheckboxGroup = LionCheckboxGroup,
+    'radio-group': roleRadioGroup = LionRadioGroup,
+    fieldset: roleFieldset = LionFieldset,
+    checkbox: roleCheckbox = LionCheckbox,
+    listbox: roleListbox = LionListbox,
+    option: roleOption = LionOption,
+    radio: roleRadio = LionRadio,
+  } = {},
+  tagString: legacyTagString,
+  checkboxGroupTagString: legacyCheckboxGroupTagString,
+  radioGroupTagString: legacyRadioGroupTagString,
+  fieldsetTagString: legacyFieldsetTagString,
+  checkboxTagString: legacyCheckboxTagString,
+  listboxTagString: legacyListboxTagString,
+  optionTagString: legacyOptionTagString,
+  radioTagString: legacyRadioTagString,
+} = {}) {
+  const tag = unsafeStatic(resolveSuiteTag(hostEl, legacyTagString));
+  const tagNameCheckboxGroup = resolveSuiteTag(roleCheckboxGroup, legacyCheckboxGroupTagString);
   const tagCheckboxGroup = unsafeStatic(tagNameCheckboxGroup);
-  const tagNameRadioGroup = resolveSuiteTag(
-    cfg.classes['radio-group'],
-    cfg.radioGroupTagString,
-    'lion-radio-group',
-  );
+  const tagNameRadioGroup = resolveSuiteTag(roleRadioGroup, legacyRadioGroupTagString);
   const tagRadioGroup = unsafeStatic(tagNameRadioGroup);
-  const tagNameFieldset = resolveSuiteTag(
-    cfg.classes.fieldset,
-    cfg.fieldsetTagString,
-    'lion-fieldset',
-  );
+  const tagNameFieldset = resolveSuiteTag(roleFieldset, legacyFieldsetTagString);
   const tagFieldset = unsafeStatic(tagNameFieldset);
-  const tagNameCheckbox = resolveSuiteTag(
-    cfg.classes.checkbox,
-    cfg.checkboxTagString,
-    'lion-checkbox',
-  );
+  const tagNameCheckbox = resolveSuiteTag(roleCheckbox, legacyCheckboxTagString);
   const tagCheckbox = unsafeStatic(tagNameCheckbox);
-  const tagNameListbox = resolveSuiteTag(cfg.classes.listbox, cfg.listboxTagString, 'lion-listbox');
+  const tagNameListbox = resolveSuiteTag(roleListbox, legacyListboxTagString);
   const tagListbox = unsafeStatic(tagNameListbox);
-  const tagNameOption = resolveSuiteTag(cfg.classes.option, cfg.optionTagString, 'lion-option');
+  const tagNameOption = resolveSuiteTag(roleOption, legacyOptionTagString);
   const tagOption = unsafeStatic(tagNameOption);
-  const tagNameRadio = resolveSuiteTag(cfg.classes.radio, cfg.radioTagString, 'lion-radio');
+  const tagNameRadio = resolveSuiteTag(roleRadio, legacyRadioTagString);
   const tagRadio = unsafeStatic(tagNameRadio);
 
   /**
-   * @typedef {import('../src/LionForm.js').LionForm} LionForm
    * @typedef {import('lit').TemplateResult} TemplateResult
    */
   const fixture = /** @type {(arg: TemplateResult) => Promise<LionForm>} */ (_fixture);

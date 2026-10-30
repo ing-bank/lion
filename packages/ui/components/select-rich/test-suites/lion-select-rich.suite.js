@@ -7,6 +7,7 @@ import { LionOption } from '@lion/ui/listbox.js';
 import '@lion/ui/define/lion-select-rich.js';
 import '@lion/ui/define/lion-listbox.js';
 import '@lion/ui/define/lion-option.js';
+import { LionTabs } from '@lion/ui/tabs.js';
 import '@lion/ui/define/lion-tabs.js';
 import { LitElement, nothing } from 'lit';
 import sinon from 'sinon';
@@ -34,24 +35,26 @@ import { isElementVisible } from '../../core/test-helpers/isElementVisible.js';
 const fixture = /** @type {(arg: TemplateResult) => Promise<LionSelectRich>} */ (_fixture);
 
 /**
- * Runs the `lion-select-rich` behavioural suite, moved out of `test/lion-select-rich.test.js` so a Subclasser can run
- * the same guarantees against its own element. Pass `tagString` to point it at your registered
- * tag; see docs/guides/principles/test-suites.md.
- * `tagString`, `klass` and the older role tag keys are deprecated: pass `classes` instead (Lion
- * itself uses `classes` everywhere).
- * @param {{ classes?: Record<string, CustomElementConstructor>, optionTagString?: string, tabsTagString?: string, tagString?: string }} [customConfig]
+ * Runs the `lion-select-rich` behavioural suite. The caller hands the elements it should run against;
+ * anything left out keeps Lion's own element.
+ * @typedef {import('@lion/ui/types/test-suites.js').SuiteElement} SuiteElement
+ * @param {import('@lion/ui/types/test-suites.js').SuiteConfig<{host: SuiteElement; option: SuiteElement; tabs: SuiteElement}>} [customConfig]
  */
-export function runSelectRichSuite(customConfig = {}) {
-  const cfg = {
-    classes: /** @type {Record<string, CustomElementConstructor>} */ ({}),
-    tagString: 'lion-select-rich',
-    ...customConfig,
-  };
-  cfg.tagString = resolveSuiteTag(cfg.classes.host, cfg.tagString, 'lion-select-rich');
-  const hostTag = unsafeStatic(cfg.tagString);
-  const tagNameOption = resolveSuiteTag(cfg.classes.option, cfg.optionTagString, 'lion-option');
+export function runSelectRichSuite({
+  classes: {
+    host: hostEl = LionSelectRich,
+    option: optionEl = LionOption,
+    tabs: tabsEl = LionTabs,
+  } = {},
+  tagString: legacyTagString,
+  optionTagString: legacyOptionTagString,
+  tabsTagString: legacyTabsTagString,
+} = {}) {
+  const hostTagString = resolveSuiteTag(hostEl, legacyTagString);
+  const hostTag = unsafeStatic(hostTagString);
+  const tagNameOption = resolveSuiteTag(optionEl, legacyOptionTagString);
   const tagOption = unsafeStatic(tagNameOption);
-  const tagNameTabs = resolveSuiteTag(cfg.classes.tabs, cfg.tabsTagString, 'lion-tabs');
+  const tagNameTabs = resolveSuiteTag(tabsEl, legacyTabsTagString);
   const tagTabs = unsafeStatic(tagNameTabs);
 
   describe('lion-select-rich', () => {
@@ -729,7 +732,7 @@ export function runSelectRichSuite(customConfig = {}) {
         `);
 
         const selectRich = /** @type {LionSelectRich} */ (
-          /** @type {ShadowRoot} */ (el.shadowRoot).querySelector(cfg.tagString)
+          /** @type {ShadowRoot} */ (el.shadowRoot).querySelector(hostTagString)
         );
 
         const { _invokerNode, _listboxNode } = getSelectRichMembers(selectRich);
@@ -856,7 +859,7 @@ export function runSelectRichSuite(customConfig = {}) {
             getInvoker()?.shadowRoot?.querySelector('#content-wrapper')?.textContent?.trim();
           const getDialog = () =>
             wrapperElementShadowRoot
-              ?.querySelector(cfg.tagString)
+              ?.querySelector(hostTagString)
               ?.shadowRoot?.querySelector('dialog');
           const isDialogVisible = () =>
             // @ts-ignore
@@ -990,7 +993,7 @@ export function runSelectRichSuite(customConfig = {}) {
             getInvoker()?.shadowRoot?.querySelector('#content-wrapper')?.textContent?.trim();
           const getDialog = () =>
             wrapperElementShadowRoot
-              ?.querySelector(cfg.tagString)
+              ?.querySelector(hostTagString)
               ?.shadowRoot?.querySelector('dialog');
           const isDialogVisible = () =>
             // @ts-ignore
@@ -1128,7 +1131,7 @@ export function runSelectRichSuite(customConfig = {}) {
             getInvoker()?.shadowRoot?.querySelector('#content-wrapper')?.textContent?.trim();
           const getDialog = () =>
             wrapperElementShadowRoot
-              ?.querySelector(cfg.tagString)
+              ?.querySelector(hostTagString)
               ?.shadowRoot?.querySelector('dialog');
           const isDialogVisible = () =>
             // @ts-ignore
@@ -1157,7 +1160,7 @@ export function runSelectRichSuite(customConfig = {}) {
 
     describe('Teardown', () => {
       it('does not throw when tearing down before the overlay controller is set up', () => {
-        const el = /** @type {LionSelectRich} */ (document.createElement(cfg.tagString));
+        const el = /** @type {LionSelectRich} */ (document.createElement(hostTagString));
 
         // @ts-expect-error [allow-private] in tests
         expect(() => el._teardownOverlayCtrl()).not.to.throw();

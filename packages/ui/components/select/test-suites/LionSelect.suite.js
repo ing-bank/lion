@@ -1,10 +1,11 @@
 import '@lion/ui/define/lion-select.js';
+import { LionSelect } from '@lion/ui/select.js';
 import { aTimeout, expect, fixture, unsafeStatic } from '@open-wc/testing';
 import { html } from 'lit/static-html.js';
 import { resolveSuiteTag } from '../../core/test-helpers/resolveSuiteTag.js';
 
 /**
- * @typedef {import('../src/LionSelect.js').LionSelect} LionSelect
+ * @typedef {import('@lion/ui/types/test-suites.js').SuiteElement} SuiteElement
  */
 
 /**
@@ -12,17 +13,13 @@ import { resolveSuiteTag } from '../../core/test-helpers/resolveSuiteTag.js';
  * registered element (see docs/guides/principles/test-suites.md).
  * `tagString`, `klass` and the older role tag keys are deprecated: pass `classes` instead (Lion
  * itself uses `classes` everywhere).
- * @param {{ classes?: Record<string, CustomElementConstructor>, tagString?: string }} [customConfig]
+ * @param {import('@lion/ui/types/test-suites.js').SuiteConfig<{host: SuiteElement}>} [customConfig]
  */
-export function runSelectSuite(customConfig = {}) {
-  const cfg = {
-    classes: /** @type {Record<string, CustomElementConstructor>} */ ({}),
-    tagString: 'lion-select',
-    ...customConfig,
-  };
-
-  cfg.tagString = resolveSuiteTag(cfg.classes.host, cfg.tagString, 'lion-select');
-  const tag = unsafeStatic(cfg.tagString);
+export function runSelectSuite({
+  classes: { host = LionSelect } = {},
+  tagString: legacyTagString,
+} = {}) {
+  const tag = unsafeStatic(resolveSuiteTag(host, legacyTagString));
 
   describe('lion-select', () => {
     it('can preselect an option', async () => {

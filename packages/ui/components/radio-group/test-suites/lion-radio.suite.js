@@ -1,10 +1,11 @@
 import { html } from 'lit/static-html.js';
 import { unsafeStatic, expect, fixture } from '@open-wc/testing';
+import { LionRadio } from '@lion/ui/radio-group.js';
 import '@lion/ui/define/lion-radio.js';
 import { resolveSuiteTag } from '../../core/test-helpers/resolveSuiteTag.js';
 
 /**
- * @typedef {import('../src/LionRadio.js').LionRadio} LionRadio
+ * @typedef {import('@lion/ui/types/test-suites.js').SuiteElement} SuiteElement
  */
 
 /**
@@ -13,16 +14,13 @@ import { resolveSuiteTag } from '../../core/test-helpers/resolveSuiteTag.js';
  * (see docs/guides/principles/test-suites.md).
  * `tagString`, `klass` and the older role tag keys are deprecated: pass `classes` instead (Lion
  * itself uses `classes` everywhere).
- * @param {{ classes?: Record<string, CustomElementConstructor>, tagString?: string }} [customConfig]
+ * @param {import('@lion/ui/types/test-suites.js').SuiteConfig<{host: SuiteElement}>} [customConfig]
  */
-export function runRadioSuite(customConfig = {}) {
-  const cfg = {
-    classes: /** @type {Record<string, CustomElementConstructor>} */ ({}),
-    tagString: 'lion-radio',
-    ...customConfig,
-  };
-  cfg.tagString = resolveSuiteTag(cfg.classes.host, cfg.tagString, 'lion-radio');
-  const tag = unsafeStatic(cfg.tagString);
+export function runRadioSuite({
+  classes: { host = LionRadio } = {},
+  tagString: legacyTagString,
+} = {}) {
+  const tag = unsafeStatic(resolveSuiteTag(host, legacyTagString));
 
   describe('<lion-radio>', () => {
     it('should have type = radio', async () => {

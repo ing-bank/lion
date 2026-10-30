@@ -10,6 +10,7 @@ import '@lion/ui/define/lion-input-amount.js';
 import { resolveSuiteTag } from '../../core/test-helpers/resolveSuiteTag.js';
 
 /**
+ * @typedef {import('@lion/ui/types/test-suites.js').SuiteElement} SuiteElement
  * @typedef {import('../../input/src/LionInput.js').LionInput} LionInput
  */
 
@@ -19,16 +20,14 @@ import { resolveSuiteTag } from '../../core/test-helpers/resolveSuiteTag.js';
  * registered tag; see docs/guides/principles/test-suites.md.
  * `tagString`, `klass` and the older role tag keys are deprecated: pass `classes` instead (Lion
  * itself uses `classes` everywhere).
- * @param {{ classes?: Record<string, CustomElementConstructor>, tagString?: string }} [customConfig]
+ * @param {import('@lion/ui/types/test-suites.js').SuiteConfig<{host: SuiteElement}>} [customConfig]
  */
-export function runInputAmountSuite(customConfig = {}) {
-  const cfg = {
-    classes: /** @type {Record<string, CustomElementConstructor>} */ ({}),
-    tagString: 'lion-input-amount',
-    ...customConfig,
-  };
-  cfg.tagString = resolveSuiteTag(cfg.classes.host, cfg.tagString, 'lion-input-amount');
-  const tag = unsafeStatic(cfg.tagString);
+export function runInputAmountSuite({
+  classes: { host = LionInputAmount } = {},
+  tagString: legacyTagString,
+} = {}) {
+  const tagString = resolveSuiteTag(host, legacyTagString);
+  const tag = unsafeStatic(tagString);
 
   describe('<lion-input-amount>', () => {
     const localize = getLocalizeManager();
@@ -38,9 +37,7 @@ export function runInputAmountSuite(customConfig = {}) {
     });
 
     it('uses formatAmount for formatting', async () => {
-      const el = /** @type {LionInputAmount} */ (
-        await fixture(`<${cfg.tagString}></${cfg.tagString}>`)
-      );
+      const el = /** @type {LionInputAmount} */ (await fixture(`<${tagString}></${tagString}>`));
       expect(el.formatter).to.equal(formatAmount);
     });
 
@@ -133,9 +130,7 @@ export function runInputAmountSuite(customConfig = {}) {
     });
 
     it('uses parseAmount for parsing', async () => {
-      const el = /** @type {LionInputAmount} */ (
-        await fixture(`<${cfg.tagString}></${cfg.tagString}>`)
-      );
+      const el = /** @type {LionInputAmount} */ (await fixture(`<${tagString}></${tagString}>`));
       expect(el.parser).to.equal(parseAmount);
     });
 
@@ -226,30 +221,26 @@ export function runInputAmountSuite(customConfig = {}) {
     });
 
     it('sets inputmode attribute to decimal', async () => {
-      const el = /** @type {LionInputAmount} */ (
-        await fixture(`<${cfg.tagString}></${cfg.tagString}>`)
-      );
+      const el = /** @type {LionInputAmount} */ (await fixture(`<${tagString}></${tagString}>`));
       const { _inputNode } = getInputMembers(/** @type {* & LionInput} */ (el));
       expect(_inputNode.getAttribute('inputmode')).to.equal('decimal');
     });
 
     it('has type="text" to activate default keyboard on mobile with all necessary symbols', async () => {
-      const el = /** @type {LionInputAmount} */ (
-        await fixture(`<${cfg.tagString}></${cfg.tagString}>`)
-      );
+      const el = /** @type {LionInputAmount} */ (await fixture(`<${tagString}></${tagString}>`));
       const { _inputNode } = getInputMembers(/** @type {* & LionInput} */ (el));
       expect(_inputNode.type).to.equal('text');
     });
 
     describe('currencyLabel', async () => {
       it('shows no currency by default', async () => {
-        const el = await fixture(`<${cfg.tagString}></${cfg.tagString}>`);
+        const el = await fixture(`<${tagString}></${tagString}>`);
         expect(Array.from(el.children).find(child => child.slot === 'after')).to.be.undefined;
       });
 
       it('displays currency if provided', async () => {
         const el = /** @type {LionInputAmount} */ (
-          await fixture(`<${cfg.tagString} currency="EUR"></${cfg.tagString}>`)
+          await fixture(`<${tagString} currency="EUR"></${tagString}>`)
         );
         expect(
           /** @type {HTMLElement[]} */ (Array.from(el.children)).find(
@@ -261,7 +252,7 @@ export function runInputAmountSuite(customConfig = {}) {
       it('displays correct currency for TRY if locale is tr-TR', async () => {
         localize.locale = 'tr-TR';
         const el = /** @type {LionInputAmount} */ (
-          await fixture(`<${cfg.tagString} currency="TRY"></${cfg.tagString}>`)
+          await fixture(`<${tagString} currency="TRY"></${tagString}>`)
         );
         expect(
           /** @type {HTMLElement[]} */ (Array.from(el.children)).find(
@@ -283,7 +274,7 @@ export function runInputAmountSuite(customConfig = {}) {
 
       it('can update currency', async () => {
         const el = /** @type {LionInputAmount} */ (
-          await fixture(`<${cfg.tagString} currency="EUR"></${cfg.tagString}>`)
+          await fixture(`<${tagString} currency="EUR"></${tagString}>`)
         );
         el.currency = 'USD';
         await el.updateComplete;
@@ -316,7 +307,7 @@ export function runInputAmountSuite(customConfig = {}) {
 
     it('removes the currency label when currency switches from EUR to undefined', async () => {
       const el = /** @type {LionInputAmount} */ (
-        await fixture(`<${cfg.tagString} currency="EUR"></${cfg.tagString}>`)
+        await fixture(`<${tagString} currency="EUR"></${tagString}>`)
       );
       expect(
         /** @type {HTMLElement[]} */ (Array.from(el.children)).find(child => child.slot === 'after')
@@ -332,9 +323,7 @@ export function runInputAmountSuite(customConfig = {}) {
     });
 
     it('adds the currency label when currency switches from undefined to EUR', async () => {
-      const el = /** @type {LionInputAmount} */ (
-        await fixture(`<${cfg.tagString}></${cfg.tagString}>`)
-      );
+      const el = /** @type {LionInputAmount} */ (await fixture(`<${tagString}></${tagString}>`));
       expect(
         /** @type {HTMLElement[]} */ (Array.from(el.children)).find(
           child => child.slot === 'after',
@@ -353,9 +342,9 @@ export function runInputAmountSuite(customConfig = {}) {
     it('sets currency label on the after element', async () => {
       const el = /** @type {LionInputAmount} */ (
         await fixture(`
-          <${cfg.tagString}>
+          <${tagString}>
             <span slot="after" id="123">Currency, please</span>
-          </${cfg.tagString}>`)
+          </${tagString}>`)
       );
       const mySlotLabel = /** @type {HTMLElement[]} */ (Array.from(el.children)).find(
         child => child.slot === 'after',
@@ -393,29 +382,27 @@ export function runInputAmountSuite(customConfig = {}) {
 
     describe('Accessibility', () => {
       it('is accessible', async () => {
-        const el = await fixture(
-          `<${cfg.tagString}><label slot="label">Label</label></${cfg.tagString}>`,
-        );
+        const el = await fixture(`<${tagString}><label slot="label">Label</label></${tagString}>`);
         await expect(el).to.be.accessible();
       });
 
       it('is accessible when readonly', async () => {
         const el = await fixture(
-          `<${cfg.tagString} readonly .modelValue=${'123'}><label slot="label">Label</label></${cfg.tagString}>`,
+          `<${tagString} readonly .modelValue=${'123'}><label slot="label">Label</label></${tagString}>`,
         );
         await expect(el).to.be.accessible();
       });
 
       it('is accessible when disabled', async () => {
         const el = await fixture(
-          `<${cfg.tagString} disabled><label slot="label">Label</label></${cfg.tagString}>`,
+          `<${tagString} disabled><label slot="label">Label</label></${tagString}>`,
         );
         await expect(el).to.be.accessible();
       });
 
       it('adds currency id to aria-labelledby of input', async () => {
         const el = /** @type {LionInputAmount} */ (
-          await fixture(`<${cfg.tagString} currency="EUR"></${cfg.tagString}>`)
+          await fixture(`<${tagString} currency="EUR"></${tagString}>`)
         );
         const label = /** @type {HTMLElement[]} */ (Array.from(el.children)).find(
           child => child.slot === 'after',
@@ -426,9 +413,7 @@ export function runInputAmountSuite(customConfig = {}) {
       });
 
       it('adds currency id to aria-labelledby of input when currency switches from undefined', async () => {
-        const el = /** @type {LionInputAmount} */ (
-          await fixture(`<${cfg.tagString}></${cfg.tagString}>`)
-        );
+        const el = /** @type {LionInputAmount} */ (await fixture(`<${tagString}></${tagString}>`));
 
         el.currency = 'EUR';
 
@@ -448,7 +433,7 @@ export function runInputAmountSuite(customConfig = {}) {
 
       it('adds an aria-label to currency slot', async () => {
         const el = /** @type {LionInputAmount} */ (
-          await fixture(`<${cfg.tagString} currency="EUR"></${cfg.tagString}>`)
+          await fixture(`<${tagString} currency="EUR"></${tagString}>`)
         );
         const label = /** @type {HTMLElement[]} */ (Array.from(el.children)).find(
           child => child.slot === 'after',

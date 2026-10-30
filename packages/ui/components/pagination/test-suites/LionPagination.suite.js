@@ -3,10 +3,11 @@ import { html } from 'lit/static-html.js';
 import sinon from 'sinon';
 
 import '@lion/ui/define/lion-pagination.js';
+import { LionPagination } from '@lion/ui/pagination.js';
 import { resolveSuiteTag } from '../../core/test-helpers/resolveSuiteTag.js';
 
 /**
- * @typedef {import('../src/LionPagination.js').LionPagination} LionPagination
+ * @typedef {import('@lion/ui/types/test-suites.js').SuiteElement} SuiteElement
  * @typedef {import('lit').TemplateResult} TemplateResult
  */
 
@@ -15,17 +16,13 @@ import { resolveSuiteTag } from '../../core/test-helpers/resolveSuiteTag.js';
  * registered element (see docs/guides/principles/test-suites.md).
  * `tagString`, `klass` and the older role tag keys are deprecated: pass `classes` instead (Lion
  * itself uses `classes` everywhere).
- * @param {{ classes?: Record<string, CustomElementConstructor>, tagString?: string }} [customConfig]
+ * @param {import('@lion/ui/types/test-suites.js').SuiteConfig<{host: SuiteElement}>} [customConfig]
  */
-export function runPaginationSuite(customConfig = {}) {
-  const cfg = {
-    classes: /** @type {Record<string, CustomElementConstructor>} */ ({}),
-    tagString: 'lion-pagination',
-    ...customConfig,
-  };
-
-  cfg.tagString = resolveSuiteTag(cfg.classes.host, cfg.tagString, 'lion-pagination');
-  const tag = unsafeStatic(cfg.tagString);
+export function runPaginationSuite({
+  classes: { host = LionPagination } = {},
+  tagString: legacyTagString,
+} = {}) {
+  const tag = unsafeStatic(resolveSuiteTag(host, legacyTagString));
   const fixture = /** @type {(arg: TemplateResult) => Promise<LionPagination>} */ (_fixture);
 
   describe('Pagination', () => {
