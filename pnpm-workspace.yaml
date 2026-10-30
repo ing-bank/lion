@@ -1,0 +1,4 @@
+packages:
+  - "packages/*"
+  - "packages-node/*"
+  - "test/typescript-legacy"
