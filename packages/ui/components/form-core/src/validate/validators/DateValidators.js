@@ -1,3 +1,5 @@
+/* oxlint-disable class-methods-use-this -- oxlint reports `this` inside a default parameter value; eslint does not */
+
 /* eslint-disable max-classes-per-file */
 // TODO: move to input-datepicker?
 import { normalizeDateTime } from '@lion/ui/localize-no-side-effects.js';

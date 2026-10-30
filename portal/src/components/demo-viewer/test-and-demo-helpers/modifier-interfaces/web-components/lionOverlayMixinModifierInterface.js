@@ -1,3 +1,5 @@
+/* oxlint-disable import-js/no-relative-packages -- the eslint disable for import/no-relative-packages does not match the oxlint alias */
+
 /* eslint-disable no-param-reassign, no-unused-vars */
 import { defineModifierInterfaceOnConstructor } from '../applyModifierInterface.js';
 // eslint-disable-next-line import/no-relative-packages

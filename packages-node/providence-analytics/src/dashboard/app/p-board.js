@@ -1,3 +1,5 @@
+/* oxlint-disable class-methods-use-this -- oxlint reports `this` inside a default parameter value; eslint does not */
+
 /* eslint-disable lit-a11y/no-invalid-change-handler */
 /* eslint-disable max-classes-per-file */
 

@@ -1,3 +1,5 @@
+/* oxlint-disable lion/camelcase -- the `eslint-disable-line camelcase` in this file does not match the oxlint rule id */
+
 /* eslint-disable no-unused-expressions */
 import { expect, fixture } from '@open-wc/testing';
 

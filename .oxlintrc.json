@@ -3,17 +3,18 @@
     "eslint-plugin-lion",
     "eslint-plugin-lit",
     "eslint-plugin-wc",
-    "eslint-plugin-lit-a11y"
+    "eslint-plugin-lit-a11y",
+    {
+      "name": "import-js",
+      "specifier": "eslint-plugin-import"
+    },
+    "eslint-plugin-no-only-tests",
+    "@stylistic/eslint-plugin"
   ],
   "env": {
     "browser": true,
     "node": true,
     "es2024": true
-  },
-  "globals": {
-    "getStoryPage": "readonly",
-    "capture": "readonly",
-    "context": "readonly"
   },
   "rules": {
     "curly": [
@@ -271,7 +272,10 @@
       "error"
     ],
     "no-useless-computed-key": [
-      "error"
+      "error",
+      {
+        "enforceForClassMembers": false
+      }
     ],
     "no-useless-constructor": [
       "error"
@@ -432,7 +436,8 @@
       {
         "vars": "all",
         "args": "after-used",
-        "ignoreRestSiblings": true
+        "ignoreRestSiblings": true,
+        "caughtErrors": "none"
       }
     ],
     "no-use-before-define": [
@@ -800,7 +805,10 @@
       "error"
     ],
     "no-redeclare": [
-      "error"
+      "error",
+      {
+        "builtinGlobals": false
+      }
     ],
     "no-restricted-properties": [
       "error",
@@ -926,7 +934,116 @@
     "yoda": [
       "error"
     ],
-    "lion/no-unresolved": "off"
+    "lion/no-unresolved": "off",
+    "no-only-tests/no-only-tests": "error",
+    "lion/camelcase": [
+      "error",
+      {
+        "properties": "always",
+        "ignoreDestructuring": false,
+        "ignoreImports": false,
+        "ignoreGlobals": false
+      }
+    ],
+    "lion/strict": [
+      "error",
+      "never"
+    ],
+    "lion/lines-around-directive": [
+      "error",
+      {
+        "before": "always",
+        "after": "always"
+      }
+    ],
+    "lion/no-new-symbol": [
+      "error"
+    ],
+    "lion/no-new-object": [
+      "error"
+    ],
+    "lion/no-undef-init": [
+      "error"
+    ],
+    "lion/no-buffer-constructor": [
+      "error"
+    ],
+    "lion/no-restricted-syntax": [
+      "error",
+      {
+        "selector": "ForInStatement",
+        "message": "for..in loops iterate over the entire prototype chain, which is virtually never what you want. Use Object.{keys,values,entries}, and iterate over the resulting array."
+      },
+      {
+        "selector": "LabeledStatement",
+        "message": "Labels are a form of GOTO; using them makes code confusing and hard to maintain and understand."
+      },
+      {
+        "selector": "WithStatement",
+        "message": "`with` is disallowed in strict mode because it makes code impossible to predict and optimize."
+      }
+    ],
+    "@stylistic/spaced-comment": [
+      "error",
+      "always",
+      {
+        "line": {
+          "exceptions": [
+            "-",
+            "+"
+          ],
+          "markers": [
+            "=",
+            "!",
+            "/"
+          ]
+        },
+        "block": {
+          "exceptions": [
+            "-",
+            "+"
+          ],
+          "markers": [
+            "=",
+            "!",
+            ":",
+            "::"
+          ],
+          "balanced": true
+        }
+      }
+    ],
+    "@stylistic/lines-between-class-members": [
+      "error",
+      "always",
+      {
+        "exceptAfterSingleLine": false
+      }
+    ],
+    "import-js/order": [
+      "error",
+      {
+        "groups": [
+          [
+            "builtin",
+            "external",
+            "internal"
+          ]
+        ],
+        "distinctGroup": true,
+        "named": false,
+        "warnOnUnassignedImports": false
+      }
+    ],
+    "import-js/no-useless-path-segments": [
+      "error",
+      {
+        "commonjs": true
+      }
+    ],
+    "import-js/no-relative-packages": [
+      "error"
+    ]
   },
   "overrides": [
     {
@@ -938,7 +1055,8 @@
         "**/demo/**/*.js",
         "**/docs/**/*.js",
         "**/*.config.js",
-        "scripts/**/*.js"
+        "scripts/**/*.js",
+        "packages-node/awesome-phonenumber/scripts/*.js"
       ],
       "rules": {
         "lit/binding-positions": "off",
@@ -972,7 +1090,9 @@
     "**/*.ts",
     "**/*.tsx",
     "**/*.astro",
-    "**/*.vue"
+    "**/*.vue",
+    "**/*.mts",
+    "**/*.cts"
   ],
   "categories": {
     "correctness": "off",
@@ -982,5 +1102,10 @@
     "style": "off",
     "restriction": "off",
     "nursery": "off"
+  },
+  "globals": {
+    "getStoryPage": "readonly",
+    "capture": "readonly",
+    "context": "readonly"
   }
 }

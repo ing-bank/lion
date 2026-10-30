@@ -1,3 +1,5 @@
+/* oxlint-disable import-js/no-relative-packages -- the eslint disable for import/no-relative-packages does not match the oxlint alias */
+
 // @ts-nocheck
 /* eslint-disable class-methods-use-this */
 /* eslint-disable import/no-relative-packages */

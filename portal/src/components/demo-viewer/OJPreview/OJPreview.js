@@ -1,3 +1,5 @@
+/* oxlint-disable import-js/no-relative-packages -- the eslint disable for import/no-relative-packages does not match the oxlint alias */
+
 /* eslint-disable class-methods-use-this */
 import { html, css, nothing, render, LitElement } from 'lit';
 import { ref, createRef } from 'lit/directives/ref.js';

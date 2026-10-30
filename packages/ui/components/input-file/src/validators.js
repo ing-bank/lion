@@ -1,3 +1,5 @@
+/* oxlint-disable class-methods-use-this, max-classes-per-file -- eslint does not report `this` in a default parameter value, nor the three exported validators in this file */
+
 import { Validator } from '@lion/ui/form-core.js';
 import { getLocalizeManager } from '@lion/ui/localize-no-side-effects.js';
 

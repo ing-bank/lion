@@ -1,3 +1,5 @@
+/* oxlint-disable import-js/no-relative-packages -- the eslint disable for import/no-relative-packages does not match the oxlint alias */
+
 /* eslint-disable import/no-extraneous-dependencies */
 /* eslint-disable import/no-relative-packages */
 import { LitElement } from 'lit';

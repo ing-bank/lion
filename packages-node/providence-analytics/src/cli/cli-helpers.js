@@ -1,3 +1,5 @@
+/* oxlint-disable lion/camelcase -- the `eslint-disable-line camelcase` in this file does not match the oxlint rule id */
+
 /* eslint-disable no-shadow */
 import child_process from 'child_process'; // eslint-disable-line camelcase
 import path from 'path';
