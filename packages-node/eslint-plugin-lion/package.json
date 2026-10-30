@@ -26,6 +26,8 @@
     "lint"
   ],
   "dependencies": {
+    "eslint-plugin-lit-a11y": "^4.1.4",
+    "eslint-plugin-wc": "^2.2.0",
     "oxc-resolver": "^1.12.0"
   },
   "scripts": {

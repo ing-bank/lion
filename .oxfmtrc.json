@@ -21,6 +21,8 @@
     "packages/ui/generated/**",
     "packages-node/awesome-phonenumber/upstream/**",
     "packages-node/awesome-phonenumber/build/**",
-    "packages-node/awesome-phonenumber/dist/**"
+    "packages-node/awesome-phonenumber/dist/**",
+    "prev-portal/**",
+    "portal/**"
   ]
 }

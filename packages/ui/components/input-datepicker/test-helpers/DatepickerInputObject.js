@@ -94,20 +94,26 @@ export class DatepickerInputObject {
    * through this object, never by querying that markup themselves.
    */
   get overlayRootEl() {
-    return /** @type {HTMLElement|null} */ (
-      this.el?.shadowRoot?.querySelector('.calendar-overlay') ?? null
+    return (
+      /** @type {HTMLElement|null} */ (
+        this.el?.shadowRoot?.querySelector('.calendar-overlay') ?? null
+      )
     );
   }
 
   get overlayHeaderEl() {
-    return /** @type {HTMLElement|null} */ (
-      this.el?.shadowRoot?.querySelector('.calendar-overlay__header') ?? null
+    return (
+      /** @type {HTMLElement|null} */ (
+        this.el?.shadowRoot?.querySelector('.calendar-overlay__header') ?? null
+      )
     );
   }
 
   get overlayCloseButtonContainerEl() {
-    return /** @type {HTMLElement|null} */ (
-      this.el?.shadowRoot?.querySelector('.calendar-overlay__close-button') ?? null
+    return (
+      /** @type {HTMLElement|null} */ (
+        this.el?.shadowRoot?.querySelector('.calendar-overlay__close-button') ?? null
+      )
     );
   }
 

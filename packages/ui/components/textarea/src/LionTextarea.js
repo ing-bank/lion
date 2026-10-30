@@ -11,8 +11,10 @@ class LionFieldWithTextArea extends LionField {
   get _inputNode() {
     const inputs = Array.from(this.children).filter(el => el.slot === 'input');
     // Browser extensions (like LanguageTool) can add their own element to the input slot
-    return /** @type {HTMLTextAreaElement} */ (
-      inputs.find(el => el.localName === 'textarea') || inputs[0]
+    return (
+      /** @type {HTMLTextAreaElement} */ (
+        inputs.find(el => el.localName === 'textarea') || inputs[0]
+      )
     );
   }
 }
