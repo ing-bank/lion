@@ -1,36 +1,35 @@
 /**
  * @typedef {import('../../../types/index.js').SwcTraversalContext} SwcTraversalContext
- * @typedef {import('@swc/core').VariableDeclarator} SwcVariableDeclarator
+ * @typedef {import('../../../types/index.js').AstNode} AstVariableDeclarator
  * @typedef {import('../../../types/index.js').SwcVisitor} SwcVisitor
  * @typedef {import('../../../types/index.js').SwcBinding} SwcBinding
  * @typedef {import('../../../types/index.js').SwcScope} SwcScope
  * @typedef {import('../../../types/index.js').SwcPath} SwcPath
  * @typedef {import("oxc-parser").ParseResult} OxcParseResult
- * @typedef {import('@swc/core').Identifier} SwcIdentifierNode
- * @typedef {import('@swc/core').Node} OxcNode
- * @typedef {import('@swc/core').Module} SwcAstModule
- * @typedef {import('@swc/core').Node & {
+ * @typedef {import('../../../types/index.js').AstNode} OxcNode
+ * @typedef {import('../../../types/index.js').AstNode} AstModule
+ * @typedef {import('../../../types/index.js').AstNode & {
  *   value?: string;
  *   name?: string;
- *   imported?: SwcNode;
- *   orig?: SwcNode;
- *   local?: SwcNode;
- *   exported?: SwcNode;
- *   id?: SwcNode;
- *   identifier?: SwcNode;
+ *   imported?: AstNode;
+ *   orig?: AstNode;
+ *   local?: AstNode;
+ *   exported?: AstNode;
+ *   id?: AstNode;
+ *   identifier?: AstNode;
  *   kind?: string;
- *   source?: SwcNode;
- *   init?: SwcNode;
- *   declaration?: SwcNode;
- *   expression?: SwcNode;
- *   specifiers?: SwcNode[];
- *   body?: SwcNode[];
- * }} SwcNode
+ *   source?: AstNode;
+ *   init?: AstNode;
+ *   declaration?: AstNode;
+ *   expression?: AstNode;
+ *   specifiers?: AstNode[];
+ *   body?: AstNode[];
+ * }} AstNode
  */
 
 /**
  * Contains all node info, to create paths from
- * @type {WeakMap<SwcNode,SwcPath>}
+ * @type {WeakMap<AstNode,SwcPath>}
  */
 const swcPathCache = new WeakMap();
 
@@ -45,24 +44,22 @@ const fnTypes = [
 const nonBlockParentTypes = [...fnTypes, 'SwitchStatement', 'ClassDeclaration'];
 
 /**
- * @param {SwcNode|OxcNode} node
+ * @param {AstNode|OxcNode} node
  */
 export function nameOf(node) {
-  // @ts-expect-error
   return node.value || node.name;
 }
 
 /**
- * @param {SwcNode|OxcNode} node
+ * @param {AstNode|OxcNode} node
  */
 export function importedOf(node) {
-  // @ts-expect-error
-  // babel/oxc vs swc
-  return node?.imported || node?.orig || node?.local;
+  // babel names the specifier `local`, oxc names it `imported`
+  return node?.imported || node?.local;
 }
 
 /**
- * @param {SwcNode|OxcNode} node
+ * @param {AstNode|OxcNode} node
  */
 export function isProperty(node) {
   if (!node) return false;
@@ -86,8 +83,8 @@ export function isProperty(node) {
  */
 function getNewScope(swcPath, currentScope, traversalContext) {
   const { node, parent } = swcPath;
-  // const hasNonBlockParent = (/** @type {SwcNode} */ nd) => nonBlockParentTypes.includes(nd.type);
-  const isFn = (/** @type {SwcNode} */ nd) => nd && fnTypes.includes(nd.type);
+  // const hasNonBlockParent = (/** @type {AstNode} */ nd) => nonBlockParentTypes.includes(nd.type);
+  const isFn = (/** @type {AstNode} */ nd) => nd && fnTypes.includes(nd.type);
 
   const isIsolatedBlockStatement = !isFn(parent) && node.type === 'BlockStatement';
 
@@ -124,21 +121,21 @@ function getNewScope(swcPath, currentScope, traversalContext) {
 }
 
 /**
- * @param {SwcNode} node
+ * @param {AstNode} node
  */
 export function getPathFromNode(node) {
   return swcPathCache.get(node);
 }
 
 /**
- * @param {SwcNode} node
- * @param {SwcNode|null} parent
+ * @param {AstNode} node
+ * @param {AstNode|null} parent
  * @param {() => void} stop
  * @param {SwcScope} [scope]
  * @returns {SwcPath}
  */
 function createSwcPath(node, parent, stop, scope) {
-  const swcParent = /** @type {SwcNode} */ (parent);
+  const swcParent = /** @type {AstNode} */ (parent);
   /** @type {SwcPath} */
   const swcPath = {
     node,
@@ -177,7 +174,7 @@ function createSwcPath(node, parent, stop, scope) {
  * - a declaration (like "const a = 1")?
  * - an import specifier (like "import { a } from 'b'")?
  * Handy to know if the parents of Identifiers mark a binding
- * @param {SwcNode} parent
+ * @param {AstNode} parent
  * @param {string} identifierName
  */
 function isBindingNode(parent, identifierName) {
@@ -195,7 +192,7 @@ function isBindingNode(parent, identifierName) {
 
 /**
  * Is the node a reference to a binding (like "alert(a);")?
- * @param {SwcNode} parent
+ * @param {AstNode} parent
  */
 function isBindingRefNode(parent) {
   return ![
@@ -214,9 +211,9 @@ function isBindingRefNode(parent) {
  */
 function addPotentialBindingOrRefToScope(swcPathForIdentifier) {
   const { node: rawNode, parent: rawParent, scope, parentPath } = swcPathForIdentifier;
-  const node = /** @type {SwcNode} */ (rawNode);
-  const parent = /** @type {SwcNode} */ (rawParent);
-  const grandParentNode = /** @type {SwcNode|undefined} */ (
+  const node = /** @type {AstNode} */ (rawNode);
+  const parent = /** @type {AstNode} */ (rawParent);
+  const grandParentNode = /** @type {AstNode|undefined} */ (
     swcPathForIdentifier.parentPath?.parentPath?.node
   );
 
@@ -226,7 +223,7 @@ function addPotentialBindingOrRefToScope(swcPathForIdentifier) {
   if (isBindingNode(parent, nameOf(node))) {
     /** @type {SwcBinding} */
     const binding = {
-      identifier: /** @type {SwcNode} */ (parent?.id || parent?.identifier),
+      identifier: /** @type {AstNode} */ (parent?.id || parent?.identifier),
       // kind: 'var',
       refs: [],
       path: /** @type {SwcPath} */ (swcPathForIdentifier.parentPath || swcPathForIdentifier),
@@ -254,8 +251,8 @@ function addPotentialBindingOrRefToScope(swcPathForIdentifier) {
     }
     const idName =
       nameOf(node) ||
-      nameOf(/** @type {SwcNode} */ (node.local)) ||
-      nameOf(/** @type {SwcNode} */ (node.orig || node.imported));
+      nameOf(/** @type {AstNode} */ (node.local)) ||
+      nameOf(/** @type {AstNode} */ (node.orig || node.imported));
 
     // eslint-disable-next-line no-param-reassign
     scopeBindingBelongsTo.bindings[idName] = binding;
@@ -291,7 +288,7 @@ function addPotentialBindingOrRefToScope(swcPathForIdentifier) {
 /**
  * Is the node is the root of the ast?
  * in Babel, this is the equivalent of Program
- * @param {SwcNode} node
+ * @param {AstNode} node
  * @returns {boolean}
  */
 function isRootNode(node) {
@@ -299,8 +296,8 @@ function isRootNode(node) {
 }
 
 /**
- * @param {{node: SwcNode; }} node
- * @param {(data:{child:SwcNode}) => void} callback
+ * @param {{node: AstNode; }} node
+ * @param {(data:{child:AstNode}) => void} callback
  */
 const loopChildren = ({ node }, callback) => {
   for (const [childKey, childVal] of Object.entries(node)) {
@@ -356,15 +353,14 @@ function visit(swcPath, visitor, traversalContext) {
 }
 
 /**
- * Simple traversal for swc ast.
- * @param {OxcParseResult|SwcAstModule|SwcNode} oxcAst
+ * Simple traversal for an AST result: an oxc `ParseResult` (or its `program`), or a babel AST.
+ * @param {OxcParseResult|AstModule|AstNode} oxcAst
  * @param {SwcVisitor} visitor
  * @param {object} config
  * @param {boolean} [config.needsAdvancedPaths] needs a full traversal before starting the visitor, which is less performant. Only enable when path.get() is used
  */
 export function oxcTraverse(oxcAst, visitor, { needsAdvancedPaths = false } = {}) {
-  // @ts-expect-error
-  // Before traversing, normalize so that we're still compatible with both oxc and swc
+  // Before traversing, normalize the parse result to its root node
   const ast = oxcAst.program || oxcAst;
   /**
    * For performance, the author of a visitor can call this to stop further traversal
@@ -375,8 +371,8 @@ export function oxcTraverse(oxcAst, visitor, { needsAdvancedPaths = false } = {}
   };
 
   /**
-   * @param {SwcNode} node
-   * @param {SwcNode|null} parent
+   * @param {AstNode} node
+   * @param {AstNode|null} parent
    * @param {SwcScope} scope
    * @param {boolean} hasPreparedTree
    * @param {SwcTraversalContext} traversalContext
@@ -402,11 +398,11 @@ export function oxcTraverse(oxcAst, visitor, { needsAdvancedPaths = false } = {}
   };
 
   /**
-   * @param {SwcNode} node
-   * @param {SwcNode|null} parent
+   * @param {AstNode} node
+   * @param {AstNode|null} parent
    * @param {SwcScope} scope
    * @param {SwcTraversalContext} traversalContext
-   * @param {{haltCondition?: (node: SwcNode) => boolean;}} [config]
+   * @param {{haltCondition?: (node: AstNode) => boolean;}} [config]
    */
   const prepareTree = (node, parent, scope, traversalContext, { haltCondition } = {}) => {
     if (!node?.type) {
@@ -420,8 +416,8 @@ export function oxcTraverse(oxcAst, visitor, { needsAdvancedPaths = false } = {}
   };
 
   /**
-   * @param {SwcNode} node
-   * @param {SwcNode|null} parent
+   * @param {AstNode} node
+   * @param {AstNode|null} parent
    * @param {SwcScope} scope
    * @param {{hasPreparedTree?: boolean;}} config
    * @param {SwcTraversalContext} traversalContext
