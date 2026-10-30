@@ -15,6 +15,7 @@ import { resolveSuiteTag } from '../../core/test-helpers/resolveSuiteTag.js';
 import { isActiveElement } from '../../core/test-helpers/isActiveElement.js';
 
 /**
+ * @typedef {import('@lion/ui/types/test-suites.js').SuiteElement} SuiteElement
  * @typedef {import('../src/LionSwitchButton.js').LionSwitchButton} LionSwitchButton
  * @typedef {import('@lion/ui/types/form-core.js').FormControlHost} FormControlHost
  * @typedef {import('lit').TemplateResult} TemplateResult
@@ -46,16 +47,13 @@ const fixture = /** @type {(arg: TemplateResult) => Promise<LionSwitch>} */ (_fi
  * registered tag; see docs/guides/principles/test-suites.md.
  * `tagString`, `klass` and the older role tag keys are deprecated: pass `classes` instead (Lion
  * itself uses `classes` everywhere).
- * @param {{ classes?: Record<string, CustomElementConstructor>, tagString?: string }} [customConfig]
+ * @param {import('@lion/ui/types/test-suites.js').SuiteConfig<{host: SuiteElement}>} [customConfig]
  */
-export function runSwitchSuite(customConfig = {}) {
-  const cfg = {
-    classes: /** @type {Record<string, CustomElementConstructor>} */ ({}),
-    tagString: 'lion-switch',
-    ...customConfig,
-  };
-  cfg.tagString = resolveSuiteTag(cfg.classes.host, cfg.tagString, 'lion-switch');
-  const tag = unsafeStatic(cfg.tagString);
+export function runSwitchSuite({
+  classes: { host = LionSwitch } = {},
+  tagString: legacyTagString,
+} = {}) {
+  const tag = unsafeStatic(resolveSuiteTag(host, legacyTagString));
 
   describe('lion-switch', () => {
     it('should have default "input" element', async () => {

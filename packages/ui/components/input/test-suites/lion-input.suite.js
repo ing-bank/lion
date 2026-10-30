@@ -1,12 +1,13 @@
 import { html } from 'lit/static-html.js';
 import { Validator } from '@lion/ui/form-core.js';
 import '@lion/ui/define/lion-input.js';
+import { LionInput } from '@lion/ui/input.js';
 import { aTimeout, expect, fixture, triggerFocusFor, unsafeStatic } from '@open-wc/testing';
 import { getInputMembers } from '@lion/ui/input-test-helpers.js';
 import { resolveSuiteTag } from '../../core/test-helpers/resolveSuiteTag.js';
 
 /**
- * @typedef {import('../src/LionInput.js').LionInput} LionInput
+ * @typedef {import('@lion/ui/types/test-suites.js').SuiteElement} SuiteElement
  */
 
 /**
@@ -15,16 +16,14 @@ import { resolveSuiteTag } from '../../core/test-helpers/resolveSuiteTag.js';
  * registered tag; see docs/guides/principles/test-suites.md.
  * `tagString`, `klass` and the older role tag keys are deprecated: pass `classes` instead (Lion
  * itself uses `classes` everywhere).
- * @param {{ classes?: Record<string, CustomElementConstructor>, tagString?: string }} [customConfig]
+ * @param {import('@lion/ui/types/test-suites.js').SuiteConfig<{host: SuiteElement}>} [customConfig]
  */
-export function runInputSuite(customConfig = {}) {
-  const cfg = {
-    classes: /** @type {Record<string, CustomElementConstructor>} */ ({}),
-    tagString: 'lion-input',
-    ...customConfig,
-  };
-  cfg.tagString = resolveSuiteTag(cfg.classes.host, cfg.tagString, 'lion-input');
-  const tag = unsafeStatic(cfg.tagString);
+export function runInputSuite({
+  classes: { host = LionInput } = {},
+  tagString: legacyTagString,
+} = {}) {
+  const tagString = resolveSuiteTag(host, legacyTagString);
+  const tag = unsafeStatic(tagString);
 
   describe('<lion-input>', () => {
     it('delegates readOnly property and readonly attribute', async () => {

@@ -12,12 +12,17 @@ import { resolveSuiteTag } from '../../../core/test-helpers/resolveSuiteTag.js';
  */
 
 /**
- * `tagString`, `klass` and the older role tag keys are deprecated: pass `classes` instead (Lion
- * itself uses `classes` everywhere).
- * @param {{ classes?: Record<string, CustomElementConstructor>, tagString?: string, childTagString?:string }} [customConfig]
+ * Runs the form-group suite. The caller hands the elements it should run against - `host` is the
+ * group, `child` what sits inside it; anything left out keeps the class this suite builds from the
+ * mixins.
+ * @typedef {import('@lion/ui/types/test-suites.js').SuiteElement} SuiteElement
+ * @param {import('@lion/ui/types/test-suites.js').SuiteConfig<{host: SuiteElement; child: SuiteElement}>} [customConfig]
  */
-export function runFormGroupMixinInputSuite(customConfig = {}) {
-  const cfg = { ...customConfig };
+export function runFormGroupMixinInputSuite({
+  classes = {},
+  tagString: legacyTagString,
+  childTagString: legacyChildTagString,
+} = {}) {
   const FormChild = class extends LionInput {
     get slots() {
       return {
@@ -27,8 +32,7 @@ export function runFormGroupMixinInputSuite(customConfig = {}) {
     }
   };
 
-  cfg.childTagString = resolveSuiteTag(cfg.classes?.child, cfg.childTagString, FormChild);
-  const { childTagString } = cfg;
+  const childTagString = resolveSuiteTag(classes?.child, legacyChildTagString, FormChild);
 
   const FormGroup = class extends FormGroupMixin(LitElement) {
     constructor() {
@@ -42,8 +46,7 @@ export function runFormGroupMixinInputSuite(customConfig = {}) {
     }
   };
 
-  cfg.tagString = resolveSuiteTag(cfg.classes?.host, cfg.tagString, FormGroup);
-  const { tagString } = cfg;
+  const tagString = resolveSuiteTag(classes?.host, legacyTagString, FormGroup);
   const tag = unsafeStatic(tagString);
   const childTag = unsafeStatic(childTagString);
 

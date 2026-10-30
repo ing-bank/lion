@@ -15,17 +15,12 @@ import { isActiveElement } from '../../core/test-helpers/isActiveElement.js';
  */
 
 /**
- * `tagString`, `klass` and the older role tag keys are deprecated: pass `classes` instead (Lion
- * itself uses `classes` everywhere).
- * @param {{ classes?: Record<string, CustomElementConstructor>, tagString?: string, modelValueType?: modelValueType}} [customConfig]
+ * Runs the `NativeTextFieldMixin` behavioural suite. The caller hands the element to run against;
+ * leaving `host` out keeps the element this suite builds from the mixin.
+ * @typedef {import('@lion/ui/types/test-suites.js').SuiteElement} SuiteElement
+ * @param {import('@lion/ui/types/test-suites.js').SuiteConfig<{host: SuiteElement}, {modelValueType?: modelValueType}>} [customConfig]
  */
-export function runNativeTextFieldMixinSuite(customConfig) {
-  const cfg = {
-    classes: /** @type {Record<string, CustomElementConstructor>} */ ({}),
-    tagString: null,
-    ...customConfig,
-  };
-
+export function runNativeTextFieldMixinSuite({ classes = {}, tagString: legacyTagString } = {}) {
   describe('NativeTextFieldMixin', () => {
     class NativeTextFieldClass extends NativeTextFieldMixin(LitElement) {
       get slots() {
@@ -36,8 +31,7 @@ export function runNativeTextFieldMixinSuite(customConfig) {
       }
     }
 
-    cfg.tagString = resolveSuiteTag(cfg.classes?.host, cfg.tagString, NativeTextFieldClass);
-    const tag = unsafeStatic(cfg.tagString);
+    const tag = unsafeStatic(resolveSuiteTag(classes?.host, legacyTagString, NativeTextFieldClass));
 
     it('preserves the caret position on value change', async () => {
       const el = /** @type {NativeTextFieldClass} */ (await fixture(html`<${tag}></${tag}>`));

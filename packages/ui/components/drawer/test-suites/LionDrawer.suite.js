@@ -2,36 +2,41 @@ import { expect, fixture as _fixture, unsafeStatic } from '@open-wc/testing';
 import { html } from 'lit/static-html.js';
 
 import '@lion/ui/define/lion-drawer.js';
+import { LionDrawer } from '@lion/ui/drawer.js';
 import { resolveSuiteTag } from '../../core/test-helpers/resolveSuiteTag.js';
 
 /**
- * @typedef {import('../src/LionDrawer.js').LionDrawer} LionDrawer
+ * @typedef {import('@lion/ui/types/test-suites.js').SuiteElement} SuiteElement
  * @typedef {import('lit').TemplateResult} TemplateResult
  */
 
 /**
- * Runs the `<lion-drawer>` behavioural suite. Pass `tagString` to run it against your own
- * registered element (see docs/guides/principles/test-suites.md).
- * `tagString`, `klass` and the older role tag keys are deprecated: pass `classes` instead (Lion
- * itself uses `classes` everywhere).
- * @param {{ classes?: Record<string, CustomElementConstructor>, tagString?: string }} [customConfig]
+ * Runs the `<lion-drawer>` behavioural suite. The caller hands the elements it should run against;
+ * anything left out keeps Lion's own element. The three slots are native elements, so those roles
+ * take their tag.
+ * @param {import('@lion/ui/types/test-suites.js').SuiteConfig<{host: SuiteElement; invoker: SuiteElement; headline: SuiteElement; content: SuiteElement}>} [customConfig]
  */
-export function runDrawerSuite(customConfig = {}) {
-  const cfg = {
-    classes: /** @type {Record<string, CustomElementConstructor>} */ ({}),
-    tagString: 'lion-drawer',
-    ...customConfig,
-  };
-
-  cfg.tagString = resolveSuiteTag(cfg.classes.host, cfg.tagString, 'lion-drawer');
-  const tag = unsafeStatic(cfg.tagString);
+export function runDrawerSuite({
+  classes: {
+    host: hostEl = LionDrawer,
+    // the three slots are native elements, so their default is the tag
+    invoker: invokerEl = 'button',
+    headline: headlineEl = 'p',
+    content: contentEl = 'div',
+  } = {},
+  tagString,
+} = {}) {
+  const tag = unsafeStatic(resolveSuiteTag(hostEl, tagString));
+  const invokerRef = unsafeStatic(resolveSuiteTag(invokerEl));
+  const headlineRef = unsafeStatic(resolveSuiteTag(headlineEl));
+  const contentRef = unsafeStatic(resolveSuiteTag(contentEl));
   const fixture = /** @type {(arg: TemplateResult) => Promise<LionDrawer>} */ (_fixture);
 
   const template = html`
     <${tag}>
-      <button slot="invoker">Open</button>
-      <p slot="headline">Headline</p>
-      <div slot="content" class="drawer">This is the content of the drawer</div>
+      <${invokerRef} slot="invoker">Open</${invokerRef}>
+      <${headlineRef} slot="headline">Headline</${headlineRef}>
+      <${contentRef} slot="content" class="drawer">This is the content of the drawer</${contentRef}>
     </${tag}>
   `;
 

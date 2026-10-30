@@ -10,44 +10,28 @@ import sinon from 'sinon';
 import { resolveSuiteTag } from '../../core/test-helpers/resolveSuiteTag.js';
 
 /**
- * @typedef {Object} customConfig
- * @property {typeof LitElement|undefined} [baseElement]
- * @property {string} [customConfig.suffix]
- * @property {string} [customConfig.parentTagString]
- * @property {string} [customConfig.childTagString]
- * @property {string} [customConfig.portalTagString]
+ * Runs the form-registration suite. The caller hands the three elements it should run against -
+ * `host` is the registrar (the form), `child` what registers itself and `portal` the element that
+ * forwards registrations; anything left out keeps the class this suite builds from the mixins.
+ * @typedef {import('@lion/ui/types/test-suites.js').SuiteElement} SuiteElement
+ * @param {import('@lion/ui/types/test-suites.js').SuiteConfig<{host: SuiteElement; child: SuiteElement; portal: SuiteElement}, {suffix?: string, baseElement?: typeof LitElement}>} customConfig
  */
+export const runRegistrationSuite = ({
+  classes = {},
+  suffix = '',
+  baseElement = LitElement,
+} = {}) => {
+  describe(`FormRegistrationMixins ${suffix}`, () => {
+    class RegistrarClass extends FormRegistrarMixin(baseElement) {}
+    const parentTagString = resolveSuiteTag(classes?.host, undefined, RegistrarClass);
+    class RegisteringClass extends FormRegisteringMixin(baseElement) {}
+    const childTagString = resolveSuiteTag(classes?.child, undefined, RegisteringClass);
+    class PortalClass extends FormRegistrarPortalMixin(baseElement) {}
+    const portalTagString = resolveSuiteTag(classes?.portal, undefined, PortalClass);
 
-/**
- * `tagString`, `klass` and the older role tag keys are deprecated: pass `classes` instead (Lion
- * itself uses `classes` everywhere).
- * @param {{
- *   classes?: Record<string, CustomElementConstructor>,
- *   suffix?: string,
- *   parentTagString?: string,
- *   childTagString?: string,
- *   portalTagString?: string,
- *   baseElement?: typeof LitElement,
- * }} customConfig
- */
-export const runRegistrationSuite = customConfig => {
-  const cfg = {
-    baseElement: LitElement,
-    ...customConfig,
-  };
-
-  describe(`FormRegistrationMixins ${cfg.suffix}`, () => {
-    class RegistrarClass extends FormRegistrarMixin(cfg.baseElement) {}
-    cfg.parentTagString = resolveSuiteTag(cfg.classes?.host, undefined, RegistrarClass);
-    class RegisteringClass extends FormRegisteringMixin(cfg.baseElement) {}
-    cfg.childTagString = resolveSuiteTag(cfg.classes?.child, undefined, RegisteringClass);
-    class PortalClass extends FormRegistrarPortalMixin(cfg.baseElement) {}
-    cfg.portalTagString = resolveSuiteTag(cfg.classes?.portal, undefined, PortalClass);
-
-    const parentTag = unsafeStatic(cfg.parentTagString);
-    const childTag = unsafeStatic(cfg.childTagString);
-    const portalTag = unsafeStatic(cfg.portalTagString);
-    const { parentTagString, childTagString } = cfg;
+    const parentTag = unsafeStatic(parentTagString);
+    const childTag = unsafeStatic(childTagString);
+    const portalTag = unsafeStatic(portalTagString);
 
     it('can register a formElement', async () => {
       const el = /** @type {RegistrarClass} */ (

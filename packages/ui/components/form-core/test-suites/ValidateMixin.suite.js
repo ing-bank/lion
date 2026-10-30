@@ -28,19 +28,16 @@ import { resolveSuiteTag } from '../../core/test-helpers/resolveSuiteTag.js';
  */
 
 /**
- * `tagString`, `klass` and the older role tag keys are deprecated: pass `classes` instead (Lion
- * itself uses `classes` everywhere).
- * @param {{ classes?: Record<string, CustomElementConstructor>, tagString?: string | null, lightDom?: string}} [customConfig]
+ * Runs the `ValidateMixin` behavioural suite. The caller hands the element to run against; leaving
+ * `host` out keeps the element this suite builds from the mixin.
+ * @typedef {import('@lion/ui/types/test-suites.js').SuiteElement} SuiteElement
+ * @param {import('@lion/ui/types/test-suites.js').SuiteConfig<{host: SuiteElement}, {lightDom?: string}>} [customConfig]
  */
-export function runValidateMixinSuite(customConfig) {
-  const cfg = {
-    classes: /** @type {Record<string, CustomElementConstructor>} */ ({}),
-    tagString: null,
-    ...customConfig,
-  };
-
-  const lightDom = cfg.lightDom || '';
-
+export function runValidateMixinSuite({
+  classes = {},
+  tagString: legacyTagString,
+  lightDom = '',
+} = {}) {
   class ValidateElement extends ValidateMixin(LitElement) {
     connectedCallback() {
       super.connectedCallback();
@@ -50,7 +47,7 @@ export function runValidateMixinSuite(customConfig) {
     }
   }
 
-  const tagString = resolveSuiteTag(cfg.classes.host, cfg.tagString, ValidateElement);
+  const tagString = resolveSuiteTag(classes.host, legacyTagString, ValidateElement);
   const tag = unsafeStatic(tagString);
 
   describe('ValidateMixin', () => {

@@ -6,12 +6,17 @@ import {} from '@open-wc/testing';
 import { LionInputStepper } from '../src/LionInputStepper.js';
 import { resolveSuiteTag } from '../../core/test-helpers/resolveSuiteTag.js';
 
-export const runInputStepperIntegrationSuite = (klassOrConfig = LionInputStepper) => {
-  const cfg =
-    typeof klassOrConfig === 'function'
-      ? { klass: klassOrConfig }
-      : { klass: LionInputStepper, .../** @type {any} */ (klassOrConfig) };
-  const tagString = resolveSuiteTag(cfg.classes?.host, cfg.tagString, cfg.klass);
+/**
+ * Runs the input-stepper suite. The caller hands the element to run against; leaving `host` out keeps
+ * `LionInputStepper`.
+ * @typedef {import('@lion/ui/types/test-suites.js').SuiteElement} SuiteElement
+ * @param {import('@lion/ui/types/test-suites.js').SuiteConfig<{host: SuiteElement}>} [customConfig]
+ */
+export const runInputStepperIntegrationSuite = ({
+  classes: { host = LionInputStepper } = {},
+  tagString: legacyTagString,
+} = {}) => {
+  const tagString = resolveSuiteTag(host, legacyTagString);
   runInteractionStateMixinSuite({
     tagString,
     allowedModelValueTypes: [Number],

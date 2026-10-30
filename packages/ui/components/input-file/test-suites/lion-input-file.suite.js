@@ -1,4 +1,5 @@
 import { html } from 'lit/static-html.js';
+import { LionInputFile, LionSelectedFileList } from '@lion/ui/input-file.js';
 import '@lion/ui/define/lion-input-file.js';
 import '@lion/ui/define/lion-selected-file-list.js';
 import { Required } from '@lion/ui/form-core.js';
@@ -16,8 +17,6 @@ import sinon from 'sinon';
 import { resolveSuiteTag } from '../../core/test-helpers/resolveSuiteTag.js';
 
 /**
- * @typedef {import('../src/LionInputFile.js').LionInputFile} LionInputFile
- * @typedef {import('../src/LionSelectedFileList.js').LionSelectedFileList} LionSelectedFileList
  * @typedef {import('../types/input-file.js').InputFile} InputFile
  * @typedef {import('../types/input-file.js').SystemFile} SystemFile
  * @typedef {import('lit').TemplateResult} TemplateResult
@@ -78,16 +77,20 @@ const file4 = /** @type {InputFile} */ (
  * itself uses `classes` everywhere).
  * @param {{ classes?: Record<string, CustomElementConstructor>, tagString?: string, selectedFileListTagString?: string }} [customConfig]
  */
-export function runInputFileSuite(customConfig = {}) {
-  const cfg = {
-    classes: /** @type {Record<string, CustomElementConstructor>} */ ({}),
-    tagString: 'lion-input-file',
-    selectedFileListTagString: 'lion-selected-file-list',
-    ...customConfig,
-  };
-  const { classes, selectedFileListTagString } = cfg;
-  cfg.tagString = resolveSuiteTag(cfg.classes.host, cfg.tagString, 'lion-input-file');
-  const tag = unsafeStatic(cfg.tagString);
+export function runInputFileSuite({
+  classes: {
+    host = LionInputFile,
+    'selected-file-list': selectedFileListEl = LionSelectedFileList,
+  } = {},
+  tagString: legacyTagString,
+  selectedFileListTagString: legacySelectedFileListTagString,
+} = {}) {
+  const hostTagString = resolveSuiteTag(host, legacyTagString);
+  const tag = unsafeStatic(hostTagString);
+  const selectedFileListTagString = resolveSuiteTag(
+    selectedFileListEl,
+    legacySelectedFileListTagString,
+  );
 
   describe('lion-input-file', () => {
     const localizeManager = getLocalizeManager();
@@ -1395,11 +1398,7 @@ export function runInputFileSuite(customConfig = {}) {
     );
     // The list is a separate element the input renders and a subclasser may replace, so it keeps its
     // own role key here instead of a suite and an entry point of its own.
-    const listTagString = resolveSuiteTag(
-      classes['selected-file-list'],
-      selectedFileListTagString,
-      'lion-selected-file-list',
-    );
+    const listTagString = selectedFileListTagString;
     const listTag = unsafeStatic(listTagString);
 
     /**

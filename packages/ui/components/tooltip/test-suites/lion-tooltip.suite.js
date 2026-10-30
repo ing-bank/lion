@@ -1,4 +1,5 @@
 import { html } from 'lit/static-html.js';
+import { LionTooltip } from '@lion/ui/tooltip.js';
 import '@lion/ui/define/lion-tooltip.js';
 import { aTimeout, expect, fixture, unsafeStatic } from '@open-wc/testing';
 import {
@@ -9,7 +10,6 @@ import sinon from 'sinon';
 import { resolveSuiteTag } from '../../core/test-helpers/resolveSuiteTag.js';
 
 /**
- * @typedef {import('../src/LionTooltip.js').LionTooltip} LionTooltip
  * @typedef {import('../../overlays/types/OverlayConfig.js').OverlayConfig} OverlayConfig
  */
 
@@ -19,20 +19,18 @@ import { resolveSuiteTag } from '../../core/test-helpers/resolveSuiteTag.js';
  * registered tag; see docs/guides/principles/test-suites.md.
  * `tagString`, `klass` and the older role tag keys are deprecated: pass `classes` instead (Lion
  * itself uses `classes` everywhere).
- * @param {{ classes?: Record<string, CustomElementConstructor>, tagString?: string }} [customConfig]
+ * @typedef {import('@lion/ui/types/test-suites.js').SuiteElement} SuiteElement
+ * @param {import('@lion/ui/types/test-suites.js').SuiteConfig<{host: SuiteElement}>} [customConfig]
  */
-export function runTooltipSuite(customConfig = {}) {
-  const cfg = {
-    classes: /** @type {Record<string, CustomElementConstructor>} */ ({}),
-    tagString: 'lion-tooltip',
-    ...customConfig,
-  };
-  cfg.tagString = resolveSuiteTag(cfg.classes.host, cfg.tagString, 'lion-tooltip');
-  const tag = unsafeStatic(cfg.tagString);
+export function runTooltipSuite({
+  classes: { host = LionTooltip } = {},
+  tagString: legacyTagString,
+} = {}) {
+  const tagString = resolveSuiteTag(host, legacyTagString);
+  const tag = unsafeStatic(tagString);
 
   describe('lion-tooltip', () => {
     describe('Integration tests', () => {
-      const { tagString } = cfg;
       runOverlayMixinSuite({
         tagString,
         tag,
@@ -41,7 +39,7 @@ export function runTooltipSuite(customConfig = {}) {
     });
 
     runWithHoverInteractionSuite({
-      tagString: cfg.tagString,
+      tagString,
       invokerTagString: 'button',
     });
 

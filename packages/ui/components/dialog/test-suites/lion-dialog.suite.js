@@ -9,6 +9,8 @@ import {
 } from '@open-wc/testing';
 import { cache } from 'lit/directives/cache.js';
 import { LitElement, nothing } from 'lit';
+import { LionDialog } from '@lion/ui/dialog.js';
+import { LionTabs } from '@lion/ui/tabs.js';
 import { runOverlayMixinSuite } from '../../overlays/test-suites/OverlayMixin.suite.js';
 import { resolveSuiteTag } from '../../core/test-helpers/resolveSuiteTag.js';
 import { isActiveElement } from '../../core/test-helpers/isActiveElement.js';
@@ -20,7 +22,6 @@ import { isElementVisible } from '../../core/test-helpers/isElementVisible.js';
 /* eslint-disable lit-a11y/no-autofocus */
 
 /**
- * @typedef {import('../src/LionDialog.js').LionDialog} LionDialog
  * @typedef {import('lit').TemplateResult} TemplateResult
  */
 const fixture = /** @type {(arg: TemplateResult) => Promise<LionDialog>} */ (_fixture);
@@ -29,19 +30,19 @@ const fixture = /** @type {(arg: TemplateResult) => Promise<LionDialog>} */ (_fi
  * Runs the `lion-dialog` behavioural suite, moved out of `test/lion-dialog.test.js` so a Subclasser can run
  * the same guarantees against its own element. Pass your own tag names to point it at them
  * (see docs/guides/principles/test-suites.md).
- * `tagString`, `klass` and the older role tag keys are deprecated: pass `classes` instead (Lion
- * itself uses `classes` everywhere).
- * @param {{ classes?: Record<string, CustomElementConstructor>, tabsTagString?: string, tagString?: string }} [customConfig]
+ * Runs the `lion-dialog` behavioural suite. The caller hands the elements it should run against;
+ * anything left out keeps Lion's own element.
+ * @typedef {import('@lion/ui/types/test-suites.js').SuiteElement} SuiteElement
+ * @param {import('@lion/ui/types/test-suites.js').SuiteConfig<{host: SuiteElement; tabs: SuiteElement}>} [customConfig]
  */
-export function runDialogSuite(customConfig = {}) {
-  const cfg = {
-    classes: /** @type {Record<string, CustomElementConstructor>} */ ({}),
-    tagString: 'lion-dialog',
-    ...customConfig,
-  };
-  cfg.tagString = resolveSuiteTag(cfg.classes.host, cfg.tagString, 'lion-dialog');
-  const tag = unsafeStatic(cfg.tagString);
-  const tagNameTabs = resolveSuiteTag(cfg.classes.tabs, cfg.tabsTagString, 'lion-tabs');
+export function runDialogSuite({
+  classes: { host = LionDialog, tabs = LionTabs } = {},
+  tagString: legacyTagString,
+  tabsTagString: legacyTabsTagString,
+} = {}) {
+  const hostTagString = resolveSuiteTag(host, legacyTagString);
+  const tag = unsafeStatic(hostTagString);
+  const tagNameTabs = resolveSuiteTag(tabs, legacyTabsTagString);
   const tagTabs = unsafeStatic(tagNameTabs);
 
   describe('lion-dialog', () => {
@@ -55,9 +56,8 @@ export function runDialogSuite(customConfig = {}) {
     });
 
     describe('Integration tests', () => {
-      const { tagString } = cfg;
       runOverlayMixinSuite({
-        tagString,
+        tagString: hostTagString,
         tag,
         suffix: ' for lion-dialog',
       });
@@ -98,7 +98,7 @@ export function runDialogSuite(customConfig = {}) {
         await el._overlayCtrl._showComplete;
         expect(el.opened).to.be.true;
 
-        const nestedDialogEl = /** @type {LionDialog} */ (el.querySelector(cfg.tagString));
+        const nestedDialogEl = /** @type {LionDialog} */ (el.querySelector(hostTagString));
         // @ts-expect-error you're not allowed to call protected _overlayInvokerNode in public context, but for testing it's okay
         nestedDialogEl?._overlayInvokerNode.click();
         // @ts-expect-error [allow-protected-in-tests]
@@ -294,7 +294,7 @@ export function runDialogSuite(customConfig = {}) {
         `);
 
         const getDialog = () =>
-          /** @type {LionDialog} */ (el.shadowRoot?.querySelector(cfg.tagString));
+          /** @type {LionDialog} */ (el.shadowRoot?.querySelector(hostTagString));
         const getInvoker = () =>
           /** @type {HTMLElement} */ (getDialog().querySelector('[slot="invoker"]'));
 
@@ -411,12 +411,12 @@ export function runDialogSuite(customConfig = {}) {
          */
         const getDialog = () =>
           wrapperElementShadowRoot
-            ?.querySelector(cfg.tagString)
+            ?.querySelector(hostTagString)
             ?.shadowRoot?.querySelector('dialog');
         // @ts-ignore
         const isDialogVisible = () => isElementVisible(getDialog());
         const isDialogRendered = () =>
-          !!wrapperElement.shadowRoot?.querySelector(cfg.tagString)?.shadowRoot?.childNodes.length;
+          !!wrapperElement.shadowRoot?.querySelector(hostTagString)?.shadowRoot?.childNodes.length;
         getInvokerButton()?.click();
         await waitUntil(isDialogVisible);
         getCloseButton()?.click();

@@ -13,28 +13,20 @@ import sinon from 'sinon';
 import { resolveSuiteTag } from '../../core/test-helpers/resolveSuiteTag.js';
 
 /**
- * `tagString`, `klass` and the older role tag keys are deprecated: pass `classes` instead (Lion
- * itself uses `classes` everywhere).
- * @param {{ classes?: Record<string, CustomElementConstructor>, klass?: typeof LionCalendar, tagString?: string }} [customConfig]
- */
-/**
- * @param {{
- *   classes?: Record<string, CustomElementConstructor>,
- *   klass?: typeof LionCalendar,
- *   tagString?: string,
- *   CalendarObject?: typeof DefaultCalendarObject,
- * }} [customConfig]
+ * Runs the `LionCalendar` behavioural suite. The caller hands the element to run against; anything
+ * left out keeps `LionCalendar`.
+ * @typedef {import('@lion/ui/types/test-suites.js').SuiteElement} SuiteElement
+ * @param {import('@lion/ui/types/test-suites.js').SuiteConfig<{host: SuiteElement}, {CalendarObject?: typeof DefaultCalendarObject}>} [customConfig]
  */
 export function runCalendarSuite({
   classes = {},
-  klass = LionCalendar,
   tagString,
   // The tests address the calendar through this page object; an extension layer whose navigation
   // markup differs (ING renders its own button element) passes its own subclass overriding the node
   // getters instead of the suite learning about that markup.
   CalendarObject = DefaultCalendarObject,
 } = {}) {
-  const tagStringCalendar = resolveSuiteTag(classes.host, tagString, klass);
+  const tagStringCalendar = resolveSuiteTag(classes.host, tagString, LionCalendar);
   const tagCalendar = unsafeStatic(tagStringCalendar);
 
   /**

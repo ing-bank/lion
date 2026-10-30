@@ -20,16 +20,10 @@ customElements.define('choice-group-input', ChoiceInput);
  * @param {{ classes?: Record<string, CustomElementConstructor>, tagString?:string, tagType?: string}} config
  * @deprecated
  */
-export function runChoiceInputMixinSuite({ classes = {} } = {}) {
-  const cfg = {
-    classes,
-    tagString: 'choice-group-input',
-  };
-
-  cfg.tagString = resolveSuiteTag(cfg.classes?.host, cfg.tagString, 'choice-group-input');
-
-  const tag = unsafeStatic(cfg.tagString);
-  describe(`ChoiceInputMixin: ${cfg.tagString}`, () => {
+export function runChoiceInputMixinSuite({ classes = {}, tagString: legacyTagString } = {}) {
+  const tagString = resolveSuiteTag(classes?.host, legacyTagString, 'choice-group-input');
+  const tag = unsafeStatic(tagString);
+  describe(`ChoiceInputMixin: ${tagString}`, () => {
     it('is hidden when attribute hidden is true', async () => {
       const el = /** @type {ChoiceInput} */ (await fixture(html`<${tag} hidden></${tag}>`));
       expect(el).not.to.be.displayed;

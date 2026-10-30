@@ -2,12 +2,12 @@ import { html } from 'lit/static-html.js';
 import { unsafeStatic, expect, fixture as _fixture, oneEvent } from '@open-wc/testing';
 import sinon from 'sinon';
 import '@lion/ui/define/lion-step.js';
+import { LionStep, LionSteps } from '@lion/ui/steps.js';
 import '@lion/ui/define/lion-steps.js';
 import { resolveSuiteTag } from '../../core/test-helpers/resolveSuiteTag.js';
 
 /**
- * @typedef {import('../src/LionSteps.js').LionSteps} LionSteps
- * @typedef {import('../src/LionStep.js').LionStep} LionStep
+ * @typedef {import('@lion/ui/types/test-suites.js').SuiteElement} SuiteElement
  * @typedef {import('lit').TemplateResult} TemplateResult
  * @typedef {{[key: string]: any}} UnknownData
  */
@@ -52,17 +52,16 @@ async function checkWorkflow(steps, expected) {
  * tag; see docs/guides/principles/test-suites.md.
  * `tagString`, `klass` and the older role tag keys are deprecated: pass `classes` instead (Lion
  * itself uses `classes` everywhere).
- * @param {{ classes?: Record<string, CustomElementConstructor>, stepTagString?: string, tagString?: string }} [customConfig]
+ * @param {import('@lion/ui/types/test-suites.js').SuiteConfig<{host: SuiteElement; step: SuiteElement}, {stepTagString?: any}>} [customConfig]
  */
-export function runStepsSuite(customConfig = {}) {
-  const cfg = {
-    classes: /** @type {Record<string, CustomElementConstructor>} */ ({}),
-    tagString: 'lion-steps',
-    ...customConfig,
-  };
-  cfg.tagString = resolveSuiteTag(cfg.classes.host, cfg.tagString, 'lion-steps');
-  const tag = unsafeStatic(cfg.tagString);
-  const tagNameStep = resolveSuiteTag(cfg.classes.step, cfg.stepTagString, 'lion-step');
+export function runStepsSuite({
+  classes: { host = LionSteps, step = LionStep } = {},
+  tagString: legacyTagString,
+  stepTagString: legacyStepTagString,
+} = {}) {
+  const hostTagString = resolveSuiteTag(host, legacyTagString);
+  const tag = unsafeStatic(hostTagString);
+  const tagNameStep = resolveSuiteTag(step, legacyStepTagString);
   const tagStep = unsafeStatic(tagNameStep);
 
   describe('lion-steps', () => {

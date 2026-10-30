@@ -6,12 +6,13 @@ import sinon from 'sinon';
 import '@lion/ui/define/lion-option.js';
 import '@lion/ui/define/lion-listbox.js';
 import '@lion/ui/define/lion-select-rich.js';
+import { LionOption, LionOptions } from '@lion/ui/listbox.js';
+import { LionSelectRich } from '@lion/ui/select-rich.js';
 import { getSelectRichMembers } from '@lion/ui/select-rich-test-helpers.js';
 import { resolveSuiteTag } from '../../core/test-helpers/resolveSuiteTag.js';
 
 /**
- * @typedef {import('../src/LionSelectRich.js').LionSelectRich} LionSelectRich
- * @typedef {import('../../listbox/src/LionOption.js').LionOption} LionOption
+ * @typedef {import('@lion/ui/types/test-suites.js').SuiteElement} SuiteElement
  */
 
 /**
@@ -46,19 +47,22 @@ function expectOnlyGivenOneOptionToBeChecked(options, selectedIndex) {
  * Runs the `lion-select-rich` behavioural suite, moved out of `test/lion-select-rich-interaction.test.js` so a Subclasser can run
  * the same guarantees against its own element. Pass `tagString` to point it at your registered
  * tag; see docs/guides/principles/test-suites.md.
- * @param {{ classes?: Record<string, CustomElementConstructor>, optionTagString?: string, optionsTagString?: string, tagString?: string }} [customConfig]
+ * @param {import('@lion/ui/types/test-suites.js').SuiteConfig<{host: SuiteElement; option: SuiteElement; options: SuiteElement}, {optionTagString?: any; optionsTagString?: any}>} [customConfig]
  */
-export function runSelectRichInteractionSuite(customConfig = {}) {
-  const cfg = {
-    classes: /** @type {Record<string, CustomElementConstructor>} */ ({}),
-    tagString: 'lion-select-rich',
-    ...customConfig,
-  };
-  cfg.tagString = resolveSuiteTag(cfg.classes.host, cfg.tagString, 'lion-select-rich');
-  const tag = unsafeStatic(cfg.tagString);
-  const tagNameOptions = resolveSuiteTag(cfg.classes.options, cfg.optionsTagString, 'lion-options');
+export function runSelectRichInteractionSuite({
+  classes: {
+    host: hostEl = LionSelectRich,
+    option: optionEl = LionOption,
+    options: optionsEl = LionOptions,
+  } = {},
+  tagString: legacyTagString,
+  optionsTagString: legacyOptionsTagString,
+  optionTagString: legacyOptionTagString,
+} = {}) {
+  const tag = unsafeStatic(resolveSuiteTag(hostEl, legacyTagString));
+  const tagNameOptions = resolveSuiteTag(optionsEl, legacyOptionsTagString);
   const tagOptions = unsafeStatic(tagNameOptions);
-  const tagNameOption = resolveSuiteTag(cfg.classes.option, cfg.optionTagString, 'lion-option');
+  const tagNameOption = resolveSuiteTag(optionEl, legacyOptionTagString);
   const tagOption = unsafeStatic(tagNameOption);
 
   describe('lion-select-rich interactions', () => {

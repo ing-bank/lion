@@ -10,12 +10,17 @@ import { resolveSuiteTag } from '../../core/test-helpers/resolveSuiteTag.js';
  */
 const fixture = /** @type {(arg: TemplateResult|string) => Promise<LionInputStepper>} */ (_fixture);
 
-export function runInputStepperSuite(klassOrConfig = LionInputStepper) {
-  const cfg =
-    typeof klassOrConfig === 'function'
-      ? { klass: klassOrConfig }
-      : { klass: LionInputStepper, .../** @type {any} */ (klassOrConfig) };
-  const tagString = resolveSuiteTag(cfg.classes?.host, cfg.tagString, cfg.klass);
+/**
+ * Runs the input-stepper suite. The caller hands the element to run against; leaving `host` out keeps
+ * `LionInputStepper`.
+ * @typedef {import('@lion/ui/types/test-suites.js').SuiteElement} SuiteElement
+ * @param {import('@lion/ui/types/test-suites.js').SuiteConfig<{host: SuiteElement}>} [customConfig]
+ */
+export function runInputStepperSuite({
+  classes: { host = LionInputStepper } = {},
+  tagString: legacyTagString,
+} = {}) {
+  const tagString = resolveSuiteTag(host, legacyTagString);
   const tag = unsafeStatic(tagString);
 
   const defaultInputStepper = html`

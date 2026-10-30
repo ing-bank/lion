@@ -5,12 +5,13 @@ import sinon from 'sinon';
 import { resolveSuiteTag } from '../../core/test-helpers/resolveSuiteTag.js';
 
 /**
- * `tagString`, `klass` and the older role tag keys are deprecated: pass `classes` instead (Lion
- * itself uses `classes` everywhere).
- * @param {{ classes?: Record<string, CustomElementConstructor>, klass?: typeof LionButtonReset, tagString?: string }} [customConfig]
+ * Runs the `LionButtonReset` behavioural suite. The caller hands the element to run against; anything
+ * left out keeps the element this suite registers from the Lion class.
+ * @typedef {import('@lion/ui/types/test-suites.js').SuiteElement} SuiteElement
+ * @param {import('@lion/ui/types/test-suites.js').SuiteConfig<{host: SuiteElement}>} [customConfig]
  */
-export function LionButtonResetSuite({ classes = {}, klass = LionButtonReset, tagString } = {}) {
-  const tagStringButtonReset = resolveSuiteTag(classes.host, tagString, klass);
+export function LionButtonResetSuite({ classes = {}, tagString } = {}) {
+  const tagStringButtonReset = resolveSuiteTag(classes.host, tagString, LionButtonReset);
   const tagButtonReset = unsafeStatic(tagStringButtonReset);
 
   describe('LionButtonReset', () => {

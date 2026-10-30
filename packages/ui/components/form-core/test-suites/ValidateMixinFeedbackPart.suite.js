@@ -18,12 +18,17 @@ import { resolveSuiteTag } from '../../core/test-helpers/resolveSuiteTag.js';
  * @typedef {import('../types/validate/validate.js').FeedbackMessageData} FeedbackMessageData
  */
 
+/** @typedef {import('@lion/ui/types/test-suites.js').SuiteElement} SuiteElement */
+
 /**
- * `tagString`, `klass` and the older role tag keys are deprecated: pass `classes` instead (Lion
- * itself uses `classes` everywhere).
- * @param {{ classes?: Record<string, CustomElementConstructor>, tagString?: string }} [customConfig]
+ * Runs the validity-feedback suite. The caller hands the element to run against; leaving `host` out
+ * keeps the element this suite builds from the mixin.
+ * @param {import('@lion/ui/types/test-suites.js').SuiteConfig<{host: SuiteElement}>} [customConfig]
  */
-export function runValidateMixinFeedbackPart({ classes = {}, tagString: customTagString } = {}) {
+export function runValidateMixinFeedbackPart(customConfig = {}) {
+  const classes = { ...customConfig?.classes };
+  // legacy key, kept for callers that registered their own tag
+  const customTagString = customConfig?.tagString;
   const localizeManager = getLocalizeManager();
 
   describe('Validity Feedback', () => {

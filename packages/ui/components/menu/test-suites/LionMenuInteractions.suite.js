@@ -46,17 +46,15 @@ const config = {
   },
 };
 
+/** @typedef {import('@lion/ui/types/test-suites.js').SuiteElement} SuiteElement */
+
 /**
- * `tagString`, `klass` and the older role tag keys are deprecated: pass `classes` instead (Lion
- * itself uses `classes` everywhere).
- * @param {{
- *   classes?: Record<string, CustomElementConstructor>,
- *   klass?: typeof LionMenu,
- *   tagString?: string,
- * }} [customConfig]
+ * Runs the menu-interactions suite. The caller hands the menu to run against; leaving `host` out keeps
+ * `LionMenu`.
+ * @param {import('@lion/ui/types/test-suites.js').SuiteConfig<{host: SuiteElement}>} [customConfig]
  */
-export function runLionMenuInteractionsSuite({ classes = {}, klass = LionMenu, tagString } = {}) {
-  const tagName = resolveSuiteTag(classes.host, tagString, klass);
+export function runLionMenuInteractionsSuite({ classes = {}, tagString } = {}) {
+  const tagName = resolveSuiteTag(classes.host, tagString, LionMenu);
   const tag = unsafeStatic(tagName);
 
   describe('LionMenu interactions', () => {
