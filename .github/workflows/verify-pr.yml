@@ -23,6 +23,13 @@ jobs:
       - name: Install Dependencies
         run: npm install --ci
 
+      # Fails when package-lock.json resolves different versions than pnpm-lock.yaml, so tooling that
+      # reads the npm lock cannot derive versions the install does not have. No-op while the repo has no
+      # pnpm lock; a hard gate as soon as one is committed. Runs after the install: the check needs the
+      # workspace dependencies.
+      - name: Lockfile consistency
+        run: npm run repo:lockfile:check
+
       - name: Lint
         run: npm run lint
 
