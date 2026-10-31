@@ -21,39 +21,42 @@ const {
 ---
 
 <style>
+  /* A plain masthead: display title, a hairline under it, no dot pattern and no right alignment. Wired's
+   * index opens on type, and the pattern was decoration the type does not need. */
   .blog-overview {
-    padding: 120px 0 60px;
-    text-align: center;
-    background-image: radial-gradient(var(--blog-line) 1px, transparent 1px);
-    background-size: 20px 20px;
+    padding: 128px 0 36px;
+    text-align: left;
     border-bottom: 1px solid var(--blog-line);
-    text-align: right;
-    margin-right: 3rem;
+    margin-right: 0;
   }
 
   .blog-overview h1 {
     font-family: var(--blog-font-serif);
-    font-size: 4rem;
-    margin-bottom: 16px;
+    font-size: clamp(2.4rem, 6vw, 4.2rem);
+    font-weight: 600;
+    line-height: 1.02;
     letter-spacing: -0.03em;
+    margin: 0 0 14px;
     color: var(--blog-text);
   }
 
   .blog-overview p {
     color: var(--blog-text-secondary);
-    font-size: 1.2rem;
-    max-width: 600px;
-    margin: 0 auto;
+    font-size: 1.05rem;
+    line-height: 1.5;
+    max-width: 52ch;
+    margin: 0;
   }
 
   .blog-grid-container {
-    padding: 60px 0;
+    padding: 48px 0;
   }
 
   .blog-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 40px;
+    column-gap: 32px;
+    row-gap: 40px;
     width: 100%;
   }
 

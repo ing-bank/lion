@@ -79,24 +79,29 @@ body.blog-page {
  * the three or four real ones and clipped the text. The `:first-child` is document order, and the
  * collection is what decides that order.
  */
+/* The lead story: full width, cover beside the text, and the headline at the display end of the scale
+ * so the top of the index reads like the top of a Wired index. The card chrome is gone, so this is
+ * held together by the type and the hairline above it.
+ */
 .post-card:first-child {
   grid-column: 1 / -1;
   flex-direction: row;
+  gap: 32px;
+  padding-top: 32px;
 }
 
 .post-card:first-child .post-image {
-  flex: 0 0 55%;
-  border-right: 1px solid var(--blog-line);
+  flex: 0 0 58%;
 }
 
 .post-card:first-child .post-image .post-image__img {
   height: 100%;
-  aspect-ratio: auto;
+  aspect-ratio: 2 / 1;
   border-bottom: none;
 }
 
 .post-card:first-child .post-content {
-  padding: 40px;
+  padding: 0;
   justify-content: center;
   /* A flex item will not shrink below its content without this, and the lead card's copy is what
      * overflowed the card. */
@@ -104,9 +109,9 @@ body.blog-page {
 }
 
 .post-card:first-child .post-title {
-  font-size: 2.1rem;
-  letter-spacing: -0.02em;
-  line-height: 1.15;
+  font-size: clamp(1.9rem, 3.1vw, 2.9rem);
+  letter-spacing: -0.025em;
+  line-height: 1.06;
 }
 
 .post-card:first-child .post-excerpt {
@@ -114,20 +119,27 @@ body.blog-page {
   flex: 0;
 }
 
-/* Regular Posts */
+/* Regular Posts
+ *
+ * Wired's index has no card chrome: no boxes, no shadows, no rounded corners. Items are separated by
+ * a hairline over each one and the type does the work. That is what this is - the rule above the text
+ * replaces the border around it, and the only hover response is on the cover and the headline.
+ */
 .post-card {
-  background: var(--blog-paper);
-  border: 1px solid var(--blog-line);
+  background: none;
+  border: 0;
+  border-top: 1px solid var(--blog-line);
+  padding-top: 24px;
   display: flex;
   flex-direction: column;
-  transition: all 0.2s;
   cursor: pointer;
 }
 
-.post-card:hover {
-  border-color: var(--blog-text);
-  box-shadow: 5px 5px 0px light-dark(rgba(0, 0, 0, 0.05), rgba(0, 0, 0, 0.3));
-  transform: translateY(-2px);
+.post-card:hover .post-title a {
+  text-decoration: underline;
+  text-decoration-color: var(--accent-yellow);
+  text-decoration-thickness: 3px;
+  text-underline-offset: 4px;
 }
 
 .post-image {
@@ -173,26 +185,30 @@ body.blog-page {
 }
 
 .post-meta {
-  font-size: 0.8rem;
+  font-size: 0.72rem;
   color: var(--blog-text-secondary);
   text-transform: uppercase;
-  letter-spacing: 0.05em;
-  margin-bottom: 12px;
+  letter-spacing: 0.14em;
+  font-weight: 600;
+  margin-bottom: 10px;
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
 }
 
 .post-tag {
-  color: var(--blog-accent-ink);
-  font-weight: 600;
+  color: var(--accent-on-surface);
+  font-weight: 700;
 }
 
+/* Display scale on the headline, the way Wired sets its index and its article titles. */
 .post-title {
   font-family: var(--blog-font-serif);
-  font-size: 1.5rem;
-  margin-bottom: 12px;
-  line-height: 1.3;
+  font-size: clamp(1.25rem, 1.6vw, 1.5rem);
+  letter-spacing: -0.015em;
+  line-height: 1.2;
+  font-weight: 600;
+  margin-bottom: 10px;
 }
 
 .post-title a {
@@ -208,18 +224,22 @@ body.blog-page {
   flex: 1;
 }
 
+/* A quiet link rather than a call-to-action button: the whole card is clickable anyway. */
 .read-more {
-  font-weight: 500;
-  color: var(--blog-text);
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--blog-text-secondary);
   text-decoration: none;
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
   margin-top: auto;
 }
 
 .read-more:hover {
-  color: var(--blog-accent-ink);
+  color: var(--accent-on-surface);
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 3px;
 }
 
 /* Footer Override */
@@ -239,36 +259,34 @@ body.blog-page {
 }
 
 @media (max-width: 900px) {
-  /* The lead card stops being a row here: a 55% illustration column next to body copy does not
-     * survive a 600px card, so it goes back to cover-on-top like every other card. */
+  /* The lead card stops being a row here: a 58% illustration column next to body copy does not
+   * survive a 600px card, so it goes back to cover-on-top like every other card. */
   .post-card:first-child {
     flex-direction: column;
+    gap: 20px;
+    padding-top: 24px;
   }
 
   .post-card:first-child .post-image {
     flex: 0 0 auto;
-    border-right: none;
   }
 
   .post-card:first-child .post-image .post-image__img {
     height: auto;
     aspect-ratio: 2 / 1;
-    border-bottom: 1px solid var(--blog-line);
   }
 
   .post-card:first-child .post-content {
-    padding: 20px;
+    padding: 0;
   }
 
   .post-card:first-child .post-title {
-    font-size: 1.6rem;
+    font-size: 1.9rem;
   }
 
   .post-card {
-    border-radius: 10px;
-    overflow: hidden;
     /* Two columns on a tablet, one on a phone (below). The old span 6 / span 12 counted columns
-         * that a single-column grid does not have - span 12 there creates implicit columns. */
+     * that a single-column grid does not have - span 12 there creates implicit columns. */
     grid-column: span 1;
   }
 
@@ -276,35 +294,35 @@ body.blog-page {
     aspect-ratio: 2 / 1;
   }
 
-  .post-content {
-    padding: 20px;
-  }
-
   .post-title {
-    font-size: 1.4rem;
+    font-size: 1.3rem;
     line-height: 1.25;
   }
 
   /* The tag becomes a pill: on a phone it is the first thing the eye lands on, and a bare line of
-     * accent text was too easy to miss. */
+   * accent text was too easy to miss. It is inline-flex so the pill's padding cannot push its text off
+   * the baseline the date sits on - measured: the date read as sitting lower than the pill. */
   .post-tag {
-    background-color: color-mix(in srgb, var(--blog-accent) 16%, transparent);
-    border: 1px solid color-mix(in srgb, var(--blog-accent) 35%, transparent);
+    display: inline-flex;
+    align-items: center;
+    line-height: 1.2;
+    background-color: color-mix(in srgb, var(--accent-yellow) 16%, transparent);
+    border: 1px solid color-mix(in srgb, var(--accent-yellow) 35%, transparent);
     border-radius: 999px;
     padding: 2px 8px;
   }
 
-  /* Full-width tap target with the arrow pushed right, instead of a ~90px text link. The summary's
-     * margin is evened out with the padding here (16px each side of the rule), so the divider sits
-     * in the middle of its own whitespace instead of 20px above it and 14px below. */
   .post-excerpt {
     margin-bottom: 16px;
   }
 
+  /* A full-width row with a rule above it, so the tap target is the whole width rather than the
+   * ~90px the text occupies. */
   .read-more {
+    display: flex;
     justify-content: space-between;
     width: 100%;
-    padding-top: 16px;
+    padding: 14px 0 2px;
     border-top: 1px solid var(--blog-line);
   }
 }
