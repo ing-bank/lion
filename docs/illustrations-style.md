@@ -17,54 +17,57 @@ every shipped file then measures `#ffc107`. Quoting to 16 colours saves little (
 dominates the entropy: measured 16c 535 KB against 32c 687 KB) and risks re-cutting the palette onto a
 neighbour instead.
 
-## Current direction: the editorial collage
+## Current direction: a generated scene, cut out and printed
 
-The set on the blog today is the collage, not the engraving. Same palette, same house restraint, but
-the construction is taken off the Wired article hero: **a photographic subject cut out hard and printed
-in high-contrast black and white, laid on a flat field, with the scenery printed around it.**
+The set on the blog is now built from **one generation per post**, not from a collage of assembled
+parts: the model draws the whole scene - the lion-headed figure at work together with the machinery
+around them - and the treatment prints it.
 
-Two rules that came after the first collage set shipped, because it failed on them:
-
-- **Every cover gets its own background system.** One recipe with a different random seed reads as the
-  same image eight times, whatever the seed does. Each post now carries a construction of its own - a
-  braille dot matrix, stacked container blocks, ruled ledger lines, a rack lattice, blueprint
-  construction arcs, letterpress type sorts, a scaffold truss, gear arcs with speed ticks. Nothing is
-  shared between two posts except the palette and the ground line.
-- **The photographs are searched, not generated.** Each post gets a subject, a background and an
-  ornament, sourced from Wikimedia Commons (Openverse was dropped: it throttles anonymous callers and
-  the run reached four files a minute). The licence and the source page are recorded per file and the
-  attribution is rendered on the article page, because CC BY requires it where the work is shown - a
-  credits file in the repo is not attribution. Where a slot's only candidate was share-alike (CC BY-SA
-  is a problem for this site), that element is made for this site instead.
-
-| layer     | what it is                                                                              |
-| --------- | --------------------------------------------------------------------------------------- |
-| field     | paper `#e8e8e8`, edge to edge                                                           |
-| scenery   | the post's own abstract system, drawn over the searched background photo printed as ink |
-| ornament  | a searched cut-out, top left, in the same high-contrast black and white as the subject  |
-| subject   | the searched cut-out, white outline tracing its silhouette, on the ground line at 94%   |
-| furniture | one pixel sprite standing on the ground line, so it belongs to the scene                |
-| filter    | dot screen over everything, paper grain, ink out of register by 2-3px                   |
-| credits   | `cover_credits` in the post frontmatter, rendered under the date row                    |
+| layer    | what it is                                                                                                    |
+| -------- | ------------------------------------------------------------------------------------------------------------- |
+| scene    | one generation (`alibaba:qwen-image@3.0-pro`, $0.04) on **one flat single-tone backdrop**, nothing else in frame |
+| cut      | background removal on that scene: the figure and the machine as **one group**, never assembled by hand          |
+| print    | high-contrast black and white, a **6px** white edge tracing the group's silhouette                             |
+| plate    | a second generation per post: the abstract background, light grey dominant, its own system                      |
+| accent   | recoloured from the model's own warm pixels, then snapped bit-exact to `#FFC107`                                |
+| motif    | one drawn geometry per post in the accent, different on every cover                                             |
+| filter   | dot screen over everything, paper grain                                                                         |
 
 Rules that make it work, each learned from a rejected round:
 
-- **The accent interacts, it does not sit beside the composition.** Yellow confined to a corner sprite
-  read as an addition; the plate only came together when the yellow was part of the scenery - screen
-  behind the bars, tips on the bars, the sprite's feet on a bar. Measured coverage across the shipped
-  set is 0.3-0.4% of the plate. Below about 0.2% it stops registering at card size (one variant
-  measured 0.11% and read as an accident).
-- **"8-bit" means blocky videogame furniture**: sprites and HUD drawn on character grids and scaled
-  with nearest neighbour, so the steps are square pixels. Not a smooth vector pretending to be retro,
-  and not screenshots or logo art from a game.
-- **Subjects stand clear of everything.** The learned background removal reads anything crossing the
-  body as background: a lathe in front of a figure's legs cost it a leg and half a torso. Photograph or
-  generate the subject standing free of props, on one flat seamless backdrop.
-- **Trim the cutout to its content box before placing it.** Background removal leaves the studio's floor
-  margin under the object, so aligning the canvas bottom to the ground line leaves every object
-  floating. Align the alpha's bounding box instead.
+- **Lettering is never applied in post.** A badge, a monogram or a numeral has to exist in the
+  generation; the pipeline may only recolour it to the accent. Pasting text on top afterwards was
+  ruled out outright - and a star with a "7" or a badge with "TS" produced by the model reads as part
+  of the machine, which pasted type never does.
+- **One base colour in the backdrop, or the cut fails.** A scene rendered on a two-tone studio floor
+  (grey wall, off-white ground) made the background removal cut along the join: tyres and feet came
+  out flat where the tone changed. Ask for a single flat surface, no horizon and no ground plane.
+- **The model draws the contact, not the pipeline.** Assembling a photographed rider onto a drawn
+  machine by hand got the anatomy and the contact wrong in every round: the hip floated, the hands
+  missed the bars, the feet hovered. One generation of the whole scene has all of that correct by
+  construction. Where a two-point fit is unavoidable, solve it as a similarity transform and **print the
+  residual** - a fit that is not verified is a guess.
+- **Grey the plate, keep the accent.** Converting the group to black and white *after* recolouring the
+  badge threw the accent away silently (measured: yellow coverage dropped to 0.09%). The greyscale pass
+  has to re-apply the accent where the warm mask was.
+- **The white edge is 6px, not 12.** At 12 the subject reads as a sticker with a glow.
+- **Motion is generated and drawn.** Speed lives in the generation (blurred wheels, a crouch, a mane
+  blown back) and in the drawn dynamics on top: slipstream lines that grow towards the rear, a forward
+  vector off the front wheel, and hub arcs drawn as **jittered, broken polylines** - clean concentric
+  arcs read as a digital overlay on a hand-drawn plate.
+- **Every cover gets its own background system and its own accent motif.** One recipe with a different
+  seed reads as the same image eight times. Each post carries a different construction (ledger bars,
+  radial burst, converging lines, stamp grid, waveform rows, smoothed zigzag, arc fan) and a different
+  way of spending the yellow.
 - **Pin the accent last.** The screen, the grain and the misregistered ink all sit over the yellow, so
-  the snap to `#FFC107` has to happen after the filter pass - measured: `#edb808` before it.
+  the snap to `#FFC107` has to happen after the filter pass.
+- **Subjects stand clear of everything.** The learned background removal reads anything crossing the
+  body as background: a lathe in front of a figure's legs cost it a leg and half a torso. Keep props
+  behind and beside the figure, not in front of it.
+- **The photographs are searched, not generated** - only where a searched photograph is needed at all.
+  Elements sourced from Wikimedia Commons record licence and source page per file, and the attribution
+  renders on the article page, because CC BY requires it where the work is shown. CC BY-SA is a problem
+  for this site; where that was the only candidate, the element is generated instead.
 
 ## The earlier direction: the engraving plate
 
