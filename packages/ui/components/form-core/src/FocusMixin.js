@@ -158,7 +158,7 @@ const FocusMixinImplementation = /** @type {FocusMixin} */ (superclass =>
        */
       this.__redispatchFocus = ev => {
         ev.stopPropagation();
-        this.dispatchEvent(new Event('focus'));
+        this.dispatchEvent(new Event('focus', { composed: true }));
       };
       this._focusableNode.addEventListener('focus', this.__redispatchFocus);
 
@@ -168,7 +168,7 @@ const FocusMixinImplementation = /** @type {FocusMixin} */ (superclass =>
        */
       this.__redispatchBlur = ev => {
         ev.stopPropagation();
-        this.dispatchEvent(new Event('blur'));
+        this.dispatchEvent(new Event('blur', { composed: true }));
       };
       this._focusableNode.addEventListener('blur', this.__redispatchBlur);
 
