@@ -44,6 +44,12 @@ _Note: **playwright** is required for running tests._
 npx playwright install
 ```
 
+Every declared dependency is also weighed by its surface (`npm run lint:dependency-surface`): the
+installed packages it drags in that run code at install time, two generations of one package that a
+stale range nested, and — lowest weight — the count of distinct packages against a budget of 20.
+Declarations the repo accepts are listed in `dependencySurface.allow` in the root package.json; take
+anything else it reports as a prompt to look for a lighter dependency or an existing one.
+
 Create a Pull Request:
 
 - At <https://github.com/ing-bank/lion> click on fork (at the right top)
