@@ -5,6 +5,7 @@ description: TypeScript 7 type-checks Lion's ~1,000 declaration files about six 
 date: 2026-09-26
 tags: [javascript, typescript, performance]
 cover_image: /blog/images/typescript-7.png
+cover_credits: "subject - Biomedical Technicians Test Hospital Equipment (8587864).jpg (Public domain) / ornament - made for this site / background - Image from page 691 of 'Railway mechanical engineer' (1916).jpg (CC0)"
 eleventyNavigation:
   key: Migrating Lion to TypeScript 7
   title: Migrating Lion to TypeScript 7

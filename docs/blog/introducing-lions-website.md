@@ -5,6 +5,7 @@ description: A static website with docs and demos for lion
 date: 2021-03-10
 tags: [javascript, rocket, documentation]
 cover_image: /blog/images/introducing-lions-website.png
+cover_credits: 'subject - Businessman working and writing notes in office (Unsplash).jpg (CC0) / ornament - Metal movable text.jpg (CC BY 2.5) / background - In Bamberg, the first printing press in nowadays Bavaria was built and the first German bo (Public domain)'
 eleventyNavigation:
   key: Introducing lions website
   title: Introducing lions website

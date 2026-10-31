@@ -5,6 +5,7 @@ description: Extending a component library and its documentation for a speedy de
 date: 2020-12-01
 tags: javascript, documentation, demos
 cover_image: /blog/images/extending-documentation.png
+cover_credits: 'subject - Person writing in a notebook while sitting at a desk.jpg (CC BY 2.0) / ornament - 1906 marbled paper back cover in book binding by Colonial Press, Boston, Massachusetts of  (Public domain) / background - Bookshelves in Hove Library 2025-08-20.jpg (CC0)'
 eleventyNavigation:
   key: Extending Lion Documentation
   title: Extending Lion Documentation

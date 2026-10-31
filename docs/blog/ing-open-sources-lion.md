@@ -5,6 +5,7 @@ description: A library of performant, accessible & flexible Web Components
 date: 2020-08-10
 tags: [javascript, tests, demos]
 cover_image: /blog/images/ing-open-sources-lion.png
+cover_credits: 'subject - Code on computer monitor (Unsplash).jpg (CC0) / ornament - Patch cable with RJ45 connector.jpg (CC BY 4.0) / background - EFTA00002522 - Cluttered server rack filled with colorful cables and networking equipment. (Public domain)'
 eleventyNavigation:
   key: ING open sources Lion
   title: ING open sources Lion

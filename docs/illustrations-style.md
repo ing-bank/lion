@@ -23,15 +23,29 @@ The set on the blog today is the collage, not the engraving. Same palette, same 
 the construction is taken off the Wired article hero: **a photographic subject cut out hard and printed
 in high-contrast black and white, laid on a flat field, with the scenery printed around it.**
 
-| layer         | what it is                                                                                        |
-| ------------- | ------------------------------------------------------------------------------------------------- |
-| field         | paper `#e8e8e8`, edge to edge                                                                     |
-| scenery       | vertical bars in a grey _lighter_ than the ink (`#acacac`), on a shared ground line at 94% height |
-| accent screen | a yellow dot screen printed **first**, so the bars print over it and interrupt it                 |
-| bar tips      | selected bars carry their top blocks in the accent, so the yellow rides the bar rhythm            |
-| furniture     | one pixel sprite standing **on** a bar top, footprint square on the bar it belongs to             |
-| subject       | the cutout, white outline tracing its silhouette, standing on the bars' ground line               |
-| filter        | dot screen over everything, paper grain, ink out of register by 2-3px                             |
+Two rules that came after the first collage set shipped, because it failed on them:
+
+- **Every cover gets its own background system.** One recipe with a different random seed reads as the
+  same image eight times, whatever the seed does. Each post now carries a construction of its own - a
+  braille dot matrix, stacked container blocks, ruled ledger lines, a rack lattice, blueprint
+  construction arcs, letterpress type sorts, a scaffold truss, gear arcs with speed ticks. Nothing is
+  shared between two posts except the palette and the ground line.
+- **The photographs are searched, not generated.** Each post gets a subject, a background and an
+  ornament, sourced from Wikimedia Commons (Openverse was dropped: it throttles anonymous callers and
+  the run reached four files a minute). The licence and the source page are recorded per file and the
+  attribution is rendered on the article page, because CC BY requires it where the work is shown - a
+  credits file in the repo is not attribution. Where a slot's only candidate was share-alike (CC BY-SA
+  is a problem for this site), that element is made for this site instead.
+
+| layer     | what it is                                                                              |
+| --------- | --------------------------------------------------------------------------------------- |
+| field     | paper `#e8e8e8`, edge to edge                                                           |
+| scenery   | the post's own abstract system, drawn over the searched background photo printed as ink |
+| ornament  | a searched cut-out, top left, in the same high-contrast black and white as the subject  |
+| subject   | the searched cut-out, white outline tracing its silhouette, on the ground line at 94%   |
+| furniture | one pixel sprite standing on the ground line, so it belongs to the scene                |
+| filter    | dot screen over everything, paper grain, ink out of register by 2-3px                   |
+| credits   | `cover_credits` in the post frontmatter, rendered under the date row                    |
 
 Rules that make it work, each learned from a rejected round:
 

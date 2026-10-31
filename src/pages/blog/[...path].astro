@@ -19,7 +19,7 @@ if (!entry) {
     throw new Error(`Could not find component by URL ${path}`);
 }
 
-const { title, cover_image, tags = [], date, description = "" } = entry.data;
+const { title, cover_image, cover_credits, tags = [], date, description = "" } = entry.data;
 const tagsArr = Array.isArray(tags) ? tags : tags.split(',').map(tag => tag.trim());
 const site  = Astro.locals;
 const { headings = [] } = entry.rendered?.metadata;
@@ -104,6 +104,15 @@ const { Content } = await render(entry);
     border-left: 1px solid var(--blog-line);
   }
 
+  /* Attribution for the cover: small, quiet, and above the fold where the work is shown. */
+  .blog-lede__credits {
+    margin: -2rem 0 2.5rem;
+    font-size: 0.78rem;
+    line-height: 1.5;
+    color: var(--blog-text-secondary);
+    max-width: 70ch;
+  }
+
   @media (max-width: 700px) {
     /* A 2:1 cover on a 390px viewport is a 195px band - too thin to read as a lede, so the phone
      * gets 16:9 and the headline is free to run the full measure. */
@@ -144,6 +153,11 @@ const { Content } = await render(entry);
         </span>
         {tagsArr.length > 0 && <span>{tagsArr.join(', ')}</span>}
       </div>
+      {/*
+        Several covers are built on CC BY photographs, and CC BY requires attribution where the work is
+        shown - a credits file in the repo is not attribution. This line is that attribution.
+      */}
+      {cover_credits && <p class="blog-lede__credits">Cover: {cover_credits}</p>}
     </div>
   </div>
 
