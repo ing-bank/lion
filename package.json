@@ -21,6 +21,7 @@
     "lint:markdownlint": "git ls-files '*.md' | xargs markdownlint --ignore '{.github/**/*.md,.changeset/*.md,**/CHANGELOG.md,packages/ui/_legacy-changelogs/*.md,packages-node/awesome-phonenumber/upstream/**,prev-portal/*.md,portal/*.md}'",
     "lint:phone-number-up-to-date": "node ./scripts/lint-phone-number-lib.js",
     "lint:prettier": "prettier \"**/*.js\" --list-different || (echo '↑↑ these files are not prettier formatted ↑↑' && exit 1)",
+    "lint:dependency-surface": "node ./scripts/lint-dependency-surface.mjs",
     "lint:types": "npm run types",
     "lint:versions": "node ./scripts/lint-versions.js",
     "prepare": "husky install",
@@ -37,6 +38,7 @@
     "test": "wireit",
     "test:browser": "web-test-runner --coverage",
     "test:node": "npm run test:node --workspaces --if-present",
+    "test:scripts": "mocha \"scripts/test/**/*.test.mjs\"",
     "types": "npm run types --workspaces --if-present",
     "types-check-only": "npm run types-check-only --workspaces --if-present"
   },
@@ -168,6 +170,17 @@
       "@lit/reactive-element": [
         "We make sure latest version is hoisted and resolved, until we move to astro (when we can regenerate the package-lock.json file w/o breaking Rocket)."
       ]
+    },
+    "dependencySurface": {
+      "//": [
+        "`npm run lint:dependency-surface` weighs every declared dependency of every workspace on what it drags into the install, in the order that matters for risk:",
+        "1. attack surface - packages in the closure that run code at install time (high), and how deep a chain nobody chose runs (medium);",
+        "2. unintentional nesting - two generations (major, or minor for 0.x) of the same package inside one declaration, which a stale range causes;",
+        "3. transitive weight - the count of distinct packages, against an arbitrary budget of 20. Count is a weak proxy for risk on its own, so it only ever reports at `low`.",
+        "Sources for that ordering, and the tools that measure the same things, are in scripts/dependency-surface.md.",
+        "Warnings only for now: exit 0, and `--strict` turns it into a gate.",
+        "`dependencySurface.allow` below lists the declarations this repo accepts (weight-only findings): they are counted in the summary and shown with --show-allowed, never warned about."
+      ]
     }
   },
   "dependenciesAstroForTheFuture": {
@@ -235,6 +248,7 @@
         "lint:markdownlint",
         "lint:phone-number-up-to-date",
         "lint:prettier",
+        "lint:dependency-surface",
         "lint:types",
         "lint:versions"
       ]
@@ -242,8 +256,46 @@
     "test": {
       "dependencies": [
         "test:browser",
-        "test:node"
+        "test:node",
+        "test:scripts"
       ]
+    }
+  },
+  "dependencySurface": {
+    "allow": {
+      "package.json": {
+        "wireit": "the repo task runner; the count is its own stack",
+        "eslint": "the linter; the count is eslint and its parsing stack",
+        "eslint-plugin-wc": "lint plugin for custom elements",
+        "eslint-config-prettier": "lint config; its plugin set is the config",
+        "gh-pages": "publishes the portal",
+        "patch-package": "applies patches/ after install",
+        "@babel/core": "babel core, reached by the CEM analyzer and the rocket preset",
+        "prettier-package-json": "formats package.json files",
+        "remark-html": "markdown rendering in the portal build",
+        "@lit-labs/ssr": "SSR renderer for the lit-ssr tests",
+        "typescript": "the compiler"
+      },
+      "packages-node/astro-lit/package.json": {
+        "@lit-labs/ssr": "SSR renderer this package builds on"
+      },
+      "packages-node/awesome-phonenumber/package.json": {
+        "rollup": "bundles the phone number library",
+        "google-closure-compiler": "minifies the phone number library"
+      },
+      "packages-node/lit-ssr-patch-tests/package.json": {
+        "@lit-labs/ssr": "SSR renderer under test here"
+      },
+      "packages-node/providence-analytics/package.json": {
+        "oxc-parser": "parser providence-analytics wraps"
+      },
+      "packages-node/remark-extend/package.json": {
+        "remark-gfm": "remark plugin this package extends"
+      },
+      "packages-node/rocket-preset-extend-lion-docs/package.json": {
+        "@babel/plugin-syntax-import-assertions": "babel plugin of the docs preset",
+        "@babel/core": "babel core of the docs preset"
+      }
     }
   }
 }
