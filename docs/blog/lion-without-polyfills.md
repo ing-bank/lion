@@ -5,7 +5,7 @@ description: Lion has been a long user of the scoped registry - always requiring
 date: 2022-04-05
 tags: [javascript, polyfills]
 cover_image: /blog/images/lion-without-polyfills.png
-cover_credits: "subject - *Scaffolding and workers at Legislative Building construction site, Washington State Capito* by <div class='fn value'> / ornament - Young and Halstead's descriptive seed catalogue (1902) (20560740122).jpg (No restrictions) / background - BridgeOfTheGods2.jpg (CC BY 2.5)"
+cover_credits: "subject - Scaffolding and workers at Legislative Building construction... (Public domain, match 0.667); plate, scene and mark - Lion"
 eleventyNavigation:
   key: Lion without polyfills
   title: Lion without polyfills

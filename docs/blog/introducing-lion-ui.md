@@ -5,7 +5,7 @@ description: Lion introduces the new package @lion/ui which is a collection of a
 date: 2023-03-20
 tags: [javascript]
 cover_image: /blog/images/introducing-lion-ui.png
-cover_credits: 'subject - Cenotaph sketch by Lutyens.jpg (Public domain) / ornament - made for this site / background - *Blueprint reading / a practical manual of instruction in blueprint reading through the anal* by <p>Fairfield, Howard Parker, 1858-'
+cover_credits: "subject made for this site; plate, scene and mark - Lion"
 eleventyNavigation:
   key: Introducing Lion UI
   title: Introducing Lion UI

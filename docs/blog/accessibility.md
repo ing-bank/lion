@@ -5,7 +5,7 @@ description: What does the term Accessibility mean within the context of Lion?
 date: 2021-12-07
 tags: [ux, accessibility]
 cover_image: /blog/images/accessibility.png
-cover_credits: "subject - Secretary Kerry Fires the Starting Gun for the Men's Push-Rim Wheelchair Division of the B (Public domain) / ornament - Blindness Braille-Apparatus Britannica.png (Public domain) / background - Tactile paving, Albert Street, Brisbane CBD L1030419.jpg (CC0)"
+cover_credits: "subject - Secretary Kerry Fires the Starting Gun for the Men's Push-Rim... (Public domain, match 0.58); plate, scene and mark - Lion"
 eleventyNavigation:
   key: The Accessibility of Lion
   title: The Accessibility of Lion

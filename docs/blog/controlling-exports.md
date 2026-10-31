@@ -5,7 +5,7 @@ description: Maintainer can now define their public api of a package itself.
 date: 2021-03-09
 tags: [javascript, exports]
 cover_image: /blog/images/controlling-exports.png
-cover_credits: 'subject - made for this site / ornament - PPS-X01.1.png (CC0) / background - Shipping containers stacked Panama City panama.jpg (Public domain)'
+cover_credits: "subject made for this site; plate, scene and mark - Lion"
 eleventyNavigation:
   key: Controlling exports
   title: Controlling exports
