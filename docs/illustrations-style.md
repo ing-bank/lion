@@ -5,9 +5,57 @@ mascot in one of them without it reading as a sticker. Use this file as the prom
 illustration is needed anywhere else on the portal, so a new drawing lands in the same visual
 language.
 
-The covers ship as **rasters** in `public/blog/images/<slug>.png` (1536x768, 2:1), drawn on the
-quality model id. An earlier round shipped them as traced SVG; the tracer flattened the hatching that
-carries this style, so the raster route won - sharper, and cheaper than the tooling it needed.
+The covers ship as **rasters** in `public/blog/images/<slug>.png` (1536x768, 2:1). An earlier round
+shipped them as traced SVG; the tracer flattened the hatching that carries this style, so the raster
+route won - sharper, and cheaper than the tooling it needed.
+
+They ship as **palette PNGs, not JPEG**, and that is a hard requirement rather than a size choice:
+JPEG re-shifts the accent on the way out (measured: the yellow plateau came back `#ffd300` on one
+cover, 18 points off on green), so a JPEG cover cannot carry the house yellow exactly. Quantise to 32
+colours and overwrite the palette entry nearest the accent with `#FFC107` itself; the modal yellow in
+every shipped file then measures `#ffc107`. Quoting to 16 colours saves little (the print grain
+dominates the entropy: measured 16c 535 KB against 32c 687 KB) and risks re-cutting the palette onto a
+neighbour instead.
+
+## Current direction: the editorial collage
+
+The set on the blog today is the collage, not the engraving. Same palette, same house restraint, but
+the construction is taken off the Wired article hero: **a photographic subject cut out hard and printed
+in high-contrast black and white, laid on a flat field, with the scenery printed around it.**
+
+| layer         | what it is                                                                                        |
+| ------------- | ------------------------------------------------------------------------------------------------- |
+| field         | paper `#e8e8e8`, edge to edge                                                                     |
+| scenery       | vertical bars in a grey _lighter_ than the ink (`#acacac`), on a shared ground line at 94% height |
+| accent screen | a yellow dot screen printed **first**, so the bars print over it and interrupt it                 |
+| bar tips      | selected bars carry their top blocks in the accent, so the yellow rides the bar rhythm            |
+| furniture     | one pixel sprite standing **on** a bar top, footprint square on the bar it belongs to             |
+| subject       | the cutout, white outline tracing its silhouette, standing on the bars' ground line               |
+| filter        | dot screen over everything, paper grain, ink out of register by 2-3px                             |
+
+Rules that make it work, each learned from a rejected round:
+
+- **The accent interacts, it does not sit beside the composition.** Yellow confined to a corner sprite
+  read as an addition; the plate only came together when the yellow was part of the scenery - screen
+  behind the bars, tips on the bars, the sprite's feet on a bar. Measured coverage across the shipped
+  set is 0.3-0.4% of the plate. Below about 0.2% it stops registering at card size (one variant
+  measured 0.11% and read as an accident).
+- **"8-bit" means blocky videogame furniture**: sprites and HUD drawn on character grids and scaled
+  with nearest neighbour, so the steps are square pixels. Not a smooth vector pretending to be retro,
+  and not screenshots or logo art from a game.
+- **Subjects stand clear of everything.** The learned background removal reads anything crossing the
+  body as background: a lathe in front of a figure's legs cost it a leg and half a torso. Photograph or
+  generate the subject standing free of props, on one flat seamless backdrop.
+- **Trim the cutout to its content box before placing it.** Background removal leaves the studio's floor
+  margin under the object, so aligning the canvas bottom to the ground line leaves every object
+  floating. Align the alpha's bounding box instead.
+- **Pin the accent last.** The screen, the grain and the misregistered ink all sit over the yellow, so
+  the snap to `#FFC107` has to happen after the filter pass - measured: `#edb808` before it.
+
+## The earlier direction: the engraving plate
+
+Kept because some drawings on the portal still use it, and because it documents why the collage took
+over.
 
 ## The style in one line
 
