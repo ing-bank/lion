@@ -253,6 +253,41 @@ lands on `#FFC107` exactly. Shifting rather than filling keeps the highlights an
 engraving put around the accent, and the step prints the before/after mean per cover so the claim is
 checkable in the log rather than asserted.
 
+## Carrying a mark: the logo goes on an object, deformed to it
+
+The set is about naming what a post covers, and a mark that floats in a corner reads as a sticker
+however well it is drawn. The TypeScript cover is the reference: its badge sits on the fuel tank and its
+star on the fairing, each following that surface. Every cover now carries its marks the same way.
+
+| where the mark sits | how it is applied                                                                     |
+| ------------------- | ------------------------------------------------------------------------------------- |
+| a machine or prop   | **decal**: warp the mark onto a quad on the object's own axis, and apply it as paint    |
+| a flat plate        | **annotation**: a hairline leader from the mark to what it labels, or a ruled title block |
+| a curved surface    | **bend**: slice the mark into strips and map each onto the annulus between two radii    |
+
+- **Measure the object's axis, do not guess it.** The rocket's hull runs at -28.9 degrees, from nozzle at
+  (0.28, 0.78) to nose tip at (0.94, 0.05) in the group's frame, and the hull is 0.08 of the frame wide.
+  Those numbers came from looking at the cut-out; with them the decals land on the hull, without them
+  they land on the background.
+- **Place the decal in the un-rotated group's frame and rotate the group afterwards.** Building quads
+  inside the *rotated* group's bounding box produces axis-aligned quads, so the decals come out square to
+  the page and float: the mark has to turn with the machine, not with the page.
+- **Apply the mark as paint, not as a picture of a mark.** Multiply the pixels underneath by (1 - mask),
+  so the object's panel lines, rivets and shading stay visible through it. An opaque pasted block hides
+  the surface it is supposed to be on. For the accent, multiply the yellow by the surface's own
+  luminance so it darkens and brightens with the metal.
+- **Bow the quad, more where the object tapers.** A cylinder's far edge is narrower; a nose cone tapers
+  hardest.
+- **White backing is for knockouts, not for decals.** A silhouette-following white plate stops the
+  plate's linework at a label's edge, which is what makes a nameplate or a struck-through mark readable -
+  but on an object it destroys the illusion.
+- **Spread the marks evenly and clear of the figure.** Two decals under the rider's hand read as clutter;
+  spaced along the axis they read as livery.
+- **Leader lines must not cross.** Order the labels the way their targets run along the diagram, and end
+  each leader on the construction rather than on the body, where a line can never land inside a limb.
+- **Put the accent on one mark** rather than spending it on a lone band: the mark carries the yellow into
+  the composition's own weight.
+
 ## Checklist before shipping a drawing
 
 - [ ] Plate is one black field; the scene spans the canvas with no large empty margins.
