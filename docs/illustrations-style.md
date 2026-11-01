@@ -288,6 +288,28 @@ star on the fairing, each following that surface. Every cover now carries its ma
 - **Put the accent on one mark** rather than spending it on a lone band: the mark carries the yellow into
   the composition's own weight.
 
+### Where the surface should come from the model, and where it should not
+
+Warping a real logo onto bare hull is a composite, and it reads as one. Handing the model the logo as a
+reference so *it* paints the mark is worse: measured on `qwen-image-edit@2511`, it kept the character but
+re-rendered the environment, put a correct Rust cog in the wrong place, drew an abstract block where the
+npm glyph belongs, and by the third chained pass had turned the lion into another brand's mark.
+
+The split that works is by competence:
+
+1. ask the model for the **surface only** - empty stencil plates or blank decal panels on the object, no
+   lettering, nothing else changed;
+2. **measure** the plates off the result (centre, size, tilt) rather than assuming where they landed;
+3. warp the **project's own art** into those plates.
+
+That gets the model's curvature and lighting under the mark and the source's exact letterforms in it. The
+same pass may add background elements of its own - large ghosted versions of the marks appeared in the
+oxc pass - so the result is reviewed before it ships, not trusted.
+
+Measured API limits on that route: `inputs.referenceImages` accepts **at most three** images on both
+`alibaba:qwen-image-edit@2511` and `alibaba:qwen-image@3.0-pro`, and `providerSettings.alibaba` belongs to
+the generation model only - the edit model rejects it with `mismatchProviderSettingsProvider`.
+
 ## Checklist before shipping a drawing
 
 - [ ] Plate is one black field; the scene spans the canvas with no large empty margins.
