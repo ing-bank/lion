@@ -261,10 +261,15 @@ export class OverlayController extends EventTarget {
               offset: [0, 8], // horizontal and vertical margin (distance between popper and referenceElement)
             },
           },
-          { name: 'arrow', enabled: false },
+          {
+            name: 'arrow',
+            enabled: false,
+          },
         ],
       },
-      viewportConfig: { placement: 'center' },
+      viewportConfig: {
+        placement: 'center',
+      },
       zIndex: 9999,
       isActivated: true,
       elementToFocusOnShow: false,
@@ -1044,16 +1049,7 @@ export class OverlayController extends EventTarget {
         contentNode: this.contentNode,
       });
 
-      const hasNativeDialog =
-        'HTMLDialogElement' in window && this.__wrappingDialogNode instanceof HTMLDialogElement;
-
-      if (hasNativeDialog) {
-        // We disable the invokerNode for a fraction of a second, so that the LionButton
-        // is not triggered (via keyup) when the dialog closes.
-        // See: https://github.com/ing-bank/lion/issues/2555
-        if (this.invokerNode) {
-          this.invokerNode.disabled = true;
-        }
+      if ('HTMLDialogElement' in window && this.__wrappingDialogNode instanceof HTMLDialogElement) {
         this.__wrappingDialogNode.close();
       }
       // @ts-ignore
@@ -1062,18 +1058,6 @@ export class OverlayController extends EventTarget {
       this._keepBodySize({ phase: 'hide' });
       this.dispatchEvent(new Event('hide'));
       this._restoreFocus();
-      // We disable the invokerNode for a fraction of a second, so that the LionButton
-      // is not triggered (via keyup) when the dialog closes.
-      // See: https://github.com/ing-bank/lion/issues/2555
-      // N.B. when the solutions mentioned here would be implemented, this temporary disabling
-      // would not be needed anymore
-      if (hasNativeDialog) {
-        setTimeout(() => {
-          if (this.invokerNode) {
-            this.invokerNode.disabled = false;
-          }
-        }, 100);
-      }
     }
     /** @type {function} */ (this._hideResolve)();
 

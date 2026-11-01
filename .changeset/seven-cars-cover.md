@@ -2,4 +2,4 @@
 '@lion/ui': patch
 ---
 
-[overlays, button] integration issue between overlays (using native dialog), form with implicits submission, and lion-button
+[button] only trigger click on keyup when keydown was received on the button, preventing unintended re-opening of overlays after form submission

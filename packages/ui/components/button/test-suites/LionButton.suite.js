@@ -337,6 +337,23 @@ export function LionButtonSuite({ classes = {}, tagString } = {}) {
         expect(formButtonClickedSpy).to.have.been.calledOnce;
       });
 
+      it('does not trigger click when keyup is dispatched without preceding keydown', async () => {
+        const clickSpy = /** @type {EventListener} */ (sinon.spy());
+        const form = await fixture(html`
+          <form @submit=${/** @type {EventListener} */ ev => ev.preventDefault()}>
+            <${tagButton} @click="${clickSpy}" type="submit">foo</${tagButton}>
+          </form>
+        `);
+
+        const button = /** @type {LionButton} */ (form.querySelector(tagStringButton));
+        button.dispatchEvent(new KeyboardEvent('keyup', { key: ' ' }));
+        button.dispatchEvent(new KeyboardEvent('keyup', { key: 'Enter' }));
+        await aTimeout(0);
+        await aTimeout(0);
+
+        expect(clickSpy).to.not.have.been.called;
+      });
+
       it('behaves like native `button` when interacted with keyboard space', async () => {
         const formButtonClickedSpy = /** @type {EventListener} */ (sinon.spy());
         const form = await fixture(html`
@@ -346,6 +363,7 @@ export function LionButtonSuite({ classes = {}, tagString } = {}) {
         `);
 
         const lionButton = /** @type {LionButton} */ (form.querySelector(tagStringButton));
+        lionButton.dispatchEvent(new KeyboardEvent('keydown', { key: ' ' }));
         lionButton.dispatchEvent(new KeyboardEvent('keyup', { key: ' ' }));
         await aTimeout(0);
         await aTimeout(0);
@@ -362,6 +380,7 @@ export function LionButtonSuite({ classes = {}, tagString } = {}) {
         `);
 
         const button = /** @type {LionButton} */ (form.querySelector(tagStringButton));
+        button.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
         button.dispatchEvent(new KeyboardEvent('keyup', { key: 'Enter' }));
         await aTimeout(0);
         await aTimeout(0);

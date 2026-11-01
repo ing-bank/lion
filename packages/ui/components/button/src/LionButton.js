@@ -32,7 +32,10 @@ const isSpaceKeyboardClickEvent = (/** @type {KeyboardEvent} */ e) => e.key === 
  */
 export class LionButton extends DisabledWithTabIndexMixin(LitElement) {
   static get properties() {
-    return { active: { type: Boolean, reflect: true }, type: { type: String, reflect: true } };
+    return {
+      active: { type: Boolean, reflect: true },
+      type: { type: String, reflect: true },
+    };
   }
 
   render() {
@@ -125,6 +128,10 @@ export class LionButton extends DisabledWithTabIndexMixin(LitElement) {
     super();
     this.type = 'button';
     this.active = false;
+    /** @type {boolean} @private */
+    this.__hasKeyDown = false;
+    /** @type {string | null} @private */
+    this.__keyDownKey = null;
 
     this.__setupEvents();
   }
@@ -158,6 +165,11 @@ export class LionButton extends DisabledWithTabIndexMixin(LitElement) {
     this.addEventListener('mousedown', this.__mousedownHandler);
     this.addEventListener('keydown', this.__keydownHandler);
     this.addEventListener('keyup', this.__keyupHandler);
+    this.addEventListener('blur', () => {
+      this.active = false;
+      this.__hasKeyDown = false;
+      this.__keyDownKey = null;
+    });
   }
 
   /**
@@ -191,12 +203,18 @@ export class LionButton extends DisabledWithTabIndexMixin(LitElement) {
     }
 
     this.active = true;
+    this.__hasKeyDown = true;
+    this.__keyDownKey = event.key;
     /**
      * @param {KeyboardEvent} keyupEvent
      */
     const keyupHandler = keyupEvent => {
       if (isKeyboardClickEvent(keyupEvent)) {
         this.active = false;
+        setTimeout(() => {
+          this.__hasKeyDown = false;
+          this.__keyDownKey = null;
+        });
         document.removeEventListener('keyup', keyupHandler, true);
       }
     };
@@ -208,7 +226,15 @@ export class LionButton extends DisabledWithTabIndexMixin(LitElement) {
    * @private
    */
   __keyupHandler(event) {
-    if (!isKeyboardClickEvent(event) || this.disabled) return;
+    if (!isKeyboardClickEvent(event) || this.disabled) {
+      return;
+    }
+
+    if (!this.__hasKeyDown || this.__keyDownKey !== event.key) {
+      return;
+    }
+    this.__hasKeyDown = false;
+    this.__keyDownKey = null;
 
     // Fixes IE11 double submit/click. Enter keypress somehow triggers the __keyUpHandler on the native <button>
     if (event.target && event.target !== this) {

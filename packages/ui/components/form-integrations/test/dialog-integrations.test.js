@@ -10,6 +10,7 @@ import { html } from 'lit';
 import { sendKeys } from '@web/test-runner-commands';
 
 import { isActiveElement } from '../../core/test-helpers/isActiveElement.js';
+import { isElementVisible } from '../../core/test-helpers/isElementVisible.js';
 import { getAllTagNames } from './helpers/helpers.js';
 import './helpers/umbrella-form.js';
 
@@ -101,24 +102,26 @@ describe('Form inside dialog Integrations', () => {
   });
 
   it('does not re-open when closed via submit event using lion-button as invoker', async () => {
-    const el = await fixture(html`
-      <lion-dialog opened>
-        <div slot="content">
-          <lion-form @submit="${() => el.close()}">
-            <form @submit="${event => event.preventDefault()}">
-              <input type="text" name="name" />
-              <button type="submit">Submit</button>
-            </form>
-          </lion-form>
-        </div>
-        <lion-button type="button" slot="invoker">Invoker</lion-button>
-      </lion-dialog>
-    `);
-
-    const dialogEl = /** @type {HTMLDialogElement} */ (el._overlayCtrl.__wrappingDialogNode);
+    const el = /** @type {LionDialog} */ (
+      await fixture(html`
+        <lion-dialog opened>
+          <div slot="content">
+            <lion-form @submit="${() => el.close()}">
+              <form @submit="${(/** @type {Event} */ event) => event.preventDefault()}">
+                <input type="text" name="name" />
+                <button type="submit">Submit</button>
+              </form>
+            </lion-form>
+          </div>
+          <lion-button type="button" slot="invoker">Invoker</lion-button>
+        </lion-dialog>
+      `)
+    );
 
     // @ts-expect-error [allow-protected-in-tests]
-    expect(dialogEl.checkVisibility()).to.be.true;
+    const dialogEl = /** @type {HTMLDialogElement} */ (el._overlayCtrl.__wrappingDialogNode);
+
+    expect(isElementVisible(dialogEl)).to.be.true;
 
     /** @type {HTMLInputElement} */ (el.querySelector('input[type="text"]')).focus();
 
@@ -127,10 +130,11 @@ describe('Form inside dialog Integrations', () => {
     await el.updateComplete;
     await el.updateComplete;
     await el.updateComplete;
-    await aTimeout(); // wait for dialog to close
+    await aTimeout(0); // wait for dialog to close
 
-    expect(dialogEl.checkVisibility()).to.be.false;
+    expect(isElementVisible(dialogEl)).to.be.false;
 
+    // @ts-expect-error [allow-protected-in-tests]
     expect(isActiveElement(el._overlayInvokerNode)).to.be.true;
   });
 });
