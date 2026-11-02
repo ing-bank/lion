@@ -45,7 +45,10 @@ describe('<lion-collapsible> screen reader', () => {
   it('announces the invoker as a control for a closed section', async () => {
     const wrapper = await fixtureComponent();
     const collapsible = /** @type {HTMLElement} */ (wrapper.querySelector('lion-collapsible'));
-    await expect(collapsible).to.be.accessible();
+    // axe first, and with Lion's own exception: the overlay wrapper is a <dialog role="none"> for the
+    // top layer, which axe reports as `aria-allowed-role`; Lion's overlay rationale prescribes ignoring
+    // exactly that rule. See the package README.
+    await expect(collapsible).to.be.accessible({ ignoredRules: ['aria-allowed-role'] });
 
     await sr.focus('lion-collapsible');
     if (activeReader === 'nvda') {

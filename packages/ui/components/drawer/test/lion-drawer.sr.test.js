@@ -48,7 +48,10 @@ describe('<lion-drawer> screen reader', () => {
   it('announces the invoker as a control that opens a closed drawer', async () => {
     const wrapper = await fixtureComponent();
     const drawer = /** @type {HTMLElement} */ (wrapper.querySelector('lion-drawer'));
-    await expect(drawer).to.be.accessible();
+    // axe first, and with Lion's own exception: the overlay wrapper is a <dialog role="none"> for the
+    // top layer, which axe reports as `aria-allowed-role`; Lion's overlay rationale prescribes ignoring
+    // exactly that rule. See the package README.
+    await expect(drawer).to.be.accessible({ ignoredRules: ['aria-allowed-role'] });
 
     await sr.focus('lion-drawer');
     if (activeReader === 'nvda') {

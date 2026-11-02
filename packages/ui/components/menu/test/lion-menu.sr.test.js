@@ -51,7 +51,10 @@ describe('<lion-menu> screen reader', () => {
     const menu = /** @type {HTMLElement} */ (wrapper.querySelector('lion-menu'));
     await /** @type {any} */ (menu).updateComplete;
     // axe keeps the role and the names honest; a reader wording them differently is not a regression.
-    await expect(menu).to.be.accessible();
+    // axe first, and with Lion's own exception: the overlay wrapper is a <dialog role="none"> for the
+    // top layer, which axe reports as `aria-allowed-role`; Lion's overlay rationale prescribes ignoring
+    // exactly that rule. See the package README.
+    await expect(menu).to.be.accessible({ ignoredRules: ['aria-allowed-role'] });
 
     await sr.focus('lion-menu');
     if (activeReader === 'nvda') {

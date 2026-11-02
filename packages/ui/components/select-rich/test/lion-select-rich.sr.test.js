@@ -51,7 +51,10 @@ describe('<lion-select-rich> screen reader', () => {
     const selectRich = /** @type {SelectRich} */ (document.querySelector('lion-select-rich'));
     // Axe keeps the name, the role and the selected state honest; how a reader words them is what the
     // assertions below are for.
-    await expect(selectRich).to.be.accessible();
+    // axe first, and with Lion's own exception: the overlay wrapper is a <dialog role="none"> for the
+    // top layer, which axe reports as `aria-allowed-role`; Lion's overlay rationale prescribes ignoring
+    // exactly that rule. See the package README.
+    await expect(selectRich).to.be.accessible({ ignoredRules: ['aria-allowed-role'] });
 
     // The component generates its own invoker when the consumer does not pass one (the
     // "generates an lion-select-invoker if no invoker is provided" unit test), and *that* element is

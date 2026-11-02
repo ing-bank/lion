@@ -116,6 +116,10 @@ describe('<lion-tooltip> screen reader', () => {
 
   it('announces the tooltip as the description of its invoker', async () => {
     const el = await fixtureTooltip();
+    // axe first, and with Lion's own exception: the overlay wrapper is a <dialog role="none"> for the
+    // top layer, which axe reports as `aria-allowed-role`; Lion's overlay rationale prescribes ignoring
+    // exactly that rule. See the package README.
+    await expect(el).to.be.accessible({ ignoredRules: ['aria-allowed-role'] });
     const invoker = /** @type {HTMLElement} */ (el.querySelector('[slot="invoker"]'));
     const content = /** @type {HTMLElement} */ (el.querySelector('[slot="content"]'));
 
@@ -129,6 +133,11 @@ describe('<lion-tooltip> screen reader', () => {
       'the invoker points at the tooltip content',
     );
     expect(content.getAttribute('role')).to.equal('tooltip');
+
+    // axe's `aria-allowed-role` above is about the overlay *wrapper* (`<dialog role="none">`, there for the
+    // top layer); what a reader gets is the content node, with its own role and name - which is what the
+    // expectations below assert. The wrapper is deliberately not reachable from here (it lives in the
+    // overlay host's shadow tree), so the pairing is pinned in the component test instead.
     expect(content.id).to.not.equal(null);
 
     // The description is announced with the control it belongs to; a reader that speaks about what

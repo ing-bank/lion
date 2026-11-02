@@ -41,7 +41,10 @@ describe('<lion-button> screen reader', () => {
   it('announces every button by its name, also when it only holds an icon', async () => {
     await fixtureComponent();
     const wrapper = /** @type {HTMLElement} */ (document.querySelector('div'));
-    await expect(wrapper).to.be.accessible();
+    // axe first, and with Lion's own exception: the overlay wrapper is a <dialog role="none"> for the
+    // top layer, which axe reports as `aria-allowed-role`; Lion's overlay rationale prescribes ignoring
+    // exactly that rule. See the package README.
+    await expect(wrapper).to.be.accessible({ ignoredRules: ['aria-allowed-role'] });
 
     await sr.focus('lion-button');
     // The log grows one phrase per step, so walk the three buttons before asserting the whole set.

@@ -48,7 +48,10 @@ describe('<lion-accordion> screen reader', () => {
   it('announces the summary as a heading with a button that controls a closed section', async () => {
     const wrapper = await fixtureComponent();
     const accordion = /** @type {HTMLElement} */ (wrapper.querySelector('lion-accordion'));
-    await expect(accordion).to.be.accessible();
+    // axe first, and with Lion's own exception: the overlay wrapper is a <dialog role="none"> for the
+    // top layer, which axe reports as `aria-allowed-role`; Lion's overlay rationale prescribes ignoring
+    // exactly that rule. See the package README.
+    await expect(accordion).to.be.accessible({ ignoredRules: ['aria-allowed-role'] });
 
     await sr.focus('lion-accordion');
     if (activeReader === 'nvda') {

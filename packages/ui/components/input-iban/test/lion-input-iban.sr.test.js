@@ -102,7 +102,11 @@ describe('<lion-input-iban> screen reader', () => {
   });
 
   it('announces an empty IBAN field', async () => {
-    await fixtureIban();
+    const el = await fixtureIban();
+    // axe first, and with Lion's own exception: the overlay wrapper is a <dialog role="none"> for the
+    // top layer, which axe reports as `aria-allowed-role`; Lion's overlay rationale prescribes ignoring
+    // exactly that rule. See the package README.
+    await expect(el).to.be.accessible({ ignoredRules: ['aria-allowed-role'] });
 
     await anchorOnIbanField();
     if (activeReader === 'voiceover') {

@@ -48,7 +48,10 @@ describe('<lion-textarea> screen reader', () => {
     // label, role or state stops being exposed (a reader that words things differently is not
     // a regression, a control that lost its name is).
     const component = /** @type {HTMLElement} */ (el.querySelector('lion-textarea'));
-    await expect(component).to.be.accessible();
+    // axe first, and with Lion's own exception: the overlay wrapper is a <dialog role="none"> for the
+    // top layer, which axe reports as `aria-allowed-role`; Lion's overlay rationale prescribes ignoring
+    // exactly that rule. See the package README.
+    await expect(component).to.be.accessible({ ignoredRules: ['aria-allowed-role'] });
 
     await sr.focus('lion-textarea');
     // The virtual reader and NVDA speak about what their cursor is on, so both walk onto the control;

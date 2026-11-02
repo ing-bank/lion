@@ -36,6 +36,24 @@ describe('<lion-menu> opened state', () => {
     // The items stay menuitems in place. This is state, so it belongs here: a screen reader test would need
     // the overlay open, whose state depends on the rest of the run, and a closed menu makes the virtual
     // reader pass on the slotted items regardless - the announcement itself is asserted in the SR test.
+    // The wrapper axe complains about, reachable here because a menu's overlay host stays inside the
+    // component: it exists for the top layer only and carries no role of its own, so the announced role is
+    // the content's. That is the DOM half of the proof; the reader half is in the SR test.
+    const findWrapper = /** @param {any} root @returns {HTMLDialogElement | null} */ root => {
+      const direct = root.querySelector?.('dialog[data-overlay-outer-wrapper]');
+      if (direct) return direct;
+      for (const el of root.querySelectorAll?.('*') ?? []) {
+        if (el.shadowRoot) {
+          const inner = findWrapper(el.shadowRoot);
+          if (inner) return inner;
+        }
+      }
+      return null;
+    };
+    const wrapper = findWrapper(document);
+    expect(wrapper, 'the overlay wrapper exists while the menu is open').to.exist;
+    expect(wrapper?.getAttribute('role'), 'and it carries no role of its own').to.equal('none');
+
     const items = [...menu.querySelectorAll('[role="menuitem"]')];
     expect(items.length, 'both items are exposed as menuitems').to.equal(2);
     expect(items.every(item => menu.contains(item))).to.equal(true);

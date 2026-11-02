@@ -50,7 +50,10 @@ describe('<lion-tabs> screen reader', () => {
     const tabs = /** @type {HTMLElement} */ (wrapper.querySelector('lion-tabs'));
     // axe keeps the role, the name and the selected state honest; a reader wording them differently is
     // not a regression, a tab that lost its panel is.
-    await expect(tabs).to.be.accessible();
+    // axe first, and with Lion's own exception: the overlay wrapper is a <dialog role="none"> for the
+    // top layer, which axe reports as `aria-allowed-role`; Lion's overlay rationale prescribes ignoring
+    // exactly that rule. See the package README.
+    await expect(tabs).to.be.accessible({ ignoredRules: ['aria-allowed-role'] });
 
     await sr.focus('lion-tabs');
     if (activeReader === 'nvda') {

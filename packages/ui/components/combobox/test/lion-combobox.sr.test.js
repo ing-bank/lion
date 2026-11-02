@@ -52,7 +52,10 @@ describe('<lion-combobox> screen reader', () => {
     // The wiring itself, independent of phrasing: axe fails the run when the name, the role or the
     // expanded state stops being exposed - a reader wording it differently is not a regression, a
     // combobox that lost its popup is.
-    await expect(combobox).to.be.accessible();
+    // axe first, and with Lion's own exception: the overlay wrapper is a <dialog role="none"> for the
+    // top layer, which axe reports as `aria-allowed-role`; Lion's overlay rationale prescribes ignoring
+    // exactly that rule. See the package README.
+    await expect(combobox).to.be.accessible({ ignoredRules: ['aria-allowed-role'] });
 
     await sr.focus('lion-combobox');
     if (activeReader !== 'voiceover') {
