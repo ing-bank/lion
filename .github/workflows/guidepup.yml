@@ -91,7 +91,7 @@ jobs:
               if npm run test:sr -- --voiceover --files "$file" >"$log" 2>&1; then
                 break
               fi
-              if [ "$attempt" = 2 ] || ! grep -qE "cannot be started|Unable to activate|is not running|did not answer after starting" "$log"; then
+              if [ "$attempt" = 2 ] || ! grep -qE "cannot be started|Unable to activate|is not running|did not answer after starting|\[sr-recover\]" "$log"; then
                 status="FAIL"
                 break
               fi
@@ -149,7 +149,7 @@ jobs:
               if npm run test:sr -- --nvda --files "$file" >"$log" 2>&1; then
                 break
               fi
-              if [ "$attempt" = 2 ] || ! grep -qE "cannot be started|Unable to activate|is not running|did not answer after starting" "$log"; then
+              if [ "$attempt" = 2 ] || ! grep -qE "cannot be started|Unable to activate|is not running|did not answer after starting|\[sr-recover\]" "$log"; then
                 status="FAIL"
                 break
               fi
