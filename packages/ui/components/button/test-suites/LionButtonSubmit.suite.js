@@ -1,11 +1,18 @@
 /* eslint-disable lit-a11y/click-events-have-key-events */
 import { LionButtonSubmit } from '@lion/ui/button.js';
-import { aTimeout, defineCE, expect, fixture, html, unsafeStatic } from '@open-wc/testing';
+import { aTimeout, expect, fixture, html, unsafeStatic } from '@open-wc/testing';
 import { sendKeys } from '@web/test-runner-commands';
 import sinon from 'sinon';
+import { resolveSuiteTag } from '../../core/test-helpers/resolveSuiteTag.js';
 
-export function LionButtonSubmitSuite({ klass = LionButtonSubmit } = {}) {
-  const tagStringButton = defineCE(class extends klass {});
+/**
+ * Runs the `LionButtonSubmit` behavioural suite. The caller hands the element to run against; anything
+ * left out keeps the element this suite registers from the Lion class.
+ * @typedef {import('@lion/ui/types/test-suites.js').SuiteElement} SuiteElement
+ * @param {import('@lion/ui/types/test-suites.js').SuiteConfig<{host: SuiteElement}>} [customConfig]
+ */
+export function LionButtonSubmitSuite({ classes = {}, tagString } = {}) {
+  const tagStringButton = resolveSuiteTag(classes.host, tagString, LionButtonSubmit);
   const tagButton = unsafeStatic(tagStringButton);
 
   describe('LionButtonSubmit', () => {

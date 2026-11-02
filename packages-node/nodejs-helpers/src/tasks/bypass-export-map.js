@@ -1,5 +1,5 @@
 import path from 'path';
-import { globby } from 'globby';
+import { fsGlob } from 'providence-analytics/utils.js';
 // @ts-ignore
 import { createRequire } from 'module';
 // @ts-ignore
@@ -23,6 +23,13 @@ export const ERROR_CAN_NOT_ACCESS_PACKAGE_DIR = 'Can not access package director
  * @returns {boolean}
  */
 const isDirectorySync = filePath => lstatSync(filePath).isDirectory();
+
+/**
+ * Glob patterns use forward slashes on every platform
+ * @param {string} filePath
+ * @returns {string}
+ */
+const toForwardSlashes = filePath => filePath.replace(/\\/g, '/');
 
 /**
  * Adjusts the source by updating the relative path value
@@ -128,16 +135,25 @@ const bypassExportMapItem = async (packageDir, exportMapKey, exportMapValue) => 
   const exportMapValuePath = path.join(packageDir, exportMapValue);
   const exportMapKeyPath = path.join(packageDir, exportMapKey);
   // TODO: css import assertions, use generic export map resolver from providence?
+  // fsGlob returns forward-slash paths (globby preserved the separators of the pattern), so the
+  // output path is derived from the resolved file path instead of replacing the pattern inside the
+  // returned string: a `filePath.replace(exportMapValuePath, …)` silently stops matching on Windows,
+  // where the pattern (absolute, backslashes) and the result (forward slashes) disagree, and the
+  // output dir then points back at the input dir.
+  const cwd = process.cwd();
+  const valuePathPattern = toForwardSlashes(path.relative(cwd, exportMapValuePath));
   const searchPattern = isDirectorySync(exportMapValuePath)
-    ? path.join(exportMapValuePath, '**', '*.js')
-    : exportMapValuePath;
-  const filePaths = await globby(searchPattern);
+    ? path.posix.join(valuePathPattern, '**', '*.js')
+    : valuePathPattern;
+  const filePaths = await fsGlob(searchPattern, { cwd });
   // @ts-ignore
   return asyncConcurrentForEach(filePaths, async filePath => {
-    const outputFilePath = filePath.replace(exportMapValuePath, exportMapKeyPath);
+    const absoluteFilePath = path.resolve(cwd, filePath);
+    const relativePath = path.relative(exportMapValuePath, absoluteFilePath);
+    const outputFilePath = path.resolve(exportMapKeyPath, relativePath);
     const outputDir = path.dirname(outputFilePath);
-    const fileName = path.basename(filePath);
-    const exportsDir = path.dirname(filePath);
+    const fileName = path.basename(absoluteFilePath);
+    const exportsDir = path.dirname(absoluteFilePath);
     await makeDir(outputDir);
     return generateAdjustedExportFile(fileName, exportsDir, outputDir);
   });

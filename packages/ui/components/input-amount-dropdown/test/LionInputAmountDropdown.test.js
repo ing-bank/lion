@@ -64,9 +64,10 @@ class WithFormControlInputAmountDropdown extends ScopedElementsMixin(LionInputAm
 runInputAmountDropdownSuite();
 
 describe('WithFormControlInputAmountDropdown', () => {
-  // @ts-expect-error
   // Runs it for LionSelectRich, which uses .modelValue/@model-value-changed instead of .value/@change
-  runInputAmountDropdownSuite({ klass: WithFormControlInputAmountDropdown });
+  runInputAmountDropdownSuite({
+    classes: { host: WithFormControlInputAmountDropdown },
+  });
 
   it('focuses the textbox right after selection if selected via opened dropdown if interaction-mode is mac', async () => {
     class InputAmountDropdownMac extends LionInputAmountDropdown {

@@ -3,13 +3,7 @@
   "name": "@lion/root",
   "license": "MIT",
   "scripts": {
-    "build": "npm run build:astro && npm run build:rocket && npm run build:update-links",
-    "build:astro": "astro telemetry disable && astro build --force",
-    "build:clean": "find src/pages -path \"*/_demos/*.js\" -type f -delete && rm -rf node_modules/_lion_docs && npm run build",
-    "build:rocket": "rocket build",
-    "build:portal": "npm run build:astro && npm run build:update-links",
-    "build:update-links": "node ./src/utils/rewrite-links.mjs",
-    "bundlesize": "rollup -c bundlesize/rollup.config.js && bundlesize",
+    "build": "npm --prefix portal run build",
     "changeset": "changeset",
     "custom-elements-manifest": "npm run custom-elements-manifest --workspaces --if-present && node ./scripts/create-api-tables.mjs",
     "debug": "web-test-runner --watch --config web-test-runner-chrome.config.mjs",
@@ -17,16 +11,15 @@
     "debug:no-scoped-registries-polyfill": "npm run debug -- --no-scoped-registries-polyfill",
     "debug:webkit": "web-test-runner --watch --config web-test-runner-webkit.config.mjs",
     "debug:sr": "web-test-runner --watch --config web-test-runner-sr.config.mjs",
-    "predeploy": "npm run build:portal",
+    "predeploy": "npm run build",
     "deploy": "gh-pages -d _site -a -r git@github.com:ing-bank/lion --nojekyll",
-    "dev": "astro dev --force",
     "format": "npm run format:eslint && npm run format:prettier",
     "format:eslint": "eslint --ext .js,.html . --fix",
     "format:prettier": "prettier \"**/*.{js,md,astro}\" \"packages/*/package.json\" \"package.json\" --write",
     "postinstall": "npx patch-package && npm run build:phone --workspace @lion/ui && npm run custom-elements-manifest",
-    "lint": "run-p lint:*",
+    "lint": "wireit",
     "lint:eslint": "eslint --ext .js,.html .",
-    "lint:markdownlint": "git ls-files '*.md' | xargs markdownlint --ignore '{.github/**/*.md,.changeset/*.md,**/CHANGELOG.md,packages/ui/_legacy-changelogs/*.md,packages-node/awesome-phonenumber/upstream/**}'",
+    "lint:markdownlint": "git ls-files '*.md' | xargs markdownlint --ignore '{.github/**/*.md,.changeset/*.md,**/CHANGELOG.md,packages/ui/_legacy-changelogs/*.md,packages-node/awesome-phonenumber/upstream/**,prev-portal/*.md,portal/*.md}'",
     "lint:phone-number-up-to-date": "node ./scripts/lint-phone-number-lib.js",
     "lint:prettier": "prettier \"**/*.js\" --list-different || (echo '↑↑ these files are not prettier formatted ↑↑' && exit 1)",
     "lint:sr-command-budget": "node ./scripts/lint-sr-command-budget.js",
@@ -34,21 +27,18 @@
     "lint:versions": "node ./scripts/lint-versions.js",
     "prepare": "husky install",
     "preview": "npx serve _site",
-    "portal:preview": "node ./scripts/deploy-portal-preview.mjs",
     "release": "changeset publish",
     "repo:clean-slate": "git clean -dfX",
     "repo:diff-package-lock": "npx diff-package-lock",
+    "repo:lockfile:check": "npm run lockfile:check --workspace @lion/lockfile-interop",
+    "repo:lockfile:generate": "npm run lockfile:generate --workspace @lion/lockfile-interop",
     "screenshots-comparison:generate-screenshots-diff": "node ./scripts/screenshots-comparison/generate-screenshots-diff.js --target-branch master",
     "screenshots-comparison:update-baseline": "node ./scripts/screenshots-comparison/update-baseline.js --target-branch master",
-    "start": "rocket start",
-    "start:astro": "astro dev",
     "start:prod": "npm run preview",
     "temporary-disabled__lint:types": "npm run types",
-    "test": "run-p test:browser test:node",
+    "test": "wireit",
     "test:browser": "web-test-runner --coverage",
     "test:node": "npm run test:node --workspaces --if-present",
-    "test:screenshots": "npx rimraf screenshots/.diff/ && npx rimraf screenshots/.current/ && mocha --require scripts/screenshots/bootstrap.js --exit --timeout 10000 \"packages/**/test/*.screenshots-test.js\"",
-    "test:screenshots:update": "cross-env UPDATE_SCREENSHOTS=true npm run test:screenshots",
     "test:sr": "web-test-runner --config web-test-runner-sr.config.mjs",
     "types": "npm run types --workspaces --if-present",
     "types-check-only": "npm run types-check-only --workspaces --if-present"
@@ -64,28 +54,20 @@
     "playwright": "^1.61.0"
   },
   "devDependencies": {
-    "@astrojs/mdx": "^5.0.0",
     "@babel/core": "^7.29.6",
     "@bundled-es-modules/fetch-mock": "^6.5.2",
     "@changesets/cli": "^2.30.0",
     "@custom-elements-manifest/analyzer": "^0.10.10",
     "@custom-elements-manifest/to-markdown": "^0.1.0",
-    "@lion/astro-lit": "0.1.0",
     "@lit-labs/ssr": "4.1.0",
     "@lit-labs/testing": "^0.2.8",
     "@lit/reactive-element": "^2.1.2",
     "@mdjs/core": "^0.21.1",
-    "@mdjs/mdjs-preview": "^0.6.0",
-    "@mdjs/mdjs-story": "^0.4.0",
-    "@open-wc/building-rollup": "^2.2.3",
+    "@open-wc/dedupe-mixin": "^2.0.1",
     "@open-wc/eslint-config": "^12.0.3",
     "@open-wc/scoped-elements": "^3.0.5",
     "@open-wc/testing": "^4.0.0",
     "@open-wc/testing-helpers": "^3.0.1",
-    "@rocket/blog": "0.4.0",
-    "@rocket/cli": "^0.21.0",
-    "@rocket/launch": "^0.6.0",
-    "@rocket/search": "^0.5.1",
     "@thepassle/module-graph": "^0.11.0",
     "@types/autosize": "^4.0.3",
     "@types/chai-as-promised": "^8.0.1",
@@ -99,10 +81,6 @@
     "@web/test-runner-visual-regression": "^0.10.0",
     "@webcomponents/scoped-custom-element-registry": "^0.0.10",
     "@webcomponents/template-shadowroot": "^0.2.1",
-    "astro": "^6.0.8",
-    "astro-pagefind": "^1.8.5",
-    "astro-seo": "^0.7.5",
-    "bundlesize": "^1.0.0-beta.2",
     "cem-plugin-vs-code-custom-data-generator": "^1.4.2",
     "chai": "^4.5.0",
     "chai-as-promised": "^8.0.0",
@@ -114,18 +92,16 @@
     "eslint-plugin-import": "^2.31.0",
     "eslint-plugin-wc": "^2.2.0",
     "gh-pages": "^6.3.0",
-    "globby": "^16.1.0",
     "gray-matter": "^4.0.3",
     "husky": "^9.1.6",
     "lint-staged": "^15.2.10",
-    "looks-same": "^9.0.1",
     "markdownlint-cli": "^0.49.1",
     "mocha": "^10.7.3",
-    "npm-run-all": "^4.1.5",
     "patch-package": "^8.0.1",
     "postinstall-postinstall": "^2.1.0",
     "prettier": "^3.3.3",
     "prettier-package-json": "^2.8.0",
+    "providence-analytics": "^0.21.0",
     "remark-html": "^13.0.2",
     "rocket-preset-extend-lion-docs": "^0.4.0",
     "semver": "^7.6.3",
@@ -134,12 +110,6 @@
     "unist-util-visit": "^5.0.0",
     "wireit": "^0.14.13"
   },
-  "bundlesize": [
-    {
-      "path": "./bundlesize/dist/*/*.js",
-      "maxSize": "20 kB"
-    }
-  ],
   "comments": {
     "overrides": {
       "//": [
@@ -149,24 +119,23 @@
         "Transitive dep of @open-wc/testing. 0.20.1 ships chai-dom-diff-plugin.d.ts with an extensionless",
         "relative import (TS2835 under --moduleResolution nodenext); 0.21.0 emits the .js extension."
       ],
-      "sharp": [
-        "Version of 'sharp' package we get via '@rocket/cli' is too old to be built on a Mac.",
-        "But updating package '@rocket-cli' causes our portal to break. Reason unknown.",
-        "So, we override the sharp version in here until '@rocket-cli' can be updated."
-      ],
       "lit, lit-element, lit-html, @lit/reactive-element": [
-        "The workspace installed lit several times over: the root 3.x plus 2.8.0 copies inside @lion/*",
-        "and @rocket/*. Which copy an Astro island's module graph resolved varied per page load, and the",
-        "injected @lit-labs/ssr-client hydration support patches exactly one LitElement - so on some loads",
-        "an island rendered a second copy of its template beside the server-rendered shadow root instead of",
-        "hydrating it (a duplicated table of contents, 3 of 6 page loads). The portal and @lion/ui run the",
-        "single 3.3.3 copy."
+        "The workspace installed lit several times over: the root 3.x plus 2.8.0 copies inside the legacy",
+        "@lion/* packages that arrived through @rocket/*. Which copy an Astro island's module graph resolved",
+        "varied per page load, and the injected @lit-labs/ssr-client hydration support patches exactly one",
+        "LitElement - so on some loads an island rendered a second copy of its template beside the",
+        "server-rendered shadow root instead of hydrating it (a duplicated table of contents, 3 of 6 page",
+        "loads). The portal and @lion/ui run the single 3.3.3 copy."
       ],
-      "//@lion/core, @rocket/engine, @rocket/drawer": [
-        "This repo is hybrid: it still runs on rocket next to astro, and those packages are the lit 2 era",
-        "(they declare lit ^2.x). They keep the lit line they were built and tested against, so the",
-        "collapse above only covers the portal and @lion/ui - a lit 3 upgrade of the rocket side is a",
-        "separate migration, not a side effect of this one."
+      "//@open-wc/dedupe-mixin": [
+        "Declared at the root on purpose: it used to arrive hoisted through the legacy rocket dependency tree,",
+        "while src/components/shared/UIBaseElement.js and LightRenderMixin.js import it by name."
+      ],
+      "@web/test-runner-commands": [
+        "@lit-labs/testing asks for ^0.6.1 while the root depends on ^0.9.0, so npm nested a second copy (0.6.6)",
+        "that dragged an entire old @web/test-runner stack in: @web/test-runner-core@0.10.29 ->",
+        "@web/dev-server-core@0.4.1 -> ip@1.1.9 (GHSA-2p57-rm9w-gvfp, high). The only api the ssr fixtures use",
+        "is executeServerCommand, which is unchanged, so one override dedupes it: -10 lock entries, ip gone."
       ]
     },
     "olderVersions": {
@@ -184,15 +153,6 @@
       ],
       "remark-html": [
         "Can't be updated to 14.x, because remark-html is still in commonjs."
-      ],
-      "@rocket/*": [
-        "Pinned, as newer versions require a complete overhaul of docs. Later we will move to astro."
-      ],
-      "looks-same": [
-        "Part of ./scripts/screenshots, which is not incorporated atm in automated test suite. TODO: re-evaluate solution and whether visual regression testing needs to be part of this repo"
-      ],
-      "@open-wc/building-rollup": [
-        "Can't be updated to 3.x, as v2 seems to be better compatible with rocket setup"
       ],
       "chai": [
         "Can't be updated to 5.x, because @web/dev-server-core test-helpers (having implicit dep on chai) is not compatible with chai >= 5.x"
@@ -235,7 +195,6 @@
   },
   "overrides": {
     "@open-wc/semantic-dom-diff": "^0.21.0",
-    "sharp": "^0.29.x",
     "@mdjs/core": "^0.21.1",
     "@mdjs/mdjs-story": "^0.4.0",
     "remark-rehype": "^8",
@@ -252,12 +211,6 @@
     "lit-element": "4.2.2",
     "lit-html": "3.3.3",
     "@lit/reactive-element": "$@lit/reactive-element",
-    "@lion/core": {
-      "lit": "2.8.0",
-      "lit-element": "3.3.3",
-      "lit-html": "2.8.0",
-      "@lit/reactive-element": "1.6.3"
-    },
     "@lion/listbox": {
       "lit": "2.8.0",
       "lit-element": "3.3.3",
@@ -270,29 +223,30 @@
       "lit-html": "2.8.0",
       "@lit/reactive-element": "1.6.3"
     },
-    "@rocket/engine": {
-      "lit": "2.8.0",
-      "lit-element": "3.3.3",
-      "lit-html": "2.8.0",
-      "@lit/reactive-element": "1.6.3"
-    },
-    "@rocket/search": {
-      "lit": "2.8.0",
-      "lit-element": "3.3.3",
-      "lit-html": "2.8.0",
-      "@lit/reactive-element": "1.6.3"
-    },
-    "@rocket/drawer": {
-      "lit": "2.8.0",
-      "lit-element": "3.3.3",
-      "lit-html": "2.8.0",
-      "@lit/reactive-element": "1.6.3"
-    }
+    "@web/test-runner-commands": "^0.9.0"
   },
   "prettier": {
     "printWidth": 100,
     "singleQuote": true,
     "arrowParens": "avoid",
     "trailingComma": "all"
+  },
+  "wireit": {
+    "lint": {
+      "dependencies": [
+        "lint:eslint",
+        "lint:markdownlint",
+        "lint:phone-number-up-to-date",
+        "lint:prettier",
+        "lint:types",
+        "lint:versions"
+      ]
+    },
+    "test": {
+      "dependencies": [
+        "test:browser",
+        "test:node"
+      ]
+    }
   }
 }

@@ -1,4 +1,4 @@
-import { defineCE, expect, fixture, html, triggerFocusFor, unsafeStatic } from '@open-wc/testing';
+import { expect, fixture, html, triggerFocusFor, unsafeStatic } from '@open-wc/testing';
 import { getFormControlMembers } from '@lion/ui/form-core-test-helpers.js';
 import { NativeTextFieldMixin } from '@lion/ui/form-core.js';
 import { sendKeys } from '@web/test-runner-commands';
@@ -6,6 +6,7 @@ import { browserDetection } from '@lion/ui/core.js';
 import { LitElement } from 'lit';
 import { spy } from 'sinon';
 
+import { resolveSuiteTag } from '../../core/test-helpers/resolveSuiteTag.js';
 import { isActiveElement } from '../../core/test-helpers/isActiveElement.js';
 
 /**
@@ -14,14 +15,12 @@ import { isActiveElement } from '../../core/test-helpers/isActiveElement.js';
  */
 
 /**
- * @param {{tagString?: string, modelValueType?: modelValueType}} [customConfig]
+ * Runs the `NativeTextFieldMixin` behavioural suite. The caller hands the element to run against;
+ * leaving `host` out keeps the element this suite builds from the mixin.
+ * @typedef {import('@lion/ui/types/test-suites.js').SuiteElement} SuiteElement
+ * @param {import('@lion/ui/types/test-suites.js').SuiteConfig<{host: SuiteElement}, {modelValueType?: modelValueType}>} [customConfig]
  */
-export function runNativeTextFieldMixinSuite(customConfig) {
-  const cfg = {
-    tagString: null,
-    ...customConfig,
-  };
-
+export function runNativeTextFieldMixinSuite({ classes = {}, tagString: legacyTagString } = {}) {
   describe('NativeTextFieldMixin', () => {
     class NativeTextFieldClass extends NativeTextFieldMixin(LitElement) {
       get slots() {
@@ -32,8 +31,7 @@ export function runNativeTextFieldMixinSuite(customConfig) {
       }
     }
 
-    cfg.tagString = cfg.tagString ? cfg.tagString : defineCE(NativeTextFieldClass);
-    const tag = unsafeStatic(cfg.tagString);
+    const tag = unsafeStatic(resolveSuiteTag(classes?.host, legacyTagString, NativeTextFieldClass));
 
     it('preserves the caret position on value change', async () => {
       const el = /** @type {NativeTextFieldClass} */ (await fixture(html`<${tag}></${tag}>`));

@@ -72,12 +72,13 @@ const legacyTsc = module
   .createRequire(path.join(repoRoot, 'test/typescript-legacy/package.json'))
   .resolve('typescript/bin/tsc');
 
-async function runNpm(args, cwd) {
+async function runNpm(args, cwd, env = {}) {
   const npmCli = process.env.npm_execpath;
   assert(npmCli, 'Run these packaging tests through npm so npm_execpath is available.');
   const { stdout } = await execFile(process.execPath, [npmCli, ...args], {
     cwd,
     maxBuffer: 10 * 1024 * 1024,
+    env: { ...process.env, ...env },
   });
   return stdout;
 }
@@ -97,6 +98,11 @@ test(
         await runNpm(
           ['pack', '--workspace', '@lion/ui', '--json', '--pack-destination', fixture],
           repoRoot,
+          // Wireit can consider `build:phone` fresh while its output was just deleted above, so the
+          // prepack leaves the generated phone library out and `npm run types` fails on
+          // `#awesome-phonenumber` (seen on the Windows runner, not on Linux). Force the rebuild the
+          // prepack promises instead of trusting the cache.
+          { WIREIT_CACHE: 'none' },
         ),
       );
       assert.deepEqual(packed.bundled, []);

@@ -15,6 +15,7 @@ import { cache } from 'lit/directives/cache.js';
 import '@lion/ui/define/lion-dialog.js';
 import { LitElement } from 'lit';
 import sinon from 'sinon';
+import { isElementVisible } from '../../core/test-helpers/isElementVisible.js';
 
 /**
  * @typedef {import('../types/OverlayMixinTypes.js').DefineOverlayConfig} DefineOverlayConfig
@@ -462,12 +463,10 @@ export function runOverlayMixinSuite({ tagString, tag, suffix = '' }) {
 
       const dialogEl = /** @type {HTMLDialogElement} */ (el._overlayCtrl.__wrappingDialogNode);
 
-      // @ts-ignore [checkVisibility lives on the polyfilled dialog]
-      expect(dialogEl.checkVisibility()).to.be.true;
+      expect(isElementVisible(dialogEl)).to.be.true;
       // @ts-expect-error [allow-protected-in-tests]
       await mimicEscapePress(el._overlayContentNode);
-      // @ts-ignore [checkVisibility lives on the polyfilled dialog]
-      expect(dialogEl.checkVisibility()).to.be.true;
+      expect(isElementVisible(dialogEl)).to.be.true;
     });
 
     describe('Teardown', () => {

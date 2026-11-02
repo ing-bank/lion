@@ -1,19 +1,20 @@
 /* eslint-disable lit-a11y/click-events-have-key-events */
 import { LionButton } from '@lion/ui/button.js';
 import { browserDetection } from '@lion/ui/core.js';
-import {
-  aTimeout,
-  defineCE,
-  expect,
-  fixture,
-  html,
-  oneEvent,
-  unsafeStatic,
-} from '@open-wc/testing';
+import { aTimeout, expect, fixture, html, oneEvent, unsafeStatic } from '@open-wc/testing';
 import sinon from 'sinon';
+import { resolveSuiteTag } from '../../core/test-helpers/resolveSuiteTag.js';
 
-export function LionButtonSuite({ klass = LionButton } = {}) {
-  const tagStringButton = defineCE(class extends klass {});
+/**
+ * Runs the `LionButton` behavioural suite. The caller hands the element to run against; anything
+ * left out keeps the element this suite registers from the Lion class.
+ * @typedef {import('@lion/ui/types/test-suites.js').SuiteElement} SuiteElement
+ * @param {import('@lion/ui/types/test-suites.js').SuiteConfig<{host: SuiteElement}>} [customConfig]
+ */
+export function LionButtonSuite({ classes = {}, tagString } = {}) {
+  // When a subclasser passes its own registered tag name, that element is tested as-is; otherwise
+  // the suite registers an anonymous subclass so the Lion defaults stay covered.
+  const tagStringButton = resolveSuiteTag(classes.host, tagString, LionButton);
   const tagButton = unsafeStatic(tagStringButton);
 
   describe('LionButton', () => {

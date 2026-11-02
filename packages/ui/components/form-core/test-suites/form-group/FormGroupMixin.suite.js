@@ -15,11 +15,20 @@ import {
 } from '@open-wc/testing';
 import sinon from 'sinon';
 import { getFormControlMembers } from '@lion/ui/form-core-test-helpers.js';
+import { resolveSuiteTag } from '../../../core/test-helpers/resolveSuiteTag.js';
 
 /**
- * @param {{ tagString?: string, childTagString?:string }} [cfg]
+ * Runs the form-group suite. The caller hands the elements it should run against - `host` is the
+ * group, `child` what sits inside it; anything left out keeps the class this suite builds from the
+ * mixins.
+ * @typedef {import('@lion/ui/types/test-suites.js').SuiteElement} SuiteElement
+ * @param {import('@lion/ui/types/test-suites.js').SuiteConfig<{host: SuiteElement; child: SuiteElement}>} [customConfig]
  */
-export function runFormGroupMixinSuite(cfg = {}) {
+export function runFormGroupMixinSuite({
+  classes = {},
+  tagString: legacyTagString,
+  childTagString: legacyChildTagString,
+} = {}) {
   class FormChild extends LionField {
     // @ts-ignore
     get slots() {
@@ -30,7 +39,7 @@ export function runFormGroupMixinSuite(cfg = {}) {
     }
   }
 
-  const childTagString = cfg.childTagString || defineCE(FormChild);
+  const childTagString = resolveSuiteTag(classes?.child, legacyChildTagString, FormChild);
 
   class FormGroup extends FormGroupMixin(LitElement) {
     constructor() {
@@ -42,7 +51,7 @@ export function runFormGroupMixinSuite(cfg = {}) {
     }
   }
 
-  const tagString = cfg.tagString || defineCE(FormGroup);
+  const tagString = resolveSuiteTag(classes?.host, legacyTagString, FormGroup);
   const tag = unsafeStatic(tagString);
   const childTag = unsafeStatic(childTagString);
   const inputSlots = html`

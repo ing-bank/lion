@@ -1,23 +1,26 @@
 import { formatNumber } from '@lion/ui/localize-no-side-effects.js';
-import {
-  fixture as _fixture,
-  defineCE,
-  expect,
-  html,
-  nextFrame,
-  unsafeStatic,
-} from '@open-wc/testing';
+import { fixture as _fixture, expect, html, nextFrame, unsafeStatic } from '@open-wc/testing';
 import { nothing } from 'lit';
 import sinon from 'sinon';
 import { LionInputStepper } from '../src/LionInputStepper.js';
+import { resolveSuiteTag } from '../../core/test-helpers/resolveSuiteTag.js';
 
 /**
  * @typedef {import('lit').TemplateResult} TemplateResult
  */
 const fixture = /** @type {(arg: TemplateResult|string) => Promise<LionInputStepper>} */ (_fixture);
 
-export function runInputStepperSuite(klass = LionInputStepper) {
-  const tagString = defineCE(class extends klass {});
+/**
+ * Runs the input-stepper suite. The caller hands the element to run against; leaving `host` out keeps
+ * `LionInputStepper`.
+ * @typedef {import('@lion/ui/types/test-suites.js').SuiteElement} SuiteElement
+ * @param {import('@lion/ui/types/test-suites.js').SuiteConfig<{host: SuiteElement}>} [customConfig]
+ */
+export function runInputStepperSuite({
+  classes: { host = LionInputStepper } = {},
+  tagString: legacyTagString,
+} = {}) {
+  const tagString = resolveSuiteTag(host, legacyTagString);
   const tag = unsafeStatic(tagString);
 
   const defaultInputStepper = html`

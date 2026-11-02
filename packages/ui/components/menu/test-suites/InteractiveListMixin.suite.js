@@ -1,7 +1,8 @@
 import { LitElement } from 'lit';
-import { expect, html, fixture as _fixture, unsafeStatic, defineCE } from '@open-wc/testing';
+import { expect, html, fixture as _fixture, unsafeStatic } from '@open-wc/testing';
 import { InteractiveListMixin } from '../src/InteractiveListMixin.js';
 import { mimicKeyPress } from '../test-helpers/mimicKeyPress.js';
+import { resolveSuiteTag } from '../../core/test-helpers/resolveSuiteTag.js';
 
 class InteractiveListClass extends InteractiveListMixin(LitElement) {}
 
@@ -24,21 +25,16 @@ const supportedRoles = [
  * @typedef {import('../src/LionMenu.js').LionMenu} LionMenu
  * @typedef {import('lit').TemplateResult} TemplateResult
  *
- * * @typedef {Object} TestConfig
- * @property {string} tagString
  */
 
 const fixture = /** @type {(arg: TemplateResult) => Promise<LionMenu>} */ (_fixture);
 
 /**
- * @param {TestConfig} [customConfig]
+ * @typedef {import('@lion/ui/types/test-suites.js').SuiteElement} SuiteElement
+ * @param {import('@lion/ui/types/test-suites.js').SuiteConfig<{host: SuiteElement}>} [customConfig]
  */
-export function runInteractiveListMixinSuite(customConfig) {
-  const cfg = {
-    tagString: customConfig?.tagString || defineCE(InteractiveListClass),
-  };
-
-  const { tagString } = cfg;
+export function runInteractiveListMixinSuite({ classes = {}, tagString: legacyTagString } = {}) {
+  const tagString = resolveSuiteTag(classes?.host, legacyTagString, InteractiveListClass);
   const tag = unsafeStatic(tagString);
 
   describe('InteractiveListMixin', () => {

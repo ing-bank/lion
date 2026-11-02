@@ -2,7 +2,7 @@ import path from 'path';
 import { createRequire } from 'module';
 import { readFile, rm } from 'fs/promises';
 import { existsSync } from 'fs';
-import { globby } from 'globby';
+import { fsGlob } from 'providence-analytics/utils.js';
 import chai from 'chai';
 // eslint-disable-next-line import/no-unresolved
 import chaiAsPromised from 'chai-as-promised';
@@ -30,11 +30,11 @@ const { expect } = chai;
 /**
  * Get sorted js files for the given directory
  *
- * @param {string} searchPattern The globby search pattern
+ * @param {string} searchPattern The glob search pattern
  * @returns {Promise<string[]>}
  */
 const getSortedJsFileNamesInDir = async searchPattern => {
-  const files = await globby(searchPattern);
+  const files = await fsGlob(searchPattern);
   return files.map(file => path.basename(file)).sort(byStringAscendingSort);
 };
 

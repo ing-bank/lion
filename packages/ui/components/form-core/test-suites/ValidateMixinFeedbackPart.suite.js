@@ -12,12 +12,23 @@ import {
   ValidateMixin,
   Validator,
 } from '@lion/ui/form-core.js';
+import { resolveSuiteTag } from '../../core/test-helpers/resolveSuiteTag.js';
 
 /**
  * @typedef {import('../types/validate/validate.js').FeedbackMessageData} FeedbackMessageData
  */
 
-export function runValidateMixinFeedbackPart() {
+/** @typedef {import('@lion/ui/types/test-suites.js').SuiteElement} SuiteElement */
+
+/**
+ * Runs the validity-feedback suite. The caller hands the element to run against; leaving `host` out
+ * keeps the element this suite builds from the mixin.
+ * @param {import('@lion/ui/types/test-suites.js').SuiteConfig<{host: SuiteElement}>} [customConfig]
+ */
+export function runValidateMixinFeedbackPart(customConfig = {}) {
+  const classes = { ...customConfig?.classes };
+  // legacy key, kept for callers that registered their own tag
+  const customTagString = customConfig?.tagString;
   const localizeManager = getLocalizeManager();
 
   describe('Validity Feedback', () => {
@@ -34,7 +45,7 @@ export function runValidateMixinFeedbackPart() {
       }
     }
 
-    const tagString = defineCE(ValidateElement);
+    const tagString = resolveSuiteTag(classes.host, customTagString, ValidateElement);
     const tag = unsafeStatic(tagString);
 
     class ContainsLowercaseA extends Validator {

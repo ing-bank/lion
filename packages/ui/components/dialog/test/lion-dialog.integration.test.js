@@ -11,6 +11,7 @@ import '@lion/ui/define/lion-tooltip.js';
 
 import { mimicUserTyping } from '@lion/ui/combobox-test-helpers.js';
 import sinon from 'sinon';
+import { isElementVisible } from '../../core/test-helpers/isElementVisible.js';
 
 /**
  * @typedef {import('../src/LionDialog.js').LionDialog} LionDialog
@@ -48,7 +49,7 @@ describe('lion-dialog', () => {
         el.querySelectorAll('lion-option')?.[0]
       );
       // @ts-ignore
-      const isComboboxFirstOptionInDropdownVisible = () => firstOption?.checkVisibility();
+      const isComboboxFirstOptionInDropdownVisible = () => isElementVisible(firstOption);
       await waitUntil(isComboboxFirstOptionInDropdownVisible);
       const comboboxDialog = combobox?.shadowRoot?.querySelector('dialog');
       // Note, do not remove `console.log` down below. There is a bug in test engine.
@@ -63,7 +64,7 @@ describe('lion-dialog', () => {
         press: 'Escape',
       });
       // @ts-ignore
-      const isDialogVisible = () => el?.shadowRoot?.querySelector('dialog')?.checkVisibility();
+      const isDialogVisible = () => isElementVisible(el?.shadowRoot?.querySelector('dialog'));
       await waitUntil(() => dropdownDialogCloseSpy.called);
       expect(isDialogVisible()).to.equal(true);
     });
@@ -105,11 +106,9 @@ describe('lion-dialog', () => {
       // @ts-ignore
       const dropdownDialogCloseSpy = sinon.spy(dropdownDialog, 'close');
       const isDropdownVisible = () =>
-        el
-          ?.querySelector('lion-select-rich')
-          ?.shadowRoot?.querySelector('dialog')
-          // @ts-ignore
-          ?.checkVisibility();
+        isElementVisible(
+          el?.querySelector('lion-select-rich')?.shadowRoot?.querySelector('dialog'),
+        );
       await waitUntil(isDropdownVisible);
       const lionOptions = /** @type {HTMLElement} */ (el.querySelector('lion-options'));
       lionOptions?.focus();
@@ -117,7 +116,7 @@ describe('lion-dialog', () => {
         press: 'Escape',
       });
       // @ts-ignore
-      const isDialogVisible = () => el?.shadowRoot?.querySelector('dialog')?.checkVisibility();
+      const isDialogVisible = () => isElementVisible(el?.shadowRoot?.querySelector('dialog'));
       await waitUntil(() => dropdownDialogCloseSpy.called);
       expect(isDialogVisible()).to.equal(true);
     });
@@ -151,13 +150,13 @@ describe('lion-dialog', () => {
           .querySelector('lion-tooltip')
           ?.shadowRoot?.querySelector('#overlay-content-node-wrapper');
       // @ts-ignore
-      const isTooltipContentVisible = () => getTooltipContent()?.checkVisibility();
+      const isTooltipContentVisible = () => isElementVisible(getTooltipContent());
       await waitUntil(isTooltipContentVisible);
       await sendKeys({
         press: 'Escape',
       });
       // @ts-ignore
-      const isDialogVisible = () => el?.shadowRoot?.querySelector('dialog')?.checkVisibility();
+      const isDialogVisible = () => isElementVisible(el?.shadowRoot?.querySelector('dialog'));
       expect(isTooltipContentVisible()).to.equal(false);
       expect(isDialogVisible()).to.equal(true);
       await sendKeys({

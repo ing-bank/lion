@@ -1,6 +1,6 @@
 import { visualRegressionPlugin } from '@web/test-runner-visual-regression/plugin';
 import { playwrightLauncher } from '@web/test-runner-playwright';
-import { globby } from 'globby';
+import { fsGlob } from 'providence-analytics/utils.js';
 import defaultConfig from './web-test-runner.config.mjs';
 import { getWorkTreeRelativePath } from './scripts/screenshots-comparison/util.mjs';
 
@@ -14,7 +14,7 @@ const testsPathPrefix = shouldRunTestsLocatedInWorktree ? `${worktreeRelativePat
 const groups = [
   {
     name: 'visual-tests',
-    files: await globby([`${testsPathPrefix}packages/**/*.visual.test.js`]),
+    files: await fsGlob([`${testsPathPrefix}packages/**/*.visual.test.js`]),
   },
 ];
 

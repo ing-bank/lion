@@ -1,0 +1,26 @@
+# The only reason this file exists is to silence Dependabot for the frozen rocket build.
+#
+# /prev-portal/ is a snapshot: @rocket/cli is pinned to 0.10.2, the last version that can still build
+# the site published under /prev (0.21 dropped the Eleventy flow and breaks the build). Every update
+# Dependabot finds there is either impossible - its transitive dependencies (axios, liquidjs,
+# markdown-it, linkify-it, sharp) only move when the cli moves - or breaking. Without this file the
+# repository gets a bundle of security PRs per cycle, each proposing the same 0.10.2 -> 0.21.0 bump.
+#
+# Only /prev-portal is listed on purpose: a directory that is not listed here keeps the repository's
+# default behaviour, so alerting and security updates stay on for the root, the workspaces and portal/
+# (where updates are wanted), and no scheduled version updates are enabled anywhere.
+version: 2
+
+updates:
+  - package-ecosystem: npm
+    directory: /prev-portal
+    schedule:
+      interval: monthly
+    # 0 disables scheduled version updates; the ignore below also covers the security updates that
+    # GitHub raises from the dependency graph (an ignored dependency gets no PR).
+    open-pull-requests-limit: 0
+    ignore:
+      - dependency-name: '*'
+      # Belt and braces: the rocket packages are the ones that must stay where they are, even if the
+      # wildcard above is ever narrowed to a specific set of vulnerable transitive dependencies.
+      - dependency-name: '@rocket/*'

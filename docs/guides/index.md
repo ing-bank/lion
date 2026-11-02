@@ -33,6 +33,7 @@ Developers extending our web components, for instance: `class MaterialInput exte
 Especially for subclassers we have some extra documentation:
 
 - [Subclasser APIs](./principles/subclasser-apis.md)
+- [Test suites](./principles/test-suites.md)
 - [Extend documentation](../blog/extending-documentation.md)
 
 ## How To

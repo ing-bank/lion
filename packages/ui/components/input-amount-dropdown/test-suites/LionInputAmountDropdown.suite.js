@@ -10,6 +10,7 @@ import {
 } from '@open-wc/testing';
 import sinon from 'sinon';
 
+import { resolveSuiteTag } from '../../core/test-helpers/resolveSuiteTag.js';
 import { isActiveElement } from '../../core/test-helpers/isActiveElement.js';
 import { mimicUserChangingDropdown } from '../test-helpers/mimicUserChangingDropdown.js';
 
@@ -38,12 +39,15 @@ function getDropdownValue(dropdownEl) {
 }
 
 /**
- * @param {{ klass:LionInputAmountDropdown }} config
+ * `tagString`, `klass` and the older role tag keys are deprecated: pass `classes` instead (Lion
+ * itself uses `classes` everywhere).
+ * @param {{ classes?: Record<string, CustomElementConstructor>, klass?: typeof LionInputAmountDropdown, tagString?: string }} config
  */
-// @ts-expect-error
-export function runInputAmountDropdownSuite({ klass } = { klass: LionInputAmountDropdown }) {
+export function runInputAmountDropdownSuite(
+  { classes = {}, klass, tagString } = { klass: LionInputAmountDropdown },
+) {
   // @ts-ignore
-  const tagName = defineCE(/** @type {* & HTMLElement} */ (class extends klass {}));
+  const tagName = resolveSuiteTag(classes.host, tagString, klass);
   const tag = unsafeStatic(tagName);
 
   describe('LionInputAmountDropdown', () => {

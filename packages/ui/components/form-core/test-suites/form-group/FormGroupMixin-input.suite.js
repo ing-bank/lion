@@ -3,17 +3,26 @@ import '@lion/ui/define/lion-field.js';
 import '@lion/ui/define/lion-validation-feedback.js';
 import { LionInput } from '@lion/ui/input.js';
 import { localizeTearDown } from '@lion/ui/localize-test-helpers.js';
-import { defineCE, expect, fixture, html, unsafeStatic } from '@open-wc/testing';
+import { expect, fixture, html, unsafeStatic } from '@open-wc/testing';
 import { FormGroupMixin } from '@lion/ui/form-core.js';
+import { resolveSuiteTag } from '../../../core/test-helpers/resolveSuiteTag.js';
 
 /**
  * @typedef {import('@lion/ui/form-core.js').LionField} LionField
  */
 
 /**
- * @param {{ tagString?: string, childTagString?:string }} [cfg]
+ * Runs the form-group suite. The caller hands the elements it should run against - `host` is the
+ * group, `child` what sits inside it; anything left out keeps the class this suite builds from the
+ * mixins.
+ * @typedef {import('@lion/ui/types/test-suites.js').SuiteElement} SuiteElement
+ * @param {import('@lion/ui/types/test-suites.js').SuiteConfig<{host: SuiteElement; child: SuiteElement}>} [customConfig]
  */
-export function runFormGroupMixinInputSuite(cfg = {}) {
+export function runFormGroupMixinInputSuite({
+  classes = {},
+  tagString: legacyTagString,
+  childTagString: legacyChildTagString,
+} = {}) {
   const FormChild = class extends LionInput {
     get slots() {
       return {
@@ -23,7 +32,7 @@ export function runFormGroupMixinInputSuite(cfg = {}) {
     }
   };
 
-  const childTagString = cfg.childTagString || defineCE(FormChild);
+  const childTagString = resolveSuiteTag(classes?.child, legacyChildTagString, FormChild);
 
   const FormGroup = class extends FormGroupMixin(LitElement) {
     constructor() {
@@ -37,7 +46,7 @@ export function runFormGroupMixinInputSuite(cfg = {}) {
     }
   };
 
-  const tagString = cfg.tagString || defineCE(FormGroup);
+  const tagString = resolveSuiteTag(classes?.host, legacyTagString, FormGroup);
   const tag = unsafeStatic(tagString);
   const childTag = unsafeStatic(childTagString);
 

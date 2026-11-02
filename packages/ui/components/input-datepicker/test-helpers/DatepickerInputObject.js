@@ -83,6 +83,29 @@ export class DatepickerInputObject {
   }
 
   /**
+   * The overlay's own markup. These getters are the seam an extension layer overrides when it
+   * renders its own overlay frame instead of Lion's `.calendar-overlay`; the suites assert only
+   * through this object, never by querying that markup themselves.
+   */
+  get overlayRootEl() {
+    return /** @type {HTMLElement|null} */ (
+      this.el?.shadowRoot?.querySelector('.calendar-overlay') ?? null
+    );
+  }
+
+  get overlayHeaderEl() {
+    return /** @type {HTMLElement|null} */ (
+      this.el?.shadowRoot?.querySelector('.calendar-overlay__header') ?? null
+    );
+  }
+
+  get overlayCloseButtonContainerEl() {
+    return /** @type {HTMLElement|null} */ (
+      this.el?.shadowRoot?.querySelector('.calendar-overlay__close-button') ?? null
+    );
+  }
+
+  /**
    * Object references
    */
 

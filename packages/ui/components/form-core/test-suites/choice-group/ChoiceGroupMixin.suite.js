@@ -11,6 +11,7 @@ import { LionInput } from '@lion/ui/input.js';
 import { expect, fixture, fixtureSync, html, unsafeStatic } from '@open-wc/testing';
 import { LitElement } from 'lit';
 import sinon from 'sinon';
+import { resolveSuiteTag } from '../../../core/test-helpers/resolveSuiteTag.js';
 
 class ChoiceInputFoo extends ChoiceInputMixin(LionInput) {}
 customElements.define('choice-input-foo', ChoiceInputFoo);
@@ -27,24 +28,45 @@ class ChoiceInputGroup extends ChoiceGroupMixin(FormGroupMixin(LitElement)) {}
 customElements.define('choice-input-group', ChoiceInputGroup);
 
 /**
- * @param {{ parentTagString?:string, childTagString?: string, choiceType?: string}} config
+ * @typedef {import('@lion/ui/types/test-suites.js').SuiteElement} SuiteElement
+ * `tagString`, `klass` and the older role tag keys are deprecated: pass `classes` instead (Lion
+ * itself uses `classes` everywhere).
+ * @param {import('@lion/ui/types/test-suites.js').SuiteConfig<{child: SuiteElement; childBar: SuiteElement; childFoo: SuiteElement; host: SuiteElement}, {childTagString?: any; childTagStringBar?: any; childTagStringFoo?: any; choiceType?: any; parentTagString?: any}>} customConfig
  */
-export function runChoiceGroupMixinSuite({ parentTagString, childTagString, choiceType } = {}) {
-  const cfg = {
-    parentTagString: parentTagString || 'choice-input-group',
-    childTagString: childTagString || 'choice-input',
-    childTagStringFoo: 'choice-input-foo',
-    childTagStringBar: 'choice-input-bar',
-    choiceType: choiceType || 'single',
-  };
+export function runChoiceGroupMixinSuite({
+  classes = {},
+  choiceType = 'single',
+  parentTagString: legacyParentTagString,
+  childTagString: legacyChildTagString,
+  childTagStringFoo: legacyChildTagStringFoo,
+  childTagStringBar: legacyChildTagStringBar,
+} = {}) {
+  // Every element this suite renders is built from the mixins, so the class - not a Lion element - is
+  // the default, and it only exists inside the `describe` below.
+  const parentTagString = resolveSuiteTag(
+    classes?.host,
+    legacyParentTagString,
+    'choice-input-group',
+  );
+  const childTagString = resolveSuiteTag(classes?.child, legacyChildTagString, 'choice-input');
+  const childTagStringFoo = resolveSuiteTag(
+    classes?.childFoo,
+    legacyChildTagStringFoo,
+    'choice-input-foo',
+  );
+  const childTagStringBar = resolveSuiteTag(
+    classes?.childBar,
+    legacyChildTagStringBar,
+    'choice-input-bar',
+  );
 
-  const parentTag = unsafeStatic(cfg.parentTagString);
-  const childTag = unsafeStatic(cfg.childTagString);
-  const childTagFoo = unsafeStatic(cfg.childTagStringFoo);
-  const childTagBar = unsafeStatic(cfg.childTagStringBar);
+  const parentTag = unsafeStatic(parentTagString);
+  const childTag = unsafeStatic(childTagString);
+  const childTagFoo = unsafeStatic(childTagStringFoo);
+  const childTagBar = unsafeStatic(childTagStringBar);
 
-  describe(`ChoiceGroupMixin: ${cfg.parentTagString}`, () => {
-    if (cfg.choiceType === 'single') {
+  describe(`ChoiceGroupMixin: ${parentTagString}`, () => {
+    if (choiceType === 'single') {
       it('has a single modelValue representing initial checked values', async () => {
         const el = /** @type {ChoiceInputGroup} */ (
           await fixture(html`
@@ -122,7 +144,7 @@ export function runChoiceGroupMixinSuite({ parentTagString, childTagString, choi
       expect(() => {
         el.addFormElement(invalidChild);
       }).to.throw(
-        `The ${cfg.parentTagString} name="gender[]" does not allow to register ${cfg.childTagString} with .modelValue="Lara" - The modelValue should represent an Object { value: "foo", checked: false }`,
+        `The ${parentTagString} name="gender[]" does not allow to register ${childTagString} with .modelValue="Lara" - The modelValue should represent an Object { value: "foo", checked: false }`,
       );
     });
 
@@ -258,7 +280,7 @@ export function runChoiceGroupMixinSuite({ parentTagString, childTagString, choi
       `)
       );
 
-      if (cfg.choiceType === 'single') {
+      if (choiceType === 'single') {
         expect(el.modelValue).to.equal('other');
       } else {
         expect(el.modelValue).to.deep.equal(['other']);
@@ -277,7 +299,7 @@ export function runChoiceGroupMixinSuite({ parentTagString, childTagString, choi
       `)
       );
 
-      if (cfg.choiceType === 'single') {
+      if (choiceType === 'single') {
         expect(el.serializedValue).to.equal('other');
       } else {
         expect(el.serializedValue).to.deep.equal(['other']);
@@ -296,7 +318,7 @@ export function runChoiceGroupMixinSuite({ parentTagString, childTagString, choi
       `)
       );
 
-      if (cfg.choiceType === 'single') {
+      if (choiceType === 'single') {
         expect(el.formattedValue).to.equal('other');
       } else {
         expect(el.formattedValue).to.deep.equal(['other']);
@@ -315,7 +337,7 @@ export function runChoiceGroupMixinSuite({ parentTagString, childTagString, choi
       `)
       );
 
-      if (cfg.choiceType === 'single') {
+      if (choiceType === 'single') {
         el.modelValue = 'other';
         await el.registrationComplete;
         expect(el.modelValue).to.equal('other');
@@ -337,7 +359,7 @@ export function runChoiceGroupMixinSuite({ parentTagString, childTagString, choi
       `)
       );
 
-      if (cfg.choiceType === 'single') {
+      if (choiceType === 'single') {
         // @ts-expect-error
         el.serializedValue = 'other';
         await el.registrationComplete;
@@ -361,7 +383,7 @@ export function runChoiceGroupMixinSuite({ parentTagString, childTagString, choi
       `)
       );
 
-      if (cfg.choiceType === 'single') {
+      if (choiceType === 'single') {
         expect(el.modelValue).to.equal('');
       } else {
         expect(el.modelValue).to.deep.equal([]);
@@ -369,7 +391,7 @@ export function runChoiceGroupMixinSuite({ parentTagString, childTagString, choi
 
       el.modelValue = undefined;
       await el.updateComplete;
-      if (cfg.choiceType === 'single') {
+      if (choiceType === 'single') {
         expect(el.modelValue).to.equal('');
       } else {
         expect(el.modelValue).to.deep.equal([]);
@@ -388,7 +410,7 @@ export function runChoiceGroupMixinSuite({ parentTagString, childTagString, choi
       `)
       );
 
-      if (cfg.choiceType === 'single') {
+      if (choiceType === 'single') {
         expect(el.modelValue).to.equal(date);
         el.formElements[0].checked = true;
         expect(el.modelValue).to.deep.equal({ some: 'data' });
@@ -409,7 +431,7 @@ export function runChoiceGroupMixinSuite({ parentTagString, childTagString, choi
       `)
       );
 
-      if (cfg.choiceType === 'single') {
+      if (choiceType === 'single') {
         expect(el.modelValue).to.equal(0);
         el.formElements[1].checked = true;
         expect(el.modelValue).to.equal('');
@@ -437,7 +459,7 @@ export function runChoiceGroupMixinSuite({ parentTagString, childTagString, choi
       `)
       );
 
-      if (cfg.choiceType === 'single') {
+      if (choiceType === 'single') {
         expect(el.modelValue).to.equal('female');
       } else {
         expect(el.modelValue).to.deep.equal(['female']);
@@ -463,13 +485,13 @@ export function runChoiceGroupMixinSuite({ parentTagString, childTagString, choi
       `)
       );
 
-      if (cfg.choiceType === 'single') {
+      if (choiceType === 'single') {
         expect(el.modelValue).to.eql({ v: 'female' });
       } else {
         expect(el.modelValue).to.deep.equal([{ v: 'female' }]);
       }
 
-      if (cfg.choiceType === 'single') {
+      if (choiceType === 'single') {
         el.modelValue = { v: 'other' };
       } else {
         el.modelValue = [{ v: 'other' }];
@@ -508,7 +530,7 @@ export function runChoiceGroupMixinSuite({ parentTagString, childTagString, choi
       el.formElements[2].checked = true;
       expect(counter).to.equal(2); // other becomes checked
 
-      if (cfg.choiceType === 'single') {
+      if (choiceType === 'single') {
         // not found values trigger no event
         el.modelValue = 'foo';
         expect(counter).to.equal(2);
@@ -563,7 +585,7 @@ export function runChoiceGroupMixinSuite({ parentTagString, childTagString, choi
       `)
       );
       el.formElements[0].checked = true;
-      if (cfg.choiceType === 'single') {
+      if (choiceType === 'single') {
         expect(el.serializedValue).to.deep.equal('male');
       } else {
         expect(el.serializedValue).to.deep.equal(['male']);
@@ -580,7 +602,7 @@ export function runChoiceGroupMixinSuite({ parentTagString, childTagString, choi
       `)
       );
 
-      if (cfg.choiceType === 'single') {
+      if (choiceType === 'single') {
         expect(el.serializedValue).to.deep.equal('');
       } else {
         expect(el.serializedValue).to.deep.equal([]);
@@ -599,7 +621,7 @@ export function runChoiceGroupMixinSuite({ parentTagString, childTagString, choi
       el.formElements[0].checked = true;
       el.clear();
 
-      if (cfg.choiceType === 'single') {
+      if (choiceType === 'single') {
         expect(el.serializedValue).to.deep.equal('');
       } else {
         expect(el.serializedValue).to.deep.equal([]);
@@ -736,7 +758,7 @@ export function runChoiceGroupMixinSuite({ parentTagString, childTagString, choi
         `)
         );
 
-        if (cfg.choiceType === 'single') {
+        if (choiceType === 'single') {
           expect(el.serializedValue).to.deep.equal({ 'gender[]': ['female'] });
         } else {
           expect(el.serializedValue).to.deep.equal({ 'gender[]': [['female']] });

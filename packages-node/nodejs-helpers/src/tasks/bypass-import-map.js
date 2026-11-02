@@ -1,5 +1,5 @@
 import path from 'path';
-import { globby } from 'globby';
+import { fsGlob } from 'providence-analytics/utils.js';
 // @ts-ignore
 import { createRequire } from 'module';
 // @ts-ignore
@@ -139,7 +139,7 @@ const normalizeImportMap = imports => {
  * @returns {Promise<any>}
  */
 export const bypassImportMap = async (packageDir, options = {}) => {
-  // TODO: Use globby's gitignore option
+  // TODO: honour .gitignore when expanding the glob (fsGlob has no gitignore option)
   const ignoredDirs = options.ignoredDirs || ['node_modules'];
   if (!existsSync(packageDir)) {
     throw new Error(ERROR_CAN_NOT_ACCESS_PACKAGE_DIR);
@@ -150,11 +150,14 @@ export const bypassImportMap = async (packageDir, options = {}) => {
   if (!imports) {
     return Promise.resolve();
   }
-  const filePaths = await globby('**/*.js', {
-    cwd: packageDir,
-    absolute: true,
-    ignore: ignoredDirs.map(dir => `${dir.replace(/\\/g, '/')}/**`),
-  });
+  // fsGlob's `absolute` returns path.join(cwd, match), so the cwd has to be absolute itself
+  const filePaths = await fsGlob(
+    ['**/*.js', ...ignoredDirs.map(dir => `!${dir.replace(/\\/g, '/')}/**`)],
+    {
+      cwd: path.resolve(packageDir),
+      absolute: true,
+    },
+  );
   const importMap = normalizeImportMap(imports);
   // @ts-ignore
   return asyncConcurrentForEach(filePaths, filePath =>

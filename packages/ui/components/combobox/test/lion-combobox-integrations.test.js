@@ -1,14 +1,14 @@
 import { css } from 'lit';
 import { runListboxMixinSuite } from '@lion/ui/listbox-test-suites.js';
 import '@lion/ui/define/lion-combobox.js';
+import { LionOption } from '@lion/ui/listbox.js';
 import { runCustomChoiceGroupMixinSuite } from '../../form-core/test-suites/choice-group/CustomChoiceGroupMixin.suite.js';
 import { LionCombobox } from '../src/LionCombobox.js';
 import { ScopedStylesController } from '../../core/src/ScopedStylesController.js';
 
-runListboxMixinSuite({ tagString: 'lion-combobox' });
+runListboxMixinSuite({ classes: { host: LionCombobox } });
 runCustomChoiceGroupMixinSuite({
-  parentTagString: 'lion-combobox',
-  childTagString: 'lion-option',
+  classes: { host: LionCombobox, child: LionOption },
 });
 
 // Test case for using ScopedStylesController inside the LionCombobox
@@ -29,4 +29,4 @@ class ComboboxWithScopedStyles extends LionCombobox {
 
 customElements.define('combobox-with-scoped-styles', ComboboxWithScopedStyles);
 
-runListboxMixinSuite({ tagString: 'combobox-with-scoped-styles' });
+runListboxMixinSuite({ classes: { host: ComboboxWithScopedStyles } });

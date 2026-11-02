@@ -21,22 +21,23 @@ import sinon from 'sinon';
 
 import '@lion/ui/define/lion-field.js';
 import '@lion/ui/define/lion-validation-feedback.js';
+import { resolveSuiteTag } from '../../core/test-helpers/resolveSuiteTag.js';
 
 /**
  * @typedef {import('@lion/ui/form-core.js').LionField} LionField
  */
 
 /**
- * @param {{tagString?: string | null, lightDom?: string}} [customConfig]
+ * Runs the `ValidateMixin` behavioural suite. The caller hands the element to run against; leaving
+ * `host` out keeps the element this suite builds from the mixin.
+ * @typedef {import('@lion/ui/types/test-suites.js').SuiteElement} SuiteElement
+ * @param {import('@lion/ui/types/test-suites.js').SuiteConfig<{host: SuiteElement}, {lightDom?: string}>} [customConfig]
  */
-export function runValidateMixinSuite(customConfig) {
-  const cfg = {
-    tagString: null,
-    ...customConfig,
-  };
-
-  const lightDom = cfg.lightDom || '';
-
+export function runValidateMixinSuite({
+  classes = {},
+  tagString: legacyTagString,
+  lightDom = '',
+} = {}) {
   class ValidateElement extends ValidateMixin(LitElement) {
     connectedCallback() {
       super.connectedCallback();
@@ -46,7 +47,7 @@ export function runValidateMixinSuite(customConfig) {
     }
   }
 
-  const tagString = cfg.tagString || defineCE(ValidateElement);
+  const tagString = resolveSuiteTag(classes.host, legacyTagString, ValidateElement);
   const tag = unsafeStatic(tagString);
 
   describe('ValidateMixin', () => {
@@ -783,8 +784,9 @@ export function runValidateMixinSuite(customConfig) {
             .modelValue=${'dog'}
             .validators=${[asyncV]}
             .asyncValidateOn=${
-              /** @param {{ formControl: { isFocused: boolean } }} opts */ ({ formControl }) =>
-                !formControl.isFocused
+              /** @param {{ classes?: Record<string, CustomElementConstructor>, formControl: { isFocused: boolean } }} opts */ ({
+                formControl,
+              }) => !formControl.isFocused
             }
             >
           ${lightDom}

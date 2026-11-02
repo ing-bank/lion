@@ -1,10 +1,17 @@
 /* eslint-disable lit-a11y/click-events-have-key-events */
 import { LionButtonReset } from '@lion/ui/button.js';
-import { aTimeout, defineCE, expect, fixture, html, unsafeStatic } from '@open-wc/testing';
+import { aTimeout, expect, fixture, html, unsafeStatic } from '@open-wc/testing';
 import sinon from 'sinon';
+import { resolveSuiteTag } from '../../core/test-helpers/resolveSuiteTag.js';
 
-export function LionButtonResetSuite({ klass = LionButtonReset } = {}) {
-  const tagStringButtonReset = defineCE(class extends klass {});
+/**
+ * Runs the `LionButtonReset` behavioural suite. The caller hands the element to run against; anything
+ * left out keeps the element this suite registers from the Lion class.
+ * @typedef {import('@lion/ui/types/test-suites.js').SuiteElement} SuiteElement
+ * @param {import('@lion/ui/types/test-suites.js').SuiteConfig<{host: SuiteElement}>} [customConfig]
+ */
+export function LionButtonResetSuite({ classes = {}, tagString } = {}) {
+  const tagStringButtonReset = resolveSuiteTag(classes.host, tagString, LionButtonReset);
   const tagButtonReset = unsafeStatic(tagStringButtonReset);
 
   describe('LionButtonReset', () => {

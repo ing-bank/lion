@@ -1,6 +1,6 @@
 import fs from 'fs';
 // eslint-disable-next-line import/no-extraneous-dependencies
-import { globby } from 'globby';
+import { fsGlob } from 'providence-analytics/utils.js';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { createModuleGraph } from '@thepassle/module-graph';
 // eslint-disable-next-line import/no-extraneous-dependencies
@@ -15,7 +15,7 @@ import { customElementJetBrainsPlugin } from 'custom-element-jet-brains-integrat
 /**
  * Find all entrypoints for lion to create the CEM from
  */
-const globs = await globby('./exports/**/*.js');
+const globs = await fsGlob('exports/**/*.js');
 
 /**
  * Based on the entrypoints, create a module graph including @lion/ui dependency

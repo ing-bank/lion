@@ -3,17 +3,17 @@ import {
   runInteractionStateMixinSuite,
 } from '@lion/ui/form-core-test-suites.js';
 
+import { LionInputDate } from '@lion/ui/input-date.js';
 import '@lion/ui/define/lion-input-date.js';
 
-const tagString = 'lion-input-date';
 describe('<lion-input-date> integrations', () => {
   runInteractionStateMixinSuite({
-    tagString,
+    classes: { host: LionInputDate },
     allowedModelValueTypes: [Date],
   });
 
   runFormatMixinSuite({
-    tagString,
+    classes: { host: LionInputDate },
     modelValueType: Date,
   });
 });

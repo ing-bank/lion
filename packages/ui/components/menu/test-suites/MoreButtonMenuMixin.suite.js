@@ -1,9 +1,10 @@
 import { LitElement } from 'lit';
-import { expect, html, fixture as _fixture, unsafeStatic, defineCE } from '@open-wc/testing';
+import { expect, html, fixture as _fixture, unsafeStatic } from '@open-wc/testing';
 import { sendMouse, resetMouse } from '@web/test-runner-commands';
 import sinon from 'sinon';
 import { getDeepActiveElement } from '@lion/ui/overlays.js';
 import { InteractiveListMixin } from '../src/InteractiveListMixin.js';
+import { resolveSuiteTag } from '../../core/test-helpers/resolveSuiteTag.js';
 
 class InteractiveListClass extends InteractiveListMixin(LitElement) {}
 
@@ -15,8 +16,6 @@ class InteractiveListClass extends InteractiveListMixin(LitElement) {}
  * @typedef {import('../src/LionMenu.js').LionMenu} LionMenu
  * @typedef {import('lit').TemplateResult} TemplateResult
  *
- * * @typedef {Object} TestConfig
- * @property {string} tagString
  */
 
 const fixture = /** @type {(arg: TemplateResult) => Promise<LionMenu>} */ (_fixture);
@@ -35,14 +34,11 @@ const l1Config = {
 };
 
 /**
- * @param {TestConfig} [customConfig]
+ * @typedef {import('@lion/ui/types/test-suites.js').SuiteElement} SuiteElement
+ * @param {import('@lion/ui/types/test-suites.js').SuiteConfig<{host: SuiteElement}>} [customConfig]
  */
-export function runMoreButtonMenuMixinSuite(customConfig) {
-  const cfg = {
-    tagString: customConfig?.tagString || defineCE(InteractiveListClass),
-  };
-
-  const { tagString } = cfg;
+export function runMoreButtonMenuMixinSuite({ classes = {}, tagString: legacyTagString } = {}) {
+  const tagString = resolveSuiteTag(classes?.host, legacyTagString, InteractiveListClass);
   const tag = unsafeStatic(tagString);
 
   describe('MoreButtonMenuMixin', () => {

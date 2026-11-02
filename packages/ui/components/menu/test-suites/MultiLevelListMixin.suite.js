@@ -1,9 +1,10 @@
 import { LitElement } from 'lit';
-import { expect, html, fixture as _fixture, unsafeStatic, defineCE } from '@open-wc/testing';
+import { expect, html, fixture as _fixture, unsafeStatic } from '@open-wc/testing';
 import sinon from 'sinon';
 import { MultiLevelListMixin } from '../src/MultiLevelListMixin.js';
 import { InteractiveListMixin } from '../src/InteractiveListMixin.js';
 import { mimicKeyPress } from '../test-helpers/mimicKeyPress.js';
+import { resolveSuiteTag } from '../../core/test-helpers/resolveSuiteTag.js';
 
 class MultiLevelListClass extends MultiLevelListMixin(LitElement) {}
 class InteractiveListClass extends InteractiveListMixin(LitElement) {}
@@ -12,23 +13,25 @@ class InteractiveListClass extends InteractiveListMixin(LitElement) {}
  * @typedef {import('../src/LionMenu.js').LionMenu} LionMenu
  * @typedef {import('lit').TemplateResult} TemplateResult
  *
- * @typedef {Object} TestConfig
- * @property {string} tagString
- * @property {string} tagChildString
  */
 
 const fixture = /** @type {(arg: TemplateResult) => Promise<LionMenu>} */ (_fixture);
 
 /**
- * @param {TestConfig} [customConfig]
+ * @typedef {import('@lion/ui/types/test-suites.js').SuiteElement} SuiteElement
+ * @param {import('@lion/ui/types/test-suites.js').SuiteConfig<{host: SuiteElement; 'interactive-list': SuiteElement}>} [customConfig]
  */
-export function runMultiLevelListMixinSuite(customConfig) {
-  const cfg = {
-    tagString: customConfig?.tagString || defineCE(MultiLevelListClass),
-    tagChildString: customConfig?.tagChildString || defineCE(InteractiveListClass),
-  };
-
-  const { tagString, tagChildString } = cfg;
+export function runMultiLevelListMixinSuite({
+  classes = {},
+  tagString: legacyTagString,
+  tagChildString: legacyChildTagString,
+} = {}) {
+  const tagString = resolveSuiteTag(classes?.host, legacyTagString, MultiLevelListClass);
+  const tagChildString = resolveSuiteTag(
+    classes?.['interactive-list'],
+    legacyChildTagString,
+    InteractiveListClass,
+  );
   const tag = unsafeStatic(tagString);
   const tagChild = unsafeStatic(tagChildString);
 

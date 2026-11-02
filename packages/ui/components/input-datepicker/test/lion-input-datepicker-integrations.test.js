@@ -3,17 +3,17 @@ import {
   runInteractionStateMixinSuite,
 } from '@lion/ui/form-core-test-suites.js';
 
+import { LionInputDatepicker } from '@lion/ui/input-datepicker.js';
 import '@lion/ui/define/lion-input-datepicker.js';
 
-const tagString = 'lion-input-datepicker';
 describe('<lion-input-datepicker> integrations', () => {
   runInteractionStateMixinSuite({
-    tagString,
+    classes: { host: LionInputDatepicker },
     allowedModelValueTypes: [Date],
   });
 
   runFormatMixinSuite({
-    tagString,
+    classes: { host: LionInputDatepicker },
     modelValueType: Date,
   });
 });

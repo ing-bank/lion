@@ -1,10 +1,11 @@
 /* eslint-disable lit-a11y/click-events-have-key-events */
-import { defineCE, expect, fixture, html, unsafeStatic, aTimeout } from '@open-wc/testing';
+import { expect, fixture, html, unsafeStatic, aTimeout } from '@open-wc/testing';
 import { sendMouse, resetMouse, sendKeys } from '@web/test-runner-commands';
 import { useFakeTimers } from 'sinon';
 import { css } from 'lit';
 import { getDeepActiveElement } from '@lion/ui/overlays.js';
 import { LionMenu } from '../src/LionMenu.js';
+import { resolveSuiteTag } from '../../core/test-helpers/resolveSuiteTag.js';
 
 const l2Style = css`
   [level='2'] > [slot='list'] {
@@ -45,9 +46,16 @@ const config = {
   },
 };
 
-export function runLionMenuInteractionsSuite({ klass = LionMenu } = {}) {
-  const tagString = defineCE(class extends klass {});
-  const tag = unsafeStatic(tagString);
+/** @typedef {import('@lion/ui/types/test-suites.js').SuiteElement} SuiteElement */
+
+/**
+ * Runs the menu-interactions suite. The caller hands the menu to run against; leaving `host` out keeps
+ * `LionMenu`.
+ * @param {import('@lion/ui/types/test-suites.js').SuiteConfig<{host: SuiteElement}>} [customConfig]
+ */
+export function runLionMenuInteractionsSuite({ classes = {}, tagString } = {}) {
+  const tagName = resolveSuiteTag(classes.host, tagString, LionMenu);
+  const tag = unsafeStatic(tagName);
 
   describe('LionMenu interactions', () => {
     /** @type {import('sinon').SinonFakeTimers | null} */

@@ -2,6 +2,7 @@ import '@lion/ui/define/lion-fieldset.js';
 import '@lion/ui/define/lion-checkbox-group.js';
 import '@lion/ui/define/lion-checkbox.js';
 import { expect, fixture, fixtureSync, html, unsafeStatic } from '@open-wc/testing';
+import { resolveSuiteTag } from '../../../core/test-helpers/resolveSuiteTag.js';
 
 /**
  *
@@ -9,24 +10,19 @@ import { expect, fixture, fixtureSync, html, unsafeStatic } from '@open-wc/testi
  */
 
 /**
- * @param {{ parentTagString?:string, childTagString?: string, choiceType?: string}} config
+ * Both elements are built here rather than taken from Lion, so `host` and `child` are the only roles
+ * and anything the caller leaves out keeps the class this suite builds.
+ * @typedef {import('@lion/ui/types/test-suites.js').SuiteElement} SuiteElement
+ * @param {import('@lion/ui/types/test-suites.js').SuiteConfig<{host: SuiteElement; child: SuiteElement}, {choiceType?: string}>} [customConfig]
  */
-export function runCustomChoiceGroupMixinSuite({
-  parentTagString,
-  childTagString,
-  choiceType,
-} = {}) {
-  const cfg = {
-    parentTagString: parentTagString || 'custom-choice-input-group',
-    childTagString: childTagString || 'custom-choice-input',
-    choiceType: choiceType || 'single',
-  };
+export function runCustomChoiceGroupMixinSuite({ classes = {}, choiceType = 'single' } = {}) {
+  const parentTagString = resolveSuiteTag(classes?.host, undefined, 'custom-choice-input-group');
+  const childTagString = resolveSuiteTag(classes?.child, undefined, 'custom-choice-input');
+  const parentTag = unsafeStatic(parentTagString);
+  const childTag = unsafeStatic(childTagString);
 
-  const parentTag = unsafeStatic(cfg.parentTagString);
-  const childTag = unsafeStatic(cfg.childTagString);
-
-  describe(`CustomChoiceGroupMixin: ${cfg.parentTagString}`, () => {
-    if (cfg.choiceType === 'single') {
+  describe(`CustomChoiceGroupMixin: ${parentTagString}`, () => {
+    if (choiceType === 'single') {
       it('has a single modelValue representing a custom value', async () => {
         const el = /** @type {CustomChoiceGroup} */ (
           await fixture(html`
@@ -75,7 +71,7 @@ export function runCustomChoiceGroupMixinSuite({
       `)
       );
 
-      if (cfg.choiceType === 'single') {
+      if (choiceType === 'single') {
         expect(el.modelValue).to.equal('other');
       } else {
         expect(el.modelValue).to.deep.equal(['other']);
@@ -94,7 +90,7 @@ export function runCustomChoiceGroupMixinSuite({
       `)
       );
 
-      if (cfg.choiceType === 'single') {
+      if (choiceType === 'single') {
         expect(el.serializedValue).to.equal('other');
       } else {
         expect(el.serializedValue).to.deep.equal(['other']);
@@ -113,7 +109,7 @@ export function runCustomChoiceGroupMixinSuite({
       `)
       );
 
-      if (cfg.choiceType === 'single') {
+      if (choiceType === 'single') {
         expect(el.formattedValue).to.equal('other');
       } else {
         expect(el.formattedValue).to.deep.equal(['other']);
@@ -132,7 +128,7 @@ export function runCustomChoiceGroupMixinSuite({
       `)
       );
 
-      if (cfg.choiceType === 'single') {
+      if (choiceType === 'single') {
         el.modelValue = 'other';
         await el.registrationComplete;
         expect(el.modelValue).to.equal('other');
@@ -153,7 +149,7 @@ export function runCustomChoiceGroupMixinSuite({
       `)
       );
 
-      if (cfg.choiceType === 'single') {
+      if (choiceType === 'single') {
         // @ts-expect-error
         el.serializedValue = 'other';
         await el.registrationComplete;
@@ -175,7 +171,7 @@ export function runCustomChoiceGroupMixinSuite({
         </${parentTag}>
       `)
       );
-      if (cfg.choiceType === 'single') {
+      if (choiceType === 'single') {
         el.modelValue = 'other';
       } else {
         el.modelValue = ['other'];
@@ -183,7 +179,7 @@ export function runCustomChoiceGroupMixinSuite({
 
       el.clear();
 
-      if (cfg.choiceType === 'single') {
+      if (choiceType === 'single') {
         expect(el.serializedValue).to.deep.equal('');
       } else {
         expect(el.serializedValue).to.deep.equal([]);

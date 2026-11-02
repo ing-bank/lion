@@ -123,6 +123,9 @@
     "lit": "^3.3.3",
     "singleton-manager": "^1.8.0"
   },
+  "devDependencies": {
+    "providence-analytics": "^0.21.0"
+  },
   "keywords": [
     "design-system",
     "lion",
