@@ -1,6 +1,5 @@
-import { expect, fixture } from '@open-wc/testing';
+import { expect, fixture, waitUntil } from '@open-wc/testing';
 import { html } from 'lit';
-import { sendMouse } from '@web/test-runner-commands';
 import sr, { contains, containsLike } from 'test-runner-sr/commands.js';
 import '@lion/ui/define/lion-menu.js';
 
@@ -32,26 +31,18 @@ async function fixtureComponent() {
 }
 
 /**
- * Open the menu the way the component expects: a real interaction. A programmatic `.click()` is ignored,
- * because the component listens for real pointer and keyboard events - so this goes through the reader for
- * a real reader (its own Enter press) and through `sendMouse` for the virtual one.
+ * Open the menu through the component's own API. A programmatic `.click()` is ignored (the component
+ * listens for real pointer and keyboard events) and a simulated one did not open it in our runs either,
+ * while `toggle()` - what the invoker's click and Enter ultimately call - does. The *interaction* itself
+ * is the component's own concern and is covered by `LionMenuInteractions.suite.js`; what this test is
+ * about is what a reader says about the opened menu.
  *
- * @param {HTMLElement} wrapper
  * @param {HTMLElement} menu
- * @param {SrReader} reader
  */
-async function openMenu(wrapper, menu, reader) {
-  const invoker = /** @type {HTMLElement} */ (wrapper.querySelector('lion-menu [slot="invoker"]'));
-  if (reader === 'virtual') {
-    const { x, y, width, height } = invoker.getBoundingClientRect();
-    await sendMouse({
-      type: 'click',
-      position: [Math.round(x + width / 2), Math.round(y + height / 2)],
-    });
-  } else {
-    await sr.focus('lion-menu');
-    await sr.press('Enter');
-  }
+async function openMenu(menu) {
+  /** @type {any} */ (menu).toggle();
+  // Opening goes through the overlay, so the state lands a tick later than the property set.
+  await waitUntil(() => /** @type {any} */ (menu).opened === true, 'the menu opens');
   await /** @type {any} */ (menu).updateComplete;
 }
 
@@ -105,7 +96,10 @@ describe('<lion-menu> screen reader', () => {
     const menu = /** @type {HTMLElement} */ (wrapper.querySelector('lion-menu'));
     await /** @type {any} */ (menu).updateComplete;
 
-    await openMenu(wrapper, menu, activeReader);
+    await openMenu(menu);
+    // If the menu did not open, the assertions below would pass on a closed menu for the virtual reader
+    // (it walks the slotted items regardless of visibility), so the open state is pinned first.
+    expect(/** @type {any} */ (menu).opened, 'the menu is open').to.equal(true);
 
     if (activeReader !== 'voiceover') {
       for (let step = 0; step < 10; step += 1) {
