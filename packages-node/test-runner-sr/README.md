@@ -327,6 +327,12 @@ infrastructure:
 - The preflight keeps printing the reader's own answer once a second before the run, without failing it: the
   tests stay the gate, but a run that fails because a reader died is recognisable from those lines, and the fix
   is a rerun rather than an edited expectation.
+- On CI each affected file runs on its own, and a file that fails is retried once - but only when the log
+  shows the reader misbehaved (`cannot be started`, `Unable to activate`, `is not running`, `did not answer
+after starting`). A real expectation failure fails again on that retry, so nothing is masked: the retry only
+  stops a dead screen reader from colouring a green suite red. Every file's outcome is written to the job
+  summary (`pass`, `passed after retry (the reader misbehaved)`, `FAIL`), so a red run states whether it was
+  the reader or the code without log archaeology.
 
 ## Known limits
 

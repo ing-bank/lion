@@ -76,7 +76,37 @@ jobs:
         run: npx playwright install --with-deps
 
       - name: Run screen reader tests
-        run: npm run test:sr -- --voiceover ${{ needs.select.outputs.files }}
+        shell: bash
+        run: |
+          set -u
+          log="$RUNNER_TEMP/sr-voiceover.log"
+          failures=""
+          # The reader is a process on a runner we do not control: it can refuse to start, or start and stop
+          # answering mid-run. Neither is a defect in the component, so a file that fails is retried once -
+          # but only when the log shows the reader misbehaved. A real expectation failure fails again on that
+          # retry, so this never hides one; it only stops a dead screen reader from colouring a green suite red.
+          for file in $(echo "${{ needs.select.outputs.files }}" | tr ' ' '\n' | grep -v '^--files$' | grep -v '^$'); do
+            status="pass"
+            for attempt in 1 2; do
+              if npm run test:sr -- --voiceover --files "$file" >"$log" 2>&1; then
+                break
+              fi
+              if [ "$attempt" = 2 ] || ! grep -qE "cannot be started|Unable to activate|is not running|did not answer after starting" "$log"; then
+                status="FAIL"
+                break
+              fi
+              status="passed after retry (the reader misbehaved)"
+              echo "::warning file=$file::the screen reader misbehaved; retrying this file once"
+              sleep 15
+            done
+            echo "- \`$file\`: $status" >> "$GITHUB_STEP_SUMMARY"
+            grep -E "test files \||Error:" "$log" | tail -2
+            if [ "$status" = "FAIL" ]; then failures="$failures $file"; fi
+          done
+          if [ -n "$failures" ]; then
+            echo "::error::screen reader tests still failing after a retry:$failures"
+            exit 1
+          fi
 
   nvda:
     name: NVDA (windows)
@@ -104,4 +134,34 @@ jobs:
         run: npx playwright install --with-deps
 
       - name: Run screen reader tests
-        run: npm run test:sr -- --nvda ${{ needs.select.outputs.files }}
+        shell: bash
+        run: |
+          set -u
+          log="$RUNNER_TEMP/sr-nvda.log"
+          failures=""
+          # The reader is a process on a runner we do not control: it can refuse to start, or start and stop
+          # answering mid-run. Neither is a defect in the component, so a file that fails is retried once -
+          # but only when the log shows the reader misbehaved. A real expectation failure fails again on that
+          # retry, so this never hides one; it only stops a dead screen reader from colouring a green suite red.
+          for file in $(echo "${{ needs.select.outputs.files }}" | tr ' ' '\n' | grep -v '^--files$' | grep -v '^$'); do
+            status="pass"
+            for attempt in 1 2; do
+              if npm run test:sr -- --nvda --files "$file" >"$log" 2>&1; then
+                break
+              fi
+              if [ "$attempt" = 2 ] || ! grep -qE "cannot be started|Unable to activate|is not running|did not answer after starting" "$log"; then
+                status="FAIL"
+                break
+              fi
+              status="passed after retry (the reader misbehaved)"
+              echo "::warning file=$file::the screen reader misbehaved; retrying this file once"
+              sleep 15
+            done
+            echo "- \`$file\`: $status" >> "$GITHUB_STEP_SUMMARY"
+            grep -E "test files \||Error:" "$log" | tail -2
+            if [ "$status" = "FAIL" ]; then failures="$failures $file"; fi
+          done
+          if [ -n "$failures" ]; then
+            echo "::error::screen reader tests still failing after a retry:$failures"
+            exit 1
+          fi
