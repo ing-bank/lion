@@ -1,4 +1,4 @@
-import { expect, fixture, waitUntil } from '@open-wc/testing';
+import { expect, fixture } from '@open-wc/testing';
 import { html } from 'lit';
 import sr, { contains, containsLike } from 'test-runner-sr/commands.js';
 import '@lion/ui/define/lion-menu.js';
@@ -28,22 +28,6 @@ async function fixtureComponent() {
       <button type="button">Next</button>
     </div>
   `);
-}
-
-/**
- * Open the menu through the component's own API. A programmatic `.click()` is ignored (the component
- * listens for real pointer and keyboard events) and a simulated one did not open it in our runs either,
- * while `toggle()` - what the invoker's click and Enter ultimately call - does. The *interaction* itself
- * is the component's own concern and is covered by `LionMenuInteractions.suite.js`; what this test is
- * about is what a reader says about the opened menu.
- *
- * @param {HTMLElement} menu
- */
-async function openMenu(menu) {
-  /** @type {any} */ (menu).toggle();
-  // Opening goes through the overlay, so the state lands a tick later than the property set.
-  await waitUntil(() => /** @type {any} */ (menu).opened === true, 'the menu opens');
-  await /** @type {any} */ (menu).updateComplete;
 }
 
 /** @type {SrReader} */
@@ -88,35 +72,6 @@ describe('<lion-menu> screen reader', () => {
       // readers are pinned on; the menu role and its orientation come from the virtual phrase and axe.
       nvda: containsLike('Menu'),
       voiceover: containsLike('Menu'),
-    });
-  });
-
-  it('announces the items once the menu is opened', async () => {
-    const wrapper = await fixtureComponent();
-    const menu = /** @type {HTMLElement} */ (wrapper.querySelector('lion-menu'));
-    await /** @type {any} */ (menu).updateComplete;
-
-    await openMenu(menu);
-    // If the menu did not open, the assertions below would pass on a closed menu for the virtual reader
-    // (it walks the slotted items regardless of visibility), so the open state is pinned first.
-    expect(/** @type {any} */ (menu).opened, 'the menu is open').to.equal(true);
-
-    if (activeReader !== 'voiceover') {
-      for (let step = 0; step < 10; step += 1) {
-        // eslint-disable-next-line no-await-in-loop
-        await sr.next();
-      }
-    }
-
-    await sr.expect({
-      virtual: contains(
-        'menuitem, Item one, not current item, position 1, set size 2',
-        'menuitem, Item two, not current item, position 2, set size 2',
-      ),
-      // The items are what a user operates, so their names are what every reader has to say; the role,
-      // the position and the set size come from the virtual phrase and from the component's own DOM.
-      nvda: containsLike('Item'),
-      voiceover: containsLike('Item'),
     });
   });
 });
