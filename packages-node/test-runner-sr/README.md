@@ -298,6 +298,19 @@ makes it slower and flakier without making it stronger. Worked examples from thi
 name, role or label fails there. What only a screen reader test can add is what the announcement actually
 says.
 
+Every axe call in this flow - in the screen reader tests and in the component tests written alongside them -
+passes `{ ignoredRules: ['aria-allowed-role'] }` with the same short reason: Lion's overlay wrapper is a
+`<dialog role="none">`, a dialog for the top layer while the real role sits on the content node, which axe
+reports as `aria-allowed-role` and which Lion's own
+[overlay rationale](https://lion.js.org/fundamentals/systems/overlays/rationale/#considerations) prescribes
+ignoring. One shape and one reason everywhere, so a violation that is not that known one cannot hide inside an
+exception.
+
+That the wrapper is harmless is not taken on faith. The dialog and tooltip screen reader tests assert the role
+and name of the content node and what the reader announces, and the menu component test asserts the wrapper
+itself carries `role="none"` - the wrapper lives in an overlay host's shadow tree, so finding it needs a walk
+through shadow roots.
+
 ## Known limits
 
 A server command has to answer within **20000ms**. That limit is hardcoded in
