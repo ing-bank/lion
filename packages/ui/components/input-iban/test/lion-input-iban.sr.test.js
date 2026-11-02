@@ -165,16 +165,18 @@ describe('<lion-input-iban> screen reader', () => {
     await sr.press('Shift+Tab');
     await anchorOnIbanField();
 
-    // Only NVDA is waited on for the wording, and that is a measured decision rather than a retry:
-    // the message reaches users through the feedback's assertive live region, and NVDA announces it
-    // (our CI logs say "invalid entry, Error, Please enter a valid IBAN"), while
-    //   - VoiceOver on macOS does not convey `aria-errormessage` at all (a11ysupport.io) and its own
-    //     help banner can swallow the live region announcement - our failing runs show the banner
-    //     twice and never the message;
-    //   - the virtual reader did not pick this live region up in our runs, so it asserts the state,
-    //     which it does produce ("not disabled, invalid").
+    // Only NVDA is waited on for the wording, and that is a measured decision rather than a retry.
+    // The message is properly associated: the feedback element lives in the light DOM with the field,
+    // carries `id="feedback-<inputId>"` and the field's `aria-describedby` points at it, so the message
+    // is both the description and an assertive live region. What differs is the reader:
+    //   - NVDA announces the wording (our CI logs say "invalid entry, Error, Please enter a valid
+    //     IBAN");
+    //   - in the failing run VoiceOver never spoke it - the log shows the field and VoiceOver's own
+    //     help banner twice - so for VoiceOver the state is asserted, which it does produce;
+    //   - the virtual reader did not pick this live region up either, so it asserts the state too
+    //     ("not disabled, invalid").
     // The wording itself is not left uncovered: NVDA asserts it, and the DOM assertions below pin the
-    // rendered message and its live region for every reader.
+    // rendered message, its live region and its association for every reader.
     if (activeReader === 'nvda') {
       await sr.waitFor('Please enter a valid IBAN');
     }
@@ -197,7 +199,7 @@ describe('<lion-input-iban> screen reader', () => {
     await sr.expect({
       virtual: containsLike('invalid'),
       nvda: containsLike('Please enter a valid IBAN'),
-      // See above: the state is what the virtual reader and VoiceOver reliably say here.
+      // See above: the state is what the virtual reader and VoiceOver produce here.
       voiceover: containsLike('invalid'),
     });
 
