@@ -29,7 +29,7 @@ describe('<lion-menu> opened state', () => {
     // The invoker's click and Enter both end up here; calling it directly keeps this test about the state
     // the component produces, not about the event plumbing (LionMenuInteractions.suite.js covers that).
     menu.toggle();
-    await waitUntil(() => menu.opened === true, { timeout: 3000 });
+    await waitUntil(() => menu.opened === true, 'the menu opens', { timeout: 3000 });
     await menu.updateComplete;
 
     expect(menu.opened).to.equal(true);
