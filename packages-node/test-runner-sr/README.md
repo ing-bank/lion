@@ -311,6 +311,23 @@ and name of the content node and what the reader announces, and the menu compone
 itself carries `role="none"` - the wrapper lives in an overlay host's shadow tree, so finding it needs a walk
 through shadow roots.
 
+## When the reader itself fails
+
+A real reader is a process on a machine we do not control, and our CI logs show all three ways it lets us down:
+it does not start (`NVDA cannot be started`, `Unable to activate application: VoiceOver`), or it starts and then
+stops answering mid-run (`NVDA is not running` about three minutes in, after which every command in every
+following test burns its 20s budget). The reader is not the thing under test, so the flow treats it as
+infrastructure:
+
+- `sr.reset()`, which runs before every test, checks that the reader still answers and **restarts it** if it does
+  not (`[sr-recover] the <reader> screen reader had stopped; restarting it`). One crash therefore costs at most
+  one test - with `retries: 1` for real readers, often none - instead of the rest of the file run.
+- Starting already retries twice before giving up, and when it does give up the error says so explicitly: the
+  runner, not the test.
+- The preflight keeps printing the reader's own answer once a second before the run, without failing it: the
+  tests stay the gate, but a run that fails because a reader died is recognisable from those lines, and the fix
+  is a rerun rather than an edited expectation.
+
 ## Known limits
 
 A server command has to answer within **20000ms**. That limit is hardcoded in

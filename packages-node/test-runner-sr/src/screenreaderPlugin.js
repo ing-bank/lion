@@ -323,8 +323,9 @@ function createScreenReader({ screenReader, getPage, appId }) {
 
     if (!(await answersWithin())) {
       throw new Error(
-        `The ${screenReader} screen reader did not answer after starting twice ` +
-          '(check that the screen reader is installed and running for this OS user).',
+        `The ${screenReader} screen reader did not answer after starting twice. This is the runner, not ` +
+          'the test: check that the screen reader is installed and running for this OS user, then rerun ' +
+          'the job.',
       );
     }
 
@@ -343,6 +344,42 @@ function createScreenReader({ screenReader, getPage, appId }) {
       // stopping a reader that already went away is not a test failure
     }
     instance = null;
+  };
+
+  /**
+   * Does the reader still answer? A real reader can stop in the middle of a run - our CI logs show
+   * NVDA starting fine and then reporting "NVDA is not running" about three minutes later, after
+   * which every command in every following test burned its 20s budget. A health check before each
+   * test turns that into one unlucky test instead of a wasted file run.
+   *
+   * @param {number} [timeout]
+   * @returns {Promise<boolean>}
+   */
+  const isAlive = async (timeout = 2000) => {
+    if (screenReader === 'virtual') {
+      return true;
+    }
+    return answersWithin(timeout);
+  };
+
+  /**
+   * Restart a reader that stopped, and put it back on the page (VoiceOver reads whatever window is in
+   * front, so it needs the same navigation the start uses).
+   *
+   * @returns {Promise<boolean>} whether the reader had to be revived
+   */
+  const revive = async () => {
+    if (await isAlive()) {
+      return false;
+    }
+    // eslint-disable-next-line no-console
+    console.log(`[sr-recover] the ${screenReader} screen reader had stopped; restarting it`);
+    await stop();
+    await start();
+    if (screenReader === 'voiceover') {
+      await navigateToWebContent();
+    }
+    return true;
   };
 
   /**
@@ -369,6 +406,8 @@ function createScreenReader({ screenReader, getPage, appId }) {
     start,
     reset,
     stop,
+    isAlive,
+    revive,
     navigateToWebContent,
     waitForSpeechToSettle,
     speakAgain,
@@ -479,6 +518,8 @@ export function screenreaderPlugin(options) {
     }
 
     if (command === 'sr-reset') {
+      // Before every test: if the reader died mid-run, bring it back so the rest of the file survives.
+      await stateFor(session).reader.revive();
       await stateFor(session).reader.reset();
       return { success: true };
     }
