@@ -51,6 +51,40 @@ export function runListboxMixinSuite({
   const optionTag = unsafeStatic(optionTagString);
 
   describe('ListboxMixin', () => {
+    it('updates grouped option positions and navigation after one microtask', async () => {
+      const el = await fixture(html`
+        <${tag}>
+          <div><${optionTag} .choiceValue=${'one'}>One</${optionTag}></div>
+          <div>
+            <${optionTag} .choiceValue=${'two'}>Two</${optionTag}>
+            <${optionTag} .choiceValue=${'three'}>Three</${optionTag}>
+          </div>
+        </${tag}>
+      `);
+      const { _listboxNode } = getListboxMembers(el);
+      const groups = [..._listboxNode.children];
+      const target = document.createElement('div');
+      _listboxNode.appendChild(target);
+      groups.forEach(group => target.appendChild(group));
+      await Promise.resolve();
+
+      const options = [...target.querySelectorAll(optionTagString)];
+      expect([...el.formElements]).to.deep.equal(options);
+      options.forEach((option, index) => {
+        expect(option.getAttribute('aria-posinset')).to.equal(String(index + 1));
+        expect(option.getAttribute('aria-setsize')).to.equal('3');
+      });
+      el.activeIndex = 0;
+      mimicKeyPress(_listboxNode, 'ArrowDown');
+      expect(el.formElements[1]).to.equal(options[1]);
+      expect(el.formElements[1].active).to.be.true;
+
+      options[1].remove();
+      await Promise.resolve();
+      expect(options[2].getAttribute('aria-posinset')).to.equal('2');
+      expect(options[2].getAttribute('aria-setsize')).to.equal('2');
+    });
+
     // TODO: See if it is possible to get functionality from ChoiceGroup and/or Field suite(s)
     describe('FormControl (Field / ChoiceGroup) functionality', () => {
       it('has a single modelValue representing the currently checked option', async () => {

@@ -151,11 +151,13 @@ export function runFormGroupMixinSuite({
       const el = /**  @type {FormGroup} */ (await fixture(html`<${tag} name="foo"></${tag}>`));
       try {
         // we test the api directly as errors thrown from a web component are in a
-        // different context and we can not catch them here => register fake elements
+        // different context and we can not catch them here => register detached elements
         el.addFormElement(
-          /**  @type {HTMLElement & import('../../types/FormControlMixinTypes.js').FormControlHost} */ ({
-            name: 'foo',
-          }),
+          /**  @type {FormChild} */ (
+            Object.assign(document.createElement(childTagString), {
+              name: 'foo',
+            })
+          ),
         );
       } catch (err) {
         error = err;
@@ -176,16 +178,20 @@ export function runFormGroupMixinSuite({
       const el = /**  @type {FormGroup} */ (await fixture(html`<${tag}></${tag}>`));
       try {
         // we test the api directly as errors thrown from a web component are in a
-        // different context and we can not catch them here => register fake elements
+        // different context and we can not catch them here => register detached elements
         el.addFormElement(
-          /**  @type {HTMLElement & import('../../types/FormControlMixinTypes.js').FormControlHost} */ ({
-            name: 'fooBar',
-          }),
+          /**  @type {FormChild} */ (
+            Object.assign(document.createElement(childTagString), {
+              name: 'fooBar',
+            })
+          ),
         );
         el.addFormElement(
-          /**  @type {HTMLElement & import('../../types/FormControlMixinTypes.js').FormControlHost} */ ({
-            name: 'fooBar',
-          }),
+          /**  @type {FormChild} */ (
+            Object.assign(document.createElement(childTagString), {
+              name: 'fooBar',
+            })
+          ),
         );
       } catch (err) {
         error = err;

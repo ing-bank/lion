@@ -13,6 +13,22 @@ import { FormRegisteringMixin } from './FormRegisteringMixin.js';
  */
 
 /**
+ * @param {Node} first
+ * @param {Node} second
+ * @returns {number}
+ */
+function compareDocumentOrder(first, second) {
+  const position = first.compareDocumentPosition(second);
+  // Cross-root registrations have no defined DOM order; preserve their registration order.
+  // eslint-disable-next-line no-bitwise
+  if (position === 0 || position & Node.DOCUMENT_POSITION_DISCONNECTED) {
+    return 0;
+  }
+  // eslint-disable-next-line no-bitwise
+  return position & Node.DOCUMENT_POSITION_FOLLOWING ? -1 : 1;
+}
+
+/**
  * @desc This allows an element to become the manager of a register.
  * It basically keeps track of a FormControlsCollection that it stores in .formElements
  * This will always be an array of all elements.
@@ -27,6 +43,8 @@ import { FormRegisteringMixin } from './FormRegisteringMixin.js';
 const FormRegistrarMixinImplementation = /** @type {FormRegistrarMixin} */ (superclass =>
   // eslint-disable-next-line no-shadow, no-unused-vars
   class extends FormRegisteringMixin(superclass) {
+    #formElementsUpdatePending = false;
+
     /** @type {any} */
     static get properties() {
       return {
@@ -165,11 +183,7 @@ const FormRegistrarMixinImplementation = /** @type {FormRegistrarMixin} */ (supe
           if (!Array.isArray(this.formElements[name])) {
             this.formElements[name] = new FormControlsCollection();
           }
-          if (indexToInsertAt > 0) {
-            this.formElements[name].splice(indexToInsertAt, 0, child);
-          } else {
-            this.formElements[name].push(child);
-          }
+          this.formElements[name].push(child);
         } else if (!this.formElements[name]) {
           this.formElements[name] = child;
         } else {
@@ -179,7 +193,35 @@ const FormRegistrarMixinImplementation = /** @type {FormRegistrarMixin} */ (supe
           );
         }
       }
+      this.#scheduleFormElementsUpdate();
     }
+
+    #scheduleFormElementsUpdate() {
+      if (this.#formElementsUpdatePending) {
+        return;
+      }
+      this.#formElementsUpdatePending = true;
+      queueMicrotask(() => {
+        this.#formElementsUpdatePending = false;
+        this.formElements.sort(compareDocumentOrder);
+        if (this._isFormOrFieldset) {
+          for (const name of Object.keys(this.formElements)) {
+            if (name.endsWith('[]') && Array.isArray(this.formElements[name])) {
+              this.formElements[name].sort(compareDocumentOrder);
+            }
+          }
+        }
+        this._onFormElementsChanged();
+      });
+    }
+
+    /**
+     * Called once per microtask batch after registered fields are restored to DOM order.
+     * @protected
+     * @returns {void}
+     */
+    // eslint-disable-next-line class-methods-use-this
+    _onFormElementsChanged() {}
 
     /**
      * @param {FormControlHost} child the child element (field)
@@ -203,6 +245,7 @@ const FormRegistrarMixinImplementation = /** @type {FormRegistrarMixin} */ (supe
           delete this.formElements[name];
         }
       }
+      this.#scheduleFormElementsUpdate();
     }
 
     /**
@@ -226,18 +269,10 @@ const FormRegistrarMixinImplementation = /** @type {FormRegistrarMixin} */ (supe
       // If there is no other element, index is -1 (e.g. add it to the end)
       let indexToInsertAt = -1;
       if (this.formElements && Array.isArray(this.formElements)) {
-        // we start comparing from the end of the array as it's the most likely position where the element will be added
-        for (const [i, formElement] of this.formElements.entries()) {
-          // compareDocumentPosition returns a bitmask
-          // eslint-disable-next-line no-bitwise
-          if (formElement.compareDocumentPosition(child) & Node.DOCUMENT_POSITION_FOLLOWING) {
-            // nothing as child is after formElement in DOM
-          } else {
-            // first time child is NOT after formElement in DOM we insert it
-            indexToInsertAt = i;
-            break;
-          }
-        }
+        // A batched reorder repairs temporary inconsistencies while groups are moved.
+        indexToInsertAt = this.formElements.findIndex(
+          formElement => compareDocumentOrder(formElement, child) > 0,
+        );
       }
       this.addFormElement(child, indexToInsertAt);
     }
