@@ -346,6 +346,7 @@ export function LionButtonSuite({ classes = {}, tagString } = {}) {
         `);
 
         const lionButton = /** @type {LionButton} */ (form.querySelector(tagStringButton));
+        lionButton.dispatchEvent(new KeyboardEvent('keydown', { key: ' ' }));
         lionButton.dispatchEvent(new KeyboardEvent('keyup', { key: ' ' }));
         await aTimeout(0);
         await aTimeout(0);
@@ -362,11 +363,34 @@ export function LionButtonSuite({ classes = {}, tagString } = {}) {
         `);
 
         const button = /** @type {LionButton} */ (form.querySelector(tagStringButton));
+        button.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
         button.dispatchEvent(new KeyboardEvent('keyup', { key: 'Enter' }));
         await aTimeout(0);
         await aTimeout(0);
 
         expect(formButtonClickedSpy).to.have.been.calledOnce;
+      });
+
+      it('does not click on a keyup whose keydown was not on the button', async () => {
+        const clickSpy = /** @type {EventListener} */ (sinon.spy());
+        const el = /** @type {LionButton} */ (
+          await fixture(html`<${tagButton} @click="${clickSpy}">foo</${tagButton}>`)
+        );
+
+        // focus moved to the button between keydown and keyup, as a closing dialog does (#2555)
+        el.dispatchEvent(new KeyboardEvent('keyup', { key: 'Enter' }));
+        el.dispatchEvent(new KeyboardEvent('keyup', { key: ' ' }));
+        // keydown on the button, keyup elsewhere, then a keyup on the button on its own
+        el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+        document.body.dispatchEvent(new KeyboardEvent('keyup', { key: 'Enter' }));
+        el.dispatchEvent(new KeyboardEvent('keyup', { key: 'Enter' }));
+        await aTimeout(0);
+        expect(clickSpy).not.to.have.been.called;
+
+        el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+        el.dispatchEvent(new KeyboardEvent('keyup', { key: 'Enter' }));
+        await aTimeout(0);
+        expect(clickSpy).to.have.been.calledOnce;
       });
     });
   });
