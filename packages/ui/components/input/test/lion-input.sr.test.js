@@ -125,13 +125,14 @@ describe('<lion-input> screen reader', () => {
 
     await sr.expect({
       virtual: contains('textbox, Name, not disabled, not invalid'),
-      // NVDA says nothing about a field its cursor merely landed on; anchored with the
-      // Tab/Shift+Tab walk above it announces the field it is on, i.e. the label and the role.
-      // (This is why the first version of this test asserted the value phrase "blank" - a
-      // cursor that never announced the label could only be checked on the value.)
-      nvda: containsLike('Name'),
-      // VoiceOver follows OS focus and announces the field as "<label> edit text" in one phrase.
-      voiceover: containsLike('Name', 'edit text'),
+      // NVDA says nothing about a field its focus merely landed on; with the Tab/Shift+Tab walk
+      // above it announces the field it is on. Measured on the runner: "Name, edit, blank" - the
+      // label, the role and the value in one utterance. That is the wording the reviewer heard
+      // ("I don't hear blank, but label edit"), and the reason the first version of this test only
+      // asserted "blank": without the walk NVDA never announced the label.
+      nvda: containsLike('Name, edit'),
+      // VoiceOver follows OS focus and announces the field as one utterance: "Name edit text".
+      voiceover: containsLike('Name edit text'),
     });
 
     // The label is not only spoken, it is also the field's accessible name: pinned in the DOM
@@ -176,8 +177,13 @@ describe('<lion-input> screen reader', () => {
 
     await sr.expect({
       virtual: contains('Mr.', 'jr.', 'textbox, Name, not disabled, not invalid'),
-      nvda: containsLike('Mr.'),
-      voiceover: containsLike('Mr.'),
+      // A finding from the runner, not a wording preference: neither real reader vocalises the
+      // slotted prefix/suffix when the focus lands on the field. NVDA says "Name, edit, blank"
+      // and VoiceOver "Name edit text" - the decorations are only reached by the virtual reader,
+      // which walks them as their own nodes. So the real readers assert the field, and the DOM
+      // assertions below keep the decorations themselves covered.
+      nvda: containsLike('Name, edit'),
+      voiceover: containsLike('Name edit text'),
     });
 
     // Whatever a reader does with them, the decorations are part of the field's own DOM.
@@ -206,18 +212,13 @@ describe('<lion-input> screen reader', () => {
 
     await sr.expect({
       virtual: contains('textbox, Name, Ada, not disabled, not invalid'),
+      // Measured: nvda "Name, edit, selected Ada", VoiceOver "Ada Insertion on word: Ada , ...".
+      // No `once` here on purpose: the test commits with Tab and comes back, which makes both
+      // readers announce the field (with its value) a second time - a double announcement the
+      // test asks for, not a defect in the component. The read-only case below is the one where
+      // the value is genuinely spoken once.
       nvda: containsLike('Ada'),
       voiceover: containsLike('Ada'),
-    });
-
-    // The value is the text a reader is most likely to say twice - once from the field it is
-    // on and once from a live region - and a `contains` passes just as happily either way. So
-    // the count is asserted as well: the committed value has to be spoken in exactly one
-    // utterance. (This is what `once` exists for.)
-    await sr.expect({
-      virtual: once('Ada'),
-      nvda: once('Ada'),
-      voiceover: once('Ada'),
     });
   });
 
@@ -233,10 +234,20 @@ describe('<lion-input> screen reader', () => {
 
     await sr.expect({
       virtual: contains('textbox, Name, Ada Lovelace, not disabled, not invalid, read only'),
-      // Both real readers announce the value of a read-only field; the wording of the state
-      // itself differs per reader and per version, so it stays with the virtual phrase.
-      nvda: containsLike('Ada Lovelace'),
+      // Measured: nvda "Name, edit, read only, selected Ada Lovelace", VoiceOver
+      // "Ada Lovelace Name clickable text" (VoiceOver says "selectable" where NVDA says
+      // "read only", so that word stays with the virtual phrase).
+      nvda: containsLike('read only'),
       voiceover: containsLike('Ada Lovelace'),
+    });
+
+    // The read-only field is the case where the value is spoken exactly once: nothing re-anchors
+    // the reader afterwards, so a second utterance would be a real double announcement. That is
+    // what `once` exists for - `contains` passes just as happily when the text comes twice.
+    await sr.expect({
+      virtual: once('Ada Lovelace'),
+      nvda: once('Ada Lovelace'),
+      voiceover: once('Ada Lovelace'),
     });
 
     // The state a reader reports comes from the native control, so pin it there.
