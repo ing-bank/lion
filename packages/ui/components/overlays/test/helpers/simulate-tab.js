@@ -1,4 +1,4 @@
-import { getFocusableElements } from './get-focusable-elements.js';
+import { getFocusableElements } from '../../src/utils/get-focusable-elements.js';
 
 export function simulateTab(node = document.body) {
   const current = /** @type {HTMLElement} */ (document.activeElement);
