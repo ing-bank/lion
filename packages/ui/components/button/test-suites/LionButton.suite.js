@@ -372,9 +372,10 @@ export function LionButtonSuite({ classes = {}, tagString } = {}) {
       });
 
       it('does not click on a keyup whose keydown was not on the button', async () => {
-        const clickSpy = /** @type {EventListener} */ (sinon.spy());
+        const clickSpy = sinon.spy();
+        const onClick = /** @type {EventListener} */ (clickSpy);
         const el = /** @type {LionButton} */ (
-          await fixture(html`<${tagButton} @click="${clickSpy}">foo</${tagButton}>`)
+          await fixture(html`<${tagButton} @click="${onClick}">foo</${tagButton}>`)
         );
 
         // focus moved to the button between keydown and keyup, as a closing dialog does (#2555)
@@ -385,12 +386,12 @@ export function LionButtonSuite({ classes = {}, tagString } = {}) {
         document.body.dispatchEvent(new KeyboardEvent('keyup', { key: 'Enter' }));
         el.dispatchEvent(new KeyboardEvent('keyup', { key: 'Enter' }));
         await aTimeout(0);
-        expect(clickSpy).not.to.have.been.called;
+        expect(clickSpy.callCount).to.equal(0);
 
         el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
         el.dispatchEvent(new KeyboardEvent('keyup', { key: 'Enter' }));
         await aTimeout(0);
-        expect(clickSpy).to.have.been.calledOnce;
+        expect(clickSpy.callCount).to.equal(1);
       });
     });
   });
