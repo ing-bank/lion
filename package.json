@@ -18,6 +18,7 @@
     "format:prettier": "prettier \"**/*.{js,md,astro}\" \"packages/*/package.json\" \"package.json\" --write",
     "postinstall": "npx patch-package && npm run build:phone --workspace @lion/ui && npm run custom-elements-manifest",
     "lint": "wireit",
+    "lint:bin-modes": "node ./scripts/lint-bin-modes.mjs",
     "lint:eslint": "eslint --ext .js,.html .",
     "lint:markdownlint": "git ls-files '*.md' | xargs markdownlint --ignore '{.github/**/*.md,.changeset/*.md,**/CHANGELOG.md,packages/ui/_legacy-changelogs/*.md,packages-node/awesome-phonenumber/upstream/**,prev-portal/*.md,portal/*.md}'",
     "lint:phone-number-up-to-date": "node ./scripts/lint-phone-number-lib.js",
