@@ -1,5 +1,16 @@
 # @lion/ui
 
+## 0.27.0
+
+### Minor Changes
+
+- 8b1e534: [test-suites] make every component's tests reusable: 35 public `*-test-suites.js` entry points and a `classes` map per runner (`host` for the element under test plus a key per role a composite renders), so a subclasser or extension layer hands the suite its own classes and runs Lion's guarantees against them; injectable page objects and a documented contract included. `klass`, `tagString` and the older role tag keys keep working as deprecated fallbacks
+
+### Patch Changes
+
+- 961193a: Use the current Providence analytics workspace version so import/export map helpers and build scripts
+  resolve its utilities and type declarations consistently.
+
 ## 0.26.0
 
 ### Minor Changes
