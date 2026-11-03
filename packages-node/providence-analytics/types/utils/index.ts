@@ -1,4 +1,20 @@
-import type { Node as SwcNode } from '@swc/core';
+/**
+ * The AST node shape the traversal works with, shared by every parser this package can use.
+ *
+ * `AstService.getAst` returns oxc's ESTree for each shipped analyzer and babel's AST behind
+ * `--fallback-to-babel`; the traversal only ever reads `type` plus the child fields its visitors
+ * add, and narrows through casts. Keeping the node structural - instead of one parser's node union -
+ * is what lets the parser itself be an optional runtime dependency, and keeps our shipped
+ * declarations free of a parser's typings.
+ */
+export type AstNode = {
+  type: string;
+  start?: number | null;
+  end?: number | null;
+  span?: { start: number; end: number };
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  [childNode: string]: any;
+};
 import { IdentifierName } from '../index.js';
 
 export type SwcScope = {
@@ -8,21 +24,21 @@ export type SwcScope = {
   path: SwcPath | null;
   getBinding: (IdentifierName: string) => SwcBinding;
   dispose: () => void;
-  _pendingRefsWithoutBinding: SwcNode[];
+  _pendingRefsWithoutBinding: AstNode[];
   _isIsolatedBlockStatement: boolean;
 };
 
 /* Binding https://github.com/jamiebuilds/babel-handbook/blob/master/translations/en/plugin-handbook.md#toc-bindings */
 export type SwcBinding = {
-  identifier: SwcNode;
+  identifier: AstNode;
   // kind: string;
-  refs: SwcNode[];
+  refs: AstNode[];
   path: SwcPath;
 };
 
 export type SwcPath = {
-  node: SwcNode;
-  parent: SwcNode;
+  node: AstNode;
+  parent: AstNode;
   stop: () => void;
   scope?: SwcScope;
   parentPath: SwcPath | null | undefined;

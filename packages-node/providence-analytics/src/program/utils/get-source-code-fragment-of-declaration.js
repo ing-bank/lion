@@ -12,25 +12,25 @@ import { fsAdapter } from './fs-adapter.js';
  * @typedef {import('../../../types/index.js').AnalyzerAst} AnalyzerAst
  * @typedef {import('../../../types/index.js').SwcBinding} SwcBinding
  * @typedef {import('../../../types/index.js').SwcPath} SwcPath
- * @typedef {import('@swc/core').Node & {
- *   body?: SwcNode[];
- *   declaration?: SwcNode;
- *   expression?: SwcNode;
- *   init?: SwcNode;
- *   id?: SwcNode;
- *   identifier?: SwcNode;
- *   source?: SwcNode;
- *   specifiers?: SwcNode[];
- *   imported?: SwcNode;
- *   local?: SwcNode;
- *   orig?: SwcNode;
+ * @typedef {import('../../../types/index.js').AstNode & {
+ *   body?: AstNode[];
+ *   declaration?: AstNode;
+ *   expression?: AstNode;
+ *   init?: AstNode;
+ *   id?: AstNode;
+ *   identifier?: AstNode;
+ *   source?: AstNode;
+ *   specifiers?: AstNode[];
+ *   imported?: AstNode;
+ *   local?: AstNode;
+ *   orig?: AstNode;
  *   start?: number | null;
  *   end?: number | null;
  *   span?: { start: number; end: number };
- * }} SwcNode
+ * }} AstNode
  * @typedef {import("oxc-parser").ParseResult} OxcParseResult
- * @typedef {import('@swc/core').Module} SwcAstModule
- * @typedef {OxcParseResult|SwcAstModule|SwcNode} ParsedAst
+ * @typedef {import('../../../types/index.js').AstNode} AstModule
+ * @typedef {OxcParseResult|AstModule|AstNode} ParsedAst
  */
 
 /**
@@ -50,7 +50,7 @@ export function getFilePathOrExternalSource({ rootPath, localPath }) {
 
 /**
  * Checks whether we are a Declaration (like class X {}) or Declarator (like const x = 88)
- * @param {SwcNode} node
+ * @param {AstNode} node
  * @returns {boolean}
  */
 function containsIdentifier(node) {
@@ -83,7 +83,7 @@ export function getReferencedDeclaration({ referencedIdentifierName, globalScope
   if (!identifierBinding) return null;
 
   const { type } = identifierBinding.path.node;
-  const declarationNode = /** @type {SwcNode} */ (identifierBinding.path.node);
+  const declarationNode = /** @type {AstNode} */ (identifierBinding.path.node);
   const isNonRefDeclaration = type.endsWith('Declaration');
   if (isNonRefDeclaration && !containsIdentifier(declarationNode)) {
     throw new Error('Make sure entries added to globalScopeBindings contains an identifier');
@@ -97,7 +97,7 @@ export function getReferencedDeclaration({ referencedIdentifierName, globalScope
   const isRefDeclarator = declarationNode.init?.type === 'Identifier';
   if (isRefDeclarator) {
     return getReferencedDeclaration({
-      referencedIdentifierName: nameOf(/** @type {SwcNode} */ (declarationNode.init)),
+      referencedIdentifierName: nameOf(/** @type {AstNode} */ (declarationNode.init)),
       globalScopeBindings,
     });
   }
@@ -141,9 +141,6 @@ export async function getSourceCodeFragmentOfDeclaration({
   // Type guard: ensure ast is defined
   if (!ast) throw new Error('Failed to generate AST');
 
-  // compensate for swc span bug: https://github.com/swc-project/swc/issues/1366#issuecomment-1516539812
-  const offset = parser === 'swc' ? await AstService._getSwcOffset() : -1;
-
   /** @type {SwcPath|undefined} */
   let finalNodePath;
 
@@ -158,21 +155,21 @@ export async function getSourceCodeFragmentOfDeclaration({
     //   - declared right away
     //   - referenced (possibly recursively) by other declaration
 
-    const moduleNode = /** @type {SwcNode} */ (astPath.node);
-    const globalScopeBindings = getPathFromNode(/** @type {SwcNode} */ (moduleNode.body?.[0]))
+    const moduleNode = /** @type {AstNode} */ (astPath.node);
+    const globalScopeBindings = getPathFromNode(/** @type {AstNode} */ (moduleNode.body?.[0]))
       ?.scope?.bindings;
 
     if (exportedIdentifier === '[default]') {
       const defaultExportPath = /** @type {SwcPath} */ (
         getPathFromNode(
-          /** @type {SwcNode} */ (
+          /** @type {AstNode} */ (
             moduleNode.body?.find((/** @type {{ type: string; }} */ child) =>
               ['ExportDefaultDeclaration', 'ExportDefaultExpression'].includes(child.type),
             )
           ),
         )
       );
-      const defaultExportNode = /** @type {SwcNode|undefined} */ (defaultExportPath?.node);
+      const defaultExportNode = /** @type {AstNode|undefined} */ (defaultExportPath?.node);
 
       const isReferenced =
         (defaultExportNode?.declaration?.type || defaultExportNode?.expression?.type) ===
@@ -188,7 +185,7 @@ export async function getSourceCodeFragmentOfDeclaration({
         finalNodePath = /** @type {SwcPath} */ (
           getReferencedDeclaration({
             referencedIdentifierName: nameOf(
-              /** @type {SwcNode} */ (
+              /** @type {AstNode} */ (
                 defaultExportNode?.declaration || defaultExportNode?.expression
               ),
             ),
@@ -207,8 +204,8 @@ export async function getSourceCodeFragmentOfDeclaration({
           ast,
           {
             VariableDeclarator(/** @type {SwcPath} */ varPath) {
-              const varDeclNode = /** @type {SwcNode} */ (varPath.node);
-              if (nameOf(/** @type {SwcNode} */ (varDeclNode.id)) === exportedIdentifier) {
+              const varDeclNode = /** @type {AstNode} */ (varPath.node);
+              if (nameOf(/** @type {AstNode} */ (varDeclNode.id)) === exportedIdentifier) {
                 const initType = varDeclNode.init?.type;
 
                 if (!varDeclNode.init) {
@@ -219,7 +216,7 @@ export async function getSourceCodeFragmentOfDeclaration({
                   finalNodePath = /** @type {SwcPath} */ (varPath.get('init') || varPath);
                 } else if (initType === 'Identifier') {
                   // References another identifier - try to resolve it
-                  const referencedName = nameOf(/** @type {SwcNode} */ (varDeclNode.init));
+                  const referencedName = nameOf(/** @type {AstNode} */ (varDeclNode.init));
                   // Get the global scope to look up the binding
 
                   if (globalScopeBindings) {
@@ -256,17 +253,17 @@ export async function getSourceCodeFragmentOfDeclaration({
       }
 
       const variableDeclaratorPath = globalBindingForIdentifier.path;
-      const varDeclNode = /** @type {SwcNode} */ (variableDeclaratorPath.node);
+      const varDeclNode = /** @type {AstNode} */ (variableDeclaratorPath.node);
       const initType = varDeclNode.init?.type;
       const contentPath = /** @type {SwcPath} */ (
         varDeclNode.init ? variableDeclaratorPath.get('init') : variableDeclaratorPath
       );
 
       const name = varDeclNode.init
-        ? nameOf(/** @type {SwcNode} */ (varDeclNode.init))
-        : nameOf(/** @type {SwcNode} */ (varDeclNode.id)) ||
-          nameOf(/** @type {SwcNode} */ (varDeclNode.imported)) ||
-          nameOf(/** @type {SwcNode} */ (varDeclNode.orig));
+        ? nameOf(/** @type {AstNode} */ (varDeclNode.init))
+        : nameOf(/** @type {AstNode} */ (varDeclNode.id)) ||
+          nameOf(/** @type {AstNode} */ (varDeclNode.imported)) ||
+          nameOf(/** @type {AstNode} */ (varDeclNode.orig));
 
       if (!varDeclNode.init) {
         // No init value
@@ -310,12 +307,12 @@ export async function getSourceCodeFragmentOfDeclaration({
   );
 
   if (finalNodePath?.type === 'ImportSpecifier') {
-    const importDeclNode = /** @type {SwcNode} */ (finalNodePath.parentPath?.node);
-    const source = nameOf(/** @type {SwcNode} */ (importDeclNode.source));
-    const importedNode = /** @type {SwcNode} */ (finalNodePath.node);
+    const importDeclNode = /** @type {AstNode} */ (finalNodePath.parentPath?.node);
+    const source = nameOf(/** @type {AstNode} */ (importDeclNode.source));
+    const importedNode = /** @type {AstNode} */ (finalNodePath.node);
     const identifierName =
-      nameOf(/** @type {SwcNode} */ (importedNode.imported)) ||
-      nameOf(/** @type {SwcNode} */ (importedNode.local));
+      nameOf(/** @type {AstNode} */ (importedNode.imported)) ||
+      nameOf(/** @type {AstNode} */ (importedNode.local));
     const currentFilePath = filePath;
 
     const rootFile = await trackDownIdentifier(
@@ -358,19 +355,19 @@ export async function getSourceCodeFragmentOfDeclaration({
   }
 
   /**
-   * @param {SwcNode} node
+   * @param {AstNode} node
    * @returns {number}
    */
   const startOf = node => /** @type {number} */ (node.start || node.span?.start);
   /**
-   * @param {SwcNode} node
+   * @param {AstNode} node
    * @returns {number}
    */
   const endOf = node => /** @type {number} */ (node.end || node.span?.end);
 
-  const finalNode = /** @type {SwcNode} */ (finalNodePath.node);
+  const finalNode = /** @type {AstNode} */ (finalNodePath.node);
 
-  const sourceFragment = code.slice(startOf(finalNode) - 1 - offset, endOf(finalNode) - 1 - offset);
+  const sourceFragment = code.slice(startOf(finalNode), endOf(finalNode));
 
   return {
     sourceNodeType: finalNode.type,

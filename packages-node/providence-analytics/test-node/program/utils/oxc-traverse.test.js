@@ -6,13 +6,13 @@ import { oxcTraverse } from '#utils/oxc-traverse.js';
 import { AstService } from '#core/AstService.js';
 
 /**
- * @typedef {import('@swc/core').Module} SwcAstModule
+ * @typedef {import('#types/index.js').AstNode} AstModule
  * @typedef {import('#types/index.js').SwcPath} SwcPath
  * @typedef {import('#types/index.js').SwcScope} SwcScope
  */
 
 /**
- * @param {SwcAstModule} oxcAst
+ * @param {AstModule} oxcAst
  */
 function gatherAllScopes(oxcAst) {
   /** @type {SwcScope[]} */
@@ -37,11 +37,11 @@ function nameOf(node) {
 /**
  * The `id` of a `VariableDeclarator` path, narrowed to an `Identifier`.
  * @param {SwcPath} path
- * @returns {import('@swc/core').Identifier}
+ * @returns {import('#types/index.js').AstNode}
  */
 function identifierOf(path) {
-  const declarator = /** @type {import('@swc/core').VariableDeclarator} */ (path.node);
-  return /** @type {import('@swc/core').Identifier} */ (declarator.id);
+  const declarator = /** @type {import('#types/index.js').AstNode} */ (path.node);
+  return /** @type {import('#types/index.js').AstNode} */ (declarator.id);
 }
 
 describe('oxcTraverse', () => {
@@ -325,8 +325,8 @@ describe('oxcTraverse', () => {
 
         expect(
           nameOf(
-            /** @type {import('@swc/core').KeyValueProperty} */ (
-              /** @type {import('@swc/core').ObjectExpression} */ (results[0].node).properties[0]
+            /** @type {import('oxc-parser').ObjectProperty} */ (
+              /** @type {import('#types/index.js').AstNode} */ (results[0].node).properties[0]
             ).key,
           ),
         ).to.equal('toString');

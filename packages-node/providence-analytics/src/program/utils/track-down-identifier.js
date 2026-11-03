@@ -14,16 +14,16 @@ import { memoize } from './memoize.js';
  * @typedef {import('../../../types/index.js').IdentifierName} IdentifierName
  * @typedef {import('../../../types/index.js').RootFile} RootFile
  * @typedef {import('../../../types/index.js').SwcPath} SwcPath
- * @typedef {import('@swc/core').Node & {
- *   source?: SwcNode;
- *   local?: SwcNode;
- *   exported?: SwcNode;
- *   imported?: SwcNode;
- *   orig?: SwcNode;
- *   expression?: SwcNode;
- *   declaration?: SwcNode;
- *   specifiers?: SwcNode[];
- * }} SwcNode
+ * @typedef {import('../../../types/index.js').AstNode & {
+ *   source?: AstNode;
+ *   local?: AstNode;
+ *   exported?: AstNode;
+ *   imported?: AstNode;
+ *   orig?: AstNode;
+ *   expression?: AstNode;
+ *   declaration?: AstNode;
+ *   specifiers?: AstNode[];
+ * }} AstNode
  */
 
 /**
@@ -68,16 +68,16 @@ function getBindingAndSourceReexports(swcPath, identifierName) {
 
   oxcTraverse(rootPath.node, {
     ExportSpecifier(/** @type {SwcPath} */ astPath) {
-      const astNode = /** @type {SwcNode} */ (astPath.node);
+      const astNode = /** @type {AstNode} */ (astPath.node);
       // eslint-disable-next-line arrow-body-style
       const found =
         nameOf(importedOf(astNode)) === identifierName ||
-        nameOf(/** @type {SwcNode} */ (astNode.exported)) === identifierName ||
-        nameOf(/** @type {SwcNode} */ (astNode.local)) === identifierName;
+        nameOf(/** @type {AstNode} */ (astNode.exported)) === identifierName ||
+        nameOf(/** @type {AstNode} */ (astNode.local)) === identifierName;
       if (found) {
         bindingPath = astPath;
         bindingType = 'ExportSpecifier';
-        const parentNode = /** @type {SwcNode} */ (astPath.parentPath?.node);
+        const parentNode = /** @type {AstNode} */ (astPath.parentPath?.node);
         source = parentNode.source ? nameOf(parentNode.source) : '[current]';
         astPath.stop();
       }
@@ -110,8 +110,8 @@ export function getImportSourceFromAst(astPath, identifierName) {
   const matchingTypes = ['ImportSpecifier', 'ImportDefaultSpecifier', 'ExportSpecifier'];
 
   if (bindingType && matchingTypes.includes(bindingType)) {
-    const boundNode = /** @type {SwcNode|undefined} */ (binding?.path?.parentPath?.node);
-    source = nameOf(/** @type {SwcNode} */ (boundNode?.source));
+    const boundNode = /** @type {AstNode|undefined} */ (binding?.path?.parentPath?.node);
+    source = nameOf(/** @type {AstNode} */ (boundNode?.source));
   } else {
     // no binding
     [source, bindingType, bindingPath] = getBindingAndSourceReexports(astPath, identifierName);
@@ -121,9 +121,9 @@ export function getImportSourceFromAst(astPath, identifierName) {
   if (shouldLookForDefaultExport) {
     importedIdentifierName = '[default]';
   } else if (source) {
-    const node = /** @type {SwcNode} */ (bindingPath?.node);
+    const node = /** @type {AstNode} */ (bindingPath?.node);
     importedIdentifierName =
-      nameOf(importedOf(node)) || nameOf(/** @type {SwcNode} */ (node.local));
+      nameOf(importedOf(node)) || nameOf(/** @type {AstNode} */ (node.local));
   }
 
   return /** @type {{ source: string; importedIdentifierName: string }} */ ({
@@ -223,7 +223,7 @@ async function trackDownIdentifierFn(
   const shouldLookForDefaultExport = identifierName === '[default]';
 
   let reexportMatch = false; // named specifier declaration
-  /** @type {SwcNode|undefined} */
+  /** @type {AstNode|undefined} */
   let exportMatch;
   /** @type {Promise<RootFile>|undefined} */
   let pendingTrackDownPromise;
@@ -231,13 +231,13 @@ async function trackDownIdentifierFn(
   const handleExportDefaultDeclOrExpr = (/** @type {SwcPath} */ astPath) => {
     if (!shouldLookForDefaultExport) return;
 
-    const astNode = /** @type {SwcNode} */ (astPath.node);
+    const astNode = /** @type {AstNode} */ (astPath.node);
 
     let newSource;
     if (astNode.expression?.type === 'Identifier' || astNode.declaration?.type === 'Identifier') {
       newSource = getImportSourceFromAst(
         astPath,
-        nameOf(/** @type {SwcNode} */ (astNode.expression || astNode.declaration)),
+        nameOf(/** @type {AstNode} */ (astNode.expression || astNode.declaration)),
       ).source;
     }
 
@@ -264,15 +264,15 @@ async function trackDownIdentifierFn(
     enter(/** @type {SwcPath} */ astPath) {
       if (reexportMatch || shouldLookForDefaultExport) return;
 
-      const astNode = /** @type {SwcNode} */ (astPath.node);
+      const astNode = /** @type {AstNode} */ (astPath.node);
 
       // Are we dealing with a re-export ?
       if (!astNode.specifiers?.length) return;
 
       exportMatch = astNode.specifiers.find(
-        (/** @type {SwcNode} */ s) =>
+        (/** @type {AstNode} */ s) =>
           nameOf(importedOf(s)) === identifierName ||
-          nameOf(/** @type {SwcNode} */ (s.exported)) === identifierName,
+          nameOf(/** @type {AstNode} */ (s.exported)) === identifierName,
       );
 
       if (!exportMatch) return;
