@@ -73,8 +73,10 @@ describe('<lion-accordion> screen reader', () => {
       ),
       // A heading is what a user navigates by, so both real readers announce the level; the wording of
       // the level and of the collapsed state differs, so those stay with the virtual phrase and axe.
+      // The summary is asserted as a whole ("Summary one"), not as the fragment "Summary": the loose
+      // form would also pass on a reader that dropped the second half of the label.
       nvda: containsLike('Summary one'),
-      voiceover: containsLike('Summary'),
+      voiceover: containsLike('Summary one'),
     });
   });
 
