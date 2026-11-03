@@ -1,5 +1,17 @@
 # @lion/ui
 
+## 0.26.0
+
+### Minor Changes
+
+- bcc572f: Keep provided amount dropdown preferred currency order
+
+### Patch Changes
+
+- df9d634: [input-amount] fix rounding of big numbers (20+ digits) resulting in `NaN`
+- 1f9f7f9: [core] make the ScopedElementsMixin typings independent of how npm hoists lit-element
+- f3b059c: [textarea] use the slotted textarea as `_inputNode` when another element (for example from a browser extension) is also slotted as input
+
 ## 0.25.0
 
 ### Minor Changes

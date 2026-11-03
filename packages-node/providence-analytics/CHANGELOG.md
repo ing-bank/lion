@@ -1,5 +1,46 @@
 # Change Log
 
+## 0.22.0
+
+### Minor Changes
+
+- 3361d1f: Resolve import specifiers with `oxc-resolver` instead of `@rollup/plugin-node-resolve`.
+
+  The rules are the ones the package used before - `exports` maps with the ESM conditions, `module`
+  preferred over `main`, `.mjs`/`.js`/`.json` extension guessing, `modulePaths` support - and a parity
+  test asserts both resolvers return the same path for relative, bare, subpath, exports-map,
+  `module`-field, extensionless and builtin specifiers. Resolution itself drops from ~1.7 ms to
+  ~0.03 ms per call (2400 calls: 4.2 s to 0.08 s, memoization disabled), and the rollup plugin moves to
+  `devDependencies`, where it stays only as the resolver the mock-fs suites swap in.
+
+  Also removes unused dependencies: `@types/inquirer` (the CLI no longer uses inquirer) and
+  `@babel/plugin-syntax-import-assertions` (`AstService` passes the built-in parser plugin names to
+  `@babel/parser`), plus the duplicate `@babel/parser` / `@swc/core` declarations. The dashboard imports (`@web/dev-server`,
+  `lit-element`) stay dev-only: both an `optionalDependencies` edge and a `dependencies` edge were
+  measured and rejected (the first breaks `packages/ui`'s type gate in CI, the second adds a
+  194-package closure to every consumer); the constraint is now recorded in `comments.dependencies`.
+
+- 8238df2: Serve the dashboard with our own dev server, exported as `miniDevServer`, and drop `@web/dev-server`
+
+  The dashboard only used a small part of `@web/dev-server` (wds): serve static files, rewrite bare
+  module specifiers for the browser and run the dashboard middleware. `miniDevServer`
+  (`src/program/utils/mini-dev-server.js`, exported from `providence-analytics/utils.js`) does exactly
+  that in ~250 lines on top of node's `http`, so `@web/dev-server` and `@web/dev-server-core` are no
+  longer needed - together with the ~195 entry dependency tree they brought in.
+
+  `miniDevServer` is a drop-in for the wds config subset we use: `rootDir`, `appIndex`, `nodeResolve`,
+  `moduleDirs`, `middleware`, `open`, `port`, `hostname` (and the legacy `host` alias). `watch` is
+  accepted and ignored. It follows wds's shape as well: `createServer(config)`,
+  `startDevServer({ config })` with `start()`/`stop()`/`url`/`server`, plus `createTestServer(config)`
+  returning `{ host, server }`. `createDashboardServerConfig()` therefore keeps returning a wds shaped
+  config, and the dashboard tests use `miniDevServer.createTestServer()` instead of the wds test
+  helpers.
+
+  Bare specifiers are resolved with `oxc-resolver` (the same resolver the analysis uses) and rewritten
+  through the AST (parsed with `oxc-parser`), so specifier-like text in comments or strings is left
+  alone. `/node_modules/<name>/<file>` is resolved back per request, which makes hoisted, nested and
+  symlinked installs all work.
+
 ## 0.21.0
 
 ### Minor Changes
