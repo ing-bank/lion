@@ -10,6 +10,7 @@ import { sendKeys } from '@web/test-runner-commands';
 import { html } from 'lit';
 
 import { isActiveElement } from '../../core/test-helpers/isActiveElement.js';
+import { isElementVisible } from '../../core/test-helpers/isElementVisible.js';
 import { getAllTagNames } from './helpers/helpers.js';
 import './helpers/umbrella-form.js';
 
@@ -119,13 +120,13 @@ describe('Form inside dialog Integrations', () => {
     );
     // @ts-expect-error [allow-protected-in-tests]
     const dialogEl = /** @type {HTMLDialogElement} */ (el._overlayCtrl.__wrappingDialogNode);
-    expect(dialogEl.checkVisibility()).to.be.true;
+    expect(isElementVisible(dialogEl)).to.be.true;
 
     /** @type {HTMLInputElement} */ (el.querySelector('input[type="text"]')).focus();
     await sendKeys({ press: 'Enter' });
     await el.updateComplete;
     await el.updateComplete;
 
-    expect(dialogEl.checkVisibility()).to.be.false;
+    expect(isElementVisible(dialogEl)).to.be.false;
   });
 });
