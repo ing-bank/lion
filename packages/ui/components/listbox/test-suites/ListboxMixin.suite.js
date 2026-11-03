@@ -53,7 +53,7 @@ export function runListboxMixinSuite({
   describe('ListboxMixin', () => {
     it('updates grouped option positions and navigation after one microtask', async () => {
       const el = await fixture(html`
-        <${tag}>
+        <${tag} opened autocomplete="none" show-all-on-empty>
           <div><${optionTag} .choiceValue=${'one'}>One</${optionTag}></div>
           <div>
             <${optionTag} .choiceValue=${'two'}>Two</${optionTag}>
@@ -61,7 +61,7 @@ export function runListboxMixinSuite({
           </div>
         </${tag}>
       `);
-      const { _listboxNode } = getListboxMembers(el);
+      const { _listboxNode, _activeDescendantOwnerNode } = getListboxMembers(el);
       const groups = [..._listboxNode.children];
       const target = document.createElement('div');
       _listboxNode.appendChild(target);
@@ -75,7 +75,7 @@ export function runListboxMixinSuite({
         expect(option.getAttribute('aria-setsize')).to.equal('3');
       });
       el.activeIndex = 0;
-      mimicKeyPress(_listboxNode, 'ArrowDown');
+      mimicKeyPress(_activeDescendantOwnerNode, 'ArrowDown');
       expect(el.formElements[1]).to.equal(options[1]);
       expect(el.formElements[1].active).to.be.true;
 
