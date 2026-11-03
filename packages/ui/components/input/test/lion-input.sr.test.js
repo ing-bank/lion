@@ -244,13 +244,15 @@ describe('<lion-input> screen reader', () => {
   });
 
   it('announces a required field as required', async () => {
-    const wrapper = await fixture(html`
-      <div>
-        <lion-input .validators=${[new Required()]}><label slot="label">Name</label></lion-input>
-        <!-- Somewhere for Tab to go, so the focus does not leave the page. -->
-        <button type="button">Next</button>
-      </div>
-    `);
+    const wrapper = /** @type {HTMLElement} */ (
+      await fixture(html`
+        <div>
+          <lion-input .validators=${[new Required()]}><label slot="label">Name</label></lion-input>
+          <!-- Somewhere for Tab to go, so the focus does not leave the page. -->
+          <button type="button">Next</button>
+        </div>
+      `)
+    );
     const field = fieldOf(wrapper);
     await field.updateComplete;
     await expect(field).to.be.accessible({ ignoredRules: ['aria-allowed-role'] });
