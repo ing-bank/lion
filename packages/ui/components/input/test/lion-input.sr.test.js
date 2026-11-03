@@ -1,7 +1,7 @@
 import { expect, fixture } from '@open-wc/testing';
 import { html } from 'lit';
 import { Required } from '@lion/ui/form-core.js';
-import sr, { contains, containsLike } from 'test-runner-sr/commands.js';
+import sr, { contains, containsLike, once } from 'test-runner-sr/commands.js';
 import '@lion/ui/define/lion-input.js';
 
 /**
@@ -208,6 +208,16 @@ describe('<lion-input> screen reader', () => {
       virtual: contains('textbox, Name, Ada, not disabled, not invalid'),
       nvda: containsLike('Ada'),
       voiceover: containsLike('Ada'),
+    });
+
+    // The value is the text a reader is most likely to say twice - once from the field it is
+    // on and once from a live region - and a `contains` passes just as happily either way. So
+    // the count is asserted as well: the committed value has to be spoken in exactly one
+    // utterance. (This is what `once` exists for.)
+    await sr.expect({
+      virtual: once('Ada'),
+      nvda: once('Ada'),
+      voiceover: once('Ada'),
     });
   });
 
