@@ -1,0 +1,128 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1152" height="512" viewBox="0 0 1152 512" role="img"
+     aria-label="Three flows through the same four layers: before, where the browser never passes an attribute on; before, where the browser passes it on but the screen reader ignores it; and after, where the whole chain holds. Each flow names real examples and sources."
+     font-family="Inter, system-ui, -apple-system, Segoe UI, sans-serif">
+  <defs>
+    <marker id="ok" viewBox="0 0 12 12" refX="9" refY="6" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 12 6 L 0 12 z" fill="#A6892C"/>
+    </marker>
+    <marker id="okg" viewBox="0 0 12 12" refX="9" refY="6" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 12 6 L 0 12 z" fill="#22B573"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1152" height="512" fill="#FFFFFF"/>
+
+  <!-- column captions -->
+  <g font-size="10.5" font-weight="600" letter-spacing="1.1" fill="#9A9AA5">
+    <text x="24" y="26">1 · DOM — WHAT WE WRITE</text>
+    <text x="300" y="26">2 · ARIA + APG — THE IDEAL</text>
+    <text x="576" y="26">3 · AOM — WHAT THE BROWSER EXPOSES</text>
+    <text x="852" y="26">4 · SPEECH — WHAT THE USER HEARS</text>
+  </g>
+
+  <!-- ============ FLOW 1: THE CHAIN BREAKS BETWEEN DOM AND AOM ============ -->
+  <text x="24" y="56" font-size="10.5" font-weight="700" letter-spacing="1.1" fill="#FF6584">BEFORE · THE PATTERN IS FINE, BUT THE NAME NEVER REACHES THE TREE</text>
+  <g>
+    <rect x="24" y="68" width="240" height="62" rx="12" fill="#F2F2F2"/>
+    <text x="38" y="90" font-size="12.5" fill="#2F2E41" font-family="ui-monospace, SFMono-Regular, Menlo, monospace">&lt;span aria-label="News"&gt;</text>
+    <text x="38" y="110" font-size="11.5" fill="#7A7A86">a label on a generic element</text>
+  </g>
+  <g>
+    <rect x="300" y="68" width="240" height="62" rx="12" fill="#F2F2F2"/>
+    <text x="314" y="90" font-size="11.5" fill="#2F2E41">no role to attach a name to,</text>
+    <text x="314" y="110" font-size="11.5" fill="#2F2E41">so the pattern cannot apply</text>
+  </g>
+  <g opacity="0.45">
+    <rect x="576" y="68" width="240" height="62" rx="12" fill="#F2F2F2"/>
+    <text x="590" y="90" font-size="11.5" fill="#2F2E41">no accessible name in the</text>
+    <text x="590" y="110" font-size="11.5" fill="#2F2E41">accessibility tree</text>
+  </g>
+  <g opacity="0.45">
+    <rect x="852" y="68" width="240" height="62" rx="12" fill="#F2F2F2"/>
+    <text x="866" y="90" font-size="11.5" fill="#2F2E41">nothing to announce — and</text>
+    <text x="866" y="110" font-size="11.5" fill="#2F2E41">nothing to fix downstream</text>
+  </g>
+  <line x1="268" y1="99" x2="294" y2="99" stroke="#A6892C" stroke-width="2.4" marker-end="url(#ok)"/>
+  <g stroke="#FF6584" stroke-width="3.4" stroke-linecap="round">
+    <line x1="552" y1="91" x2="564" y2="107"/>
+    <line x1="564" y1="91" x2="552" y2="107"/>
+  </g>
+  <line x1="816" y1="99" x2="842" y2="99" stroke="#A6892C" stroke-width="2.4" marker-end="url(#ok)"/>
+  <text x="24" y="152" font-size="11.5" fill="#7A7A86">examples: <tspan font-family="ui-monospace, SFMono-Regular, Menlo, monospace">aria-label</tspan> on a <tspan font-family="ui-monospace, SFMono-Regular, Menlo, monospace">&lt;div&gt;</tspan> or <tspan font-family="ui-monospace, SFMono-Regular, Menlo, monospace">&lt;span&gt;</tspan> — announced by nobody in VoiceOver iOS, JAWS or Narrator in Chrome, TalkBack</text>
+  <text x="24" y="168" font-size="11.5" fill="#7A7A86">in Firefox — and <tspan font-family="ui-monospace, SFMono-Regular, Menlo, monospace">aria-describedby</tspan> pointing at an element with <tspan font-family="ui-monospace, SFMono-Regular, Menlo, monospace">display:none</tspan>: the browser excludes hidden nodes.</text>
+  <line x1="24" y1="186" x2="1128" y2="186" stroke="#E6E6E6" stroke-width="1.5"/>
+
+  <!-- ============ FLOW 2: THE CHAIN BREAKS BETWEEN AOM AND SPEECH ============ -->
+  <text x="24" y="214" font-size="10.5" font-weight="700" letter-spacing="1.1" fill="#FF6584">BEFORE · THE BROWSER EXPOSES IT, THE READER IGNORES IT</text>
+  <g>
+    <rect x="24" y="226" width="240" height="62" rx="12" fill="#F2F2F2"/>
+    <text x="38" y="248" font-size="12.5" fill="#2F2E41" font-family="ui-monospace, SFMono-Regular, Menlo, monospace">&lt;button aria-controls=…&gt;</text>
+    <text x="38" y="268" font-size="12.5" fill="#2F2E41" font-family="ui-monospace, SFMono-Regular, Menlo, monospace">aria-errormessage="e1"</text>
+  </g>
+  <g>
+    <rect x="300" y="226" width="240" height="62" rx="12" fill="#F2F2F2"/>
+    <text x="314" y="248" font-size="11.5" fill="#2F2E41">the pattern is correct, the</text>
+    <text x="314" y="268" font-size="11.5" fill="#2F2E41">roles and names are valid</text>
+  </g>
+  <g>
+    <rect x="576" y="226" width="240" height="62" rx="12" fill="#F2F2F2"/>
+    <text x="590" y="248" font-size="12.5" fill="#2F2E41" font-family="ui-monospace, SFMono-Regular, Menlo, monospace">controls: [panel]</text>
+    <text x="590" y="268" font-size="12.5" fill="#2F2E41" font-family="ui-monospace, SFMono-Regular, Menlo, monospace">invalid: true</text>
+  </g>
+  <g opacity="0.45">
+    <rect x="852" y="226" width="240" height="62" rx="12" fill="#F2F2F2"/>
+    <text x="866" y="248" font-size="11.5" fill="#2F2E41">"Next, button" — and nothing</text>
+    <text x="866" y="268" font-size="11.5" fill="#2F2E41">about the panel or the error</text>
+  </g>
+  <line x1="268" y1="257" x2="294" y2="257" stroke="#A6892C" stroke-width="2.4" marker-end="url(#ok)"/>
+  <line x1="544" y1="257" x2="570" y2="257" stroke="#A6892C" stroke-width="2.4" marker-end="url(#ok)"/>
+  <g stroke="#FF6584" stroke-width="3.4" stroke-linecap="round">
+    <line x1="822" y1="249" x2="834" y2="265"/>
+    <line x1="834" y1="249" x2="822" y2="265"/>
+  </g>
+  <text x="24" y="310" font-size="11.5" fill="#7A7A86">examples: <tspan font-family="ui-monospace, SFMono-Regular, Menlo, monospace">aria-controls</tspan> — its presence is conveyed by nobody in the tested combinations, and only JAWS can jump to</text>
+  <text x="24" y="326" font-size="11.5" fill="#7A7A86">the target — plus <tspan font-family="ui-monospace, SFMono-Regular, Menlo, monospace">aria-errormessage</tspan> (VoiceOver macOS: none; NVDA and JAWS on Edge: none) and <tspan font-family="ui-monospace, SFMono-Regular, Menlo, monospace">aria-activedescendant</tspan> in a combobox (VoiceOver macOS: none).</text>
+  <line x1="24" y1="344" x2="1128" y2="344" stroke="#E6E6E6" stroke-width="1.5"/>
+
+  <!-- ============ FLOW 3: AFTER — THE WHOLE CHAIN HOLDS ============ -->
+  <text x="24" y="372" font-size="10.5" font-weight="700" letter-spacing="1.1" fill="#22B573">AFTER · THE WHOLE CHAIN HOLDS</text>
+  <g>
+    <rect x="24" y="384" width="240" height="62" rx="12" fill="#EAF7F0"/>
+    <text x="38" y="406" font-size="12.5" fill="#2F2E41" font-family="ui-monospace, SFMono-Regular, Menlo, monospace">role="switch"</text>
+    <text x="38" y="426" font-size="12.5" fill="#2F2E41" font-family="ui-monospace, SFMono-Regular, Menlo, monospace">aria-checked="false"</text>
+  </g>
+  <g>
+    <rect x="300" y="384" width="240" height="62" rx="12" fill="#EAF7F0"/>
+    <text x="314" y="406" font-size="11.5" fill="#2F2E41">a role that takes the state,</text>
+    <text x="314" y="426" font-size="11.5" fill="#2F2E41">so the pattern applies</text>
+  </g>
+  <g>
+    <rect x="576" y="384" width="240" height="62" rx="12" fill="#EAF7F0"/>
+    <text x="590" y="406" font-size="12.5" fill="#2F2E41" font-family="ui-monospace, SFMono-Regular, Menlo, monospace">checked: false</text>
+    <text x="590" y="426" font-size="12.5" fill="#2F2E41" font-family="ui-monospace, SFMono-Regular, Menlo, monospace">name: "Notifications"</text>
+  </g>
+  <g>
+    <rect x="852" y="384" width="240" height="62" rx="12" fill="#EAF7F0"/>
+    <text x="866" y="406" font-size="11.5" fill="#2F2E41">"switch, Notifications, off" —</text>
+    <text x="866" y="426" font-size="11.5" fill="#2F2E41">NVDA and VoiceOver both say it</text>
+  </g>
+  <g stroke="#22B573" stroke-width="2.6" fill="none" stroke-linecap="round">
+    <line x1="268" y1="415" x2="294" y2="415" marker-end="url(#okg)"/>
+    <line x1="544" y1="415" x2="570" y2="415" marker-end="url(#okg)"/>
+    <line x1="820" y1="415" x2="846" y2="415" marker-end="url(#okg)"/>
+  </g>
+  <g fill="#22B573">
+    <circle cx="281" cy="397" r="7"/>
+    <circle cx="557" cy="397" r="7"/>
+    <circle cx="833" cy="397" r="7"/>
+  </g>
+  <g stroke="#FFFFFF" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M 278 397 l 2.2 2.6 l 4.4 -5"/>
+    <path d="M 554 397 l 2.2 2.6 l 4.4 -5"/>
+    <path d="M 830 397 l 2.2 2.6 l 4.4 -5"/>
+  </g>
+  <text x="24" y="468" font-size="11.5" fill="#7A7A86">examples: a native <tspan font-family="ui-monospace, SFMono-Regular, Menlo, monospace">&lt;button&gt;</tspan> with a name; <tspan font-family="ui-monospace, SFMono-Regular, Menlo, monospace">role="switch"</tspan> with <tspan font-family="ui-monospace, SFMono-Regular, Menlo, monospace">aria-checked</tspan>; <tspan font-family="ui-monospace, SFMono-Regular, Menlo, monospace">aria-disabled</tspan> — read as “unavailable” or “dimmed”.</text>
+  <text x="24" y="484" font-size="11.5" fill="#7A7A86">These are the states a user needs the most, and the ones this repository’s own NVDA and VoiceOver runs confirm.</text>
+  <line x1="24" y1="498" x2="1128" y2="498" stroke="#E6E6E6" stroke-width="1.5"/>
+  <text x="24" y="512" font-size="10.5" fill="#9A9AA5">sources: a11ysupport.io (tested browser/AT combinations) · TetraLogical compatibility notes · Matuzović, “Don’t put aria-label on generic elements” · this repository’s reader runs</text>
+</svg>
