@@ -1,6 +1,6 @@
 import { expect, fixture } from '@open-wc/testing';
 import { html } from 'lit';
-import sr, { contains, containsLike } from 'test-runner-sr/commands.js';
+import sr, { contains, containsLike, once } from 'test-runner-sr/commands.js';
 import '@lion/ui/define/lion-accordion.js';
 
 /**
@@ -71,12 +71,17 @@ describe('<lion-accordion> screen reader', () => {
         'button, Summary one, 1 control, not expanded',
         'heading, Summary two, level 3',
       ),
-      // A heading is what a user navigates by, so both real readers announce the level; the wording of
-      // the level and of the collapsed state differs, so those stay with the virtual phrase and axe.
-      // The summary is asserted as a whole ("Summary one"), not as the fragment "Summary": the loose
-      // form would also pass on a reader that dropped the second half of the label.
-      nvda: containsLike('Summary one'),
-      voiceover: containsLike('Summary one'),
+      // The summary has to be read out exactly once, not twice - and for both real readers it is,
+      // measured: `once('Summary one')` passes on the NVDA and the VoiceOver runner, which follow
+      // the focus onto the button and do not announce the heading as a second utterance.
+      //
+      // The virtual reader cannot make that claim, and that is its own model rather than a defect
+      // in the component: it walks the accessibility tree node by node, so one pass over this
+      // fixture produces four utterances containing the text - the focus announcement, the
+      // `heading`, the `button` and the `end of heading` closing phrase. Asserting `once` for it
+      // would demand that the heading stop carrying its own text.
+      nvda: once('Summary one'),
+      voiceover: once('Summary one'),
     });
   });
 
