@@ -219,5 +219,50 @@ export function runRadioGroupSuite({
       el.remove();
       expect(feedbackConditionSpy).to.not.have.been.called;
     });
+
+    it('updates validity when a selected option is removed from a connected group', async () => {
+      const el = await fixture(html`
+        <${tag} name="gender" .validators=${[new Required()]}>
+          <${childTag} label="Male" .choiceValue=${'male'}></${childTag}>
+          <${childTag} label="Female" .choiceValue=${'female'}></${childTag}>
+        </${tag}>
+      `);
+      el.formElements[0].checked = true;
+      expect(el.modelValue).to.equal('male');
+      expect(el.hasFeedbackFor).to.deep.equal([]);
+
+      const option1 = el.formElements[0];
+      option1.remove();
+
+      expect(el.modelValue).to.equal('');
+      expect(el.hasFeedbackFor).to.deep.equal(['error']);
+    });
+
+    it('updates validity when a selected option is moved to another connected group', async () => {
+      const container = await fixture(html`
+        <div>
+          <${tag} id="group1" name="g1" .validators=${[new Required()]}>
+            <${childTag} id="r1" label="Option 1" .choiceValue=${'1'}></${childTag}>
+          </${tag}>
+          <${tag} id="group2" name="g2" .validators=${[new Required()]}>
+            <${childTag} id="r2" label="Option 2" .choiceValue=${'2'}></${childTag}>
+          </${tag}>
+        </div>
+      `);
+      const g1 = /** @type {LionRadioGroup} */ (container.querySelector('#group1'));
+      const g2 = /** @type {LionRadioGroup} */ (container.querySelector('#group2'));
+      const r1 = /** @type {LionRadio} */ (container.querySelector('#r1'));
+
+      g1.formElements[0].checked = true;
+      expect(g1.hasFeedbackFor).to.deep.equal([]);
+      expect(g2.hasFeedbackFor).to.deep.equal(['error']);
+
+      g2.appendChild(r1);
+      await g1.updateComplete;
+      await g2.updateComplete;
+
+      expect(g1.hasFeedbackFor).to.deep.equal(['error']);
+      expect(g2.hasFeedbackFor).to.deep.equal([]);
+    });
   });
 }
