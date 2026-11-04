@@ -6,11 +6,13 @@
  * @typedef {import('../types/index.js').SrReader} SrReader
  */
 
+import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
 import { normalizePhrases } from './comparePhrases.js';
 import { recordObservation, resetObservations } from './transcripts.js';
+import { patchVirtualReaderBundle } from './virtualReaderBundle.js';
 
 /**
  * The browser gives up on a server command after 20000ms - hardcoded in `@web/dev-server-core`'s
@@ -92,6 +94,19 @@ function getVirtualBundlePaths() {
     // package not resolvable here: fall back to the known layouts
   }
   return paths.concat(FALLBACK_VIRTUAL_BUNDLE_PATHS);
+}
+
+/**
+ * The virtual screen reader browser bundle on disk, or `null` when it cannot be found here (the
+ * page then walks its own fallbacks, and the `serve` hook simply does not answer).
+ *
+ * @returns {string | null}
+ */
+function getVirtualBundleFile() {
+  const candidates = getVirtualBundlePaths()
+    .map(bundlePath => path.join(process.cwd(), bundlePath))
+    .filter(candidate => fs.existsSync(candidate));
+  return candidates[0] ?? null;
 }
 
 /**
@@ -450,6 +465,10 @@ export function screenreaderPlugin(options) {
   /** @type {Map<string, { reader: ReturnType<typeof createScreenReader> }>} */
   const sessionStates = new Map();
 
+  // The `serve` hook below sees every request, and neither answer changes during a run.
+  const virtualBundlePaths = new Set(getVirtualBundlePaths());
+  const virtualBundleFile = getVirtualBundleFile();
+
   /**
    * @param {TestSession} session
    */
@@ -712,6 +731,26 @@ export function screenreaderPlugin(options) {
 
   return {
     name: 'screenreader-commands',
+
+    /**
+     * Serve the virtual screen reader browser bundle with the shadow-root fixes applied, so the
+     * fixes do not have to be a patch against `node_modules` (see src/virtualReaderBundle.js).
+     * The plugin already decides which URL the page imports, so this is the one place that can
+     * hand it a bundle that has been healed - and it fails loudly, in the run, when the bundle no
+     * longer matches the version the fixes were written against.
+     *
+     * @param {import('koa').Context} context
+     */
+    async serve(context) {
+      if (screenReader !== 'virtual' || !virtualBundleFile) {
+        return undefined;
+      }
+      if (!virtualBundlePaths.has(context.path)) {
+        return undefined;
+      }
+      const source = await fs.promises.readFile(virtualBundleFile, 'utf8');
+      return { body: patchVirtualReaderBundle(source), type: 'text/javascript' };
+    },
 
     async executeCommand(args) {
       if (!args.command.startsWith('sr-')) {
