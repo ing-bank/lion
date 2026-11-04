@@ -17,6 +17,8 @@ import '@lion/ui/define/lion-checkbox.js';
 async function fixtureComponent() {
   return fixture(html`
     <div>
+      <!-- The group's name is announced on entry, so the anchor starts here, outside it. -->
+      <button type="button" id="before-group">Before</button>
       <lion-checkbox-group name="cb-group">
         <label slot="label">Pick</label>
         <lion-checkbox><label slot="label">A</label></lion-checkbox>
@@ -32,25 +34,28 @@ async function fixtureComponent() {
 let activeReader;
 
 /**
- * Point the reader at the group and walk onto the first checkbox.
+ * Start the reader on the button before the group and walk in.
  *
- * VoiceOver follows OS focus and must not be walked (walking moves it off the control and it
- * then acts on whatever it is on). For the other readers the phrase log grows one phrase per
- * step, so walk until the checkbox itself is announced - the group is announced before its
- * children, and how many steps that takes depends on the markup around it.
+ * The group's own name is announced when the reader *enters* the group, not when it lands on a
+ * checkbox inside it. Measured against a native `<fieldset>` + `<legend>`, which behaves the same
+ * way: walking in from outside NVDA says `grouping, clickable, Pick` (the reference: `grouping,
+ * Pick`) and VoiceOver `Pick group` (the reference: the same), while anchored inside the group
+ * both readers only announce the exit (`out of grouping`) and never the name. Walking in is
+ * therefore the only way an assertion can be about the group's name at all.
+ *
+ * VoiceOver is walked here, against the flow's rule, because it follows OS focus and the group is
+ * not focusable - a cursor move is the only way to hear the entry. The rule exists because a
+ * walked VoiceOver types into whatever its cursor is on, and this test types nothing.
  */
-async function anchorOnGroup() {
-  await sr.focus('lion-checkbox-group');
-  if (activeReader !== 'voiceover') {
-    for (let step = 0; step < 6; step += 1) {
-      // eslint-disable-next-line no-await-in-loop
-      const log = await sr.phraseLog();
-      if (log.some(phrase => phrase.startsWith('checkbox,'))) {
-        break;
-      }
-      // eslint-disable-next-line no-await-in-loop
-      await sr.next();
-    }
+async function anchorAndWalkIntoGroup() {
+  await sr.focus('#before-group');
+  if (activeReader === 'nvda') {
+    await sr.press('Tab');
+    await sr.press('Shift+Tab');
+  }
+  for (let step = 0; step < 6; step += 1) {
+    // eslint-disable-next-line no-await-in-loop
+    await sr.next();
   }
 }
 
@@ -78,10 +83,11 @@ describe('<lion-checkbox-group> screen reader', () => {
       // exactly that rule. See the package README.
     ).to.be.accessible({ ignoredRules: ['aria-allowed-role'] });
 
-    await anchorOnGroup();
+    await anchorAndWalkIntoGroup();
 
-    // Neither real reader announced the group's own name in CI - they announce the control inside it -
-    // so the group role stays pinned in the DOM; a user has to hear that these belong together.
+    // Both real readers announce the group with its own name on entry (measured, and equal to the
+    // native fieldset/legend reference); the virtual phrase and these DOM assertions keep the
+    // relationship pinned even when a reader words it differently.
     expect(group.getAttribute('role')).to.equal('group');
 
     await sr.expect({
@@ -89,13 +95,8 @@ describe('<lion-checkbox-group> screen reader', () => {
         'group, Pick, not disabled',
         'checkbox, A, not checked, not disabled, not invalid',
       ),
-      nvda: containsLike('check box'),
-      // VoiceOver says "checkbox" for the focused control in this harness (the wording the first
-      // version of this test asserted, and the one the CI run of VoiceOver confirmed). The
-      // reviewer hears "tick box" with the VoiceOver cursor, which is a different anchor than
-      // the focus this flow sets - worth a separate look, but the assertion keeps the measured
-      // wording rather than the one another navigation mode produces.
-      voiceover: containsLike('checkbox'),
+      nvda: containsLike('grouping, clickable, Pick'),
+      voiceover: containsLike('Pick group'),
     });
 
     // The group's own label is what makes the checkboxes a set, so the association is pinned
@@ -114,7 +115,7 @@ describe('<lion-checkbox-group> screen reader', () => {
     group.formElements[0].checked = true;
     await group.updateComplete;
 
-    await anchorOnGroup();
+    await anchorAndWalkIntoGroup();
 
     await sr.expect({
       // The virtual reader cannot see this state: it resolves "checked" from the native
