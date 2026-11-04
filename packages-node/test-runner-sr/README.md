@@ -381,6 +381,7 @@ got slower.
 | `exact(...phrases)`      | `SrPhraseList`      | phrase log has to match one to one              |
 | `contains(...phrases)`   | `SrPhraseList`      | phrases have to appear in this order            |
 | `containsLike(...texts)` | `SrPhraseList`      | each text has to be part of a spoken phrase     |
+| `once(...texts)`         | `SrPhraseList`      | each text has to be spoken in exactly one utterance |
 
 Note on VoiceOver: its cursor does not start inside the browser. The machine setup
 leaves a mounted preferences volume in the Finder and VoiceOver reads that instead
@@ -409,6 +410,22 @@ arrives as `"polite: Error,, Please enter a valid IBAN."`, where the politeness 
 joined additions phrase are not what a user hears. The message itself is asserted with
 `containsLike('Please enter a valid IBAN')`; use `contains` when the whole phrase is
 the point.
+
+`once` exists for the announcement that is read out _twice_, which is the most common
+screen reader bug and one that `contains` and `containsLike` cannot see: a phrase read
+twice satisfies them exactly as well as one read once. It counts the utterances that
+contain the text and fails on anything but one, so a live region that fires again, a
+description that is both rendered and described, or a field announced by two nodes turns
+the run red:
+
+```js
+await sr.expect({ virtual: once('Ada'), nvda: once('Ada'), voiceover: once('Ada') });
+```
+
+The failure names the count: `"Ada" was spoken 3 times, expected exactly once`. Because
+matching is a substring of the utterance, the text has to be distinctive - `once('Name')`
+also matches the label's own utterance next to the control's phrase, which is real speech
+but rarely what was meant.
 
 Note on waits: `sr.waitFor()` defaults to 15s, below the 20s after which the browser
 side gives up on a test runner command, so a phrase that never comes is reported as
