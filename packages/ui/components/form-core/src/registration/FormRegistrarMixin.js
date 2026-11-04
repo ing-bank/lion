@@ -80,23 +80,51 @@ const FormRegistrarMixinImplementation = /** @type {FormRegistrarMixin} */ (supe
         this.__rejectInitComplete = reject;
       });
 
-      /**
-       * registrationComplete waits for all children formElements to have registered
-       * @type {Promise<any> & {done?:boolean}}
-       */
-      this.registrationComplete = new Promise((resolve, reject) => {
-        this.__resolveRegistrationComplete = resolve;
-        this.__rejectRegistrationComplete = reject;
-      });
-      this.registrationComplete.done = false;
-      this.registrationComplete.then(
+      this.__initCompleteDone = false;
+      this.__isCompletingRegistration = false;
+      this.__hasDisconnected = false;
+      this._renewRegistration();
+    }
+
+    /**
+     * registrationComplete waits for all children formElements to have registered
+     * @type {Promise<any> & {done?:boolean}}
+     */
+    get registrationComplete() {
+      return /** @type {Promise<any> & {done?:boolean}} */ (this.__registrationComplete);
+    }
+
+    /**
+     * Renews the registrationComplete promise when children are removed or group is reconnected.
+     * @protected
+     */
+    _renewRegistration() {
+      if (this.__registrationComplete && this.__registrationComplete.done === false) {
+        return;
+      }
+      const registrationPromise = /** @type {Promise<any> & {done?:boolean}} */ (
+        new Promise((resolve, reject) => {
+          this.__resolveRegistrationComplete = resolve;
+          this.__rejectRegistrationComplete = reject;
+        })
+      );
+      registrationPromise.done = false;
+      this.__registrationComplete = registrationPromise;
+
+      this.__registrationComplete.then(
         () => {
-          this.registrationComplete.done = true;
-          this.__resolveInitComplete(undefined);
+          registrationPromise.done = true;
+          if (!this.__initCompleteDone && typeof this.__resolveInitComplete === 'function') {
+            this.__initCompleteDone = true;
+            this.__resolveInitComplete(undefined);
+          }
         },
         () => {
-          this.registrationComplete.done = true;
-          this.__rejectInitComplete(undefined);
+          registrationPromise.done = true;
+          if (!this.__initCompleteDone && typeof this.__rejectInitComplete === 'function') {
+            this.__initCompleteDone = true;
+            this.__rejectInitComplete(undefined);
+          }
           throw new Error(
             'Registration could not finish. Please use await el.registrationComplete;',
           );
@@ -106,6 +134,10 @@ const FormRegistrarMixinImplementation = /** @type {FormRegistrarMixin} */ (supe
 
     connectedCallback() {
       super.connectedCallback();
+      if (this.__hasDisconnected) {
+        this._renewRegistration();
+        this.__hasDisconnected = false;
+      }
       this._completeRegistration();
     }
 
@@ -114,16 +146,28 @@ const FormRegistrarMixinImplementation = /** @type {FormRegistrarMixin} */ (supe
      * @overridable
      */
     _completeRegistration() {
-      Promise.resolve().then(() => this.__resolveRegistrationComplete(undefined));
+      Promise.resolve().then(() => {
+        this.__isCompletingRegistration = false;
+        if (typeof this.__resolveRegistrationComplete === 'function') {
+          this.__resolveRegistrationComplete(undefined);
+        }
+      });
     }
 
     disconnectedCallback() {
       super.disconnectedCallback();
+      this.__hasDisconnected = true;
 
       if (this.registrationComplete.done === false) {
         Promise.resolve().then(() => {
           Promise.resolve().then(() => {
-            this.__rejectRegistrationComplete();
+            if (
+              this.__hasDisconnected &&
+              this.registrationComplete.done === false &&
+              typeof this.__rejectRegistrationComplete === 'function'
+            ) {
+              this.__rejectRegistrationComplete(undefined);
+            }
           });
         });
       }
@@ -179,6 +223,12 @@ const FormRegistrarMixinImplementation = /** @type {FormRegistrarMixin} */ (supe
           );
         }
       }
+
+      // If registration is not yet marked done or was renewed, schedule completion
+      if (!this.registrationComplete.done && !this.__isCompletingRegistration) {
+        this.__isCompletingRegistration = true;
+        this._completeRegistration();
+      }
     }
 
     /**
@@ -202,6 +252,29 @@ const FormRegistrarMixinImplementation = /** @type {FormRegistrarMixin} */ (supe
         } else if (this.formElements[name]) {
           delete this.formElements[name];
         }
+      }
+
+      // When the group becomes empty, renew registration so future children can be awaited
+      if (this.formElements.length === 0) {
+        this._renewRegistration();
+      }
+    }
+
+    /**
+     * Helper to apply a value or action once child registration is complete.
+     * If formElements is currently empty and registration was settled, renews registration.
+     * @param {() => void} applyFn
+     * @protected
+     */
+    _setValueWhenReady(applyFn) {
+      if (this.formElements.length === 0 && this.registrationComplete.done) {
+        this._renewRegistration();
+        this._completeRegistration();
+      }
+      if (!this.registrationComplete.done) {
+        this.registrationComplete.then(applyFn);
+      } else {
+        applyFn();
       }
     }
 

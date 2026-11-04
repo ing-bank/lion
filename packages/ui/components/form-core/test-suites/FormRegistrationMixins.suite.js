@@ -201,6 +201,48 @@ export const runRegistrationSuite = ({
       expect(el.formElements.length).to.equal(1);
     });
 
+    it('renews registrationComplete when all elements are removed and resolves when new elements register', async () => {
+      const el = /** @type {RegistrarClass} */ (
+        await fixture(html`
+        <${parentTag}>
+          <${childTag}></${childTag}>
+        </${parentTag}>
+      `)
+      );
+      await el.registrationComplete;
+      expect(/** @type {any} */ (el.registrationComplete).done).to.be.true;
+
+      const existingChild = el.children[0];
+      el.removeChild(existingChild);
+      expect(el.formElements.length).to.equal(0);
+      expect(/** @type {any} */ (el.registrationComplete).done).to.be.false;
+
+      const newChild = await fixture(html`<${childTag}></${childTag}>`);
+      el.appendChild(newChild);
+      expect(el.formElements.length).to.equal(1);
+      await el.registrationComplete;
+      expect(/** @type {any} */ (el.registrationComplete).done).to.be.true;
+    });
+
+    it('renews registrationComplete when reconnected to DOM', async () => {
+      const el = /** @type {RegistrarClass} */ (
+        await fixture(html`
+        <${parentTag}>
+          <${childTag}></${childTag}>
+        </${parentTag}>
+      `)
+      );
+      await el.registrationComplete;
+      expect(/** @type {any} */ (el.registrationComplete).done).to.be.true;
+
+      const { parentNode } = el;
+      el.remove();
+      parentNode?.appendChild(el);
+      expect(/** @type {any} */ (el.registrationComplete).done).to.be.false;
+      await el.registrationComplete;
+      expect(/** @type {any} */ (el.registrationComplete).done).to.be.true;
+    });
+
     it('adds elements to formElements in the right order (DOM)', async () => {
       const el = /** @type {RegistrarClass} */ (
         await fixture(html`

@@ -13,7 +13,7 @@ eleventyNavigation:
 # Use Cases
 
 ```js script
-import { html } from '@mdjs/mdjs-preview';
+import { LitElement, html } from '@mdjs/mdjs-preview';
 import '@lion/ui/define/lion-radio-group.js';
 import '@lion/ui/define/lion-radio.js';
 ```
@@ -50,6 +50,92 @@ export const preSelect = () => html`
     <lion-radio label="diplodocus" .choiceValue="${'diplodocus'}"></lion-radio>
   </lion-radio-group>
 `;
+```
+
+## Pre-select via `lion-radio-group.modelValue`
+
+You can pre-select an option by setting the `modelValue` of the `lion-radio-group`.
+
+```js preview-story
+export const preSelectViaModelValue = () => html`
+  <lion-radio-group
+    name="dinos_2"
+    label="What are your favourite dinosaurs?"
+    .modelValue="${'brontosaurus'}"
+  >
+    <lion-radio label="allosaurus" .choiceValue="${'allosaurus'}"></lion-radio>
+    <lion-radio label="brontosaurus" .choiceValue="${'brontosaurus'}"></lion-radio>
+    <lion-radio label="diplodocus" .choiceValue="${'diplodocus'}"></lion-radio>
+  </lion-radio-group>
+`;
+```
+
+## Dynamic options
+
+When options are fetched asynchronously (e.g. from an API) and rendered dynamically, you can set `.modelValue` simultaneously with the rendered options. `lion-radio-group` waits for its child elements to register before applying the selection:
+
+```js preview-story
+export const dynamicOptions = () => {
+  const tagName = 'demo-radio-group-dynamic';
+  if (!customElements.get(tagName)) {
+    customElements.define(
+      tagName,
+      class extends LitElement {
+        static get properties() {
+          return {
+            options: { type: Array },
+            selectedOption: { type: String },
+          };
+        }
+
+        constructor() {
+          super();
+          /** @type {{ id: string; name: string }[]} */
+          this.options = [];
+          this.selectedOption = '';
+        }
+
+        connectedCallback() {
+          super.connectedCallback();
+          // Simulate async data fetch
+          setTimeout(() => {
+            this.options = [
+              { id: 'allosaurus', name: 'Allosaurus' },
+              { id: 'brontosaurus', name: 'Brontosaurus' },
+              { id: 'diplodocus', name: 'Diplodocus' },
+            ];
+            this.selectedOption = 'brontosaurus';
+          }, 300);
+        }
+
+        render() {
+          return html`
+            <lion-radio-group
+              name="dynamic_dinos"
+              label="Dynamically loaded dinosaurs"
+              .modelValue="${this.selectedOption}"
+              @model-value-changed="${(
+                /** @type {CustomEvent & { target: { modelValue: string } }} */ e,
+              ) => {
+                this.selectedOption = e.target.modelValue;
+              }}"
+            >
+              ${this.options.map(
+                option => html`
+                  <lion-radio label="${option.name}" .choiceValue="${option.id}"></lion-radio>
+                `,
+              )}
+            </lion-radio-group>
+            ${this.options.length === 0
+              ? html`<p><em>Loading options...</em></p>`
+              : html`<p>Selected dinosaur: <strong>${this.selectedOption}</strong></p>`}
+          `;
+        }
+      },
+    );
+  }
+  return html`<demo-radio-group-dynamic></demo-radio-group-dynamic>`;
+};
 ```
 
 ## Disabled

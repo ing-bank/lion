@@ -61,16 +61,11 @@ const ChoiceGroupMixinImplementation = /** @type {ChoiceGroupMixin} */ (supercla
         return el.choiceValue === val;
       };
 
-      if (this.__isInitialModelValue) {
-        this.registrationComplete.then(() => {
-          this.__isInitialModelValue = false;
-          this._setCheckedElements(value, checkCondition);
-          this.requestUpdate('modelValue', this._oldModelValue);
-        });
-      } else {
+      this._setValueWhenReady(() => {
         this._setCheckedElements(value, checkCondition);
         this.requestUpdate('modelValue', this._oldModelValue);
-      }
+        this._oldModelValue = this.modelValue;
+      });
       this._oldModelValue = this.modelValue;
     }
 
@@ -97,16 +92,10 @@ const ChoiceGroupMixinImplementation = /** @type {ChoiceGroupMixin} */ (supercla
        */
       const checkCondition = (el, val) => el.serializedValue.value === val;
 
-      if (this.__isInitialSerializedValue) {
-        this.registrationComplete.then(() => {
-          this.__isInitialSerializedValue = false;
-          this._setCheckedElements(value, checkCondition);
-          this.requestUpdate('serializedValue');
-        });
-      } else {
+      this._setValueWhenReady(() => {
         this._setCheckedElements(value, checkCondition);
         this.requestUpdate('serializedValue');
-      }
+      });
     }
 
     get formattedValue() {
@@ -124,14 +113,9 @@ const ChoiceGroupMixinImplementation = /** @type {ChoiceGroupMixin} */ (supercla
        */
       const checkCondition = (el, val) => el.formattedValue === val;
 
-      if (this.__isInitialFormattedValue) {
-        this.registrationComplete.then(() => {
-          this.__isInitialFormattedValue = false;
-          this._setCheckedElements(value, checkCondition);
-        });
-      } else {
+      this._setValueWhenReady(() => {
         this._setCheckedElements(value, checkCondition);
-      }
+      });
     }
 
     get operationMode() {
@@ -156,22 +140,10 @@ const ChoiceGroupMixinImplementation = /** @type {ChoiceGroupMixin} */ (supercla
        * @protected
        */
       this._repropagationRole = 'choice-group';
-      /** @private */
-      this.__isInitialModelValue = true;
-      /** @private */
-      this.__isInitialSerializedValue = true;
-      /** @private */
-      this.__isInitialFormattedValue = true;
     }
 
     connectedCallback() {
       super.connectedCallback();
-
-      this.registrationComplete.then(() => {
-        this.__isInitialModelValue = false;
-        this.__isInitialSerializedValue = false;
-        this.__isInitialFormattedValue = false;
-      });
     }
 
     /**
@@ -357,11 +329,12 @@ const ChoiceGroupMixinImplementation = /** @type {ChoiceGroupMixin} */ (supercla
       }
       for (let i = 0; i < this.formElements.length; i += 1) {
         if (this.multipleChoice) {
-          let valueIsIncluded = value.includes(this.formElements[i].modelValue.value);
+          const values = Array.isArray(value) ? value : [/** @type {any} */ (value)];
+          let valueIsIncluded = values.includes(this.formElements[i].modelValue.value);
 
           // For complex values, do a JSON Stringified includes check, because [{ v: 'foo'}].includes({ v: 'foo' }) => false
           if (typeof this.formElements[i].modelValue.value === 'object') {
-            valueIsIncluded = /** @type {any[]} */ (value)
+            valueIsIncluded = values
               .map(/** @param {Object} v */ v => JSON.stringify(v))
               .includes(JSON.stringify(this.formElements[i].modelValue.value));
           }

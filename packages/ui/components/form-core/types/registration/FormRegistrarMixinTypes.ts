@@ -41,7 +41,7 @@ export declare class FormRegistrarHost {
    * Promise that is resolved by `._completeRegistration`. By default after one microtask,
    * so children get the chance to register themselves
    */
-  registrationComplete: Promise<boolean>;
+  registrationComplete: Promise<any> & { done?: boolean };
 
   /**
    * initComplete resolves after all pending initialization logic
@@ -60,6 +60,17 @@ export declare class FormRegistrarHost {
    * (multi)select)
    */
   protected _isFormOrFieldset: boolean;
+
+  /**
+   * Renews the registrationComplete promise when children are removed or group is reconnected.
+   */
+  protected _renewRegistration(): void;
+
+  /**
+   * Helper to apply a value or action once child registration is complete.
+   * If formElements is currently empty and registration was settled, renews registration.
+   */
+  protected _setValueWhenReady(applyFn: () => void): void;
 
   /**
    * Hook for Subclassers to perform logic before an element is added

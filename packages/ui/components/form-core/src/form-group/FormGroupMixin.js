@@ -62,15 +62,9 @@ const FormGroupMixinImplementation = /** @type {FormGroupMixin} */ (superclass =
     }
 
     set modelValue(values) {
-      // @ts-ignore [ts7-2565] TS7 checks definite assignment on this inferred field; private field: hoist to a class field with an initializer (the fix proven on LionAccordion)
-      if (this.__isInitialModelValue) {
-        this.__isInitialModelValue = false;
-        this.registrationComplete.then(() => {
-          this._setValueMapForAllFormElements('modelValue', values);
-        });
-      } else {
+      this._setValueWhenReady(() => {
         this._setValueMapForAllFormElements('modelValue', values);
-      }
+      });
     }
 
     /**
@@ -81,15 +75,9 @@ const FormGroupMixinImplementation = /** @type {FormGroupMixin} */ (superclass =
     }
 
     set serializedValue(values) {
-      // @ts-ignore [ts7-2565] TS7 checks definite assignment on this inferred field; private field: hoist to a class field with an initializer (the fix proven on LionAccordion)
-      if (this.__isInitialSerializedValue) {
-        this.__isInitialSerializedValue = false;
-        this.registrationComplete.then(() => {
-          this._setValueMapForAllFormElements('serializedValue', values);
-        });
-      } else {
+      this._setValueWhenReady(() => {
         this._setValueMapForAllFormElements('serializedValue', values);
-      }
+      });
     }
 
     /**
@@ -144,10 +132,6 @@ const FormGroupMixinImplementation = /** @type {FormGroupMixin} */ (superclass =
       /** @private */
       this.__addedSubValidators = false;
       /** @private */
-      this.__isInitialModelValue = true;
-      /** @private */
-      this.__isInitialSerializedValue = true;
-      /** @private */
       this._checkForOutsideClick = this._checkForOutsideClick.bind(this);
 
       this.addEventListener('focusin', this._syncFocused);
@@ -168,8 +152,6 @@ const FormGroupMixinImplementation = /** @type {FormGroupMixin} */ (superclass =
       this.setAttribute('role', 'group');
 
       this.initComplete.then(() => {
-        this.__isInitialModelValue = false;
-        this.__isInitialSerializedValue = false;
         this.__initInteractionStates();
       });
     }

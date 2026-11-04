@@ -398,6 +398,28 @@ export function runChoiceGroupMixinSuite({
       }
     });
 
+    it('handles non-array modelValue (such as boolean) gracefully in multipleChoice mode', async () => {
+      const el = /** @type {ChoiceInputGroup} */ (
+        await fixture(html`
+        <${parentTag} name="gender[]" multiple-choice>
+          <${childTag} .choiceValue=${'male'}></${childTag}>
+          <${childTag} .choiceValue=${'female'}></${childTag}>
+        </${parentTag}>
+      `)
+      );
+
+      // Setting a boolean should not throw TypeError: value.includes is not a function
+      expect(() => {
+        // @ts-ignore
+        el.modelValue = true;
+      }).to.not.throw();
+
+      expect(() => {
+        // @ts-ignore
+        el.modelValue = false;
+      }).to.not.throw();
+    });
+
     it('can handle complex data via choiceValue', async () => {
       const date = new Date(2018, 11, 24, 10, 33, 30, 0);
 
