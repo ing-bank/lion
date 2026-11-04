@@ -1,6 +1,7 @@
 ---
 import { getCollection, getEntry, render } from "astro:content";
 import DetailLayout from "../../layouts/DetailLayout.astro";
+import { getFundamentalsNavigation } from "../../utils/getFundamentalsNavigation.mjs";
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 
 export async function getStaticPaths() {
@@ -35,35 +36,7 @@ const displayName = entry.data?.title || fundamentalName?.charAt(0).toUpperCase(
 
 // Build fundamentals list for sidebar navigation
 const allFundamentals = await getCollection("lionFundamentals");
-const fundamentalsByCategory = new Map();
-
-allFundamentals
-  .filter(fundamental => fundamental.id !== 'index') // Exclude the index page from sidebar
-  .forEach(fundamental => {
-    const [category] = fundamental.id.split('/');
-    const fundamentalPath = fundamental.id;
-    const name = fundamental.id.split('/').pop() || fundamental.id;
-    const label = fundamental.data?.title || name?.charAt(0).toUpperCase() + name?.slice(1) || 'Fundamental';
-
-    if (!fundamentalsByCategory.has(category)) {
-      fundamentalsByCategory.set(category, []);
-    }
-
-    fundamentalsByCategory.get(category).push({
-      href: `/fundamentals/${fundamentalPath}/`,
-      label,
-    });
-  });
-
-// Sort categories and their items
-const sortedCategories = new Map(
-  Array.from(fundamentalsByCategory.entries())
-    .sort(([catA], [catB]) => catA.localeCompare(catB))
-    .map(([category, items]) => [
-      category,
-      items.sort((a, b) => a.label.localeCompare(b.label))
-    ])
-);
+const sortedCategories = getFundamentalsNavigation(allFundamentals);
 ---
 
 <DetailLayout
