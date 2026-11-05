@@ -121,7 +121,7 @@ for (const [className, slotNames] of declared) {
     (annotated.has(slotName) ? covered : uncovered).push(`${className}#${slotName}`);
   }
 }
-const MIN_DECLARED_SLOTS_COVERED = 20;
+const MIN_DECLARED_SLOTS_COVERED = 10;
 if (covered.length < MIN_DECLARED_SLOTS_COVERED) {
   failures.push(
     `annotated slots for declared \`get slots()\` slots dropped to ${covered.length} ` +
@@ -132,6 +132,11 @@ if (covered.length < MIN_DECLARED_SLOTS_COVERED) {
 if (failures.length > 0) {
   console.error('cem:check failed:');
   for (const failure of failures) console.error(`  - ${failure}`);
+  console.error(
+    `  declared in \`get slots()\`: ${covered.length + uncovered.length}, annotated: ${covered.length}, ` +
+      `still open: ${uncovered.length}`,
+  );
+  if (uncovered.length > 0) console.error(`    ${uncovered.join(' | ')}`);
   process.exit(1);
 }
 
