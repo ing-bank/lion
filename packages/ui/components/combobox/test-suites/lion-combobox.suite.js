@@ -15,6 +15,7 @@ import { Required, Unparseable } from '@lion/ui/form-core.js';
 import { defineCE, expect, fixture, unsafeStatic, waitUntil } from '@open-wc/testing';
 import { sendKeys } from '@web/test-runner-commands';
 import { LitElement, nothing } from 'lit';
+import { ref } from 'lit/directives/ref.js';
 import sinon from 'sinon';
 import { resolveSuiteTag } from '../../core/test-helpers/resolveSuiteTag.js';
 import { isActiveElement } from '../../core/test-helpers/isActiveElement.js';
@@ -23,17 +24,34 @@ import { isActiveElement } from '../../core/test-helpers/isActiveElement.js';
  * @typedef {import('@lion/ui/types/test-suites.js').SuiteElement} SuiteElement
  * Runs the `lion-combobox` behavioural suite. The caller hands the elements it should run against;
  * anything left out keeps Lion's own element.
- * @param {import('@lion/ui/types/test-suites.js').SuiteConfig<{host: SuiteElement; option: SuiteElement}, {optionTagString?: any}>} [customConfig]
+ * @param {import('@lion/ui/types/test-suites.js').SuiteConfig<{host: SuiteElement; option: SuiteElement}, {
+ *   optionTagString?: string;
+ *   configureOption?: (option: import('@lion/ui/listbox.js').LionOption, label: string) => void;
+ * }>} [customConfig]
  */
 export function runComboboxSuite({
   classes = {},
   tagString: legacyTagString,
   optionTagString,
+  configureOption,
 } = {}) {
   const tagNameHost = resolveSuiteTag(classes.host, legacyTagString, 'lion-combobox');
   const hostTag = unsafeStatic(tagNameHost);
   const tagNameOption = resolveSuiteTag(classes.option, optionTagString, 'lion-option');
   const tagOption = unsafeStatic(tagNameOption);
+
+  /**
+   * Configure additional option properties before connection, including on template updates.
+   * @param {string} label
+   * @returns {import('lit/directive.js').DirectiveResult}
+   */
+  function optionFixture(label) {
+    return ref(element => {
+      if (element) {
+        configureOption?.(/** @type {LionOption} */ (element), label);
+      }
+    });
+  }
 
   /**
    * @typedef {import('../types/SelectionDisplay.js').SelectionDisplay} SelectionDisplay
@@ -47,10 +65,10 @@ export function runComboboxSuite({
     const el = /** @type {LionCombobox} */ (
       await fixture(html`
         <${hostTag} label="Search" name="foo">
-          <${tagOption} .choiceValue="${'Artichoke'}">Artichoke</${tagOption}>
-          <${tagOption} .choiceValue="${'Chard'}">Chard</${tagOption}>
-          <${tagOption} .choiceValue="${'Chicory'}">Chicory</${tagOption}>
-          <${tagOption} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tagOption}>
+          <${tagOption} ${optionFixture(`Artichoke`)} .choiceValue="${'Artichoke'}">Artichoke</${tagOption}>
+          <${tagOption} ${optionFixture(`Chard`)} .choiceValue="${'Chard'}">Chard</${tagOption}>
+          <${tagOption} ${optionFixture(`Chicory`)} .choiceValue="${'Chicory'}">Chicory</${tagOption}>
+          <${tagOption} ${optionFixture(`Victoria Plum`)} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tagOption}>
         </${hostTag}>
       `)
     );
@@ -111,7 +129,7 @@ export function runComboboxSuite({
             return html`<${hostTag} name="foo">
               ${this.entries.map(
                 entry =>
-                  html`<${tagOption} .choiceValue="${entry.id}">${entry.label}</${tagOption}>`,
+                  html`<${tagOption} ${optionFixture(`${entry.label}`)} .choiceValue="${entry.id}">${entry.label}</${tagOption}>`,
               )}
             </${hostTag}>`;
           }
@@ -154,10 +172,10 @@ export function runComboboxSuite({
         const el = /** @type {LionCombobox} */ (
           await fixture(html`
             <${hostTag} name="foo">
-              <${tagOption} .choiceValue="${'Artichoke'}">Artichoke</${tagOption}>
-              <${tagOption} .choiceValue="${'Chard'}">Chard</${tagOption}>
-              <${tagOption} .choiceValue="${'Chicory'}">Chicory</${tagOption}>
-              <${tagOption} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tagOption}>
+              <${tagOption} ${optionFixture(`Artichoke`)} .choiceValue="${'Artichoke'}">Artichoke</${tagOption}>
+              <${tagOption} ${optionFixture(`Chard`)} .choiceValue="${'Chard'}">Chard</${tagOption}>
+              <${tagOption} ${optionFixture(`Chicory`)} .choiceValue="${'Chicory'}">Chicory</${tagOption}>
+              <${tagOption} ${optionFixture(`Victoria Plum`)} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tagOption}>
             </${hostTag}>
           `)
         );
@@ -189,10 +207,10 @@ export function runComboboxSuite({
         const el = /** @type {LionCombobox} */ (
           await fixture(html`
             <${hostTag} name="foo">
-              <${tagOption} .choiceValue="${'Artichoke'}">Artichoke</${tagOption}>
-              <${tagOption} .choiceValue="${'Chard'}">Chard</${tagOption}>
-              <${tagOption} .choiceValue="${'Chicory'}">Chicory</${tagOption}>
-              <${tagOption} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tagOption}>
+              <${tagOption} ${optionFixture(`Artichoke`)} .choiceValue="${'Artichoke'}">Artichoke</${tagOption}>
+              <${tagOption} ${optionFixture(`Chard`)} .choiceValue="${'Chard'}">Chard</${tagOption}>
+              <${tagOption} ${optionFixture(`Chicory`)} .choiceValue="${'Chicory'}">Chicory</${tagOption}>
+              <${tagOption} ${optionFixture(`Victoria Plum`)} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tagOption}>
             </${hostTag}>
           `)
         );
@@ -212,10 +230,10 @@ export function runComboboxSuite({
         const el = /** @type {LionCombobox} */ (
           await fixture(html`
             <${hostTag} name="foo" show-all-on-empty>
-              <${tagOption} .choiceValue="${'Artichoke'}">Artichoke</${tagOption}>
-              <${tagOption} .choiceValue="${'Chard'}">Chard</${tagOption}>
-              <${tagOption} .choiceValue="${'Chicory'}">Chicory</${tagOption}>
-              <${tagOption} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tagOption}>
+              <${tagOption} ${optionFixture(`Artichoke`)} .choiceValue="${'Artichoke'}">Artichoke</${tagOption}>
+              <${tagOption} ${optionFixture(`Chard`)} .choiceValue="${'Chard'}">Chard</${tagOption}>
+              <${tagOption} ${optionFixture(`Chicory`)} .choiceValue="${'Chicory'}">Chicory</${tagOption}>
+              <${tagOption} ${optionFixture(`Victoria Plum`)} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tagOption}>
             </${hostTag}>
           `)
         );
@@ -237,10 +255,10 @@ export function runComboboxSuite({
         const el = /** @type {LionCombobox} */ (
           await fixture(html`
             <${hostTag} name="foo">
-              <${tagOption} .choiceValue="${'Artichoke'}">Artichoke</${tagOption}>
-              <${tagOption} .choiceValue="${'Chard'}">Chard</${tagOption}>
-              <${tagOption} .choiceValue="${'Chicory'}">Chicory</${tagOption}>
-              <${tagOption} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tagOption}>
+              <${tagOption} ${optionFixture(`Artichoke`)} .choiceValue="${'Artichoke'}">Artichoke</${tagOption}>
+              <${tagOption} ${optionFixture(`Chard`)} .choiceValue="${'Chard'}">Chard</${tagOption}>
+              <${tagOption} ${optionFixture(`Chicory`)} .choiceValue="${'Chicory'}">Chicory</${tagOption}>
+              <${tagOption} ${optionFixture(`Victoria Plum`)} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tagOption}>
             </${hostTag}>
           `)
         );
@@ -270,10 +288,10 @@ export function runComboboxSuite({
           const el = /** @type {LionCombobox} */ (
             await fixture(html`
               <${hostTag} name="foo" autocomplete="list" show-all-on-empty>
-                <${tagOption} .choiceValue="${'Artichoke'}">Artichoke</${tagOption}>
-                <${tagOption} .choiceValue="${'Chard'}">Chard</${tagOption}>
-                <${tagOption} .choiceValue="${'Chicory'}">Chicory</${tagOption}>
-                <${tagOption} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tagOption}>
+                <${tagOption} ${optionFixture(`Artichoke`)} .choiceValue="${'Artichoke'}">Artichoke</${tagOption}>
+                <${tagOption} ${optionFixture(`Chard`)} .choiceValue="${'Chard'}">Chard</${tagOption}>
+                <${tagOption} ${optionFixture(`Chicory`)} .choiceValue="${'Chicory'}">Chicory</${tagOption}>
+                <${tagOption} ${optionFixture(`Victoria Plum`)} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tagOption}>
               </${hostTag}>
             `)
           );
@@ -305,10 +323,10 @@ export function runComboboxSuite({
           const el = /** @type {LionCombobox} */ (
             await fixture(html`
               <${hostTag} name="foo" .showAllOnEmpty="${true}">
-                <${tagOption} .choiceValue="${'Artichoke'}">Artichoke</${tagOption}>
-                <${tagOption} .choiceValue="${'Chard'}">Chard</${tagOption}>
-                <${tagOption} .choiceValue="${'Chicory'}">Chicory</${tagOption}>
-                <${tagOption} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tagOption}>
+                <${tagOption} ${optionFixture(`Artichoke`)} .choiceValue="${'Artichoke'}">Artichoke</${tagOption}>
+                <${tagOption} ${optionFixture(`Chard`)} .choiceValue="${'Chard'}">Chard</${tagOption}>
+                <${tagOption} ${optionFixture(`Chicory`)} .choiceValue="${'Chicory'}">Chicory</${tagOption}>
+                <${tagOption} ${optionFixture(`Victoria Plum`)} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tagOption}>
               </${hostTag}>
             `)
           );
@@ -324,10 +342,10 @@ export function runComboboxSuite({
           const el = /** @type {LionCombobox} */ (
             await fixture(html`
               <${hostTag} name="foo" .showAllOnEmpty="${true}" opened>
-                <${tagOption} .choiceValue="${'Artichoke'}">Artichoke</${tagOption}>
-                <${tagOption} .choiceValue="${'Chard'}">Chard</${tagOption}>
-                <${tagOption} .choiceValue="${'Chicory'}">Chicory</${tagOption}>
-                <${tagOption} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tagOption}>
+                <${tagOption} ${optionFixture(`Artichoke`)} .choiceValue="${'Artichoke'}">Artichoke</${tagOption}>
+                <${tagOption} ${optionFixture(`Chard`)} .choiceValue="${'Chard'}">Chard</${tagOption}>
+                <${tagOption} ${optionFixture(`Chicory`)} .choiceValue="${'Chicory'}">Chicory</${tagOption}>
+                <${tagOption} ${optionFixture(`Victoria Plum`)} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tagOption}>
               </${hostTag}>
             `)
           );
@@ -344,10 +362,10 @@ export function runComboboxSuite({
           const el = /** @type {LionCombobox} */ (
             await fixture(html`
               <${hostTag} name="foo" .showAllOnEmpty="${true}">
-                <${tagOption} .choiceValue="${'Artichoke'}">Artichoke</${tagOption}>
-                <${tagOption} .choiceValue="${'Chard'}">Chard</${tagOption}>
-                <${tagOption} .choiceValue="${'Chicory'}">Chicory</${tagOption}>
-                <${tagOption} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tagOption}>
+                <${tagOption} ${optionFixture(`Artichoke`)} .choiceValue="${'Artichoke'}">Artichoke</${tagOption}>
+                <${tagOption} ${optionFixture(`Chard`)} .choiceValue="${'Chard'}">Chard</${tagOption}>
+                <${tagOption} ${optionFixture(`Chicory`)} .choiceValue="${'Chicory'}">Chicory</${tagOption}>
+                <${tagOption} ${optionFixture(`Victoria Plum`)} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tagOption}>
               </${hostTag}>
             `)
           );
@@ -392,8 +410,8 @@ export function runComboboxSuite({
         const el = /** @type {LionCombobox} */ (
           await fixture(html`
             <${hostTag} name="foo">
-              <${tagOption} .choiceValue="${'10'}" checked>Item 1</${tagOption}>
-              <${tagOption} .choiceValue="${'20'}">Item 2</${tagOption}>
+              <${tagOption} ${optionFixture(`Item 1`)} .choiceValue="${'10'}" checked>Item 1</${tagOption}>
+              <${tagOption} ${optionFixture(`Item 2`)} .choiceValue="${'20'}">Item 2</${tagOption}>
             </${hostTag}>
           `)
         );
@@ -409,8 +427,8 @@ export function runComboboxSuite({
         const el = /** @type {LionCombobox} */ (
           await fixture(html`
             <${hostTag} name="foo">
-              <${tagOption} .choiceValue="${'10'}" checked>Item 1</${tagOption}>
-              <${tagOption} .choiceValue="${'20'}">Item 2</${tagOption}>
+              <${tagOption} ${optionFixture(`Item 1`)} .choiceValue="${'10'}" checked>Item 1</${tagOption}>
+              <${tagOption} ${optionFixture(`Item 2`)} .choiceValue="${'20'}">Item 2</${tagOption}>
             </${hostTag}>
           `)
         );
@@ -424,8 +442,8 @@ export function runComboboxSuite({
         const el = /** @type {LionCombobox} */ (
           await fixture(html`
             <${hostTag} name="foo">
-              <${tagOption} .choiceValue="${'10'}" checked>Item 1</${tagOption}>
-              <${tagOption} .choiceValue="${'20'}">Item 2</${tagOption}>
+              <${tagOption} ${optionFixture(`Item 1`)} .choiceValue="${'10'}" checked>Item 1</${tagOption}>
+              <${tagOption} ${optionFixture(`Item 2`)} .choiceValue="${'20'}">Item 2</${tagOption}>
             </${hostTag}>
           `)
         );
@@ -472,7 +490,7 @@ export function runComboboxSuite({
         const el = /** @type {MyEl} */ (
           await fixture(html`
             <${wrappingTag} label="my label">
-              <${tagOption} .choiceValue="${'1'}">${'one'}</${tagOption}>
+              <${tagOption} ${optionFixture(`${'one'}`)} .choiceValue="${'1'}">${'one'}</${tagOption}>
             </${wrappingTag}>
           `)
         );
@@ -490,8 +508,8 @@ export function runComboboxSuite({
         const el = /** @type {LionCombobox} */ (
           await fixture(html`
             <${hostTag} name="foo" .modelValue="${'10'}">
-              <${tagOption} .choiceValue="${'10'}" checked>Item 1</${tagOption}>
-              <${tagOption} .choiceValue="${'20'}">Item 2</${tagOption}>
+              <${tagOption} ${optionFixture(`Item 1`)} .choiceValue="${'10'}" checked>Item 1</${tagOption}>
+              <${tagOption} ${optionFixture(`Item 2`)} .choiceValue="${'20'}">Item 2</${tagOption}>
             </${hostTag}>
           `)
         );
@@ -508,10 +526,10 @@ export function runComboboxSuite({
         const el = /** @type {LionCombobox} */ (
           await fixture(html`
             <${hostTag} name="foo" .modelValue="${'Artichoke'}">
-              <${tagOption} .choiceValue="${'Artichoke'}">Artichoke</${tagOption}>
-              <${tagOption} .choiceValue="${'Chard'}">Chard</${tagOption}>
-              <${tagOption} .choiceValue="${'Chicory'}">Chicory</${tagOption}>
-              <${tagOption} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tagOption}>
+              <${tagOption} ${optionFixture(`Artichoke`)} .choiceValue="${'Artichoke'}">Artichoke</${tagOption}>
+              <${tagOption} ${optionFixture(`Chard`)} .choiceValue="${'Chard'}">Chard</${tagOption}>
+              <${tagOption} ${optionFixture(`Chicory`)} .choiceValue="${'Chicory'}">Chicory</${tagOption}>
+              <${tagOption} ${optionFixture(`Victoria Plum`)} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tagOption}>
             </${hostTag}>
           `)
         );
@@ -546,10 +564,10 @@ export function runComboboxSuite({
         const el = /** @type {LionCombobox} */ (
           await fixture(html`
             <${hostTag} name="foo" .modelValue="${'Artichoke'}" .requireOptionMatch="${false}">
-              <${tagOption} .choiceValue="${'Artichoke'}">Artichoke</${tagOption}>
-              <${tagOption} .choiceValue="${'Chard'}">Chard</${tagOption}>
-              <${tagOption} .choiceValue="${'Chicory'}">Chicory</${tagOption}>
-              <${tagOption} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tagOption}>
+              <${tagOption} ${optionFixture(`Artichoke`)} .choiceValue="${'Artichoke'}">Artichoke</${tagOption}>
+              <${tagOption} ${optionFixture(`Chard`)} .choiceValue="${'Chard'}">Chard</${tagOption}>
+              <${tagOption} ${optionFixture(`Chicory`)} .choiceValue="${'Chicory'}">Chicory</${tagOption}>
+              <${tagOption} ${optionFixture(`Victoria Plum`)} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tagOption}>
             </${hostTag}>
           `)
         );
@@ -575,10 +593,10 @@ export function runComboboxSuite({
         const el = /** @type {LionCombobox} */ (
           await fixture(html`
             <${hostTag} name="foo" multiple-choice .modelValue="${['Artichoke']}">
-              <${tagOption} .choiceValue="${'Artichoke'}">Artichoke</${tagOption}>
-              <${tagOption} .choiceValue="${'Chard'}">Chard</${tagOption}>
-              <${tagOption} .choiceValue="${'Chicory'}">Chicory</${tagOption}>
-              <${tagOption} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tagOption}>
+              <${tagOption} ${optionFixture(`Artichoke`)} .choiceValue="${'Artichoke'}">Artichoke</${tagOption}>
+              <${tagOption} ${optionFixture(`Chard`)} .choiceValue="${'Chard'}">Chard</${tagOption}>
+              <${tagOption} ${optionFixture(`Chicory`)} .choiceValue="${'Chicory'}">Chicory</${tagOption}>
+              <${tagOption} ${optionFixture(`Victoria Plum`)} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tagOption}>
             </${hostTag}>
           `)
         );
@@ -594,10 +612,10 @@ export function runComboboxSuite({
         const el = /** @type {LionCombobox} */ (
           await fixture(html`
             <${hostTag} name="foo" .modelValue="${'Artichoke'}">
-              <${tagOption} .choiceValue="${'Artichoke'}">Artichoke</${tagOption}>
-              <${tagOption} .choiceValue="${'Chard'}">Chard</${tagOption}>
-              <${tagOption} .choiceValue="${'Chicory'}">Chicory</${tagOption}>
-              <${tagOption} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tagOption}>
+              <${tagOption} ${optionFixture(`Artichoke`)} .choiceValue="${'Artichoke'}">Artichoke</${tagOption}>
+              <${tagOption} ${optionFixture(`Chard`)} .choiceValue="${'Chard'}">Chard</${tagOption}>
+              <${tagOption} ${optionFixture(`Chicory`)} .choiceValue="${'Chicory'}">Chicory</${tagOption}>
+              <${tagOption} ${optionFixture(`Victoria Plum`)} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tagOption}>
             </${hostTag}>
           `)
         );
@@ -611,10 +629,10 @@ export function runComboboxSuite({
         const el2 = /** @type {LionCombobox} */ (
           await fixture(html`
             <${hostTag} name="foo" multiple-choice .modelValue="${['Artichoke']}">
-              <${tagOption} .choiceValue="${'Artichoke'}">Artichoke</${tagOption}>
-              <${tagOption} .choiceValue="${'Chard'}">Chard</${tagOption}>
-              <${tagOption} .choiceValue="${'Chicory'}">Chicory</${tagOption}>
-              <${tagOption} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tagOption}>
+              <${tagOption} ${optionFixture(`Artichoke`)} .choiceValue="${'Artichoke'}">Artichoke</${tagOption}>
+              <${tagOption} ${optionFixture(`Chard`)} .choiceValue="${'Chard'}">Chard</${tagOption}>
+              <${tagOption} ${optionFixture(`Chicory`)} .choiceValue="${'Chicory'}">Chicory</${tagOption}>
+              <${tagOption} ${optionFixture(`Victoria Plum`)} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tagOption}>
             </${hostTag}>
           `)
         );
@@ -629,9 +647,9 @@ export function runComboboxSuite({
         const el = /** @type {LionCombobox} */ (
           await fixture(
             html`<${hostTag}>
-              <${tagOption} .choiceValue=${'red'}>Red</${tagOption}>
-              <${tagOption} .choiceValue=${'green'}>Green</${tagOption}>
-              <${tagOption} .choiceValue=${'blue'}>Blue</${tagOption}>
+              <${tagOption} ${optionFixture(`Red`)} .choiceValue=${'red'}>Red</${tagOption}>
+              <${tagOption} ${optionFixture(`Green`)} .choiceValue=${'green'}>Green</${tagOption}>
+              <${tagOption} ${optionFixture(`Blue`)} .choiceValue=${'blue'}>Blue</${tagOption}>
             </${hostTag}>`,
           )
         );
@@ -655,10 +673,10 @@ export function runComboboxSuite({
         const el = /** @type {LionCombobox} */ (
           await fixture(html`
             <${hostTag} name="foo" multiple-choice>
-              <${tagOption} .choiceValue="${'Artichoke'}">Artichoke</${tagOption}>
-              <${tagOption} .choiceValue="${'Chard'}">Chard</${tagOption}>
-              <${tagOption} .choiceValue="${'Chicory'}">Chicory</${tagOption}>
-              <${tagOption} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tagOption}>
+              <${tagOption} ${optionFixture(`Artichoke`)} .choiceValue="${'Artichoke'}">Artichoke</${tagOption}>
+              <${tagOption} ${optionFixture(`Chard`)} .choiceValue="${'Chard'}">Chard</${tagOption}>
+              <${tagOption} ${optionFixture(`Chicory`)} .choiceValue="${'Chicory'}">Chicory</${tagOption}>
+              <${tagOption} ${optionFixture(`Victoria Plum`)} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tagOption}>
             </${hostTag}>
           `)
         );
@@ -678,10 +696,10 @@ export function runComboboxSuite({
         const el = /** @type {LionCombobox} */ (
           await fixture(html`
             <${hostTag} name="foo">
-              <${tagOption} .choiceValue="${'Artichoke'}">Artichoke</${tagOption}>
-              <${tagOption} .choiceValue="${'Chard'}">Chard</${tagOption}>
-              <${tagOption} .choiceValue="${'Chicory'}">Chicory</${tagOption}>
-              <${tagOption} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tagOption}>
+              <${tagOption} ${optionFixture(`Artichoke`)} .choiceValue="${'Artichoke'}">Artichoke</${tagOption}>
+              <${tagOption} ${optionFixture(`Chard`)} .choiceValue="${'Chard'}">Chard</${tagOption}>
+              <${tagOption} ${optionFixture(`Chicory`)} .choiceValue="${'Chicory'}">Chicory</${tagOption}>
+              <${tagOption} ${optionFixture(`Victoria Plum`)} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tagOption}>
             </${hostTag}>
           `)
         );
@@ -698,10 +716,10 @@ export function runComboboxSuite({
         const el = /** @type {LionCombobox} */ (
           await fixture(html`
             <${hostTag} name="foo" .modelValue="${'Artichoke'}">
-              <${tagOption} .choiceValue="${'Artichoke'}">Artichoke</${tagOption}>
-              <${tagOption} .choiceValue="${'Chard'}">Chard</${tagOption}>
-              <${tagOption} .choiceValue="${'Chicory'}">Chicory</${tagOption}>
-              <${tagOption} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tagOption}>
+              <${tagOption} ${optionFixture(`Artichoke`)} .choiceValue="${'Artichoke'}">Artichoke</${tagOption}>
+              <${tagOption} ${optionFixture(`Chard`)} .choiceValue="${'Chard'}">Chard</${tagOption}>
+              <${tagOption} ${optionFixture(`Chicory`)} .choiceValue="${'Chicory'}">Chicory</${tagOption}>
+              <${tagOption} ${optionFixture(`Victoria Plum`)} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tagOption}>
             </${hostTag}>
           `)
         );
@@ -715,10 +733,10 @@ export function runComboboxSuite({
         const el2 = /** @type {LionCombobox} */ (
           await fixture(html`
             <${hostTag} name="foo" multiple-choice .modelValue="${['Artichoke']}">
-              <${tagOption} .choiceValue="${'Artichoke'}">Artichoke</${tagOption}>
-              <${tagOption} .choiceValue="${'Chard'}">Chard</${tagOption}>
-              <${tagOption} .choiceValue="${'Chicory'}">Chicory</${tagOption}>
-              <${tagOption} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tagOption}>
+              <${tagOption} ${optionFixture(`Artichoke`)} .choiceValue="${'Artichoke'}">Artichoke</${tagOption}>
+              <${tagOption} ${optionFixture(`Chard`)} .choiceValue="${'Chard'}">Chard</${tagOption}>
+              <${tagOption} ${optionFixture(`Chicory`)} .choiceValue="${'Chicory'}">Chicory</${tagOption}>
+              <${tagOption} ${optionFixture(`Victoria Plum`)} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tagOption}>
             </${hostTag}>
           `)
         );
@@ -734,8 +752,8 @@ export function runComboboxSuite({
           const el = /** @type {LionCombobox} */ (
             await fixture(html`
               <${hostTag} name="foo" show-all-on-empty .autocomplete="${autocompleteMode}">
-                <${tagOption} .choiceValue="${'Aa'}" checked>Aa</${tagOption}>
-                <${tagOption} .choiceValue="${'Bb'}">Bb</${tagOption}>
+                <${tagOption} ${optionFixture(`Aa`)} .choiceValue="${'Aa'}" checked>Aa</${tagOption}>
+                <${tagOption} ${optionFixture(`Bb`)} .choiceValue="${'Bb'}">Bb</${tagOption}>
               </${hostTag}>
             `)
           );
@@ -769,10 +787,10 @@ export function runComboboxSuite({
         const el = /** @type {LionCombobox} */ (
           await fixture(html`
             <${hostTag} name="foo" .validators=${[new Required()]}>
-              <${tagOption} .choiceValue="${'Artichoke'}">Artichoke</${tagOption}>
-              <${tagOption} .choiceValue="${'Chard'}">Chard</${tagOption}>
-              <${tagOption} .choiceValue="${'Chicory'}">Chicory</${tagOption}>
-              <${tagOption} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tagOption}>
+              <${tagOption} ${optionFixture(`Artichoke`)} .choiceValue="${'Artichoke'}">Artichoke</${tagOption}>
+              <${tagOption} ${optionFixture(`Chard`)} .choiceValue="${'Chard'}">Chard</${tagOption}>
+              <${tagOption} ${optionFixture(`Chicory`)} .choiceValue="${'Chicory'}">Chicory</${tagOption}>
+              <${tagOption} ${optionFixture(`Victoria Plum`)} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tagOption}>
             </${hostTag}>
           `)
         );
@@ -787,10 +805,10 @@ export function runComboboxSuite({
         const el = /** @type {LionCombobox} */ (
           await fixture(html`
             <${hostTag} name="foo" multiple-choice autocomplete="none">
-              <${tagOption} .choiceValue="${'Artichoke'}">Artichoke</${tagOption}>
-              <${tagOption} .choiceValue="${'Chard'}">Chard</${tagOption}>
-              <${tagOption} .choiceValue="${'Chicory'}">Chicory</${tagOption}>
-              <${tagOption} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tagOption}>
+              <${tagOption} ${optionFixture(`Artichoke`)} .choiceValue="${'Artichoke'}">Artichoke</${tagOption}>
+              <${tagOption} ${optionFixture(`Chard`)} .choiceValue="${'Chard'}">Chard</${tagOption}>
+              <${tagOption} ${optionFixture(`Chicory`)} .choiceValue="${'Chicory'}">Chicory</${tagOption}>
+              <${tagOption} ${optionFixture(`Victoria Plum`)} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tagOption}>
             </${hostTag}>
           `)
         );
@@ -814,10 +832,10 @@ export function runComboboxSuite({
         const el = /** @type {LionCombobox} */ (
           await fixture(html`
             <${hostTag} name="foo" .validators=${[new Required()]}>
-              <${tagOption} checked .choiceValue="${'Artichoke'}">Artichoke</${tagOption}>
-              <${tagOption} .choiceValue="${'Chard'}">Chard</${tagOption}>
-              <${tagOption} .choiceValue="${'Chicory'}">Chicory</${tagOption}>
-              <${tagOption} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tagOption}>
+              <${tagOption} ${optionFixture(`Artichoke`)} checked .choiceValue="${'Artichoke'}">Artichoke</${tagOption}>
+              <${tagOption} ${optionFixture(`Chard`)} .choiceValue="${'Chard'}">Chard</${tagOption}>
+              <${tagOption} ${optionFixture(`Chicory`)} .choiceValue="${'Chicory'}">Chicory</${tagOption}>
+              <${tagOption} ${optionFixture(`Victoria Plum`)} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tagOption}>
             </${hostTag}>
           `)
         );
@@ -838,10 +856,10 @@ export function runComboboxSuite({
         const el = /** @type {LionCombobox} */ (
           await fixture(html`
             <${hostTag} name="foo" autocomplete="both" .requireOptionMatch="${false}">
-              <${tagOption} checked .choiceValue="${'Artichoke'}">Artichoke</${tagOption}>
-              <${tagOption} .choiceValue="${'Chard'}">Chard</${tagOption}>
-              <${tagOption} .choiceValue="${'Chicory'}">Chicory</${tagOption}>
-              <${tagOption} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tagOption}>
+              <${tagOption} ${optionFixture(`Artichoke`)} checked .choiceValue="${'Artichoke'}">Artichoke</${tagOption}>
+              <${tagOption} ${optionFixture(`Chard`)} .choiceValue="${'Chard'}">Chard</${tagOption}>
+              <${tagOption} ${optionFixture(`Chicory`)} .choiceValue="${'Chicory'}">Chicory</${tagOption}>
+              <${tagOption} ${optionFixture(`Victoria Plum`)} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tagOption}>
             </${hostTag}>
           `)
         );
@@ -862,10 +880,10 @@ export function runComboboxSuite({
         const el = /** @type {LionCombobox} */ (
           await fixture(html`
             <${hostTag} name="foo" autocomplete="none" .requireOptionMatch="${false}">
-              <${tagOption} checked .choiceValue="${'Artichoke'}">Artichoke</${tagOption}>
-              <${tagOption} .choiceValue="${'Chard'}">Chard</${tagOption}>
-              <${tagOption} .choiceValue="${'Chicory'}">Chicory</${tagOption}>
-              <${tagOption} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tagOption}>
+              <${tagOption} ${optionFixture(`Artichoke`)} checked .choiceValue="${'Artichoke'}">Artichoke</${tagOption}>
+              <${tagOption} ${optionFixture(`Chard`)} .choiceValue="${'Chard'}">Chard</${tagOption}>
+              <${tagOption} ${optionFixture(`Chicory`)} .choiceValue="${'Chicory'}">Chicory</${tagOption}>
+              <${tagOption} ${optionFixture(`Victoria Plum`)} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tagOption}>
             </${hostTag}>
           `)
         );
@@ -887,10 +905,10 @@ export function runComboboxSuite({
         const el = /** @type {LionCombobox} */ (
           await fixture(html`
             <${hostTag} name="foo" autocomplete="none" .requireOptionMatch="${false}">
-              <${tagOption} .choiceValue="${'Artichoke'}">Artichoke</${tagOption}>
-              <${tagOption} .choiceValue="${'Chard'}">Chard</${tagOption}>
-              <${tagOption} .choiceValue="${'Chicory'}">Chicory</${tagOption}>
-              <${tagOption} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tagOption}>
+              <${tagOption} ${optionFixture(`Artichoke`)} .choiceValue="${'Artichoke'}">Artichoke</${tagOption}>
+              <${tagOption} ${optionFixture(`Chard`)} .choiceValue="${'Chard'}">Chard</${tagOption}>
+              <${tagOption} ${optionFixture(`Chicory`)} .choiceValue="${'Chicory'}">Chicory</${tagOption}>
+              <${tagOption} ${optionFixture(`Victoria Plum`)} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tagOption}>
             </${hostTag}>
           `)
         );
@@ -911,10 +929,10 @@ export function runComboboxSuite({
         const el = /** @type {LionCombobox} */ (
           await fixture(html`
             <${hostTag} name="foo" autocomplete="both">
-              <${tagOption} .choiceValue="${'Artichoke'}">Artichoke</${tagOption}>
-              <${tagOption} .choiceValue="${'Chard'}">Chard</${tagOption}>
-              <${tagOption} .choiceValue="${'Chicory'}">Chicory</${tagOption}>
-              <${tagOption} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tagOption}>
+              <${tagOption} ${optionFixture(`Artichoke`)} .choiceValue="${'Artichoke'}">Artichoke</${tagOption}>
+              <${tagOption} ${optionFixture(`Chard`)} .choiceValue="${'Chard'}">Chard</${tagOption}>
+              <${tagOption} ${optionFixture(`Chicory`)} .choiceValue="${'Chicory'}">Chicory</${tagOption}>
+              <${tagOption} ${optionFixture(`Victoria Plum`)} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tagOption}>
             </${hostTag}>
           `)
         );
@@ -939,10 +957,10 @@ export function runComboboxSuite({
         const el = /** @type {LionCombobox} */ (
           await fixture(html`
             <${hostTag} name="foo" autocomplete="both">
-              <${tagOption} .choiceValue="${'Artichoke'}">Artichoke</${tagOption}>
-              <${tagOption} .choiceValue="${'Chard'}">Chard</${tagOption}>
-              <${tagOption} .choiceValue="${'Chicory'}">Chicory</${tagOption}>
-              <${tagOption} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tagOption}>
+              <${tagOption} ${optionFixture(`Artichoke`)} .choiceValue="${'Artichoke'}">Artichoke</${tagOption}>
+              <${tagOption} ${optionFixture(`Chard`)} .choiceValue="${'Chard'}">Chard</${tagOption}>
+              <${tagOption} ${optionFixture(`Chicory`)} .choiceValue="${'Chicory'}">Chicory</${tagOption}>
+              <${tagOption} ${optionFixture(`Victoria Plum`)} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tagOption}>
             </${hostTag}>
           `)
         );
@@ -966,10 +984,10 @@ export function runComboboxSuite({
         const el = /** @type {LionCombobox} */ (
           await fixture(html`
             <${hostTag} name="foo" .validators=${[new Required()]}>
-              <${tagOption} .choiceValue="${'Artichoke'}">Artichoke</${tagOption}>
-              <${tagOption} .choiceValue="${'Chard'}">Chard</${tagOption}>
-              <${tagOption} .choiceValue="${'Chicory'}">Chicory</${tagOption}>
-              <${tagOption} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tagOption}>
+              <${tagOption} ${optionFixture(`Artichoke`)} .choiceValue="${'Artichoke'}">Artichoke</${tagOption}>
+              <${tagOption} ${optionFixture(`Chard`)} .choiceValue="${'Chard'}">Chard</${tagOption}>
+              <${tagOption} ${optionFixture(`Chicory`)} .choiceValue="${'Chicory'}">Chicory</${tagOption}>
+              <${tagOption} ${optionFixture(`Victoria Plum`)} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tagOption}>
             </${hostTag}>
           `)
         );
@@ -996,10 +1014,10 @@ export function runComboboxSuite({
         const el = /** @type {LionCombobox} */ (
           await fixture(html`
             <${hostTag} name="foo">
-              <${tagOption} checked .choiceValue="${'Artichoke'}">Artichoke</${tagOption}>
-              <${tagOption} .choiceValue="${'Chard'}">Chard</${tagOption}>
-              <${tagOption} .choiceValue="${'Chicory'}">Chicory</${tagOption}>
-              <${tagOption} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tagOption}>
+              <${tagOption} ${optionFixture(`Artichoke`)} checked .choiceValue="${'Artichoke'}">Artichoke</${tagOption}>
+              <${tagOption} ${optionFixture(`Chard`)} .choiceValue="${'Chard'}">Chard</${tagOption}>
+              <${tagOption} ${optionFixture(`Chicory`)} .choiceValue="${'Chicory'}">Chicory</${tagOption}>
+              <${tagOption} ${optionFixture(`Victoria Plum`)} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tagOption}>
             </${hostTag}>
           `)
         );
@@ -1027,10 +1045,10 @@ export function runComboboxSuite({
               name="foo"
               .parser="${/** @param {string} value */ value => value.replace(/[0-9]/g, '')}"
             >
-              <${tagOption} .choiceValue="${'Artichoke'}">Artichoke</${tagOption}>
-              <${tagOption} .choiceValue="${'Chard'}">Chard</${tagOption}>
-              <${tagOption} .choiceValue="${'Chicory'}">Chicory</${tagOption}>
-              <${tagOption} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tagOption}>
+              <${tagOption} ${optionFixture(`Artichoke`)} .choiceValue="${'Artichoke'}">Artichoke</${tagOption}>
+              <${tagOption} ${optionFixture(`Chard`)} .choiceValue="${'Chard'}">Chard</${tagOption}>
+              <${tagOption} ${optionFixture(`Chicory`)} .choiceValue="${'Chicory'}">Chicory</${tagOption}>
+              <${tagOption} ${optionFixture(`Victoria Plum`)} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tagOption}>
             </${hostTag}>
           `)
         );
@@ -1053,10 +1071,10 @@ export function runComboboxSuite({
               .validators=${[new Required()]}
               autocomplete="none"
             >
-              <${tagOption} .choiceValue="${'Artichoke'}">Artichoke</${tagOption}>
-              <${tagOption} checked .choiceValue="${'Chard'}">Chard</${tagOption}>
-              <${tagOption} .choiceValue="${'Chicory'}">Chicory</${tagOption}>
-              <${tagOption} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tagOption}>
+              <${tagOption} ${optionFixture(`Artichoke`)} .choiceValue="${'Artichoke'}">Artichoke</${tagOption}>
+              <${tagOption} ${optionFixture(`Chard`)} checked .choiceValue="${'Chard'}">Chard</${tagOption}>
+              <${tagOption} ${optionFixture(`Chicory`)} .choiceValue="${'Chicory'}">Chicory</${tagOption}>
+              <${tagOption} ${optionFixture(`Victoria Plum`)} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tagOption}>
             </${hostTag}>
           `)
         );
@@ -1091,10 +1109,10 @@ export function runComboboxSuite({
               .validators=${[new Required()]}
               autocomplete="none"
             >
-              <${tagOption} .choiceValue="${'Artichoke'}">Artichoke</${tagOption}>
-              <${tagOption} .choiceValue="${'Chard'}">Chard</${tagOption}>
-              <${tagOption} .choiceValue="${'Chicory'}">Chicory</${tagOption}>
-              <${tagOption} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tagOption}>
+              <${tagOption} ${optionFixture(`Artichoke`)} .choiceValue="${'Artichoke'}">Artichoke</${tagOption}>
+              <${tagOption} ${optionFixture(`Chard`)} .choiceValue="${'Chard'}">Chard</${tagOption}>
+              <${tagOption} ${optionFixture(`Chicory`)} .choiceValue="${'Chicory'}">Chicory</${tagOption}>
+              <${tagOption} ${optionFixture(`Victoria Plum`)} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tagOption}>
             </${hostTag}>
           `)
         );
@@ -1130,10 +1148,10 @@ export function runComboboxSuite({
               .requireOptionMatch=${false}
               autocomplete="both"
             >
-              <${tagOption} .choiceValue="${'Artichoke'}">Artichoke</${tagOption}>
-              <${tagOption} .choiceValue="${'Chard'}">Chard</${tagOption}>
-              <${tagOption} .choiceValue="${'Chicory'}">Chicory</${tagOption}>
-              <${tagOption} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tagOption}>
+              <${tagOption} ${optionFixture(`Artichoke`)} .choiceValue="${'Artichoke'}">Artichoke</${tagOption}>
+              <${tagOption} ${optionFixture(`Chard`)} .choiceValue="${'Chard'}">Chard</${tagOption}>
+              <${tagOption} ${optionFixture(`Chicory`)} .choiceValue="${'Chicory'}">Chicory</${tagOption}>
+              <${tagOption} ${optionFixture(`Victoria Plum`)} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tagOption}>
             </${hostTag}>
           `)
         );
@@ -1159,10 +1177,10 @@ export function runComboboxSuite({
               .requireOptionMatch=${false}
               autocomplete="both"
             >
-              <${tagOption} .choiceValue="${'Artichoke'}">Artichoke</${tagOption}>
-              <${tagOption} .choiceValue="${'Chard'}">Chard</${tagOption}>
-              <${tagOption} .choiceValue="${'Chicory'}">Chicory</${tagOption}>
-              <${tagOption} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tagOption}>
+              <${tagOption} ${optionFixture(`Artichoke`)} .choiceValue="${'Artichoke'}">Artichoke</${tagOption}>
+              <${tagOption} ${optionFixture(`Chard`)} .choiceValue="${'Chard'}">Chard</${tagOption}>
+              <${tagOption} ${optionFixture(`Chicory`)} .choiceValue="${'Chicory'}">Chicory</${tagOption}>
+              <${tagOption} ${optionFixture(`Victoria Plum`)} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tagOption}>
             </${hostTag}>
           `)
         );
@@ -1189,10 +1207,10 @@ export function runComboboxSuite({
               .requireOptionMatch=${false}
               autocomplete="both"
             >
-              <${tagOption} .choiceValue="${'Artichoke'}">Artichoke</${tagOption}>
-              <${tagOption} .choiceValue="${'Chard'}">Chard</${tagOption}>
-              <${tagOption} .choiceValue="${'Chicory'}">Chicory</${tagOption}>
-              <${tagOption} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tagOption}>
+              <${tagOption} ${optionFixture(`Artichoke`)} .choiceValue="${'Artichoke'}">Artichoke</${tagOption}>
+              <${tagOption} ${optionFixture(`Chard`)} .choiceValue="${'Chard'}">Chard</${tagOption}>
+              <${tagOption} ${optionFixture(`Chicory`)} .choiceValue="${'Chicory'}">Chicory</${tagOption}>
+              <${tagOption} ${optionFixture(`Victoria Plum`)} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tagOption}>
             </${hostTag}>
           `)
         );
@@ -1218,10 +1236,10 @@ export function runComboboxSuite({
           const el = /** @type {LionCombobox} */ (
             await fixture(html`
               <${hostTag} autocomplete="${autocompleteValue}" .modelValue="${'Chard'}" name="foo">
-                <${tagOption} .choiceValue="${'Artichoke'}">Artichoke</${tagOption}>
-                <${tagOption} .choiceValue="${'Chard'}">Chard</${tagOption}>
-                <${tagOption} .choiceValue="${'Chicory'}">Chicory</${tagOption}>
-                <${tagOption} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tagOption}>
+                <${tagOption} ${optionFixture(`Artichoke`)} .choiceValue="${'Artichoke'}">Artichoke</${tagOption}>
+                <${tagOption} ${optionFixture(`Chard`)} .choiceValue="${'Chard'}">Chard</${tagOption}>
+                <${tagOption} ${optionFixture(`Chicory`)} .choiceValue="${'Chicory'}">Chicory</${tagOption}>
+                <${tagOption} ${optionFixture(`Victoria Plum`)} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tagOption}>
               </${hostTag}>
             `)
           );
@@ -1238,10 +1256,10 @@ export function runComboboxSuite({
           await fixture(html`
             <form @submit=${submitSpy}>
               <${hostTag} name="foo">
-                <${tagOption} .choiceValue="${'Artichoke'}">Artichoke</${tagOption}>
-                <${tagOption} .choiceValue="${'Chard'}">Chard</${tagOption}>
-                <${tagOption} .choiceValue="${'Chicory'}">Chicory</${tagOption}>
-                <${tagOption} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tagOption}>
+                <${tagOption} ${optionFixture(`Artichoke`)} .choiceValue="${'Artichoke'}">Artichoke</${tagOption}>
+                <${tagOption} ${optionFixture(`Chard`)} .choiceValue="${'Chard'}">Chard</${tagOption}>
+                <${tagOption} ${optionFixture(`Chicory`)} .choiceValue="${'Chicory'}">Chicory</${tagOption}>
+                <${tagOption} ${optionFixture(`Victoria Plum`)} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tagOption}>
               </${hostTag}>
               <button type="submit">submit</button>
             </form>
@@ -1263,10 +1281,10 @@ export function runComboboxSuite({
           await fixture(html`
             <form @submit=${submitSpy}>
               <${hostTag} name="foo">
-                <${tagOption} .choiceValue="${'Artichoke'}">Artichoke</${tagOption}>
-                <${tagOption} .choiceValue="${'Chard'}">Chard</${tagOption}>
-                <${tagOption} .choiceValue="${'Chicory'}">Chicory</${tagOption}>
-                <${tagOption} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tagOption}>
+                <${tagOption} ${optionFixture(`Artichoke`)} .choiceValue="${'Artichoke'}">Artichoke</${tagOption}>
+                <${tagOption} ${optionFixture(`Chard`)} .choiceValue="${'Chard'}">Chard</${tagOption}>
+                <${tagOption} ${optionFixture(`Chicory`)} .choiceValue="${'Chicory'}">Chicory</${tagOption}>
+                <${tagOption} ${optionFixture(`Victoria Plum`)} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tagOption}>
               </${hostTag}>
               <button type="submit">submit</button>
             </form>
@@ -1289,10 +1307,10 @@ export function runComboboxSuite({
         const el = /** @type {LionCombobox} */ (
           await fixture(html`
             <${hostTag} name="foo">
-              <${tagOption} .choiceValue="${'Artichoke'}">Artichoke</${tagOption}>
-              <${tagOption} .choiceValue="${'Chard'}">Chard</${tagOption}>
-              <${tagOption} .choiceValue="${'Chicory'}">Chicory</${tagOption}>
-              <${tagOption} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tagOption}>
+              <${tagOption} ${optionFixture(`Artichoke`)} .choiceValue="${'Artichoke'}">Artichoke</${tagOption}>
+              <${tagOption} ${optionFixture(`Chard`)} .choiceValue="${'Chard'}">Chard</${tagOption}>
+              <${tagOption} ${optionFixture(`Chicory`)} .choiceValue="${'Chicory'}">Chicory</${tagOption}>
+              <${tagOption} ${optionFixture(`Victoria Plum`)} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tagOption}>
             </${hostTag}>
           `)
         );
@@ -1317,10 +1335,10 @@ export function runComboboxSuite({
         const el = /** @type {LionCombobox} */ (
           await fixture(html` 
             <${tag} name="combo" label="Display only the label once selected">
-              <${tagOption} .choiceValue="${'Artichoke'}">Artichoke</${tagOption}>
-              <${tagOption} .choiceValue="${'Chard'}">Chard</${tagOption}>
-              <${tagOption} .choiceValue="${'Chicory'}">Chicory</${tagOption}>
-              <${tagOption} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tagOption}>
+              <${tagOption} ${optionFixture(`Artichoke`)} .choiceValue="${'Artichoke'}">Artichoke</${tagOption}>
+              <${tagOption} ${optionFixture(`Chard`)} .choiceValue="${'Chard'}">Chard</${tagOption}>
+              <${tagOption} ${optionFixture(`Chicory`)} .choiceValue="${'Chicory'}">Chicory</${tagOption}>
+              <${tagOption} ${optionFixture(`Victoria Plum`)} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tagOption}>
             </${tag}>
           `)
         );
@@ -1352,10 +1370,10 @@ export function runComboboxSuite({
         const el = /** @type {LionCombobox} */ (
           await fixture(html`
             <${hostTag} name="foo">
-              <${tagOption} .choiceValue="${'Artichoke'}">Artichoke</${tagOption}>
-              <${tagOption} .choiceValue="${'Chard'}">Chard</${tagOption}>
-              <${tagOption} .choiceValue="${'Chicory'}">Chicory</${tagOption}>
-              <${tagOption} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tagOption}>
+              <${tagOption} ${optionFixture(`Artichoke`)} .choiceValue="${'Artichoke'}">Artichoke</${tagOption}>
+              <${tagOption} ${optionFixture(`Chard`)} .choiceValue="${'Chard'}">Chard</${tagOption}>
+              <${tagOption} ${optionFixture(`Chicory`)} .choiceValue="${'Chicory'}">Chicory</${tagOption}>
+              <${tagOption} ${optionFixture(`Victoria Plum`)} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tagOption}>
             </${hostTag}>
           `)
         );
@@ -1379,10 +1397,10 @@ export function runComboboxSuite({
         const el = /** @type {LionCombobox} */ (
           await fixture(html`
             <${hostTag} name="foo">
-              <${tagOption} .choiceValue="${'Artichoke'}">Artichoke</${tagOption}>
-              <${tagOption} .choiceValue="${'Chard'}">Chard</${tagOption}>
-              <${tagOption} .choiceValue="${'Chicory'}">Chicory</${tagOption}>
-              <${tagOption} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tagOption}>
+              <${tagOption} ${optionFixture(`Artichoke`)} .choiceValue="${'Artichoke'}">Artichoke</${tagOption}>
+              <${tagOption} ${optionFixture(`Chard`)} .choiceValue="${'Chard'}">Chard</${tagOption}>
+              <${tagOption} ${optionFixture(`Chicory`)} .choiceValue="${'Chicory'}">Chicory</${tagOption}>
+              <${tagOption} ${optionFixture(`Victoria Plum`)} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tagOption}>
             </${hostTag}>
           `)
         );
@@ -1418,8 +1436,8 @@ export function runComboboxSuite({
         const el = /** @type {LionCombobox} */ (
           await fixture(html`
             <${hostTag} name="foo" autocomplete="list">
-              <${tagOption} .choiceValue="${'Artichoke'}">Artichoke</${tagOption}>
-              <${tagOption} .choiceValue="${'Chard'}">Chard</${tagOption}>
+              <${tagOption} ${optionFixture(`Artichoke`)} .choiceValue="${'Artichoke'}">Artichoke</${tagOption}>
+              <${tagOption} ${optionFixture(`Chard`)} .choiceValue="${'Chard'}">Chard</${tagOption}>
             </${hostTag}>
           `)
         );
@@ -1449,10 +1467,10 @@ export function runComboboxSuite({
         const el = /** @type {LionCombobox} */ (
           await fixture(html`
             <${hostTag} name="foo">
-              <${tagOption} .choiceValue="${'Artichoke'}">Artichoke</${tagOption}>
-              <${tagOption} .choiceValue="${'Chard'}">Chard</${tagOption}>
-              <${tagOption} .choiceValue="${'Chicory'}">Chicory</${tagOption}>
-              <${tagOption} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tagOption}>
+              <${tagOption} ${optionFixture(`Artichoke`)} .choiceValue="${'Artichoke'}">Artichoke</${tagOption}>
+              <${tagOption} ${optionFixture(`Chard`)} .choiceValue="${'Chard'}">Chard</${tagOption}>
+              <${tagOption} ${optionFixture(`Chicory`)} .choiceValue="${'Chicory'}">Chicory</${tagOption}>
+              <${tagOption} ${optionFixture(`Victoria Plum`)} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tagOption}>
             </${hostTag}>
           `)
         );
@@ -1473,10 +1491,10 @@ export function runComboboxSuite({
         const el = /** @type {LionCombobox} */ (
           await fixture(html`
             <${hostTag} name="foo">
-              <${tagOption} .choiceValue="${'Artichoke'}">Artichoke</${tagOption}>
-              <${tagOption} .choiceValue="${'Chard'}">Chard</${tagOption}>
-              <${tagOption} .choiceValue="${'Chicory'}">Chicory</${tagOption}>
-              <${tagOption} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tagOption}>
+              <${tagOption} ${optionFixture(`Artichoke`)} .choiceValue="${'Artichoke'}">Artichoke</${tagOption}>
+              <${tagOption} ${optionFixture(`Chard`)} .choiceValue="${'Chard'}">Chard</${tagOption}>
+              <${tagOption} ${optionFixture(`Chicory`)} .choiceValue="${'Chicory'}">Chicory</${tagOption}>
+              <${tagOption} ${optionFixture(`Victoria Plum`)} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tagOption}>
             </${hostTag}>
           `)
         );
@@ -1499,10 +1517,10 @@ export function runComboboxSuite({
         const el = /** @type {LionCombobox} */ (
           await fixture(html`
             <${hostTag} name="foo">
-              <${tagOption} .choiceValue="${'Artichoke'}">Artichoke</${tagOption}>
-              <${tagOption} .choiceValue="${'Chard'}">Chard</${tagOption}>
-              <${tagOption} .choiceValue="${'Chicory'}">Chicory</${tagOption}>
-              <${tagOption} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tagOption}>
+              <${tagOption} ${optionFixture(`Artichoke`)} .choiceValue="${'Artichoke'}">Artichoke</${tagOption}>
+              <${tagOption} ${optionFixture(`Chard`)} .choiceValue="${'Chard'}">Chard</${tagOption}>
+              <${tagOption} ${optionFixture(`Chicory`)} .choiceValue="${'Chicory'}">Chicory</${tagOption}>
+              <${tagOption} ${optionFixture(`Victoria Plum`)} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tagOption}>
             </${hostTag}>
           `)
         );
@@ -1525,10 +1543,10 @@ export function runComboboxSuite({
         const el = /** @type {LionCombobox} */ (
           await fixture(html`
             <${hostTag} name="foo">
-              <${tagOption} .choiceValue="${'Artichoke'}">Artichoke</${tagOption}>
-              <${tagOption} .choiceValue="${'Chard'}">Chard</${tagOption}>
-              <${tagOption} .choiceValue="${'Chicory'}">Chicory</${tagOption}>
-              <${tagOption} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tagOption}>
+              <${tagOption} ${optionFixture(`Artichoke`)} .choiceValue="${'Artichoke'}">Artichoke</${tagOption}>
+              <${tagOption} ${optionFixture(`Chard`)} .choiceValue="${'Chard'}">Chard</${tagOption}>
+              <${tagOption} ${optionFixture(`Chicory`)} .choiceValue="${'Chicory'}">Chicory</${tagOption}>
+              <${tagOption} ${optionFixture(`Victoria Plum`)} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tagOption}>
             </${hostTag}>
           `)
         );
@@ -1551,10 +1569,10 @@ export function runComboboxSuite({
         const el = /** @type {LionCombobox} */ (
           await fixture(html`
             <${hostTag} name="foo">
-              <${tagOption} .choiceValue="${'Artichoke'}">Artichoke</${tagOption}>
-              <${tagOption} .choiceValue="${'Chard'}">Chard</${tagOption}>
-              <${tagOption} .choiceValue="${'Chicory'}">Chicory</${tagOption}>
-              <${tagOption} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tagOption}>
+              <${tagOption} ${optionFixture(`Artichoke`)} .choiceValue="${'Artichoke'}">Artichoke</${tagOption}>
+              <${tagOption} ${optionFixture(`Chard`)} .choiceValue="${'Chard'}">Chard</${tagOption}>
+              <${tagOption} ${optionFixture(`Chicory`)} .choiceValue="${'Chicory'}">Chicory</${tagOption}>
+              <${tagOption} ${optionFixture(`Victoria Plum`)} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tagOption}>
             </${hostTag}>
           `)
         );
@@ -1579,10 +1597,10 @@ export function runComboboxSuite({
         const el = /** @type {LionCombobox} */ (
           await fixture(html`
             <${hostTag} name="foo" .showAllOnEmpty="${true}">
-              <${tagOption} .choiceValue="${'Artichoke'}">Artichoke</${tagOption}>
-              <${tagOption} .choiceValue="${'Chard'}">Chard</${tagOption}>
-              <${tagOption} .choiceValue="${'Chicory'}">Chicory</${tagOption}>
-              <${tagOption} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tagOption}>
+              <${tagOption} ${optionFixture(`Artichoke`)} .choiceValue="${'Artichoke'}">Artichoke</${tagOption}>
+              <${tagOption} ${optionFixture(`Chard`)} .choiceValue="${'Chard'}">Chard</${tagOption}>
+              <${tagOption} ${optionFixture(`Chicory`)} .choiceValue="${'Chicory'}">Chicory</${tagOption}>
+              <${tagOption} ${optionFixture(`Victoria Plum`)} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tagOption}>
             </${hostTag}>
           `)
         );
@@ -1619,10 +1637,10 @@ export function runComboboxSuite({
           const el = /** @type {LionCombobox} */ (
             await fixture(html`
             <${tag} name="foo">
-              <${tagOption} .choiceValue="${'Artichoke'}">Artichoke</${tagOption}>
-              <${tagOption} .choiceValue="${'Chard'}">Chard</${tagOption}>
-              <${tagOption} .choiceValue="${'Chicory'}">Chicory</${tagOption}>
-              <${tagOption} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tagOption}>
+              <${tagOption} ${optionFixture(`Artichoke`)} .choiceValue="${'Artichoke'}">Artichoke</${tagOption}>
+              <${tagOption} ${optionFixture(`Chard`)} .choiceValue="${'Chard'}">Chard</${tagOption}>
+              <${tagOption} ${optionFixture(`Chicory`)} .choiceValue="${'Chicory'}">Chicory</${tagOption}>
+              <${tagOption} ${optionFixture(`Victoria Plum`)} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tagOption}>
             </${tag}>
           `)
           );
@@ -1647,10 +1665,10 @@ export function runComboboxSuite({
           const el = /** @type {LionCombobox} */ (
             await fixture(html`
             <${tag} name="foo">
-              <${tagOption} .choiceValue="${'Artichoke'}">Artichoke</${tagOption}>
-              <${tagOption} .choiceValue="${'Chard'}">Chard</${tagOption}>
-              <${tagOption} .choiceValue="${'Chicory'}">Chicory</${tagOption}>
-              <${tagOption} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tagOption}>
+              <${tagOption} ${optionFixture(`Artichoke`)} .choiceValue="${'Artichoke'}">Artichoke</${tagOption}>
+              <${tagOption} ${optionFixture(`Chard`)} .choiceValue="${'Chard'}">Chard</${tagOption}>
+              <${tagOption} ${optionFixture(`Chicory`)} .choiceValue="${'Chicory'}">Chicory</${tagOption}>
+              <${tagOption} ${optionFixture(`Victoria Plum`)} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tagOption}>
             </${tag}>
           `)
           );
@@ -1675,10 +1693,10 @@ export function runComboboxSuite({
           const el = /** @type {LionCombobox} */ (
             await fixture(html`
             <${tag} name="foo">
-              <${tagOption} .choiceValue="${'Artichoke'}">Artichoke</${tagOption}>
-              <${tagOption} .choiceValue="${'Chard'}">Chard</${tagOption}>
-              <${tagOption} .choiceValue="${'Chicory'}">Chicory</${tagOption}>
-              <${tagOption} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tagOption}>
+              <${tagOption} ${optionFixture(`Artichoke`)} .choiceValue="${'Artichoke'}">Artichoke</${tagOption}>
+              <${tagOption} ${optionFixture(`Chard`)} .choiceValue="${'Chard'}">Chard</${tagOption}>
+              <${tagOption} ${optionFixture(`Chicory`)} .choiceValue="${'Chicory'}">Chicory</${tagOption}>
+              <${tagOption} ${optionFixture(`Victoria Plum`)} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tagOption}>
             </${tag}>
           `)
           );
@@ -1697,10 +1715,10 @@ export function runComboboxSuite({
           const el = /** @type {LionCombobox} */ (
             await fixture(html`
               <${hostTag} name="foo" multiple-choice>
-                <${tagOption} .choiceValue="${'Artichoke'}">Artichoke</${tagOption}>
-                <${tagOption} .choiceValue="${'Chard'}">Chard</${tagOption}>
-                <${tagOption} .choiceValue="${'Chicory'}">Chicory</${tagOption}>
-                <${tagOption} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tagOption}>
+                <${tagOption} ${optionFixture(`Artichoke`)} .choiceValue="${'Artichoke'}">Artichoke</${tagOption}>
+                <${tagOption} ${optionFixture(`Chard`)} .choiceValue="${'Chard'}">Chard</${tagOption}>
+                <${tagOption} ${optionFixture(`Chicory`)} .choiceValue="${'Chicory'}">Chicory</${tagOption}>
+                <${tagOption} ${optionFixture(`Victoria Plum`)} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tagOption}>
               </${hostTag}>
             `)
           );
@@ -1738,10 +1756,10 @@ export function runComboboxSuite({
           const el = /** @type {LionCombobox} */ (
             await fixture(html`
               <${hostTag} name="foo">
-                <${tagOption} .choiceValue="${'Artichoke'}">Artichoke</${tagOption}>
-                <${tagOption} .choiceValue="${'Chard'}">Chard</${tagOption}>
-                <${tagOption} .choiceValue="${'Chicory'}">Chicory</${tagOption}>
-                <${tagOption} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tagOption}>
+                <${tagOption} ${optionFixture(`Artichoke`)} .choiceValue="${'Artichoke'}">Artichoke</${tagOption}>
+                <${tagOption} ${optionFixture(`Chard`)} .choiceValue="${'Chard'}">Chard</${tagOption}>
+                <${tagOption} ${optionFixture(`Chicory`)} .choiceValue="${'Chicory'}">Chicory</${tagOption}>
+                <${tagOption} ${optionFixture(`Victoria Plum`)} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tagOption}>
               </${hostTag}>
             `)
           );
@@ -1766,10 +1784,10 @@ export function runComboboxSuite({
           const el = /** @type {LionCombobox} */ (
             await fixture(html`
               <${hostTag} name="foo" .validators=${[new Required()]}>
-                <${tagOption} checked .choiceValue="${'Artichoke'}">Artichoke</${tagOption}>
-                <${tagOption} .choiceValue="${'Chard'}">Chard</${tagOption}>
-                <${tagOption} .choiceValue="${'Chicory'}">Chicory</${tagOption}>
-                <${tagOption} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tagOption}>
+                <${tagOption} ${optionFixture(`Artichoke`)} checked .choiceValue="${'Artichoke'}">Artichoke</${tagOption}>
+                <${tagOption} ${optionFixture(`Chard`)} .choiceValue="${'Chard'}">Chard</${tagOption}>
+                <${tagOption} ${optionFixture(`Chicory`)} .choiceValue="${'Chicory'}">Chicory</${tagOption}>
+                <${tagOption} ${optionFixture(`Victoria Plum`)} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tagOption}>
               </${hostTag}>
             `)
           );
@@ -1789,8 +1807,8 @@ export function runComboboxSuite({
           const el = /** @type {LionCombobox} */ (
             await fixture(html`
               <${hostTag} name="foo">
-                <${tagOption} .choiceValue="${'10'}" checked>Item 1</${tagOption}>
-                <${tagOption} .choiceValue="${'20'}">Item 2</${tagOption}>
+                <${tagOption} ${optionFixture(`Item 1`)} .choiceValue="${'10'}" checked>Item 1</${tagOption}>
+                <${tagOption} ${optionFixture(`Item 2`)} .choiceValue="${'20'}">Item 2</${tagOption}>
               </${hostTag}>
             `)
           );
@@ -1803,8 +1821,8 @@ export function runComboboxSuite({
           const el = /** @type {LionCombobox} */ (
             await fixture(html`
               <${hostTag} name="foo" ._ariaVersion="${'1.0'}">
-                <${tagOption} .choiceValue="${'10'}" checked>Item 1</${tagOption}>
-                <${tagOption} .choiceValue="${'20'}">Item 2</${tagOption}>
+                <${tagOption} ${optionFixture(`Item 1`)} .choiceValue="${'10'}" checked>Item 1</${tagOption}>
+                <${tagOption} ${optionFixture(`Item 2`)} .choiceValue="${'20'}">Item 2</${tagOption}>
               </${hostTag}>
             `)
           );
@@ -1818,8 +1836,8 @@ export function runComboboxSuite({
           const el2 = /** @type {LionCombobox} */ (
             await fixture(html`
               <${hostTag} name="foo" ._ariaVersion="${'1.1'}">
-                <${tagOption} .choiceValue="${'10'}" checked>Item 1</${tagOption}>
-                <${tagOption} .choiceValue="${'20'}">Item 2</${tagOption}>
+                <${tagOption} ${optionFixture(`Item 1`)} .choiceValue="${'10'}" checked>Item 1</${tagOption}>
+                <${tagOption} ${optionFixture(`Item 2`)} .choiceValue="${'20'}">Item 2</${tagOption}>
               </${hostTag}>
             `)
           );
@@ -1835,8 +1853,8 @@ export function runComboboxSuite({
           const el = /** @type {LionCombobox} */ (
             await fixture(html`
               <${hostTag} name="foo">
-                <${tagOption} .choiceValue="${'10'}" checked>Item 1</${tagOption}>
-                <${tagOption} .choiceValue="${'20'}">Item 2</${tagOption}>
+                <${tagOption} ${optionFixture(`Item 1`)} .choiceValue="${'10'}" checked>Item 1</${tagOption}>
+                <${tagOption} ${optionFixture(`Item 2`)} .choiceValue="${'20'}">Item 2</${tagOption}>
               </${hostTag}>
             `)
           );
@@ -1869,7 +1887,7 @@ export function runComboboxSuite({
           await fixture(html`
           <${hostTag} name="foo">
             <${selectionDisplayTag} slot="selection-display"></${selectionDisplayTag}>
-            <${tagOption} .choiceValue="${'10'}" checked>Item 1</${tagOption}>
+            <${tagOption} ${optionFixture(`Item 1`)} .choiceValue="${'10'}" checked>Item 1</${tagOption}>
           </${hostTag}>
         `)
         );
@@ -1883,7 +1901,7 @@ export function runComboboxSuite({
           await fixture(html`
           <${hostTag} name="foo">
             <${selectionDisplayTag} slot="selection-display"></${selectionDisplayTag}>
-            <${tagOption} .choiceValue="${'10'}" checked>Item 1</${tagOption}>
+            <${tagOption} ${optionFixture(`Item 1`)} .choiceValue="${'10'}" checked>Item 1</${tagOption}>
           </${hostTag}>
         `)
         );
@@ -1896,7 +1914,7 @@ export function runComboboxSuite({
           await fixture(html`
           <${hostTag} name="foo">
             <${selectionDisplayTag} slot="selection-display"></${selectionDisplayTag}>
-            <${tagOption} .choiceValue="${'10'}" checked>Item 1</${tagOption}>
+            <${tagOption} ${optionFixture(`Item 1`)} .choiceValue="${'10'}" checked>Item 1</${tagOption}>
           </${hostTag}>
         `)
         );
@@ -1913,10 +1931,10 @@ export function runComboboxSuite({
         // it('displays chips next to textbox, ordered based on user selection', async () => {
         //   const el = /** @type {LionCombobox} */ (await fixture(html`
         //     <${hostTag} name="foo" multiple-choice>
-        //       <${tagOption} .choiceValue="${'Artichoke'}">Artichoke</${tagOption}>
-        //       <${tagOption} .choiceValue="${'Chard'}">Chard</${tagOption}>
-        //       <${tagOption} .choiceValue="${'Chicory'}">Chicory</${tagOption}>
-        //       <${tagOption} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tagOption}>
+        //       <${tagOption} ${optionFixture(`Artichoke`)} .choiceValue="${'Artichoke'}">Artichoke</${tagOption}>
+        //       <${tagOption} ${optionFixture(`Chard`)} .choiceValue="${'Chard'}">Chard</${tagOption}>
+        //       <${tagOption} ${optionFixture(`Chicory`)} .choiceValue="${'Chicory'}">Chicory</${tagOption}>
+        //       <${tagOption} ${optionFixture(`Victoria Plum`)} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tagOption}>
         //     </${hostTag}>
         //   `));
         //   const options = el.formElements;
@@ -1930,9 +1948,9 @@ export function runComboboxSuite({
         // it('stages deletable chips on [Backspace]', async () => {
         //   const el = /** @type {LionCombobox} */ (await fixture(html`
         //     <${hostTag} name="foo" multiple-choice>
-        //       <${tagOption} .choiceValue="${'Artichoke'}">Artichoke</${tagOption}>
-        //       <${tagOption} .choiceValue="${'Chard'}">Chard</${tagOption}>
-        //       <${tagOption} .choiceValue="${'Chicory'}">Chicory</${tagOption}>
+        //       <${tagOption} ${optionFixture(`Artichoke`)} .choiceValue="${'Artichoke'}">Artichoke</${tagOption}>
+        //       <${tagOption} ${optionFixture(`Chard`)} .choiceValue="${'Chard'}">Chard</${tagOption}>
+        //       <${tagOption} ${optionFixture(`Chicory`)} .choiceValue="${'Chicory'}">Chicory</${tagOption}>
         //     </${hostTag}>
         //   `));
         //   const options = el.formElements;
@@ -1947,9 +1965,9 @@ export function runComboboxSuite({
         // it('deletes staged chip on [Backspace]', async () => {
         //   const el = /** @type {LionCombobox} */ (await fixture(html`
         //     <${hostTag} name="foo" multiple-choice>
-        //       <${tagOption} .choiceValue="${'Artichoke'}">Artichoke</${tagOption}>
-        //       <${tagOption} .choiceValue="${'Chard'}">Chard</${tagOption}>
-        //       <${tagOption} .choiceValue="${'Chicory'}">Chicory</${tagOption}>
+        //       <${tagOption} ${optionFixture(`Artichoke`)} .choiceValue="${'Artichoke'}">Artichoke</${tagOption}>
+        //       <${tagOption} ${optionFixture(`Chard`)} .choiceValue="${'Chard'}">Chard</${tagOption}>
+        //       <${tagOption} ${optionFixture(`Chicory`)} .choiceValue="${'Chicory'}">Chicory</${tagOption}>
         //     </${hostTag}>
         //   `));
         //   const options = el.formElements;
@@ -1977,7 +1995,7 @@ export function runComboboxSuite({
         const el = /** @type {LionCombobox} */ (
           await fixture(html`
             <${hostTag} name="foo">
-              <${tagOption} .choiceValue="${'10'}" checked>Item 1</${tagOption}>
+              <${tagOption} ${optionFixture(`Item 1`)} .choiceValue="${'10'}" checked>Item 1</${tagOption}>
             </${hostTag}>
           `)
         );
@@ -1988,10 +2006,10 @@ export function runComboboxSuite({
         const el = /** @type {LionCombobox} */ (
           await fixture(html`
             <${hostTag} name="foo" autocomplete="both">
-              <${tagOption} .choiceValue="${'Artichoke'}">Artichoke</${tagOption}>
-              <${tagOption} .choiceValue="${'Chard'}">Chard</${tagOption}>
-              <${tagOption} .choiceValue="${'Chicory'}">Chicory</${tagOption}>
-              <${tagOption} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tagOption}>
+              <${tagOption} ${optionFixture(`Artichoke`)} .choiceValue="${'Artichoke'}">Artichoke</${tagOption}>
+              <${tagOption} ${optionFixture(`Chard`)} .choiceValue="${'Chard'}">Chard</${tagOption}>
+              <${tagOption} ${optionFixture(`Chicory`)} .choiceValue="${'Chicory'}">Chicory</${tagOption}>
+              <${tagOption} ${optionFixture(`Victoria Plum`)} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tagOption}>
             </${hostTag}>
           `)
         );
@@ -2004,10 +2022,10 @@ export function runComboboxSuite({
         const el = /** @type {LionCombobox} */ (
           await fixture(html`
             <${hostTag} name="foo" autocomplete="both">
-              <${tagOption} .choiceValue="${'Artichoke'}">Artichoke</${tagOption}>
-              <${tagOption} .choiceValue="${'Chard'}">Chard</${tagOption}>
-              <${tagOption} .choiceValue="${'Chicory'}">Chicory</${tagOption}>
-              <${tagOption} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tagOption}>
+              <${tagOption} ${optionFixture(`Artichoke`)} .choiceValue="${'Artichoke'}">Artichoke</${tagOption}>
+              <${tagOption} ${optionFixture(`Chard`)} .choiceValue="${'Chard'}">Chard</${tagOption}>
+              <${tagOption} ${optionFixture(`Chicory`)} .choiceValue="${'Chicory'}">Chicory</${tagOption}>
+              <${tagOption} ${optionFixture(`Victoria Plum`)} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tagOption}>
             </${hostTag}>
           `)
         );
@@ -2029,10 +2047,10 @@ export function runComboboxSuite({
         const el = /** @type {LionCombobox} */ (
           await fixture(html`
             <${hostTag} name="foo" autocomplete="list">
-              <${tagOption} .choiceValue="${'Artichoke'}">Artichoke</${tagOption}>
-              <${tagOption} .choiceValue="${'Chard'}">Chard</${tagOption}>
-              <${tagOption} .choiceValue="${'Chicory'}">Chicory</${tagOption}>
-              <${tagOption} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tagOption}>
+              <${tagOption} ${optionFixture(`Artichoke`)} .choiceValue="${'Artichoke'}">Artichoke</${tagOption}>
+              <${tagOption} ${optionFixture(`Chard`)} .choiceValue="${'Chard'}">Chard</${tagOption}>
+              <${tagOption} ${optionFixture(`Chicory`)} .choiceValue="${'Chicory'}">Chicory</${tagOption}>
+              <${tagOption} ${optionFixture(`Victoria Plum`)} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tagOption}>
             </${hostTag}>
           `)
         );
@@ -2048,10 +2066,10 @@ export function runComboboxSuite({
         const el = /** @type {LionCombobox} */ (
           await fixture(html`
             <${hostTag} name="foo" autocomplete="none">
-              <${tagOption} .choiceValue="${'Artichoke'}">Artichoke</${tagOption}>
-              <${tagOption} .choiceValue="${'Chard'}">Chard</${tagOption}>
-              <${tagOption} .choiceValue="${'Chicory'}">Chicory</${tagOption}>
-              <${tagOption} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tagOption}>
+              <${tagOption} ${optionFixture(`Artichoke`)} .choiceValue="${'Artichoke'}">Artichoke</${tagOption}>
+              <${tagOption} ${optionFixture(`Chard`)} .choiceValue="${'Chard'}">Chard</${tagOption}>
+              <${tagOption} ${optionFixture(`Chicory`)} .choiceValue="${'Chicory'}">Chicory</${tagOption}>
+              <${tagOption} ${optionFixture(`Victoria Plum`)} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tagOption}>
             </${hostTag}>
           `)
         );
@@ -2069,9 +2087,9 @@ export function runComboboxSuite({
         const el = /** @type {LionCombobox} */ (
           await fixture(html`
             <${hostTag} name="foo">
-              <${tagOption} .choiceValue="${'Mango'}">Mango</${tagOption}>
-              <${tagOption} .choiceValue="${'Lemon'}">Lemon</${tagOption}>
-              <${tagOption} .choiceValue="${'Apple'}">Apple</${tagOption}>
+              <${tagOption} ${optionFixture(`Mango`)} .choiceValue="${'Mango'}">Mango</${tagOption}>
+              <${tagOption} ${optionFixture(`Lemon`)} .choiceValue="${'Lemon'}">Lemon</${tagOption}>
+              <${tagOption} ${optionFixture(`Apple`)} .choiceValue="${'Apple'}">Apple</${tagOption}>
             </${hostTag}>
           `)
         );
@@ -2088,9 +2106,9 @@ export function runComboboxSuite({
         const el = /** @type {LionCombobox} */ (
           await fixture(html`
             <${hostTag} name="foo">
-              <${tagOption} .choiceValue="${'Mango'}">Mango</${tagOption}>
-              <${tagOption} .choiceValue="${'Lemon'}">Lemon</${tagOption}>
-              <${tagOption} .choiceValue="${'Apple'}">Apple</${tagOption}>
+              <${tagOption} ${optionFixture(`Mango`)} .choiceValue="${'Mango'}">Mango</${tagOption}>
+              <${tagOption} ${optionFixture(`Lemon`)} .choiceValue="${'Lemon'}">Lemon</${tagOption}>
+              <${tagOption} ${optionFixture(`Apple`)} .choiceValue="${'Apple'}">Apple</${tagOption}>
             </${hostTag}>
           `)
         );
@@ -2110,10 +2128,10 @@ export function runComboboxSuite({
         const el = /** @type {LionCombobox} */ (
           await fixture(html`
             <${hostTag} name="foo" autocomplete="inline">
-              <${tagOption} .choiceValue="${'Artichoke'}">Artichoke</${tagOption}>
-              <${tagOption} .choiceValue="${'Chard'}">Chard</${tagOption}>
-              <${tagOption} .choiceValue="${'Chicory'}">Chicory</${tagOption}>
-              <${tagOption} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tagOption}>
+              <${tagOption} ${optionFixture(`Artichoke`)} .choiceValue="${'Artichoke'}">Artichoke</${tagOption}>
+              <${tagOption} ${optionFixture(`Chard`)} .choiceValue="${'Chard'}">Chard</${tagOption}>
+              <${tagOption} ${optionFixture(`Chicory`)} .choiceValue="${'Chicory'}">Chicory</${tagOption}>
+              <${tagOption} ${optionFixture(`Victoria Plum`)} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tagOption}>
             </${hostTag}>
           `)
         );
@@ -2131,10 +2149,10 @@ export function runComboboxSuite({
         const el = /** @type {LionCombobox} */ (
           await fixture(html`
             <${hostTag} name="foo" autocomplete="inline">
-              <${tagOption} .choiceValue="${'Artichoke'}">Artichoke</${tagOption}>
-              <${tagOption} .choiceValue="${'Chard'}">Chard</${tagOption}>
-              <${tagOption} .choiceValue="${'Chicory'}">Chicory</${tagOption}>
-              <${tagOption} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tagOption}>
+              <${tagOption} ${optionFixture(`Artichoke`)} .choiceValue="${'Artichoke'}">Artichoke</${tagOption}>
+              <${tagOption} ${optionFixture(`Chard`)} .choiceValue="${'Chard'}">Chard</${tagOption}>
+              <${tagOption} ${optionFixture(`Chicory`)} .choiceValue="${'Chicory'}">Chicory</${tagOption}>
+              <${tagOption} ${optionFixture(`Victoria Plum`)} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tagOption}>
             </${hostTag}>
           `)
         );
@@ -2151,10 +2169,10 @@ export function runComboboxSuite({
         const el2 = /** @type {LionCombobox} */ (
           await fixture(html`
             <${hostTag} name="foo" autocomplete="both">
-              <${tagOption} .choiceValue="${'Artichoke'}">Artichoke</${tagOption}>
-              <${tagOption} .choiceValue="${'Chard'}">Chard</${tagOption}>
-              <${tagOption} .choiceValue="${'Chicory'}">Chicory</${tagOption}>
-              <${tagOption} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tagOption}>
+              <${tagOption} ${optionFixture(`Artichoke`)} .choiceValue="${'Artichoke'}">Artichoke</${tagOption}>
+              <${tagOption} ${optionFixture(`Chard`)} .choiceValue="${'Chard'}">Chard</${tagOption}>
+              <${tagOption} ${optionFixture(`Chicory`)} .choiceValue="${'Chicory'}">Chicory</${tagOption}>
+              <${tagOption} ${optionFixture(`Victoria Plum`)} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tagOption}>
             </${hostTag}>
           `)
         );
@@ -2173,10 +2191,10 @@ export function runComboboxSuite({
         const el = /** @type {LionCombobox} */ (
           await fixture(html`
             <${hostTag} name="foo" autocomplete="both">
-              <${tagOption} .choiceValue="${'Artichoke'}">Artichoke</${tagOption}>
-              <${tagOption} .choiceValue="${'Chard'}">Chard</${tagOption}>
-              <${tagOption} .choiceValue="${'Chicory'}">Chicory</${tagOption}>
-              <${tagOption} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tagOption}>
+              <${tagOption} ${optionFixture(`Artichoke`)} .choiceValue="${'Artichoke'}">Artichoke</${tagOption}>
+              <${tagOption} ${optionFixture(`Chard`)} .choiceValue="${'Chard'}">Chard</${tagOption}>
+              <${tagOption} ${optionFixture(`Chicory`)} .choiceValue="${'Chicory'}">Chicory</${tagOption}>
+              <${tagOption} ${optionFixture(`Victoria Plum`)} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tagOption}>
             </${hostTag}>
           `)
         );
@@ -2193,10 +2211,10 @@ export function runComboboxSuite({
         const el2 = /** @type {LionCombobox} */ (
           await fixture(html`
             <${hostTag} name="foo" autocomplete="both">
-              <${tagOption} .choiceValue="${'Artichoke'}">Artichoke</${tagOption}>
-              <${tagOption} .choiceValue="${'Chard'}">Chard</${tagOption}>
-              <${tagOption} .choiceValue="${'Chicory'}">Chicory</${tagOption}>
-              <${tagOption} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tagOption}>
+              <${tagOption} ${optionFixture(`Artichoke`)} .choiceValue="${'Artichoke'}">Artichoke</${tagOption}>
+              <${tagOption} ${optionFixture(`Chard`)} .choiceValue="${'Chard'}">Chard</${tagOption}>
+              <${tagOption} ${optionFixture(`Chicory`)} .choiceValue="${'Chicory'}">Chicory</${tagOption}>
+              <${tagOption} ${optionFixture(`Victoria Plum`)} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tagOption}>
             </${hostTag}>
           `)
         );
@@ -2218,10 +2236,10 @@ export function runComboboxSuite({
         const el = /** @type {LionCombobox} */ (
           await fixture(html`
             <${hostTag} name="foo" autocomplete="both">
-              <${tagOption} .choiceValue="${'Artichoke'}">Artichoke</${tagOption}>
-              <${tagOption} .choiceValue="${'Chard'}">Chard</${tagOption}>
-              <${tagOption} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tagOption}>
-              <${tagOption} .choiceValue="${'Daikon'}">Daikon</${tagOption}>
+              <${tagOption} ${optionFixture(`Artichoke`)} .choiceValue="${'Artichoke'}">Artichoke</${tagOption}>
+              <${tagOption} ${optionFixture(`Chard`)} .choiceValue="${'Chard'}">Chard</${tagOption}>
+              <${tagOption} ${optionFixture(`Victoria Plum`)} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tagOption}>
+              <${tagOption} ${optionFixture(`Daikon`)} .choiceValue="${'Daikon'}">Daikon</${tagOption}>
             </${hostTag}>
           `)
         );
@@ -2237,10 +2255,10 @@ export function runComboboxSuite({
         const el = /** @type {LionCombobox} */ (
           await fixture(html`
             <${hostTag} name="foo" autocomplete="inline">
-              <${tagOption} .choiceValue="${'Artichoke'}">Artichoke</${tagOption}>
-              <${tagOption} .choiceValue="${'Chard'}">Chard</${tagOption}>
-              <${tagOption} .choiceValue="${'Chicory'}">Chicory</${tagOption}>
-              <${tagOption} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tagOption}>
+              <${tagOption} ${optionFixture(`Artichoke`)} .choiceValue="${'Artichoke'}">Artichoke</${tagOption}>
+              <${tagOption} ${optionFixture(`Chard`)} .choiceValue="${'Chard'}">Chard</${tagOption}>
+              <${tagOption} ${optionFixture(`Chicory`)} .choiceValue="${'Chicory'}">Chicory</${tagOption}>
+              <${tagOption} ${optionFixture(`Victoria Plum`)} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tagOption}>
             </${hostTag}>
           `)
         );
@@ -2270,10 +2288,10 @@ export function runComboboxSuite({
         const el = /** @type {LionCombobox} */ (
           await fixture(html`
             <${hostTag} name="foo" autocomplete="none">
-              <${tagOption} .choiceValue="${'Artichoke'}">Artichoke</${tagOption}>
-              <${tagOption} .choiceValue="${'Chard'}">Chard</${tagOption}>
-              <${tagOption} .choiceValue="${'Chicory'}">Chicory</${tagOption}>
-              <${tagOption} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tagOption}>
+              <${tagOption} ${optionFixture(`Artichoke`)} .choiceValue="${'Artichoke'}">Artichoke</${tagOption}>
+              <${tagOption} ${optionFixture(`Chard`)} .choiceValue="${'Chard'}">Chard</${tagOption}>
+              <${tagOption} ${optionFixture(`Chicory`)} .choiceValue="${'Chicory'}">Chicory</${tagOption}>
+              <${tagOption} ${optionFixture(`Victoria Plum`)} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tagOption}>
             </${hostTag}>
           `)
         );
@@ -2315,10 +2333,10 @@ export function runComboboxSuite({
         const el = /** @type {LionCombobox} */ (
           await fixture(html`
             <${hostTag} name="foo" autocomplete="none" ._syncToTextboxCondition="${() => false}">
-              <${tagOption} .choiceValue="${'Artichoke'}">Artichoke</${tagOption}>
-              <${tagOption} .choiceValue="${'Chard'}">Chard</${tagOption}>
-              <${tagOption} .choiceValue="${'Chicory'}">Chicory</${tagOption}>
-              <${tagOption} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tagOption}>
+              <${tagOption} ${optionFixture(`Artichoke`)} .choiceValue="${'Artichoke'}">Artichoke</${tagOption}>
+              <${tagOption} ${optionFixture(`Chard`)} .choiceValue="${'Chard'}">Chard</${tagOption}>
+              <${tagOption} ${optionFixture(`Chicory`)} .choiceValue="${'Chicory'}">Chicory</${tagOption}>
+              <${tagOption} ${optionFixture(`Victoria Plum`)} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tagOption}>
             </${hostTag}>
           `)
         );
@@ -2359,10 +2377,10 @@ export function runComboboxSuite({
         const el = /** @type {LionCombobox} */ (
           await fixture(html`
             <${hostTag} name="foo" autocomplete="inline">
-              <${tagOption} .choiceValue="${'Artichoke'}">Artichoke</${tagOption}>
-              <${tagOption} .choiceValue="${'Chard'}">Chard</${tagOption}>
-              <${tagOption} .choiceValue="${'Chicory'}">Chicory</${tagOption}>
-              <${tagOption} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tagOption}>
+              <${tagOption} ${optionFixture(`Artichoke`)} .choiceValue="${'Artichoke'}">Artichoke</${tagOption}>
+              <${tagOption} ${optionFixture(`Chard`)} .choiceValue="${'Chard'}">Chard</${tagOption}>
+              <${tagOption} ${optionFixture(`Chicory`)} .choiceValue="${'Chicory'}">Chicory</${tagOption}>
+              <${tagOption} ${optionFixture(`Victoria Plum`)} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tagOption}>
             </${hostTag}>
           `)
         );
@@ -2393,10 +2411,10 @@ export function runComboboxSuite({
         const el = /** @type {LionCombobox} */ (
           await fixture(html`
             <${hostTag} name="foo" autocomplete="inline">
-              <${tagOption} .choiceValue="${'Artichoke'}">Artichoke</${tagOption}>
-              <${tagOption} .choiceValue="${'Chard'}">Chard</${tagOption}>
-              <${tagOption} .choiceValue="${'Chicory'}">Chicory</${tagOption}>
-              <${tagOption} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tagOption}>
+              <${tagOption} ${optionFixture(`Artichoke`)} .choiceValue="${'Artichoke'}">Artichoke</${tagOption}>
+              <${tagOption} ${optionFixture(`Chard`)} .choiceValue="${'Chard'}">Chard</${tagOption}>
+              <${tagOption} ${optionFixture(`Chicory`)} .choiceValue="${'Chicory'}">Chicory</${tagOption}>
+              <${tagOption} ${optionFixture(`Victoria Plum`)} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tagOption}>
             </${hostTag}>
           `)
         );
@@ -2428,10 +2446,10 @@ export function runComboboxSuite({
         const el = /** @type {LionCombobox} */ (
           await fixture(html`
             <${hostTag} name="foo" autocomplete="list" match-mode="all">
-              <${tagOption} .choiceValue="${'Artichoke'}">Artichoke</${tagOption}>
-              <${tagOption} .choiceValue="${'Chard'}">Chard</${tagOption}>
-              <${tagOption} .choiceValue="${'Chicory'}">Chicory</${tagOption}>
-              <${tagOption} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tagOption}>
+              <${tagOption} ${optionFixture(`Artichoke`)} .choiceValue="${'Artichoke'}">Artichoke</${tagOption}>
+              <${tagOption} ${optionFixture(`Chard`)} .choiceValue="${'Chard'}">Chard</${tagOption}>
+              <${tagOption} ${optionFixture(`Chicory`)} .choiceValue="${'Chicory'}">Chicory</${tagOption}>
+              <${tagOption} ${optionFixture(`Victoria Plum`)} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tagOption}>
             </${hostTag}>
           `)
         );
@@ -2456,10 +2474,10 @@ export function runComboboxSuite({
         const el = /** @type {LionCombobox} */ (
           await fixture(html`
             <${hostTag} name="foo" autocomplete="inline">
-              <${tagOption} .choiceValue="${'Artichoke'}">Artichoke</${tagOption}>
-              <${tagOption} .choiceValue="${'Chard'}">Chard</${tagOption}>
-              <${tagOption} .choiceValue="${'Chicory'}">Chicory</${tagOption}>
-              <${tagOption} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tagOption}>
+              <${tagOption} ${optionFixture(`Artichoke`)} .choiceValue="${'Artichoke'}">Artichoke</${tagOption}>
+              <${tagOption} ${optionFixture(`Chard`)} .choiceValue="${'Chard'}">Chard</${tagOption}>
+              <${tagOption} ${optionFixture(`Chicory`)} .choiceValue="${'Chicory'}">Chicory</${tagOption}>
+              <${tagOption} ${optionFixture(`Victoria Plum`)} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tagOption}>
             </${hostTag}>
           `)
         );
@@ -2514,7 +2532,8 @@ export function runComboboxSuite({
             return html`
               <${hostTag} id="combobox" label="Server side completion">
                 ${this.options.map(
-                  option => html` <${tagOption} .choiceValue="${option}">${option}</${tagOption}> `,
+                  option =>
+                    html` <${tagOption} ${optionFixture(`${option}`)} .choiceValue="${option}">${option}</${tagOption}> `,
                 )}
               </${hostTag}>
             `;
@@ -2596,10 +2615,10 @@ export function runComboboxSuite({
           const el = /** @type {LionCombobox} */ (
             await fixture(html`
             <${tag} name="foo" opened>
-              <${tagOption} .choiceValue="${'Artichoke'}">Artichoke</${tagOption}>
-              <${tagOption} .choiceValue="${'Chard'}">Chard</${tagOption}>
-              <${tagOption} .choiceValue="${'Chicory'}">Chicory</${tagOption}>
-              <${tagOption} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tagOption}>
+              <${tagOption} ${optionFixture(`Artichoke`)} .choiceValue="${'Artichoke'}">Artichoke</${tagOption}>
+              <${tagOption} ${optionFixture(`Chard`)} .choiceValue="${'Chard'}">Chard</${tagOption}>
+              <${tagOption} ${optionFixture(`Chicory`)} .choiceValue="${'Chicory'}">Chicory</${tagOption}>
+              <${tagOption} ${optionFixture(`Victoria Plum`)} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tagOption}>
             </${tag}>
           `)
           );
@@ -2614,10 +2633,10 @@ export function runComboboxSuite({
         const el = /** @type {LionCombobox} */ (
           await fixture(html`
             <${hostTag} name="foo" match-mode="all">
-              <${tagOption} .choiceValue="${'Artichoke'}">Artichoke</${tagOption}>
-              <${tagOption} .choiceValue="${'Chard'}">Chard</${tagOption}>
-              <${tagOption} .choiceValue="${'Chicory'}">Chicory</${tagOption}>
-              <${tagOption} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tagOption}>
+              <${tagOption} ${optionFixture(`Artichoke`)} .choiceValue="${'Artichoke'}">Artichoke</${tagOption}>
+              <${tagOption} ${optionFixture(`Chard`)} .choiceValue="${'Chard'}">Chard</${tagOption}>
+              <${tagOption} ${optionFixture(`Chicory`)} .choiceValue="${'Chicory'}">Chicory</${tagOption}>
+              <${tagOption} ${optionFixture(`Victoria Plum`)} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tagOption}>
             </${hostTag}>
           `)
         );
@@ -2658,19 +2677,19 @@ export function runComboboxSuite({
         const el = /** @type {LionCombobox} */ (
           await fixture(html`
             <${hostTag} name="foo" match-mode="all">
-              <${tagOption} .choiceValue="${'Artichoke'}">
+              <${tagOption} ${optionFixture('Artichoke')} .choiceValue="${'Artichoke'}">
                 <div>Artichoke</div>
                 <small>Cardoon</small>
               </${tagOption}>
-              <${tagOption} .choiceValue="${'Chard'}">
+              <${tagOption} ${optionFixture('Chard')} .choiceValue="${'Chard'}">
                 <div>Chard</div>
                 <small>Beet</small>
               </${tagOption}>
-              <${tagOption} .choiceValue="${'Chicory'}">
+              <${tagOption} ${optionFixture('Chicory')} .choiceValue="${'Chicory'}">
                 <div>Chicory</div>
                 <small>Chicory</small>
               </${tagOption}>
-              <${tagOption} .choiceValue="${'Victoria Plum'}">
+              <${tagOption} ${optionFixture('Victoria Plum')} .choiceValue="${'Victoria Plum'}">
                 <div>Victoria Plum</div>
                 <small>Prunus domestica</small>
               </${tagOption}>
@@ -2700,10 +2719,10 @@ export function runComboboxSuite({
         const el = /** @type {LionCombobox} */ (
           await fixture(html`
             <${hostTag} name="foo" match-mode="all">
-              <${tagOption} .choiceValue="${'Artichoke'}">Artichoke</${tagOption}>
-              <${tagOption} .choiceValue="${'Chard'}">Chard</${tagOption}>
-              <${tagOption} .choiceValue="${'Chicory'}">Chicory</${tagOption}>
-              <${tagOption} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tagOption}>
+              <${tagOption} ${optionFixture(`Artichoke`)} .choiceValue="${'Artichoke'}">Artichoke</${tagOption}>
+              <${tagOption} ${optionFixture(`Chard`)} .choiceValue="${'Chard'}">Chard</${tagOption}>
+              <${tagOption} ${optionFixture(`Chicory`)} .choiceValue="${'Chicory'}">Chicory</${tagOption}>
+              <${tagOption} ${optionFixture(`Victoria Plum`)} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tagOption}>
             </${hostTag}>
           `)
         );
@@ -2724,10 +2743,10 @@ export function runComboboxSuite({
         const el = /** @type {LionCombobox} */ (
           await fixture(html`
             <${hostTag} name="foo" autocomplete="none">
-              <${tagOption} .choiceValue="${'Artichoke'}">Artichoke</${tagOption}>
-              <${tagOption} .choiceValue="${'Chard'}">Chard</${tagOption}>
-              <${tagOption} .choiceValue="${'Chicory'}">Chicory</${tagOption}>
-              <${tagOption} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tagOption}>
+              <${tagOption} ${optionFixture(`Artichoke`)} .choiceValue="${'Artichoke'}">Artichoke</${tagOption}>
+              <${tagOption} ${optionFixture(`Chard`)} .choiceValue="${'Chard'}">Chard</${tagOption}>
+              <${tagOption} ${optionFixture(`Chicory`)} .choiceValue="${'Chicory'}">Chicory</${tagOption}>
+              <${tagOption} ${optionFixture(`Victoria Plum`)} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tagOption}>
             </${hostTag}>
           `)
         );
@@ -2763,10 +2782,10 @@ export function runComboboxSuite({
         const el = /** @type {LionCombobox} */ (
           await fixture(html`
             <${hostTag} name="foo" autocomplete="none" multiple-choice>
-              <${tagOption} .choiceValue="${'Artichoke'}">Artichoke</${tagOption}>
-              <${tagOption} .choiceValue="${'Chard'}">Chard</${tagOption}>
-              <${tagOption} .choiceValue="${'Chicory'}">Chicory</${tagOption}>
-              <${tagOption} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tagOption}>
+              <${tagOption} ${optionFixture(`Artichoke`)} .choiceValue="${'Artichoke'}">Artichoke</${tagOption}>
+              <${tagOption} ${optionFixture(`Chard`)} .choiceValue="${'Chard'}">Chard</${tagOption}>
+              <${tagOption} ${optionFixture(`Chicory`)} .choiceValue="${'Chicory'}">Chicory</${tagOption}>
+              <${tagOption} ${optionFixture(`Victoria Plum`)} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tagOption}>
             </${hostTag}>
           `)
         );
@@ -2824,10 +2843,10 @@ export function runComboboxSuite({
           const el = /** @type {LionCombobox} */ (
             await fixture(html`
             <${tag} name="foo" autocomplete="none" multiple-choice>
-              <${tagOption} .choiceValue="${'Artichoke'}">Artichoke</${tagOption}>
-              <${tagOption} .choiceValue="${'Chard'}">Chard</${tagOption}>
-              <${tagOption} .choiceValue="${'Chicory'}">Chicory</${tagOption}>
-              <${tagOption} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tagOption}>
+              <${tagOption} ${optionFixture(`Artichoke`)} .choiceValue="${'Artichoke'}">Artichoke</${tagOption}>
+              <${tagOption} ${optionFixture(`Chard`)} .choiceValue="${'Chard'}">Chard</${tagOption}>
+              <${tagOption} ${optionFixture(`Chicory`)} .choiceValue="${'Chicory'}">Chicory</${tagOption}>
+              <${tagOption} ${optionFixture(`Victoria Plum`)} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tagOption}>
             </${tag}>
           `)
           );
@@ -2874,16 +2893,16 @@ export function runComboboxSuite({
             const el = /** @type {LionCombobox} */ (
               await fixture(html`
               <${tag} name="foo" autocomplete="both" multiple-choice>
-                <${tagOption} .label="${'Artichoke as label'}" .choiceValue="${{
+                <${tagOption} ${optionFixture('Artichoke as label')} .label="${'Artichoke as label'}" .choiceValue="${{
                   value: 'Artichoke',
                 }}">Artichoke</${tagOption}>
-                <${tagOption} .label="${'Chard as label'}" .choiceValue="${{
+                <${tagOption} ${optionFixture('Chard as label')} .label="${'Chard as label'}" .choiceValue="${{
                   value: 'Chard',
                 }}">Chard</${tagOption}>
-                <${tagOption} .label="${'Chicory as label'}" .choiceValue="${{
+                <${tagOption} ${optionFixture('Chicory as label')} .label="${'Chicory as label'}" .choiceValue="${{
                   value: 'Chicory',
                 }}">Chicory</${tagOption}>
-                <${tagOption} .label="${'Victoria Plum as label'}" .choiceValue="${{
+                <${tagOption} ${optionFixture('Victoria Plum as label')} .label="${'Victoria Plum as label'}" .choiceValue="${{
                   value: 'Victoria Plum',
                 }}">Victoria Plum</${tagOption}>
               </${tag}>
@@ -2927,16 +2946,16 @@ export function runComboboxSuite({
             const el = /** @type {LionCombobox} */ (
               await fixture(html`
               <${tag} name="foo">
-                <${tagOption} .label="${'Artichoke as label'}" .choiceValue="${{
+                <${tagOption} ${optionFixture('Artichoke as label')} .label="${'Artichoke as label'}" .choiceValue="${{
                   value: 'Artichoke',
                 }}">Artichoke</${tagOption}>
-                <${tagOption} .label="${'Chard as label'}" .choiceValue="${{
+                <${tagOption} ${optionFixture('Chard as label')} .label="${'Chard as label'}" .choiceValue="${{
                   value: 'Chard',
                 }}" checked>Chard</${tagOption}>
-                <${tagOption} .label="${'Chicory as label'}" .choiceValue="${{
+                <${tagOption} ${optionFixture('Chicory as label')} .label="${'Chicory as label'}" .choiceValue="${{
                   value: 'Chicory',
                 }}">Chicory</${tagOption}>
-                <${tagOption} .label="${'Victoria Plum as label'}" .choiceValue="${{
+                <${tagOption} ${optionFixture('Victoria Plum as label')} .label="${'Victoria Plum as label'}" .choiceValue="${{
                   value: 'Victoria Plum',
                 }}">Victoria Plum</${tagOption}>
               </${tag}>
@@ -2977,16 +2996,16 @@ export function runComboboxSuite({
             const el = /** @type {LionCombobox} */ (
               await fixture(html`
               <${tag} name="foo" .modelValue="${{ value: 'Artichoke' }}">
-                <${tagOption} .label="${'Artichoke as label'}" .choiceValue="${{
+                <${tagOption} ${optionFixture('Artichoke as label')} .label="${'Artichoke as label'}" .choiceValue="${{
                   value: 'Artichoke',
                 }}">Artichoke</${tagOption}>
-                <${tagOption} .label="${'Chard as label'}" .choiceValue="${{
+                <${tagOption} ${optionFixture('Chard as label')} .label="${'Chard as label'}" .choiceValue="${{
                   value: 'Chard',
                 }}">Chard</${tagOption}>
-                <${tagOption} .label="${'Chicory as label'}" .choiceValue="${{
+                <${tagOption} ${optionFixture('Chicory as label')} .label="${'Chicory as label'}" .choiceValue="${{
                   value: 'Chicory',
                 }}">Chicory</${tagOption}>
-                <${tagOption} .label="${'Victoria Plum as label'}" .choiceValue="${{
+                <${tagOption} ${optionFixture('Victoria Plum as label')} .label="${'Victoria Plum as label'}" .choiceValue="${{
                   value: 'Victoria Plum',
                 }}">Victoria Plum</${tagOption}>
               </${tag}>
@@ -3024,16 +3043,16 @@ export function runComboboxSuite({
             const el = /** @type {LionCombobox} */ (
               await fixture(html`
               <${tag} name="foo">
-                <${tagOption} .label="${'Artichoke as label'}" .choiceValue="${{
+                <${tagOption} ${optionFixture('Artichoke as label')} .label="${'Artichoke as label'}" .choiceValue="${{
                   value: 'Artichoke',
                 }}">Artichoke</${tagOption}>
-                <${tagOption} .label="${'Chard as label'}" .choiceValue="${{
+                <${tagOption} ${optionFixture('Chard as label')} .label="${'Chard as label'}" .choiceValue="${{
                   value: 'Chard',
                 }}">Chard</${tagOption}>
-                <${tagOption} .label="${'Chicory as label'}" .choiceValue="${{
+                <${tagOption} ${optionFixture('Chicory as label')} .label="${'Chicory as label'}" .choiceValue="${{
                   value: 'Chicory',
                 }}">Chicory</${tagOption}>
-                <${tagOption} .label="${'Victoria Plum as label'}" .choiceValue="${{
+                <${tagOption} ${optionFixture('Victoria Plum as label')} .label="${'Victoria Plum as label'}" .choiceValue="${{
                   value: 'Victoria Plum',
                 }}">Victoria Plum</${tagOption}>
               </${tag}>
@@ -3104,19 +3123,19 @@ export function runComboboxSuite({
           const el = /** @type {LionCombobox} */ (
             await fixture(html`
               <${tag} name="foo" autocomplete="both">
-                <${tagOption} .choiceValue="${'Artichoke'}">
+                <${tagOption} ${optionFixture('Artichoke')} .choiceValue="${'Artichoke'}">
                   <div data-key>Artichoke</div>
                   <small>Cardoon</small>
                 </${tagOption}>
-                <${tagOption} .choiceValue="${'Chard'}">
+                <${tagOption} ${optionFixture('Chard')} .choiceValue="${'Chard'}">
                   <div data-key>Chard</div>
                   <small>Beet</small>
                 </${tagOption}>
-                <${tagOption} .choiceValue="${'Chicory'}">
+                <${tagOption} ${optionFixture('Chicory')} .choiceValue="${'Chicory'}">
                   <div data-key>Chicory</div>
                   <small>Chicory</small>
                 </${tagOption}>
-                <${tagOption} .choiceValue="${'Victoria Plum'}">
+                <${tagOption} ${optionFixture('Victoria Plum')} .choiceValue="${'Victoria Plum'}">
                   <div data-key>Victoria Plum</div>
                   <small>Prunus domestica</small>
                 </${tagOption}>
@@ -3162,10 +3181,10 @@ export function runComboboxSuite({
           const el = /** @type {LionCombobox} */ (
             await fixture(html`
               <${hostTag} name="foo">
-                <${tagOption} .choiceValue="${'Artichoke'}">Artichoke</${tagOption}>
-                <${tagOption} .choiceValue="${'Chard'}">Chard</${tagOption}>
-                <${tagOption} .choiceValue="${'Chicory'}">Chicory</${tagOption}>
-                <${tagOption} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tagOption}>
+                <${tagOption} ${optionFixture(`Artichoke`)} .choiceValue="${'Artichoke'}">Artichoke</${tagOption}>
+                <${tagOption} ${optionFixture(`Chard`)} .choiceValue="${'Chard'}">Chard</${tagOption}>
+                <${tagOption} ${optionFixture(`Chicory`)} .choiceValue="${'Chicory'}">Chicory</${tagOption}>
+                <${tagOption} ${optionFixture(`Victoria Plum`)} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tagOption}>
               </${hostTag}>
             `)
           );
@@ -3184,10 +3203,10 @@ export function runComboboxSuite({
           const el = /** @type {LionCombobox} */ (
             await fixture(html`
               <${hostTag} name="foo" autocomplete="none">
-                <${tagOption} .choiceValue="${'Artichoke'}">Artichoke</${tagOption}>
-                <${tagOption} .choiceValue="${'Chard'}">Chard</${tagOption}>
-                <${tagOption} .choiceValue="${'Chicory'}">Chicory</${tagOption}>
-                <${tagOption} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tagOption}>
+                <${tagOption} ${optionFixture(`Artichoke`)} .choiceValue="${'Artichoke'}">Artichoke</${tagOption}>
+                <${tagOption} ${optionFixture(`Chard`)} .choiceValue="${'Chard'}">Chard</${tagOption}>
+                <${tagOption} ${optionFixture(`Chicory`)} .choiceValue="${'Chicory'}">Chicory</${tagOption}>
+                <${tagOption} ${optionFixture(`Victoria Plum`)} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tagOption}>
               </${hostTag}>
             `)
           );
@@ -3273,10 +3292,10 @@ export function runComboboxSuite({
           const el = /** @type {LionCombobox} */ (
             await fixture(html`
               <${hostTag} name="foo" autocomplete="both">
-                <${tagOption} .choiceValue="${'Artichoke'}">Artichoke</${tagOption}>
-                <${tagOption} .choiceValue="${'Chard'}">Chard</${tagOption}>
-                <${tagOption} .choiceValue="${'Chicory'}">Chicory</${tagOption}>
-                <${tagOption} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tagOption}>
+                <${tagOption} ${optionFixture(`Artichoke`)} .choiceValue="${'Artichoke'}">Artichoke</${tagOption}>
+                <${tagOption} ${optionFixture(`Chard`)} .choiceValue="${'Chard'}">Chard</${tagOption}>
+                <${tagOption} ${optionFixture(`Chicory`)} .choiceValue="${'Chicory'}">Chicory</${tagOption}>
+                <${tagOption} ${optionFixture(`Victoria Plum`)} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tagOption}>
               </${hostTag}>
             `)
           );
@@ -3311,10 +3330,10 @@ export function runComboboxSuite({
           const el = /** @type {LionCombobox} */ (
             await fixture(html`
               <${hostTag} name="foo">
-                <${tagOption} .choiceValue="${'Artichoke'}">Artichoke</${tagOption}>
-                <${tagOption} .choiceValue="${'Chard'}">Chard</${tagOption}>
-                <${tagOption} .choiceValue="${'Chicory'}">Chicory</${tagOption}>
-                <${tagOption} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tagOption}>
+                <${tagOption} ${optionFixture(`Artichoke`)} .choiceValue="${'Artichoke'}">Artichoke</${tagOption}>
+                <${tagOption} ${optionFixture(`Chard`)} .choiceValue="${'Chard'}">Chard</${tagOption}>
+                <${tagOption} ${optionFixture(`Chicory`)} .choiceValue="${'Chicory'}">Chicory</${tagOption}>
+                <${tagOption} ${optionFixture(`Victoria Plum`)} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tagOption}>
               </${hostTag}>
             `)
           );
@@ -3368,12 +3387,12 @@ export function runComboboxSuite({
           const el = /** @type {LionCombobox} */ (
             await fixture(html`
               <${hostTag} name="foo" autocomplete="none">
-                <${tagOption} .choiceValue="${'Artichoke'}" id="artichoke-option"
+                <${tagOption} ${optionFixture(`Artichoke`)} .choiceValue="${'Artichoke'}" id="artichoke-option"
                   >Artichoke</${tagOption}
                 >
-                <${tagOption} .choiceValue="${'Chard'}" id="chard-option">Chard</${tagOption}>
-                <${tagOption} .choiceValue="${'Chicory'}">Chicory</${tagOption}>
-                <${tagOption} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tagOption}>
+                <${tagOption} ${optionFixture(`Chard`)} .choiceValue="${'Chard'}" id="chard-option">Chard</${tagOption}>
+                <${tagOption} ${optionFixture(`Chicory`)} .choiceValue="${'Chicory'}">Chicory</${tagOption}>
+                <${tagOption} ${optionFixture(`Victoria Plum`)} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tagOption}>
               </${hostTag}>
             `)
           );
@@ -3400,10 +3419,10 @@ export function runComboboxSuite({
           const el2 = /** @type {LionCombobox} */ (
             await fixture(html`
               <${hostTag} name="foo" autocomplete="both" match-mode="begin">
-                <${tagOption} .choiceValue="${'Artichoke'}">Artichoke</${tagOption}>
-                <${tagOption} .choiceValue="${'Chard'}">Chard</${tagOption}>
-                <${tagOption} .choiceValue="${'Chicory'}">Chicory</${tagOption}>
-                <${tagOption} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tagOption}>
+                <${tagOption} ${optionFixture(`Artichoke`)} .choiceValue="${'Artichoke'}">Artichoke</${tagOption}>
+                <${tagOption} ${optionFixture(`Chard`)} .choiceValue="${'Chard'}">Chard</${tagOption}>
+                <${tagOption} ${optionFixture(`Chicory`)} .choiceValue="${'Chicory'}">Chicory</${tagOption}>
+                <${tagOption} ${optionFixture(`Victoria Plum`)} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tagOption}>
               </${hostTag}>
             `)
           );
@@ -3440,7 +3459,7 @@ export function runComboboxSuite({
           const el = /** @type {LionCombobox} */ (
             await fixture(html`
               <${hostTag} name="foo" match-mode="all">
-                <${tagOption} .choiceValue="${'Artichoke'}">
+                <${tagOption} ${optionFixture('Artichoke')} .choiceValue="${'Artichoke'}">
                   <div>Artichoke</div>
                   <small>Cardoon</small>
                 </${tagOption}>
@@ -3466,7 +3485,7 @@ export function runComboboxSuite({
           const el = /** @type {LionCombobox} */ (
             await fixture(html`
               <${hostTag} name="foo" ._ariaVersion="${'1.1'}">
-                <${tagOption} .choiceValue="${'10'}" checked>Item 1</${tagOption}>
+                <${tagOption} ${optionFixture(`Item 1`)} .choiceValue="${'10'}" checked>Item 1</${tagOption}>
               </${hostTag}>
             `)
           );
@@ -3479,7 +3498,7 @@ export function runComboboxSuite({
           const el = /** @type {LionCombobox} */ (
             await fixture(html`
               <${hostTag} name="foo" ._ariaVersion="${'1.0'}">
-                <${tagOption} .choiceValue="${'10'}" checked>Item 1</${tagOption}>
+                <${tagOption} ${optionFixture(`Item 1`)} .choiceValue="${'10'}" checked>Item 1</${tagOption}>
               </${hostTag}>
             `)
           );
@@ -3495,7 +3514,7 @@ export function runComboboxSuite({
           const el = /** @type {LionCombobox} */ (
             await fixture(html`
               <${hostTag} name="foo">
-                <${tagOption} .choiceValue="${'10'}" checked>Item 1</${tagOption}>
+                <${tagOption} ${optionFixture(`Item 1`)} .choiceValue="${'10'}" checked>Item 1</${tagOption}>
               </${hostTag}>
             `)
           );
@@ -3507,7 +3526,7 @@ export function runComboboxSuite({
           const el2 = /** @type {LionCombobox} */ (
             await fixture(html`
               <${hostTag} name="foo">
-                <${tagOption} .choiceValue="${'10'}" checked>Item 1</${tagOption}>
+                <${tagOption} ${optionFixture(`Item 1`)} .choiceValue="${'10'}" checked>Item 1</${tagOption}>
               </${hostTag}>
             `)
           );
@@ -3527,10 +3546,10 @@ export function runComboboxSuite({
         const el = /** @type {LionCombobox} */ (
           await fixture(html`
             <${hostTag} name="foo" multiple-choice>
-              <${tagOption} .choiceValue="${'Artichoke'}">Artichoke</${tagOption}>
-              <${tagOption} .choiceValue="${'Chard'}">Chard</${tagOption}>
-              <${tagOption} .choiceValue="${'Chicory'}">Chicory</${tagOption}>
-              <${tagOption} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tagOption}>
+              <${tagOption} ${optionFixture(`Artichoke`)} .choiceValue="${'Artichoke'}">Artichoke</${tagOption}>
+              <${tagOption} ${optionFixture(`Chard`)} .choiceValue="${'Chard'}">Chard</${tagOption}>
+              <${tagOption} ${optionFixture(`Chicory`)} .choiceValue="${'Chicory'}">Chicory</${tagOption}>
+              <${tagOption} ${optionFixture(`Victoria Plum`)} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tagOption}>
             </${hostTag}>
           `)
         );
@@ -3549,10 +3568,10 @@ export function runComboboxSuite({
         const el = /** @type {LionCombobox} */ (
           await fixture(html`
             <${hostTag} name="foo" multiple-choice>
-              <${tagOption} .choiceValue="${'Artichoke'}">Artichoke</${tagOption}>
-              <${tagOption} .choiceValue="${'Chard'}">Chard</${tagOption}>
-              <${tagOption} .choiceValue="${'Chicory'}">Chicory</${tagOption}>
-              <${tagOption} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tagOption}>
+              <${tagOption} ${optionFixture(`Artichoke`)} .choiceValue="${'Artichoke'}">Artichoke</${tagOption}>
+              <${tagOption} ${optionFixture(`Chard`)} .choiceValue="${'Chard'}">Chard</${tagOption}>
+              <${tagOption} ${optionFixture(`Chicory`)} .choiceValue="${'Chicory'}">Chicory</${tagOption}>
+              <${tagOption} ${optionFixture(`Victoria Plum`)} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tagOption}>
             </${hostTag}>
           `)
         );
@@ -3573,10 +3592,10 @@ export function runComboboxSuite({
         const el = /** @type {LionCombobox} */ (
           await fixture(html`
             <${hostTag} name="foo" multiple-choice>
-              <${tagOption} .choiceValue="${'Artichoke'}">Artichoke</${tagOption}>
-              <${tagOption} .choiceValue="${'Chard'}">Chard</${tagOption}>
-              <${tagOption} .choiceValue="${'Chicory'}">Chicory</${tagOption}>
-              <${tagOption} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tagOption}>
+              <${tagOption} ${optionFixture(`Artichoke`)} .choiceValue="${'Artichoke'}">Artichoke</${tagOption}>
+              <${tagOption} ${optionFixture(`Chard`)} .choiceValue="${'Chard'}">Chard</${tagOption}>
+              <${tagOption} ${optionFixture(`Chicory`)} .choiceValue="${'Chicory'}">Chicory</${tagOption}>
+              <${tagOption} ${optionFixture(`Victoria Plum`)} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tagOption}>
             </${hostTag}>
           `)
         );
@@ -3603,10 +3622,10 @@ export function runComboboxSuite({
         const el = /** @type {LionCombobox} */ (
           await fixture(html`
             <${hostTag} name="foo" multiple-choice>
-              <${tagOption} .choiceValue="${'Artichoke'}">Artichoke</${tagOption}>
-              <${tagOption} .choiceValue="${'Chard'}">Chard</${tagOption}>
-              <${tagOption} .choiceValue="${'Chicory'}">Chicory</${tagOption}>
-              <${tagOption} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tagOption}>
+              <${tagOption} ${optionFixture(`Artichoke`)} .choiceValue="${'Artichoke'}">Artichoke</${tagOption}>
+              <${tagOption} ${optionFixture(`Chard`)} .choiceValue="${'Chard'}">Chard</${tagOption}>
+              <${tagOption} ${optionFixture(`Chicory`)} .choiceValue="${'Chicory'}">Chicory</${tagOption}>
+              <${tagOption} ${optionFixture(`Victoria Plum`)} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tagOption}>
             </${hostTag}>
           `)
         );
@@ -3633,10 +3652,10 @@ export function runComboboxSuite({
           await fixture(html`
             <form @submit=${submitSpy}>
               <${hostTag} name="foo" multiple-choice>
-                <${tagOption} .choiceValue="${'Artichoke'}">Artichoke</${tagOption}>
-                <${tagOption} .choiceValue="${'Chard'}">Chard</${tagOption}>
-                <${tagOption} .choiceValue="${'Chicory'}">Chicory</${tagOption}>
-                <${tagOption} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tagOption}>
+                <${tagOption} ${optionFixture(`Artichoke`)} .choiceValue="${'Artichoke'}">Artichoke</${tagOption}>
+                <${tagOption} ${optionFixture(`Chard`)} .choiceValue="${'Chard'}">Chard</${tagOption}>
+                <${tagOption} ${optionFixture(`Chicory`)} .choiceValue="${'Chicory'}">Chicory</${tagOption}>
+                <${tagOption} ${optionFixture(`Victoria Plum`)} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tagOption}>
               </${hostTag}>
               <button type="submit">submit</button>
             </form>
@@ -3658,10 +3677,10 @@ export function runComboboxSuite({
           await fixture(html`
             <form @submit=${submitSpy}>
               <${hostTag} name="foo" multiple-choice>
-                <${tagOption} .choiceValue="${'Artichoke'}">Artichoke</${tagOption}>
-                <${tagOption} .choiceValue="${'Chard'}">Chard</${tagOption}>
-                <${tagOption} .choiceValue="${'Chicory'}">Chicory</${tagOption}>
-                <${tagOption} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tagOption}>
+                <${tagOption} ${optionFixture(`Artichoke`)} .choiceValue="${'Artichoke'}">Artichoke</${tagOption}>
+                <${tagOption} ${optionFixture(`Chard`)} .choiceValue="${'Chard'}">Chard</${tagOption}>
+                <${tagOption} ${optionFixture(`Chicory`)} .choiceValue="${'Chicory'}">Chicory</${tagOption}>
+                <${tagOption} ${optionFixture(`Victoria Plum`)} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tagOption}>
               </${hostTag}>
               <button type="submit">submit</button>
             </form>
@@ -3860,24 +3879,24 @@ export function runComboboxSuite({
         const el = /** @type {LionCombobox} */ (
           await fixture(html`
             <${hostTag} label="Search" name="foo">
-              <${tagOption} .choiceValue="${'test.com'}">test.com</${tagOption}>
-              <${tagOption} .choiceValue="${'func(arg)'}">func(arg)</${tagOption}>
-              <${tagOption} .choiceValue="${'array[0]'}">array[0]</${tagOption}>
-              <${tagOption} .choiceValue="${'C++'}">C++</${tagOption}>
-              <${tagOption} .choiceValue="${'a * b'}">a * b</${tagOption}>
-              <${tagOption} .choiceValue="${'What?'}">What?</${tagOption}>
-              <${tagOption} .choiceValue="${'$100'}">$100</${tagOption}>
-              <${tagOption} .choiceValue="${'x^2'}">x^2</${tagOption}>
-              <${tagOption} .choiceValue="${'a | b'}">a | b</${tagOption}>
-              <${tagOption} .choiceValue="${'path\\file'}">path\\file</${tagOption}>
-              <${tagOption} .choiceValue="${'{name}'}">{name}</${tagOption}>
-              <${tagOption} .choiceValue="${'user+tag@example.com'}">user+tag@example.com</${tagOption}>
-              <${tagOption} .choiceValue="${'(a+b)*c^2$'}">>(a+b)*c^2$</${tagOption}>
-              <${tagOption} .choiceValue="${'test|value?[x]'}">test|value?[x]</${tagOption}>
-              <${tagOption} .choiceValue="${'file.{txt|md}\\n'}">file.{txt|md}\\n</${tagOption}>
-              <${tagOption} .choiceValue="${'testXcom'}">testXcom</${tagOption}>
-              <${tagOption} .choiceValue="${'funcXargX'}">funcXargX</${tagOption}>
-              <${tagOption} .choiceValue="${'arrayX0X'}">arrayX0X</${tagOption}>
+              <${tagOption} ${optionFixture(`test.com`)} .choiceValue="${'test.com'}">test.com</${tagOption}>
+              <${tagOption} ${optionFixture(`func(arg)`)} .choiceValue="${'func(arg)'}">func(arg)</${tagOption}>
+              <${tagOption} ${optionFixture(`array[0]`)} .choiceValue="${'array[0]'}">array[0]</${tagOption}>
+              <${tagOption} ${optionFixture(`C++`)} .choiceValue="${'C++'}">C++</${tagOption}>
+              <${tagOption} ${optionFixture(`a * b`)} .choiceValue="${'a * b'}">a * b</${tagOption}>
+              <${tagOption} ${optionFixture(`What?`)} .choiceValue="${'What?'}">What?</${tagOption}>
+              <${tagOption} ${optionFixture(`$100`)} .choiceValue="${'$100'}">$100</${tagOption}>
+              <${tagOption} ${optionFixture(`x^2`)} .choiceValue="${'x^2'}">x^2</${tagOption}>
+              <${tagOption} ${optionFixture(`a | b`)} .choiceValue="${'a | b'}">a | b</${tagOption}>
+              <${tagOption} ${optionFixture(`path\\file`)} .choiceValue="${'path\\file'}">path\\file</${tagOption}>
+              <${tagOption} ${optionFixture(`{name}`)} .choiceValue="${'{name}'}">{name}</${tagOption}>
+              <${tagOption} ${optionFixture(`user+tag@example.com`)} .choiceValue="${'user+tag@example.com'}">user+tag@example.com</${tagOption}>
+              <${tagOption} ${optionFixture(`(a+b)*c^2$`)} .choiceValue="${'(a+b)*c^2$'}">>(a+b)*c^2$</${tagOption}>
+              <${tagOption} ${optionFixture(`test|value?[x]`)} .choiceValue="${'test|value?[x]'}">test|value?[x]</${tagOption}>
+              <${tagOption} ${optionFixture(`file.{txt|md}\\n`)} .choiceValue="${'file.{txt|md}\\n'}">file.{txt|md}\\n</${tagOption}>
+              <${tagOption} ${optionFixture(`testXcom`)} .choiceValue="${'testXcom'}">testXcom</${tagOption}>
+              <${tagOption} ${optionFixture(`funcXargX`)} .choiceValue="${'funcXargX'}">funcXargX</${tagOption}>
+              <${tagOption} ${optionFixture(`arrayX0X`)} .choiceValue="${'arrayX0X'}">arrayX0X</${tagOption}>
             </${hostTag}>
           `)
         );

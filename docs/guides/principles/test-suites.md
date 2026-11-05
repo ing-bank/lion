@@ -105,6 +105,22 @@ describe('my-input', () => {
    (`openedCalendarEl.firstDayOfWeek = 0`) — before opening, the property lands on an element that
    gets re-rendered. The same rule covers the invoker's accessible name: that fixture carries
    `label="date"`, because the assertion is that the invoker _names the field_.
+   The combobox runner accepts `configureOption(option, label)` for option classes that need
+   additional properties. It runs during every option's template render, before `choiceValue` is
+   assigned and before connection, including dynamic additions and updates. `label` contains the
+   fixture's display label (or its explicit `.label` in label-override tests). The suite retains its
+   original light-DOM content, checked state and other bindings; the hook must not change behavior.
+
+   ```js
+   runComboboxSuite({
+     classes: { host: MyCombobox, option: MyOption },
+     configureOption(option, label) {
+       if (option instanceof MyOption) {
+         Object.assign(option, { label });
+       }
+     },
+   });
+   ```
 
 ## Public entry points
 
