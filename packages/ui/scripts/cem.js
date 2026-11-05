@@ -146,10 +146,16 @@ const cem = create({
           const slots = [
             ...source.matchAll(/@slot\s+(?:'([^']+)'|"([^"]+)"|([\w-]+))\s+([^\n*]+)/g),
           ]
-            .map(match => ({ name: match[1] ?? match[2] ?? match[3], description: match[4].trim() }))
+            .map(match => ({
+              name: match[1] ?? match[2] ?? match[3],
+              description: match[4].trim(),
+            }))
             // A file can repeat a tag (the class JSDoc and the typedef above the implementation), so keep
             // the first occurrence per name.
-            .filter((slot, index, all) => all.findIndex(candidate => candidate.name === slot.name) === index);
+            .filter(
+              (slot, index, all) =>
+                all.findIndex(candidate => candidate.name === slot.name) === index,
+            );
           if (slots.length === 0) continue;
           /**
            * The analyzer does emit the export, but as a `variable` (the exported value is a function), so
@@ -180,7 +186,9 @@ const cem = create({
         const inheritedSlots = (declaration, seen = new Set()) => {
           if (!declaration || seen.has(declaration.name)) return new Map();
           seen.add(declaration.name);
-          const found = new Map((declaration.slots ?? []).map(slot => [slot.name, declaration.name]));
+          const found = new Map(
+            (declaration.slots ?? []).map(slot => [slot.name, declaration.name]),
+          );
           const parents = [
             declaration.superclass?.name,
             ...(declaration.mixins ?? []).map(mixin => mixin.name),
@@ -198,7 +206,10 @@ const cem = create({
             const own = new Set((declaration.slots ?? []).map(slot => slot.name));
             for (const [name, owner] of inheritedSlots(declaration)) {
               if (own.has(name) || owner === declaration.name) continue;
-              declaration.slots = [...(declaration.slots ?? []), { name, inheritedFrom: { name: owner } }];
+              declaration.slots = [
+                ...(declaration.slots ?? []),
+                { name, inheritedFrom: { name: owner } },
+              ];
             }
             if (declaration.slots?.length) declaration.slots.sort(sortName);
           }
