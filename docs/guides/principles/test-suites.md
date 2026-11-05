@@ -105,6 +105,9 @@ describe('my-input', () => {
    (`openedCalendarEl.firstDayOfWeek = 0`) — before opening, the property lands on an element that
    gets re-rendered. The same rule covers the invoker's accessible name: that fixture carries
    `label="date"`, because the assertion is that the invoker _names the field_.
+   The collapsible fixture likewise sets its asserted 32px content height explicitly, rather than
+   depending on the host's width to wrap text into two lines. Switch event assertions await the
+   host update before the inner button update, allowing deferred host-to-button synchronization.
    The combobox runner accepts `configureOption(option, label)` for option classes that need
    additional properties. It runs during every option's template render, before `choiceValue` is
    assigned and before connection, including dynamic additions and updates. `label` contains the

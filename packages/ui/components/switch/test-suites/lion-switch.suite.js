@@ -423,6 +423,7 @@ export function runSwitchSuite({
         await elementUpdated(btn);
         expect(handlerSpy.called).to.be.false;
         hostEl.checked = !hostEl.checked;
+        await hostEl.updateComplete;
         await elementUpdated(btn);
         expect(handlerSpy.called).to.be.true;
       });

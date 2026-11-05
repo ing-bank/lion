@@ -45,7 +45,7 @@ export function runCollapsibleSuite({
 
   const collapsibleTemplate = html`
     <${invokerRef} slot="invoker">More about cars</${invokerRef}>
-    <${contentRef} slot="content" style="font-size: 12px; line-height: 16px; font-family: Arial;">
+    <${contentRef} slot="content" style="height: 32px; font-size: 12px; line-height: 16px; font-family: Arial;">
       Most definitions of cars say that they run primarily on roads, seat one to eight people, have
       four tires, and mainly transport people rather than goods.
     </${contentRef}>
