@@ -140,6 +140,35 @@ export const runRegistrationSuite = ({
       ]);
     });
 
+    it('maintains DOM order when groups of registered elements are moved together', async () => {
+      for (const isFormOrFieldset of [false, true]) {
+        const el = /** @type {RegistrarClass} */ (
+          await fixture(html`
+            <${parentTag} ._isFormOrFieldset=${isFormOrFieldset}>
+              <div>
+                <${childTag} name="items[]"></${childTag}>
+              </div>
+              <div>
+                <${childTag} name="items[]"></${childTag}>
+                <${childTag} name="items[]"></${childTag}>
+              </div>
+            </${parentTag}>
+          `)
+        );
+        const groups = [...el.children];
+        const target = document.createElement('div');
+        el.appendChild(target);
+        groups.forEach(group => target.appendChild(group));
+
+        await Promise.resolve();
+        const domElements = [...target.querySelectorAll(childTagString)];
+        expect([...el.formElements]).to.deep.equal(domElements);
+        if (isFormOrFieldset) {
+          expect([...el.formElements['items[]']]).to.deep.equal(domElements);
+        }
+      }
+    });
+
     it('supports nested registration parents', async () => {
       const el = /** @type {RegistrarClass} */ (
         await fixture(html`
@@ -155,6 +184,47 @@ export const runRegistrationSuite = ({
 
       const subGroup = /** @type {RegistrarClass} */ (el.querySelector('.sub-group'));
       expect(subGroup.formElements.length).to.equal(2);
+    });
+
+    it('keeps named collections in DOM order when inserting before existing fields', async () => {
+      const el = /** @type {RegistrarClass} */ (
+        await fixture(html`
+          <${parentTag} ._isFormOrFieldset=${true}>
+            <${childTag} name="items[]" pos="1"></${childTag}>
+            <${childTag} name="other" pos="2"></${childTag}>
+            <${childTag} name="items[]" pos="3"></${childTag}>
+          </${parentTag}>
+        `)
+      );
+      const topField = await fixture(html`<${childTag} name="items[]" pos="0"></${childTag}>`);
+      el.prepend(topField);
+      const middleField = await fixture(
+        html`<${childTag} name="items[]" pos="inserted-before-3"></${childTag}>`,
+      );
+      el.lastElementChild?.insertAdjacentElement('beforebegin', middleField);
+
+      await Promise.resolve();
+      const positions = el.formElements['items[]'].map((/** @type {RegisteringClass} */ field) =>
+        field.getAttribute('pos'),
+      );
+      expect(positions).to.deep.equal(['0', '1', 'inserted-before-3', '3']);
+    });
+
+    it('batches DOM ordering into one microtask while registering synchronously', async () => {
+      const el = /** @type {RegistrarClass} */ (await fixture(html`<${parentTag}></${parentTag}>`));
+      const sortSpy = sinon.spy(el.formElements, 'sort');
+      try {
+        el.appendChild(document.createElement(childTagString));
+        el.appendChild(document.createElement(childTagString));
+        el.appendChild(document.createElement(childTagString));
+
+        expect(el.formElements).to.have.length(3);
+        expect(sortSpy).not.to.have.been.called;
+        await Promise.resolve();
+        expect(sortSpy).to.have.been.calledOnce;
+      } finally {
+        sortSpy.restore();
+      }
     });
 
     it('works for components that have a delayed render', async () => {
