@@ -1091,9 +1091,12 @@ export class LionCombobox extends LocalizeMixin(OverlayMixin(CustomChoiceGroupMi
 
     // Make sure that we don't lose inputNode.selectionStart and inputNode.selectionEnd
     if (this._inputNode.value !== newValue) {
-      const prevLen = this._inputNode.value.length;
+      const completionStart =
+        this._inputNode.selectionStart !== this._inputNode.selectionEnd
+          ? this._inputNode.selectionStart
+          : this._inputNode.value.length;
       this._inputNode.value = newValue;
-      this._inputNode.selectionStart = prevLen;
+      this._inputNode.selectionStart = completionStart;
       this._inputNode.selectionEnd = this._inputNode.value.length;
     }
   }

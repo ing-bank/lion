@@ -2536,6 +2536,40 @@ export function runComboboxSuite({
           expect(spy).to.have.been.calledTwice;
         });
 
+        it('keeps the untyped suffix selected when a server response changes the first match', async () => {
+          const el = /** @type {MyEl} */ (await fixture(html`<${wrappingTag}></${wrappingTag}>`));
+          el.options = ['charges and regulations'];
+          el.requestUpdate();
+          await el.updateComplete;
+          await el.combobox.registrationComplete;
+          await el.combobox.updateComplete;
+          const { _inputNode } = getComboboxMembers(el.combobox);
+
+          await mimicUserTyping(el.combobox, 'c');
+          await el.combobox.updateComplete;
+          expect(_inputNode.value).to.equal('charges and regulations');
+          expect(_inputNode.selectionStart).to.equal(1);
+          expect(_inputNode.selectionEnd).to.equal('charges and regulations'.length);
+
+          // Resolve the server response only after the initial inline completion.
+          el.clearOptions();
+          await el.updateComplete;
+          await el.combobox.updateComplete;
+          el.options = ['create holder', 'charges and regulations'];
+          el.requestUpdate();
+          await el.updateComplete;
+          await el.combobox.registrationComplete;
+          await el.combobox.updateComplete;
+
+          expect(getFilteredOptionValues(el.combobox)).to.eql([
+            'create holder',
+            'charges and regulations',
+          ]);
+          expect(_inputNode.value).to.equal('create holder');
+          expect(_inputNode.selectionEnd).to.equal('create holder'.length);
+          expect(_inputNode.selectionStart).to.equal(1);
+        });
+
         it('should handle dynamic options', async () => {
           // Arrange
           const el = /** @type {MyEl} */ (await fixture(html`<${wrappingTag}></${wrappingTag}>`));
