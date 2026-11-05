@@ -1,4 +1,4 @@
-import { runChoiceGroupMixinSuite } from '@lion/ui/form-core-test-suites.js';
+import { runChoiceGroupMixinSuite } from '@lion/ui/test-suites/form-core.js';
 import { LitElement } from 'lit';
 import '@lion/ui/define/lion-fieldset.js';
 import '@lion/ui/define/lion-checkbox-group.js';

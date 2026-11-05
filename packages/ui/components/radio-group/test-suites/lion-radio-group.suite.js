@@ -22,18 +22,20 @@ export function runRadioGroupSuite({
   tagString: legacyTagString,
   childTagString: legacyChildTagString,
 } = {}) {
-  const tag = unsafeStatic(resolveSuiteTag(hostEl, legacyTagString));
-  const childTag = unsafeStatic(resolveSuiteTag(radioEl, legacyChildTagString));
+  const tags = {
+    host: unsafeStatic(resolveSuiteTag(hostEl, legacyTagString)),
+    radio: unsafeStatic(resolveSuiteTag(radioEl, legacyChildTagString)),
+  };
 
   describe('<lion-radio-group>', () => {
     describe('resetGroup', () => {
       // TODO move to FormGroupMixin test suite and let CheckboxGroup make use of them
       it('restores to empty modelValue if changes were made', async () => {
         const el = await fixture(html`
-          <${tag} name="gender" label="Gender">
-            <${childTag} label="Male" .choiceValue=${'male'}></${childTag}>
-            <${childTag} label="Female" .choiceValue=${'female'}></${childTag}>
-          </${tag}>
+          <${tags.host} name="gender" label="Gender">
+            <${tags.radio} label="Male" .choiceValue=${'male'}></${tags.radio}>
+            <${tags.radio} label="Female" .choiceValue=${'female'}></${tags.radio}>
+          </${tags.host}>
         `);
         el.formElements[0].checked = true;
         expect(el.modelValue).to.deep.equal('male');
@@ -44,11 +46,11 @@ export function runRadioGroupSuite({
 
       it('restores default values if changes were made', async () => {
         const el = await fixture(html`
-          <${tag} name="gender" label="Gender">
-            <${childTag} label="Male" .choiceValue=${'male'}></${childTag}>
-            <${childTag} label="Female" .modelValue=${{ value: 'female', checked: true }}></${childTag}>
-            <${childTag} label="Other" .choiceValue=${'other'}></${childTag}>
-          </${tag}>
+          <${tags.host} name="gender" label="Gender">
+            <${tags.radio} label="Male" .choiceValue=${'male'}></${tags.radio}>
+            <${tags.radio} label="Female" .modelValue=${{ value: 'female', checked: true }}></${tags.radio}>
+            <${tags.radio} label="Other" .choiceValue=${'other'}></${tags.radio}>
+          </${tags.host}>
         `);
         el.formElements[0].checked = true;
         expect(el.modelValue).to.deep.equal('male');
@@ -69,15 +71,15 @@ export function runRadioGroupSuite({
         const formatter = /** @type {(modelValue: { value: string}) => string} */ modelValue =>
           modelValue.value.charAt(0);
         const el = await fixture(html`
-          <${tag} name="gender" label="Gender">
-            <${childTag} label="Male" .formatter=${formatter} .choiceValue=${'male'}></${childTag}>
-            <${childTag}
+          <${tags.host} name="gender" label="Gender">
+            <${tags.radio} label="Male" .formatter=${formatter} .choiceValue=${'male'}></${tags.radio}>
+            <${tags.radio}
               label="Female"
               .formatter=${formatter}
               .modelValue=${{ value: 'female', checked: true }}
-            ></${childTag}>
-            <${childTag} label="Other" .formatter=${formatter} .choiceValue=${'other'}></${childTag}>
-          </${tag}>
+            ></${tags.radio}>
+            <${tags.radio} label="Other" .formatter=${formatter} .choiceValue=${'other'}></${tags.radio}>
+          </${tags.host}>
         `);
         el.formElements[0].checked = true;
         expect(el.modelValue).to.deep.equal('male');
@@ -97,20 +99,20 @@ export function runRadioGroupSuite({
 
     it('should have role = radiogroup', async () => {
       const el = await fixture(html`
-        <${tag} label="Gender" name="gender">
-          <${childTag} label="male" value="male"></${childTag}>
-          <${childTag} label="female" value="female" checked></${childTag}>
-        </${tag}>
+        <${tags.host} label="Gender" name="gender">
+          <${tags.radio} label="male" value="male"></${tags.radio}>
+          <${tags.radio} label="female" value="female" checked></${tags.radio}>
+        </${tags.host}>
       `);
       expect(el.getAttribute('role')).to.equal('radiogroup');
     });
 
     it(`becomes "touched" once a single element of the group changes`, async () => {
       const el = await fixture(html`
-        <${tag} name="myGroup">
-          <${childTag}></${childTag}>
-          <${childTag}></${childTag}>
-        </${tag}>
+        <${tags.host} name="myGroup">
+          <${tags.radio}></${tags.radio}>
+          <${tags.radio}></${tags.radio}>
+        </${tags.host}>
       `);
 
       el.formElements[1].focus();
@@ -121,10 +123,10 @@ export function runRadioGroupSuite({
 
     it('allows selection of only one radio in a named group', async () => {
       const el = await fixture(html`
-        <${tag} name="gender">
-          <${childTag} .modelValue="${{ value: 'male', checked: false }}"></${childTag}>
-          <${childTag} .modelValue="${{ value: 'female', checked: false }}"></${childTag}>
-        </${tag}>
+        <${tags.host} name="gender">
+          <${tags.radio} .modelValue="${{ value: 'male', checked: false }}"></${tags.radio}>
+          <${tags.radio} .modelValue="${{ value: 'female', checked: false }}"></${tags.radio}>
+        </${tags.host}>
       `);
       const male = el.formElements[0];
       const maleInput = male.querySelector('input');
@@ -147,30 +149,30 @@ export function runRadioGroupSuite({
 
     it('is accessible', async () => {
       const el = await fixture(html`
-        <${tag} label="My group" name="gender">
-          <${childTag} label="male" value="male"></${childTag}>
-          <${childTag} label="female" value="female" checked></${childTag}>
-        </${tag}>
+        <${tags.host} label="My group" name="gender">
+          <${tags.radio} label="male" value="male"></${tags.radio}>
+          <${tags.radio} label="female" value="female" checked></${tags.radio}>
+        </${tags.host}>
       `);
       await expect(el).to.be.accessible();
     });
 
     it('is accessible when the group is disabled', async () => {
       const el = await fixture(html`
-        <${tag} label="My group" name="gender" disabled>
-          <${childTag} label="male" value="male"></${childTag}>
-          <${childTag} label="female" value="female" checked></${childTag}>
-        </${tag}>
+        <${tags.host} label="My group" name="gender" disabled>
+          <${tags.radio} label="male" value="male"></${tags.radio}>
+          <${tags.radio} label="female" value="female" checked></${tags.radio}>
+        </${tags.host}>
       `);
       await expect(el).to.be.accessible();
     });
 
     it('is accessible when an option is disabled', async () => {
       const el = await fixture(html`
-        <${tag} label="My group" name="gender">
-          <${childTag} label="male" value="male" disabled></${childTag}>
-          <${childTag} label="female" value="female" checked></${childTag}>
-        </${tag}>
+        <${tags.host} label="My group" name="gender">
+          <${tags.radio} label="male" value="male" disabled></${tags.radio}>
+          <${tags.radio} label="female" value="female" checked></${tags.radio}>
+        </${tags.host}>
       `);
       await expect(el).to.be.accessible();
     });

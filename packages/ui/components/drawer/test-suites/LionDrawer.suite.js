@@ -25,18 +25,20 @@ export function runDrawerSuite({
   } = {},
   tagString,
 } = {}) {
-  const tag = unsafeStatic(resolveSuiteTag(hostEl, tagString));
-  const invokerRef = unsafeStatic(resolveSuiteTag(invokerEl));
-  const headlineRef = unsafeStatic(resolveSuiteTag(headlineEl));
-  const contentRef = unsafeStatic(resolveSuiteTag(contentEl));
+  const tags = {
+    host: unsafeStatic(resolveSuiteTag(hostEl, tagString)),
+    invoker: unsafeStatic(resolveSuiteTag(invokerEl)),
+    headline: unsafeStatic(resolveSuiteTag(headlineEl)),
+    content: unsafeStatic(resolveSuiteTag(contentEl)),
+  };
   const fixture = /** @type {(arg: TemplateResult) => Promise<LionDrawer>} */ (_fixture);
 
   const template = html`
-    <${tag}>
-      <${invokerRef} slot="invoker">Open</${invokerRef}>
-      <${headlineRef} slot="headline">Headline</${headlineRef}>
-      <${contentRef} slot="content" class="drawer">This is the content of the drawer</${contentRef}>
-    </${tag}>
+    <${tags.host}>
+      <${tags.invoker} slot="invoker">Open</${tags.invoker}>
+      <${tags.headline} slot="headline">Headline</${tags.headline}>
+      <${tags.content} slot="content" class="drawer">This is the content of the drawer</${tags.content}>
+    </${tags.host}>
   `;
 
   describe('<lion-drawer>', () => {

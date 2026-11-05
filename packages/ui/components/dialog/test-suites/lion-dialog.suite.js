@@ -39,9 +39,10 @@ export function runDialogSuite({
   tabsTagString: legacyTabsTagString,
 } = {}) {
   const hostTagString = resolveSuiteTag(host, legacyTagString);
-  const tag = unsafeStatic(hostTagString);
-  const tagNameTabs = resolveSuiteTag(tabs, legacyTabsTagString);
-  const tagTabs = unsafeStatic(tagNameTabs);
+  const tags = {
+    host: unsafeStatic(hostTagString),
+    tabs: unsafeStatic(resolveSuiteTag(tabs, legacyTabsTagString)),
+  };
 
   describe('lion-dialog', () => {
     // For some reason, globalRootNode is not cleared properly on disconnectedCallback from previous overlay test fixtures...
@@ -56,7 +57,7 @@ export function runDialogSuite({
     describe('Integration tests', () => {
       runOverlayMixinSuite({
         tagString: hostTagString,
-        tag,
+        tag: tags.host,
         suffix: ' for lion-dialog',
       });
     });
@@ -64,10 +65,10 @@ export function runDialogSuite({
     describe('Basic', () => {
       it('should show content on invoker click', async () => {
         const el = await fixture(html`
-          <${tag}>
+          <${tags.host}>
             <div slot="content" class="dialog">Hey there</div>
             <button slot="invoker">Popup button</button>
-          </${tag}>
+          </${tags.host}>
         `);
         const invoker = /** @type {HTMLElement} */ (el.querySelector('[slot="invoker"]'));
         invoker.click();
@@ -78,16 +79,16 @@ export function runDialogSuite({
 
       it('supports nested overlays', async () => {
         const el = await fixture(html`
-          <${tag}>
+          <${tags.host}>
             <div slot="content">
               open nested overlay:
-              <${tag}>
+              <${tags.host}>
                 <div slot="content">Nested content</div>
                 <button slot="invoker">nested invoker button</button>
-              </${tag}>
+              </${tags.host}>
             </div>
             <button slot="invoker">invoker button</button>
-          </${tag}>
+          </${tags.host}>
         `);
 
         // @ts-expect-error [allow-protected-in-tests]
@@ -108,13 +109,13 @@ export function runDialogSuite({
     describe('focus', () => {
       it('sets focus on contentSlot by default', async () => {
         const el = await fixture(html`
-          <${tag}>
+          <${tags.host}>
             <button slot="invoker">invoker button</button>
             <div slot="content">
               <label for="myInput">Label</label>
               <input id="myInput" />
             </div>
-          </${tag}>
+          </${tags.host}>
         `);
         // @ts-expect-error [allow-protected-in-tests]
         const invokerNode = el._overlayInvokerNode;
@@ -126,13 +127,13 @@ export function runDialogSuite({
 
       it('sets focus on autofocused element', async () => {
         const el = await fixture(html`
-          <${tag}>
+          <${tags.host}>
             <button slot="invoker">invoker button</button>
             <div slot="content">
               <label for="myInput">Label</label>
               <input id="myInput" autofocus />
             </div>
-          </${tag}>
+          </${tags.host}>
         `);
         // @ts-expect-error [allow-protected-in-tests]
         const invokerNode = el._overlayInvokerNode;
@@ -144,13 +145,13 @@ export function runDialogSuite({
 
       it('with trapsKeyboardFocus set to false the focus stays on the invoker', async () => {
         const el = /** @type {LionDialog} */ await fixture(html`
-          <${tag} .config=${{ trapsKeyboardFocus: false }}>
+          <${tags.host} .config=${{ trapsKeyboardFocus: false }}>
             <button slot="invoker">invoker button</button>
             <div slot="content">
               <label for="myInput">Label</label>
               <input id="myInput" autofocus />
             </div>
-          </${tag}>
+          </${tags.host}>
         `);
         // @ts-expect-error [allow-protected-in-tests]
         const invokerNode = el._overlayInvokerNode;
@@ -161,13 +162,13 @@ export function runDialogSuite({
 
       it('opened-changed event should send detail object with opened state', async () => {
         const el = /** @type {LionDialog} */ await fixture(html`
-          <${tag} .config=${{ trapsKeyboardFocus: false }}>
+          <${tags.host} .config=${{ trapsKeyboardFocus: false }}>
             <button slot="invoker">invoker button</button>
             <div slot="content">
               <label for="myInput">Label</label>
               <input id="myInput" autofocus />
             </div>
-          </${tag}>
+          </${tags.host}>
         `);
 
         el.setAttribute('opened', '');
@@ -182,13 +183,13 @@ export function runDialogSuite({
 
       it("opened-changed event's target should point to lion-dialog", async () => {
         const el = /** @type {LionDialog} */ await fixture(html`
-          <${tag} .config=${{ trapsKeyboardFocus: false }}>
+          <${tags.host} .config=${{ trapsKeyboardFocus: false }}>
             <button slot="invoker">invoker button</button>
             <div slot="content">
               <label for="myInput">Label</label>
               <input id="myInput" autofocus />
             </div>
-          </${tag}>
+          </${tags.host}>
         `);
 
         el.addEventListener('opened-changed', e => {
@@ -201,20 +202,20 @@ export function runDialogSuite({
     describe('Accessibility', () => {
       it('passes a11y audit', async () => {
         const el = await fixture(html`
-          <${tag}>
+          <${tags.host}>
             <button slot="invoker">Invoker</button>
             <div slot="content" class="dialog" aria-label="Dialog">Hey there</div>
-          </${tag}>
+          </${tags.host}>
         `);
         await expect(el).to.be.accessible();
       });
 
       it('passes a11y audit when opened', async () => {
         const el = await fixture(html`
-          <${tag} opened>
+          <${tags.host} opened>
             <button slot="invoker">Invoker</button>
             <div slot="content" class="dialog" aria-label="Dialog">Hey there</div>
-          </${tag}>
+          </${tags.host}>
         `);
         // error expected since we put role="none" on the dialog itself, which is valid but not recognized by Axe
         await expect(el).to.be.accessible({ ignoredRules: ['aria-allowed-role'] });
@@ -222,10 +223,10 @@ export function runDialogSuite({
 
       it('does not add [aria-expanded] to invoker button', async () => {
         const el = await fixture(
-          html` <${tag}>
+          html` <${tags.host}>
             <div slot="content" class="dialog">Hey there</div>
             <button slot="invoker">Popup button</button>
-          </${tag}>`,
+          </${tags.host}>`,
         );
         const invokerButton = /** @type {HTMLElement} */ (el.querySelector('[slot="invoker"]'));
 
@@ -240,10 +241,10 @@ export function runDialogSuite({
 
       it('has role="dialog" by default', async () => {
         const el = await fixture(
-          html` <${tag}>
+          html` <${tags.host}>
             <div slot="content" class="dialog">Hey there</div>
             <button slot="invoker">Popup button</button>
-          </${tag}>`,
+          </${tags.host}>`,
         );
         const contentNode = /** @type {HTMLElement} */ (el.querySelector('[slot="content"]'));
 
@@ -252,10 +253,10 @@ export function runDialogSuite({
 
       it('has role="alertdialog" by when "is-alert-dialog" is set', async () => {
         const el = await fixture(
-          html` <${tag} is-alert-dialog>
+          html` <${tags.host} is-alert-dialog>
             <div slot="content" class="dialog">Hey there</div>
             <button slot="invoker">Popup button</button>
-          </${tag}>`,
+          </${tags.host}>`,
         );
         const contentNode = /** @type {HTMLElement} */ (el.querySelector('[slot="content"]'));
 
@@ -264,10 +265,10 @@ export function runDialogSuite({
 
       it('passes a11y audit when opened and role="alertdialog"', async () => {
         const el = await fixture(html`
-          <${tag} opened is-alert-dialog>
+          <${tags.host} opened is-alert-dialog>
             <button slot="invoker">Invoker</button>
             <div slot="content" class="dialog" aria-label="Dialog">Hey there</div>
-          </${tag}>
+          </${tags.host}>
         `);
         // error expected since we put role="none" on the dialog itself, which is valid but not recognized by Axe
         await expect(el).to.be.accessible({ ignoredRules: ['aria-allowed-role'] });
@@ -280,10 +281,10 @@ export function runDialogSuite({
           <test-router
             .routingMap="${{
               a: html`
-                <${tag}>
+                <${tags.host}>
                   <div slot="content" class="dialog">Hey there</div>
                   <button slot="invoker">Popup button</button>
-                </${tag}>
+                </${tags.host}>
               `,
               b: html` <div>B</div> `,
             }}"
@@ -334,13 +335,13 @@ export function runDialogSuite({
          */
         const closeButtonHandler = e =>
           e.target?.dispatchEvent(new Event('close-overlay', { bubbles: true }));
-        const dialog = html` <${tag}>
+        const dialog = html` <${tags.host}>
           <button slot="invoker" class="invoker-button">Click me to open dialog</button>
           <div slot="content" class="demo-dialog-content">
             Hello! You can close this dialog here:
             <button class="close-button" @click="${closeButtonHandler}">⨯</button>
           </div>
-        </${tag}>`;
+        </${tags.host}>`;
 
         /**
          * Note, inactive tab content is **destroyed** on every tab switch.
@@ -366,7 +367,7 @@ export function runDialogSuite({
           render() {
             const changeActiveTabIndexRef = this.changeActiveTabIndex.bind(this);
             return html`
-              <${tagTabs}>
+              <${tags.tabs}>
                 <button slot="tab" class="first-button" @click=${() => changeActiveTabIndexRef(0)}>
                   First
                 </button>
@@ -375,7 +376,7 @@ export function runDialogSuite({
                   Second
                 </button>
                 <p slot="panel">Info page with lots of information about us.</p>
-              </${tagTabs}>
+              </${tags.tabs}>
             `;
           }
         }

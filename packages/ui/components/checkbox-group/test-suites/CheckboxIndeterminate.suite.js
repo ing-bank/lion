@@ -44,9 +44,11 @@ export function runCheckboxIndeterminateSuite({
   const groupTagString = resolveSuiteTag(groupEl, legacyGroupTagString);
   const childTagString = resolveSuiteTag(childEl, legacyChildTagString);
 
-  const tag = unsafeStatic(tagString);
-  const groupTag = unsafeStatic(groupTagString);
-  const childTag = unsafeStatic(childTagString);
+  const tags = {
+    host: unsafeStatic(tagString),
+    'checkbox-group': unsafeStatic(groupTagString),
+    checkbox: unsafeStatic(childTagString),
+  };
 
   describe('CheckboxIndeterminate', async () => {
     /** @type {{_$litStatic$: any}} */
@@ -54,10 +56,10 @@ export function runCheckboxIndeterminateSuite({
     it('should have type = checkbox', async () => {
       // Arrange
       const el = await fixture(html`
-        <${tag}
+        <${tags.host}
           name="checkbox"
           .choiceValue="${'male'}"
-        ></${tag}>
+        ></${tags.host}>
       `);
 
       // Assert
@@ -67,13 +69,13 @@ export function runCheckboxIndeterminateSuite({
     it('should not be indeterminate by default if all children are unchecked', async () => {
       // Arrange
       const el = await fixture(html`
-        <${groupTag} name="scientists[]">
-          <${tag} label="Favorite scientists">
-            <${childTag} label="Archimedes"></${childTag}>
-            <${childTag} label="Francis Bacon"></${childTag}>
-            <${childTag} label="Marie Curie"></${childTag}>
-          </${tag}>
-        </${groupTag}>
+        <${tags['checkbox-group']} name="scientists[]">
+          <${tags.host} label="Favorite scientists">
+            <${tags.checkbox} label="Archimedes"></${tags.checkbox}>
+            <${tags.checkbox} label="Francis Bacon"></${tags.checkbox}>
+            <${tags.checkbox} label="Marie Curie"></${tags.checkbox}>
+          </${tags.host}>
+        </${tags['checkbox-group']}>
       `);
       const elIndeterminate = /**  @type {LionCheckboxIndeterminate} */ (
         el.querySelector(`${tagString}`)
@@ -86,13 +88,13 @@ export function runCheckboxIndeterminateSuite({
     it('should be indeterminate if one child is checked', async () => {
       // Arrange
       const el = /**  @type {LionCheckboxGroup} */ await fixture(html`
-      <${groupTag} name="scientists[]">
-        <${tag} label="Favorite scientists">
-          <${childTag} label="Archimedes"></${childTag}>
-          <${childTag} label="Francis Bacon" checked></${childTag}>
-          <${childTag} label="Marie Curie"></${childTag}>
-        </${tag}>
-      </${groupTag}>
+      <${tags['checkbox-group']} name="scientists[]">
+        <${tags.host} label="Favorite scientists">
+          <${tags.checkbox} label="Archimedes"></${tags.checkbox}>
+          <${tags.checkbox} label="Francis Bacon" checked></${tags.checkbox}>
+          <${tags.checkbox} label="Marie Curie"></${tags.checkbox}>
+        </${tags.host}>
+      </${tags['checkbox-group']}>
     `);
 
       const elIndeterminate = /**  @type {LionCheckboxIndeterminate} */ (
@@ -106,13 +108,13 @@ export function runCheckboxIndeterminateSuite({
       // Arrange
       const el = /**  @type {LionCheckboxGroup} */ (
         await fixture(html`
-        <${groupTag} name="scientists[]">
-          <${tag} label="Favorite scientists">
-            <${childTag} label="Archimedes" checked></${childTag}>
-            <${childTag} label="Francis Bacon" checked></${childTag}>
-            <${childTag} label="Marie Curie" checked></${childTag}>
-          </${tag}>
-        </${groupTag}>
+        <${tags['checkbox-group']} name="scientists[]">
+          <${tags.host} label="Favorite scientists">
+            <${tags.checkbox} label="Archimedes" checked></${tags.checkbox}>
+            <${tags.checkbox} label="Francis Bacon" checked></${tags.checkbox}>
+            <${tags.checkbox} label="Marie Curie" checked></${tags.checkbox}>
+          </${tags.host}>
+        </${tags['checkbox-group']}>
       `)
       );
       const elIndeterminate = /**  @type {LionCheckboxIndeterminate} */ (
@@ -128,13 +130,13 @@ export function runCheckboxIndeterminateSuite({
       // Arrange
       const el = /**  @type {LionCheckboxGroup} */ (
         await fixture(html`
-        <${groupTag} name="scientists[]">
-          <${tag} label="Favorite scientists">
-            <${childTag} label="Archimedes"></${childTag}>
-            <${childTag} label="Francis Bacon"></${childTag}>
-            <${childTag} label="Marie Curie"></${childTag}>
-          </${tag}>
-        </${groupTag}>
+        <${tags['checkbox-group']} name="scientists[]">
+          <${tags.host} label="Favorite scientists">
+            <${tags.checkbox} label="Archimedes"></${tags.checkbox}>
+            <${tags.checkbox} label="Francis Bacon"></${tags.checkbox}>
+            <${tags.checkbox} label="Marie Curie"></${tags.checkbox}>
+          </${tags.host}>
+        </${tags['checkbox-group']}>
       `)
       );
       const elIndeterminate = /**  @type {LionCheckboxIndeterminate} */ (
@@ -155,13 +157,13 @@ export function runCheckboxIndeterminateSuite({
       // Arrange
       const el = /**  @type {LionCheckboxGroup} */ (
         await fixture(html`
-        <${groupTag} name="scientists[]">
-          <${tag} label="Favorite scientists">
-            <${childTag} label="Archimedes"></${childTag}>
-            <${childTag} label="Francis Bacon"></${childTag}>
-            <${childTag} label="Marie Curie"></${childTag}>
-          </${tag}>
-        </${groupTag}>
+        <${tags['checkbox-group']} name="scientists[]">
+          <${tags.host} label="Favorite scientists">
+            <${tags.checkbox} label="Archimedes"></${tags.checkbox}>
+            <${tags.checkbox} label="Francis Bacon"></${tags.checkbox}>
+            <${tags.checkbox} label="Marie Curie"></${tags.checkbox}>
+          </${tags.host}>
+        </${tags['checkbox-group']}>
       `)
       );
       const elIndeterminate = /**  @type {LionCheckboxIndeterminate} */ (
@@ -184,13 +186,13 @@ export function runCheckboxIndeterminateSuite({
       // Arrange
       const el = /**  @type {LionCheckboxGroup} */ (
         await fixture(html`
-        <${groupTag} name="scientists[]">
-          <${tag} label="Favorite scientists">
-            <${childTag} label="Archimedes"></${childTag}>
-            <${childTag} label="Francis Bacon" disabled></${childTag}>
-            <${childTag} label="Marie Curie"></${childTag}>
-          </${tag}>
-        </${groupTag}>
+        <${tags['checkbox-group']} name="scientists[]">
+          <${tags.host} label="Favorite scientists">
+            <${tags.checkbox} label="Archimedes"></${tags.checkbox}>
+            <${tags.checkbox} label="Francis Bacon" disabled></${tags.checkbox}>
+            <${tags.checkbox} label="Marie Curie"></${tags.checkbox}>
+          </${tags.host}>
+        </${tags['checkbox-group']}>
       `)
       );
       const elIndeterminate = /**  @type {LionCheckboxIndeterminate} */ (
@@ -211,13 +213,13 @@ export function runCheckboxIndeterminateSuite({
     it('should be checked when all children are prechecked', async () => {
       // Arrange
       const el = /**  @type {LionCheckboxGroup} */ await fixture(html`
-      <${groupTag} name="scientists[]">
-        <${tag} label="Favorite scientists">
-          <${childTag} checked label="Archimedes"></${childTag}>
-          <${childTag} checked label="Francis Bacon"></${childTag}>
-          <${childTag} checked label="Marie Curie"></${childTag}>
-        </${tag}>
-      </${groupTag}>
+      <${tags['checkbox-group']} name="scientists[]">
+        <${tags.host} label="Favorite scientists">
+          <${tags.checkbox} checked label="Archimedes"></${tags.checkbox}>
+          <${tags.checkbox} checked label="Francis Bacon"></${tags.checkbox}>
+          <${tags.checkbox} checked label="Marie Curie"></${tags.checkbox}>
+        </${tags.host}>
+      </${tags['checkbox-group']}>
     `);
 
       const elIndeterminate = /**  @type {LionCheckboxIndeterminate} */ (
@@ -231,11 +233,11 @@ export function runCheckboxIndeterminateSuite({
     it('should be checked when it has one prechecked child', async () => {
       // Arrange
       const el = /**  @type {LionCheckboxGroup} */ await fixture(html`
-      <${groupTag} name="scientists[]">
-        <${tag} label="Favorite scientists">
-          <${childTag} checked label="Archimedes"></${childTag}>
-        </${tag}>
-      </${groupTag}>
+      <${tags['checkbox-group']} name="scientists[]">
+        <${tags.host} label="Favorite scientists">
+          <${tags.checkbox} checked label="Archimedes"></${tags.checkbox}>
+        </${tags.host}>
+      </${tags['checkbox-group']}>
     `);
 
       const elIndeterminate = /**  @type {LionCheckboxIndeterminate} */ (
@@ -249,12 +251,12 @@ export function runCheckboxIndeterminateSuite({
     it('should be unchecked when it has an disabled checked child and an unchecked child', async () => {
       // Arrange
       const el = /**  @type {LionCheckboxGroup} */ await fixture(html`
-      <${groupTag} name="scientists[]">
-        <${tag} label="Favorite scientists">
-          <${childTag} disabled checked label="Archimedes"></${childTag}>
-          <${childTag} label="Francis Bacon"></${childTag}>
-        </${tag}>
-      </${groupTag}>
+      <${tags['checkbox-group']} name="scientists[]">
+        <${tags.host} label="Favorite scientists">
+          <${tags.checkbox} disabled checked label="Archimedes"></${tags.checkbox}>
+          <${tags.checkbox} label="Francis Bacon"></${tags.checkbox}>
+        </${tags.host}>
+      </${tags['checkbox-group']}>
     `);
 
       const elIndeterminate = /**  @type {LionCheckboxIndeterminate} */ (
@@ -268,13 +270,13 @@ export function runCheckboxIndeterminateSuite({
     it('should be indeterminated when some of the children are prechecked', async () => {
       // Arrange
       const el = /**  @type {LionCheckboxGroup} */ await fixture(html`
-      <${groupTag} name="scientists[]">
-        <${tag} label="Favorite scientists">
-          <${childTag} checked label="Archimedes"></${childTag}>
-          <${childTag} checked label="Francis Bacon"></${childTag}>
-          <${childTag} label="Marie Curie"></${childTag}>
-        </${tag}>
-      </${groupTag}>
+      <${tags['checkbox-group']} name="scientists[]">
+        <${tags.host} label="Favorite scientists">
+          <${tags.checkbox} checked label="Archimedes"></${tags.checkbox}>
+          <${tags.checkbox} checked label="Francis Bacon"></${tags.checkbox}>
+          <${tags.checkbox} label="Marie Curie"></${tags.checkbox}>
+        </${tags.host}>
+      </${tags['checkbox-group']}>
     `);
 
       const elIndeterminate = /**  @type {LionCheckboxIndeterminate} */ (
@@ -289,13 +291,13 @@ export function runCheckboxIndeterminateSuite({
       // Arrange
       const el = /**  @type {LionCheckboxGroup} */ (
         await fixture(html`
-        <${groupTag} name="scientists[]">
-          <${tag} label="Favorite scientists">
-            <${childTag} label="Archimedes"></${childTag}>
-            <${childTag} label="Francis Bacon" checked></${childTag}>
-            <${childTag} label="Marie Curie"></${childTag}>
-          </${tag}>
-        </${groupTag}>
+        <${tags['checkbox-group']} name="scientists[]">
+          <${tags.host} label="Favorite scientists">
+            <${tags.checkbox} label="Archimedes"></${tags.checkbox}>
+            <${tags.checkbox} label="Francis Bacon" checked></${tags.checkbox}>
+            <${tags.checkbox} label="Marie Curie"></${tags.checkbox}>
+          </${tags.host}>
+        </${tags['checkbox-group']}>
       `)
       );
       const elIndeterminate = /**  @type {LionCheckboxIndeterminate} */ (
@@ -318,13 +320,13 @@ export function runCheckboxIndeterminateSuite({
       // Arrange
       const el = /**  @type {LionCheckboxGroup} */ (
         await fixture(html`
-        <${groupTag} name="scientists[]">
-          <${tag} label="Favorite scientists">
-            <${childTag} label="Archimedes"></${childTag}>
-            <${childTag} label="Francis Bacon" disabled></${childTag}>
-            <${childTag} label="Marie Curie"></${childTag}>
-          </${tag}>
-        </${groupTag}>
+        <${tags['checkbox-group']} name="scientists[]">
+          <${tags.host} label="Favorite scientists">
+            <${tags.checkbox} label="Archimedes"></${tags.checkbox}>
+            <${tags.checkbox} label="Francis Bacon" disabled></${tags.checkbox}>
+            <${tags.checkbox} label="Marie Curie"></${tags.checkbox}>
+          </${tags.host}>
+        </${tags['checkbox-group']}>
       `)
       );
       const elIndeterminate = /**  @type {LionCheckboxIndeterminate} */ (
@@ -347,13 +349,13 @@ export function runCheckboxIndeterminateSuite({
       // Arrange
       const el = /**  @type {LionCheckboxGroup} */ (
         await fixture(html`
-        <${groupTag} name="scientists[]">
-          <${tag} label="Favorite scientists">
-            <${childTag} label="Archimedes" disabled></${childTag}>
-            <${childTag} label="Francis Bacon" disabled></${childTag}>
-            <${childTag} label="Marie Curie" disabled></${childTag}>
-          </${tag}>
-        </${groupTag}>
+        <${tags['checkbox-group']} name="scientists[]">
+          <${tags.host} label="Favorite scientists">
+            <${tags.checkbox} label="Archimedes" disabled></${tags.checkbox}>
+            <${tags.checkbox} label="Francis Bacon" disabled></${tags.checkbox}>
+            <${tags.checkbox} label="Marie Curie" disabled></${tags.checkbox}>
+          </${tags.host}>
+        </${tags['checkbox-group']}>
       `)
       );
       const elIndeterminate = /**  @type {LionCheckboxIndeterminate} */ (
@@ -377,13 +379,13 @@ export function runCheckboxIndeterminateSuite({
       // Arrange
       const el = /**  @type {LionCheckboxGroup} */ (
         await fixture(html`
-        <${groupTag} name="scientists[]">
-          <${tag} label="Favorite scientists">
-            <${childTag} label="Archimedes" disabled checked></${childTag}>
-            <${childTag} label="Francis Bacon" disabled checked></${childTag}>
-            <${childTag} label="Marie Curie" disabled checked></${childTag}>
-          </${tag}>
-        </${groupTag}>
+        <${tags['checkbox-group']} name="scientists[]">
+          <${tags.host} label="Favorite scientists">
+            <${tags.checkbox} label="Archimedes" disabled checked></${tags.checkbox}>
+            <${tags.checkbox} label="Francis Bacon" disabled checked></${tags.checkbox}>
+            <${tags.checkbox} label="Marie Curie" disabled checked></${tags.checkbox}>
+          </${tags.host}>
+        </${tags['checkbox-group']}>
       `)
       );
       const elIndeterminate = /**  @type {LionCheckboxIndeterminate} */ (
@@ -407,13 +409,13 @@ export function runCheckboxIndeterminateSuite({
       // Arrange
       const el = /**  @type {LionCheckboxGroup} */ (
         await fixture(html`
-        <${groupTag} name="scientists[]">
-          <${tag} label="Favorite scientists">
-            <${childTag} label="Archimedes"></${childTag}>
-            <${childTag} label="Francis Bacon"></${childTag}>
-            <${childTag} label="Marie Curie"></${childTag}>
-          </${tag}>
-        </${groupTag}>
+        <${tags['checkbox-group']} name="scientists[]">
+          <${tags.host} label="Favorite scientists">
+            <${tags.checkbox} label="Archimedes"></${tags.checkbox}>
+            <${tags.checkbox} label="Francis Bacon"></${tags.checkbox}>
+            <${tags.checkbox} label="Marie Curie"></${tags.checkbox}>
+          </${tags.host}>
+        </${tags['checkbox-group']}>
       `)
       );
       const elIndeterminate = /**  @type {LionCheckboxIndeterminate} */ (
@@ -436,13 +438,13 @@ export function runCheckboxIndeterminateSuite({
       // Arrange
       const el = /**  @type {LionCheckboxGroup} */ (
         await fixture(html`
-        <${groupTag} name="scientists[]">
-          <${tag} label="Favorite scientists">
-            <${childTag} label="Archimedes" checked></${childTag}>
-            <${childTag} label="Francis Bacon" checked></${childTag}>
-            <${childTag} label="Marie Curie" checked></${childTag}>
-          </${tag}>
-        </${groupTag}>
+        <${tags['checkbox-group']} name="scientists[]">
+          <${tags.host} label="Favorite scientists">
+            <${tags.checkbox} label="Archimedes" checked></${tags.checkbox}>
+            <${tags.checkbox} label="Francis Bacon" checked></${tags.checkbox}>
+            <${tags.checkbox} label="Marie Curie" checked></${tags.checkbox}>
+          </${tags.host}>
+        </${tags['checkbox-group']}>
       `)
       );
       const elIndeterminate = /**  @type {LionCheckboxIndeterminate} */ (
@@ -465,13 +467,13 @@ export function runCheckboxIndeterminateSuite({
       // Arrange
       const el = /**  @type {LionCheckboxGroup} */ (
         await fixture(html`
-        <${groupTag} name="scientists[]">
-          <${tag} label="Favorite scientists">
-            <${childTag} checked label="Archimedes"></${childTag}>
-            <${childTag} disabled label="Francis Bacon"></${childTag}>
-            <${childTag} checked label="Marie Curie"></${childTag}>
-          </${tag}>
-        </${groupTag}>
+        <${tags['checkbox-group']} name="scientists[]">
+          <${tags.host} label="Favorite scientists">
+            <${tags.checkbox} checked label="Archimedes"></${tags.checkbox}>
+            <${tags.checkbox} disabled label="Francis Bacon"></${tags.checkbox}>
+            <${tags.checkbox} checked label="Marie Curie"></${tags.checkbox}>
+          </${tags.host}>
+        </${tags['checkbox-group']}>
       `)
       );
       const elIndeterminate = /**  @type {LionCheckboxIndeterminate} */ (
@@ -495,13 +497,13 @@ export function runCheckboxIndeterminateSuite({
       // Arrange
       const el = /**  @type {LionCheckboxGroup} */ (
         await fixture(html`
-        <${groupTag} name="scientists[]">
-          <${tag} label="Favorite scientists">
-            <${childTag} checked label="Archimedes"></${childTag}>
-            <${childTag} disabled label="Francis Bacon"></${childTag}>
-            <${childTag} label="Marie Curie"></${childTag}>
-          </${tag}>
-        </${groupTag}>
+        <${tags['checkbox-group']} name="scientists[]">
+          <${tags.host} label="Favorite scientists">
+            <${tags.checkbox} checked label="Archimedes"></${tags.checkbox}>
+            <${tags.checkbox} disabled label="Francis Bacon"></${tags.checkbox}>
+            <${tags.checkbox} label="Marie Curie"></${tags.checkbox}>
+          </${tags.host}>
+        </${tags['checkbox-group']}>
       `)
       );
       const elIndeterminate = /**  @type {LionCheckboxIndeterminate} */ (
@@ -524,39 +526,39 @@ export function runCheckboxIndeterminateSuite({
       // Arrange
       const el = /**  @type {LionCheckboxGroup} */ (
         await fixture(html`
-        <${groupTag} name="scientists[]" label="Favorite scientists">
-          <${tag}
+        <${tags['checkbox-group']} name="scientists[]" label="Favorite scientists">
+          <${tags.host}
             label="Old Greek scientists"
             id="first-checkbox-indeterminate"
           >
-            <${childTag}
+            <${tags.checkbox}
               slot="checkbox"
               label="Archimedes"
               .choiceValue=${'Archimedes'}
-            ></${childTag}>
-            <${childTag} label="Plato" .choiceValue=${'Plato'}></${childTag}>
-            <${childTag}
+            ></${tags.checkbox}>
+            <${tags.checkbox} label="Plato" .choiceValue=${'Plato'}></${tags.checkbox}>
+            <${tags.checkbox}
               slot="checkbox"
               label="Pythagoras"
               .choiceValue=${'Pythagoras'}
-            ></${childTag}>
-          </${tag}>
-          <${tag}
+            ></${tags.checkbox}>
+          </${tags.host}>
+          <${tags.host}
             label="17th Century scientists"
             id="second-checkbox-indeterminate"
           >
-            <${childTag}
+            <${tags.checkbox}
               slot="checkbox"
               label="Isaac Newton"
               .choiceValue=${'Isaac Newton'}
-            ></${childTag}>
-            <${childTag}
+            ></${tags.checkbox}>
+            <${tags.checkbox}
               slot="checkbox"
               label="Galileo Galilei"
               .choiceValue=${'Galileo Galilei'}
-            ></${childTag}>
-          </${tag}>
-        </${groupTag}>
+            ></${tags.checkbox}>
+          </${tags.host}>
+        </${tags['checkbox-group']}>
       `)
       );
       const elFirstIndeterminate = /**  @type {LionCheckboxIndeterminate} */ (
@@ -589,13 +591,13 @@ export function runCheckboxIndeterminateSuite({
     it('should work as expected when new checkbox was added', async () => {
       // Arrange
       const el = /**  @type {LionCheckboxGroup} */ await fixture(html`
-      <${groupTag} name="scientists[]">
-        <${tag} label="Favorite scientists">
-          <${childTag} checked label="Archimedes"></${childTag}>
-          <${childTag} checked label="Francis Bacon" checked></${childTag}>
-          <${childTag} checked label="Marie Curie"></${childTag}>
-        </${tag}>
-      </${groupTag}>
+      <${tags['checkbox-group']} name="scientists[]">
+        <${tags.host} label="Favorite scientists">
+          <${tags.checkbox} checked label="Archimedes"></${tags.checkbox}>
+          <${tags.checkbox} checked label="Francis Bacon" checked></${tags.checkbox}>
+          <${tags.checkbox} checked label="Marie Curie"></${tags.checkbox}>
+        </${tags.host}>
+      </${tags['checkbox-group']}>
     `);
 
       const elIndeterminate = /**  @type {LionCheckboxIndeterminate} */ (
@@ -615,13 +617,13 @@ export function runCheckboxIndeterminateSuite({
     it('should work as expected when an existing checkbox was removed', async () => {
       // Arrange
       const el = /**  @type {LionCheckboxGroup} */ await fixture(html`
-      <${groupTag} name="scientists[]">
-        <${tag} label="Favorite scientists">
-          <${childTag} checked label="Archimedes"></${childTag}>
-          <${childTag} checked label="Francis Bacon" checked></${childTag}>
-          <${childTag} label="Marie Curie"></${childTag}>
-        </${tag}>
-      </${groupTag}>
+      <${tags['checkbox-group']} name="scientists[]">
+        <${tags.host} label="Favorite scientists">
+          <${tags.checkbox} checked label="Archimedes"></${tags.checkbox}>
+          <${tags.checkbox} checked label="Francis Bacon" checked></${tags.checkbox}>
+          <${tags.checkbox} label="Marie Curie"></${tags.checkbox}>
+        </${tags.host}>
+      </${tags['checkbox-group']}>
     `);
 
       const elIndeterminate = /**  @type {LionCheckboxIndeterminate} */ (
@@ -642,37 +644,37 @@ export function runCheckboxIndeterminateSuite({
       // Arrange
       const el = /**  @type {LionCheckboxGroup} */ (
         await fixture(html`
-        <${groupTag} name="scientists[]" label="Favorite scientists">
-          <${tag} label="Scientists" id="parent-checkbox-indeterminate">
-            <${childTag}
+        <${tags['checkbox-group']} name="scientists[]" label="Favorite scientists">
+          <${tags.host} label="Scientists" id="parent-checkbox-indeterminate">
+            <${tags.checkbox}
               slot="checkbox"
               label="Isaac Newton"
               .choiceValue=${'Isaac Newton'}
-            ></${childTag}>
-            <${childTag}
+            ></${tags.checkbox}>
+            <${tags.checkbox}
               slot="checkbox"
               label="Galileo Galilei"
               .choiceValue=${'Galileo Galilei'}
-            ></${childTag}>
-            <${tag}
+            ></${tags.checkbox}>
+            <${tags.host}
               slot="checkbox"
               label="Old Greek scientists"
               id="nested-checkbox-indeterminate"
             >
-              <${childTag}
+              <${tags.checkbox}
                 slot="checkbox"
                 label="Archimedes"
                 .choiceValue=${'Archimedes'}
-              ></${childTag}>
-              <${childTag} label="Plato" .choiceValue=${'Plato'}></${childTag}>
-              <${childTag}
+              ></${tags.checkbox}>
+              <${tags.checkbox} label="Plato" .choiceValue=${'Plato'}></${tags.checkbox}>
+              <${tags.checkbox}
                 slot="checkbox"
                 label="Pythagoras"
                 .choiceValue=${'Pythagoras'}
-              ></${childTag}>
-            </${tag}>
-          </${tag}>
-        </${groupTag}>
+              ></${tags.checkbox}>
+            </${tags.host}>
+          </${tags.host}>
+        </${tags['checkbox-group']}>
       `)
       );
       const elNestedIndeterminate = /**  @type {LionCheckboxIndeterminate} */ (
@@ -730,20 +732,20 @@ export function runCheckboxIndeterminateSuite({
       // Arrange
       const el = /**  @type {LionCheckboxGroup} */ (
         await fixture(html`
-        <${groupTag} name="scientists[]">
+        <${tags['checkbox-group']} name="scientists[]">
           <div>
             Let's have some fun
             <div>Hello I'm a div</div>
-            <${tag} label="Favorite scientists">
+            <${tags.host} label="Favorite scientists">
               <div>useless div</div>
-              <${childTag} label="Archimedes"></${childTag}>
-              <${childTag} label="Francis Bacon"></${childTag}>
+              <${tags.checkbox} label="Archimedes"></${tags.checkbox}>
+              <${tags.checkbox} label="Francis Bacon"></${tags.checkbox}>
               <div>absolutely useless</div>
-              <${childTag} label="Marie Curie"></${childTag}>
-            </${tag}>
+              <${tags.checkbox} label="Marie Curie"></${tags.checkbox}>
+            </${tags.host}>
           </div>
           <div>Too much fun, stop it !</div>
-        </${groupTag}>
+        </${tags['checkbox-group']}>
       `)
       );
       const elIndeterminate = /**  @type {LionCheckboxIndeterminate} */ (
@@ -766,13 +768,13 @@ export function runCheckboxIndeterminateSuite({
     describe('mixed-state', () => {
       it('can have a mixed-state (using mixed-state attribute), none -> indeterminate -> all, cycling through', async () => {
         const el = await fixture(html`
-        <${groupTag} name="scientists[]">
-          <${tag} mixed-state label="Favorite scientists">
-            <${childTag} label="Archimedes" checked></${childTag}>
-            <${childTag} label="Francis Bacon"></${childTag}>
-            <${childTag} label="Marie Curie"></${childTag}>
-          </${tag}>
-        </${groupTag}>
+        <${tags['checkbox-group']} name="scientists[]">
+          <${tags.host} mixed-state label="Favorite scientists">
+            <${tags.checkbox} label="Archimedes" checked></${tags.checkbox}>
+            <${tags.checkbox} label="Francis Bacon"></${tags.checkbox}>
+            <${tags.checkbox} label="Marie Curie"></${tags.checkbox}>
+          </${tags.host}>
+        </${tags['checkbox-group']}>
       `);
         const elIndeterminate = /**  @type {LionCheckboxIndeterminate} */ (
           el.querySelector(`${tagString}`)
@@ -803,13 +805,13 @@ export function runCheckboxIndeterminateSuite({
 
       it('should reset to old child checkbox states when reaching indeterminate state', async () => {
         const el = await fixture(html`
-        <${groupTag} name="scientists[]">
-          <${tag} mixed-state label="Favorite scientists">
-            <${childTag} label="Archimedes" checked></${childTag}>
-            <${childTag} label="Francis Bacon"></${childTag}>
-            <${childTag} label="Marie Curie"></${childTag}>
-          </${tag}>
-        </${groupTag}>
+        <${tags['checkbox-group']} name="scientists[]">
+          <${tags.host} mixed-state label="Favorite scientists">
+            <${tags.checkbox} label="Archimedes" checked></${tags.checkbox}>
+            <${tags.checkbox} label="Francis Bacon"></${tags.checkbox}>
+            <${tags.checkbox} label="Marie Curie"></${tags.checkbox}>
+          </${tags.host}>
+        </${tags['checkbox-group']}>
       `);
         const elIndeterminate = /**  @type {LionCheckboxIndeterminate} */ (
           el.querySelector(`${tagString}`)
@@ -838,13 +840,13 @@ export function runCheckboxIndeterminateSuite({
 
       it('should no longer reach indeterminate state if the child boxes are all checked or all unchecked during indeterminate state', async () => {
         const el = await fixture(html`
-        <${groupTag} name="scientists[]">
-          <${tag} mixed-state label="Favorite scientists">
-            <${childTag} label="Archimedes" checked></${childTag}>
-            <${childTag} label="Francis Bacon"></${childTag}>
-            <${childTag} label="Marie Curie"></${childTag}>
-          </${tag}>
-        </${groupTag}>
+        <${tags['checkbox-group']} name="scientists[]">
+          <${tags.host} mixed-state label="Favorite scientists">
+            <${tags.checkbox} label="Archimedes" checked></${tags.checkbox}>
+            <${tags.checkbox} label="Francis Bacon"></${tags.checkbox}>
+            <${tags.checkbox} label="Marie Curie"></${tags.checkbox}>
+          </${tags.host}>
+        </${tags['checkbox-group']}>
       `);
         const elIndeterminate = /**  @type {LionCheckboxIndeterminate} */ (
           el.querySelector(`${tagString}`)
@@ -914,13 +916,13 @@ export function runCheckboxIndeterminateSuite({
       it('is accessible', async () => {
         const el = /** @type {LionCheckboxGroup} */ (
           await fixture(html`
-            <${groupTag} name="scientists[]">
-              <${tag} label="Favorite scientists">
-                <${childTag} label="Archimedes" checked></${childTag}>
-                <${childTag} label="Francis Bacon"></${childTag}>
-                <${childTag} label="Marie Curie"></${childTag}>
-              </${tag}>
-            </${groupTag}>
+            <${tags['checkbox-group']} name="scientists[]">
+              <${tags.host} label="Favorite scientists">
+                <${tags.checkbox} label="Archimedes" checked></${tags.checkbox}>
+                <${tags.checkbox} label="Francis Bacon"></${tags.checkbox}>
+                <${tags.checkbox} label="Marie Curie"></${tags.checkbox}>
+              </${tags.host}>
+            </${tags['checkbox-group']}>
           `)
         );
         await expect(el).to.be.accessible();
@@ -928,13 +930,13 @@ export function runCheckboxIndeterminateSuite({
 
       it('has role="list" and its children role="listitem"', async () => {
         const el = await fixture(html`
-          <${groupTag} name="scientists[]">
-            <${tag} label="Favorite scientists">
-              <${childTag} label="Archimedes" checked></${childTag}>
-              <${childTag} label="Francis Bacon"></${childTag}>
-              <${childTag} label="Marie Curie"></${childTag}>
-            </${tag}>
-          </${groupTag}>
+          <${tags['checkbox-group']} name="scientists[]">
+            <${tags.host} label="Favorite scientists">
+              <${tags.checkbox} label="Archimedes" checked></${tags.checkbox}>
+              <${tags.checkbox} label="Francis Bacon"></${tags.checkbox}>
+              <${tags.checkbox} label="Marie Curie"></${tags.checkbox}>
+            </${tags.host}>
+          </${tags['checkbox-group']}>
         `);
         const elIndeterminate = /**  @type {LionCheckboxIndeterminate} */ (
           el.querySelector(`${tagString}`)

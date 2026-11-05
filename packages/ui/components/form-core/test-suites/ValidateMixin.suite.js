@@ -385,9 +385,11 @@ export function runValidateMixinSuite({
         const alwaysValidExecuteSpy = sinon.spy(alwaysValid, 'execute');
         const el = /** @type {ValidateElement} */ (
           await fixture(html`
-          <${tag} .validators=${[alwaysValid]}>${lightDom}</${tag}>
+          <${tag} .validators=${[alwaysValid]} .modelValue=${'initial'}>${lightDom}</${tag}>
         `)
         );
+        await el.updateComplete;
+        alwaysValidExecuteSpy.resetHistory();
         // @ts-ignore [allow-private] in test
         const isEmptySpy = sinon.spy(el, '__isEmpty');
         const validateSpy = sinon.spy(el, 'validate');
@@ -619,10 +621,12 @@ export function runValidateMixinSuite({
           await fixture(html`
           <${tag}
             .validators=${[isCatValidator]}
-            .modelValue=${'cat'}
+            .modelValue=${'dog'}
           >${lightDom}</${tag}>
         `)
         );
+        await el.updateComplete;
+        catSpy.resetHistory();
         el.modelValue = 'cat';
         expect(catSpy.callCount).to.equal(1);
         isCatValidator.param = 'Garfield';
@@ -1177,12 +1181,12 @@ export function runValidateMixinSuite({
           .feedbackCondition="${(
             /** @type {string} */ type,
             /** @type {object} */ meta,
-            /** @type {(type: string) => any} */ defaultCondition,
+            /** @type {(type: string, meta: object) => any} */ defaultCondition,
           ) => {
             if (type === 'error') {
               return true;
             }
-            return defaultCondition(type);
+            return defaultCondition(type, meta);
           }}"
           >${lightDom}</${tag}>
         `)

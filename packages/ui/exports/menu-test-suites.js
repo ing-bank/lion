@@ -1,3 +1,4 @@
+/** @deprecated Import component suites from `@lion/ui/test-suites/menu.js` instead. */
 /* eslint-disable import/no-relative-packages */
 // The first two runners describe mixins that `@lion/ui/menu.js` does not re-export, so a Subclasser
 // cannot extend the mixin they test. Open decision: export the mixins, or keep these runners

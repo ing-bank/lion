@@ -44,21 +44,24 @@ export function runListboxMixinSuite({
   optionTagString: legacyOptionTagString,
 } = {}) {
   const hostTagString = resolveSuiteTag(host, legacyTagString);
-  const tag = unsafeStatic(hostTagString);
   const optionTagString = resolveSuiteTag(roleOption, legacyOptionTagString);
-  const optionTag = unsafeStatic(optionTagString);
   const optionsTagString = resolveSuiteTag(LionOptions);
+  const tags = {
+    host: unsafeStatic(hostTagString),
+    option: unsafeStatic(optionTagString),
+    options: unsafeStatic(optionsTagString),
+  };
 
   describe('ListboxMixin', () => {
     it('updates grouped option positions and navigation after one microtask', async () => {
       const el = await fixture(html`
-        <${tag} opened autocomplete="none" show-all-on-empty>
-          <div><${optionTag} .choiceValue=${'one'}>One</${optionTag}></div>
+        <${tags.host} opened autocomplete="none" show-all-on-empty>
+          <div><${tags.option} .choiceValue=${'one'}>One</${tags.option}></div>
           <div>
-            <${optionTag} .choiceValue=${'two'}>Two</${optionTag}>
-            <${optionTag} .choiceValue=${'three'}>Three</${optionTag}>
+            <${tags.option} .choiceValue=${'two'}>Two</${tags.option}>
+            <${tags.option} .choiceValue=${'three'}>Three</${tags.option}>
           </div>
-        </${tag}>
+        </${tags.host}>
       `);
       const { _listboxNode, _activeDescendantOwnerNode } = getListboxMembers(el);
       const groups = [..._listboxNode.children];
@@ -88,10 +91,10 @@ export function runListboxMixinSuite({
     describe('FormControl (Field / ChoiceGroup) functionality', () => {
       it('has a single modelValue representing the currently checked option', async () => {
         const el = await fixture(html`
-        <${tag} name="foo">
-          <${optionTag} .choiceValue=${'10'} checked>Item 1</${optionTag}>
-          <${optionTag} .choiceValue=${'20'}>Item 2</${optionTag}>
-        </${tag}>
+        <${tags.host} name="foo">
+          <${tags.option} .choiceValue=${'10'} checked>Item 1</${tags.option}>
+          <${tags.option} .choiceValue=${'20'}>Item 2</${tags.option}>
+        </${tags.host}>
       `);
         expect(el.modelValue).to.equal('10');
       });
@@ -99,11 +102,11 @@ export function runListboxMixinSuite({
       it('should dispatch model-value-changed 1 time on first paint', async () => {
         const spy = sinon.spy();
         await fixture(html`
-          <${tag} @model-value-changed="${spy}">
-            <${optionTag} .choiceValue="${'10'}">Item 1</${optionTag}>
-            <${optionTag} .choiceValue="${'20'}">Item 2</${optionTag}>
-            <${optionTag} .choiceValue="${'30'}">Item 3</${optionTag}>
-          </${tag}>
+          <${tags.host} @model-value-changed="${spy}">
+            <${tags.option} .choiceValue="${'10'}">Item 1</${tags.option}>
+            <${tags.option} .choiceValue="${'20'}">Item 2</${tags.option}>
+            <${tags.option} .choiceValue="${'30'}">Item 3</${tags.option}>
+          </${tags.host}>
         `);
         expect(spy.callCount).to.equal(1);
       });
@@ -111,11 +114,11 @@ export function runListboxMixinSuite({
       it('should dispatch model-value-changed 1 time on interaction', async () => {
         const spy = sinon.spy();
         const el = await fixture(html`
-          <${tag}>
-            <${optionTag} .choiceValue="${'10'}">Item 1</${optionTag}>
-            <${optionTag} .choiceValue="${'20'}">Item 2</${optionTag}>
-            <${optionTag} .choiceValue="${'30'}">Item 3</${optionTag}>
-          </${tag}>
+          <${tags.host}>
+            <${tags.option} .choiceValue="${'10'}">Item 1</${tags.option}>
+            <${tags.option} .choiceValue="${'20'}">Item 2</${tags.option}>
+            <${tags.option} .choiceValue="${'30'}">Item 3</${tags.option}>
+          </${tags.host}>
         `);
 
         el.addEventListener('model-value-changed', spy);
@@ -131,11 +134,11 @@ export function runListboxMixinSuite({
       it('should not dispatch model-value-changed on reappend checked child', async () => {
         const spy = sinon.spy();
         const el = await fixture(html`
-          <${tag}>
-            <${optionTag} .choiceValue="${'10'}">Item 1</${optionTag}>
-            <${optionTag} .choiceValue="${'20'}">Item 2</${optionTag}>
-            <${optionTag} .choiceValue="${'30'}">Item 3</${optionTag}>
-          </${tag}>
+          <${tags.host}>
+            <${tags.option} .choiceValue="${'10'}">Item 1</${tags.option}>
+            <${tags.option} .choiceValue="${'20'}">Item 2</${tags.option}>
+            <${tags.option} .choiceValue="${'30'}">Item 3</${tags.option}>
+          </${tags.host}>
         `);
 
         el.addEventListener('model-value-changed', spy);
@@ -148,17 +151,17 @@ export function runListboxMixinSuite({
 
       it('automatically sets the name attribute of child checkboxes to its own name', async () => {
         const el = await fixture(html`
-        <${tag} name="foo">
-          <${optionTag} .choiceValue=${10} checked>Item 1</${optionTag}>
-          <${optionTag} .choiceValue=${20}>Item 2</${optionTag}>
-        </${tag}>
+        <${tags.host} name="foo">
+          <${tags.option} .choiceValue=${10} checked>Item 1</${tags.option}>
+          <${tags.option} .choiceValue=${20}>Item 2</${tags.option}>
+        </${tags.host}>
       `);
 
         expect(el.formElements[0].name).to.equal('foo');
         expect(el.formElements[1].name).to.equal('foo');
 
         const validChild = await fixture(
-          html` <${optionTag} .choiceValue=${30}>Item 3</${optionTag}> `,
+          html` <${tags.option} .choiceValue=${30}>Item 3</${tags.option}> `,
         );
         el.appendChild(validChild);
 
@@ -167,13 +170,13 @@ export function runListboxMixinSuite({
 
       it('throws if a child element without a modelValue like { value: "foo", checked: false } tries to register', async () => {
         const el = await fixture(html`
-        <${tag} name="foo">
-          <${optionTag} .choiceValue=${10} checked>Item 1</${optionTag}>
-          <${optionTag} .choiceValue=${20}>Item 2</${optionTag}>
-        </${tag}>
+        <${tags.host} name="foo">
+          <${tags.option} .choiceValue=${10} checked>Item 1</${tags.option}>
+          <${tags.option} .choiceValue=${20}>Item 2</${tags.option}>
+        </${tags.host}>
       `);
         const invalidChild = await fixture(
-          html` <${optionTag} .modelValue=${'Lara'}></${optionTag}> `,
+          html` <${tags.option} .modelValue=${'Lara'}></${tags.option}> `,
         );
 
         expect(() => {
@@ -185,11 +188,11 @@ export function runListboxMixinSuite({
 
       it('can set initial modelValue on creation', async () => {
         const el = await fixture(html`
-        <${tag} name="gender" .modelValue=${'other'}>
-          <${optionTag} .choiceValue=${'male'}></${optionTag}>
-          <${optionTag} .choiceValue=${'female'}></${optionTag}>
-          <${optionTag} .choiceValue=${'other'}></${optionTag}>
-        </${tag}>
+        <${tags.host} name="gender" .modelValue=${'other'}>
+          <${tags.option} .choiceValue=${'male'}></${tags.option}>
+          <${tags.option} .choiceValue=${'female'}></${tags.option}>
+          <${tags.option} .choiceValue=${'other'}></${tags.option}>
+        </${tags.host}>
       `);
 
         expect(el.modelValue).to.equal('other');
@@ -198,11 +201,11 @@ export function runListboxMixinSuite({
 
       it('requests update for modelValue when checkedIndex changes', async () => {
         const el = /** @type {LionListbox} */ await fixture(html`
-          <${tag} name="gender" .modelValue=${'other'}>
-            <${optionTag} .choiceValue=${'male'}></${optionTag}>
-            <${optionTag} .choiceValue=${'female'}></${optionTag}>
-            <${optionTag} .choiceValue=${'other'}></${optionTag}>
-          </${tag}>
+          <${tags.host} name="gender" .modelValue=${'other'}>
+            <${tags.option} .choiceValue=${'male'}></${tags.option}>
+            <${tags.option} .choiceValue=${'female'}></${tags.option}>
+            <${tags.option} .choiceValue=${'other'}></${tags.option}>
+          </${tags.host}>
         `);
         expect(el.checkedIndex).to.equal(2);
         const requestSpy = sinon.spy(el, 'requestUpdate');
@@ -217,11 +220,11 @@ export function runListboxMixinSuite({
 
       it('requests update for modelValue after click', async () => {
         const el = await fixture(html`
-          <${tag} name="gender" .modelValue=${'other'}>
-            <${optionTag} .choiceValue=${'male'}></${optionTag}>
-            <${optionTag} .choiceValue=${'female'}></${optionTag}>
-            <${optionTag} .choiceValue=${'other'}></${optionTag}>
-          </${tag}>
+          <${tags.host} name="gender" .modelValue=${'other'}>
+            <${tags.option} .choiceValue=${'male'}></${tags.option}>
+            <${tags.option} .choiceValue=${'female'}></${tags.option}>
+            <${tags.option} .choiceValue=${'other'}></${tags.option}>
+          </${tags.host}>
         `);
         expect(el.checkedIndex).to.equal(2);
         const requestSpy = sinon.spy(el, 'requestUpdate');
@@ -236,11 +239,11 @@ export function runListboxMixinSuite({
 
       it('requests update for modelValue when checkedIndex changes for multiple choice', async () => {
         const el = await fixture(html`
-          <${tag} name="gender" multiple-choice .modelValue=${['other']}>
-            <${optionTag} .choiceValue=${'male'}></${optionTag}>
-            <${optionTag} .choiceValue=${'female'}></${optionTag}>
-            <${optionTag} .choiceValue=${'other'}></${optionTag}>
-          </${tag}>
+          <${tags.host} name="gender" multiple-choice .modelValue=${['other']}>
+            <${tags.option} .choiceValue=${'male'}></${tags.option}>
+            <${tags.option} .choiceValue=${'female'}></${tags.option}>
+            <${tags.option} .choiceValue=${'other'}></${tags.option}>
+          </${tags.host}>
         `);
         expect(el.checkedIndex).to.eql([2]);
         const requestSpy = sinon.spy(el, 'requestUpdate');
@@ -258,11 +261,11 @@ export function runListboxMixinSuite({
 
       it('requests update for modelValue after click for multiple choice', async () => {
         const el = await fixture(html`
-          <${tag} name="gender" multiple-choice .modelValue=${['other']}>
-            <${optionTag} .choiceValue=${'male'}></${optionTag}>
-            <${optionTag} .choiceValue=${'female'}></${optionTag}>
-            <${optionTag} .choiceValue=${'other'}></${optionTag}>
-          </${tag}>
+          <${tags.host} name="gender" multiple-choice .modelValue=${['other']}>
+            <${tags.option} .choiceValue=${'male'}></${tags.option}>
+            <${tags.option} .choiceValue=${'female'}></${tags.option}>
+            <${tags.option} .choiceValue=${'other'}></${tags.option}>
+          </${tags.host}>
         `);
         expect(el.checkedIndex).to.eql([2]);
         const requestSpy = sinon.spy(el, 'requestUpdate');
@@ -280,15 +283,15 @@ export function runListboxMixinSuite({
 
       it(`has a fieldName based on the label`, async () => {
         const el1 = await fixture(html`
-        <${tag} label="foo"></${tag}>
+        <${tags.host} label="foo"></${tags.host}>
       `);
         const { _labelNode: _labelNode1 } = getListboxMembers(el1);
         expect(el1.fieldName).to.equal(_labelNode1.textContent);
 
         const el2 = await fixture(html`
-        <${tag}>
+        <${tags.host}>
           <label slot="label">bar</label>
-        </${tag}>
+        </${tags.host}>
       `);
         const { _labelNode: _labelNode2 } = getListboxMembers(el2);
         expect(el2.fieldName).to.equal(_labelNode2.textContent);
@@ -296,14 +299,14 @@ export function runListboxMixinSuite({
 
       it(`has a fieldName based on the name if no label exists`, async () => {
         const el = await fixture(html`
-        <${tag} name="foo"></${tag}>
+        <${tags.host} name="foo"></${tags.host}>
       `);
         expect(el.fieldName).to.equal(el.name);
       });
 
       it(`can override fieldName`, async () => {
         const el = await fixture(html`
-        <${tag} label="foo" .fieldName="${'bar'}"></${tag}>
+        <${tags.host} label="foo" .fieldName="${'bar'}"></${tags.host}>
       `);
         // @ts-ignore [allow-protected] in test
         expect(el.__fieldName).to.equal(el.fieldName);
@@ -311,17 +314,17 @@ export function runListboxMixinSuite({
 
       it('supports validation', async () => {
         const el = await fixture(html`
-        <${tag}
+        <${tags.host}
           id="color"
           name="color"
           label="Favorite color"
           .validators="${[new Required()]}"
         >
-          <${optionTag} .choiceValue=${null}>select a color</${optionTag}>
-          <${optionTag} .choiceValue=${'red'}>Red</${optionTag}>
-          <${optionTag} .choiceValue=${'hotpink'} disabled>Hotpink</${optionTag}>
-          <${optionTag} .choiceValue=${'teal'}>Teal</${optionTag}>
-        </${tag}>
+          <${tags.option} .choiceValue=${null}>select a color</${tags.option}>
+          <${tags.option} .choiceValue=${'red'}>Red</${tags.option}>
+          <${tags.option} .choiceValue=${'hotpink'} disabled>Hotpink</${tags.option}>
+          <${tags.option} .choiceValue=${'teal'}>Teal</${tags.option}>
+        </${tags.host}>
       `);
 
         expect(el.hasFeedbackFor.includes('error')).to.be.true;
@@ -347,11 +350,11 @@ export function runListboxMixinSuite({
     describe('Selection', () => {
       it('supports changing the selection through serializedValue setter', async () => {
         const el = await fixture(html`
-        <${tag} id="color" name="color" label="Favorite color" has-no-default-selected>
-          <${optionTag} .choiceValue=${'red'}>Red</${optionTag}>
-          <${optionTag} .choiceValue=${'hotpink'}>Hotpink</${optionTag}>
-          <${optionTag} .choiceValue=${'teal'}>Teal</${optionTag}>
-        </${tag}>
+        <${tags.host} id="color" name="color" label="Favorite color" has-no-default-selected>
+          <${tags.option} .choiceValue=${'red'}>Red</${tags.option}>
+          <${tags.option} .choiceValue=${'hotpink'}>Hotpink</${tags.option}>
+          <${tags.option} .choiceValue=${'teal'}>Teal</${tags.option}>
+        </${tags.host}>
       `);
 
         expect(el.checkedIndex).to.equal(-1);
@@ -369,18 +372,18 @@ export function runListboxMixinSuite({
             <div style="position: sticky; top: 0px; width: 100%; height: 100px; background-color: purple; z-index: 1;">Header 1</div>
             <div style="position: relative">
               <div style="position: sticky; top: 100px; width: 100%; height: 50px; background-color: beige; z-index: 1;">Header 2</div>
-              <${tag} id="color" name="color" has-no-default-selected>
-                <${optionTag} style="height: 50px; scroll-margin-top: 150px;" .choiceValue=${'red'}>Red</${optionTag}>
-                <${optionTag} style="height: 50px; scroll-margin-top: 150px;" .choiceValue=${'hotpink'}>Hotpink</${optionTag}>
-                <${optionTag} style="height: 50px; scroll-margin-top: 150px;" .choiceValue=${'teal'}>Teal</${optionTag}>
-                <${optionTag} style="height: 50px; scroll-margin-top: 150px;" .choiceValue=${'1'}>1</${optionTag}>
-                <${optionTag} style="height: 50px; scroll-margin-top: 150px;" .choiceValue=${'2'}>2</${optionTag}>
-                <${optionTag} style="height: 50px; scroll-margin-top: 150px;" .choiceValue=${'3'}>3</${optionTag}>
-                <${optionTag} style="height: 50px; scroll-margin-top: 150px;" .choiceValue=${'4'}>4</${optionTag}>
-                <${optionTag} style="height: 50px; scroll-margin-top: 150px;" .choiceValue=${'5'}>5</${optionTag}>
-                <${optionTag} style="height: 50px; scroll-margin-top: 150px;" .choiceValue=${'5'}>6</${optionTag}>
-                <${optionTag} style="height: 50px; scroll-margin-top: 150px;" .choiceValue=${'6'}>7</${optionTag}>
-              </${tag}>
+              <${tags.host} id="color" name="color" has-no-default-selected>
+                <${tags.option} style="height: 50px; scroll-margin-top: 150px;" .choiceValue=${'red'}>Red</${tags.option}>
+                <${tags.option} style="height: 50px; scroll-margin-top: 150px;" .choiceValue=${'hotpink'}>Hotpink</${tags.option}>
+                <${tags.option} style="height: 50px; scroll-margin-top: 150px;" .choiceValue=${'teal'}>Teal</${tags.option}>
+                <${tags.option} style="height: 50px; scroll-margin-top: 150px;" .choiceValue=${'1'}>1</${tags.option}>
+                <${tags.option} style="height: 50px; scroll-margin-top: 150px;" .choiceValue=${'2'}>2</${tags.option}>
+                <${tags.option} style="height: 50px; scroll-margin-top: 150px;" .choiceValue=${'3'}>3</${tags.option}>
+                <${tags.option} style="height: 50px; scroll-margin-top: 150px;" .choiceValue=${'4'}>4</${tags.option}>
+                <${tags.option} style="height: 50px; scroll-margin-top: 150px;" .choiceValue=${'5'}>5</${tags.option}>
+                <${tags.option} style="height: 50px; scroll-margin-top: 150px;" .choiceValue=${'5'}>6</${tags.option}>
+                <${tags.option} style="height: 50px; scroll-margin-top: 150px;" .choiceValue=${'6'}>7</${tags.option}>
+              </${tags.host}>
             </div>
           </div>
         `);
@@ -421,10 +424,10 @@ export function runListboxMixinSuite({
     describe('Accessibility', () => {
       it('[axe]: is accessible when opened', async () => {
         const el = await fixture(html`
-          <${tag} label="age" opened>
-            <${optionTag} .choiceValue=${10}>Item 1</${optionTag}>
-            <${optionTag} .choiceValue=${20}>Item 2</${optionTag}>
-          </${tag}>
+          <${tags.host} label="age" opened>
+            <${tags.option} .choiceValue=${10}>Item 1</${tags.option}>
+            <${tags.option} .choiceValue=${20}>Item 2</${tags.option}>
+          </${tags.host}>
         `);
         await el.updateComplete;
         await el.updateComplete; // need 2 awaits as overlay.show is an async function
@@ -435,27 +438,27 @@ export function runListboxMixinSuite({
       // NB: regular listbox is always 'opened', but needed for combobox and select-rich
       it('[axe]: is accessible when closed', async () => {
         const el = await fixture(html`
-          <${tag} label="age">
-            <${optionTag} .choiceValue=${10}>Item 1</${optionTag}>
-            <${optionTag} .choiceValue=${20}>Item 2</${optionTag}>
-          </${tag}>
+          <${tags.host} label="age">
+            <${tags.option} .choiceValue=${10}>Item 1</${tags.option}>
+            <${tags.option} .choiceValue=${20}>Item 2</${tags.option}>
+          </${tags.host}>
         `);
         // for more info about why we need the ignoreRules, see: https://lion.js.org/fundamentals/systems/overlays/rationale/#considerations
         await expect(el).to.be.accessible({ ignoredRules: ['aria-allowed-role'] });
       });
 
       it('does not have a tabindex', async () => {
-        const el = await fixture(html`<${tag}></${tag}>`);
+        const el = await fixture(html`<${tags.host}></${tags.host}>`);
         expect(el.hasAttribute('tabindex')).to.be.false;
       });
 
       it('creates unique ids for all children', async () => {
         const el = await fixture(html`
-          <${tag}>
-            <${optionTag} .choiceValue=${10}>Item 1</${optionTag}>
-            <${optionTag} .choiceValue=${20} selected>Item 2</${optionTag}>
-            <${optionTag} .choiceValue=${30} id="predefined">Item 3</${optionTag}>
-          </${tag}>
+          <${tags.host}>
+            <${tags.option} .choiceValue=${10}>Item 1</${tags.option}>
+            <${tags.option} .choiceValue=${20} selected>Item 2</${tags.option}>
+            <${tags.option} .choiceValue=${30} id="predefined">Item 3</${tags.option}>
+          </${tags.host}>
         `);
         expect(el.querySelectorAll(optionTagString)[0].id).to.exist;
         expect(el.querySelectorAll(optionTagString)[1].id).to.exist;
@@ -464,10 +467,10 @@ export function runListboxMixinSuite({
 
       it('has a reference to the active option', async () => {
         const el = await fixture(html`
-          <${tag} opened has-no-default-selected autocomplete="none" show-all-on-empty>
-            <${optionTag} .choiceValue=${'10'} id="first">Item 1</${optionTag}>
-            <${optionTag} .choiceValue=${'20'} id="second">Item 2</${optionTag}>
-          </${tag}>
+          <${tags.host} opened has-no-default-selected autocomplete="none" show-all-on-empty>
+            <${tags.option} .choiceValue=${'10'} id="first">Item 1</${tags.option}>
+            <${tags.option} .choiceValue=${'20'} id="second">Item 2</${tags.option}>
+          </${tags.host}>
         `);
         const { _activeDescendantOwnerNode } = getListboxMembers(el);
 
@@ -486,11 +489,11 @@ export function runListboxMixinSuite({
       it('puts "aria-setsize" on all options to indicate the total amount of options', async () => {
         const el = /** @type {LionListbox} */ (
           await fixture(html`
-          <${tag} autocomplete="none" show-all-on-empty>
-            <${optionTag} .choiceValue=${10}>Item 1</${optionTag}>
-            <${optionTag} .choiceValue=${20}>Item 2</${optionTag}>
-            <${optionTag} .choiceValue=${30}>Item 3</${optionTag}>
-          </${tag}>
+          <${tags.host} autocomplete="none" show-all-on-empty>
+            <${tags.option} .choiceValue=${10}>Item 1</${tags.option}>
+            <${tags.option} .choiceValue=${20}>Item 2</${tags.option}>
+            <${tags.option} .choiceValue=${30}>Item 3</${tags.option}>
+          </${tags.host}>
         `)
         );
         el.formElements.forEach(optionEl => {
@@ -500,11 +503,11 @@ export function runListboxMixinSuite({
 
       it('puts "aria-posinset" on all options to indicate their position in the listbox', async () => {
         const el = await fixture(html`
-          <${tag} autocomplete="none" show-all-on-empty>
-            <${optionTag} .choiceValue=${10}>Item 1</${optionTag}>
-            <${optionTag} .choiceValue=${20}>Item 2</${optionTag}>
-            <${optionTag} .choiceValue=${30}>Item 3</${optionTag}>
-          </${tag}>
+          <${tags.host} autocomplete="none" show-all-on-empty>
+            <${tags.option} .choiceValue=${10}>Item 1</${tags.option}>
+            <${tags.option} .choiceValue=${20}>Item 2</${tags.option}>
+            <${tags.option} .choiceValue=${30}>Item 3</${tags.option}>
+          </${tags.host}>
         `);
         el.formElements.forEach((oEl, i) => {
           expect(oEl.getAttribute('aria-posinset')).to.equal(`${i + 1}`);
@@ -516,10 +519,10 @@ export function runListboxMixinSuite({
       // TODO: ChoiceGroup suite?
       it('registers options', async () => {
         const el = await fixture(html`
-          <${tag}>
-            <${optionTag} .choiceValue=${10}>Item 1</${optionTag}>
-            <${optionTag} .choiceValue=${20}>Item 2</${optionTag}>
-          </${tag}>
+          <${tags.host}>
+            <${tags.option} .choiceValue=${10}>Item 1</${tags.option}>
+            <${tags.option} .choiceValue=${20}>Item 2</${tags.option}>
+          </${tags.host}>
         `);
         expect(el.formElements.length).to.equal(2);
         expect(el.formElements).to.eql([
@@ -530,10 +533,10 @@ export function runListboxMixinSuite({
 
       it('allows null choiceValue', async () => {
         const el = await fixture(html`
-          <${tag}>
-            <${optionTag} checked .choiceValue=${null}>Please select value</${optionTag}>
-            <${optionTag} .choiceValue=${20}>Item 2</${optionTag}>
-          </${tag}>
+          <${tags.host}>
+            <${tags.option} checked .choiceValue=${null}>Please select value</${tags.option}>
+            <${tags.option} .choiceValue=${20}>Item 2</${tags.option}>
+          </${tags.host}>
         `);
 
         // @ts-ignore feature detect LionCombobox
@@ -548,10 +551,10 @@ export function runListboxMixinSuite({
 
       it('should reset selected value to initial value', async () => {
         const el = await fixture(html`
-          <${tag}>
-            <${optionTag} .choiceValue=${'10'}>Item 1</${optionTag}>
-            <${optionTag} .choiceValue=${'20'} checked>Item 2</${optionTag}>
-          </${tag}>
+          <${tags.host}>
+            <${tags.option} .choiceValue=${'10'}>Item 1</${tags.option}>
+            <${tags.option} .choiceValue=${'20'} checked>Item 2</${tags.option}>
+          </${tags.host}>
         `);
         expect(el.modelValue).to.equal('20');
         el.setCheckedIndex(0);
@@ -562,10 +565,10 @@ export function runListboxMixinSuite({
 
       it('should reset selected value to "Please select account" with has-no-default-selected attribute', async () => {
         const el = await fixture(html`
-          <${tag} has-no-default-selected>
-            <${optionTag} .choiceValue=${'10'}>Item 1</${optionTag}>
-            <${optionTag} .choiceValue=${'20'}>Item 2</${optionTag}>
-          </${tag}>
+          <${tags.host} has-no-default-selected>
+            <${tags.option} .choiceValue=${'10'}>Item 1</${tags.option}>
+            <${tags.option} .choiceValue=${'20'}>Item 2</${tags.option}>
+          </${tags.host}>
         `);
         el.setCheckedIndex(1);
         expect(el.modelValue).to.equal('20');
@@ -575,11 +578,11 @@ export function runListboxMixinSuite({
 
       it('should reset selected value to initial values when multiple-choice', async () => {
         const el = await fixture(html`
-          <${tag} multiple-choice has-no-default-selected>
-            <${optionTag} .choiceValue=${'10'}>Item 1</${optionTag}>
-            <${optionTag} .choiceValue=${'20'} checked>Item 2</${optionTag}>
-            <${optionTag} .choiceValue=${'30'} checked>Item 3</${optionTag}>
-          </${tag}>
+          <${tags.host} multiple-choice has-no-default-selected>
+            <${tags.option} .choiceValue=${'10'}>Item 1</${tags.option}>
+            <${tags.option} .choiceValue=${'20'} checked>Item 2</${tags.option}>
+            <${tags.option} .choiceValue=${'30'} checked>Item 3</${tags.option}>
+          </${tags.host}>
         `);
         el.setCheckedIndex(0);
         expect(el.modelValue).to.deep.equal(['10', '20', '30']);
@@ -589,10 +592,10 @@ export function runListboxMixinSuite({
 
       it('has an activeIndex', async () => {
         const el = await fixture(html`
-          <${tag} has-no-default-selected autocomplete="list">
-            <${optionTag} .choiceValue=${10}>Item 1</${optionTag}>
-            <${optionTag} .choiceValue=${20}>Item 2</${optionTag}>
-          </${tag}>
+          <${tags.host} has-no-default-selected autocomplete="list">
+            <${tags.option} .choiceValue=${10}>Item 1</${tags.option}>
+            <${tags.option} .choiceValue=${20}>Item 2</${tags.option}>
+          </${tags.host}>
         `);
         const options = el.formElements;
 
@@ -604,10 +607,10 @@ export function runListboxMixinSuite({
 
       it('should reset activeIndex value', async () => {
         const el = await fixture(html`
-          <${tag} has-no-default-selected>
-            <${optionTag} .choiceValue=${'10'}>Item 1</${optionTag}>
-            <${optionTag} .choiceValue=${'20'}>Item 2</${optionTag}>
-          </${tag}>
+          <${tags.host} has-no-default-selected>
+            <${tags.option} .choiceValue=${'10'}>Item 1</${tags.option}>
+            <${tags.option} .choiceValue=${'20'}>Item 2</${tags.option}>
+          </${tags.host}>
         `);
         const options = el.formElements;
 
@@ -620,10 +623,10 @@ export function runListboxMixinSuite({
 
       it('clears modelValue on clear()', async () => {
         const el = await fixture(html`
-          <${tag} has-no-default-selected>
-            <${optionTag} .choiceValue=${'10'}>Item 1</${optionTag}>
-            <${optionTag} .choiceValue=${'20'}>Item 2</${optionTag}>
-          </${tag}>
+          <${tags.host} has-no-default-selected>
+            <${tags.option} .choiceValue=${'10'}>Item 1</${tags.option}>
+            <${tags.option} .choiceValue=${'20'}>Item 2</${tags.option}>
+          </${tags.host}>
         `);
 
         el.setCheckedIndex(0);
@@ -637,10 +640,10 @@ export function runListboxMixinSuite({
 
       it('clears modelValue on clear() when multiple-choice', async () => {
         const el = await fixture(html`
-          <${tag} has-no-default-selected multiple-choice>
-            <${optionTag} .choiceValue=${'10'}>Item 1</${optionTag}>
-            <${optionTag} .choiceValue=${'20'}>Item 2</${optionTag}>
-          </${tag}>
+          <${tags.host} has-no-default-selected multiple-choice>
+            <${tags.option} .choiceValue=${'10'}>Item 1</${tags.option}>
+            <${tags.option} .choiceValue=${'20'}>Item 2</${tags.option}>
+          </${tags.host}>
         `);
         el.setCheckedIndex(0);
         await el.updateComplete;
@@ -652,10 +655,10 @@ export function runListboxMixinSuite({
 
       it('keeps interaction states on clear()', async () => {
         const el = await fixture(html`
-          <${tag} has-no-default-selected>
-            <${optionTag} .choiceValue=${'10'}>Item 1</${optionTag}>
-            <${optionTag} .choiceValue=${'20'}>Item 2</${optionTag}>
-          </${tag}>
+          <${tags.host} has-no-default-selected>
+            <${tags.option} .choiceValue=${'10'}>Item 1</${tags.option}>
+            <${tags.option} .choiceValue=${'20'}>Item 2</${tags.option}>
+          </${tags.host}>
         `);
 
         el.setCheckedIndex(0);
@@ -674,11 +677,11 @@ export function runListboxMixinSuite({
           it('stops navigation by default at end of option list', async () => {
             const el = /** @type {LionListbox} */ (
               await fixture(html`
-                <${tag} opened name="foo" .rotateKeyboardNavigation="${false}">
-                  <${optionTag} .choiceValue="${'Artichoke'}">Artichoke</${optionTag}>
-                  <${optionTag} .choiceValue="${'Bla'}">Bla</${optionTag}>
-                  <${optionTag} .choiceValue="${'Chard'}">Chard</${optionTag}>
-                </${tag}>
+                <${tags.host} opened name="foo" .rotateKeyboardNavigation="${false}">
+                  <${tags.option} .choiceValue="${'Artichoke'}">Artichoke</${tags.option}>
+                  <${tags.option} .choiceValue="${'Bla'}">Bla</${tags.option}>
+                  <${tags.option} .choiceValue="${'Chard'}">Chard</${tags.option}>
+                </${tags.host}>
               `)
             );
             const { _listboxNode } = getListboxMembers(el);
@@ -703,11 +706,11 @@ export function runListboxMixinSuite({
           it('when "rotate-navigation" provided, selects first option after navigated to next from last and vice versa', async () => {
             const el = /** @type {LionListbox} */ (
               await fixture(html`
-                <${tag} opened name="foo" rotate-keyboard-navigation autocomplete="inline">
-                  <${optionTag} checked .choiceValue="${'Artichoke'}">Artichoke</${optionTag}>
-                  <${optionTag} .choiceValue="${'Bla'}">Bla</${optionTag}>
-                  <${optionTag} .choiceValue="${'Chard'}">Chard</${optionTag}>
-                </${tag}>
+                <${tags.host} opened name="foo" rotate-keyboard-navigation autocomplete="inline">
+                  <${tags.option} checked .choiceValue="${'Artichoke'}">Artichoke</${tags.option}>
+                  <${tags.option} .choiceValue="${'Bla'}">Bla</${tags.option}>
+                  <${tags.option} .choiceValue="${'Chard'}">Chard</${tags.option}>
+                </${tags.host}>
               `)
             );
             const { _inputNode } = getListboxMembers(el);
@@ -740,11 +743,11 @@ export function runListboxMixinSuite({
           it('[Enter] selects active option', async () => {
             const el = /** @type {LionListbox} */ (
               await fixture(html`
-              <${tag} opened name="foo" autocomplete="none" show-all-on-empty>
-                <${optionTag} .choiceValue="${'Artichoke'}">Artichoke</${optionTag}>
-                <${optionTag} .choiceValue="${'Bla'}">Bla</${optionTag}>
-                <${optionTag} .choiceValue="${'Chard'}">Chard</${optionTag}>
-              </${tag}>
+              <${tags.host} opened name="foo" autocomplete="none" show-all-on-empty>
+                <${tags.option} .choiceValue="${'Artichoke'}">Artichoke</${tags.option}>
+                <${tags.option} .choiceValue="${'Bla'}">Bla</${tags.option}>
+                <${tags.option} .choiceValue="${'Chard'}">Chard</${tags.option}>
+              </${tags.host}>
             `)
             );
             const { _listboxNode } = getListboxMembers(el);
@@ -763,11 +766,11 @@ export function runListboxMixinSuite({
             const el = /** @type {HTMLFormElement}  */ (
               await _fixture(html`
               <form @submit=${submitSpy}>
-                <${tag} name="foo">
-                  <${optionTag} .choiceValue="${'Artichoke'}">Artichoke</${optionTag}>
-                  <${optionTag} .choiceValue="${'Bla'}">Bla</${optionTag}>
-                  <${optionTag} .choiceValue="${'Chard'}">Chard</${optionTag}>
-                </${tag}>
+                <${tags.host} name="foo">
+                  <${tags.option} .choiceValue="${'Artichoke'}">Artichoke</${tags.option}>
+                  <${tags.option} .choiceValue="${'Bla'}">Bla</${tags.option}>
+                  <${tags.option} .choiceValue="${'Chard'}">Chard</${tags.option}>
+                </${tags.host}>
                 <button type="submit">submit</button>
               </form>
             `)
@@ -794,11 +797,11 @@ export function runListboxMixinSuite({
             // to enter a space in the focusable element (textbox)
             const el = /** @type {LionListbox} */ (
               await fixture(html`
-                <${tag} opened name="foo" ._listboxReceivesNoFocus="${false}" autocomplete="none" show-all-on-empty>
-                  <${optionTag} .choiceValue="${'Artichoke'}">Artichoke</${optionTag}>
-                  <${optionTag} .choiceValue="${'Bla'}">Bla</${optionTag}>
-                  <${optionTag} .choiceValue="${'Chard'}">Chard</${optionTag}>
-                </${tag}>
+                <${tags.host} opened name="foo" ._listboxReceivesNoFocus="${false}" autocomplete="none" show-all-on-empty>
+                  <${tags.option} .choiceValue="${'Artichoke'}">Artichoke</${tags.option}>
+                  <${tags.option} .choiceValue="${'Bla'}">Bla</${tags.option}>
+                  <${tags.option} .choiceValue="${'Chard'}">Chard</${tags.option}>
+                </${tags.host}>
               `)
             );
             const { _listboxNode } = getListboxMembers(el);
@@ -825,11 +828,11 @@ export function runListboxMixinSuite({
         describe('Typeahead', () => {
           it('activates a value with single [character] key', async () => {
             const el = await fixture(html`
-            <${tag} opened id="color" name="color" label="Favorite color">
-              <${optionTag} .choiceValue=${'red'}>Red</${optionTag}>
-              <${optionTag} .choiceValue=${'teal'}>Teal</${optionTag}>
-              <${optionTag} .choiceValue=${'turquoise'}>Turquoise</${optionTag}>
-            </${tag}>
+            <${tags.host} opened id="color" name="color" label="Favorite color">
+              <${tags.option} .choiceValue=${'red'}>Red</${tags.option}>
+              <${tags.option} .choiceValue=${'teal'}>Teal</${tags.option}>
+              <${tags.option} .choiceValue=${'turquoise'}>Turquoise</${tags.option}>
+            </${tags.host}>
           `);
             // @ts-expect-error [allow-protected-in-tests]
             if (el._noTypeAhead) {
@@ -848,11 +851,11 @@ export function runListboxMixinSuite({
 
           it('activates a value with multiple [character] keys', async () => {
             const el = await fixture(html`
-            <${tag} opened id="color" name="color" label="Favorite color">
-              <${optionTag} .choiceValue=${'red'}>Red</${optionTag}>
-              <${optionTag} .choiceValue=${'teal'}>Teal</${optionTag}>
-              <${optionTag} .choiceValue=${'turquoise'}>Turquoise</${optionTag}>
-            </${tag}>
+            <${tags.host} opened id="color" name="color" label="Favorite color">
+              <${tags.option} .choiceValue=${'red'}>Red</${tags.option}>
+              <${tags.option} .choiceValue=${'teal'}>Teal</${tags.option}>
+              <${tags.option} .choiceValue=${'turquoise'}>Turquoise</${tags.option}>
+            </${tags.host}>
           `);
             // @ts-expect-error [allow-protected-in-tests]
             if (el._noTypeAhead) {
@@ -873,11 +876,11 @@ export function runListboxMixinSuite({
 
           it('selects a value with [character] keys and selectionFollowsFocus', async () => {
             const el = await fixture(html`
-            <${tag} opened id="color" name="color" label="Favorite color" selection-follows-focus>
-              <${optionTag} .choiceValue=${'red'}>Red</${optionTag}>
-              <${optionTag} .choiceValue=${'teal'}>Teal</${optionTag}>
-              <${optionTag} .choiceValue=${'turquoise'}>Turquoise</${optionTag}>
-            </${tag}>
+            <${tags.host} opened id="color" name="color" label="Favorite color" selection-follows-focus>
+              <${tags.option} .choiceValue=${'red'}>Red</${tags.option}>
+              <${tags.option} .choiceValue=${'teal'}>Teal</${tags.option}>
+              <${tags.option} .choiceValue=${'turquoise'}>Turquoise</${tags.option}>
+            </${tags.host}>
           `);
             // @ts-expect-error [allow-protected-in-tests]
             if (el._noTypeAhead) {
@@ -898,11 +901,11 @@ export function runListboxMixinSuite({
 
           it('clears typedChars after _typeAheadTimeout', async () => {
             const el = await fixture(html`
-            <${tag} opened id="color" name="color" label="Favorite color">
-              <${optionTag} .choiceValue=${'red'}>Red</${optionTag}>
-              <${optionTag} .choiceValue=${'teal'}>Teal</${optionTag}>
-              <${optionTag} .choiceValue=${'turquoise'}>turquoise</${optionTag}>
-            </${tag}>
+            <${tags.host} opened id="color" name="color" label="Favorite color">
+              <${tags.option} .choiceValue=${'red'}>Red</${tags.option}>
+              <${tags.option} .choiceValue=${'teal'}>Teal</${tags.option}>
+              <${tags.option} .choiceValue=${'turquoise'}>turquoise</${tags.option}>
+            </${tags.host}>
           `);
             // @ts-expect-error [allow-protected-in-tests]
             if (el._noTypeAhead) {
@@ -929,11 +932,11 @@ export function runListboxMixinSuite({
 
           it('clears scheduled timeouts', async () => {
             const el = await fixture(html`
-            <${tag} opened id="color" name="color" label="Favorite color">
-              <${optionTag} .choiceValue=${'red'}>Red</${optionTag}>
-              <${optionTag} .choiceValue=${'teal'}>Teal</${optionTag}>
-              <${optionTag} .choiceValue=${'turquoise'}>Turquoise</${optionTag}>
-            </${tag}>
+            <${tags.host} opened id="color" name="color" label="Favorite color">
+              <${tags.option} .choiceValue=${'red'}>Red</${tags.option}>
+              <${tags.option} .choiceValue=${'teal'}>Teal</${tags.option}>
+              <${tags.option} .choiceValue=${'turquoise'}>Turquoise</${tags.option}>
+            </${tags.host}>
           `);
             // @ts-expect-error [allow-protected-in-tests]
             if (el._noTypeAhead) {
@@ -955,12 +958,12 @@ export function runListboxMixinSuite({
 
         it('navigates to first and last option with [Home] and [End] keys', async () => {
           const el = await fixture(html`
-              <${tag} opened>
-                <${optionTag} .choiceValue=${'10'}>Item 1</${optionTag}>
-                <${optionTag} .choiceValue=${'20'}>Item 2</${optionTag}>
-                <${optionTag} .choiceValue=${'30'} checked>Item 3</${optionTag}>
-                <${optionTag} .choiceValue=${'40'}>Item 4</${optionTag}>
-              </${tag}>
+              <${tags.host} opened>
+                <${tags.option} .choiceValue=${'10'}>Item 1</${tags.option}>
+                <${tags.option} .choiceValue=${'20'}>Item 2</${tags.option}>
+                <${tags.option} .choiceValue=${'30'} checked>Item 3</${tags.option}>
+                <${tags.option} .choiceValue=${'40'}>Item 4</${tags.option}>
+              </${tags.host}>
             `);
           const { _listboxNode } = getListboxMembers(el);
 
@@ -979,11 +982,11 @@ export function runListboxMixinSuite({
         it('navigates through open lists with [ArrowDown] [ArrowUp] keys activates the option', async () => {
           const el = /** @type {LionListbox} */ (
             await fixture(html`
-              <${tag} opened has-no-default-selected autocomplete="none" show-all-on-empty>
-                <${optionTag} .choiceValue=${'Item 1'}>Item 1</${optionTag}>
-                <${optionTag} .choiceValue=${'Item 2'}>Item 2</${optionTag}>
-                <${optionTag} .choiceValue=${'Item 3'}>Item 3</${optionTag}>
-              </${tag}>
+              <${tags.host} opened has-no-default-selected autocomplete="none" show-all-on-empty>
+                <${tags.option} .choiceValue=${'Item 1'}>Item 1</${tags.option}>
+                <${tags.option} .choiceValue=${'Item 2'}>Item 2</${tags.option}>
+                <${tags.option} .choiceValue=${'Item 3'}>Item 3</${tags.option}>
+              </${tags.host}>
             `)
           );
           const { _listboxNode } = getListboxMembers(el);
@@ -1009,10 +1012,10 @@ export function runListboxMixinSuite({
         it('has a default value of "vertical"', async () => {
           const el = /** @type {LionListbox} */ (
             await fixture(html`
-            <${tag} opened name="foo" autocomplete="none" show-all-on-empty>
-              <${optionTag} .choiceValue="${'Artichoke'}">Artichoke</${optionTag}>
-              <${optionTag} .choiceValue="${'Chard'}">Chard</${optionTag}>
-            </${tag}>
+            <${tags.host} opened name="foo" autocomplete="none" show-all-on-empty>
+              <${tags.option} .choiceValue="${'Artichoke'}">Artichoke</${tags.option}>
+              <${tags.option} .choiceValue="${'Chard'}">Chard</${tags.option}>
+            </${tags.host}>
           `)
           );
           const { _listboxNode } = getListboxMembers(el);
@@ -1051,10 +1054,10 @@ export function runListboxMixinSuite({
         it('uses [ArrowLeft] and [ArrowRight] keys when "horizontal"', async () => {
           const el = /** @type {LionListbox} */ (
             await fixture(html`
-            <${tag} ._listboxReceivesNoFocus="${false}" opened name="foo" orientation="horizontal" autocomplete="none" show-all-on-empty>
-              <${optionTag} .choiceValue="${'Artichoke'}">Artichoke</${optionTag}>
-              <${optionTag} .choiceValue="${'Chard'}">Chard</${optionTag}>
-            </${tag}>
+            <${tags.host} ._listboxReceivesNoFocus="${false}" opened name="foo" orientation="horizontal" autocomplete="none" show-all-on-empty>
+              <${tags.option} .choiceValue="${'Artichoke'}">Artichoke</${tags.option}>
+              <${tags.option} .choiceValue="${'Chard'}">Chard</${tags.option}>
+            </${tags.host}>
           `)
           );
           const { _listboxNode } = getListboxMembers(el);
@@ -1091,10 +1094,10 @@ export function runListboxMixinSuite({
         describe('Accessibility', () => {
           it('adds aria-orientation attribute to listbox node', async () => {
             const el = await fixture(html`
-              <${tag} name="foo" orientation="horizontal">
-                <${optionTag} checked .choiceValue="${'Artichoke'}">Artichoke</${optionTag}>
-                <${optionTag} .choiceValue="${'Chard'}">Chard</${optionTag}>
-              </${tag}>
+              <${tags.host} name="foo" orientation="horizontal">
+                <${tags.option} checked .choiceValue="${'Artichoke'}">Artichoke</${tags.option}>
+                <${tags.option} .choiceValue="${'Chard'}">Chard</${tags.option}>
+              </${tags.host}>
             `);
             const { _listboxNode } = getListboxMembers(el);
             expect(_listboxNode.getAttribute('aria-orientation')).to.equal('horizontal');
@@ -1105,12 +1108,12 @@ export function runListboxMixinSuite({
       describe('Multiple Choice', () => {
         it('does not uncheck siblings', async () => {
           const el = await fixture(html`
-            <${tag} name="foo" multiple-choice>
-              <${optionTag} .choiceValue="${'Artichoke'}">Artichoke</${optionTag}>
-              <${optionTag} .choiceValue="${'Chard'}">Chard</${optionTag}>
-              <${optionTag} .choiceValue="${'Chicory'}">Chicory</${optionTag}>
-              <${optionTag} .choiceValue="${'Victoria Plum'}">Victoria Plum</${optionTag}>
-            </${tag}>
+            <${tags.host} name="foo" multiple-choice>
+              <${tags.option} .choiceValue="${'Artichoke'}">Artichoke</${tags.option}>
+              <${tags.option} .choiceValue="${'Chard'}">Chard</${tags.option}>
+              <${tags.option} .choiceValue="${'Chicory'}">Chicory</${tags.option}>
+              <${tags.option} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tags.option}>
+            </${tags.host}>
           `);
           const options = el.formElements;
           options[0].checked = true;
@@ -1121,12 +1124,12 @@ export function runListboxMixinSuite({
 
         it('works via different interaction mechanisms (click, enter, spaces)', async () => {
           const el = await fixture(html`
-            <${tag} name="foo" multiple-choice>
-              <${optionTag} .choiceValue="${'Artichoke'}">Artichoke</${optionTag}>
-              <${optionTag} .choiceValue="${'Chard'}">Chard</${optionTag}>
-              <${optionTag} .choiceValue="${'Chicory'}">Chicory</${optionTag}>
-              <${optionTag} .choiceValue="${'Victoria Plum'}">Victoria Plum</${optionTag}>
-            </${tag}>
+            <${tags.host} name="foo" multiple-choice>
+              <${tags.option} .choiceValue="${'Artichoke'}">Artichoke</${tags.option}>
+              <${tags.option} .choiceValue="${'Chard'}">Chard</${tags.option}>
+              <${tags.option} .choiceValue="${'Chicory'}">Chicory</${tags.option}>
+              <${tags.option} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tags.option}>
+            </${tags.host}>
           `);
           const { _listboxNode } = getListboxMembers(el);
           const options = el.formElements;
@@ -1192,10 +1195,10 @@ export function runListboxMixinSuite({
         describe('Accessibility', () => {
           it('adds aria-multiselectable="true" to listbox node', async () => {
             const el = await fixture(html`
-              <${tag} name="foo" multiple-choice>
-                <${optionTag} .choiceValue="${'Artichoke'}">Artichoke</${optionTag}>
-                <${optionTag} .choiceValue="${'Chard'}">Chard</${optionTag}>
-              </${tag}>
+              <${tags.host} name="foo" multiple-choice>
+                <${tags.option} .choiceValue="${'Artichoke'}">Artichoke</${tags.option}>
+                <${tags.option} .choiceValue="${'Chard'}">Chard</${tags.option}>
+              </${tags.host}>
             `);
             const { _listboxNode } = getListboxMembers(el);
             expect(_listboxNode.getAttribute('aria-multiselectable')).to.equal('true');
@@ -1203,10 +1206,10 @@ export function runListboxMixinSuite({
 
           it('does not allow "selectionFollowsFocus"', async () => {
             const el = await fixture(html`
-              <${tag} name="foo" multiple-choice>
-                <${optionTag} checked .choiceValue="${'Artichoke'}">Artichoke</${optionTag}>
-                <${optionTag} .choiceValue="${'Chard'}">Chard</${optionTag}>
-              </${tag}>
+              <${tags.host} name="foo" multiple-choice>
+                <${tags.option} checked .choiceValue="${'Artichoke'}">Artichoke</${tags.option}>
+                <${tags.option} .choiceValue="${'Chard'}">Chard</${tags.option}>
+              </${tags.host}>
             `);
             const { _listboxNode, _inputNode } = getListboxMembers(el);
 
@@ -1234,11 +1237,11 @@ export function runListboxMixinSuite({
           }
           const el = /** @type {LionListbox} */ (
             await fixture(html`
-              <${tag} opened selection-follows-focus autocomplete="none" show-all-on-empty>
-                  <${optionTag} .choiceValue=${10}>Item 1</${optionTag}>
-                  <${optionTag} .choiceValue=${20}>Item 2</${optionTag}>
-                  <${optionTag} .choiceValue=${30}>Item 3</${optionTag}>
-              </${tag}>
+              <${tags.host} opened selection-follows-focus autocomplete="none" show-all-on-empty>
+                  <${tags.option} .choiceValue=${10}>Item 1</${tags.option}>
+                  <${tags.option} .choiceValue=${20}>Item 2</${tags.option}>
+                  <${tags.option} .choiceValue=${30}>Item 3</${tags.option}>
+              </${tags.host}>
             `)
           );
 
@@ -1277,11 +1280,11 @@ export function runListboxMixinSuite({
           }
           const el = /** @type {LionListbox} */ (
             await fixture(html`
-              <${tag} ._listboxReceivesNoFocus="${false}" opened selection-follows-focus orientation="horizontal" autocomplete="none" show-all-on-empty>
-                  <${optionTag} .choiceValue=${10}>Item 1</${optionTag}>
-                  <${optionTag} .choiceValue=${20}>Item 2</${optionTag}>
-                  <${optionTag} .choiceValue=${30}>Item 3</${optionTag}>
-              </${tag}>
+              <${tags.host} ._listboxReceivesNoFocus="${false}" opened selection-follows-focus orientation="horizontal" autocomplete="none" show-all-on-empty>
+                  <${tags.option} .choiceValue=${10}>Item 1</${tags.option}>
+                  <${tags.option} .choiceValue=${20}>Item 2</${tags.option}>
+                  <${tags.option} .choiceValue=${30}>Item 3</${tags.option}>
+              </${tags.host}>
             `)
           );
 
@@ -1306,12 +1309,12 @@ export function runListboxMixinSuite({
         });
         it('checks first and last option with [Home] and [End] keys', async () => {
           const el = await fixture(html`
-              <${tag} opened selection-follows-focus>
-                <${optionTag} .choiceValue=${'10'}>Item 1</${optionTag}>
-                <${optionTag} .choiceValue=${'20'}>Item 2</${optionTag}>
-                <${optionTag} .choiceValue=${'30'} checked>Item 3</${optionTag}>
-                <${optionTag} .choiceValue=${'40'}>Item 4</${optionTag}>
-              </${tag}>
+              <${tags.host} opened selection-follows-focus>
+                <${tags.option} .choiceValue=${'10'}>Item 1</${tags.option}>
+                <${tags.option} .choiceValue=${'20'}>Item 2</${tags.option}>
+                <${tags.option} .choiceValue=${'30'} checked>Item 3</${tags.option}>
+                <${tags.option} .choiceValue=${'40'}>Item 4</${tags.option}>
+              </${tags.host}>
             `);
           const { _listboxNode } = getListboxMembers(el);
 
@@ -1331,10 +1334,10 @@ export function runListboxMixinSuite({
       describe('Disabled Host', () => {
         it('cannot be navigated with keyboard if disabled', async () => {
           const el = await fixture(html`
-            <${tag} disabled>
-              <${optionTag} .choiceValue=${'10'}>Item 1</${optionTag}>
-              <${optionTag} checked .choiceValue=${'20'}>Item 2</${optionTag}>
-            </${tag}>
+            <${tags.host} disabled>
+              <${tags.option} .choiceValue=${'10'}>Item 1</${tags.option}>
+              <${tags.option} checked .choiceValue=${'20'}>Item 2</${tags.option}>
+            </${tags.host}>
           `);
           const { _listboxNode } = getListboxMembers(el);
 
@@ -1346,10 +1349,10 @@ export function runListboxMixinSuite({
 
         it('sync its disabled state to all options', async () => {
           const el = await fixture(html`
-            <${tag} opened>
-              <${optionTag} .choiceValue=${10} disabled>Item 1</${optionTag}>
-              <${optionTag} .choiceValue=${20}>Item 2</${optionTag}>
-            </${tag}>
+            <${tags.host} opened>
+              <${tags.option} .choiceValue=${10} disabled>Item 1</${tags.option}>
+              <${tags.option} .choiceValue=${20}>Item 2</${tags.option}>
+            </${tags.host}>
           `);
           const options = el.formElements;
           el.disabled = true;
@@ -1365,10 +1368,10 @@ export function runListboxMixinSuite({
 
         it('can be enabled (incl. its options) even if it starts as disabled', async () => {
           const el = await fixture(html`
-            <${tag} disabled>
-              <${optionTag} .choiceValue=${10} disabled>Item 1</${optionTag}>
-              <${optionTag} .choiceValue=${20}>Item 2</${optionTag}>
-            </${tag}>
+            <${tags.host} disabled>
+              <${tags.option} .choiceValue=${10} disabled>Item 1</${tags.option}>
+              <${tags.option} .choiceValue=${20}>Item 2</${tags.option}>
+            </${tags.host}>
           `);
           const options = el.formElements;
           expect(options[0].disabled).to.be.true;
@@ -1384,11 +1387,11 @@ export function runListboxMixinSuite({
       describe('Disabled Options', () => {
         it('does not skip disabled options but prevents checking them', async () => {
           const el = await fixture(html`
-            <${tag} opened autocomplete="inline" .selectionFollowsFocus="${false}">
-              <${optionTag} .choiceValue=${'Item 1'} checked>Item 1</${optionTag}>
-              <${optionTag} .choiceValue=${'Item 2'} disabled>Item 2</${optionTag}>
-              <${optionTag} .choiceValue=${'Item 3'}>Item 3</${optionTag}>
-            </${tag}>
+            <${tags.host} opened autocomplete="inline" .selectionFollowsFocus="${false}">
+              <${tags.option} .choiceValue=${'Item 1'} checked>Item 1</${tags.option}>
+              <${tags.option} .choiceValue=${'Item 2'} disabled>Item 2</${tags.option}>
+              <${tags.option} .choiceValue=${'Item 3'}>Item 3</${tags.option}>
+            </${tags.host}>
           `);
 
           const { _listboxNode } = getListboxMembers(el);
@@ -1406,11 +1409,11 @@ export function runListboxMixinSuite({
         });
         it('does not check disabled options when selection-follow-focus is enabled', async () => {
           const el = await fixture(html`
-            <${tag} opened autocomplete="inline" .selectionFollowsFocus="${true}">
-              <${optionTag} .choiceValue=${'Item 1'} checked>Item 1</${optionTag}>
-              <${optionTag} .choiceValue=${'Item 2'} disabled>Item 2</${optionTag}>
-              <${optionTag} .choiceValue=${'Item 3'}>Item 3</${optionTag}>
-            </${tag}>
+            <${tags.host} opened autocomplete="inline" .selectionFollowsFocus="${true}">
+              <${tags.option} .choiceValue=${'Item 1'} checked>Item 1</${tags.option}>
+              <${tags.option} .choiceValue=${'Item 2'} disabled>Item 2</${tags.option}>
+              <${tags.option} .choiceValue=${'Item 3'}>Item 3</${tags.option}>
+            </${tags.host}>
           `);
 
           const { _listboxNode } = getListboxMembers(el);
@@ -1431,10 +1434,10 @@ export function runListboxMixinSuite({
       describe('Programmatic interaction', () => {
         it('can set active state', async () => {
           const el = await fixture(html`
-            <${tag}>
-              <${optionTag} .choiceValue=${10}>Item 1</${optionTag}>
-              <${optionTag} .choiceValue=${20} id="myId">Item 2</${optionTag}>
-            </${tag}>
+            <${tags.host}>
+              <${tags.option} .choiceValue=${10}>Item 1</${tags.option}>
+              <${tags.option} .choiceValue=${20} id="myId">Item 2</${tags.option}>
+            </${tags.host}>
           `);
           const { _activeDescendantOwnerNode } = getListboxMembers(el);
 
@@ -1445,10 +1448,10 @@ export function runListboxMixinSuite({
 
         it('can set checked state', async () => {
           const el = await fixture(html`
-            <${tag}>
-              <${optionTag} .choiceValue=${10}>Item 1</${optionTag}>
-              <${optionTag} .choiceValue=${20}>Item 2</${optionTag}>
-            </${tag}>
+            <${tags.host}>
+              <${tags.option} .choiceValue=${10}>Item 1</${tags.option}>
+              <${tags.option} .choiceValue=${20}>Item 2</${tags.option}>
+            </${tags.host}>
           `);
           const option = el.formElements[1];
           option.checked = true;
@@ -1457,9 +1460,9 @@ export function runListboxMixinSuite({
 
         it('does not allow to set checkedIndex or activeIndex to be out of bound', async () => {
           const el = await fixture(html`
-            <${tag} has-no-default-selected autocomplete="list">
-              <${optionTag} .choiceValue=${10}>Item 1</${optionTag}>
-            </${tag}>
+            <${tags.host} has-no-default-selected autocomplete="list">
+              <${tags.option} .choiceValue=${10}>Item 1</${tags.option}>
+            </${tags.host}>
           `);
           expect(() => {
             el.activeIndex = -1;
@@ -1473,10 +1476,10 @@ export function runListboxMixinSuite({
 
         it('unsets checked on other options when option becomes checked', async () => {
           const el = await fixture(html`
-            <${tag}>
-              <${optionTag} .choiceValue=${10}>Item 1</${optionTag}>
-              <${optionTag} .choiceValue=${20}>Item 2</${optionTag}>
-            </${tag}>
+            <${tags.host}>
+              <${tags.option} .choiceValue=${10}>Item 1</${tags.option}>
+              <${tags.option} .choiceValue=${20}>Item 2</${tags.option}>
+            </${tags.host}>
           `);
           const options = el.formElements;
           options[0].checked = true;
@@ -1489,10 +1492,10 @@ export function runListboxMixinSuite({
 
         it('unsets active on other options when option becomes active', async () => {
           const el = await fixture(html`
-            <${tag}>
-              <${optionTag} active .choiceValue=${10}>Item 1</${optionTag}>
-              <${optionTag} .choiceValue=${20}>Item 2</${optionTag}>
-            </${tag}>
+            <${tags.host}>
+              <${tags.option} active .choiceValue=${10}>Item 1</${tags.option}>
+              <${tags.option} .choiceValue=${20}>Item 2</${tags.option}>
+            </${tags.host}>
           `);
           const options = el.formElements;
           expect(options[0].active).to.be.true;
@@ -1505,10 +1508,10 @@ export function runListboxMixinSuite({
       describe('Interaction states', () => {
         it('becomes dirty if value changed once', async () => {
           const el = await fixture(html`
-            <${tag}>
-              <${optionTag} .choiceValue=${10}>Item 1</${optionTag}>
-              <${optionTag} .choiceValue=${20}>Item 2</${optionTag}>
-            </${tag}>
+            <${tags.host}>
+              <${tags.option} .choiceValue=${10}>Item 1</${tags.option}>
+              <${tags.option} .choiceValue=${20}>Item 2</${tags.option}>
+            </${tags.host}>
           `);
 
           expect(el.dirty).to.be.false;
@@ -1518,17 +1521,17 @@ export function runListboxMixinSuite({
 
         it('is prefilled if there is a value on init', async () => {
           const el = await fixture(html`
-            <${tag}>
-              <${optionTag} checked .choiceValue=${'10'}>Item 1</${optionTag}>
-            </${tag}>
+            <${tags.host}>
+              <${tags.option} checked .choiceValue=${'10'}>Item 1</${tags.option}>
+            </${tags.host}>
           `);
           expect(el.prefilled).to.be.true;
 
           const elEmpty = await fixture(html`
-            <${tag}>
-              <${optionTag} .choiceValue=${null}>Please select a value</${optionTag}>
-              <${optionTag} .choiceValue=${'10'}>Item 1</${optionTag}>
-            </${tag}>
+            <${tags.host}>
+              <${tags.option} .choiceValue=${null}>Please select a value</${tags.option}>
+              <${tags.option} .choiceValue=${'10'}>Item 1</${tags.option}>
+            </${tags.host}>
           `);
           expect(elEmpty.prefilled).to.be.false;
         });
@@ -1538,10 +1541,10 @@ export function runListboxMixinSuite({
       describe('Validation', () => {
         it('can be required', async () => {
           const el = await fixture(html`
-            <${tag} .validators=${[new Required()]}>
-              <${optionTag} .choiceValue=${null}>Please select a value</${optionTag}>
-              <${optionTag} .choiceValue=${20}>Item 2</${optionTag}>
-            </${tag}>
+            <${tags.host} .validators=${[new Required()]}>
+              <${tags.option} .choiceValue=${null}>Please select a value</${tags.option}>
+              <${tags.option} .choiceValue=${20}>Item 2</${tags.option}>
+            </${tags.host}>
           `);
 
           expect(el.hasFeedbackFor).to.include('error');
@@ -1563,15 +1566,15 @@ export function runListboxMixinSuite({
           { type: 'visacard', label: 'Visa Card', amount: 0, active: false },
         ];
         const el = await fixture(html`
-          <${tag} label="Favorite color" name="color">
+          <${tags.host} label="Favorite color" name="color">
             ${objs.map(
               obj => html`
-                <${optionTag} .modelValue=${{ value: obj, checked: false }}
-                  >${obj.label}</${optionTag}
+                <${tags.option} .modelValue=${{ value: obj, checked: false }}
+                  >${obj.label}</${tags.option}
                 >
               `,
             )}
-          </${tag}>
+          </${tags.host}>
         `);
         el.setCheckedIndex(0);
         expect(el.modelValue).to.deep.equal({
@@ -1612,10 +1615,10 @@ export function runListboxMixinSuite({
 
       it('can be instantiated without options', async () => {
         const el = await fixture(html`
-          <${tag} name="foo">
-            <${optionTag} .choiceValue=${10} checked>Item 1</${optionTag}>
-            <${optionTag} .choiceValue=${20}>Item 2</${optionTag}>
-          </${tag}>
+          <${tags.host} name="foo">
+            <${tags.option} .choiceValue=${10} checked>Item 1</${tags.option}>
+            <${tags.option} .choiceValue=${20}>Item 2</${tags.option}>
+          </${tags.host}>
         `);
         const { _listboxNode } = getListboxMembers(el);
 
@@ -1636,10 +1639,10 @@ export function runListboxMixinSuite({
     describe('Href Options', () => {
       it('allows anchors to be clicked when a [href] attribute is present', async () => {
         const el = await fixture(html`
-          <${tag}>
-            <${optionTag}>Google</${optionTag}>
-            <${optionTag} .href=${'https://duckduckgo.com'}>DuckDuck Go</${optionTag}>
-          </${tag}>
+          <${tags.host}>
+            <${tags.option}>Google</${tags.option}>
+            <${tags.option} .href=${'https://duckduckgo.com'}>DuckDuck Go</${tags.option}>
+          </${tags.host}>
         `);
 
         const { _listboxNode } = getListboxMembers(el);
@@ -1656,10 +1659,10 @@ export function runListboxMixinSuite({
 
       it('does not allow anchors to be clicked when a [href] attribute is not present', async () => {
         const el = await fixture(html`
-          <${tag}>
-            <${optionTag}>Google</${optionTag}>
-            <${optionTag} .href=${'https://duckduckgo.com'}>DuckDuck Go</${optionTag}>
-          </${tag}>
+          <${tags.host}>
+            <${tags.option}>Google</${tags.option}>
+            <${tags.option} .href=${'https://duckduckgo.com'}>DuckDuck Go</${tags.option}>
+          </${tags.host}>
         `);
 
         const { _listboxNode } = getListboxMembers(el);
@@ -1711,20 +1714,21 @@ export function runListboxMixinSuite({
 
         render() {
           return html`
-            <${tag} id="withMap">
+            <${tags.host} id="withMap">
               ${this.options.map(
-                option => html` <${optionTag} .choiceValue="${option}">${option}</${optionTag}> `,
+                option =>
+                  html` <${tags.option} .choiceValue="${option}">${option}</${tags.option}> `,
               )}
-            </${tag}>
-            <${tag} id="withRepeat">
+            </${tags.host}>
+            <${tags.host} id="withRepeat">
               ${repeat(
                 this.options,
                 (/** @type {string} */ option) => option,
                 (/** @type {string} */ option) => html`
-                  <${optionTag} .choiceValue="${option}">${option}</${optionTag}>
+                  <${tags.option} .choiceValue="${option}">${option}</${tags.option}>
                 `,
               )}
-            </${tag}>
+            </${tags.host}>
           `;
         }
       }
@@ -1793,11 +1797,12 @@ export function runListboxMixinSuite({
 
         render() {
           return html`
-            <${tag} id="listbox">
+            <${tags.host} id="listbox">
               ${this.options.map(
-                option => html` <${optionTag} .choiceValue="${option}">${option}</${optionTag}> `,
+                option =>
+                  html` <${tags.option} .choiceValue="${option}">${option}</${tags.option}> `,
               )}
-            </${tag}>
+            </${tags.host}>
           `;
         }
       }

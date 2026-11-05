@@ -1,7 +1,7 @@
 import {
   runFormatMixinSuite,
   runInteractionStateMixinSuite,
-} from '@lion/ui/form-core-test-suites.js';
+} from '@lion/ui/test-suites/form-core.js';
 import {} from '@open-wc/testing';
 import { LionInputStepper } from '../src/LionInputStepper.js';
 import { resolveSuiteTag } from '../../core/test-helpers/resolveSuiteTag.js';

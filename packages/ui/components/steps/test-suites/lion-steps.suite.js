@@ -58,29 +58,31 @@ export function runStepsSuite({
   stepTagString: legacyStepTagString,
 } = {}) {
   const hostTagString = resolveSuiteTag(host, legacyTagString);
-  const tag = unsafeStatic(hostTagString);
   const tagNameStep = resolveSuiteTag(step, legacyStepTagString);
-  const tagStep = unsafeStatic(tagNameStep);
+  const tags = {
+    host: unsafeStatic(hostTagString),
+    step: unsafeStatic(tagNameStep),
+  };
 
   describe('lion-steps', () => {
     it('can be instantiated', async () => {
-      const el = await fixture(html`<${tag}> </${tag}>`);
+      const el = await fixture(html`<${tags.host}> </${tags.host}>`);
       expect(el).to.be.a('HTMLElement');
     });
 
     it('is hidden when attribute hidden is true', async () => {
-      const el = await fixture(html`<${tag} hidden> </${tag}>`);
+      const el = await fixture(html`<${tags.host} hidden> </${tags.host}>`);
       expect(el).not.to.be.displayed;
     });
 
     it('has "steps" getter that returns default slot elements', async () => {
       const el = await fixture(html`
-        <${tag}>
-          <${tagStep}>Step 1</${tagStep}>
-          <${tagStep} initial-step>Step 2</${tagStep}>
+        <${tags.host}>
+          <${tags.step}>Step 1</${tags.step}>
+          <${tags.step} initial-step>Step 2</${tags.step}>
           <other-step-element>Step 3</other-step-element>
           <steps-extension-element slot="new-slot">e.g. steps indicator</steps-extension-element>
-        </${tag}>
+        </${tags.host}>
       `);
       expect(el.steps.length).to.equal(3);
       expect(el.steps[0].tagName).to.equal(tagNameStep.toUpperCase());
@@ -91,10 +93,10 @@ export function runStepsSuite({
     describe('initialization', () => {
       it('activates step with an "initial-step" attribute', async () => {
         const el = await fixture(html`
-          <${tag}>
-            <${tagStep} initial-step>Step 0</${tagStep}>
-            <${tagStep}>Step 1</${tagStep}>
-          </${tag}>
+          <${tags.host}>
+            <${tags.step} initial-step>Step 0</${tags.step}>
+            <${tags.step}>Step 1</${tags.step}>
+          </${tags.host}>
         `);
         expect(el.current).to.equal(0);
         expect(/** @type {LionStep} */ (el.children[0]).status).to.equal('entered');
@@ -104,10 +106,10 @@ export function runStepsSuite({
     describe('navigation', () => {
       it('can navigate to the next step', async () => {
         const el = await fixture(html`
-          <${tag}>
-            <${tagStep} initial-step>Step 0</${tagStep}>
-            <${tagStep}>Step 1</${tagStep}>
-          </${tag}>
+          <${tags.host}>
+            <${tags.step} initial-step>Step 0</${tags.step}>
+            <${tags.step}>Step 1</${tags.step}>
+          </${tags.host}>
         `);
 
         setTimeout(() => el.next());
@@ -122,10 +124,10 @@ export function runStepsSuite({
 
       it('can navigate to the previous step', async () => {
         const el = await fixture(html`
-          <${tag}>
-            <${tagStep}>Step 0</${tagStep}>
-            <${tagStep} initial-step>Step 1</${tagStep}>
-          </${tag}>
+          <${tags.host}>
+            <${tags.step}>Step 0</${tags.step}>
+            <${tags.step} initial-step>Step 1</${tags.step}>
+          </${tags.host}>
         `);
 
         setTimeout(() => el.previous());
@@ -140,10 +142,10 @@ export function runStepsSuite({
 
       it('prevents navigating to the next step if user is on the last step', async () => {
         const el = await fixture(html`
-          <${tag}>
-            <${tagStep}>Step 0</${tagStep}>
-            <${tagStep} initial-step>Step 1</${tagStep}>
-          </${tag}>
+          <${tags.host}>
+            <${tags.step}>Step 0</${tags.step}>
+            <${tags.step} initial-step>Step 1</${tags.step}>
+          </${tags.host}>
         `);
         const cb = sinon.spy();
         el.addEventListener('transition', cb);
@@ -154,10 +156,10 @@ export function runStepsSuite({
 
       it('prevents navigating to the previous step if user is on the first step', async () => {
         const el = await fixture(html`
-          <${tag}>
-            <${tagStep} initial-step>Step 0</${tagStep}>
-            <${tagStep}>Step 1</${tagStep}>
-          </${tag}>
+          <${tags.host}>
+            <${tags.step} initial-step>Step 0</${tags.step}>
+            <${tags.step}>Step 1</${tags.step}>
+          </${tags.host}>
         `);
         const cb = sinon.spy();
         el.addEventListener('transition', cb);
@@ -168,17 +170,17 @@ export function runStepsSuite({
 
       it('can navigate to an arbitrary step skipping intermediate conditions', async () => {
         const el = await fixture(html`
-          <${tag} .data=${{ age: 25 }}>
-            <${tagStep} initial-step>Step 0</${tagStep}>
-            <${tagStep} .condition=${/** @param {UnknownData} data */ data => data.age < 18}
-              >Step 1</${tagStep}
+          <${tags.host} .data=${{ age: 25 }}>
+            <${tags.step} initial-step>Step 0</${tags.step}>
+            <${tags.step} .condition=${/** @param {UnknownData} data */ data => data.age < 18}
+              >Step 1</${tags.step}
             >
-            <${tagStep}>Step 2</${tagStep}>
-            <${tagStep} .condition=${/** @param {UnknownData} data */ data => data.age < 22}
-              >Step 3</${tagStep}
+            <${tags.step}>Step 2</${tags.step}>
+            <${tags.step} .condition=${/** @param {UnknownData} data */ data => data.age < 22}
+              >Step 3</${tags.step}
             >
-            <${tagStep}>Step 4</${tagStep}>
-          </${tag}>
+            <${tags.step}>Step 4</${tags.step}>
+          </${tags.host}>
         `);
 
         el.current = 2;
@@ -196,11 +198,11 @@ export function runStepsSuite({
 
       it('throws an error if current step is set out of bounds', async () => {
         const el = await fixture(html`
-          <${tag}>
-            <${tagStep}>Step 0</${tagStep}>
-            <${tagStep}>Step 1</${tagStep}>
-            <${tagStep}>Step 2</${tagStep}>
-          </${tag}>
+          <${tags.host}>
+            <${tags.step}>Step 0</${tags.step}>
+            <${tags.step}>Step 1</${tags.step}>
+            <${tags.step}>Step 2</${tags.step}>
+          </${tags.host}>
         `);
 
         expect(() => el._goTo(3, el.current)).to.throw(Error, 'There is no step at index 3.');
@@ -215,11 +217,11 @@ export function runStepsSuite({
           currentInLeaveEvent = /** @type {LionStep} */ (ev.target).controller?.current;
         };
         const el = await fixture(html`
-          <${tag}>
-            <${tagStep} @leave=${onLeave}>Step 0</${tagStep}>
-            <${tagStep}>Step 1</${tagStep}>
-            <${tagStep}>Step 2</${tagStep}>
-          </${tag}>
+          <${tags.host}>
+            <${tags.step} @leave=${onLeave}>Step 0</${tags.step}>
+            <${tags.step}>Step 1</${tags.step}>
+            <${tags.step}>Step 2</${tags.step}>
+          </${tags.host}>
         `);
         el.next();
         expect(currentInLeaveEvent).to.equal(0);
@@ -231,11 +233,11 @@ export function runStepsSuite({
           currentInEnterEvent = /** @type {LionStep} */ (ev.target).controller?.current;
         };
         const el = await fixture(html`
-          <${tag}>
-            <${tagStep}>Step 0</${tagStep}>
-            <${tagStep} @enter=${onEnter}> Step 1</${tagStep}>
-            <${tagStep}>Step 2</${tagStep}>
-          </${tag}>
+          <${tags.host}>
+            <${tags.step}>Step 0</${tags.step}>
+            <${tags.step} @enter=${onEnter}> Step 1</${tags.step}>
+            <${tags.step}>Step 2</${tags.step}>
+          </${tags.host}>
         `);
         el.next();
         expect(currentInEnterEvent).to.equal(1);
@@ -244,21 +246,21 @@ export function runStepsSuite({
       it('will fire initial @enter event on first step with or with [initial-step] attribute', async () => {
         const firstEnterSpy = sinon.spy();
         await fixture(html`
-          <${tag}>
-            <${tagStep} @enter=${firstEnterSpy}>
+          <${tags.host}>
+            <${tags.step} @enter=${firstEnterSpy}>
               <div>test1</div>
-            </${tagStep}>
-          </${tag}>
+            </${tags.step}>
+          </${tags.host}>
         `);
         expect(firstEnterSpy).to.have.been.calledOnce;
 
         const firstEnterSpyWithInitial = sinon.spy();
         await fixture(html`
-          <${tag}>
-            <${tagStep} initial-step @enter=${firstEnterSpyWithInitial}>
+          <${tags.host}>
+            <${tags.step} initial-step @enter=${firstEnterSpyWithInitial}>
               <div>test1</div>
-            </${tagStep}>
-          </${tag}>
+            </${tags.step}>
+          </${tags.host}>
         `);
         expect(firstEnterSpyWithInitial).to.have.been.calledOnce;
       });
@@ -267,14 +269,14 @@ export function runStepsSuite({
         const firstEnterSpy = sinon.spy();
         const secondEnterSpy = sinon.spy();
         await fixture(html`
-          <${tag}>
-            <${tagStep} @enter=${firstEnterSpy}>
+          <${tags.host}>
+            <${tags.step} @enter=${firstEnterSpy}>
               <div>test1</div>
-            </${tagStep}>
-            <${tagStep} initial-step @enter=${secondEnterSpy}>
+            </${tags.step}>
+            <${tags.step} initial-step @enter=${secondEnterSpy}>
               <div>test2</div>
-            </${tagStep}>
-          </${tag}>
+            </${tags.step}>
+          </${tags.host}>
         `);
         expect(firstEnterSpy).to.not.have.been.called;
         expect(secondEnterSpy).to.have.been.calledOnce;
@@ -284,20 +286,20 @@ export function runStepsSuite({
     describe('workflow with data and conditions', () => {
       it('navigates to the next step which passes the condition', async () => {
         const el = await fixture(html`
-          <${tag} .data=${{ age: 25 }}>
-            <${tagStep} initial-step>Step 0</${tagStep}>
-            <${tagStep} .condition=${/** @param {UnknownData} data */ data => data.age < 18}
-              >Step 1</${tagStep}
+          <${tags.host} .data=${{ age: 25 }}>
+            <${tags.step} initial-step>Step 0</${tags.step}>
+            <${tags.step} .condition=${/** @param {UnknownData} data */ data => data.age < 18}
+              >Step 1</${tags.step}
             >
-            <${tagStep}
+            <${tags.step}
               .condition=${/** @param {UnknownData} data */ data => data.age >= 18 && data.age < 21}
-              >Step 2</${tagStep}
+              >Step 2</${tags.step}
             >
-            <${tagStep} .condition=${/** @param {UnknownData} data */ data => data.age >= 21}
-              >Step 3</${tagStep}
+            <${tags.step} .condition=${/** @param {UnknownData} data */ data => data.age >= 21}
+              >Step 3</${tags.step}
             >
-            <${tagStep}>Step 4</${tagStep}>
-          </${tag}>
+            <${tags.step}>Step 4</${tags.step}>
+          </${tags.host}>
         `);
 
         setTimeout(() => el.next());
@@ -310,20 +312,20 @@ export function runStepsSuite({
 
       it('skips steps with failing condition when navigating to the next step', async () => {
         const el = await fixture(html`
-          <${tag} .data=${{ age: 19 }}>
-            <${tagStep} initial-step>Step 0</${tagStep}>
-            <${tagStep} .condition=${/** @param {UnknownData} data */ data => data.age < 18}
-              >Step 1</${tagStep}
+          <${tags.host} .data=${{ age: 19 }}>
+            <${tags.step} initial-step>Step 0</${tags.step}>
+            <${tags.step} .condition=${/** @param {UnknownData} data */ data => data.age < 18}
+              >Step 1</${tags.step}
             >
-            <${tagStep}
+            <${tags.step}
               .condition=${/** @param {UnknownData} data */ data => data.age >= 18 && data.age < 21}
-              >Step 2</${tagStep}
+              >Step 2</${tags.step}
             >
-            <${tagStep} .condition=${/** @param {UnknownData} data */ data => data.age >= 21}
-              >Step 3</${tagStep}
+            <${tags.step} .condition=${/** @param {UnknownData} data */ data => data.age >= 21}
+              >Step 3</${tags.step}
             >
-            <${tagStep}>Step 4</${tagStep}>
-          </${tag}>
+            <${tags.step}>Step 4</${tags.step}>
+          </${tags.host}>
         `);
 
         el.next();
@@ -338,20 +340,20 @@ export function runStepsSuite({
 
       it('skips steps with failing condition when navigating to the previous step', async () => {
         const el = await fixture(html`
-          <${tag} .data=${{ age: 15 }}>
-            <${tagStep} initial-step>Step 0</${tagStep}>
-            <${tagStep} .condition=${/** @param {UnknownData} data */ data => data.age < 18}
-              >Step 1</${tagStep}
+          <${tags.host} .data=${{ age: 15 }}>
+            <${tags.step} initial-step>Step 0</${tags.step}>
+            <${tags.step} .condition=${/** @param {UnknownData} data */ data => data.age < 18}
+              >Step 1</${tags.step}
             >
-            <${tagStep}
+            <${tags.step}
               .condition=${/** @param {UnknownData} data */ data => data.age >= 18 && data.age < 21}
-              >Step 2</${tagStep}
+              >Step 2</${tags.step}
             >
-            <${tagStep} .condition=${/** @param {UnknownData} data */ data => data.age >= 21}
-              >Step 3</${tagStep}
+            <${tags.step} .condition=${/** @param {UnknownData} data */ data => data.age >= 21}
+              >Step 3</${tags.step}
             >
-            <${tagStep}>Step 4</${tagStep}>
-          </${tag}>
+            <${tags.step}>Step 4</${tags.step}>
+          </${tags.host}>
         `);
 
         el.next();
@@ -369,15 +371,15 @@ export function runStepsSuite({
     describe('workflow with inverted condition', () => {
       it('behaves like "if not" when inverted condition is present', async () => {
         const el = await fixture(html`
-          <${tag} .data=${{}}>
-            <${tagStep} initial-step>Step 0</${tagStep}>
-            <${tagStep}
+          <${tags.host} .data=${{}}>
+            <${tags.step} initial-step>Step 0</${tags.step}>
+            <${tags.step}
               .condition=${/** @param {UnknownData} data */ data => data.age < 18}
               invert-condition
-              >Step 1</${tagStep}
+              >Step 1</${tags.step}
             >
-            <${tagStep}>Step 2</${tagStep}>
-          </${tag}>
+            <${tags.step}>Step 2</${tags.step}>
+          </${tags.host}>
         `);
 
         setTimeout(() => {
@@ -400,11 +402,11 @@ export function runStepsSuite({
       it('behaves like "if/else" in case both condition and inverted condition are present', async () => {
         const condition = /** @param {UnknownData} data */ data => data.age < 18;
         const el = await fixture(html`
-          <${tag} .data=${{}}>
-            <${tagStep} initial-step>Step 0</${tagStep}>
-            <${tagStep} .condition=${condition}>Step 1</${tagStep}>
-            <${tagStep} .condition=${condition} invert-condition>Step 2</${tagStep}>
-          </${tag}>
+          <${tags.host} .data=${{}}>
+            <${tags.step} initial-step>Step 0</${tags.step}>
+            <${tags.step} .condition=${condition}>Step 1</${tags.step}>
+            <${tags.step} .condition=${condition} invert-condition>Step 2</${tags.step}>
+          </${tags.host}>
         `);
 
         setTimeout(() => {
@@ -426,11 +428,11 @@ export function runStepsSuite({
     describe('workflow with forward-only', () => {
       it('activates step when going forward', async () => {
         const el = await fixture(html`
-          <${tag}>
-            <${tagStep} initial-step>Step 0</${tagStep}>
-            <${tagStep} forward-only>Step 1</${tagStep}>
-            <${tagStep}>Step 2</${tagStep}>
-          </${tag}>
+          <${tags.host}>
+            <${tags.step} initial-step>Step 0</${tags.step}>
+            <${tags.step} forward-only>Step 1</${tags.step}>
+            <${tags.step}>Step 2</${tags.step}>
+          </${tags.host}>
         `);
 
         setTimeout(() => {
@@ -446,11 +448,11 @@ export function runStepsSuite({
 
       it('skips step when going back to prevent reevaluation of "service" steps', async () => {
         const el = await fixture(html`
-          <${tag}>
-            <${tagStep} initial-step>Step 0</${tagStep}>
-            <${tagStep} forward-only>Step 1</${tagStep}>
-            <${tagStep}>Step 2</${tagStep}>
-          </${tag}>
+          <${tags.host}>
+            <${tags.step} initial-step>Step 0</${tags.step}>
+            <${tags.step} forward-only>Step 1</${tags.step}>
+            <${tags.step}>Step 2</${tags.step}>
+          </${tags.host}>
         `);
 
         el.next();
@@ -466,11 +468,11 @@ export function runStepsSuite({
 
       it('does not set "skipped" status when going back', async () => {
         const el = await fixture(html`
-          <${tag}>
-            <${tagStep} initial-step>Step 0</${tagStep}>
-            <${tagStep} forward-only>Step 1</${tagStep}>
-            <${tagStep}>Step 2</${tagStep}>
-          </${tag}>
+          <${tags.host}>
+            <${tags.step} initial-step>Step 0</${tags.step}>
+            <${tags.step} forward-only>Step 1</${tags.step}>
+            <${tags.step}>Step 2</${tags.step}>
+          </${tags.host}>
         `);
 
         el.next();
