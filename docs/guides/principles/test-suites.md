@@ -85,6 +85,9 @@ describe('my-input', () => {
    and friends for the calendar) instead of the suite learning about that markup. The datepicker's
    inner calendar comes from `InputObject.calendarEl` too — that getter reads the element's own
    `_calendarNode`, so no tag is needed there either.
+   The combobox suite likewise reads the options container from
+   `getComboboxMembers(host)._listboxNode`, so a renamed scoped options element needs no extra
+   selector configuration.
 7. **Accessibility is Lion's; styling and markup are the extension layer's.** So the accessible
    _name_ is asserted, but not the attribute it lives on: the suite reads it from `title`,
    `aria-label` or a `label` attribute, and the copy stays Lion's (localized messages). Asserting

@@ -30,7 +30,8 @@ export function runComboboxSuite({
   tagString: legacyTagString,
   optionTagString,
 } = {}) {
-  const hostTag = unsafeStatic(resolveSuiteTag(classes.host, legacyTagString, 'lion-combobox'));
+  const tagNameHost = resolveSuiteTag(classes.host, legacyTagString, 'lion-combobox');
+  const hostTag = unsafeStatic(tagNameHost);
   const tagNameOption = resolveSuiteTag(classes.option, optionTagString, 'lion-option');
   const tagOption = unsafeStatic(tagNameOption);
 
@@ -119,11 +120,13 @@ export function runComboboxSuite({
         const tagString = defineCE(Wrapper);
         const tag = unsafeStatic(tagString);
         const wrapperElement = /** @type {Wrapper} */ (await fixture(html`<${tag}></${tag}>`));
+        const combobox = /** @type {LionCombobox} */ (
+          wrapperElement.shadowRoot?.querySelector(tagNameHost)
+        );
         await waitUntil(
           () =>
-            wrapperElement?.shadowRoot
-              ?.querySelector('lion-options')
-              ?.querySelectorAll(tagNameOption).length === entries.length,
+            getComboboxMembers(combobox)._listboxNode?.querySelectorAll(tagNameOption).length ===
+            entries.length,
         );
 
         wrapperElement.entries = [
@@ -135,9 +138,8 @@ export function runComboboxSuite({
 
         await waitUntil(
           () =>
-            wrapperElement?.shadowRoot
-              ?.querySelector('lion-options')
-              ?.querySelectorAll(tagNameOption).length === wrapperElement.entries.length,
+            getComboboxMembers(combobox)._listboxNode?.querySelectorAll(tagNameOption).length ===
+            wrapperElement.entries.length,
         );
 
         const optionElements = wrapperElement.shadowRoot?.querySelectorAll(tagNameOption);
