@@ -79,7 +79,6 @@ export async function resolveImportPathWithNodeResolve(importee, importer, opts 
     /** @type {unknown} */ (fakePluginContext)
   );
   const result = await resolveIdHandler?.call(pluginContext, importee, importer, {
-    attributes: {},
     isEntry: false,
   });
 
