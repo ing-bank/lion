@@ -189,7 +189,7 @@ function missingHarnessResult(repoRoot: string): BehaviourResult {
  */
 export function parseSuiteOutput(output: string): Map<string, BehaviourFailure[]> {
   const byFile = new Map<string, BehaviourFailure[]>();
-  const lines = output.split('\n');
+  const lines = output.replace(/\r\n?/g, '\n').split('\n');
   let current: string | undefined;
 
   for (let index = 0; index < lines.length; index++) {

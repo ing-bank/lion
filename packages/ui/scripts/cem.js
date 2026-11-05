@@ -130,9 +130,17 @@ const cem = create({
         for (const [, module] of moduleGraph.modules) {
           if (module?.path) sourceByPath.set(module.path, module.source);
         }
-        for (const definition of customElementsManifest.modules) {
+        /**
+         * Emit one definition's factory mixin, if it has exactly one and it declares slots.
+         *
+         * The analyzer does emit the export, but as a `variable` (the exported value is a function), so the
+         * entry exists and is ignored by everything that looks for classes: `byName` in the slot
+         * propagation below, the docs, and the api-table coverage gates. Promote it, keeping its
+         * description and adding the slots it declares.
+         */
+        const emitFactoryMixin = definition => {
           const source = sourceByPath.get(definition.path);
-          if (!source) continue;
+          if (!source) return;
           const factories = new Set(
             [
               ...source.matchAll(
@@ -141,7 +149,7 @@ const cem = create({
             ].map(m => m[1]),
           );
           // Only one factory per file can be attributed unambiguously.
-          if (factories.size !== 1) continue;
+          if (factories.size !== 1) return;
           const [name] = factories;
           const slots = [
             ...source.matchAll(/@slot\s+(?:'([^']+)'|"([^"]+)"|([\w-]+))\s+([^\n*]+)/g),
@@ -156,13 +164,7 @@ const cem = create({
               (slot, index, all) =>
                 all.findIndex(candidate => candidate.name === slot.name) === index,
             );
-          if (slots.length === 0) continue;
-          /**
-           * The analyzer does emit the export, but as a `variable` (the exported value is a function), so
-           * the entry exists and is ignored by everything that looks for classes: `byName` in the slot
-           * propagation below, the docs, and the api-table coverage gates. Promote it, keeping its
-           * description and adding the slots it declares.
-           */
+          if (slots.length === 0) return;
           const existing = definition.declarations.find(d => d.name === name);
           if (existing) {
             existing.kind = 'class';
@@ -175,7 +177,8 @@ const cem = create({
               slots,
             });
           }
-        }
+        };
+        for (const definition of customElementsManifest.modules) emitFactoryMixin(definition);
 
         const byName = new Map();
         for (const definition of customElementsManifest.modules) {
@@ -201,15 +204,16 @@ const cem = create({
           return found;
         };
         for (const definition of customElementsManifest.modules) {
-          for (const declaration of definition.declarations ?? []) {
-            if (declaration.kind !== 'class') continue;
+          const classDeclarations = (definition.declarations ?? []).filter(d => d.kind === 'class');
+          for (const declaration of classDeclarations) {
             const own = new Set((declaration.slots ?? []).map(slot => slot.name));
             for (const [name, owner] of inheritedSlots(declaration)) {
-              if (own.has(name) || owner === declaration.name) continue;
-              declaration.slots = [
-                ...(declaration.slots ?? []),
-                { name, inheritedFrom: { name: owner } },
-              ];
+              if (!own.has(name) && owner !== declaration.name) {
+                declaration.slots = [
+                  ...(declaration.slots ?? []),
+                  { name, inheritedFrom: { name: owner } },
+                ];
+              }
             }
             if (declaration.slots?.length) declaration.slots.sort(sortName);
           }
