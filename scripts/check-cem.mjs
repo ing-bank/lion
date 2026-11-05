@@ -83,7 +83,63 @@ const missingMixins = MIXINS.filter(name => !names.has(name));
  * description a consumer reads) comes from the `@slot` JSDoc. This is the gate for the remaining work,
  * and the covered count is a ratchet so the gap can only shrink.
  */
-function declaredSlotNames() {
+/**
+ * The class a `get slots()` belongs to: the nearest `class X` above it. Factory mixins (`superclass =>
+ * class extends …`) have no name, which is exactly the gap that keeps them out of the manifest.
+ */
+function classNameFor(source, index) {
+  const matches = [...source.slice(0, index).matchAll(/class\s+([A-Z]\w+)/g)];
+  return matches.length > 0 ? matches[matches.length - 1][1] : '<anonymous>';
+}
+
+/**
+ * The object literal the getter returns, with its braces balanced. Slicing to the next `}` is what
+ * produced the earlier noise (LionItem#TODO, #Enter, #ArrowUp, #https): the arrow functions in the values
+ * carry their own object literals, keymaps and switch bodies.
+ */
+function returnedObjectLiteral(source, from) {
+  const open = source.indexOf('{', source.indexOf('return', from));
+  if (open === -1) return null;
+  let depth = 0;
+  for (let i = open; i < source.length; i += 1) {
+    if (source[i] === '{') depth += 1;
+    else if (source[i] === '}') {
+      depth -= 1;
+      if (depth === 0) return source.slice(open + 1, i);
+    }
+  }
+  return null;
+}
+
+/**
+ * Only the keys at depth 1 of the returned literal are slots. The JSDoc directly above a key is the
+ * description - the part a consumer reads and the part that cannot be derived from anywhere else.
+ */
+function slotEntries(body) {
+  const slots = [];
+  let depth = 0;
+  let description = '';
+  for (const line of body.split('\n')) {
+    const trimmed = line.trim();
+    if (depth === 0) {
+      if (trimmed.startsWith('/**')) description = trimmed.replace(/^\/\*\*?\s*/, '');
+      else if (trimmed.endsWith('*/')) description = `${description} ${trimmed.replace(/\*\/$/, '')}`.trim();
+      else if (trimmed.startsWith('*')) {
+        description = `${description} ${trimmed.replace(/^\*\s?/, '')}`.trim();
+      } else if (trimmed.length > 0) {
+        const key = trimmed.match(/^(?:'([^']+)'|"([^"]+)"|([A-Za-z_$][\w$-]*))\s*:/);
+        if (key && !trimmed.startsWith('...')) {
+          slots.push({ name: key[1] ?? key[2] ?? key[3], description });
+        }
+        description = '';
+      }
+    }
+    depth += (line.match(/\{/g)?.length ?? 0) - (line.match(/\}/g)?.length ?? 0);
+  }
+  return slots;
+}
+
+function declaredSlots() {
   const found = new Map();
   const walk = dir => {
     for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
@@ -91,14 +147,14 @@ function declaredSlotNames() {
       if (entry.isDirectory()) walk(full);
       else if (entry.name.endsWith('.js') && full.includes('/src/')) {
         const source = fs.readFileSync(full, 'utf8');
-        for (const [, className, body] of source.matchAll(
-          /class\s+([A-Z]\w+)[^{]*\{[\s\S]*?get\s+slots\(\)\s*\{([\s\S]*?)\n  \}/g,
-        )) {
-          const names = [...body.matchAll(/(?:^|\s)(?:'([^']+)'|"([^"]+)"|(\w+))\s*:/g)].map(
-            m => m[1] ?? m[2] ?? m[3],
-          );
-          if (!found.has(className)) found.set(className, new Set());
-          for (const name of names) found.get(className).add(name);
+        for (const match of source.matchAll(/get\s+slots\(\)\s*\{/g)) {
+          const at = match.index;
+          const owner = classNameFor(source, at);
+          const body = returnedObjectLiteral(source, at + match[0].length);
+          if (!body) continue;
+          for (const slot of slotEntries(body)) {
+            found.set(`${owner}#${slot.name}`, { description: slot.description, file: full });
+          }
         }
       }
     }
@@ -107,18 +163,23 @@ function declaredSlotNames() {
   return found;
 }
 
-const declared = declaredSlotNames();
+const declared = declaredSlots();
 const covered = [];
 const uncovered = [];
-for (const [className, slotNames] of declared) {
+const withoutDescription = [];
+for (const [key, { description, file }] of declared) {
+  const [className, slotName] = key.split('#');
   const declaration = classes.find(d => d.name === className);
   if (!declaration) {
-    uncovered.push(`${className} (class is not in the manifest at all)`);
+    uncovered.push(`${key} (${className} is not in the manifest at all — see ${file})`);
     continue;
   }
-  const annotated = new Set((declaration.slots ?? []).map(s => s.name));
-  for (const slotName of slotNames) {
-    (annotated.has(slotName) ? covered : uncovered).push(`${className}#${slotName}`);
+  const annotated = (declaration.slots ?? []).find(s => s.name === slotName);
+  if (annotated) {
+    covered.push(key);
+    if (!annotated.description) withoutDescription.push(key);
+  } else {
+    uncovered.push(key);
   }
 }
 const MIN_DECLARED_SLOTS_COVERED = 10;
@@ -146,7 +207,7 @@ console.log(
 );
 console.log(
   `  slots declared in \`get slots()\`: ${covered.length + uncovered.length}, annotated: ${covered.length}, ` +
-    `still open: ${uncovered.length}`,
+    `still open: ${uncovered.length}, annotated without a description: ${withoutDescription.length}`,
 );
 if (uncovered.length > 0) console.log(`    ${uncovered.join(' | ')}`);
 console.log(
