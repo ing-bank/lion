@@ -558,10 +558,18 @@ axios.post('upload_file', formData, {
 
 #### Slots
 
-| Name                 | Description                                   |
-| -------------------- | --------------------------------------------- |
-| `file-select-button` | \[private] The button to open the file dialog |
-| `selected-file-list` | \[private] The list of selected files         |
+| Name                 | Description                                                                             |
+| -------------------- | --------------------------------------------------------------------------------------- |
+| `after`              | Content rendered after the field, inside the same wrapper.                              |
+| `before`             | Content rendered before the field, inside the same wrapper.                             |
+| `feedback`           | Validation feedback shown below the field.                                              |
+| `file-select-button` | \[private] The button to open the file dialog                                           |
+| `help-text`          | Help text shown below the field.                                                        |
+| `input`              | The input, textarea or select element the field wraps; the field's value comes from it. |
+| `label`              | The label of the field. Alternatively the \`label\` attribute can be used.              |
+| `prefix`             | Content shown in front of the input, for example a currency symbol.                     |
+| `selected-file-list` | \[private] The list of selected files                                                   |
+| `suffix`             | Content shown after the input.                                                          |
 
 <hr/>
 

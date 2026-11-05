@@ -304,8 +304,8 @@ export const events = ({ shadowRoot }) => html`
 
 | Name       | Description                         |
 | ---------- | ----------------------------------- |
-| `invoker`  | The invoker element for the drawer  |
 | `content`  | The content element for the drawer  |
 | `headline` | The headline element for the drawer |
+| `invoker`  | The invoker element for the drawer  |
 
 <hr/>

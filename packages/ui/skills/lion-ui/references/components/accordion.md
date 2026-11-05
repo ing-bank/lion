@@ -500,8 +500,8 @@ If there is a button or a form inside the tab panel then these elements get focu
 
 | Name         | Description                                                        |
 | ------------ | ------------------------------------------------------------------ |
-| `invoker`    | The invoker element for the accordion                              |
 | `content`    | The content element for the accordion                              |
+| `invoker`    | The invoker element for the accordion                              |
 | `_accordion` | The slot for the accordion, used to rearrange invokers and content |
 
 <hr/>

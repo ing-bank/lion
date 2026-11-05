@@ -244,7 +244,7 @@ _hideAnimation({ contentNode }) {
 
 | Name      | Description                             |
 | --------- | --------------------------------------- |
-| `invoker` | The invoker element for the collapsible |
 | `content` | The content element for the collapsible |
+| `invoker` | The invoker element for the collapsible |
 
 <hr/>

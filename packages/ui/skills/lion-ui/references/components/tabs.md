@@ -325,7 +325,7 @@ export const main = () => html`
 
 | Name    | Description                     |
 | ------- | ------------------------------- |
-| `tab`   | The tab elements for the tabs   |
 | `panel` | The panel elements for the tabs |
+| `tab`   | The tab elements for the tabs   |
 
 <hr/>

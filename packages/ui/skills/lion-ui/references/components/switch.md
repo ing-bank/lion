@@ -228,6 +228,19 @@ This component fulfils the following requirements:
 | -------------------- | ------- | ----------- | -------------- |
 | `user-input-changed` | `Event` |             | LionField      |
 
+#### Slots
+
+| Name        | Description                                                                             |
+| ----------- | --------------------------------------------------------------------------------------- |
+| `after`     | Content rendered after the field, inside the same wrapper.                              |
+| `before`    | Content rendered before the field, inside the same wrapper.                             |
+| `feedback`  | Validation feedback shown below the field.                                              |
+| `help-text` | Help text shown below the field.                                                        |
+| `input`     | The input, textarea or select element the field wraps; the field's value comes from it. |
+| `label`     | The label of the field. Alternatively the \`label\` attribute can be used.              |
+| `prefix`    | Content shown in front of the input, for example a currency symbol.                     |
+| `suffix`    | Content shown after the input.                                                          |
+
 <hr/>
 
 ### class: `LionSwitchButton`, `lion-switch-button`
