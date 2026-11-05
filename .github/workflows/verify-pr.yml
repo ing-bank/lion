@@ -121,5 +121,12 @@ jobs:
       - name: Install Dependencies
         run: npm install --ci --force
 
+      # The harness's behaviour tier executes the produced code in Chromium via @web/test-runner, so the
+      # browser has to exist. Without it those tests fail with "Executable doesn't exist" instead of
+      # running (measured: 6 failures on ubuntu and windows). No --with-deps: this job also runs on
+      # windows, where that flag is unsupported.
+      - name: Install Chromium for the behaviour tier
+        run: npx playwright install chromium chromium-headless-shell
+
       - name: Test
         run: npm run test:node

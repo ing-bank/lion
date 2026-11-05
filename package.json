@@ -19,7 +19,7 @@
     "postinstall": "npx patch-package && npm run build:phone --workspace @lion/ui && npm run custom-elements-manifest",
     "lint": "wireit",
     "lint:eslint": "eslint --ext .js,.html .",
-    "lint:markdownlint": "git ls-files '*.md' | xargs markdownlint --ignore '{.github/**/*.md,.changeset/*.md,**/CHANGELOG.md,packages/ui/_legacy-changelogs/*.md,packages-node/awesome-phonenumber/upstream/**,packages/ui/skills/lion-ui/references/**/*.md}'",
+    "lint:markdownlint": "git ls-files '*.md' | xargs markdownlint --ignore '{.github/**/*.md,.changeset/*.md,**/CHANGELOG.md,packages/ui/_legacy-changelogs/*.md,packages-node/awesome-phonenumber/upstream/**,packages-node/skill-tester/mock-repo/**,packages/ui/skills/lion-ui/references/**/*.md}'",
     "lint:phone-number-up-to-date": "node ./scripts/lint-phone-number-lib.js",
     "lint:prettier": "prettier \"**/*.js\" --list-different || (echo '↑↑ these files are not prettier formatted ↑↑' && exit 1)",
     "lint:sr-command-budget": "node ./scripts/lint-sr-command-budget.js",
