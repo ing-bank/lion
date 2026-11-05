@@ -85,8 +85,8 @@ export function runStepsSuite({
         </${tag}>
       `);
       expect(el.steps.length).to.equal(3);
-      expect(el.steps[0].tagName).to.equal('LION-STEP');
-      expect(el.steps[1].tagName).to.equal('LION-STEP');
+      expect(el.steps[0].tagName).to.equal(tagNameStep.toUpperCase());
+      expect(el.steps[1].tagName).to.equal(tagNameStep.toUpperCase());
       expect(el.steps[2].tagName).to.equal('OTHER-STEP-ELEMENT');
     });
 

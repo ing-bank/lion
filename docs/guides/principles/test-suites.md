@@ -88,6 +88,9 @@ describe('my-input', () => {
    The combobox suite likewise reads the options container from
    `getComboboxMembers(host)._listboxNode`, so a renamed scoped options element needs no extra
    selector configuration.
+   `runPaginationSuite` reads its previous, next, page and ellipsis nodes through the exported
+   `PaginationObject`; a subclass with different navigation markup can pass a subclass overriding
+   those getters.
 7. **Accessibility is Lion's; styling and markup are the extension layer's.** So the accessible
    _name_ is asserted, but not the attribute it lives on: the suite reads it from `title`,
    `aria-label` or a `label` attribute, and the copy stays Lion's (localized messages). Asserting
@@ -150,7 +153,7 @@ A non-exported mixin keeps its runner inside the package next to its own tests.
 
 The fixtures a suite needs from the caller are the exported `*-test-helpers.js` entry points
 (`@lion/ui/form-core-test-helpers.js`, `@lion/ui/listbox-test-helpers.js`,
-`@lion/ui/input-test-helpers.js`, …). Helpers that live in a component's internal
+`@lion/ui/input-test-helpers.js`, `@lion/ui/pagination-test-helpers.js`, …). Helpers that live in a component's internal
 `test-helpers/` folder are private to Lion and are not part of this contract.
 
 ## Not yet covered

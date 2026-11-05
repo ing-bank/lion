@@ -4,6 +4,7 @@ import sinon from 'sinon';
 
 import '@lion/ui/define/lion-pagination.js';
 import { LionPagination } from '@lion/ui/pagination.js';
+import { PaginationObject as DefaultPaginationObject } from '@lion/ui/pagination-test-helpers.js';
 import { resolveSuiteTag } from '../../core/test-helpers/resolveSuiteTag.js';
 
 /**
@@ -16,10 +17,14 @@ import { resolveSuiteTag } from '../../core/test-helpers/resolveSuiteTag.js';
  * registered element (see docs/guides/principles/test-suites.md).
  * `tagString`, `klass` and the older role tag keys are deprecated: pass `classes` instead (Lion
  * itself uses `classes` everywhere).
- * @param {import('@lion/ui/types/test-suites.js').SuiteConfig<{host: SuiteElement}>} [customConfig]
+ * @param {import('@lion/ui/types/test-suites.js').SuiteConfig<
+ *   {host: SuiteElement},
+ *   {PaginationObject?: typeof DefaultPaginationObject}
+ * >} [customConfig]
  */
 export function runPaginationSuite({
   classes: { host = LionPagination } = {},
+  PaginationObject = DefaultPaginationObject,
   tagString: legacyTagString,
 } = {}) {
   const tag = unsafeStatic(resolveSuiteTag(host, legacyTagString));
@@ -39,45 +44,30 @@ export function runPaginationSuite({
 
     it('disables the previous button if on first page', async () => {
       const el = await fixture(html` <${tag} count="4"></${tag}> `);
-      const buttons = Array.from(
-        /** @type {ShadowRoot} */ (el.shadowRoot).querySelectorAll('button'),
-      );
-      expect(buttons[0]).to.has.attribute('disabled');
+      expect(new PaginationObject(el).previousButtonEl).to.has.attribute('disabled');
     });
 
     it('disables the next button if on last page', async () => {
       const el = await fixture(html` <${tag} count="4" current="4"></${tag}> `);
-      const buttons = Array.from(
-        /** @type {ShadowRoot} */ (el.shadowRoot).querySelectorAll('button'),
-      );
-      expect(buttons[buttons.length - 1]).to.has.attribute('disabled');
+      expect(new PaginationObject(el).nextButtonEl).to.has.attribute('disabled');
     });
 
     describe('User interaction', () => {
       it('can go to previous page with previous button', async () => {
         const el = await fixture(html` <${tag} count="6" current="2"></${tag}> `);
-        const buttons = Array.from(
-          /** @type {ShadowRoot} */ (el.shadowRoot).querySelectorAll('button'),
-        );
-        buttons[0].click();
+        new PaginationObject(el).previousButtonEl.click();
         expect(el.current).to.equal(1);
       });
 
       it('can go to next page with next button', async () => {
         const el = await fixture(html` <${tag} count="6" current="2"></${tag}> `);
-        const buttons = Array.from(
-          /** @type {ShadowRoot} */ (el.shadowRoot).querySelectorAll('button'),
-        );
-        buttons[buttons.length - 1].click();
+        new PaginationObject(el).nextButtonEl.click();
         expect(el.current).to.equal(3);
       });
 
       it('goes to the page when clicking on its button', async () => {
         const el = await fixture(html` <${tag} count="6" current="2"></${tag}> `);
-        const buttons = Array.from(
-          /** @type {ShadowRoot} */ (el.shadowRoot).querySelectorAll('button'),
-        );
-        buttons[5].click();
+        new PaginationObject(el).pageButtonEls[4].click();
         expect(el.current).to.equal(5);
       });
 
@@ -86,12 +76,9 @@ export function runPaginationSuite({
         const el = await fixture(html`
           <${tag} count="6" current="2" @current-changed=${changeSpy}></${tag}>
         `);
-        const buttons = Array.from(
-          /** @type {ShadowRoot} */ (el.shadowRoot).querySelectorAll('button'),
-        );
-        const previous = buttons[0];
-        const next = buttons[buttons.length - 1];
-        const page5 = buttons[5];
+        const paginationObject = new PaginationObject(el);
+        const { previousButtonEl: previous, nextButtonEl: next, pageButtonEls } = paginationObject;
+        const page5 = pageButtonEls[4];
 
         previous.click();
         expect(changeSpy).to.have.callCount(1);
@@ -111,9 +98,12 @@ export function runPaginationSuite({
         const el = await fixture(html`
           <${tag} count="6" current="2" @current-changed=${changeSpy}></${tag}>
         `);
-        const page2 = /** @type {HTMLElement} */ (
-          el.shadowRoot?.querySelector("button[aria-current='true']")
+        const page2 = new PaginationObject(el).pageButtonEls.find(
+          button => button.getAttribute('aria-current') === 'true',
         );
+        if (!page2) {
+          throw new Error('The current page button was not found.');
+        }
         page2.click();
         expect(changeSpy).to.not.be.called;
         expect(el.current).to.equal(2);
@@ -121,18 +111,16 @@ export function runPaginationSuite({
 
       it('should announce next and previous page using `next()` and `previous()`', async () => {
         const el = await fixture(html` <${tag} count="6" current="2"></${tag}> `);
-        const buttons = Array.from(
-          /** @type {ShadowRoot} */ (el.shadowRoot).querySelectorAll('button'),
-        );
-        expect(buttons[2].getAttribute('aria-live')).to.equal('polite');
+        const { pageButtonEls } = new PaginationObject(el);
+        expect(pageButtonEls[1].getAttribute('aria-live')).to.equal('polite');
         el.next();
         await el.updateComplete;
-        expect(buttons[3].getAttribute('aria-live')).to.equal('polite');
-        expect(buttons[2].getAttribute('aria-live')).to.equal('off');
+        expect(pageButtonEls[2].getAttribute('aria-live')).to.equal('polite');
+        expect(pageButtonEls[1].getAttribute('aria-live')).to.equal('off');
         el.previous();
         await el.updateComplete;
-        expect(buttons[3].getAttribute('aria-live')).to.equal('off');
-        expect(buttons[2].getAttribute('aria-live')).to.equal('polite');
+        expect(pageButtonEls[2].getAttribute('aria-live')).to.equal('off');
+        expect(pageButtonEls[1].getAttribute('aria-live')).to.equal('polite');
       });
 
       it('should goto next and previous page using `next()` and `previous()`', async () => {
@@ -163,19 +151,16 @@ export function runPaginationSuite({
     describe('Accessibility', () => {
       it('sets aria-current to the current page', async () => {
         const el = await fixture(html` <${tag} count="3"></${tag}> `);
-        const buttons = Array.from(
-          /** @type {ShadowRoot} */ (el.shadowRoot).querySelectorAll('button'),
-        );
-        // button[0] is the previous button
-        expect(buttons[1].getAttribute('aria-current')).to.equal('true');
-        expect(buttons[2].getAttribute('aria-current')).to.equal('false');
-        expect(buttons[3].getAttribute('aria-current')).to.equal('false');
+        const { pageButtonEls } = new PaginationObject(el);
+        expect(pageButtonEls[0].getAttribute('aria-current')).to.equal('true');
+        expect(pageButtonEls[1].getAttribute('aria-current')).to.equal('false');
+        expect(pageButtonEls[2].getAttribute('aria-current')).to.equal('false');
 
         el.current = 2;
         await el.updateComplete;
-        expect(buttons[1].getAttribute('aria-current')).to.equal('false');
-        expect(buttons[2].getAttribute('aria-current')).to.equal('true');
-        expect(buttons[3].getAttribute('aria-current')).to.equal('false');
+        expect(pageButtonEls[0].getAttribute('aria-current')).to.equal('false');
+        expect(pageButtonEls[1].getAttribute('aria-current')).to.equal('true');
+        expect(pageButtonEls[2].getAttribute('aria-current')).to.equal('false');
       });
     });
 
@@ -186,10 +171,7 @@ export function runPaginationSuite({
           /** @type {ShadowRoot} */ (el.shadowRoot).querySelectorAll('li'),
         );
         // Check that no ellipsis is rendered (no <span> elements with '...')
-        const spans = Array.from(
-          /** @type {ShadowRoot} */ (el.shadowRoot).querySelectorAll('li span'),
-        );
-        expect(spans.length).to.equal(0);
+        expect(new PaginationObject(el).ellipsisEls.length).to.equal(0);
 
         // There should be 8 nav items: previous button + 6 page buttons + next button
         expect(navItems.length).to.equal(8);
@@ -198,10 +180,7 @@ export function runPaginationSuite({
       it('should not show ellipsis when count is visiblePages + 2 (count=7, visiblePages=5)', async () => {
         const el = await fixture(html` <${tag} count="7" current="1"></${tag}> `);
         // Check that no ellipsis is rendered (no <span> elements with '...')
-        const spans = Array.from(
-          /** @type {ShadowRoot} */ (el.shadowRoot).querySelectorAll('li span'),
-        );
-        expect(spans.length).to.equal(0);
+        expect(new PaginationObject(el).ellipsisEls.length).to.equal(0);
 
         // There should be 9 nav items: previous button + 7 page buttons + next button
         const navItems = Array.from(
@@ -213,9 +192,7 @@ export function runPaginationSuite({
       it('should show ellipsis when count is visiblePages + 3 (count=8, visiblePages=5)', async () => {
         const el = await fixture(html` <${tag} count="8" current="1"></${tag}> `);
         // Check that ellipsis is rendered (should have <span> elements with '...')
-        const spans = Array.from(
-          /** @type {ShadowRoot} */ (el.shadowRoot).querySelectorAll('li span'),
-        );
+        const spans = new PaginationObject(el).ellipsisEls;
         expect(spans.length).to.be.greaterThan(0);
 
         // Verify the ellipsis contains '...'

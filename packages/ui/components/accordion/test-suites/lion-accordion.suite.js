@@ -1,10 +1,11 @@
 import { html } from 'lit/static-html.js';
-import { unsafeStatic, expect, fixture } from '@open-wc/testing';
+import { unsafeStatic, expect, fixture, waitUntil } from '@open-wc/testing';
 import { sendKeys } from '@web/test-runner-commands';
 import sinon from 'sinon';
 import '@lion/ui/define/lion-accordion.js';
 import { LionAccordion } from '@lion/ui/accordion.js';
 import { resolveSuiteTag } from '../../core/test-helpers/resolveSuiteTag.js';
+import { isElementVisible } from '../../core/test-helpers/isElementVisible.js';
 
 /**
  * @typedef {import('@lion/ui/types/test-suites.js').SuiteElement} SuiteElement
@@ -313,15 +314,14 @@ export function runAccordionSuite({
 
         const contents = getContents(el);
 
-        setTimeout(() => {
-          expect(contents[0]).to.be.visible;
-          expect(contents[1]).to.be.not.visible;
+        await waitUntil(() => isElementVisible(contents[0]) && !isElementVisible(contents[1]));
+        expect(contents[0]).to.be.visible;
+        expect(contents[1]).to.be.not.visible;
 
-          el.expanded = [1];
-
-          expect(contents[0]).to.be.not.visible;
-          expect(contents[1]).to.be.visible;
-        }, 250);
+        el.expanded = [1];
+        await waitUntil(() => !isElementVisible(contents[0]) && isElementVisible(contents[1]));
+        expect(contents[0]).to.be.not.visible;
+        expect(contents[1]).to.be.visible;
       });
 
       it.skip('have a DOM structure that allows them to be animated ', async () => {});

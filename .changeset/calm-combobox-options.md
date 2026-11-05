@@ -2,4 +2,4 @@
 '@lion/ui': patch
 ---
 
-Fix the combobox test suite's dynamic-options checks for subclasses with a renamed scoped options element.
+Make the combobox and steps suites work with renamed children, and let pagination suites query custom navigation elements.
