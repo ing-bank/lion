@@ -15,6 +15,15 @@ class ChoiceInput extends ChoiceInputMixin(LionInput) {
 customElements.define('choice-group-input', ChoiceInput);
 
 /**
+ * @param {EventTarget | null} actualTarget
+ * @param {EventTarget} expectedTarget
+ * @param {string} description
+ */
+function expectEventTarget(actualTarget, expectedTarget, description) {
+  expect(actualTarget === expectedTarget, description).to.be.true;
+}
+
+/**
  * `tagString`, `klass` and the older role tag keys are deprecated: pass `classes` instead (Lion
  * itself uses `classes` everywhere).
  * @param {{ classes?: Record<string, CustomElementConstructor>, tagString?:string, tagType?: string}} config
@@ -117,14 +126,22 @@ export function runChoiceInputMixinSuite({ classes = {}, tagString: legacyTagStr
       const { _inputNode, _labelNode } = getFormControlMembers(el);
 
       el.click();
-      expect(spy.args[0][0].target).to.equal(el);
+      expectEventTarget(spy.args[0][0].target, el, 'host click event target');
       expect(spy.callCount).to.equal(1);
       _labelNode.click();
-      expect(spy.args[1][0].target).to.equal(_labelNode);
+      expectEventTarget(spy.args[1][0].target, _labelNode, 'label click event target');
       expect(spy.callCount).to.equal(2);
       _inputNode.click();
-      expect(spy.args[2][0].target).to.equal(_inputNode);
+      expectEventTarget(spy.args[2][0].target, _inputNode, 'input click event target');
       expect(spy.callCount).to.equal(3);
+    });
+
+    it('reports click target mismatches without serializing DOM nodes', () => {
+      const actualTarget = document.createElement('ing-button');
+      const expectedTarget = document.createElement('input');
+      expect(() =>
+        expectEventTarget(actualTarget, expectedTarget, 'forwarded click event target'),
+      ).to.throw('forwarded click event target');
     });
 
     it('adds "isTriggerByUser" flag on model-value-changed', async () => {
