@@ -1,0 +1,11 @@
+{
+  "name": "staged-publish",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Internal tooling for staging Lion packages on npm",
+  "scripts": {
+    "release": "node ./src/stage-publish.js",
+    "test:node": "mocha test-node"
+  }
+}

@@ -198,8 +198,10 @@ describe('resolveImportPath with the oxc resolver (real file system)', () => {
     fs.writeFileSync(filePath, code);
   }
 
-  before(() => {
-    root = fs.mkdtempSync(path.join(os.tmpdir(), 'providence-resolve-'));
+  before(async () => {
+    root = await fs.promises.realpath(
+      await fs.promises.mkdtemp(path.join(os.tmpdir(), 'providence-resolve-')),
+    );
     projectPath = path.join(root, 'my-project');
     targetPath = path.join(root, 'target');
     const modulesPath = path.join(targetPath, 'node_modules');
