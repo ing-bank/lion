@@ -109,6 +109,44 @@ const cem = create({
             }
           }
         }
+
+        // Slots are the one thing the analyzer does NOT inherit (members are), so a field would lose the
+        // structure its base class renders. Copy a parent's slots onto the declaration that extends it,
+        // marked with `inheritedFrom`: the field structure (label, input, prefix, suffix, before, after,
+        // help-text, feedback) is annotated once on LionField and then belongs to every field, instead of
+        // being repeated per component. The walk covers superclasses and mixins.
+        const byName = new Map();
+        for (const definition of customElementsManifest.modules) {
+          for (const declaration of definition.declarations ?? []) {
+            if (declaration.kind === 'class') byName.set(declaration.name, declaration);
+          }
+        }
+        const inheritedSlots = (declaration, seen = new Set()) => {
+          if (!declaration || seen.has(declaration.name)) return new Map();
+          seen.add(declaration.name);
+          const found = new Map((declaration.slots ?? []).map(slot => [slot.name, declaration.name]));
+          const parents = [
+            declaration.superclass?.name,
+            ...(declaration.mixins ?? []).map(mixin => mixin.name),
+          ];
+          for (const parent of parents) {
+            for (const [name, owner] of inheritedSlots(byName.get(parent), seen)) {
+              if (!found.has(name)) found.set(name, owner);
+            }
+          }
+          return found;
+        };
+        for (const definition of customElementsManifest.modules) {
+          for (const declaration of definition.declarations ?? []) {
+            if (declaration.kind !== 'class') continue;
+            const own = new Set((declaration.slots ?? []).map(slot => slot.name));
+            for (const [name, owner] of inheritedSlots(declaration)) {
+              if (own.has(name) || owner === declaration.name) continue;
+              declaration.slots = [...(declaration.slots ?? []), { name, inheritedFrom: { name: owner } }];
+            }
+            if (declaration.slots?.length) declaration.slots.sort(sortName);
+          }
+        }
       },
     },
     generateCustomData(),
