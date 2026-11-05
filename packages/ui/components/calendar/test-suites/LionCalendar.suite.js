@@ -16,7 +16,7 @@ import { resolveSuiteTag } from '../../core/test-helpers/resolveSuiteTag.js';
  * Runs the `LionCalendar` behavioural suite. The caller hands the element to run against; anything
  * left out keeps `LionCalendar`.
  * @typedef {import('@lion/ui/types/test-suites.js').SuiteElement} SuiteElement
- * @param {import('@lion/ui/types/test-suites.js').SuiteConfig<{host: SuiteElement}, {CalendarObject?: typeof DefaultCalendarObject}>} [customConfig]
+ * @param {import('@lion/ui/types/test-suites.js').SuiteConfig<{host: SuiteElement}, {pageObjects?: {host?: typeof DefaultCalendarObject}}>} [customConfig]
  */
 export function runCalendarSuite({
   classes = {},
@@ -24,7 +24,7 @@ export function runCalendarSuite({
   // The tests address the calendar through this page object; an extension layer whose navigation
   // markup differs (ING renders its own button element) passes its own subclass overriding the node
   // getters instead of the suite learning about that markup.
-  CalendarObject = DefaultCalendarObject,
+  pageObjects: { host: CalendarObject = DefaultCalendarObject } = {},
 } = {}) {
   const tagStringCalendar = resolveSuiteTag(classes.host, tagString, LionCalendar);
   const tagCalendar = unsafeStatic(tagStringCalendar);

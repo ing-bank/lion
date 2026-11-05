@@ -7,3 +7,5 @@ Make the combobox and steps suites work with renamed children, and let paginatio
 Allow combobox suites to configure label-property options before their values are formatted, including dynamically rendered options.
 
 Make collapsible suite height fixtures independent of text wrapping and await switch host updates before asserting inner button events.
+
+Configure pagination, calendar and datepicker suite page objects consistently through `pageObjects: { host: MyPageObject }`.

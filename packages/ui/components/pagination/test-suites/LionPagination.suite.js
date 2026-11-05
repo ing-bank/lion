@@ -19,12 +19,12 @@ import { resolveSuiteTag } from '../../core/test-helpers/resolveSuiteTag.js';
  * itself uses `classes` everywhere).
  * @param {import('@lion/ui/types/test-suites.js').SuiteConfig<
  *   {host: SuiteElement},
- *   {PaginationObject?: typeof DefaultPaginationObject}
+ *   {pageObjects?: {host?: typeof DefaultPaginationObject}}
  * >} [customConfig]
  */
 export function runPaginationSuite({
   classes: { host = LionPagination } = {},
-  PaginationObject = DefaultPaginationObject,
+  pageObjects: { host: PaginationObject = DefaultPaginationObject } = {},
   tagString: legacyTagString,
 } = {}) {
   const tag = unsafeStatic(resolveSuiteTag(host, legacyTagString));

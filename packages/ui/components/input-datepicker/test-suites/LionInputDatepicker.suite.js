@@ -29,7 +29,7 @@ import { resolveSuiteTag } from '../../core/test-helpers/resolveSuiteTag.js';
  *   classes?: Record<string, CustomElementConstructor>,
  *   datepickerTagName?: string,
  *   calendarTagName?: string,
- *   InputObject?: typeof DefaultInputObject,
+ *   pageObjects?: {host?: typeof DefaultInputObject},
  * }} [customConfig]
  */
 export function runDatepickerSuite({
@@ -39,7 +39,7 @@ export function runDatepickerSuite({
   // The tests drive the datepicker through a page object; an extension layer whose overlay markup
   // differs (ING renders its own popover frame) passes its own subclass here instead of the suite
   // learning about that markup. See docs/guides/principles/test-suites.md.
-  InputObject = DefaultInputObject,
+  pageObjects: { host: InputObject = DefaultInputObject } = {},
 } = {}) {
   const datepickerTag = resolveSuiteTag(classes.host, datepickerTagName, 'lion-input-datepicker');
   const calendarTag = resolveSuiteTag(classes.calendar, calendarTagName, 'lion-calendar');

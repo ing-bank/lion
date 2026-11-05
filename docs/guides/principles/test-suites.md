@@ -75,23 +75,34 @@ describe('my-input', () => {
 5. **`classes` is the surface, and every suite is prefilled with it.** A runner starts from Lion's own
    elements for the roles it resolves, so calling it without arguments runs the guarantees against
    Lion; an extension layer hands its own elements for the roles it replaces.
-6. **A suite asserts through its page object, not through Lion's markup.** `runDatepickerSuite` takes
-   `InputObject` (default `DatepickerInputObject`) and `runCalendarSuite` takes `CalendarObject`
-   (default `CalendarObject`, both from the `*-test-helpers.js` entry points), and every node
+6. **A suite asserts through its page object, not through Lion's markup.** Page-object constructors
+   are passed through `pageObjects`, keyed by role just like `classes`.
+   `runDatepickerSuite` defaults `pageObjects.host` to `DatepickerInputObject` and
+   `runCalendarSuite` defaults it to `CalendarObject` (both from the `*-test-helpers.js` entry points), and every node
    reference and user action goes through them — the suite itself never queries
    `.calendar-overlay…`, `.calendar__previous-button` or `#close-button`. An extension layer whose
    markup differs passes its own subclass overriding the node getters (`overlayRootEl`,
    `overlayHeaderEl`, `overlayHeadingEl`, `overlayCloseButtonEl`, `overlayEl`; `previousYearButtonEl`
    and friends for the calendar) instead of the suite learning about that markup. The datepicker's
-   inner calendar comes from `InputObject.calendarEl` too — that getter reads the element's own
+   inner calendar comes from the host page object's `calendarEl` too — that getter reads the element's own
    `_calendarNode`, so no tag is needed there either.
    The combobox suite likewise reads the options container from
    `getComboboxMembers(host)._listboxNode`, so a renamed scoped options element needs no extra
    selector configuration.
    `runPaginationSuite` reads its previous, next, page and ellipsis nodes through the exported
-   `PaginationObject`; a subclass with different navigation markup can pass a subclass overriding
-   those getters. Click assertions wait for the requested page and its render to complete, so
+   `PaginationObject`; a subclass with different navigation markup can pass
+   `pageObjects: { host: MyPaginationObject }` overriding those getters. Click assertions wait for the requested page and its render to complete, so
    deferred navigation handlers are supported without changing the expected pages or event counts.
+
+   ```js
+   runPaginationSuite({
+     classes: { host: MyPagination },
+     pageObjects: { host: MyPaginationObject },
+   });
+   runCalendarSuite({ pageObjects: { host: MyCalendarObject } });
+   runDatepickerSuite({ pageObjects: { host: MyDatepickerInputObject } });
+   ```
+
 7. **Accessibility is Lion's; styling and markup are the extension layer's.** So the accessible
    _name_ is asserted, but not the attribute it lives on: the suite reads it from `title`,
    `aria-label` or a `label` attribute, and the copy stays Lion's (localized messages). Asserting

@@ -60,6 +60,10 @@ class SuitePaginationObject extends PaginationObject {
 describe('pagination suite with custom navigation elements', () => {
   runPaginationSuite({
     classes: { host: SuitePagination },
-    PaginationObject: SuitePaginationObject,
+    pageObjects: { host: SuitePaginationObject },
   });
+});
+
+describe('pagination suite with an empty page-object map', () => {
+  runPaginationSuite({ pageObjects: {} });
 });
