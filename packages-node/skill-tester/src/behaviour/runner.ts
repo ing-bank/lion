@@ -265,7 +265,9 @@ function runChunk({
   const output = `${run.stdout ?? ''}\n${run.stderr ?? ''}`;
   const stripped = stripAnsi(output);
   const crashed = Boolean(run.error || run.signal);
-  const failuresByFile = crashed ? new Map<string, BehaviourFailure[]>() : parseSuiteOutput(stripped);
+  const failuresByFile = crashed
+    ? new Map<string, BehaviourFailure[]>()
+    : parseSuiteOutput(stripped);
 
   const failEveryCase = (message: string): void => {
     for (const relative of relativeTestFiles) {
