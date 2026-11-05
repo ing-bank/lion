@@ -1801,6 +1801,23 @@ export const main = () => {
 
 ## API Reference
 
+### class: `FormControlMixin`
+
+#### Slots
+
+| Name        | Description                                                                     |
+| ----------- | ------------------------------------------------------------------------------- |
+| `after`     | - The after element for the form control, e.g. a label                          |
+| `before`    | - The before element for the form control, e.g. a label                         |
+| `feedback`  | - The validation feedback for the form control                                  |
+| `help-text` | - The help text for the form control                                            |
+| `input`     | - The input element for the form control, e.g. \<input>, \<textarea>, \<select> |
+| `label`     | - The label for the form control                                                |
+| `prefix`    | - The prefix for the form control, e.g. currency symbol                         |
+| `suffix`    | - The suffix for the form control, e.g. currency symbol                         |
+
+<hr/>
+
 ### class: `LionField`, `lion-field`
 
 #### Methods
@@ -1824,9 +1841,9 @@ export const main = () => {
 | `after`     | Content rendered after the field, inside the same wrapper.                              |
 | `before`    | Content rendered before the field, inside the same wrapper.                             |
 | `feedback`  | Validation feedback shown below the field.                                              |
-| `help-text` | Help text shown below the field.                                                        |
+| `help-text` |                                                                                         |
 | `input`     | The input, textarea or select element the field wraps; the field's value comes from it. |
-| `label`     | The label of the field. Alternatively the \`label\` attribute can be used.              |
+| `label`     |                                                                                         |
 | `prefix`    | Content shown in front of the input, for example a currency symbol.                     |
 | `suffix`    | Content shown after the input.                                                          |
 

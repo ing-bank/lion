@@ -674,9 +674,10 @@ See the [listbox documentation](../listbox/overview.md) for more information.
 
 #### Slots
 
-| Name                | Description                                                                    |
-| ------------------- | ------------------------------------------------------------------------------ |
-| `listbox`           | The listbox element for the combobox, e.g. \<lion-options>                     |
-| `selection-display` | The selection display element for the combobox, e.g. \<lion-selection-display> |
+| Name                | Description                                                                                                    |
+| ------------------- | -------------------------------------------------------------------------------------------------------------- |
+| `input`             | The interactive element of the combobox: the element that receives the keyboard input and filters the options. |
+| `listbox`           | The listbox element for the combobox, e.g. \<lion-options>                                                     |
+| `selection-display` | The selection display element for the combobox, e.g. \<lion-selection-display>                                 |
 
 <hr/>

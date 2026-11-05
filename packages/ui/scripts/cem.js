@@ -115,6 +115,62 @@ const cem = create({
         // marked with `inheritedFrom`: the field structure (label, input, prefix, suffix, before, after,
         // help-text, feedback) is annotated once on LionField and then belongs to every field, instead of
         // being repeated per component. The walk covers superclasses and mixins.
+        /**
+         * Factory mixins - `export const FormControlMixin = superclass => class extends …` - are not
+         * declarations, so the analyzer names them in `mixins: [...]` on every consumer but never emits an
+         * entry for the mixin itself. A consumer then inherits from a name that has no entry, and the
+         * extension surface - what a subclasser actually composes - is invisible to the docs.
+         *
+         * Emit them from the same source the analyzer read, carrying the `@slot` annotations, so the
+         * propagation below can hand their slots to every consumer.
+         */
+        // The module graph's Map is not keyed by the path the analyzer reports on its manifest modules, so
+        // index the sources by that path instead of trusting the key.
+        const sourceByPath = new Map();
+        for (const [, module] of moduleGraph.modules) {
+          if (module?.path) sourceByPath.set(module.path, module.source);
+        }
+        for (const definition of customElementsManifest.modules) {
+          const source = sourceByPath.get(definition.path);
+          if (!source) continue;
+          const factories = new Set(
+            [
+              ...source.matchAll(
+                /export const (\w+) = (?:dedupeMixin\(\w+\)|(?:superclass|superClass|base)\s*=>)/g,
+              ),
+            ].map(m => m[1]),
+          );
+          // Only one factory per file can be attributed unambiguously.
+          if (factories.size !== 1) continue;
+          const [name] = factories;
+          const slots = [
+            ...source.matchAll(/@slot\s+(?:'([^']+)'|"([^"]+)"|([\w-]+))\s+([^\n*]+)/g),
+          ]
+            .map(match => ({ name: match[1] ?? match[2] ?? match[3], description: match[4].trim() }))
+            // A file can repeat a tag (the class JSDoc and the typedef above the implementation), so keep
+            // the first occurrence per name.
+            .filter((slot, index, all) => all.findIndex(candidate => candidate.name === slot.name) === index);
+          if (slots.length === 0) continue;
+          /**
+           * The analyzer does emit the export, but as a `variable` (the exported value is a function), so
+           * the entry exists and is ignored by everything that looks for classes: `byName` in the slot
+           * propagation below, the docs, and the api-table coverage gates. Promote it, keeping its
+           * description and adding the slots it declares.
+           */
+          const existing = definition.declarations.find(d => d.name === name);
+          if (existing) {
+            existing.kind = 'class';
+            existing.slots = slots;
+          } else {
+            definition.declarations.push({
+              kind: 'class',
+              name,
+              description: `Mixin factory: \`${name}(superclass)\`.`,
+              slots,
+            });
+          }
+        }
+
         const byName = new Map();
         for (const definition of customElementsManifest.modules) {
           for (const declaration of definition.declarations ?? []) {

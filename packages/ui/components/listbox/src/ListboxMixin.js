@@ -37,6 +37,7 @@ import { moveUserProvidedDefaultSlottablesToTarget } from '../../core/src/SlotMi
 /**
  * @type {ListboxMixin}
  * @param {import('@open-wc/dedupe-mixin').Constructor<import('lit').LitElement>} superclass
+ * @slot input - The interactive element of the listbox: the element that receives the keyboard input.
  */
 // prettier-ignore
 const ListboxMixinImplementation = /** @type {ListboxMixin} */ (superclass =>

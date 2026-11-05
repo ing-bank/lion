@@ -198,6 +198,12 @@ A validator can be used to make it e.g. `required`. If you want to know how to d
 
 ### class: `LionListbox`, `lion-listbox`
 
+#### Slots
+
+| Name    | Description |
+| ------- | ----------- |
+| `input` |             |
+
 <hr/>
 
 ### class: `LionOption`, `lion-option`

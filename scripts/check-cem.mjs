@@ -102,7 +102,7 @@ for (const [key, { description, file }] of declared) {
     uncovered.push(key);
   }
 }
-const MIN_DECLARED_SLOTS_COVERED = 10;
+const MIN_DECLARED_SLOTS_COVERED = 18;
 if (covered.length < MIN_DECLARED_SLOTS_COVERED) {
   failures.push(
     `annotated slots for declared \`get slots()\` slots dropped to ${covered.length} ` +

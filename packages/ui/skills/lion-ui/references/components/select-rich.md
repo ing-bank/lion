@@ -488,6 +488,12 @@ export const IntlSelectRich = () => html`
 | `active`          | active          | LionButton     |
 | `type`            | type            | LionButton     |
 
+#### Slots
+
+| Name    | Description                                 |
+| ------- | ------------------------------------------- |
+| `after` | Content rendered after the invoker's label. |
+
 <hr/>
 
 ### class: `LionSelectRich`, `lion-field-with-select`
@@ -529,5 +535,12 @@ export const IntlSelectRich = () => html`
 | `interaction-mode`        | interactionMode       |                |
 | `single-option`           | singleOption          |                |
 | `opened`                  | opened                | OverlayMixin   |
+
+#### Slots
+
+| Name      | Description                                                        |
+| --------- | ------------------------------------------------------------------ |
+| `input`   |                                                                    |
+| `invoker` | The invoker that opens the listbox, e.g. a \<lion-select-invoker>. |
 
 <hr/>

@@ -21,13 +21,11 @@ import { InteractionStateMixin } from './InteractionStateMixin.js'; // applies F
  *   <input type="text" slot="input">
  * </lion-field>
  *
- * @slot label - The label of the field. Alternatively the `label` attribute can be used.
  * @slot input - The input, textarea or select element the field wraps; the field's value comes from it.
  * @slot prefix - Content shown in front of the input, for example a currency symbol.
  * @slot suffix - Content shown after the input.
  * @slot before - Content rendered before the field, inside the same wrapper.
  * @slot after - Content rendered after the field, inside the same wrapper.
- * @slot help-text - Help text shown below the field.
  * @slot feedback - Validation feedback shown below the field.
  *
  * @customElement lion-field
