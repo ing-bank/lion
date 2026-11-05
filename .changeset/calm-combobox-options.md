@@ -11,3 +11,5 @@ Make collapsible suite height fixtures independent of text wrapping and await sw
 Configure pagination, calendar and datepicker suite page objects consistently through `pageObjects: { host: MyPageObject }`.
 
 Build shared-suite fixtures from constructors without importing definition entry points or registering fixed global custom-element names.
+
+Restore inherited SelectRich option-position accessibility updates when options are added, removed or reordered.
