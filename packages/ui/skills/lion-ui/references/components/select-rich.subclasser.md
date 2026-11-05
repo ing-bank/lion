@@ -17,172 +17,56 @@
 | `LionSelectInvoker` | `_contentTemplate` |  |  |
 | `LionSelectInvoker` | `_contentWrapperNode` |  |  |
 | `LionSelectInvoker` | `_noSelectionTemplate` |  | To be overriden for a placeholder, used when `hasNoDefaultSelected` is true on the select rich |
-| `LionSelectInvoker` | `_requestedToBeDisabled` | boolean |  |
 | `LionSelectInvoker` | `__handleKeydown` |  |  |
-| `LionSelectInvoker` | `__internalSetDisabled` |  |  |
-| `LionSelectInvoker` | `__internalSetTabIndex` |  |  |
-| `LionSelectInvoker` | `__isUserSettingDisabled` | boolean |  |
-| `LionSelectInvoker` | `__isUserSettingTabIndex` | boolean |  |
 | `LionSelectInvoker` | `__keydownHandler` |  |  |
 | `LionSelectInvoker` | `__keyupHandler` |  |  |
 | `LionSelectInvoker` | `__mousedownHandler` |  |  |
-| `LionSelectInvoker` | `__restoreDisabledTo` | boolean |  |
-| `LionSelectInvoker` | `__restoreTabIndexTo` | number |  |
 | `LionSelectInvoker` | `__setupEvents` |  |  |
-| `LionSelectRich` | `#isInstanceOfRequiredValidator` |  |  |
-| `LionSelectRich` | `shouldShowFeedbackFor` | ValidationType[] | A temporary storage to transition from hasFeedbackFor to showsFeedbackFor |
-| `LionSelectRich` | `_activeDescendantOwnerNode` | HTMLElement |  |
+| `LionSelectRich` | `#hasSetup` | boolean |  |
 | `LionSelectRich` | `_alignInvokerWidth` |  | Align invoker width with content width Make sure display is not set to "none" while calculating the content width |
-| `LionSelectRich` | `_allValidators` | (Validator | MetaValidator)[] | Combination of validators provided by Application Developer and the default validators |
 | `LionSelectRich` | `_arrowWidth` | number |  |
-| `LionSelectRich` | `_checkSingleChoiceElements` |  |  |
-| `LionSelectRich` | `_completeRegistration` |  | Resolves the registrationComplete promise. Subclassers can delay if needed |
-| `LionSelectRich` | `_connectSlotMixin` |  |  |
+| `LionSelectRich` | `_defineOverlay` |  |  |
 | `LionSelectRich` | `_defineOverlayConfig` |  |  |
-| `LionSelectRich` | `_dispatchInitialModelValueChangedEvent` |  |  |
-| `LionSelectRich` | `_enhanceLightDomA11y` |  |  |
-| `LionSelectRich` | `_enhanceLightDomA11yForAdditionalSlots` |  | Enhances additional slots(prefix, suffix, before, after) defined by developer.  When boolean attribute data-label or data-description is found, the slot element will be connected to the input via aria-labelledby or aria-describedby |
-| `LionSelectRich` | `_enhanceLightDomClasses` |  |  |
-| `LionSelectRich` | `_feedbackConditionMeta` |  | Allows Subclassers to add meta info for feedbackCondition |
-| `LionSelectRich` | `_feedbackNode` |  | Element where validation feedback will be rendered to |
-| `LionSelectRich` | `_feedbackTemplate` |  |  |
-| `LionSelectRich` | `_focusableNode` | HTMLElement | The focusable element: could be an input, textarea, select, button or any other element with tabindex > -1 |
-| `LionSelectRich` | `_getAriaDescriptionElements` |  | This function exposes descripion elements that a FormGroup should expose to its children. See FormGroupMixin.__getAllDescriptionElementsInParentChain() |
+| `LionSelectRich` | `_feedbackConditionMeta` |  |  |
+| `LionSelectRich` | `_focusableNode` |  | Must remain public: narrowing the public Listbox member causes TS2415. Unlike Listbox, this override was protected in Lion 0.21.1. |
 | `LionSelectRich` | `_getCheckedElements` |  | In the select disabled options are still going to a possible value for example when prefilling or programmatically setting it. |
-| `LionSelectRich` | `_getFromAllFormElements` |  | Implicit :( |
-| `LionSelectRich` | `_getFromAllFormElementsFilter` |  | A filter function which will exclude a form field when returning false By default, exclude form fields which are disabled  The type is be passed as well for more fine grained control, e.g. distinguish the filter when fetching modelValue versus serializedValue |
-| `LionSelectRich` | `_getNextEnabledOption` |  |  |
-| `LionSelectRich` | `_getPreviousEnabledOption` |  |  |
-| `LionSelectRich` | `_groupOneTemplate` |  |  |
-| `LionSelectRich` | `_groupTwoTemplate` |  |  |
-| `LionSelectRich` | `_handleTypeAhead` |  |  |
-| `LionSelectRich` | `_hasFeedbackVisibleFor` |  | Used to translate `.hasFeedbackFor` and `.shouldShowFeedbackFor` to `.showsFeedbackFor` |
-| `LionSelectRich` | `_helpTextNode` |  | Element where help text will be rendered to |
-| `LionSelectRich` | `_helpTextTemplate` |  |  |
-| `LionSelectRich` | `_inputGroupAfterTemplate` |  |  |
-| `LionSelectRich` | `_inputGroupBeforeTemplate` |  |  |
+| `LionSelectRich` | `_getFocusableInvokerEl` |  | Returns the element that can actually receive focus inside the passed invoker (wrapper) element: the element itself when it is focusable, otherwise the first focusable descendant. Custom invokers without a focusable light DOM descendant remain click targets themselves. |
+| `LionSelectRich` | `_getInvokerNode` |  |  |
 | `LionSelectRich` | `_inputGroupInputTemplate` |  |  |
-| `LionSelectRich` | `_inputGroupPrefixTemplate` |  |  |
-| `LionSelectRich` | `_inputGroupSuffixTemplate` |  |  |
-| `LionSelectRich` | `_inputGroupTemplate` |  |  |
-| `LionSelectRich` | `_inputId` | string | Unique id that can be used in all light dom |
-| `LionSelectRich` | `_inputNode` |  | The interactive (form) element. Can be a native element like input/textarea/select or an element with tabindex > -1 |
 | `LionSelectRich` | `_invokerNode` | LionSelectInvoker |  |
-| `LionSelectRich` | `_isEmpty` |  | Used for Required validation and computation of interaction states |
-| `LionSelectRich` | `_isFormOrFieldset` | boolean | Flag that determines how ".formElements" should behave. For a regular fieldset (see LionFieldset) we expect ".formElements" to be accessible as an object. In case of a radio-group, a checkbox-group or a select/listbox, it should act like an array (see ChoiceGroupMixin). Usually, when false, we deal with a choice-group (radio-group, checkbox-group, (multi)select) |
-| `LionSelectRich` | `_isPrivateSlot` |  |  |
-| `LionSelectRich` | `_iStateOnLeave` |  | Sets touched value to true and reevaluates prefilled state. When false, on next interaction, user will start with a clean state. |
-| `LionSelectRich` | `_iStateOnValueChange` |  | Sets dirty value and validates when already touched or invalid |
-| `LionSelectRich` | `_labelNode` |  | Element where label will be rendered to |
-| `LionSelectRich` | `_labelTemplate` |  |  |
-| `LionSelectRich` | `_leaveEvent` | string | The event that triggers the touched state |
-| `LionSelectRich` | `_listboxActiveDescendant` | number | null |  |
-| `LionSelectRich` | `_listboxActiveDescendantNode` | HTMLElement |  |
-| `LionSelectRich` | `_listboxNode` |  |  |
+| `LionSelectRich` | `_isPermanentlyDisconnected` |  | When we're moving around in dom, disconnectedCallback gets called. Before we decide to teardown, let's wait to see if we were not just moving nodes around. |
 | `LionSelectRich` | `_listboxOnClick` |  |  |
 | `LionSelectRich` | `_listboxOnKeyDown` |  |  |
-| `LionSelectRich` | `_listboxOnKeyUp` |  |  |
-| `LionSelectRich` | `_listboxReceivesNoFocus` | boolean | When listbox is coupled to a textbox (in case we are dealing with a combobox), spaces should not select an element (they need to be put in the textbox) |
-| `LionSelectRich` | `_listboxSlot` | HTMLElement |  |
 | `LionSelectRich` | `_noDefaultSelectedInheritsWidth` |  | With no selected element, we should override the inheritsReferenceWidth in most cases. By default, we will set it to 'min', and then set it back to what it was initially when something is selected. As a subclasser you can override this behavior. |
-| `LionSelectRich` | `_oldModelValue` | string | string[] | undefined |  |
-| `LionSelectRich` | `_onBeforeRepropagateChildrenValues` |  | Hook for Subclassers to add logic before repropagation |
-| `LionSelectRich` | `_onChildActiveChanged` |  |  |
-| `LionSelectRich` | `_onDirtyChanged` |  | Dispatches event on touched state change |
 | `LionSelectRich` | `_onFormElementsChanged` |  |  |
 | `LionSelectRich` | `_onLabelClick` |  |  |
-| `LionSelectRich` | `_onListboxContentChanged` |  | A Subclasser can perform additional logic whenever the elements inside the listbox are updated. For instance, when a combobox does server side autocomplete, we want to match highlighted parts client side. |
-| `LionSelectRich` | `_onRequestToAddFormElement` |  | Hook for Subclassers to perform logic before an element is added |
-| `LionSelectRich` | `_onRequestToChangeFormElementName` |  |  |
-| `LionSelectRich` | `_onRequestToRemoveFormElement` |  |  |
-| `LionSelectRich` | `_onTouchedChanged` |  | Dispatches event on touched state change |
-| `LionSelectRich` | `_onValidatorUpdated` |  |  |
+| `LionSelectRich` | `_overlayBackdropNode` |  |  |
 | `LionSelectRich` | `_overlayContentNode` |  |  |
-| `LionSelectRich` | `_overlayInvokerNode` |  |  |
-| `LionSelectRich` | `_prioritizeAndFilterFeedback` |  | Orders all active validators in this.__validationResult. Can also filter out occurrences (based on interaction states) |
-| `LionSelectRich` | `_repropagationCondition` |  | Based on provided target, this condition determines whether received model-value-changed event should be repropagated |
-| `LionSelectRich` | `_requestedToBeDisabled` | boolean |  |
+| `LionSelectRich` | `_overlayContentWrapperNode` |  |  |
+| `LionSelectRich` | `_overlayInvokerNode` |  | The node that opens/closes this overlay.  Resolved in a stable, declarative way (independent of the exact DOM order) by looking, in order, for: 1. a child with `[slot="invoker"]` 2. any element in the same root that opts in via `[data-invoker]` and    references this host by id (`for="<id>"`) 3. a preceding sibling that opts in via `[data-invoker]` |
+| `LionSelectRich` | `_overlayReferenceNode` |  |  |
 | `LionSelectRich` | `_scrollIntoView` |  |  |
-| `LionSelectRich` | `_scrollTargetNode` | HTMLElement |  |
-| `LionSelectRich` | `_setCheckedElements` |  |  |
+| `LionSelectRich` | `_scrollTargetNode` |  |  |
+| `LionSelectRich` | `_setOpenedWithoutPropertyEffects` |  | When the opened state is changed by an Application Developer,cthe OverlayController is requested to show/hide. It might happen that this request is not honoured (intercepted in before-hide for instance), so that we need to sync the controller state to this webcomponent again, preventing eternal loops. |
 | `LionSelectRich` | `_setupListboxNode` |  |  |
+| `LionSelectRich` | `_setupOpenCloseListeners` |  |  |
 | `LionSelectRich` | `_setupOverlayCtrl` |  |  |
-| `LionSelectRich` | `_showFeedbackConditionFor` |  | Default feedbackCondition condition, used by Subclassers, that will be used when `feedbackCondition()` is not overridden by Application Developer. Show the validity feedback when returning true, don't show when false |
 | `LionSelectRich` | `_teardownListboxNode` |  |  |
+| `LionSelectRich` | `_teardownOpenCloseListeners` |  |  |
 | `LionSelectRich` | `_teardownOverlayCtrl` |  |  |
-| `LionSelectRich` | `_throwWhenInvalidChildModelValue` |  |  |
-| `LionSelectRich` | `_triggerInitialModelValueChangedEvent` |  |  |
-| `LionSelectRich` | `_typeAheadTimeout` | number | The pending char sequence that will set active list item |
-| `LionSelectRich` | `_uncheckChildren` |  |  |
-| `LionSelectRich` | `_updateFeedbackComponent` |  | Responsible for retrieving messages from Validators and (delegation of) rendering them.  For `._feedbackNode` (extension of LionValidationFeedback): - retrieve messages from highest prio Validators - provide the result to custom feedback node and let the custom node decide on their renderings  In both cases: - we compute the 'show' flag (like 'hasErrorVisible') for all types - we set the customValidity message of the highest prio Validator - we set aria-invalid="true" in case hasErrorVisible is true |
-| `LionSelectRich` | `_updateShouldShowFeedbackFor` |  |  |
-| `LionSelectRich` | `_valueChangedEvent` | string | The event that triggers the dirty state |
-| `LionSelectRich` | `_visibleMessagesAmount` | number | The amount of feedback messages that will visible in LionValidationFeedback |
-| `LionSelectRich` | `__appendNodes` |  |  |
-| `LionSelectRich` | `__asyncValidationResult` | ValidationResultEntry[] |  |
 | `LionSelectRich` | `__blockListShowDuringTransition` |  | Normally, when textbox gets focus or a char is typed, it opens listbox. In transition phases (like clicking option) we prevent this. |
-| `LionSelectRich` | `__childModelValueChanged` | boolean | The updated children validity affects the validity of the parent. Helper to recompute validity of parent FormGroup |
-| `LionSelectRich` | `__clearValidationResults` |  |  |
-| `LionSelectRich` | `__executeAsyncValidators` |  | step a3 (as explained in `validate()`), calls __finishValidationPass |
-| `LionSelectRich` | `__executeMetaValidators` |  | step b (as explained in `validate()`), called by __finishValidationPass |
-| `LionSelectRich` | `__executeSyncValidators` |  | step a2 (as explained in `validate()`): calls `__finishValidationPass` |
-| `LionSelectRich` | `__executeValidators` |  |  |
-| `LionSelectRich` | `__finishValidationPass` |  | A 'pass' is a single run of the validation process, which will be triggered in these cases: - on clear or disable - on sync validation - on async validation (can depend on server response)  This method finishes a pass by adding the properties to the instance: - validationStates - hasFeedbackFor  It sends a private event validate-performed, which is received by parent Formgroups. |
-| `LionSelectRich` | `__getDirectSlotChild` |  |  |
-| `LionSelectRich` | `__getEnabledOption` |  |  |
-| `LionSelectRich` | `__getFeedbackMessages` |  |  |
-| `LionSelectRich` | `__hasInitialSelectedFormElement` | boolean |  |
 | `LionSelectRich` | `__initInteractionStates` |  |  |
-| `LionSelectRich` | `__initSlots` |  | Here we look what's inside our `get slots`. Rerenderable slots get scheduled and "one time slots" get rendered once on connected |
-| `LionSelectRich` | `__internalSetDisabled` |  |  |
 | `LionSelectRich` | `__invokerOnBlur` |  |  |
 | `LionSelectRich` | `__invokerOnClick` |  |  |
-| `LionSelectRich` | `__isEmpty` |  | Helper method for the mutually exclusive Required Validator |
-| `LionSelectRich` | `__isInitialFormattedValue` | boolean |  |
-| `LionSelectRich` | `__isInitialModelValue` | boolean |  |
-| `LionSelectRich` | `__isInitialSerializedValue` | boolean |  |
-| `LionSelectRich` | `__isUserSettingDisabled` | boolean |  |
-| `LionSelectRich` | `__moveOptionsToListboxNode` |  | Moves options put in unnamed slot to slot with [role="listbox"] |
-| `LionSelectRich` | `__onBlur` |  |  |
-| `LionSelectRich` | `__onChildCheckedChanged` |  |  |
-| `LionSelectRich` | `__onFocus` |  |  |
 | `LionSelectRich` | `__onKeyUp` |  |  |
 | `LionSelectRich` | `__overlayBeforeShow` |  |  |
 | `LionSelectRich` | `__overlayOnHide` |  |  |
 | `LionSelectRich` | `__overlayOnShow` |  |  |
-| `LionSelectRich` | `__preventScrollingWithArrowKeys` |  |  |
-| `LionSelectRich` | `__prevShownValidationResult` | ValidationResultEntry[] | The shown validation result depends on the visibility of the feedback messages |
-| `LionSelectRich` | `__prevValidationResult` | ValidationResultEntry[] |  |
-| `LionSelectRich` | `__privateSlots` | Set<string> | Those are slots that should be touched by SlotMixin The opposite of __slotsProvidedByUserOnFirstConnected, also taking into account undefined (a.k.a. conditional) slots |
-| `LionSelectRich` | `__proxyChildModelValueChanged` |  |  |
-| `LionSelectRich` | `__reflectAriaAttr` |  | Will handle help text, validation feedback and character counter, prefix/suffix/before/after (if they contain data-description flag attr). Also, contents of id references that will be put in the <lion-field>._ariaDescribedby property from an external context, will be read by a screen reader. |
-| `LionSelectRich` | `__registerEventsForFocusMixin` |  |  |
-| `LionSelectRich` | `__renderMetaPerSlot` | Map<string, RenderMetaObj> | The roots that are used to do a rerender in. In case of a SlotRerenderObject, this will create a render wrapper in the scoped context (shadow root) and connect this under the slot name to the light dom. All (re)renders will happen from here, so that all interactions work as intended and no focus issues can arise (which would be the case when (cloned) nodes of a render outcome would be moved around) |
-| `LionSelectRich` | `__renderTemplateInScopedContext` |  |  |
-| `LionSelectRich` | `__repropagateChildrenValues` |  |  |
-| `LionSelectRich` | `__requestOptionsToBeDisabled` |  |  |
-| `LionSelectRich` | `__rerenderSlot` |  |  |
-| `LionSelectRich` | `__restoreDisabledTo` | boolean |  |
-| `LionSelectRich` | `__retractRequestOptionsToBeDisabled` |  |  |
-| `LionSelectRich` | `__setAttributeForAllFormElements` |  | // TODO: add to choiceGroup |
-| `LionSelectRich` | `__setChildActive` |  |  |
-| `LionSelectRich` | `__setChoiceGroupTouched` |  |  |
-| `LionSelectRich` | `__setupEventListeners` |  |  |
 | `LionSelectRich` | `__setupInvokerNode` |  |  |
 | `LionSelectRich` | `__setupInvokerNodeEventListener` |  |  |
-| `LionSelectRich` | `__setupListboxNodeInteractions` |  | Helper method used within `._setupListboxNode` |
-| `LionSelectRich` | `__setupValidators` |  |  |
-| `LionSelectRich` | `__slotsProvidedByUserOnFirstConnected` | Set<string> | Those are slots that should not be touched by SlotMixin |
-| `LionSelectRich` | `__slotsThatNeedRerender` | Set<string> |  |
-| `LionSelectRich` | `__syncAutofocusToFocusableElement` |  |  |
+| `LionSelectRich` | `__setupSyncFromOverlayController` |  |  |
 | `LionSelectRich` | `__syncInvokerElement` |  |  |
-| `LionSelectRich` | `__syncUpdatableHasChanged` |  | Makes the propertyAccessor.`hasChanged` compatible in synchronous updates |
-| `LionSelectRich` | `__syncUpdatableInitialize` |  |  |
-| `LionSelectRich` | `__SyncUpdatableNamespace` | SyncUpdatableNamespace | Namespace for this mixin that guarantees naming clashes will not occur... |
-| `LionSelectRich` | `__syncValidationResult` | ValidationResultEntry[] |  |
-| `LionSelectRich` | `__teardownEventListeners` |  |  |
-| `LionSelectRich` | `__teardownEventsForFocusMixin` |  |  |
+| `LionSelectRich` | `__syncToOverlayController` |  |  |
 | `LionSelectRich` | `__teardownInvokerNode` |  |  |
+| `LionSelectRich` | `__teardownSyncFromOverlayController` |  |  |
 | `LionSelectRich` | `__toggleInvokerDisabled` |  |  |
-| `LionSelectRich` | `__typedChars` | string[] |  |
-| `LionSelectRich` | `__validationResult` | ValidationResultEntry[] | Aggregated result from sync Validators, async Validators and MetaValidators |

@@ -361,16 +361,33 @@ export const main = () => html`
 
 #### Fields
 
-| Name              | Privacy | Type                     | Default         | Description                                                                                                                                | Inherited From |
-| ----------------- | ------- | ------------------------ | --------------- | ------------------------------------------------------------------------------------------------------------------------------------------ | -------------- |
-| `hasArrow`        | public  | `boolean`                | `false`         | Whether an arrow should be displayed                                                                                                       | ArrowMixin     |
-| `invokerRelation` | public  | `'label'\|'description'` | `'description'` | Decides whether the tooltip invoker text should be considered a description&#xA;(sets aria-describedby) or a label (sets aria-labelledby). |                |
+| Name              | Privacy | Type                     | Default         | Description                                                                                                                                                           | Inherited From |
+| ----------------- | ------- | ------------------------ | --------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------- |
+| `config`          | public  | `Partial<OverlayConfig>` | `{}`            | Configure the many options of the \`OverlayController\`                                                                                                               | OverlayMixin   |
+| `hasArrow`        | public  | `boolean`                | `false`         | Whether an arrow should be displayed                                                                                                                                  |                |
+| `invokerRelation` | public  | `'label'\|'description'` | `'description'` | Decides whether the tooltip invoker text should be considered a description&#xA;(sets aria-describedby) or a label (sets aria-labelledby).                            |                |
+| `opened`          | public  | `boolean`                | `false`         | If you add the opened attribute a dialog will be opened on page load. The invoker can be left out&#xA;in case the user does not need to be able to reopen the dialog. | OverlayMixin   |
+
+#### Methods
+
+| Name                | Privacy | Description                                                                                                                                                                                                         | Parameters | Return | Inherited From |
+| ------------------- | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------- | ------ | -------------- |
+| `close`             | public  | Hides the overlay                                                                                                                                                                                                   |            |        | OverlayMixin   |
+| `open`              | public  | Shows the overlay                                                                                                                                                                                                   |            |        | OverlayMixin   |
+| `repositionOverlay` | public  | Sometimes it's needed to recompute Popper position of an overlay, for instance when we have&#xA;an opened combobox and the surrounding context changes (the space consumed by the textbox&#xA;increases vertically) |            |        | OverlayMixin   |
+| `toggle`            | public  | Toggles the overlay                                                                                                                                                                                                 |            |        | OverlayMixin   |
+
+#### Events
+
+| Name             | Type          | Description | Inherited From |
+| ---------------- | ------------- | ----------- | -------------- |
+| `opened-changed` | `CustomEvent` |             | OverlayMixin   |
 
 #### Attributes
 
 | Name               | Field           | Inherited From |
 | ------------------ | --------------- | -------------- |
 | `invoker-relation` | invokerRelation |                |
-| `has-arrow`        | hasArrow        | ArrowMixin     |
+| `opened`           | opened          | OverlayMixin   |
 
 <hr/>

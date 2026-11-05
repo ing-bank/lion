@@ -16,6 +16,7 @@
 | `OverlayController` | `#handleFocusInsideDialog` |  | When a `dialog` element gets focused, we focus programmatically something else inside dialog for better a11y. A dialog element gets focused natively in these cases: 1) When called by `showModal()` first time 2) When focus is rotating. That is when a user navigates using Tab key through all the dialog's focusable elements, then the focus goes to the browser's URL, all its tabs and then the focus goes back to the dialog element 3) Same as in the point #2, but when a user navigates backward by hitting `Shift + Tab`. In this case we do not intercept and let the focus pass through. Otherwise the focus will never leaves the dialog  Note, Chrome does not focus `Dialog` element when Tabbing. When dialog is opened first time, it focuses the contentNode if that has `tabindex` set. But the second time when we move to the dialog from URL bar, nor the dialog element, nor the `contentNode` are focused. Instead the first focusable element is focused right away |
 | `OverlayController` | `#handleShiftKeyPress` |  |  |
 | `OverlayController` | `#hasPressedInside` |  |  |
+| `OverlayController` | `#hideOnCloseButtonClick` |  |  |
 | `OverlayController` | `#isRegisteredOnManager` |  |  |
 | `OverlayController` | `#isShiftPressed` | boolean | 'True' when Shift key is pressed, 'false' otherwise |
 | `OverlayController` | `#isShiftPressedOnKeyDownHandler` |  |  |
@@ -27,6 +28,7 @@
 | `OverlayController` | `_handleAccessibility` |  |  |
 | `OverlayController` | `_handleBackdrop` |  | Sets up backdrop on the given overlay. If there was a backdrop on another element it is removed. Otherwise this is the first time displaying a backdrop, so a animation-in animation is played. |
 | `OverlayController` | `_handleBlocking` |  |  |
+| `OverlayController` | `_handleElementToFocusOnShow` |  |  |
 | `OverlayController` | `_handleFeatures` |  | All features are handled here. |
 | `OverlayController` | `_handleHidesOnEsc` |  |  |
 | `OverlayController` | `_handleHidesOnOutsideClick` |  |  |
@@ -34,6 +36,7 @@
 | `OverlayController` | `_handleInheritsReferenceWidth` |  |  |
 | `OverlayController` | `_handlePosition` |  |  |
 | `OverlayController` | `_handlePreventsScroll` |  |  |
+| `OverlayController` | `_handleSyncChildrenCloseState` |  |  |
 | `OverlayController` | `_handleTrapsKeyboardFocus` |  |  |
 | `OverlayController` | `_handleVisibilityTriggers` |  |  |
 | `OverlayController` | `_handleZIndex` |  | Display local overlays on top of elements with no z-index that appear later in the DOM |
@@ -44,30 +47,38 @@
 | `OverlayController` | `_restoreFocus` |  |  |
 | `OverlayController` | `_transitionHide` |  |  |
 | `OverlayController` | `_transitionShow` |  |  |
-| `OverlayController` | `__activeElementRightBeforeHide` | null |  |
+| `OverlayController` | `__activeElementRightBeforeHide` | Element | null |  |
 | `OverlayController` | `__cancelHandler` |  | When the overlay is a modal dialog hidesOnEsc works out of the box, so we prevent that.  There is currently a bug in chrome that makes the dialog close when pressing Esc the second time |
 | `OverlayController` | `__captureEventListeners` |  |  |
 | `OverlayController` | `__createPopperInstance` |  |  |
+| `OverlayController` | `__elementToFocusAfterHide` | HTMLElement | undefined |  |
 | `OverlayController` | `__escKeyHandler` |  |  |
 | `OverlayController` | `__escKeyHandlerCalled` | boolean | The property is used to skip `__escKeyHandler` handler for overlays that have been closed by `__escKeyHandlerCalled` previously. `__escKeyHandlerCalled` is set to `false` right before overlay show up `__escKeyHandlerCalled` is set to `true` when `__escKeyHandler` is called at least one time after each 'show' phase |
 | `OverlayController` | `__eventListeners` |  |  |
 | `OverlayController` | `__handleOverlayStyles` |  |  |
 | `OverlayController` | `__hasActiveBackdrop` | boolean |  |
+| `OverlayController` | `__hasSetup` | boolean |  |
 | `OverlayController` | `__initContentDomStructure` |  | Here we arrange our content node via: 1. HTMLDialogElement: the content will always be painted to the browser's top layer   - no matter what context the contentNode lives in, the overlay will be painted correctly via the <dialog> element,     even if 'overflow:hidden' or a css transform is applied in its parent hierarchy.   - the dialog element will be unstyled, but will span the whole screen   - a backdrop element will be a child of the dialog element, so it leverages the capabilities of the parent     (filling the whole screen if wanted an always painted to top layer) 2. ContentWrapper: the content receives the right positioning styles in a clean/non conflicting way:  - local positioning: receive inline (position) styling that can never conflict with the already existing computed styles  - global positioning: receive flex (child) classes that position the content correctly relative to the viewport  The resulting structure that will be created looks like this:  ... <dialog role="none">   <div id="optional-backdrop"></div>   <div id="content-wrapper-node">     <!-- this was the (slot for) original content node -->     <slot name="content"></slot>   </div> </dialog> ... |
+| `OverlayController` | `__initVisibility` |  |  |
 | `OverlayController` | `__originalAttrs` |  |  |
+| `OverlayController` | `__prevConfig` | OverlayConfig | undefined |  |
+| `OverlayController` | `__resolveFullEventPath` |  |  |
 | `OverlayController` | `__restoreOriginalAttrs` |  |  |
 | `OverlayController` | `__setupTeardownAccessibility` |  |  |
 | `OverlayController` | `__sharedConfig` |  |  |
 | `OverlayController` | `__storeOriginalAttrs` |  |  |
+| `OverlayController` | `__teardownVisibility` |  |  |
 | `OverlayController` | `__validateConfiguration` |  |  |
 | `OverlayMixin` | `#hasSetup` | boolean |  |
 | `OverlayMixin` | `_defineOverlay` |  |  |
 | `OverlayMixin` | `_defineOverlayConfig` |  |  |
+| `OverlayMixin` | `_getFocusableInvokerEl` |  | Returns the element that can actually receive focus inside the passed invoker (wrapper) element: the element itself when it is focusable, otherwise the first focusable descendant. Custom invokers without a focusable light DOM descendant remain click targets themselves. |
+| `OverlayMixin` | `_getInvokerNode` |  |  |
 | `OverlayMixin` | `_isPermanentlyDisconnected` |  | When we're moving around in dom, disconnectedCallback gets called. Before we decide to teardown, let's wait to see if we were not just moving nodes around. |
 | `OverlayMixin` | `_overlayBackdropNode` |  |  |
 | `OverlayMixin` | `_overlayContentNode` |  |  |
 | `OverlayMixin` | `_overlayContentWrapperNode` |  |  |
-| `OverlayMixin` | `_overlayInvokerNode` |  |  |
+| `OverlayMixin` | `_overlayInvokerNode` |  | The node that opens/closes this overlay.  Resolved in a stable, declarative way (independent of the exact DOM order) by looking, in order, for: 1. a child with `[slot="invoker"]` 2. any element in the same root that opts in via `[data-invoker]` and    references this host by id (`for="<id>"`) 3. a preceding sibling that opts in via `[data-invoker]` |
 | `OverlayMixin` | `_overlayReferenceNode` |  |  |
 | `OverlayMixin` | `_setOpenedWithoutPropertyEffects` |  | When the opened state is changed by an Application Developer,cthe OverlayController is requested to show/hide. It might happen that this request is not honoured (intercepted in before-hide for instance), so that we need to sync the controller state to this webcomponent again, preventing eternal loops. |
 | `OverlayMixin` | `_setupOpenCloseListeners` |  |  |
@@ -80,15 +91,16 @@
 | `OverlaysManager` | `_siblingsInert` | boolean |  |
 | `OverlaysManager` | `__blockingMap` | WeakMap<OverlayController, OverlayController[]> |  |
 | `OverlaysManager` | `__bodySizeVars` | {
-     *   preventScrollCount: number;
-     *   clientWidth: number | undefined;
-     *   clientHeight: number | undefined;
-     *   marginRightInline: string | undefined;
-     *   marginBottomInline: string | undefined;
-     *   marginRight: number | undefined;
-     *   marginBottom: number | undefined;
-     * } |  |
+   *   preventScrollCount: number;
+   *   clientWidth: number | undefined;
+   *   clientHeight: number | undefined;
+   *   marginRightInline: string | undefined;
+   *   marginBottomInline: string | undefined;
+   *   marginRight: number | undefined;
+   *   marginBottom: number | undefined;
+   * } |  |
 | `OverlaysManager` | `__createGlobalStyleNode` |  |  |
 | `OverlaysManager` | `__forTesting` | object |  |
+| `OverlaysManager` | `__globalStyleNode` | HTMLStyleElement | undefined |  |
 | `OverlaysManager` | `__list` | OverlayController[] |  |
 | `OverlaysManager` | `__shownList` | OverlayController[] |  |

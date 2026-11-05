@@ -254,14 +254,32 @@ Configuration passed to `config` property:
 
 #### Fields
 
-| Name            | Privacy | Type      | Default | Description | Inherited From |
-| --------------- | ------- | --------- | ------- | ----------- | -------------- |
-| `isAlertDialog` | public  | `boolean` | `false` |             |                |
+| Name            | Privacy | Type                     | Default | Description                                                                                                                                                           | Inherited From |
+| --------------- | ------- | ------------------------ | ------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------- |
+| `config`        | public  | `Partial<OverlayConfig>` | `{}`    | Configure the many options of the \`OverlayController\`                                                                                                               | OverlayMixin   |
+| `isAlertDialog` | public  | `boolean`                | `false` |                                                                                                                                                                       |                |
+| `opened`        | public  | `boolean`                | `false` | If you add the opened attribute a dialog will be opened on page load. The invoker can be left out&#xA;in case the user does not need to be able to reopen the dialog. | OverlayMixin   |
+
+#### Methods
+
+| Name                | Privacy | Description                                                                                                                                                                                                         | Parameters | Return | Inherited From |
+| ------------------- | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------- | ------ | -------------- |
+| `close`             | public  | Hides the overlay                                                                                                                                                                                                   |            |        | OverlayMixin   |
+| `open`              | public  | Shows the overlay                                                                                                                                                                                                   |            |        | OverlayMixin   |
+| `repositionOverlay` | public  | Sometimes it's needed to recompute Popper position of an overlay, for instance when we have&#xA;an opened combobox and the surrounding context changes (the space consumed by the textbox&#xA;increases vertically) |            |        | OverlayMixin   |
+| `toggle`            | public  | Toggles the overlay                                                                                                                                                                                                 |            |        | OverlayMixin   |
+
+#### Events
+
+| Name             | Type          | Description | Inherited From |
+| ---------------- | ------------- | ----------- | -------------- |
+| `opened-changed` | `CustomEvent` |             | OverlayMixin   |
 
 #### Attributes
 
 | Name              | Field         | Inherited From |
 | ----------------- | ------------- | -------------- |
 | `is-alert-dialog` | isAlertDialog |                |
+| `opened`          | opened        | OverlayMixin   |
 
 <hr/>

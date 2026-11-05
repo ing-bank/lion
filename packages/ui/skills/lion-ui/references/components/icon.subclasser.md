@@ -16,4 +16,4 @@
 | `LionIcon` | `_onIconIdChanged` |  |  |
 | `LionIcon` | `_onLabelChanged` |  |  |
 | `LionIcon` | `_renderSvg` |  |  |
-| `LionIcon` | `__svg` | TemplateResult|nothing|TagFunction |  |
+| `LionIcon` | `__svg` | TemplateResult|typeof nothing|TagFunction |  |

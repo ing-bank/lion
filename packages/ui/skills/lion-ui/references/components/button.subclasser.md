@@ -12,50 +12,29 @@
 
 | Class | Member | Type | Description |
 | --- | --- | --- | --- |
-| `LionButton` | `_requestedToBeDisabled` | boolean |  |
-| `LionButton` | `__internalSetDisabled` |  |  |
-| `LionButton` | `__internalSetTabIndex` |  |  |
-| `LionButton` | `__isUserSettingDisabled` | boolean |  |
-| `LionButton` | `__isUserSettingTabIndex` | boolean |  |
 | `LionButton` | `__keydownHandler` |  |  |
 | `LionButton` | `__keyupHandler` |  |  |
 | `LionButton` | `__mousedownHandler` |  |  |
-| `LionButton` | `__restoreDisabledTo` | boolean |  |
-| `LionButton` | `__restoreTabIndexTo` | number |  |
 | `LionButton` | `__setupEvents` |  |  |
-| `LionButtonReset` | `_requestedToBeDisabled` | boolean |  |
 | `LionButtonReset` | `_setupSubmitAndResetHelperOnConnected` |  |  |
 | `LionButtonReset` | `_teardownSubmitAndResetHelperOnDisconnected` |  |  |
 | `LionButtonReset` | `__clickDelegationHandler` |  | Delegate click, by flashing a native button as a direct child of the form, and firing click on this button. This will fire the form submit without side effects caused by the click bubbling back up to lion-button. |
-| `LionButtonReset` | `__internalSetDisabled` |  |  |
-| `LionButtonReset` | `__internalSetTabIndex` |  |  |
-| `LionButtonReset` | `__isUserSettingDisabled` | boolean |  |
-| `LionButtonReset` | `__isUserSettingTabIndex` | boolean |  |
 | `LionButtonReset` | `__keydownHandler` |  |  |
 | `LionButtonReset` | `__keyupHandler` |  |  |
 | `LionButtonReset` | `__mousedownHandler` |  |  |
 | `LionButtonReset` | `__preventEventLeakage` |  | Prevents that someone who listens outside or on form catches the click event |
-| `LionButtonReset` | `__restoreDisabledTo` | boolean |  |
-| `LionButtonReset` | `__restoreTabIndexTo` | number |  |
 | `LionButtonReset` | `__setupDelegationInConstructor` |  |  |
 | `LionButtonReset` | `__setupEvents` |  |  |
 | `LionButtonReset` | `__submitAndResetHelperButton` | HTMLButtonElement |  |
 | `LionButtonSubmit` | `_nativeButtonNode` | HTMLButtonElement|null |  |
-| `LionButtonSubmit` | `_requestedToBeDisabled` | boolean |  |
 | `LionButtonSubmit` | `_setupSubmitAndResetHelperOnConnected` |  |  |
 | `LionButtonSubmit` | `_teardownSubmitAndResetHelperOnDisconnected` |  |  |
 | `LionButtonSubmit` | `__clickDelegationHandler` |  | Delegate click, by flashing a native button as a direct child of the form, and firing click on this button. This will fire the form submit without side effects caused by the click bubbling back up to lion-button. |
 | `LionButtonSubmit` | `__implicitSubmitHelperButton` | HTMLButtonElement|null |  |
-| `LionButtonSubmit` | `__internalSetDisabled` |  |  |
-| `LionButtonSubmit` | `__internalSetTabIndex` |  |  |
-| `LionButtonSubmit` | `__isUserSettingDisabled` | boolean |  |
-| `LionButtonSubmit` | `__isUserSettingTabIndex` | boolean |  |
 | `LionButtonSubmit` | `__keydownHandler` |  |  |
 | `LionButtonSubmit` | `__keyupHandler` |  |  |
 | `LionButtonSubmit` | `__mousedownHandler` |  |  |
 | `LionButtonSubmit` | `__preventEventLeakage` |  | Prevents that someone who listens outside or on form catches the click event |
-| `LionButtonSubmit` | `__restoreDisabledTo` | boolean |  |
-| `LionButtonSubmit` | `__restoreTabIndexTo` | number |  |
 | `LionButtonSubmit` | `__setupDelegationInConstructor` |  |  |
 | `LionButtonSubmit` | `__setupEvents` |  |  |
 | `LionButtonSubmit` | `__submitAndResetHelperButton` | HTMLButtonElement |  |

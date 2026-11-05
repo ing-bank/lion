@@ -501,3 +501,31 @@ By adding the `bar` attribute the axis will be set to `inline` and the role will
   </lion-menu>
 </nav>
 ```
+
+## API Reference
+
+### class: `LionMenu`, `lion-menu`
+
+#### Fields
+
+| Name                 | Privacy | Type                      | Default        | Description                                                                  | Inherited From |
+| -------------------- | ------- | ------------------------- | -------------- | ---------------------------------------------------------------------------- | -------------- |
+| `bar`                | public  | `boolean`                 | `false`        | Enable bar to use \[role="menubar"] and horizontal navigation                | LionMenuCore   |
+| `behaveAsAccordion`  | public  | `boolean`                 | `true`         |                                                                              | LionMenuCore   |
+| `invokerInteraction` | public  | `string`                  | `'click'`      |                                                                              | LionMenuCore   |
+| `openableMode`       | public  | `'disclosure'\|'overlay'` | `'disclosure'` | Terminology aligned with https\://open-ui.org/components/openable.explainer/ |                |
+
+#### Methods
+
+| Name              | Privacy | Description                                                                                                     | Parameters      | Return | Inherited From |
+| ----------------- | ------- | --------------------------------------------------------------------------------------------------------------- | --------------- | ------ | -------------- |
+| `setCheckedIndex` | public  | Allows groups within one level. In case we deal with menuitemcheckbox,&#xA;we treat it as multiple choice group | `index: number` |        | LionMenuCore   |
+
+#### Attributes
+
+| Name            | Field        | Inherited From |
+| --------------- | ------------ | -------------- |
+| `openable-mode` | openableMode |                |
+| `bar`           | bar          | LionMenuCore   |
+
+<hr/>

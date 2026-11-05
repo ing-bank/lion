@@ -182,6 +182,12 @@ export const main = () => html`
 | `_ariaLabel`      | public  | `string`  | `''`    |             |                |
 | `_ariaLabelledby` | public  | `string`  | `''`    |             |                |
 
+#### Methods
+
+| Name              | Privacy | Description | Parameters | Return | Inherited From |
+| ----------------- | ------- | ----------- | ---------- | ------ | -------------- |
+| `onLocaleUpdated` | public  |             |            |        |                |
+
 #### Attributes
 
 | Name              | Field            | Inherited From |

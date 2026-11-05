@@ -12,10 +12,22 @@
 
 | Class | Member | Type | Description |
 | --- | --- | --- | --- |
-| `LionTooltip` | `_arrowNode` |  |  |
-| `LionTooltip` | `_arrowNodeTemplate` |  |  |
-| `LionTooltip` | `_arrowTemplate` |  |  |
-| `LionTooltip` | `_defineOverlayConfig` |  | Overrides arrow and keepTogether modifier to be enabled, and adds onCreate and onUpdate hooks to sync from popper state |
-| `LionTooltip` | `_getPopperArrowConfig` |  |  |
-| `LionTooltip` | `__setupRepositionCompletePromise` |  |  |
-| `LionTooltip` | `__syncFromPopperState` |  |  |
+| `LionTooltip` | `#hasSetup` | boolean |  |
+| `LionTooltip` | `_defineOverlay` |  |  |
+| `LionTooltip` | `_defineOverlayConfig` |  |  |
+| `LionTooltip` | `_getFocusableInvokerEl` |  | Returns the element that can actually receive focus inside the passed invoker (wrapper) element: the element itself when it is focusable, otherwise the first focusable descendant. Custom invokers without a focusable light DOM descendant remain click targets themselves. |
+| `LionTooltip` | `_getInvokerNode` |  |  |
+| `LionTooltip` | `_isPermanentlyDisconnected` |  | When we're moving around in dom, disconnectedCallback gets called. Before we decide to teardown, let's wait to see if we were not just moving nodes around. |
+| `LionTooltip` | `_overlayBackdropNode` |  |  |
+| `LionTooltip` | `_overlayContentNode` |  |  |
+| `LionTooltip` | `_overlayContentWrapperNode` |  |  |
+| `LionTooltip` | `_overlayInvokerNode` |  | The node that opens/closes this overlay.  Resolved in a stable, declarative way (independent of the exact DOM order) by looking, in order, for: 1. a child with `[slot="invoker"]` 2. any element in the same root that opts in via `[data-invoker]` and    references this host by id (`for="<id>"`) 3. a preceding sibling that opts in via `[data-invoker]` |
+| `LionTooltip` | `_overlayReferenceNode` |  |  |
+| `LionTooltip` | `_setOpenedWithoutPropertyEffects` |  | When the opened state is changed by an Application Developer,cthe OverlayController is requested to show/hide. It might happen that this request is not honoured (intercepted in before-hide for instance), so that we need to sync the controller state to this webcomponent again, preventing eternal loops. |
+| `LionTooltip` | `_setupOpenCloseListeners` |  |  |
+| `LionTooltip` | `_setupOverlayCtrl` |  |  |
+| `LionTooltip` | `_teardownOpenCloseListeners` |  |  |
+| `LionTooltip` | `_teardownOverlayCtrl` |  |  |
+| `LionTooltip` | `__setupSyncFromOverlayController` |  |  |
+| `LionTooltip` | `__syncToOverlayController` |  |  |
+| `LionTooltip` | `__teardownSyncFromOverlayController` |  |  |

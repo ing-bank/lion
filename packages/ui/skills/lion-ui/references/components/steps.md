@@ -286,11 +286,11 @@ For notifications about specific step status change you can use individual event
 
 #### Fields
 
-| Name      | Privacy | Type                 | Default | Description                                                                                                                 | Inherited From |
-| --------- | ------- | -------------------- | ------- | --------------------------------------------------------------------------------------------------------------------------- | -------------- |
-| `current` | public  | `number`             | `0`     | Number of the current entered step.                                                                                         |                |
-| `data`    | public  | `{[key: string]: ?}` | `{}`    | Storage for data gathered across different steps.&#xA;Data is passed into each step condition function as a first argument. |                |
-| `steps`   | public  |                      |         |                                                                                                                             |                |
+| Name      | Privacy | Type                   | Default | Description                                                                                                                 | Inherited From |
+| --------- | ------- | ---------------------- | ------- | --------------------------------------------------------------------------------------------------------------------------- | -------------- |
+| `current` | public  | `number`               | `0`     | Number of the current entered step.                                                                                         |                |
+| `data`    | public  | `{[key: string]: any}` | `{}`    | Storage for data gathered across different steps.&#xA;Data is passed into each step condition function as a first argument. |                |
+| `steps`   | public  |                        |         |                                                                                                                             |                |
 
 #### Methods
 

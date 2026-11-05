@@ -132,11 +132,11 @@ See [SVG and CSS](https://developer.mozilla.org/en-US/docs/Web/SVG/Tutorial/SVG_
 
 #### Fields
 
-| Name        | Privacy | Type                                   | Default | Description                                                                                                                  | Inherited From |
-| ----------- | ------- | -------------------------------------- | ------- | ---------------------------------------------------------------------------------------------------------------------------- | -------------- |
-| `ariaLabel` | public  | `string`                               | `''`    |                                                                                                                              |                |
-| `iconId`    | public  | `string`                               | `''`    |                                                                                                                              |                |
-| `svg`       | public  | `TemplateResult\|nothing\|TagFunction` |         | On IE11, svgs without focusable false appear in the tab order&#xA;so make sure to have \<svg focusable="false"> in svg files |                |
+| Name        | Privacy | Type                                          | Default | Description                                                                                                                  | Inherited From |
+| ----------- | ------- | --------------------------------------------- | ------- | ---------------------------------------------------------------------------------------------------------------------------- | -------------- |
+| `ariaLabel` | public  | `string`                                      | `''`    |                                                                                                                              |                |
+| `iconId`    | public  | `string`                                      | `''`    |                                                                                                                              |                |
+| `svg`       | public  | `TemplateResult\|typeof nothing\|TagFunction` |         | On IE11, svgs without focusable false appear in the tab order&#xA;so make sure to have \<svg focusable="false"> in svg files |                |
 
 #### Attributes
 

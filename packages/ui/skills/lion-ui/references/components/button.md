@@ -188,29 +188,17 @@ export const mainAndIconButton = () => html`
 
 #### Fields
 
-| Name       | Privacy | Type      | Default    | Description | Inherited From            |
-| ---------- | ------- | --------- | ---------- | ----------- | ------------------------- |
-| `active`   | public  | `boolean` | `false`    |             |                           |
-| `disabled` | public  | `boolean` | `false`    |             | DisabledMixin             |
-| `tabIndex` | public  | `number`  |            |             | DisabledWithTabIndexMixin |
-| `type`     | public  | `string`  | `'button'` |             |                           |
-
-#### Methods
-
-| Name                         | Privacy | Description | Parameters | Return | Inherited From |
-| ---------------------------- | ------- | ----------- | ---------- | ------ | -------------- |
-| `click`                      | public  |             |            |        | DisabledMixin  |
-| `makeRequestToBeDisabled`    | public  |             |            |        | DisabledMixin  |
-| `retractRequestToBeDisabled` | public  |             |            |        | DisabledMixin  |
+| Name     | Privacy | Type      | Default    | Description | Inherited From |
+| -------- | ------- | --------- | ---------- | ----------- | -------------- |
+| `active` | public  | `boolean` | `false`    |             |                |
+| `type`   | public  | `string`  | `'button'` |             |                |
 
 #### Attributes
 
-| Name       | Field    | Inherited From            |
-| ---------- | -------- | ------------------------- |
-| `active`   | active   |                           |
-| `type`     | type     |                           |
-| `tabindex` | tabIndex | DisabledWithTabIndexMixin |
-| `disabled` | disabled | DisabledMixin             |
+| Name     | Field  | Inherited From |
+| -------- | ------ | -------------- |
+| `active` | active |                |
+| `type`   | type   |                |
 
 <hr/>
 
@@ -218,29 +206,17 @@ export const mainAndIconButton = () => html`
 
 #### Fields
 
-| Name       | Privacy | Type      | Default   | Description | Inherited From |
-| ---------- | ------- | --------- | --------- | ----------- | -------------- |
-| `active`   | public  | `boolean` | `false`   |             | LionButton     |
-| `disabled` | public  | `boolean` | `false`   |             | LionButton     |
-| `tabIndex` | public  | `number`  |           |             | LionButton     |
-| `type`     | public  | `string`  | `'reset'` |             | LionButton     |
-
-#### Methods
-
-| Name                         | Privacy | Description | Parameters | Return | Inherited From |
-| ---------------------------- | ------- | ----------- | ---------- | ------ | -------------- |
-| `click`                      | public  |             |            |        | LionButton     |
-| `makeRequestToBeDisabled`    | public  |             |            |        | LionButton     |
-| `retractRequestToBeDisabled` | public  |             |            |        | LionButton     |
+| Name     | Privacy | Type      | Default   | Description | Inherited From |
+| -------- | ------- | --------- | --------- | ----------- | -------------- |
+| `active` | public  | `boolean` | `false`   |             | LionButton     |
+| `type`   | public  | `string`  | `'reset'` |             | LionButton     |
 
 #### Attributes
 
-| Name       | Field    | Inherited From |
-| ---------- | -------- | -------------- |
-| `tabindex` | tabIndex | LionButton     |
-| `disabled` | disabled | LionButton     |
-| `active`   | active   | LionButton     |
-| `type`     | type     | LionButton     |
+| Name     | Field  | Inherited From |
+| -------- | ------ | -------------- |
+| `active` | active | LionButton     |
+| `type`   | type   | LionButton     |
 
 <hr/>
 
@@ -248,28 +224,16 @@ export const mainAndIconButton = () => html`
 
 #### Fields
 
-| Name       | Privacy | Type      | Default    | Description | Inherited From |
-| ---------- | ------- | --------- | ---------- | ----------- | -------------- |
-| `active`   | public  | `boolean` | `false`    |             | LionButton     |
-| `disabled` | public  | `boolean` | `false`    |             | LionButton     |
-| `tabIndex` | public  | `number`  |            |             | LionButton     |
-| `type`     | public  | `string`  | `'submit'` |             | LionButton     |
-
-#### Methods
-
-| Name                         | Privacy | Description | Parameters | Return | Inherited From |
-| ---------------------------- | ------- | ----------- | ---------- | ------ | -------------- |
-| `click`                      | public  |             |            |        | LionButton     |
-| `makeRequestToBeDisabled`    | public  |             |            |        | LionButton     |
-| `retractRequestToBeDisabled` | public  |             |            |        | LionButton     |
+| Name     | Privacy | Type      | Default    | Description | Inherited From |
+| -------- | ------- | --------- | ---------- | ----------- | -------------- |
+| `active` | public  | `boolean` | `false`    |             | LionButton     |
+| `type`   | public  | `string`  | `'submit'` |             | LionButton     |
 
 #### Attributes
 
-| Name       | Field    | Inherited From |
-| ---------- | -------- | -------------- |
-| `tabindex` | tabIndex | LionButton     |
-| `disabled` | disabled | LionButton     |
-| `active`   | active   | LionButton     |
-| `type`     | type     | LionButton     |
+| Name     | Field  | Inherited From |
+| -------- | ------ | -------------- |
+| `active` | active | LionButton     |
+| `type`   | type   | LionButton     |
 
 <hr/>

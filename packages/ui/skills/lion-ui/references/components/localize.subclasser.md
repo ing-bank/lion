@@ -43,4 +43,5 @@
 | `LocalizeManager` | `__namespaceLoaderPromisesCache` | Object<string, Object<string, Promise<Object|void>>> |  |
 | `LocalizeManager` | `__namespaceLoadersCache` | Object<string, function|null> |  |
 | `LocalizeManager` | `__namespacePatternsMap` | Map<RegExp|string, function> |  |
+| `LocalizeManager` | `__resolveFullEventPath` |  |  |
 | `LocalizeManager` | `__storage` | Object<string, Object<string, Object>> |  |

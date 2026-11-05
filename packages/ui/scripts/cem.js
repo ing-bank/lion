@@ -66,6 +66,15 @@ const inheritanceDenyList = [
   'SlotMixin',
 ];
 
+/**
+ * Members that come from a deny-listed mixin but whose `inheritedFrom` the analyzer did not resolve -
+ * it depends on the module graph, so the same source can produce `inheritedFrom: LocalizeMixin` on one
+ * run and no `inheritedFrom` at all on another. Named explicitly so the rule above cannot be silently
+ * defeated by a resolution difference (measured: `localizeNamespaces` surfaced as an own public member
+ * on 12 components, which the api-table coverage gate caught).
+ */
+const deniedMemberNames = new Set(['localizeNamespaces']);
+
 const cem = create({
   modules,
   plugins: [
@@ -81,7 +90,8 @@ const cem = create({
               declaration.members = declaration.members
                 .filter(
                   /** @param {{inheritedFrom: {name: string}}} member */ member =>
-                    !inheritanceDenyList.includes(member.inheritedFrom?.name),
+                    !inheritanceDenyList.includes(member.inheritedFrom?.name) &&
+                    !deniedMemberNames.has(member.name),
                 )
                 .sort(sortName);
               /**
