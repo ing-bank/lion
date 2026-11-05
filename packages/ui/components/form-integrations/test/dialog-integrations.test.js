@@ -1,12 +1,16 @@
 /* eslint-disable lit-a11y/no-autofocus */
 import { expect, fixture } from '@open-wc/testing';
+import '@lion/ui/define/lion-button.js';
 import '@lion/ui/define/lion-checkbox.js';
 import '@lion/ui/define/lion-dialog.js';
+import '@lion/ui/define/lion-form.js';
 import '@lion/ui/define/lion-option.js';
 import '@lion/ui/define/lion-radio.js';
+import { sendKeys } from '@web/test-runner-commands';
 import { html } from 'lit';
 
 import { isActiveElement } from '../../core/test-helpers/isActiveElement.js';
+import { isElementVisible } from '../../core/test-helpers/isElementVisible.js';
 import { getAllTagNames } from './helpers/helpers.js';
 import './helpers/umbrella-form.js';
 
@@ -95,5 +99,34 @@ describe('Form inside dialog Integrations', () => {
     const lionInput = el.querySelector('[name="input"]');
     // @ts-expect-error [allow-protected-in-tests]
     expect(isActiveElement(lionInput._focusableNode)).to.be.true;
+  });
+
+  // #2555, the test is the one from #2556
+  it('does not reopen when a form submit closes it and a lion-button is the invoker', async () => {
+    const el = /** @type {LionDialog} */ (
+      await fixture(html`
+        <lion-dialog opened>
+          <div slot="content">
+            <lion-form @submit="${() => el.close()}">
+              <form @submit="${(/** @type {Event} */ e) => e.preventDefault()}">
+                <input type="text" name="name" />
+                <button type="submit">Submit</button>
+              </form>
+            </lion-form>
+          </div>
+          <lion-button slot="invoker">Invoker</lion-button>
+        </lion-dialog>
+      `)
+    );
+    // @ts-expect-error [allow-protected-in-tests]
+    const dialogEl = /** @type {HTMLDialogElement} */ (el._overlayCtrl.__wrappingDialogNode);
+    expect(isElementVisible(dialogEl)).to.be.true;
+
+    /** @type {HTMLInputElement} */ (el.querySelector('input[type="text"]')).focus();
+    await sendKeys({ press: 'Enter' });
+    await el.updateComplete;
+    await el.updateComplete;
+
+    expect(isElementVisible(dialogEl)).to.be.false;
   });
 });
