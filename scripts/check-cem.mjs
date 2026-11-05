@@ -76,6 +76,59 @@ const MIXINS = [
 const names = new Set(classes.map(d => d.name));
 const missingMixins = MIXINS.filter(name => !names.has(name));
 
+/**
+ * The slot declarations a component actually makes live in `get slots()` (17 source files), which is
+ * noise-free - unlike a regex over templates, which also matches demo code (measured: overlays:my-content,
+ * overlays:my-content-outlet, overlays:x). So: the NAME comes from `get slots()`, the CONTENT (the
+ * description a consumer reads) comes from the `@slot` JSDoc. This is the gate for the remaining work,
+ * and the covered count is a ratchet so the gap can only shrink.
+ */
+function declaredSlotNames() {
+  const found = new Map();
+  const walk = dir => {
+    for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+      const full = `${dir}/${entry.name}`;
+      if (entry.isDirectory()) walk(full);
+      else if (entry.name.endsWith('.js') && full.includes('/src/')) {
+        const source = fs.readFileSync(full, 'utf8');
+        for (const [, className, body] of source.matchAll(
+          /class\s+([A-Z]\w+)[^{]*\{[\s\S]*?get\s+slots\(\)\s*\{([\s\S]*?)\n  \}/g,
+        )) {
+          const names = [...body.matchAll(/(?:^|\s)(?:'([^']+)'|"([^"]+)"|(\w+))\s*:/g)].map(
+            m => m[1] ?? m[2] ?? m[3],
+          );
+          if (!found.has(className)) found.set(className, new Set());
+          for (const name of names) found.get(className).add(name);
+        }
+      }
+    }
+  };
+  walk('packages/ui/components');
+  return found;
+}
+
+const declared = declaredSlotNames();
+const covered = [];
+const uncovered = [];
+for (const [className, slotNames] of declared) {
+  const declaration = classes.find(d => d.name === className);
+  if (!declaration) {
+    uncovered.push(`${className} (class is not in the manifest at all)`);
+    continue;
+  }
+  const annotated = new Set((declaration.slots ?? []).map(s => s.name));
+  for (const slotName of slotNames) {
+    (annotated.has(slotName) ? covered : uncovered).push(`${className}#${slotName}`);
+  }
+}
+const MIN_DECLARED_SLOTS_COVERED = 20;
+if (covered.length < MIN_DECLARED_SLOTS_COVERED) {
+  failures.push(
+    `annotated slots for declared \`get slots()\` slots dropped to ${covered.length} ` +
+      `(baseline ${MIN_DECLARED_SLOTS_COVERED})`,
+  );
+}
+
 if (failures.length > 0) {
   console.error('cem:check failed:');
   for (const failure of failures) console.error(`  - ${failure}`);
@@ -86,6 +139,11 @@ console.log(
   `cem:check ok — ${classes.length} classes, ${ownSlots.size} own slots, ` +
     `${inheritedSlots.size} inherited slots, ${inheritedFieldSlots.length} classes inherit the field slots`,
 );
+console.log(
+  `  slots declared in \`get slots()\`: ${covered.length + uncovered.length}, annotated: ${covered.length}, ` +
+    `still open: ${uncovered.length}`,
+);
+if (uncovered.length > 0) console.log(`    ${uncovered.join(' | ')}`);
 console.log(
   `  note: ${missingMixins.length}/${MIXINS.length} mixins are still absent from the manifest ` +
     `(factory functions): ${missingMixins.join(', ')}`,
