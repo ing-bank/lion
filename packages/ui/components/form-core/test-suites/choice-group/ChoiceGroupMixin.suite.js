@@ -1,6 +1,3 @@
-import '@lion/ui/define/lion-checkbox-group.js';
-import '@lion/ui/define/lion-checkbox.js';
-import '@lion/ui/define/lion-fieldset.js';
 import {
   ChoiceGroupMixin,
   ChoiceInputMixin,
@@ -8,24 +5,21 @@ import {
   Required,
 } from '@lion/ui/form-core.js';
 import { LionInput } from '@lion/ui/input.js';
+import { LionFieldset } from '@lion/ui/fieldset.js';
 import { expect, fixture, fixtureSync, html, unsafeStatic } from '@open-wc/testing';
 import { LitElement } from 'lit';
 import sinon from 'sinon';
 import { resolveSuiteTag } from '../../../core/test-helpers/resolveSuiteTag.js';
 
 class ChoiceInputFoo extends ChoiceInputMixin(LionInput) {}
-customElements.define('choice-input-foo', ChoiceInputFoo);
 class ChoiceInputBar extends ChoiceInputMixin(LionInput) {
   _syncNameToParentFormGroup() {
     // Always sync, without conditions
     this.name = this._parentFormGroup?.name || '';
   }
 }
-customElements.define('choice-input-bar', ChoiceInputBar);
 class ChoiceInput extends ChoiceInputMixin(LionInput) {}
-customElements.define('choice-input', ChoiceInput);
 class ChoiceInputGroup extends ChoiceGroupMixin(FormGroupMixin(LitElement)) {}
-customElements.define('choice-input-group', ChoiceInputGroup);
 
 /**
  * @typedef {import('@lion/ui/types/test-suites.js').SuiteElement} SuiteElement
@@ -41,29 +35,24 @@ export function runChoiceGroupMixinSuite({
   childTagStringFoo: legacyChildTagStringFoo,
   childTagStringBar: legacyChildTagStringBar,
 } = {}) {
-  // Every element this suite renders is built from the mixins, so the class - not a Lion element - is
-  // the default, and it only exists inside the `describe` below.
-  const parentTagString = resolveSuiteTag(
-    classes?.host,
-    legacyParentTagString,
-    'choice-input-group',
-  );
-  const childTagString = resolveSuiteTag(classes?.child, legacyChildTagString, 'choice-input');
+  const parentTagString = resolveSuiteTag(classes?.host, legacyParentTagString, ChoiceInputGroup);
+  const childTagString = resolveSuiteTag(classes?.child, legacyChildTagString, ChoiceInput);
   const childTagStringFoo = resolveSuiteTag(
     classes?.childFoo,
     legacyChildTagStringFoo,
-    'choice-input-foo',
+    ChoiceInputFoo,
   );
   const childTagStringBar = resolveSuiteTag(
     classes?.childBar,
     legacyChildTagStringBar,
-    'choice-input-bar',
+    ChoiceInputBar,
   );
 
   const parentTag = unsafeStatic(parentTagString);
   const childTag = unsafeStatic(childTagString);
   const childTagFoo = unsafeStatic(childTagStringFoo);
   const childTagBar = unsafeStatic(childTagStringBar);
+  const fieldsetTag = unsafeStatic(resolveSuiteTag(LionFieldset));
 
   describe(`ChoiceGroupMixin: ${parentTagString}`, () => {
     if (choiceType === 'single') {
@@ -193,13 +182,31 @@ export function runChoiceGroupMixinSuite({
     });
 
     it('prevents updating the name property of a child if it is different from its parent', async () => {
+      const Parent = customElements.get(parentTagString);
+      const Child = customElements.get(childTagString);
+      if (!Parent || !Child) {
+        throw new Error('The choice-group fixture requires resolved constructors.');
+      }
+      // This contract requires the parent tag to contain the child tag.
+      const scopedChildName = `${childTagString}-scoped`;
+      const scopedParentName = `${parentTagString}-${scopedChildName}-group`;
+      const scopedChildTag = unsafeStatic(scopedChildName);
+      const scopedParentTag = unsafeStatic(scopedParentName);
       const el = /** @type {ChoiceInputGroup} */ (
-        await fixture(html`
-        <${parentTag} name="gender[]">
-          <${childTag}></${childTag}>
-          <${childTag}></${childTag}>
-        </${parentTag}>
-      `)
+        await fixture(
+          html`
+            <${scopedParentTag} name="gender[]">
+              <${scopedChildTag}></${scopedChildTag}>
+              <${scopedChildTag}></${scopedChildTag}>
+            </${scopedParentTag}>
+          `,
+          {
+            scopedElements: {
+              [scopedParentName]: class extends Parent {},
+              [scopedChildName]: class extends Child {},
+            },
+          },
+        )
       );
 
       expect(el.formElements[0].name).to.equal('gender[]');
@@ -748,13 +755,13 @@ export function runChoiceGroupMixinSuite({
       it('will serialize all children with their serializedValue', async () => {
         const el = /** @type {ChoiceInputGroup} */ (
           await fixture(html`
-          <lion-fieldset>
+          <${fieldsetTag}>
             <${parentTag} name="gender[]">
               <${childTag} .choiceValue=${'male'} checked disabled></${childTag}>
               <${childTag} .choiceValue=${'female'} checked></${childTag}>
               <${childTag} .choiceValue=${'other'}></${childTag}>
             </${parentTag}>
-          </lion-fieldset>
+          </${fieldsetTag}>
         `)
         );
 
@@ -771,12 +778,12 @@ export function runChoiceGroupMixinSuite({
         const formSpy = sinon.spy();
         const choiceGroupSpy = sinon.spy();
         const formEl = await fixture(html`
-        <lion-fieldset name="form">
+        <${fieldsetTag} name="form">
           <${parentTag} name="choice-group">
             <${childTag} id="option1" .choiceValue="${'1'}" checked></${childTag}>
             <${childTag} id="option2" .choiceValue="${'2'}"></${childTag}>
           </${parentTag}>
-        </lion-fieldset>
+        </${fieldsetTag}>
       `);
 
         const choiceGroupEl = /** @type {ChoiceInputGroup} */ (

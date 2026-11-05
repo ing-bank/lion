@@ -20,7 +20,6 @@ import { parseDate } from '@lion/ui/localize.js';
 import { AlwaysInvalid } from '@lion/ui/form-core-test-helpers.js';
 import { DatepickerInputObject as DefaultInputObject } from '@lion/ui/input-datepicker-test-helpers.js';
 import { LionInputDatepicker } from '@lion/ui/input-datepicker.js';
-import '@lion/ui/define/lion-input-datepicker.js';
 import sinon from 'sinon';
 import { resolveSuiteTag } from '../../core/test-helpers/resolveSuiteTag.js';
 
@@ -34,15 +33,15 @@ import { resolveSuiteTag } from '../../core/test-helpers/resolveSuiteTag.js';
  */
 export function runDatepickerSuite({
   classes = {},
-  datepickerTagName = 'lion-input-datepicker',
-  calendarTagName = 'lion-calendar',
+  datepickerTagName,
+  calendarTagName,
   // The tests drive the datepicker through a page object; an extension layer whose overlay markup
   // differs (ING renders its own popover frame) passes its own subclass here instead of the suite
   // learning about that markup. See docs/guides/principles/test-suites.md.
   pageObjects: { host: InputObject = DefaultInputObject } = {},
 } = {}) {
-  const datepickerTag = resolveSuiteTag(classes.host, datepickerTagName, 'lion-input-datepicker');
-  const calendarTag = resolveSuiteTag(classes.calendar, calendarTagName, 'lion-calendar');
+  const datepickerTag = resolveSuiteTag(classes.host, datepickerTagName, LionInputDatepicker);
+  const calendarTag = resolveSuiteTag(classes.calendar, calendarTagName, LionCalendar);
   const tag = unsafeStatic(datepickerTag);
 
   /**
@@ -417,21 +416,19 @@ export function runDatepickerSuite({
 
         it('does not converts MaxDate validator to "maxDate" property if validator type other then "error"', async () => {
           const myMaxDate = new Date('2030/06/15');
-          const tagName = 'custom-input-datepicker';
-          if (!customElements.get(tagName)) {
-            customElements.define(
-              tagName,
+          const customTag = unsafeStatic(
+            resolveSuiteTag(
               class CustomInputDatepicker extends LionInputDatepicker {
                 static get validationTypes() {
                   // @ts-ignore [ts7-2855] TS7 rejects field access via super (the parent declares this as a field). Dot form kept deliberately: bracket access is exempt from property mangling (terser keep_quoted), which could split this property into two names. Upstream fix: declare an accessor in the parent type
                   return [...super.validationTypes, 'warning'];
                 }
               },
-            );
-          }
+            ),
+          );
           const el = await fixtureForSuite(html`
-            <custom-input-datepicker .validators=${[new MaxDate(myMaxDate, { type: 'warning' })]}>
-            </custom-input-datepicker>
+            <${customTag} .validators=${[new MaxDate(myMaxDate, { type: 'warning' })]}>
+            </${customTag}>
           `);
           const elObj = new InputObject(el);
           await elObj.openCalendar();
@@ -798,20 +795,21 @@ export function runDatepickerSuite({
 
       describe('Providing a custom calendar', () => {
         it('can override the calendar template', async () => {
-          customElements.define(
-            'my-calendar',
-            class extends LionCalendar {
-              constructor() {
-                super();
-                // Change some defaults
-                this.firstDayOfWeek = 1; // Start on Mondays instead of Sundays
-                this.weekdayHeaderNotation = 'narrow'; // 'T' instead of 'Thu'
-              }
-            },
-          );
+          class CustomCalendar extends LionCalendar {
+            constructor() {
+              super();
+              // Change some defaults
+              this.firstDayOfWeek = 1; // Start on Mondays instead of Sundays
+              this.weekdayHeaderNotation = 'narrow'; // 'T' instead of 'Thu'
+            }
+          }
 
           const myTag = defineCE(
             class extends LionInputDatepicker {
+              static get scopedElements() {
+                return { ...LionInputDatepicker.scopedElements, 'my-calendar': CustomCalendar };
+              }
+
               _calendarTemplate() {
                 return htmlNonStatic`<my-calendar id="calendar"></my-calendar>`;
               }
@@ -832,8 +830,7 @@ export function runDatepickerSuite({
           // Keep in mind there is no logic inside this overlay frame; it only handles visuals.
           // All interaction should be delegated to parent, which interacts with the calendar
           // component
-          customElements.define(
-            'my-calendar-overlay-frame',
+          defineCE(
             class extends LitElement {
               render() {
                 // eslint-disable-line class-methods-use-this

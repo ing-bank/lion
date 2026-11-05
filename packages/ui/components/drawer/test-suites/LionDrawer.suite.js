@@ -1,7 +1,6 @@
 import { expect, fixture as _fixture, unsafeStatic } from '@open-wc/testing';
 import { html } from 'lit/static-html.js';
 
-import '@lion/ui/define/lion-drawer.js';
 import { LionDrawer } from '@lion/ui/drawer.js';
 import { resolveSuiteTag } from '../../core/test-helpers/resolveSuiteTag.js';
 

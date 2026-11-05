@@ -1,7 +1,8 @@
-import '@lion/ui/define/lion-fieldset.js';
-import '@lion/ui/define/lion-checkbox-group.js';
-import '@lion/ui/define/lion-checkbox.js';
 import { expect, fixture, fixtureSync, html, unsafeStatic } from '@open-wc/testing';
+import { ChoiceInputMixin, FormGroupMixin } from '@lion/ui/form-core.js';
+import { LionInput } from '@lion/ui/input.js';
+import { LitElement } from 'lit';
+import { CustomChoiceGroupMixin } from '../../src/choice-group/CustomChoiceGroupMixin.js';
 import { resolveSuiteTag } from '../../../core/test-helpers/resolveSuiteTag.js';
 
 /**
@@ -16,8 +17,10 @@ import { resolveSuiteTag } from '../../../core/test-helpers/resolveSuiteTag.js';
  * @param {import('@lion/ui/types/test-suites.js').SuiteConfig<{host: SuiteElement; child: SuiteElement}, {choiceType?: string}>} [customConfig]
  */
 export function runCustomChoiceGroupMixinSuite({ classes = {}, choiceType = 'single' } = {}) {
-  const parentTagString = resolveSuiteTag(classes?.host, undefined, 'custom-choice-input-group');
-  const childTagString = resolveSuiteTag(classes?.child, undefined, 'custom-choice-input');
+  class CustomChoiceGroup extends CustomChoiceGroupMixin(FormGroupMixin(LitElement)) {}
+  class ChoiceInput extends ChoiceInputMixin(LionInput) {}
+  const parentTagString = resolveSuiteTag(classes?.host, undefined, CustomChoiceGroup);
+  const childTagString = resolveSuiteTag(classes?.child, undefined, ChoiceInput);
   const parentTag = unsafeStatic(parentTagString);
   const childTag = unsafeStatic(childTagString);
 

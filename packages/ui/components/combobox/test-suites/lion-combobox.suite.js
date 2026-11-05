@@ -7,10 +7,8 @@ import {
   mimicUserTypingAdvanced,
 } from '@lion/ui/combobox-test-helpers.js';
 import { LionCombobox } from '@lion/ui/combobox.js';
+import { LionOption } from '@lion/ui/listbox.js';
 import { browserDetection, SlotMixin } from '@lion/ui/core.js';
-import '@lion/ui/define/lion-combobox.js';
-import '@lion/ui/define/lion-listbox.js';
-import '@lion/ui/define/lion-option.js';
 import { Required, Unparseable } from '@lion/ui/form-core.js';
 import { defineCE, expect, fixture, unsafeStatic, waitUntil } from '@open-wc/testing';
 import { sendKeys } from '@web/test-runner-commands';
@@ -35,9 +33,9 @@ export function runComboboxSuite({
   optionTagString,
   configureOption,
 } = {}) {
-  const tagNameHost = resolveSuiteTag(classes.host, legacyTagString, 'lion-combobox');
+  const tagNameHost = resolveSuiteTag(classes.host, legacyTagString, LionCombobox);
   const hostTag = unsafeStatic(tagNameHost);
-  const tagNameOption = resolveSuiteTag(classes.option, optionTagString, 'lion-option');
+  const tagNameOption = resolveSuiteTag(classes.option, optionTagString, LionOption);
   const tagOption = unsafeStatic(tagNameOption);
 
   /**
@@ -55,7 +53,6 @@ export function runComboboxSuite({
 
   /**
    * @typedef {import('../types/SelectionDisplay.js').SelectionDisplay} SelectionDisplay
-   * @typedef {import('@lion/ui/listbox.js').LionOption} LionOption
    */
 
   /**

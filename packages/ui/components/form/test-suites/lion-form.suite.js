@@ -1,20 +1,10 @@
 import { html } from 'lit/static-html.js';
 import { LionField, Required } from '@lion/ui/form-core.js';
-import '@lion/ui/define/lion-validation-feedback.js';
 import { LionFieldset } from '@lion/ui/fieldset.js';
 import { LionCheckbox, LionCheckboxGroup } from '@lion/ui/checkbox-group.js';
-import '@lion/ui/define/lion-checkbox-group.js';
 import { LionRadio, LionRadioGroup } from '@lion/ui/radio-group.js';
-import '@lion/ui/define/lion-radio-group.js';
-import '@lion/ui/define/lion-fieldset.js';
-import '@lion/ui/define/lion-checkbox.js';
 import { LionListbox, LionOption } from '@lion/ui/listbox.js';
-import '@lion/ui/define/lion-listbox.js';
-import '@lion/ui/define/lion-option.js';
-import '@lion/ui/define/lion-field.js';
-import '@lion/ui/define/lion-radio.js';
 import { LionForm } from '@lion/ui/form.js';
-import '@lion/ui/define/lion-form.js';
 import { spy } from 'sinon';
 import {
   fixture as _fixture,

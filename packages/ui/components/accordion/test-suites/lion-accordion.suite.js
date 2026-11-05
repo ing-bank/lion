@@ -2,7 +2,6 @@ import { html } from 'lit/static-html.js';
 import { unsafeStatic, expect, fixture, waitUntil } from '@open-wc/testing';
 import { sendKeys } from '@web/test-runner-commands';
 import sinon from 'sinon';
-import '@lion/ui/define/lion-accordion.js';
 import { LionAccordion } from '@lion/ui/accordion.js';
 import { resolveSuiteTag } from '../../core/test-helpers/resolveSuiteTag.js';
 import { isElementVisible } from '../../core/test-helpers/isElementVisible.js';

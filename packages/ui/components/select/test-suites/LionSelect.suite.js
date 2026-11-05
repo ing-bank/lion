@@ -1,4 +1,3 @@
-import '@lion/ui/define/lion-select.js';
 import { LionSelect } from '@lion/ui/select.js';
 import { aTimeout, expect, fixture, unsafeStatic } from '@open-wc/testing';
 import { html } from 'lit/static-html.js';

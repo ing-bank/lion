@@ -15,8 +15,6 @@ import { runOverlayMixinSuite } from '../../overlays/test-suites/OverlayMixin.su
 import { resolveSuiteTag } from '../../core/test-helpers/resolveSuiteTag.js';
 import { isActiveElement } from '../../core/test-helpers/isActiveElement.js';
 import '../test-helpers/test-router.js';
-import '@lion/ui/define/lion-dialog.js';
-import '@lion/ui/define/lion-tabs.js';
 import { isElementVisible } from '../../core/test-helpers/isElementVisible.js';
 
 /* eslint-disable lit-a11y/no-autofocus */

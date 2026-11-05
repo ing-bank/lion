@@ -1,9 +1,7 @@
 import { html } from 'lit/static-html.js';
 import { unsafeStatic, expect, fixture as _fixture, oneEvent } from '@open-wc/testing';
 import sinon from 'sinon';
-import '@lion/ui/define/lion-step.js';
 import { LionStep, LionSteps } from '@lion/ui/steps.js';
-import '@lion/ui/define/lion-steps.js';
 import { resolveSuiteTag } from '../../core/test-helpers/resolveSuiteTag.js';
 
 /**

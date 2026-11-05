@@ -59,6 +59,9 @@ describe('my-input', () => {
    takes a **class** or, for a native element, its **tag**. For a class, the **registered tag** is used
    when it has one (that is what keeps a scoped child working); a subclass element is defined on the fly
    when it does not. A suite is never host-only: every element its fixtures render has a role.
+   Suites import constructors, not `define` entry points, and resolve their fixture tags from those
+   constructors. They do not call `customElements.define` or register fixed global fixture names;
+   use `resolveSuiteTag`, `defineCE` or constructor-based scoped fixtures instead.
 
 3. **Every element a suite renders has a role.** A component's public slots are roles
    (`runAccordionSuite` and `runCollapsibleSuite`: `invoker`, `content`), a composite lists what it

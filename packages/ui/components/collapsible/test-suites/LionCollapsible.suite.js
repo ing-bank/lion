@@ -1,7 +1,6 @@
 import { expect, fixture as _fixture, unsafeStatic } from '@open-wc/testing';
 import { html } from 'lit/static-html.js';
 
-import '@lion/ui/define/lion-collapsible.js';
 import { LionCollapsible } from '@lion/ui/collapsible.js';
 import { resolveSuiteTag } from '../../core/test-helpers/resolveSuiteTag.js';
 

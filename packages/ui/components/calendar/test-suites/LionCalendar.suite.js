@@ -1,7 +1,6 @@
 import { html } from 'lit/static-html.js';
 import { LionCalendar, isSameDate } from '@lion/ui/calendar.js';
 import { expect, fixture, fixture as _fixture, unsafeStatic, waitUntil } from '@open-wc/testing';
-import '@lion/ui/define/lion-calendar.js';
 import { sendKeys } from '@web/test-runner-commands';
 import { getLocalizeManager } from '@lion/ui/localize-no-side-effects.js';
 import { localizeTearDown } from '@lion/ui/localize-test-helpers.js';

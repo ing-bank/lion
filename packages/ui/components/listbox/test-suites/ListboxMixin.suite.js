@@ -3,8 +3,6 @@ import { ref } from 'lit/directives/ref.js';
 import { repeat } from 'lit/directives/repeat.js';
 import { Required } from '@lion/ui/form-core.js';
 import { LionListbox, LionOption, LionOptions } from '@lion/ui/listbox.js';
-import '@lion/ui/define/lion-listbox.js';
-import '@lion/ui/define/lion-option.js';
 import {
   aTimeout,
   defineCE,
@@ -49,6 +47,7 @@ export function runListboxMixinSuite({
   const tag = unsafeStatic(hostTagString);
   const optionTagString = resolveSuiteTag(roleOption, legacyOptionTagString);
   const optionTag = unsafeStatic(optionTagString);
+  const optionsTagString = resolveSuiteTag(LionOptions);
 
   describe('ListboxMixin', () => {
     it('updates grouped option positions and navigation after one microtask', async () => {
@@ -180,7 +179,7 @@ export function runListboxMixinSuite({
         expect(() => {
           el.addFormElement(invalidChild);
         }).to.throw(
-          `The ${hostTagString} name="foo" does not allow to register lion-option with .modelValue="Lara" - The modelValue should represent an Object { value: "foo", checked: false }`,
+          `The ${hostTagString} name="foo" does not allow to register ${optionTagString} with .modelValue="Lara" - The modelValue should represent an Object { value: "foo", checked: false }`,
         );
       });
 
@@ -524,8 +523,8 @@ export function runListboxMixinSuite({
         `);
         expect(el.formElements.length).to.equal(2);
         expect(el.formElements).to.eql([
-          el.querySelectorAll('lion-option')[0],
-          el.querySelectorAll('lion-option')[1],
+          el.querySelectorAll(optionTagString)[0],
+          el.querySelectorAll(optionTagString)[1],
         ]);
       });
 
@@ -1598,7 +1597,7 @@ export function runListboxMixinSuite({
 
         try {
           const el = document.createElement(hostTagString);
-          const optionsEl = document.createElement('lion-options');
+          const optionsEl = document.createElement(optionsTagString);
           optionsEl.slot = 'input';
           const optionEl = document.createElement(optionTagString);
           optionsEl.appendChild(optionEl);
@@ -1714,7 +1713,7 @@ export function runListboxMixinSuite({
           return html`
             <${tag} id="withMap">
               ${this.options.map(
-                option => html` <lion-option .choiceValue="${option}">${option}</lion-option> `,
+                option => html` <${optionTag} .choiceValue="${option}">${option}</${optionTag}> `,
               )}
             </${tag}>
             <${tag} id="withRepeat">
@@ -1722,7 +1721,7 @@ export function runListboxMixinSuite({
                 this.options,
                 (/** @type {string} */ option) => option,
                 (/** @type {string} */ option) => html`
-                  <lion-option .choiceValue="${option}">${option}</lion-option>
+                  <${optionTag} .choiceValue="${option}">${option}</${optionTag}>
                 `,
               )}
             </${tag}>
@@ -1796,7 +1795,7 @@ export function runListboxMixinSuite({
           return html`
             <${tag} id="listbox">
               ${this.options.map(
-                option => html` <lion-option .choiceValue="${option}">${option}</lion-option> `,
+                option => html` <${optionTag} .choiceValue="${option}">${option}</${optionTag}> `,
               )}
             </${tag}>
           `;

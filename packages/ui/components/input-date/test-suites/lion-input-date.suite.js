@@ -4,7 +4,6 @@ import { localizeTearDown } from '@lion/ui/localize-test-helpers.js';
 import { MinDate, MaxDate } from '@lion/ui/form-core.js';
 import { unsafeStatic, expect, fixture as _fixture } from '@open-wc/testing';
 import { getInputMembers } from '@lion/ui/input-test-helpers.js';
-import '@lion/ui/define/lion-input-date.js';
 import { LionInputDate } from '@lion/ui/input-date.js';
 import { resolveSuiteTag } from '../../core/test-helpers/resolveSuiteTag.js';
 
@@ -185,7 +184,7 @@ export function runInputDateSuite({
     it('is accessible when readonly', async () => {
       const el = await fixture(html`
         <${tag} readonly .modelValue=${new Date('2017/06/15')}
-          ><label slot="label">Label</label></lion-input-date
+          ><label slot="label">Label</label></${tag}
         >
       `);
       await expect(el).to.be.accessible();

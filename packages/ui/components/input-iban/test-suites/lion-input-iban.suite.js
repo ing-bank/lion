@@ -2,7 +2,6 @@ import { html } from 'lit/static-html.js';
 import { unsafeStatic, expect, fixture as _fixture } from '@open-wc/testing';
 import { getInputMembers } from '@lion/ui/input-test-helpers.js';
 import { LionInputIban, IsCountryIBAN, formatIBAN, parseIBAN } from '@lion/ui/input-iban.js';
-import '@lion/ui/define/lion-input-iban.js';
 import { resolveSuiteTag } from '../../core/test-helpers/resolveSuiteTag.js';
 
 /**

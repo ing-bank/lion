@@ -1,4 +1,3 @@
-import { uuid } from '@lion/ui/core.js';
 import {
   FormRegisteringMixin,
   FormRegistrarMixin,
@@ -97,41 +96,33 @@ export const runRegistrationSuite = ({
     });
 
     it('maintains dom order if there are arbitrary none-form group elements between registering elements', async () => {
-      /**
-       * @param {string} tagString
-       */
-      function lazyDefine(tagString) {
-        class Extension extends RegisteringClass {}
-        customElements.define(tagString, Extension);
-      }
-
-      const [tagName1, tagName2, tagName3] = [uuid('lazy-1'), uuid('lazy-2'), uuid('lazy-3')];
+      const [tagName1, tagName2, tagName3] = [1, 2, 3].map(() =>
+        resolveSuiteTag(class extends RegisteringClass {}),
+      );
       const [tag1, tag2, tag3] = [tagName1, tagName2, tagName3].map(name => unsafeStatic(name));
 
       const el = /** @type {RegistrarClass} */ (
         await fixture(html`
           <${parentTag} .name=${'test-group'}>
-            <div role="group">
-              <${tag1} .name=${'one'}></${tag1}>
-            </div>
-            <div role="group">
-              <${tag2} .name=${'two'}></${tag2}>
-              <${tag3} .name=${'three'}></${tag3}>
-            </div>
+            <div role="group" id="first"></div>
+            <div role="group" id="second"></div>
           </${parentTag}>
         `)
       );
       expect(el.formElements.length).to.equal(0);
 
-      lazyDefine(tagName3);
+      const child3 = await fixture(html`<${tag3} .name=${'three'}></${tag3}>`);
+      el.querySelector('#second')?.appendChild(child3);
       await el.updateComplete;
       expect(el.formElements.map(fel => fel.localName)).to.deep.equal([tagName3]);
 
-      lazyDefine(tagName1);
+      const child1 = await fixture(html`<${tag1} .name=${'one'}></${tag1}>`);
+      el.querySelector('#first')?.appendChild(child1);
       await el.updateComplete;
       expect(el.formElements.map(fel => fel.localName)).to.deep.equal([tagName1, tagName3]);
 
-      lazyDefine(tagName2);
+      const child2 = await fixture(html`<${tag2} .name=${'two'}></${tag2}>`);
+      el.querySelector('#second')?.insertBefore(child2, child3);
       await el.updateComplete;
       expect(el.formElements.map(fel => fel.localName)).to.deep.equal([
         tagName1,

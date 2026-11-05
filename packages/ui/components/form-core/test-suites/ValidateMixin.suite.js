@@ -7,6 +7,7 @@ import {
 } from '@lion/ui/form-core-test-helpers.js';
 import {
   EqualsLength,
+  LionField,
   MaxLength,
   MinLength,
   Required,
@@ -19,13 +20,7 @@ import { aTimeout, defineCE, expect, fixture, html, unsafeStatic } from '@open-w
 import { LitElement } from 'lit';
 import sinon from 'sinon';
 
-import '@lion/ui/define/lion-field.js';
-import '@lion/ui/define/lion-validation-feedback.js';
 import { resolveSuiteTag } from '../../core/test-helpers/resolveSuiteTag.js';
-
-/**
- * @typedef {import('@lion/ui/form-core.js').LionField} LionField
- */
 
 /**
  * Runs the `ValidateMixin` behavioural suite. The caller hands the element to run against; leaving
@@ -49,6 +44,7 @@ export function runValidateMixinSuite({
 
   const tagString = resolveSuiteTag(classes.host, legacyTagString, ValidateElement);
   const tag = unsafeStatic(tagString);
+  const fieldTag = unsafeStatic(resolveSuiteTag(LionField));
 
   describe('ValidateMixin', () => {
     /**
@@ -284,7 +280,7 @@ export function runValidateMixinSuite({
             ._repropagationRole="${'fieldset'}"
             .validators=${[new AlwaysValid()]}
             .modelValue=${'myValue'}
-          ><lion-field id="child"><input slot="input"></lion-field></${tag}>
+          ><${fieldTag} id="child"><input slot="input"></${fieldTag}></${tag}>
         `)
         );
         const validateSpy = sinon.spy(el, 'validate');

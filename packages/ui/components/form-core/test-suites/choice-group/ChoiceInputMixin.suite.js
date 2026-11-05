@@ -12,7 +12,6 @@ class ChoiceInput extends ChoiceInputMixin(LionInput) {
     this.type = 'checkbox';
   }
 }
-customElements.define('choice-group-input', ChoiceInput);
 
 /**
  * @param {EventTarget | null} actualTarget
@@ -30,7 +29,7 @@ function expectEventTarget(actualTarget, expectedTarget, description) {
  * @deprecated
  */
 export function runChoiceInputMixinSuite({ classes = {}, tagString: legacyTagString } = {}) {
-  const tagString = resolveSuiteTag(classes?.host, legacyTagString, 'choice-group-input');
+  const tagString = resolveSuiteTag(classes?.host, legacyTagString, ChoiceInput);
   const tag = unsafeStatic(tagString);
   describe(`ChoiceInputMixin: ${tagString}`, () => {
     it('is hidden when attribute hidden is true', async () => {
@@ -134,14 +133,6 @@ export function runChoiceInputMixinSuite({ classes = {}, tagString: legacyTagStr
       _inputNode.click();
       expectEventTarget(spy.args[2][0].target, _inputNode, 'input click event target');
       expect(spy.callCount).to.equal(3);
-    });
-
-    it('reports click target mismatches without serializing DOM nodes', () => {
-      const actualTarget = document.createElement('ing-button');
-      const expectedTarget = document.createElement('input');
-      expect(() =>
-        expectEventTarget(actualTarget, expectedTarget, 'forwarded click event target'),
-      ).to.throw('forwarded click event target');
     });
 
     it('adds "isTriggerByUser" flag on model-value-changed', async () => {

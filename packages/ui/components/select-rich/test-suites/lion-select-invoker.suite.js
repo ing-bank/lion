@@ -2,7 +2,6 @@ import { html } from 'lit/static-html.js';
 import { LionButton } from '@lion/ui/button.js';
 import { unsafeStatic, defineCE, expect, fixture } from '@open-wc/testing';
 import { LionSelectInvoker } from '@lion/ui/select-rich.js';
-import '@lion/ui/define/lion-select-invoker.js';
 import { resolveSuiteTag } from '../../core/test-helpers/resolveSuiteTag.js';
 
 /**

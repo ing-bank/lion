@@ -9,3 +9,5 @@ Allow combobox suites to configure label-property options before their values ar
 Make collapsible suite height fixtures independent of text wrapping and await switch host updates before asserting inner button events.
 
 Configure pagination, calendar and datepicker suite page objects consistently through `pageObjects: { host: MyPageObject }`.
+
+Build shared-suite fixtures from constructors without importing definition entry points or registering fixed global custom-element names.

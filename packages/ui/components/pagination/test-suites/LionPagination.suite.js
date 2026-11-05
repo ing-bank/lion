@@ -2,7 +2,6 @@ import { fixture as _fixture, expect, unsafeStatic, waitUntil, aTimeout } from '
 import { html } from 'lit/static-html.js';
 import sinon from 'sinon';
 
-import '@lion/ui/define/lion-pagination.js';
 import { LionPagination } from '@lion/ui/pagination.js';
 import { PaginationObject as DefaultPaginationObject } from '@lion/ui/pagination-test-helpers.js';
 import { resolveSuiteTag } from '../../core/test-helpers/resolveSuiteTag.js';
