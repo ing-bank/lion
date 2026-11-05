@@ -90,7 +90,8 @@ describe('my-input', () => {
    selector configuration.
    `runPaginationSuite` reads its previous, next, page and ellipsis nodes through the exported
    `PaginationObject`; a subclass with different navigation markup can pass a subclass overriding
-   those getters.
+   those getters. Click assertions wait for the requested page and its render to complete, so
+   deferred navigation handlers are supported without changing the expected pages or event counts.
 7. **Accessibility is Lion's; styling and markup are the extension layer's.** So the accessible
    _name_ is asserted, but not the attribute it lives on: the suite reads it from `title`,
    `aria-label` or a `label` attribute, and the copy stays Lion's (localized messages). Asserting

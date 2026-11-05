@@ -1,4 +1,4 @@
-import { fixture as _fixture, expect, unsafeStatic } from '@open-wc/testing';
+import { fixture as _fixture, expect, unsafeStatic, waitUntil, aTimeout } from '@open-wc/testing';
 import { html } from 'lit/static-html.js';
 import sinon from 'sinon';
 
@@ -30,6 +30,15 @@ export function runPaginationSuite({
   const tag = unsafeStatic(resolveSuiteTag(host, legacyTagString));
   const fixture = /** @type {(arg: TemplateResult) => Promise<LionPagination>} */ (_fixture);
 
+  /**
+   * @param {LionPagination} el
+   * @param {number} page
+   */
+  async function waitForPage(el, page) {
+    await waitUntil(() => el.current === page, `Pagination did not navigate to page ${page}.`);
+    await el.updateComplete;
+  }
+
   describe('Pagination', () => {
     it('has states for count and current', async () => {
       const el = await fixture(html` <${tag} count="4"></${tag}> `);
@@ -56,18 +65,21 @@ export function runPaginationSuite({
       it('can go to previous page with previous button', async () => {
         const el = await fixture(html` <${tag} count="6" current="2"></${tag}> `);
         new PaginationObject(el).previousButtonEl.click();
+        await waitForPage(el, 1);
         expect(el.current).to.equal(1);
       });
 
       it('can go to next page with next button', async () => {
         const el = await fixture(html` <${tag} count="6" current="2"></${tag}> `);
         new PaginationObject(el).nextButtonEl.click();
+        await waitForPage(el, 3);
         expect(el.current).to.equal(3);
       });
 
       it('goes to the page when clicking on its button', async () => {
         const el = await fixture(html` <${tag} count="6" current="2"></${tag}> `);
         new PaginationObject(el).pageButtonEls[4].click();
+        await waitForPage(el, 5);
         expect(el.current).to.equal(5);
       });
 
@@ -77,20 +89,21 @@ export function runPaginationSuite({
           <${tag} count="6" current="2" @current-changed=${changeSpy}></${tag}>
         `);
         const paginationObject = new PaginationObject(el);
-        const { previousButtonEl: previous, nextButtonEl: next, pageButtonEls } = paginationObject;
-        const page5 = pageButtonEls[4];
+        paginationObject.previousButtonEl.click();
+        await waitForPage(el, 1);
+        expect(changeSpy.callCount, 'previous page click event count').to.equal(1);
 
-        previous.click();
-        expect(changeSpy).to.have.callCount(1);
+        paginationObject.nextButtonEl.click();
+        await waitForPage(el, 2);
+        expect(changeSpy.callCount, 'next page click event count').to.equal(2);
 
-        next.click();
-        expect(changeSpy).to.have.callCount(2);
-
-        page5.click();
-        expect(changeSpy).to.have.callCount(3);
+        paginationObject.pageButtonEls[4].click();
+        await waitForPage(el, 5);
+        expect(changeSpy.callCount, 'page number click event count').to.equal(3);
 
         el.current = 3;
-        expect(changeSpy).to.have.callCount(4);
+        await el.updateComplete;
+        expect(changeSpy.callCount, 'programmatic page change event count').to.equal(4);
       });
 
       it('does NOT fire current-changed event when clicking on a current page number', async () => {
@@ -105,7 +118,9 @@ export function runPaginationSuite({
           throw new Error('The current page button was not found.');
         }
         page2.click();
-        expect(changeSpy).to.not.be.called;
+        await aTimeout(0);
+        await el.updateComplete;
+        expect(changeSpy.callCount, 'current page click event count').to.equal(0);
         expect(el.current).to.equal(2);
       });
 
