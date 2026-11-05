@@ -140,7 +140,13 @@ export default {
 
 /** The harness binary, or undefined when it is not installed. */
 function harnessBinary(repoRoot: string): string | undefined {
-  const binary = path.join(repoRoot, 'node_modules/.bin/web-test-runner');
+  const binary = path.join(
+    repoRoot,
+    'node_modules/.bin',
+    // On Windows the executable entry is a .cmd: the extensionless file next to it is a POSIX shell script,
+    // so spawning that path fails with ENOENT (measured on the windows-latest CI job).
+    process.platform === 'win32' ? 'web-test-runner.cmd' : 'web-test-runner',
+  );
   return fs.existsSync(binary) ? binary : undefined;
 }
 
@@ -251,6 +257,9 @@ function runChunk({
     encoding: 'utf8',
     timeout: timeoutMs,
     env: { ...process.env, FORCE_COLOR: '0', NO_COLOR: '1' },
+    // A .cmd needs a shell on Windows; on POSIX a shell would change how the arguments are quoted, so it
+    // stays off there.
+    shell: process.platform === 'win32',
   });
 
   const output = `${run.stdout ?? ''}\n${run.stderr ?? ''}`;
