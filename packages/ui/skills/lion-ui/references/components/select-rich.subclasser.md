@@ -18,6 +18,7 @@
 | `LionSelectInvoker` | `_contentWrapperNode` |  |  |
 | `LionSelectInvoker` | `_noSelectionTemplate` |  | To be overriden for a placeholder, used when `hasNoDefaultSelected` is true on the select rich |
 | `LionSelectInvoker` | `__handleKeydown` |  |  |
+| `LionSelectInvoker` | `__keyboardClickStarted` | boolean |  |
 | `LionSelectInvoker` | `__keydownHandler` |  |  |
 | `LionSelectInvoker` | `__keyupHandler` |  |  |
 | `LionSelectInvoker` | `__mousedownHandler` |  |  |

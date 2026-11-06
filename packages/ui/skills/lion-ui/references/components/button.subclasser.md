@@ -12,6 +12,7 @@
 
 | Class | Member | Type | Description |
 | --- | --- | --- | --- |
+| `LionButton` | `__keyboardClickStarted` | boolean |  |
 | `LionButton` | `__keydownHandler` |  |  |
 | `LionButton` | `__keyupHandler` |  |  |
 | `LionButton` | `__mousedownHandler` |  |  |
@@ -19,6 +20,7 @@
 | `LionButtonReset` | `_setupSubmitAndResetHelperOnConnected` |  |  |
 | `LionButtonReset` | `_teardownSubmitAndResetHelperOnDisconnected` |  |  |
 | `LionButtonReset` | `__clickDelegationHandler` |  | Delegate click, by flashing a native button as a direct child of the form, and firing click on this button. This will fire the form submit without side effects caused by the click bubbling back up to lion-button. |
+| `LionButtonReset` | `__keyboardClickStarted` | boolean |  |
 | `LionButtonReset` | `__keydownHandler` |  |  |
 | `LionButtonReset` | `__keyupHandler` |  |  |
 | `LionButtonReset` | `__mousedownHandler` |  |  |
@@ -31,6 +33,7 @@
 | `LionButtonSubmit` | `_teardownSubmitAndResetHelperOnDisconnected` |  |  |
 | `LionButtonSubmit` | `__clickDelegationHandler` |  | Delegate click, by flashing a native button as a direct child of the form, and firing click on this button. This will fire the form submit without side effects caused by the click bubbling back up to lion-button. |
 | `LionButtonSubmit` | `__implicitSubmitHelperButton` | HTMLButtonElement|null |  |
+| `LionButtonSubmit` | `__keyboardClickStarted` | boolean |  |
 | `LionButtonSubmit` | `__keydownHandler` |  |  |
 | `LionButtonSubmit` | `__keyupHandler` |  |  |
 | `LionButtonSubmit` | `__mousedownHandler` |  |  |
