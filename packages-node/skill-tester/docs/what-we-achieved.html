@@ -85,6 +85,9 @@ flowchart TD
       const border = val('--border', '#555');
       try {
         const { default: mermaid } = await import(
+          // A browser-only CDN import: this file is a standalone diagram, not a bundled module, so the
+          // unresolved-path rule does not apply to it.
+          // eslint-disable-next-line import/no-unresolved
           'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs'
         );
         mermaid.initialize({

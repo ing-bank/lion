@@ -195,7 +195,10 @@ export function parseSuiteOutput(output: string): Map<string, BehaviourFailure[]
   for (let index = 0; index < lines.length; index++) {
     const header = /^(\S+\.test\.js):\s*$/.exec(lines[index]);
     if (header) {
-      current = header[1];
+      // WTR prints paths with the platform separator. Taking it verbatim would produce keys the case ids
+      // never match on Windows, and a file that cannot be matched simply has "no failures" - the exact
+      // silent-pass measured there (negative controls reported as passing).
+      current = header[1].replace(/\\/g, '/');
       continue;
     }
 

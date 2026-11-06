@@ -32,7 +32,10 @@ test('a coloured file header still attributes its failures', () => {
 
   const parsed = parseSuiteOutput(stripAnsi(output));
   const failures = parsed.get(PATH);
-  assert.ok(failures, `expected an entry for the file, got keys ${JSON.stringify([...parsed.keys()])}`);
+  assert.ok(
+    failures,
+    `expected an entry for the file, got keys ${JSON.stringify([...parsed.keys()])}`,
+  );
   assert.match(failures[0].test, /registers and renders/);
   assert.match(failures[0].message, /registered the element/);
 });
@@ -48,6 +51,24 @@ test('without stripping, a coloured header loses its failures (the regression it
 
   // This is the bug: no attribution, therefore no failures, therefore a false pass.
   assert.equal(parseSuiteOutput(output).size, 0);
+});
+
+test('a Windows header and CRLF line endings still attribute their failures', () => {
+  // Measured on the windows-latest job: WTR prints `src\behaviour.test.js:` and terminates lines with
+  // CRLF, so the parsed key never matched a POSIX case id, every lookup missed, and the three
+  // negative-control fixtures came back as passing.
+  const output = [
+    'src\\behaviour.test.js:',
+    '',
+    ' ❌ the produced code registers the element',
+    '      AssertionError: not registered',
+    '',
+  ].join('\r\n');
+
+  const parsed = parseSuiteOutput(output);
+  const failures = parsed.get('src/behaviour.test.js');
+  assert.ok(failures, `expected the POSIX key, got keys ${JSON.stringify([...parsed.keys()])}`);
+  assert.match(failures[0].message, /not registered/);
 });
 
 test('reportedFailureCount reads the harness summary line', () => {
