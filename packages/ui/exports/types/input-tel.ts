@@ -1,1 +1,1 @@
-export { RegionCode } from '../../components/input-tel/types/index.js';
+export * from '../../components/input-tel/types/index.js';
