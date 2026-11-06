@@ -620,7 +620,9 @@ const FormGroupMixinImplementation = /** @type {FormGroupMixin} */ (superclass =
      */
     removeFormElement(el) {
       super.removeFormElement(el);
-      this.validate({ clearCurrentResult: true });
+      if (this.isConnected) {
+        this.validate({ clearCurrentResult: true });
+      }
 
       if (typeof el.removeFromAriaLabelledBy === 'function' && this._labelNode) {
         el.removeFromAriaLabelledBy(this._labelNode, { reorder: false });

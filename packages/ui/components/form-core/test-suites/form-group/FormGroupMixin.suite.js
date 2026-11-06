@@ -1654,5 +1654,46 @@ export function runFormGroupMixinSuite({
         expect(fieldset2.formElements[1].serializedValue).to.equal('winsAsWell');
       });
     });
+
+    it('does not invoke feedbackCondition when removed from DOM', async () => {
+      const feedbackConditionSpy = sinon.spy();
+      const container = await fixture(html`
+        <div>
+          <${tag} name="group" .feedbackCondition="${feedbackConditionSpy}">
+            <${childTag} name="child1"></${childTag}>
+            <${childTag} name="child2"></${childTag}>
+          </${tag}>
+        </div>
+      `);
+      const el = /** @type {FormGroup} */ (container.firstElementChild);
+      await el.updateComplete;
+      feedbackConditionSpy.resetHistory();
+
+      el.remove();
+      expect(feedbackConditionSpy).to.not.have.been.called;
+    });
+
+    it('does not invoke feedbackCondition when removed from DOM with validators and touched', async () => {
+      const feedbackConditionSpy = sinon.spy();
+      const container = await fixture(html`
+        <div>
+          <${tag}
+            name="group"
+            .validators=${[new Required()]}
+            .feedbackCondition="${feedbackConditionSpy}"
+          >
+            <${childTag} name="child1"></${childTag}>
+            <${childTag} name="child2"></${childTag}>
+          </${tag}>
+        </div>
+      `);
+      const el = /** @type {FormGroup} */ (container.firstElementChild);
+      el.touched = true;
+      await el.updateComplete;
+      feedbackConditionSpy.resetHistory();
+
+      el.remove();
+      expect(feedbackConditionSpy).to.not.have.been.called;
+    });
   });
 }

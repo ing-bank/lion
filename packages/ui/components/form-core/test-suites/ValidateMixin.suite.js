@@ -131,6 +131,41 @@ export function runValidateMixinSuite({
         expect(el.hasFeedbackFor).to.deep.equal(['error']);
       });
 
+      it('does not validate when element is disconnected from DOM without validators', async () => {
+        const spy = sinon.spy();
+        const container = await fixture(html`
+          <div>
+            <${tag} .feedbackCondition="${spy}">${lightDom}</${tag}>
+          </div>
+        `);
+        const el = /** @type {ValidateElement} */ (container.firstElementChild);
+        await el.updateComplete;
+        spy.resetHistory();
+
+        el.remove();
+        el.validate();
+        expect(spy).to.not.have.been.called;
+      });
+
+      it('does not validate when element is disconnected from DOM with validators', async () => {
+        const spy = sinon.spy();
+        const container = await fixture(html`
+          <div>
+            <${tag}
+              .validators=${[new Required()]}
+              .feedbackCondition="${spy}"
+            >${lightDom}</${tag}>
+          </div>
+        `);
+        const el = /** @type {ValidateElement} */ (container.firstElementChild);
+        await el.updateComplete;
+        spy.resetHistory();
+
+        el.remove();
+        el.validate();
+        expect(spy).to.not.have.been.called;
+      });
+
       // TODO: keep this use case for backwards compatibility or just required extending Required?
       it('determines whether the "Required" validator was already handled by judging the validatorName', async () => {
         class BundledValidator extends EventTarget {

@@ -814,5 +814,46 @@ export function runChoiceGroupMixinSuite({
         expect(formEv.detail.isTriggeredByUser).to.be.false;
       });
     });
+
+    it('does not invoke feedbackCondition when removed from DOM', async () => {
+      const feedbackConditionSpy = sinon.spy();
+      const container = await fixture(html`
+        <div>
+          <${parentTag} name="group" .feedbackCondition="${feedbackConditionSpy}">
+            <${childTag} label="Option 1" .choiceValue=${'1'}></${childTag}>
+            <${childTag} label="Option 2" .choiceValue=${'2'}></${childTag}>
+          </${parentTag}>
+        </div>
+      `);
+      const el = /** @type {ChoiceInputGroup} */ (container.firstElementChild);
+      await el.updateComplete;
+      feedbackConditionSpy.resetHistory();
+
+      el.remove();
+      expect(feedbackConditionSpy).to.not.have.been.called;
+    });
+
+    it('does not invoke feedbackCondition when removed from DOM with validators and touched', async () => {
+      const feedbackConditionSpy = sinon.spy();
+      const container = await fixture(html`
+        <div>
+          <${parentTag}
+            name="group"
+            .validators=${[new Required()]}
+            .feedbackCondition="${feedbackConditionSpy}"
+          >
+            <${childTag} label="Option 1" .choiceValue=${'1'}></${childTag}>
+            <${childTag} label="Option 2" .choiceValue=${'2'}></${childTag}>
+          </${parentTag}>
+        </div>
+      `);
+      const el = /** @type {ChoiceInputGroup} */ (container.firstElementChild);
+      el.touched = true;
+      await el.updateComplete;
+      feedbackConditionSpy.resetHistory();
+
+      el.remove();
+      expect(feedbackConditionSpy).to.not.have.been.called;
+    });
   });
 }

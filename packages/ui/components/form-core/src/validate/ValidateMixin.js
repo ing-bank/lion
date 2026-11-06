@@ -408,7 +408,8 @@ export const ValidateMixinImplementation = /** @type {ValidateMixin} */ (supercl
         return;
       }
       // We don't validate before firstUpdated has run
-      if (!this.__isValidateInitialized) {
+      if (!this.__isValidateInitialized || !this.isConnected) {
+        this.__validateCompleteResolve?.(true);
         return;
       }
 
