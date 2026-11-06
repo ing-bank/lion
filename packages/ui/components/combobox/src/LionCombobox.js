@@ -1047,7 +1047,7 @@ export class LionCombobox extends LocalizeMixin(OverlayMixin(CustomChoiceGroupMi
       if (prevValue !== curValue) {
         this.activeIndex = -1;
       }
-      this.modelValue = this.parser(inputValue);
+      this.modelValue = this.parser(curValue);
     }
 
     // [7b]. Fire model-value-changed for custom (unmatched) values, regardless of autocomplete mode.
@@ -1092,9 +1092,12 @@ export class LionCombobox extends LocalizeMixin(OverlayMixin(CustomChoiceGroupMi
     // Make sure that we don't lose inputNode.selectionStart and inputNode.selectionEnd
     if (this._inputNode.value !== newValue) {
       const prevLen = this._inputNode.value.length;
+      const prevSelectionStart = this._inputNode.selectionStart;
+      const prevSelectionEnd = this._inputNode.selectionEnd;
       this._inputNode.value = newValue;
-      this._inputNode.selectionStart = prevLen;
-      this._inputNode.selectionEnd = this._inputNode.value.length;
+      this._inputNode.selectionStart =
+        prevSelectionStart === prevSelectionEnd ? prevLen : prevSelectionStart;
+      this._inputNode.selectionEnd = newValue.length;
     }
   }
 
