@@ -14,6 +14,18 @@ const refsDir = 'packages/ui/skills/lion-ui/references/components';
 const ledger = JSON.parse(fs.readFileSync('packages-node/skill-tester/results/ledger.json', 'utf8'));
 const scenarios = new Set((ledger.entries ?? []).map(entry => entry.scenario).filter(Boolean));
 
+/**
+ * A documented name can be a component OR a system - `icon` is a system in `SYSTEM_NAMES`, so looking only
+ * at `component/<name>` reported it as uncovered while `system/icon` exists. That false gap is exactly the
+ * kind of claim this register exists to prevent, so it checks both namespaces and reports which one matched.
+ */
+const scenarioFor = name => {
+  for (const namespace of ['component', 'system', 'field', 'form']) {
+    if (scenarios.has(`${namespace}/${name}`)) return `${namespace}/${name}`;
+  }
+  return undefined;
+};
+
 const rows = [];
 for (const file of fs.readdirSync(refsDir).filter(name => name.endsWith('.md'))) {
   const component = path.basename(file, '.md');
@@ -31,18 +43,19 @@ for (const file of fs.readdirSync(refsDir).filter(name => name.endsWith('.md')))
         .filter(line => /^### /.test(line))
         .map(line => line.replace(/^### /, '').trim())
     : [];
-  for (const useCase of useCases) {
-    rows.push({ component, useCase, scenario: scenarios.has(`component/${component}`) });
-  }
+  const scenario = scenarioFor(component);
+  for (const useCase of useCases) rows.push({ component, useCase, scenario });
 }
 
 const withScenario = rows.filter(row => row.scenario).length;
 const components = [...new Set(rows.map(row => row.component))];
-const noScenario = components.filter(name => !scenarios.has(`component/${name}`));
+const noScenario = components.filter(name => !scenarioFor(name));
 
-console.log(`use cases gedocumenteerd: ${rows.length} over ${components.length} componenten`);
-console.log(`component met een scenario: ${components.length - noScenario.length} | zonder: ${noScenario.length}`);
-console.log(`use cases in een component mét scenario: ${withScenario} | in een component zonder: ${rows.length - withScenario}`);
+console.log(`use cases gedocumenteerd: ${rows.length} over ${components.length} componenten/systemen`);
+console.log(`met een scenario: ${components.length - noScenario.length} | zonder: ${noScenario.length}`);
+console.log(
+  `use cases in een gedekt component: ${withScenario} | in een ongedekt component: ${rows.length - withScenario}`,
+);
 console.log('zonder scenario:', noScenario.join(', ') || '(geen)');
 
 const perComponent = {};
@@ -51,7 +64,8 @@ console.log('meeste use cases:');
 for (const [name, count] of Object.entries(perComponent)
   .sort((a, b) => b[1] - a[1])
   .slice(0, 8)) {
-  console.log(`  ${name}: ${count}${scenarios.has(`component/${name}`) ? ' ✓ scenario' : ' ✗ geen scenario'}`);
+  const covered = scenarioFor(name);
+  console.log(`  ${name}: ${count}${covered ? ` ✓ ${covered}` : ' ✗ geen scenario'}`);
 }
 
 fs.writeFileSync('/tmp/use-case-register.json', JSON.stringify(rows, null, 2));
