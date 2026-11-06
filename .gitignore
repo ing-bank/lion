@@ -48,7 +48,7 @@ packages-node/awesome-phonenumber/build/
 !packages-node/**/types.d.ts
 
 ## temp folders
-/.tmp/
+**/.tmp/
 /coverage/
 /storybook-static/
 
@@ -83,3 +83,5 @@ docs/_merged_includes/
 docs/**/api-table.md
 
 .github/skills
+# WTR coverage output written by the skill-tester behaviour tier
+.wtr-coverage/

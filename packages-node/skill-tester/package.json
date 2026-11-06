@@ -1,0 +1,62 @@
+{
+  "name": "skill-tester",
+  "version": "0.0.0",
+  "description": "Scientifically sound evaluation of your AI skills and agents",
+  "license": "MIT",
+  "author": "ing-bank",
+  "homepage": "https://github.com/ing-bank/lion/",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ing-bank/lion.git",
+    "directory": "packages-node/skill-tester"
+  },
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "main": "./src/index.ts",
+  "files": [
+    "examples",
+    "mock-repo",
+    "src",
+    "test-node"
+  ],
+  "scripts": {
+    "eval": "node src/cli.ts",
+    "eval:copilot": "node examples/run.mjs copilot",
+    "eval:docs": "node scripts/render-quality-page.mjs",
+    "eval:list": "node src/cli.ts --list",
+    "eval:local": "node examples/run.mjs local",
+    "eval:openai": "node examples/run.mjs openai",
+    "eval:runware": "node examples/run.mjs runware",
+    "skill:index": "node scripts/render-skill-index.mjs",
+    "test": "node --test --test-concurrency=1 \"test-node/*.test.ts\"",
+    "test:node": "node --test --test-concurrency=1 \"test-node/*.test.ts\"",
+    "test:skills-check": "node --test --test-concurrency=1 test-node/entrypointCoverage.test.ts test-node/componentApiCoverage.test.ts test-node/synonymRouting.test.ts test-node/docNoise.test.ts"
+  },
+  "dependencies": {
+    "diff": "^9.0.0",
+    "nanocolors": "^0.2.13",
+    "oxc-parser": "0.137.0"
+  },
+  "peerDependencies": {
+    "@github/copilot-sdk": "^0.2.2"
+  },
+  "peerDependenciesMeta": {
+    "@github/copilot-sdk": {
+      "optional": true
+    }
+  },
+  "keywords": [
+    "agent",
+    "ai",
+    "docs",
+    "evaluation",
+    "lion",
+    "skill",
+    "testing"
+  ],
+  "publishConfig": {
+    "access": "public"
+  }
+}

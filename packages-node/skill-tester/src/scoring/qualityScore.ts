@@ -1,0 +1,304 @@
+/**
+ * Quality scoring for skill/agent runs.
+ *
+ * A run produces one transformed sandbox. We score it on three complementary levels so a
+ * single number is meaningful without pretending an LLM's output matches a golden file
+ * byte-for-byte:
+ *
+ * The layers, in order:
+ *
+ *   0. gates              — deterministic prerequisites (does the output parse at all?); a failure
+ *                           zeroes the scenario regardless of the text
+ *   1. normalized match   — equal once formatting (indentation, blank lines, spacing) is ignored.
+ *                           Formatting is not the specification, so this is a FULL match.
+ *   2. similarity         — line-level similarity of the *normalized* text, for partial credit
+ *   3. exact match        — kept as a diagnostic flag only, never as a score component
+ *
+ * Why normalized equals full: measured on the golden-file scenario, identical correct code scored
+ * 100% or 95% purely because the model indented it differently — noise proportional to the model's
+ * formatting style. Likewise, line-similarity over raw text collapsed to 6% for code that is
+ * identical after re-indenting, so similarity is computed over normalized text.
+ *
+ * Scenarios can additionally declare objective `checks` (contains / notContains / matches) for
+ * properties that must hold but cannot be pinned to one golden file (e.g. "imports from
+ * `@lion/ui/*`, never from `@lion/*`"). Check outcomes — not the golden — are averaged into a single
+ * 0..100 score; the golden diff is kept in the breakdown as a diagnostic and as proof that the
+ * scenario is solvable.
+ */
+
+import fs from 'node:fs';
+import path from 'node:path';
+import { diffLines } from 'diff';
+import type { ScenarioCheck } from '../scenarios/types.ts';
+import type { GateResult } from './gates.ts';
+import { unusedImportNames } from './gates.ts';
+
+export type FileScore = {
+  path: string;
+  exists: boolean;
+  exact: boolean;
+  normalizedMatch: boolean;
+  /** 0..1 line-level similarity against the expected content. */
+  similarity: number;
+  /** 0..1 composite score actually used in the aggregate. */
+  score: number;
+};
+
+export type CheckOutcome = {
+  description: string;
+  passed: boolean;
+  weight: number;
+};
+
+export type ScenarioScore = {
+  /** Weighted 0..1 score. */
+  score: number;
+  /** Same score expressed 0..100, for dashboards and thresholds. */
+  percent: number;
+  files: FileScore[];
+  checks: CheckOutcome[];
+  /** Deterministic prerequisites. Any failure zeroes `score`/`percent`. */
+  gates: GateResult[];
+};
+
+export type AggregateStats = {
+  count: number;
+  mean: number;
+  min: number;
+  max: number;
+  stdDev: number;
+};
+
+export function normalizeContent(content: string): string {
+  return content
+    .replace(/\r\n/g, '\n')
+    .split('\n')
+    .map(line => line.trim().replace(/\s+/g, ' '))
+    .filter(line => line.length > 0)
+    .join('\n');
+}
+
+export function lineSimilarity(expected: string, actual: string): number {
+  if (expected === actual) return 1;
+  const changes = diffLines(expected, actual);
+  let matched = 0;
+  let total = 0;
+  for (const change of changes) {
+    const length = change.value.length;
+    total += length;
+    if (!change.added && !change.removed) matched += length;
+  }
+  return total === 0 ? 1 : matched / total;
+}
+
+const PARTIAL_CREDIT_CAP = 0.9;
+
+export function scoreFile({
+  sandboxRoot,
+  relativePath,
+  expectedContent,
+}: {
+  sandboxRoot: string;
+  relativePath: string;
+  expectedContent: string;
+}): FileScore {
+  const absolutePath = path.join(sandboxRoot, relativePath);
+  let actualContent: string | undefined;
+  try {
+    actualContent = fs.readFileSync(absolutePath, 'utf-8');
+  } catch {
+    return {
+      path: relativePath,
+      exists: false,
+      exact: false,
+      normalizedMatch: false,
+      similarity: 0,
+      score: 0,
+    };
+  }
+
+  const normalizedExpected = normalizeContent(expectedContent);
+  const normalizedActual = normalizeContent(actualContent);
+  const exact = actualContent.trim() === expectedContent.trim();
+  const normalizedMatch = normalizedExpected === normalizedActual;
+  // Similarity over the normalized text, so indentation changes cannot dominate the gradient.
+  const similarity = lineSimilarity(normalizedExpected, normalizedActual);
+  const score = normalizedMatch ? 1 : Math.min(similarity, PARTIAL_CREDIT_CAP);
+
+  return { path: relativePath, exists: true, exact, normalizedMatch, similarity, score };
+}
+
+function readSandboxFile(sandboxRoot: string, relativePath: string): string {
+  try {
+    return fs.readFileSync(path.join(sandboxRoot, relativePath), 'utf-8');
+  } catch {
+    return '';
+  }
+}
+
+/** Support files the harness puts in every sandbox; never counted as unexpected output. */
+const SANDBOX_SUPPORT = ['.skill', 'package.json', 'package-lock.json', 'node_modules'];
+
+function listSandboxFiles(sandboxRoot: string, base = ''): string[] {
+  const directory = base ? path.join(sandboxRoot, base) : sandboxRoot;
+  if (!fs.existsSync(directory)) return [];
+  const found: string[] = [];
+  for (const entry of fs.readdirSync(directory, { withFileTypes: true })) {
+    const relative = base ? `${base}/${entry.name}` : entry.name;
+    if (entry.isDirectory()) found.push(...listSandboxFiles(sandboxRoot, relative));
+    else found.push(relative);
+  }
+  return found;
+}
+
+/**
+ * Files the model created that the scenario never asked for.
+ *
+ * The prompt is explicit ("create that file only — nothing else"), so this is a hard check rather
+ * than a nicety: stray files are unscored noise that can also mask a wrong answer.
+ */
+/** Files written by the harness itself (never model output). */
+const HARNESS_WRITTEN = ['behaviour.test.js', 'wtr.config.mjs'];
+
+export function unexpectedFiles(sandboxRoot: string, declaredFiles: string[]): string[] {
+  const declared = new Set(declaredFiles);
+  return listSandboxFiles(sandboxRoot).filter(relative => {
+    if (declared.has(relative)) return false;
+    if (relative === 'package.json' || relative === 'package-lock.json') return false;
+    if (relative.startsWith('.skill/')) return false;
+    if (relative.startsWith('node_modules/')) return false;
+    if (HARNESS_WRITTEN.includes(relative)) return false;
+    return true;
+  });
+}
+
+const CHECK_DESCRIPTIONS: Record<ScenarioCheck['type'], (check: ScenarioCheck) => string> = {
+  contains: check => `${check.file} contains ${JSON.stringify(check.value ?? '')}`,
+  notContains: check => `${check.file} does not contain ${JSON.stringify(check.value ?? '')}`,
+  matches: check => `${check.file} matches /${check.pattern ?? ''}/`,
+  notMatches: check => `${check.file} does not match /${check.pattern ?? ''}/`,
+  exists: check => `${check.file} exists`,
+  noExtraFiles: check => `no files beyond "${check.file}" were created`,
+  noUnusedImports: check => `${check.file} imports nothing it does not use`,
+};
+
+export function evaluateCheck(
+  sandboxRoot: string,
+  check: ScenarioCheck,
+  declaredFiles: string[] = [],
+): CheckOutcome {
+  const weight = check.weight ?? 1;
+
+  if (check.type === 'noExtraFiles') {
+    // The deliverable itself is never "extra", even when a caller forgets declaredFiles.
+    const unexpected = unexpectedFiles(sandboxRoot, [...declaredFiles, check.file]);
+    return {
+      description:
+        unexpected.length === 0
+          ? `no files beyond "${check.file}" were created`
+          : `unexpected file(s) created: ${unexpected.join(', ')}`,
+      passed: unexpected.length === 0,
+      weight,
+    };
+  }
+
+  const content = readSandboxFile(sandboxRoot, check.file);
+  const description = check.description ?? CHECK_DESCRIPTIONS[check.type](check);
+  let passed = false;
+
+  switch (check.type) {
+    case 'exists':
+      passed = content.length > 0;
+      break;
+    case 'contains':
+      passed = content.includes(check.value ?? '');
+      break;
+    case 'notContains':
+      passed = !content.includes(check.value ?? '');
+      break;
+    case 'matches':
+      passed = new RegExp(check.pattern ?? '', check.flags).test(content);
+      break;
+    case 'notMatches':
+      passed = !new RegExp(check.pattern ?? '', check.flags).test(content);
+      break;
+    case 'noUnusedImports': {
+      const unused = unusedImportNames(content);
+      if (unused.length > 0) {
+        return {
+          description: `${check.file} imports ${unused.join(', ')} without using it`,
+          passed: false,
+          weight,
+        };
+      }
+      passed = true;
+      break;
+    }
+  }
+
+  return { description, passed, weight };
+}
+
+export function scoreScenario({
+  sandboxRoot,
+  expectedTransformedFiles = {},
+  checks = [],
+  declaredFiles = [],
+}: {
+  sandboxRoot: string;
+  expectedTransformedFiles?: Record<string, string>;
+  checks?: ScenarioCheck[];
+  /** Files the scenario shipped in the sandbox, so the extra-file check can tell them apart. */
+  declaredFiles?: string[];
+}): ScenarioScore {
+  const files = Object.entries(expectedTransformedFiles).map(([relativePath, expectedContent]) =>
+    scoreFile({ sandboxRoot, relativePath, expectedContent }),
+  );
+  const checkOutcomes = checks.map(check => evaluateCheck(sandboxRoot, check, declaredFiles));
+
+  // The golden files stay in the breakdown and are the scenario's solvability proof, but they no
+  // longer score: textual similarity to one reference implementation penalises correct alternatives
+  // (measured: a stale golden dragged a correct answer down to 92.8%). The score is the convention
+  // checks, gated by parse/import-policy and complemented by the behaviour tier.
+  const items: { score: number; weight: number }[] = [
+    ...checkOutcomes.map(check => ({ score: check.passed ? 1 : 0, weight: check.weight })),
+  ];
+
+  const totalWeight = items.reduce((sum, item) => sum + item.weight, 0);
+  const score =
+    totalWeight === 0 ? 1 : items.reduce((sum, item) => sum + item.score * item.weight, 0) / totalWeight;
+
+  return { score, percent: Math.round(score * 1000) / 10, files, checks: checkOutcomes, gates: [] };
+}
+
+/**
+ * Apply deterministic gates to a score.
+ *
+ * A failed gate zeroes the scenario: textual similarity to a golden file is not evidence when the
+ * output does not parse. Passed gates are attached for the report either way.
+ */
+export function applyGates(score: ScenarioScore, gates: GateResult[]): ScenarioScore {
+  const failed = gates.filter(gate => !gate.passed);
+  return {
+    ...score,
+    score: failed.length > 0 ? 0 : score.score,
+    percent: failed.length > 0 ? 0 : score.percent,
+    gates,
+  };
+}
+
+export function aggregate(scores: number[]): AggregateStats {
+  if (scores.length === 0) {
+    return { count: 0, mean: 0, min: 0, max: 0, stdDev: 0 };
+  }
+  const mean = scores.reduce((sum, value) => sum + value, 0) / scores.length;
+  const variance =
+    scores.reduce((sum, value) => sum + (value - mean) ** 2, 0) / scores.length;
+  return {
+    count: scores.length,
+    mean,
+    min: Math.min(...scores),
+    max: Math.max(...scores),
+    stdDev: Math.sqrt(variance),
+  };
+}
