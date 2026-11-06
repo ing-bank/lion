@@ -314,8 +314,124 @@ export const mortgageCalculatorScenario: TestScenario = {
   ],
 };
 
+/**
+ * Story 1, proven on one component (combobox, 12 documented use cases).
+ *
+ * Two prompts describe the same need in different words and must land on the same component, so they carry
+ * the same outcome checks as `component/combobox`. The prompts name no component on purpose: the routing
+ * has to come from the description plus the skill's synonym index, which is the property these scenarios
+ * exist to measure - "several prompt per component yielding same result for different symptoms".
+ */
+const comboboxSymptomScenarios: TestScenario[] = [
+  {
+    name: 'use-case/combobox--narrow-a-long-list-by-typing',
+    kind: 'component',
+    description: 'Typing narrows a long list of options and only the matches remain.',
+    prompt: [
+      'Create `src/my-elem.js`. Create that file only — nothing else.',
+      'It must export a class named `MyElem`.',
+      'Goal: a control that shows a list of options the user can pick from, where typing in the control',
+      'narrows that list down to the options that match what was typed.',
+    ].join(' '),
+    targetFile: 'src/my-elem.js',
+    files: { 'src/my-elem.js': '// TODO: implement the control in this file.\n' },
+    checks: [
+      { type: 'exists', file: 'src/my-elem.js' },
+      {
+        type: 'matches',
+        file: 'src/my-elem.js',
+        pattern: 'export class MyElem',
+        description: 'exports the class `MyElem`',
+      },
+      {
+        type: 'matches',
+        file: 'src/my-elem.js',
+        pattern: '@lion/ui/combobox\\.js',
+        description: 'routes to the combobox entrypoint for the documented component',
+      },
+      {
+        type: 'notMatches',
+        file: 'src/my-elem.js',
+        pattern: '@lion/ui/define/',
+        description: 'does not register elements globally through a define entrypoint',
+      },
+      {
+        type: 'notMatches',
+        file: 'src/my-elem.js',
+        pattern: '@lion/ui/(components|src)/',
+        description: 'does not deep-import from @lion/ui internals',
+      },
+      {
+        type: 'notMatches',
+        file: 'src/my-elem.js',
+        pattern: 'extends\\s+Lion',
+        description: 'consumes lion rather than subclassing it',
+      },
+      { type: 'noUnusedImports', file: 'src/my-elem.js', description: 'imports nothing it does not use' },
+      {
+        type: 'noExtraFiles',
+        file: 'src/my-elem.js',
+        description: 'no files beyond "src/my-elem.js" were created',
+      },
+    ],
+  },
+  {
+    name: 'use-case/combobox--suggest-while-you-type',
+    kind: 'component',
+    description: 'A field that suggests matching options while the user types.',
+    prompt: [
+      'Create `src/my-elem.js`. Create that file only — nothing else.',
+      'It must export a class named `MyElem`.',
+      'Goal: a text field that suggests options as the user types, so a value can be completed without',
+      'typing it out, and the suggestions come from a fixed list.',
+    ].join(' '),
+    targetFile: 'src/my-elem.js',
+    files: { 'src/my-elem.js': '// TODO: implement the field in this file.\n' },
+    checks: [
+      { type: 'exists', file: 'src/my-elem.js' },
+      {
+        type: 'matches',
+        file: 'src/my-elem.js',
+        pattern: 'export class MyElem',
+        description: 'exports the class `MyElem`',
+      },
+      {
+        type: 'matches',
+        file: 'src/my-elem.js',
+        pattern: '@lion/ui/combobox\\.js',
+        description: 'routes to the combobox entrypoint for the documented component',
+      },
+      {
+        type: 'notMatches',
+        file: 'src/my-elem.js',
+        pattern: '@lion/ui/define/',
+        description: 'does not register elements globally through a define entrypoint',
+      },
+      {
+        type: 'notMatches',
+        file: 'src/my-elem.js',
+        pattern: '@lion/ui/(components|src)/',
+        description: 'does not deep-import from @lion/ui internals',
+      },
+      {
+        type: 'notMatches',
+        file: 'src/my-elem.js',
+        pattern: 'extends\\s+Lion',
+        description: 'consumes lion rather than subclassing it',
+      },
+      { type: 'noUnusedImports', file: 'src/my-elem.js', description: 'imports nothing it does not use' },
+      {
+        type: 'noExtraFiles',
+        file: 'src/my-elem.js',
+        description: 'no files beyond "src/my-elem.js" were created',
+      },
+    ],
+  },
+];
+
 export const manualScenarios: TestScenario[] = [
   nativeFormToLionFormScenario,
   ibanFieldScenario,
   mortgageCalculatorScenario,
+  ...comboboxSymptomScenarios,
 ];
