@@ -2498,13 +2498,13 @@ export function runComboboxSuite({
       });
 
       describe('Server side completion support', () => {
-        const listboxData = ['lorem', 'ipsum', 'dolor', 'sit', 'amet'];
+        const defaultOptions = ['lorem', 'ipsum', 'dolor', 'sit', 'amet'];
 
         class MyEl extends LitElement {
           constructor() {
             super();
             /** @type {string[]} */
-            this.options = [...listboxData];
+            this.options = [...defaultOptions];
           }
 
           clearOptions() {
@@ -2518,8 +2518,8 @@ export function runComboboxSuite({
             this.requestUpdate();
           }
 
-          fillAllOptions() {
-            this.options = [...listboxData];
+          updateOptions(/** @type {string[]} */ options) {
+            this.options = [...options];
             this.requestUpdate();
           }
 
@@ -2529,7 +2529,7 @@ export function runComboboxSuite({
 
           render() {
             return html`
-              <${tags.host} id="combobox" label="Server side completion">
+              <${tags.host} id="combobox" label="Server side completion" allow-custom-choice>
                 ${this.options.map(
                   option =>
                     html` <${tags.option} ${optionFixture(`${option}`)} .choiceValue="${option}">${option}</${tags.option}> `,
@@ -2568,7 +2568,7 @@ export function runComboboxSuite({
           el.clearOptions();
           await el.updateComplete;
           await el.updateComplete;
-          el.fillAllOptions();
+          el.updateOptions(defaultOptions);
           await el.updateComplete;
           await el.updateComplete;
 
@@ -2584,7 +2584,7 @@ export function runComboboxSuite({
           el.clearOptions();
           await el.updateComplete;
           await el.updateComplete;
-          el.fillAllOptions();
+          el.updateOptions(defaultOptions);
           await el.updateComplete;
           await el.updateComplete;
 
@@ -2598,6 +2598,67 @@ export function runComboboxSuite({
           await mimicUserTypingAdvanced(el.combobox, ['Backspace', 'Backspace']);
           expect(_inputNode.value).to.equal('l');
           expect(_inputNode.selectionStart).to.equal(_inputNode.value.length);
+        });
+
+        it('should handle dynamic options with initial suggestions', async () => {
+          // Arrange
+          const el = /** @type {MyEl} */ (await fixture(html`<${wrappingTag}></${wrappingTag}>`));
+          await el.combobox.registrationComplete;
+          const { _inputNode } = getComboboxMembers(el.combobox);
+
+          // Act (get initial suggestions)
+          el.updateOptions(['particularly long option', 'other', 'options']);
+          await el.updateComplete;
+
+          // Act (start typing)
+          await mimicUserTypingAdvanced(el.combobox, ['p']);
+
+          // Assert (the input has inline-completed)
+          expect(_inputNode.value).to.equal('particularly long option');
+          expect(_inputNode.selectionStart).to.equal(1);
+          expect(_inputNode.selectionEnd).to.equal(_inputNode.value.length);
+
+          // Act (fetching server side suggestions)
+          el.clearOptions();
+          await el.updateComplete;
+          await el.updateComplete;
+          el.updateOptions(['party', 'particularly long option', 'play']);
+          await el.updateComplete;
+          await el.updateComplete;
+
+          // Assert (the input has inline-completed with new suggestions)
+          expect(_inputNode.value).to.equal('party');
+          expect(_inputNode.selectionStart).to.equal(1);
+          expect(_inputNode.selectionEnd).to.equal(_inputNode.value.length);
+        });
+
+        it('should work when dynamic options are updated to without any matching optionswhile inline completing', async () => {
+          const el = /** @type {MyEl} */ (await fixture(html`<${wrappingTag}></${wrappingTag}>`));
+          await el.combobox.registrationComplete;
+          const { _inputNode } = getComboboxMembers(el.combobox);
+
+          el.updateOptions(['apple', 'banana', 'orange']);
+          await el.updateComplete;
+
+          await mimicUserTypingAdvanced(el.combobox, ['a']);
+          expect(_inputNode.value).to.equal('apple');
+          expect(_inputNode.selectionStart).to.equal(1);
+          expect(_inputNode.selectionEnd).to.equal(_inputNode.value.length);
+
+          el.clearOptions();
+          await el.updateComplete;
+          await el.updateComplete;
+
+          expect(_inputNode.value).to.equal('a');
+          expect(_inputNode.selectionStart).to.equal(1);
+          expect(_inputNode.selectionEnd).to.equal(1);
+
+          el.updateOptions(['apple', 'apricot', 'avocado']);
+          await el.updateComplete;
+          await el.updateComplete;
+          expect(_inputNode.value).to.equal('apple');
+          expect(_inputNode.selectionStart).to.equal(1);
+          expect(_inputNode.selectionEnd).to.equal(_inputNode.value.length);
         });
       });
 
