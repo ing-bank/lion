@@ -59,6 +59,7 @@ export function LionButtonResetSuite({ classes = {}, tagString } = {}) {
           const button /** @type {LionButtonReset} */ = /** @type {LionButtonReset} */ (
             form.querySelector(tagStringButtonReset)
           );
+          button.dispatchEvent(new KeyboardEvent('keydown', { key: ' ' }));
           button.dispatchEvent(new KeyboardEvent('keyup', { key: ' ' }));
           await aTimeout(0);
           await aTimeout(0);
@@ -74,6 +75,7 @@ export function LionButtonResetSuite({ classes = {}, tagString } = {}) {
           `);
 
           const button = /** @type {LionButtonReset} */ (form.querySelector(tagStringButtonReset));
+          button.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
           button.dispatchEvent(new KeyboardEvent('keyup', { key: 'Enter' }));
           await aTimeout(0);
           await aTimeout(0);

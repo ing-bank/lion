@@ -417,18 +417,20 @@ const ListboxMixinImplementation = /** @type {ListboxMixin} */ (superclass =>
         child.makeRequestToBeDisabled();
       }
 
-      // TODO: small perf improvement could be made if logic below would be scheduled to next update,
-      // so it occurs once for all options
-      this.__setAttributeForAllFormElements('aria-setsize', this.formElements.length);
-      this.formElements.forEach((el, idx) => {
-        el.setAttribute('aria-posinset', idx + 1);
-      });
-
       this.__proxyChildModelValueChanged(
         /** @type {CustomEvent & { target: FormControlHost & LionOption; }} */ ({ target: child }),
       );
       this.resetInteractionState();
       /* eslint-enable no-param-reassign */
+    }
+
+    /** @override */
+    _onFormElementsChanged() {
+      super._onFormElementsChanged();
+      this.__setAttributeForAllFormElements('aria-setsize', this.formElements.length);
+      this.formElements.forEach((el, idx) => {
+        el.setAttribute('aria-posinset', String(idx + 1));
+      });
     }
 
     resetInteractionState() {
