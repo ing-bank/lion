@@ -12,7 +12,15 @@ class ChoiceInput extends ChoiceInputMixin(LionInput) {
     this.type = 'checkbox';
   }
 }
-customElements.define('choice-group-input', ChoiceInput);
+
+/**
+ * @param {EventTarget | null} actualTarget
+ * @param {EventTarget} expectedTarget
+ * @param {string} description
+ */
+function expectEventTarget(actualTarget, expectedTarget, description) {
+  expect(actualTarget === expectedTarget, description).to.be.true;
+}
 
 /**
  * `tagString`, `klass` and the older role tag keys are deprecated: pass `classes` instead (Lion
@@ -21,7 +29,7 @@ customElements.define('choice-group-input', ChoiceInput);
  * @deprecated
  */
 export function runChoiceInputMixinSuite({ classes = {}, tagString: legacyTagString } = {}) {
-  const tagString = resolveSuiteTag(classes?.host, legacyTagString, 'choice-group-input');
+  const tagString = resolveSuiteTag(classes?.host, legacyTagString, ChoiceInput);
   const tag = unsafeStatic(tagString);
   describe(`ChoiceInputMixin: ${tagString}`, () => {
     it('is hidden when attribute hidden is true', async () => {
@@ -117,13 +125,13 @@ export function runChoiceInputMixinSuite({ classes = {}, tagString: legacyTagStr
       const { _inputNode, _labelNode } = getFormControlMembers(el);
 
       el.click();
-      expect(spy.args[0][0].target).to.equal(el);
+      expectEventTarget(spy.args[0][0].target, el, 'host click event target');
       expect(spy.callCount).to.equal(1);
       _labelNode.click();
-      expect(spy.args[1][0].target).to.equal(_labelNode);
+      expectEventTarget(spy.args[1][0].target, _labelNode, 'label click event target');
       expect(spy.callCount).to.equal(2);
       _inputNode.click();
-      expect(spy.args[2][0].target).to.equal(_inputNode);
+      expectEventTarget(spy.args[2][0].target, _inputNode, 'input click event target');
       expect(spy.callCount).to.equal(3);
     });
 

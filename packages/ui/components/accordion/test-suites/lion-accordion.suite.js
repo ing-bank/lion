@@ -1,10 +1,10 @@
 import { html } from 'lit/static-html.js';
-import { unsafeStatic, expect, fixture } from '@open-wc/testing';
+import { unsafeStatic, expect, fixture, waitUntil } from '@open-wc/testing';
 import { sendKeys } from '@web/test-runner-commands';
 import sinon from 'sinon';
-import '@lion/ui/define/lion-accordion.js';
 import { LionAccordion } from '@lion/ui/accordion.js';
 import { resolveSuiteTag } from '../../core/test-helpers/resolveSuiteTag.js';
+import { isElementVisible } from '../../core/test-helpers/isElementVisible.js';
 
 /**
  * @typedef {import('@lion/ui/types/test-suites.js').SuiteElement} SuiteElement
@@ -29,19 +29,21 @@ export function runAccordionSuite({
   const hostTag = resolveSuiteTag(hostEl, tagString);
   const invokerTag = resolveSuiteTag(invokerEl);
   const contentTag = resolveSuiteTag(contentEl);
-  const host = unsafeStatic(hostTag);
-  const invokerRef = unsafeStatic(invokerTag);
-  const contentRef = unsafeStatic(contentTag);
+  const tags = {
+    host: unsafeStatic(hostTag),
+    invoker: unsafeStatic(invokerTag),
+    content: unsafeStatic(contentTag),
+  };
 
   const basicAccordion = html`
-    <${host}>
-      <${invokerRef} slot="invoker"><button>invoker 1</button></${invokerRef}>
-      <${contentRef} slot="content">content 1</${contentRef}>
-      <${invokerRef} slot="invoker"><button>invoker 2</button></${invokerRef}>
-      <${contentRef} slot="content">content 2</${contentRef}>
-      <${invokerRef} slot="invoker"><button>invoker 3</button></${invokerRef}>
-      <${contentRef} slot="content">content 3</${contentRef}>
-    </${host}>
+    <${tags.host}>
+      <${tags.invoker} slot="invoker"><button>invoker 1</button></${tags.invoker}>
+      <${tags.content} slot="content">content 1</${tags.content}>
+      <${tags.invoker} slot="invoker"><button>invoker 2</button></${tags.invoker}>
+      <${tags.content} slot="content">content 2</${tags.content}>
+      <${tags.invoker} slot="invoker"><button>invoker 3</button></${tags.invoker}>
+      <${tags.content} slot="content">content 3</${tags.content}>
+    </${tags.host}>
   `;
 
   /**
@@ -81,12 +83,12 @@ export function runAccordionSuite({
       it('can programmatically set expanded', async () => {
         const el = /** @type {LionAccordion} */ (
           await fixture(html`
-            <${host} .expanded=${[1]}>
-              <${invokerRef} slot="invoker"><button>invoker 1</button></${invokerRef}>
-              <${contentRef} slot="content">content 1</${contentRef}>
-              <${invokerRef} slot="invoker"><button>invoker 2</button></${invokerRef}>
-              <${contentRef} slot="content">content 2</${contentRef}>
-            </${host}>
+            <${tags.host} .expanded=${[1]}>
+              <${tags.invoker} slot="invoker"><button>invoker 1</button></${tags.invoker}>
+              <${tags.content} slot="content">content 1</${tags.content}>
+              <${tags.invoker} slot="invoker"><button>invoker 2</button></${tags.invoker}>
+              <${tags.content} slot="content">content 2</${tags.content}>
+            </${tags.host}>
           `)
         );
         expect(el.expanded).to.deep.equal([1]);
@@ -140,14 +142,14 @@ export function runAccordionSuite({
       it('supports [exclusive] attribute, allowing one collapsible to be open at a time', async () => {
         const el = /** @type {LionAccordion} */ (
           await fixture(html`
-            <${host} exclusive>
-              <${invokerRef} slot="invoker"><button>invoker 1</button></${invokerRef}>
-              <${contentRef} slot="content">content 1</${contentRef}>
-              <${invokerRef} slot="invoker"><button>invoker 2</button></${invokerRef}>
-              <${contentRef} slot="content">content 2</${contentRef}>
-              <${invokerRef} slot="invoker"><button>invoker 3</button></${invokerRef}>
-              <${contentRef} slot="content">content 3</${contentRef}>
-            </${host}>
+            <${tags.host} exclusive>
+              <${tags.invoker} slot="invoker"><button>invoker 1</button></${tags.invoker}>
+              <${tags.content} slot="content">content 1</${tags.content}>
+              <${tags.invoker} slot="invoker"><button>invoker 2</button></${tags.invoker}>
+              <${tags.content} slot="content">content 2</${tags.content}>
+              <${tags.invoker} slot="invoker"><button>invoker 3</button></${tags.invoker}>
+              <${tags.content} slot="content">content 3</${tags.content}>
+            </${tags.host}>
           `)
         );
 
@@ -193,11 +195,11 @@ export function runAccordionSuite({
       it('logs warning if unequal amount of invokers and contents', async () => {
         const stub = sinon.stub(console, 'warn');
         await fixture(html`
-          <${host}>
-            <${invokerRef} slot="invoker"><button>invoker</button></${invokerRef}>
-            <${contentRef} slot="content">content 1</${contentRef}>
-            <${contentRef} slot="content">content 2</${contentRef}>
-          </${host}>
+          <${tags.host}>
+            <${tags.invoker} slot="invoker"><button>invoker</button></${tags.invoker}>
+            <${tags.content} slot="content">content 1</${tags.content}>
+            <${tags.content} slot="content">content 2</${tags.content}>
+          </${tags.host}>
         `);
         expect(stub).to.be.calledOnceWithExactly(
           `The amount of invokers (1) doesn't match the amount of contents (2).`,
@@ -209,21 +211,21 @@ export function runAccordionSuite({
         const stub = sinon.stub(console, 'warn');
         const el = /** @type {LionAccordion} */ (
           await fixture(html`
-            <${host}>
-              <${invokerRef} slot="invoker">
+            <${tags.host}>
+              <${tags.invoker} slot="invoker">
                 <button>invoker 1</button>
                 <button slot="invoker">Nested invoker</button>
-              </${invokerRef}>
-              <${invokerRef} slot="invoker"><button>invoker 2</button></${invokerRef}>
-              <${contentRef} slot="content">
+              </${tags.invoker}>
+              <${tags.invoker} slot="invoker"><button>invoker 2</button></${tags.invoker}>
+              <${tags.content} slot="content">
                 content 1
                 <p slot="content">Nested content 1</p>
-              </${contentRef}>
-              <${contentRef} slot="content">
+              </${tags.content}>
+              <${tags.content} slot="content">
                 content 2
                 <p slot="content">Nested content 2</p>
-              </${contentRef}>
-            </${host}>
+              </${tags.content}>
+            </${tags.host}>
           `)
         );
 
@@ -246,12 +248,12 @@ export function runAccordionSuite({
       it('can programmatically set focusedIndex', async () => {
         const el = /** @type {LionAccordion} */ (
           await fixture(html`
-            <${host} .focusedIndex=${1}>
-              <${invokerRef} slot="invoker"><button>invoker 1</button></${invokerRef}>
-              <${contentRef} slot="content">content 1</${contentRef}>
-              <${invokerRef} slot="invoker"><button>invoker 2</button></${invokerRef}>
-              <${contentRef} slot="content">content 2</${contentRef}>
-            </${host}>
+            <${tags.host} .focusedIndex=${1}>
+              <${tags.invoker} slot="invoker"><button>invoker 1</button></${tags.invoker}>
+              <${tags.content} slot="content">content 1</${tags.content}>
+              <${tags.invoker} slot="invoker"><button>invoker 2</button></${tags.invoker}>
+              <${tags.content} slot="content">content 2</${tags.content}>
+            </${tags.host}>
           `)
         );
         expect(el.focusedIndex).to.equal(1);
@@ -313,15 +315,14 @@ export function runAccordionSuite({
 
         const contents = getContents(el);
 
-        setTimeout(() => {
-          expect(contents[0]).to.be.visible;
-          expect(contents[1]).to.be.not.visible;
+        await waitUntil(() => isElementVisible(contents[0]) && !isElementVisible(contents[1]));
+        expect(contents[0]).to.be.visible;
+        expect(contents[1]).to.be.not.visible;
 
-          el.expanded = [1];
-
-          expect(contents[0]).to.be.not.visible;
-          expect(contents[1]).to.be.visible;
-        }, 250);
+        el.expanded = [1];
+        await waitUntil(() => !isElementVisible(contents[0]) && isElementVisible(contents[1]));
+        expect(contents[0]).to.be.not.visible;
+        expect(contents[1]).to.be.visible;
       });
 
       it.skip('have a DOM structure that allows them to be animated ', async () => {});
@@ -380,14 +381,14 @@ export function runAccordionSuite({
       it('selects previous invoker on [arrow-left] and [arrow-up]', async () => {
         const el = /** @type {LionAccordion} */ (
           await fixture(html`
-            <${host} .focusedIndex=${1}>
-              <${invokerRef} slot="invoker"><button>invoker 1</button></${invokerRef}>
-              <${contentRef} slot="content">content 1</${contentRef}>
-              <${invokerRef} slot="invoker"><button>invoker 2</button></${invokerRef}>
-              <${contentRef} slot="content">content 2</${contentRef}>
-              <${invokerRef} slot="invoker"><button>invoker 3</button></${invokerRef}>
-              <${contentRef} slot="content">content 3</${contentRef}>
-            </${host}>
+            <${tags.host} .focusedIndex=${1}>
+              <${tags.invoker} slot="invoker"><button>invoker 1</button></${tags.invoker}>
+              <${tags.content} slot="content">content 1</${tags.content}>
+              <${tags.invoker} slot="invoker"><button>invoker 2</button></${tags.invoker}>
+              <${tags.content} slot="content">content 2</${tags.content}>
+              <${tags.invoker} slot="invoker"><button>invoker 3</button></${tags.invoker}>
+              <${tags.content} slot="content">content 3</${tags.content}>
+            </${tags.host}>
           `)
         );
         const invokers = getInvokers(el);
@@ -405,12 +406,12 @@ export function runAccordionSuite({
       it('selects first invoker on [home]', async () => {
         const el = /** @type {LionAccordion} */ (
           await fixture(html`
-            <${host} .focusedIndex=${1}>
-              <${invokerRef} slot="invoker"><button>invoker 1</button></${invokerRef}>
-              <${contentRef} slot="content">content 1</${contentRef}>
-              <${invokerRef} slot="invoker"><button>invoker 2</button></${invokerRef}>
-              <${contentRef} slot="content">content 2</${contentRef}>
-            </${host}>
+            <${tags.host} .focusedIndex=${1}>
+              <${tags.invoker} slot="invoker"><button>invoker 1</button></${tags.invoker}>
+              <${tags.content} slot="content">content 1</${tags.content}>
+              <${tags.invoker} slot="invoker"><button>invoker 2</button></${tags.invoker}>
+              <${tags.content} slot="content">content 2</${tags.content}>
+            </${tags.host}>
           `)
         );
         const invokers = getInvokers(el);
@@ -428,14 +429,14 @@ export function runAccordionSuite({
       it('stays on last invoker on [arrow-right]', async () => {
         const el = /** @type {LionAccordion} */ (
           await fixture(html`
-            <${host} focusedIndex="2">
-              <${invokerRef} slot="invoker"><button>invoker 1</button></${invokerRef}>
-              <${contentRef} slot="content">content 1</${contentRef}>
-              <${invokerRef} slot="invoker"><button>invoker 2</button></${invokerRef}>
-              <${contentRef} slot="content">content 2</${contentRef}>
-              <${invokerRef} slot="invoker"><button>invoker 3</button></${invokerRef}>
-              <${contentRef} slot="content">content 3</${contentRef}>
-            </${host}>
+            <${tags.host} focusedIndex="2">
+              <${tags.invoker} slot="invoker"><button>invoker 1</button></${tags.invoker}>
+              <${tags.content} slot="content">content 1</${tags.content}>
+              <${tags.invoker} slot="invoker"><button>invoker 2</button></${tags.invoker}>
+              <${tags.content} slot="content">content 2</${tags.content}>
+              <${tags.invoker} slot="invoker"><button>invoker 3</button></${tags.invoker}>
+              <${tags.content} slot="content">content 3</${tags.content}>
+            </${tags.host}>
           `)
         );
         const invokers = getInvokers(el);
@@ -448,14 +449,14 @@ export function runAccordionSuite({
       it('stays on first invoker on [arrow-left]', async () => {
         const el = /** @type {LionAccordion} */ (
           await fixture(html`
-            <${host}>
-              <${invokerRef} slot="invoker"><button>invoker 1</button></${invokerRef}>
-              <${contentRef} slot="content">content 1</${contentRef}>
-              <${invokerRef} slot="invoker"><button>invoker 2</button></${invokerRef}>
-              <${contentRef} slot="content">content 2</${contentRef}>
-              <${invokerRef} slot="invoker"><button>invoker 3</button></${invokerRef}>
-              <${contentRef} slot="content">content 3</${contentRef}>
-            </${host}>
+            <${tags.host}>
+              <${tags.invoker} slot="invoker"><button>invoker 1</button></${tags.invoker}>
+              <${tags.content} slot="content">content 1</${tags.content}>
+              <${tags.invoker} slot="invoker"><button>invoker 2</button></${tags.invoker}>
+              <${tags.content} slot="content">content 2</${tags.content}>
+              <${tags.invoker} slot="invoker"><button>invoker 3</button></${tags.invoker}>
+              <${tags.content} slot="content">content 3</${tags.content}>
+            </${tags.host}>
           `)
         );
         const invokers = getInvokers(el);
@@ -524,12 +525,12 @@ export function runAccordionSuite({
     describe('Accessibility', () => {
       it('does not make contents focusable', async () => {
         const el = await fixture(html`
-          <${host}>
-            <${invokerRef} slot="invoker"><button>invoker 1</button></${invokerRef}>
-            <${contentRef} slot="content">content 1</${contentRef}>
-            <${invokerRef} slot="invoker"><button>invoker 2</button></${invokerRef}>
-            <${contentRef} slot="content">content 2</${contentRef}>
-          </${host}>
+          <${tags.host}>
+            <${tags.invoker} slot="invoker"><button>invoker 1</button></${tags.invoker}>
+            <${tags.content} slot="content">content 1</${tags.content}>
+            <${tags.invoker} slot="invoker"><button>invoker 2</button></${tags.invoker}>
+            <${tags.content} slot="content">content 2</${tags.content}>
+          </${tags.host}>
         `);
 
         // console.log(getAccordionChildren(el));
@@ -545,12 +546,12 @@ export function runAccordionSuite({
         it('links ids of content items to invoker first child via [aria-controls]', async () => {
           const el = /** @type {LionAccordion} */ (
             await fixture(html`
-              <${host}>
-                <${invokerRef} id="h1" slot="invoker"><button>invoker 1</button></${invokerRef}>
-                <${contentRef} id="p1" slot="content">content 1</${contentRef}>
-                <${invokerRef} id="h2" slot="invoker"><button>invoker 2</button></${invokerRef}>
-                <${contentRef} id="p2" slot="content">content 2</${contentRef}>
-              </${host}>
+              <${tags.host}>
+                <${tags.invoker} id="h1" slot="invoker"><button>invoker 1</button></${tags.invoker}>
+                <${tags.content} id="p1" slot="content">content 1</${tags.content}>
+                <${tags.invoker} id="h2" slot="invoker"><button>invoker 2</button></${tags.invoker}>
+                <${tags.content} id="p2" slot="content">content 2</${tags.content}>
+              </${tags.host}>
             `)
           );
           const invokers = getInvokers(el);
@@ -566,10 +567,10 @@ export function runAccordionSuite({
         it('adds aria-expanded="false" to invoker when its content is not expanded', async () => {
           const el = /** @type {LionAccordion} */ (
             await fixture(html`
-              <${host}>
-                <${invokerRef} slot="invoker"><button>invoker</button></${invokerRef}>
-                <${contentRef} slot="content">content</${contentRef}>
-              </${host}>
+              <${tags.host}>
+                <${tags.invoker} slot="invoker"><button>invoker</button></${tags.invoker}>
+                <${tags.content} slot="content">content</${tags.content}>
+              </${tags.host}>
             `)
           );
           expect(Array.from(getInvokers(el))[0]?.firstElementChild).to.have.attribute(
@@ -581,10 +582,10 @@ export function runAccordionSuite({
         it('adds aria-expanded="true" to invoker when its content is expanded', async () => {
           const el = /** @type {LionAccordion} */ (
             await fixture(html`
-              <${host}>
-                <${invokerRef} slot="invoker"><button>invoker</button></${invokerRef}>
-                <${contentRef} slot="content">content</${contentRef}>
-              </${host}>
+              <${tags.host}>
+                <${tags.invoker} slot="invoker"><button>invoker</button></${tags.invoker}>
+                <${tags.content} slot="content">content</${tags.content}>
+              </${tags.host}>
             `)
           );
           el.expanded = [0];
@@ -599,12 +600,12 @@ export function runAccordionSuite({
         it('adds aria-labelledby referring to invoker ids', async () => {
           const el = /** @type {LionAccordion} */ (
             await fixture(html`
-              <${host}>
-                <${invokerRef} slot="invoker"><button>invoker 1</button></${invokerRef}>
-                <${contentRef} slot="content">content 1</${contentRef}>
-                <${invokerRef} slot="invoker"><button>invoker 2</button></${invokerRef}>
-                <${contentRef} slot="content">content 2</${contentRef}>
-              </${host}>
+              <${tags.host}>
+                <${tags.invoker} slot="invoker"><button>invoker 1</button></${tags.invoker}>
+                <${tags.content} slot="content">content 1</${tags.content}>
+                <${tags.invoker} slot="invoker"><button>invoker 2</button></${tags.invoker}>
+                <${tags.content} slot="content">content 2</${tags.content}>
+              </${tags.host}>
             `)
           );
           const contents = getContents(el);

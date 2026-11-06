@@ -1,7 +1,7 @@
 import {
   runFormGroupMixinSuite,
   runFormGroupMixinInputSuite,
-} from '@lion/ui/form-core-test-suites.js';
+} from '@lion/ui/test-suites/form-core.js';
 
 import { LionFieldset } from '@lion/ui/fieldset.js';
 import '@lion/ui/define/lion-fieldset.js';

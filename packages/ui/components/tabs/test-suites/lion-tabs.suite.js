@@ -4,7 +4,6 @@ import sinon from 'sinon';
 import { LionTabs } from '@lion/ui/tabs.js';
 import { resolveSuiteTag } from '../../core/test-helpers/resolveSuiteTag.js';
 import { isActiveElement } from '../../core/test-helpers/isActiveElement.js';
-import '@lion/ui/define/lion-tabs.js';
 
 /**
  * @typedef {import('@lion/ui/types/test-suites.js').SuiteElement} SuiteElement

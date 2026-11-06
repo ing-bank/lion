@@ -7,6 +7,7 @@ import {
 } from '@lion/ui/form-core-test-helpers.js';
 import {
   EqualsLength,
+  LionField,
   MaxLength,
   MinLength,
   Required,
@@ -19,13 +20,7 @@ import { aTimeout, defineCE, expect, fixture, html, unsafeStatic } from '@open-w
 import { LitElement } from 'lit';
 import sinon from 'sinon';
 
-import '@lion/ui/define/lion-field.js';
-import '@lion/ui/define/lion-validation-feedback.js';
 import { resolveSuiteTag } from '../../core/test-helpers/resolveSuiteTag.js';
-
-/**
- * @typedef {import('@lion/ui/form-core.js').LionField} LionField
- */
 
 /**
  * Runs the `ValidateMixin` behavioural suite. The caller hands the element to run against; leaving
@@ -49,6 +44,7 @@ export function runValidateMixinSuite({
 
   const tagString = resolveSuiteTag(classes.host, legacyTagString, ValidateElement);
   const tag = unsafeStatic(tagString);
+  const fieldTag = unsafeStatic(resolveSuiteTag(LionField));
 
   describe('ValidateMixin', () => {
     /**
@@ -284,7 +280,7 @@ export function runValidateMixinSuite({
             ._repropagationRole="${'fieldset'}"
             .validators=${[new AlwaysValid()]}
             .modelValue=${'myValue'}
-          ><lion-field id="child"><input slot="input"></lion-field></${tag}>
+          ><${fieldTag} id="child"><input slot="input"></${fieldTag}></${tag}>
         `)
         );
         const validateSpy = sinon.spy(el, 'validate');
@@ -389,9 +385,11 @@ export function runValidateMixinSuite({
         const alwaysValidExecuteSpy = sinon.spy(alwaysValid, 'execute');
         const el = /** @type {ValidateElement} */ (
           await fixture(html`
-          <${tag} .validators=${[alwaysValid]}>${lightDom}</${tag}>
+          <${tag} .validators=${[alwaysValid]} .modelValue=${'initial'}>${lightDom}</${tag}>
         `)
         );
+        await el.updateComplete;
+        alwaysValidExecuteSpy.resetHistory();
         // @ts-ignore [allow-private] in test
         const isEmptySpy = sinon.spy(el, '__isEmpty');
         const validateSpy = sinon.spy(el, 'validate');
@@ -623,10 +621,12 @@ export function runValidateMixinSuite({
           await fixture(html`
           <${tag}
             .validators=${[isCatValidator]}
-            .modelValue=${'cat'}
+            .modelValue=${'dog'}
           >${lightDom}</${tag}>
         `)
         );
+        await el.updateComplete;
+        catSpy.resetHistory();
         el.modelValue = 'cat';
         expect(catSpy.callCount).to.equal(1);
         isCatValidator.param = 'Garfield';
@@ -1181,12 +1181,12 @@ export function runValidateMixinSuite({
           .feedbackCondition="${(
             /** @type {string} */ type,
             /** @type {object} */ meta,
-            /** @type {(type: string) => any} */ defaultCondition,
+            /** @type {(type: string, meta: object) => any} */ defaultCondition,
           ) => {
             if (type === 'error') {
               return true;
             }
-            return defaultCondition(type);
+            return defaultCondition(type, meta);
           }}"
           >${lightDom}</${tag}>
         `)

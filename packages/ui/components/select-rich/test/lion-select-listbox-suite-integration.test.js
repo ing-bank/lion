@@ -1,7 +1,7 @@
-import { runListboxMixinSuite } from '@lion/ui/listbox-test-suites.js';
+import { runListboxMixinSuite } from '@lion/ui/test-suites/listbox.js';
 
-import '@lion/ui/define/lion-select-rich.js';
+import { LionSelectRich } from '@lion/ui/select-rich.js';
 
 describe('<lion-select-rich> integration with ListboxMixin', () => {
-  runListboxMixinSuite({ tagString: 'lion-select-rich' });
+  runListboxMixinSuite({ classes: { host: LionSelectRich } });
 });

@@ -1,7 +1,6 @@
 import { expect, fixture as _fixture, unsafeStatic } from '@open-wc/testing';
 import { html } from 'lit/static-html.js';
 
-import '@lion/ui/define/lion-collapsible.js';
 import { LionCollapsible } from '@lion/ui/collapsible.js';
 import { resolveSuiteTag } from '../../core/test-helpers/resolveSuiteTag.js';
 
@@ -38,33 +37,35 @@ export function runCollapsibleSuite({
   } = {},
   tagString,
 } = {}) {
-  const tag = unsafeStatic(resolveSuiteTag(hostEl, tagString));
-  const invokerRef = unsafeStatic(resolveSuiteTag(invokerEl));
-  const contentRef = unsafeStatic(resolveSuiteTag(contentEl));
+  const tags = {
+    host: unsafeStatic(resolveSuiteTag(hostEl, tagString)),
+    invoker: unsafeStatic(resolveSuiteTag(invokerEl)),
+    content: unsafeStatic(resolveSuiteTag(contentEl)),
+  };
   const fixture = /** @type {(arg: TemplateResult) => Promise<LionCollapsible>} */ (_fixture);
 
   const collapsibleTemplate = html`
-    <${invokerRef} slot="invoker">More about cars</${invokerRef}>
-    <${contentRef} slot="content" style="font-size: 12px; line-height: 16px; font-family: Arial;">
+    <${tags.invoker} slot="invoker">More about cars</${tags.invoker}>
+    <${tags.content} slot="content" style="height: 32px; font-size: 12px; line-height: 16px; font-family: Arial;">
       Most definitions of cars say that they run primarily on roads, seat one to eight people, have
       four tires, and mainly transport people rather than goods.
-    </${contentRef}>
+    </${tags.content}>
   `;
   let isCollapsibleOpen = false;
   /** @param {boolean} state */
   const collapsibleToggle = state => {
     isCollapsibleOpen = state;
   };
-  const defaultCollapsible = html` <${tag}>${collapsibleTemplate}</${tag}> `;
+  const defaultCollapsible = html` <${tags.host}>${collapsibleTemplate}</${tags.host}> `;
   const collapsibleWithEvents = html`
-    <${tag}
+    <${tags.host}
       @opened-changed=${
         /** @param {Event} e */ e =>
           collapsibleToggle(/** @type {LionCollapsible} */ (e.target)?.opened)
       }
     >
       ${collapsibleTemplate}
-    </${tag}>
+    </${tags.host}>
   `;
 
   describe('<lion-collapsible>', () => {

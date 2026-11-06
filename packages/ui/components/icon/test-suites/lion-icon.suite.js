@@ -2,7 +2,6 @@ import { html } from 'lit/static-html.js';
 import { nothing } from 'lit';
 import { until } from 'lit/directives/until.js';
 import { unsafeStatic, aTimeout, expect, fixture as _fixture, fixtureSync } from '@open-wc/testing';
-import '@lion/ui/define/lion-icon.js';
 import { LionIcon, icons } from '@lion/ui/icon.js';
 import hammerSvg from '../test/hammer.svg.js';
 import heartSvg from '../test/heart.svg.js';

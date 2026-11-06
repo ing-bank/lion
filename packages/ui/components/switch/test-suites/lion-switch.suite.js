@@ -9,7 +9,6 @@ import {
 } from '@open-wc/testing';
 import { Validator } from '@lion/ui/form-core.js';
 import { LionSwitch } from '@lion/ui/switch.js';
-import '@lion/ui/define/lion-switch.js';
 import sinon from 'sinon';
 import { resolveSuiteTag } from '../../core/test-helpers/resolveSuiteTag.js';
 import { isActiveElement } from '../../core/test-helpers/isActiveElement.js';
@@ -202,10 +201,8 @@ export function runSwitchSuite({
     });
 
     it('can be configured to show feedback messages immediately', async () => {
-      const tagName = 'custom-switch';
-      if (!customElements.get(tagName)) {
-        customElements.define(
-          tagName,
+      const customTag = unsafeStatic(
+        resolveSuiteTag(
           class CustomSwitch extends LionSwitch {
             static get validationTypes() {
               // @ts-ignore [ts7-2855] TS7 rejects field access via super (the parent declares this as a field). Dot form kept deliberately: bracket access is exempt from property mangling (terser keep_quoted), which could split this property into two names. Upstream fix: declare an accessor in the parent type
@@ -223,10 +220,10 @@ export function runSwitchSuite({
               return super._showFeedbackConditionFor(type, meta);
             }
           },
-        );
-      }
+        ),
+      );
       const el = await fixture(
-        html`<custom-switch
+        html`<${customTag}
           .validators="${[new IsTrue({}, { type: 'info' })]}"
           .feedbackCondition="${(
             /** @type {string} */ type,
@@ -238,7 +235,7 @@ export function runSwitchSuite({
             }
             return defaultCondition(type, meta);
           }}"
-        ></custom-switch>`,
+        ></${customTag}>`,
       );
       expect(el.showsFeedbackFor).to.eql(['info']);
     });
@@ -423,6 +420,7 @@ export function runSwitchSuite({
         await elementUpdated(btn);
         expect(handlerSpy.called).to.be.false;
         hostEl.checked = !hostEl.checked;
+        await hostEl.updateComplete;
         await elementUpdated(btn);
         expect(handlerSpy.called).to.be.true;
       });

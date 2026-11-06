@@ -1,6 +1,5 @@
 import { expect, fixture as _fixture } from '@open-wc/testing';
 import { getInputMembers } from '@lion/ui/input-test-helpers.js';
-import '@lion/ui/define/lion-input-email.js';
 import { LionInputEmail } from '@lion/ui/input-email.js';
 import { resolveSuiteTag } from '../../core/test-helpers/resolveSuiteTag.js';
 

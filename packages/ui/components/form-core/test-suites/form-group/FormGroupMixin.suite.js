@@ -1,7 +1,5 @@
 import { LitElement } from 'lit';
 import { IsNumber, Required, LionField, Validator, FormGroupMixin } from '@lion/ui/form-core.js';
-import '@lion/ui/define/lion-field.js';
-import '@lion/ui/define/lion-validation-feedback.js';
 
 import { localizeTearDown } from '@lion/ui/localize-test-helpers.js';
 import {

@@ -1,20 +1,10 @@
 import { html } from 'lit/static-html.js';
 import { LionField, Required } from '@lion/ui/form-core.js';
-import '@lion/ui/define/lion-validation-feedback.js';
 import { LionFieldset } from '@lion/ui/fieldset.js';
 import { LionCheckbox, LionCheckboxGroup } from '@lion/ui/checkbox-group.js';
-import '@lion/ui/define/lion-checkbox-group.js';
 import { LionRadio, LionRadioGroup } from '@lion/ui/radio-group.js';
-import '@lion/ui/define/lion-radio-group.js';
-import '@lion/ui/define/lion-fieldset.js';
-import '@lion/ui/define/lion-checkbox.js';
 import { LionListbox, LionOption } from '@lion/ui/listbox.js';
-import '@lion/ui/define/lion-listbox.js';
-import '@lion/ui/define/lion-option.js';
-import '@lion/ui/define/lion-field.js';
-import '@lion/ui/define/lion-radio.js';
 import { LionForm } from '@lion/ui/form.js';
-import '@lion/ui/define/lion-form.js';
 import { spy } from 'sinon';
 import {
   fixture as _fixture,
@@ -56,27 +46,13 @@ export function runFormSuite({
   optionTagString: legacyOptionTagString,
   radioTagString: legacyRadioTagString,
 } = {}) {
-  const tag = unsafeStatic(resolveSuiteTag(hostEl, legacyTagString));
   const tagNameCheckboxGroup = resolveSuiteTag(roleCheckboxGroup, legacyCheckboxGroupTagString);
-  const tagCheckboxGroup = unsafeStatic(tagNameCheckboxGroup);
   const tagNameRadioGroup = resolveSuiteTag(roleRadioGroup, legacyRadioGroupTagString);
-  const tagRadioGroup = unsafeStatic(tagNameRadioGroup);
   const tagNameFieldset = resolveSuiteTag(roleFieldset, legacyFieldsetTagString);
-  const tagFieldset = unsafeStatic(tagNameFieldset);
   const tagNameCheckbox = resolveSuiteTag(roleCheckbox, legacyCheckboxTagString);
-  const tagCheckbox = unsafeStatic(tagNameCheckbox);
   const tagNameListbox = resolveSuiteTag(roleListbox, legacyListboxTagString);
-  const tagListbox = unsafeStatic(tagNameListbox);
   const tagNameOption = resolveSuiteTag(roleOption, legacyOptionTagString);
-  const tagOption = unsafeStatic(tagNameOption);
   const tagNameRadio = resolveSuiteTag(roleRadio, legacyRadioTagString);
-  const tagRadio = unsafeStatic(tagNameRadio);
-
-  /**
-   * @typedef {import('lit').TemplateResult} TemplateResult
-   */
-  const fixture = /** @type {(arg: TemplateResult) => Promise<LionForm>} */ (_fixture);
-
   const childTagString = defineCE(
     class extends LionField {
       get slots() {
@@ -86,35 +62,50 @@ export function runFormSuite({
       }
     },
   );
-  const childTag = unsafeStatic(childTagString);
+  const tags = {
+    host: unsafeStatic(resolveSuiteTag(hostEl, legacyTagString)),
+    'checkbox-group': unsafeStatic(tagNameCheckboxGroup),
+    'radio-group': unsafeStatic(tagNameRadioGroup),
+    fieldset: unsafeStatic(tagNameFieldset),
+    checkbox: unsafeStatic(tagNameCheckbox),
+    listbox: unsafeStatic(tagNameListbox),
+    option: unsafeStatic(tagNameOption),
+    radio: unsafeStatic(tagNameRadio),
+    child: unsafeStatic(childTagString),
+  };
+
+  /**
+   * @typedef {import('lit').TemplateResult} TemplateResult
+   */
+  const fixture = /** @type {(arg: TemplateResult) => Promise<LionForm>} */ (_fixture);
 
   describe('<lion-form>', () => {
     it('is an instance of LionFieldSet', async () => {
       const el = await fixture(html`
-        <${tag}>
+        <${tags.host}>
           <form></form>
-        </${tag}>
+        </${tags.host}>
       `);
       expect(el).to.be.instanceOf(LionFieldset);
     });
 
     it('relies on the native form for its accessible role', async () => {
       const el = await fixture(html`
-        <${tag}>
+        <${tags.host}>
           <form></form>
-        </${tag}>
+        </${tags.host}>
       `);
       expect(el.getAttribute('role')).to.be.null;
     });
 
     it('has a custom reset that gets triggered by native reset', async () => {
       const withDefaults = await fixture(html`
-        <${tag}>
+        <${tags.host}>
           <form>
-            <${childTag} name="firstName" .modelValue="${'Foo'}"></${childTag}>
+            <${tags.child} name="firstName" .modelValue="${'Foo'}"></${tags.child}>
             <input type="reset" value="reset-button" />
           </form>
-        </${tag}>
+        </${tags.host}>
       `);
       const resetButton = /** @type {HTMLInputElement} */ (
         withDefaults.querySelector('input[type=reset]')
@@ -144,11 +135,11 @@ export function runFormSuite({
 
     it('dispatches reset events', async () => {
       const el = await fixture(html`
-        <${tag}>
+        <${tags.host}>
           <form>
-            <${childTag} name="firstName" .modelValue="${'Foo'}"></${childTag}>
+            <${tags.child} name="firstName" .modelValue="${'Foo'}"></${tags.child}>
           </form>
-        </${tag}>
+        </${tags.host}>
       `);
 
       setTimeout(() => el.reset());
@@ -163,11 +154,11 @@ export function runFormSuite({
     it('works with the native submit event (triggered via a button)', async () => {
       const submitSpy = spy();
       const el = await fixture(html`
-        <${tag} @submit=${submitSpy}>
+        <${tags.host} @submit=${submitSpy}>
           <form>
             <button type="submit">submit</button>
           </form>
-        </${tag}>
+        </${tags.host}>
       `);
 
       const button = /** @type {HTMLButtonElement} */ (el.querySelector('button'));
@@ -177,11 +168,11 @@ export function runFormSuite({
 
     it('dispatches submit events', async () => {
       const el = await fixture(html`
-        <${tag}>
+        <${tags.host}>
           <form>
             <button type="submit">submit</button>
           </form>
-        </${tag}>
+        </${tags.host}>
       `);
       const button = /** @type {HTMLButtonElement} */ (el.querySelector('button'));
       setTimeout(() => button.click());
@@ -196,11 +187,11 @@ export function runFormSuite({
     it('redispatches a submit event on the native form node when calling submit() imperatively', async () => {
       const nativeFormSubmitEventSpy = spy();
       const el = await fixture(html`
-        <${tag}>
+        <${tags.host}>
           <form @submit=${nativeFormSubmitEventSpy}>
             <button type="submit">submit</button>
           </form>
-        </${tag}>
+        </${tags.host}>
       `);
       const submitSpy = spy(el, 'submit');
       const submitGroupSpy = spy(el, 'submitGroup');
@@ -212,11 +203,11 @@ export function runFormSuite({
 
     it('handles internal submit handler before dispatch', async () => {
       const el = await fixture(html`
-        <${tag}>
+        <${tags.host}>
           <form>
             <button type="submit">submit</button>
           </form>
-        </${tag}>
+        </${tags.host}>
       `);
       const button = /** @type {HTMLButtonElement} */ (el.querySelector('button'));
       const internalHandlerSpy = spy(el, 'submitGroup');
@@ -228,11 +219,11 @@ export function runFormSuite({
 
     it('handles internal submit handler before dispatch', async () => {
       const el = await fixture(html`
-        <${tag}>
+        <${tags.host}>
           <form>
             <button type="submit">submit</button>
           </form>
-        </${tag}>
+        </${tags.host}>
       `);
       const button = /** @type {HTMLButtonElement} */ (el.querySelector('button'));
       const internalHandlerSpy = spy(el, 'submitGroup');
@@ -244,11 +235,11 @@ export function runFormSuite({
 
     it('handles internal reset handler before dispatch', async () => {
       const el = await fixture(html`
-        <${tag}>
+        <${tags.host}>
           <form>
             <button type="reset">reset</button>
           </form>
-        </${tag}>
+        </${tags.host}>
       `);
       const button = /** @type {HTMLButtonElement} */ (el.querySelector('button'));
       const internalHandlerSpy = spy(el, 'resetGroup');
@@ -260,15 +251,15 @@ export function runFormSuite({
 
     it('sets focus on submit to the first erroneous form element', async () => {
       const el = await fixture(html`
-        <${tag}>
+        <${tags.host}>
           <form>
-            <${childTag} name="firstName" .modelValue=${'Foo'} .validators=${[
+            <${tags.child} name="firstName" .modelValue=${'Foo'} .validators=${[
               new Required(),
-            ]}></${childTag}>
-            <${childTag} name="lastName" .validators=${[new Required()]}></${childTag}>
+            ]}></${tags.child}>
+            <${tags.child} name="lastName" .validators=${[new Required()]}></${tags.child}>
             <button type="submit">submit</button>
           </form>
-        </${tag}>
+        </${tags.host}>
       `);
       expect(el.getAttribute('aria-invalid')).to.equal('false');
       const button = /** @type {HTMLButtonElement} */ (el.querySelector('button'));
@@ -281,17 +272,17 @@ export function runFormSuite({
 
     it('sets focus on submit to the first erroneous form element within a fieldset', async () => {
       const el = await fixture(html`
-        <${tag}>
+        <${tags.host}>
           <form>
-            <${tagFieldset} name="name">
-              <${childTag} name="firstName" .modelValue=${'Foo'} .validators=${[
+            <${tags.fieldset} name="name">
+              <${tags.child} name="firstName" .modelValue=${'Foo'} .validators=${[
                 new Required(),
-              ]}></${childTag}>
-              <${childTag} name="lastName" .validators=${[new Required()]}></${childTag}>
-            </${tagFieldset}>
+              ]}></${tags.child}>
+              <${tags.child} name="lastName" .validators=${[new Required()]}></${tags.child}>
+            </${tags.fieldset}>
             <button type="submit">submit</button>
           </form>
-        </${tag}>
+        </${tags.host}>
       `);
       const button = /** @type {HTMLButtonElement} */ (el.querySelector('button'));
       const dispatchSpy = spy(el, 'dispatchEvent');
@@ -304,15 +295,15 @@ export function runFormSuite({
 
     it('sets focus on submit to the first form element within a erroneous fieldset', async () => {
       const el = await fixture(html`
-        <${tag}>
+        <${tags.host}>
           <form>
-            <${tagFieldset} name="name" .validators=${[new Required()]}>
-              <${childTag} name="firstName"></${childTag}>
-              <${childTag} name="lastName"></${childTag}>
-            </${tagFieldset}>
+            <${tags.fieldset} name="name" .validators=${[new Required()]}>
+              <${tags.child} name="firstName"></${tags.child}>
+              <${tags.child} name="lastName"></${tags.child}>
+            </${tags.fieldset}>
             <button type="submit">submit</button>
           </form>
-        </${tag}>
+        </${tags.host}>
       `);
       const button = /** @type {HTMLButtonElement} */ (el.querySelector('button'));
       const dispatchSpy = spy(el, 'dispatchEvent');
@@ -324,17 +315,17 @@ export function runFormSuite({
 
     it('sets focus on submit to the first form element within a erroneous fieldset within another fieldset', async () => {
       const el = await fixture(html`
-        <${tag}>
+        <${tags.host}>
           <form>
-            <${tagFieldset} name="parentFieldset">
-              <${tagFieldset} name="childFieldset" .validators="${[new Required()]}">
-                <${childTag} name="firstName"></${childTag}>
-              </${tagFieldset}>
-            </${tagFieldset}>
+            <${tags.fieldset} name="parentFieldset">
+              <${tags.fieldset} name="childFieldset" .validators="${[new Required()]}">
+                <${tags.child} name="firstName"></${tags.child}>
+              </${tags.fieldset}>
+            </${tags.fieldset}>
 
             <button type="submit">submit</button>
           </form>
-        </${tag}>
+        </${tags.host}>
       `);
       const button = /** @type {HTMLButtonElement} */ (el.querySelector('button'));
       const parentFieldSetEl = el.formElements[0];
@@ -346,15 +337,15 @@ export function runFormSuite({
 
     it('sets focus on submit to the first form element within a erroneous listbox', async () => {
       const el = await fixture(html`
-        <${tag}>
+        <${tags.host}>
           <form>
-            <${tagListbox} name="name" .validators="${[new Required()]}">
-              <${tagOption} value="a">a</${tagOption}>
-              <${tagOption} value="b">b</${tagOption}>
-            </${tagListbox}>
+            <${tags.listbox} name="name" .validators="${[new Required()]}">
+              <${tags.option} value="a">a</${tags.option}>
+              <${tags.option} value="b">b</${tags.option}>
+            </${tags.listbox}>
             <button type="submit">submit</button>
           </form>
-        </${tag}>
+        </${tags.host}>
       `);
       const button = /** @type {HTMLButtonElement} */ (el.querySelector('button'));
       button.click();
@@ -364,17 +355,17 @@ export function runFormSuite({
 
     it('sets focus on submit to the first form element within a erroneous listbox within a fieldset', async () => {
       const el = await fixture(html`
-        <${tag}>
+        <${tags.host}>
           <form>
-            <${tagFieldset} name="fieldset">
-              <${tagListbox} name="name" .validators="${[new Required()]}">
-                <${tagOption} value="a">a</${tagOption}>
-                <${tagOption} value="b">b</${tagOption}>
-              </${tagListbox}>
-            </${tagFieldset}>
+            <${tags.fieldset} name="fieldset">
+              <${tags.listbox} name="name" .validators="${[new Required()]}">
+                <${tags.option} value="a">a</${tags.option}>
+                <${tags.option} value="b">b</${tags.option}>
+              </${tags.listbox}>
+            </${tags.fieldset}>
             <button type="submit">submit</button>
           </form>
-        </${tag}>
+        </${tags.host}>
       `);
       const button = /** @type {HTMLButtonElement} */ (el.querySelector('button'));
       button.click();
@@ -385,15 +376,15 @@ export function runFormSuite({
 
     it('sets focus on submit to the first form element within a erroneous checkbox-group', async () => {
       const el = await fixture(html`
-        <${tag}>
+        <${tags.host}>
           <form>
-            <${tagCheckboxGroup} name="name" .validators="${[new Required()]}">
-              <${tagCheckbox} .choiceValue=${'a'} label="a"></${tagCheckbox}>
-              <${tagCheckbox} .choiceValue=${'b'} label="b"></${tagCheckbox}>
-            </${tagCheckboxGroup}>
+            <${tags['checkbox-group']} name="name" .validators="${[new Required()]}">
+              <${tags.checkbox} .choiceValue=${'a'} label="a"></${tags.checkbox}>
+              <${tags.checkbox} .choiceValue=${'b'} label="b"></${tags.checkbox}>
+            </${tags['checkbox-group']}>
             <button type="submit">submit</button>
           </form>
-        </${tag}>
+        </${tags.host}>
       `);
       const button = /** @type {HTMLButtonElement} */ (el.querySelector('button'));
       const checkboxGroupEl = el.formElements[0];
@@ -404,17 +395,17 @@ export function runFormSuite({
 
     it('sets focus on submit to the first form element within a erroneous radio-group', async () => {
       const el = await fixture(html`
-        <${tag}>
+        <${tags.host}>
           <form>
-              <${tagRadioGroup} name="name" .validators="${[new Required()]}">
-                <${tagRadio} .choiceValue=${'a'} label="a"></${tagRadio}>
-                <${tagRadio} .choiceValue=${'b'} label="b"></${tagRadio}>
-              </${tagRadioGroup}>
-            </${tagFieldset}>
+              <${tags['radio-group']} name="name" .validators="${[new Required()]}">
+                <${tags.radio} .choiceValue=${'a'} label="a"></${tags.radio}>
+                <${tags.radio} .choiceValue=${'b'} label="b"></${tags.radio}>
+              </${tags['radio-group']}>
+            </${tags.fieldset}>
 
             <button type="submit">submit</button>
           </form>
-        </${tag}>
+        </${tags.host}>
       `);
       const button = /** @type {HTMLButtonElement} */ (el.querySelector('button'));
 

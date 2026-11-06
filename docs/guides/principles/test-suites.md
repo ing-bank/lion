@@ -59,6 +59,9 @@ describe('my-input', () => {
    takes a **class** or, for a native element, its **tag**. For a class, the **registered tag** is used
    when it has one (that is what keeps a scoped child working); a subclass element is defined on the fly
    when it does not. A suite is never host-only: every element its fixtures render has a role.
+   Suites import constructors, not `define` entry points, and resolve their fixture tags from those
+   constructors. They do not call `customElements.define` or register fixed global fixture names;
+   use `resolveSuiteTag`, `defineCE` or constructor-based scoped fixtures instead.
 
 3. **Every element a suite renders has a role.** A component's public slots are roles
    (`runAccordionSuite` and `runCollapsibleSuite`: `invoker`, `content`), a composite lists what it
@@ -75,16 +78,34 @@ describe('my-input', () => {
 5. **`classes` is the surface, and every suite is prefilled with it.** A runner starts from Lion's own
    elements for the roles it resolves, so calling it without arguments runs the guarantees against
    Lion; an extension layer hands its own elements for the roles it replaces.
-6. **A suite asserts through its page object, not through Lion's markup.** `runDatepickerSuite` takes
-   `InputObject` (default `DatepickerInputObject`) and `runCalendarSuite` takes `CalendarObject`
-   (default `CalendarObject`, both from the `*-test-helpers.js` entry points), and every node
+6. **A suite asserts through its page object, not through Lion's markup.** Page-object constructors
+   are passed through `pageObjects`, keyed by role just like `classes`.
+   `runDatepickerSuite` defaults `pageObjects.host` to `DatepickerInputObject` and
+   `runCalendarSuite` defaults it to `CalendarObject` (both from the `*-test-helpers.js` entry points), and every node
    reference and user action goes through them — the suite itself never queries
    `.calendar-overlay…`, `.calendar__previous-button` or `#close-button`. An extension layer whose
    markup differs passes its own subclass overriding the node getters (`overlayRootEl`,
    `overlayHeaderEl`, `overlayHeadingEl`, `overlayCloseButtonEl`, `overlayEl`; `previousYearButtonEl`
    and friends for the calendar) instead of the suite learning about that markup. The datepicker's
-   inner calendar comes from `InputObject.calendarEl` too — that getter reads the element's own
+   inner calendar comes from the host page object's `calendarEl` too — that getter reads the element's own
    `_calendarNode`, so no tag is needed there either.
+   The combobox suite likewise reads the options container from
+   `getComboboxMembers(host)._listboxNode`, so a renamed scoped options element needs no extra
+   selector configuration.
+   `runPaginationSuite` reads its previous, next, page and ellipsis nodes through the exported
+   `PaginationObject`; a subclass with different navigation markup can pass
+   `pageObjects: { host: MyPaginationObject }` overriding those getters. Click assertions wait for the requested page and its render to complete, so
+   deferred navigation handlers are supported without changing the expected pages or event counts.
+
+   ```js
+   runPaginationSuite({
+     classes: { host: MyPagination },
+     pageObjects: { host: MyPaginationObject },
+   });
+   runCalendarSuite({ pageObjects: { host: MyCalendarObject } });
+   runDatepickerSuite({ pageObjects: { host: MyDatepickerInputObject } });
+   ```
+
 7. **Accessibility is Lion's; styling and markup are the extension layer's.** So the accessible
    _name_ is asserted, but not the attribute it lives on: the suite reads it from `title`,
    `aria-label` or a `label` attribute, and the copy stays Lion's (localized messages). Asserting
@@ -98,6 +119,25 @@ describe('my-input', () => {
    (`openedCalendarEl.firstDayOfWeek = 0`) — before opening, the property lands on an element that
    gets re-rendered. The same rule covers the invoker's accessible name: that fixture carries
    `label="date"`, because the assertion is that the invoker _names the field_.
+   The collapsible fixture likewise sets its asserted 32px content height explicitly, rather than
+   depending on the host's width to wrap text into two lines. Switch event assertions await the
+   host update before the inner button update, allowing deferred host-to-button synchronization.
+   The combobox runner accepts `configureOption(option, label)` for option classes that need
+   additional properties. It runs during every option's template render, before `choiceValue` is
+   assigned and before connection, including dynamic additions and updates. `label` contains the
+   fixture's display label (or its explicit `.label` in label-override tests). The suite retains its
+   original light-DOM content, checked state and other bindings; the hook must not change behavior.
+
+   ```js
+   runComboboxSuite({
+     classes: { host: MyCombobox, option: MyOption },
+     configureOption(option, label) {
+       if (option instanceof MyOption) {
+         Object.assign(option, { label });
+       }
+     },
+   });
+   ```
 
 ## Public entry points
 
@@ -109,58 +149,59 @@ A non-exported mixin keeps its runner inside the package next to its own tests.
 
 | entry point                                     | runners                                                                                                                                                                                                                                                                                  |
 | ----------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `@lion/ui/accordion-test-suites.js`             | `runAccordionSuite`                                                                                                                                                                                                                                                                      |
-| `@lion/ui/calendar-suites.js`                   | `runCalendarSuite`                                                                                                                                                                                                                                                                       |
-| `@lion/ui/checkbox-group-test-suites.js`        | `runCheckboxIndeterminateSuite`                                                                                                                                                                                                                                                          |
-| `@lion/ui/collapsible-test-suites.js`           | `runCollapsibleSuite`                                                                                                                                                                                                                                                                    |
-| `@lion/ui/combobox-test-suites.js`              | `runComboboxSuite`                                                                                                                                                                                                                                                                       |
-| `@lion/ui/dialog-test-suites.js`                | `runDialogSuite`                                                                                                                                                                                                                                                                         |
-| `@lion/ui/drawer-test-suites.js`                | `runDrawerSuite`                                                                                                                                                                                                                                                                         |
-| `@lion/ui/form-core-test-suites.js`             | `runFormatMixinSuite`, `runInteractionStateMixinSuite`, `runNativeTextFieldMixinSuite`, `runValidateMixinSuite`, `runValidateMixinFeedbackPart`, `runRegistrationSuite`, `runChoiceGroupMixinSuite`, `runChoiceInputMixinSuite`, `runFormGroupMixinSuite`, `runFormGroupMixinInputSuite` |
-| `@lion/ui/form-test-suites.js`                  | `runFormSuite`                                                                                                                                                                                                                                                                           |
-| `@lion/ui/icon-test-suites.js`                  | `runIconSuite`                                                                                                                                                                                                                                                                           |
-| `@lion/ui/input-amount-dropdown-test-suites.js` | `runInputAmountDropdownSuite`                                                                                                                                                                                                                                                            |
-| `@lion/ui/input-amount-test-suites.js`          | `runInputAmountSuite`                                                                                                                                                                                                                                                                    |
-| `@lion/ui/input-date-test-suites.js`            | `runInputDateSuite`                                                                                                                                                                                                                                                                      |
-| `@lion/ui/input-datepicker-suites.js`           | `runDatepickerSuite`                                                                                                                                                                                                                                                                     |
-| `@lion/ui/input-email-test-suites.js`           | `runInputEmailSuite`                                                                                                                                                                                                                                                                     |
-| `@lion/ui/input-file-test-suites.js`            | `runInputFileSuite`                                                                                                                                                                                                                                                                      |
-| `@lion/ui/input-iban-test-suites.js`            | `runInputIbanSuite`                                                                                                                                                                                                                                                                      |
-| `@lion/ui/input-range-test-suites.js`           | `runInputRangeSuite`                                                                                                                                                                                                                                                                     |
-| `@lion/ui/input-stepper-suites.js`              | `runInputStepperSuites` (runs the stepper suite plus its form-core integrations)                                                                                                                                                                                                         |
-| `@lion/ui/input-tel-dropdown-test-suites.js`    | `runInputTelDropdownSuite`, `runInputTelDropdownParenthesesSuite`                                                                                                                                                                                                                        |
-| `@lion/ui/input-tel-test-suites.js`             | `runInputTelSuite`                                                                                                                                                                                                                                                                       |
-| `@lion/ui/input-test-suites.js`                 | `runInputSuite`                                                                                                                                                                                                                                                                          |
-| `@lion/ui/listbox-test-suites.js`               | `runListboxMixinSuite`                                                                                                                                                                                                                                                                   |
-| `@lion/ui/menu-test-suites.js`                  | `runInteractiveListMixinSuite`, `runMultiLevelListMixinSuite`, `runLionMenuInteractionsSuite`                                                                                                                                                                                            |
-| `@lion/ui/overlays-test-suites.js`              | `runOverlayMixinSuite`, `runWithHoverInteractionSuite`                                                                                                                                                                                                                                   |
-| `@lion/ui/pagination-test-suites.js`            | `runPaginationSuite`                                                                                                                                                                                                                                                                     |
-| `@lion/ui/progress-indicator-test-suites.js`    | `runProgressIndicatorSuite`                                                                                                                                                                                                                                                              |
-| `@lion/ui/radio-group-test-suites.js`           | `runRadioSuite`, `runRadioGroupSuite`                                                                                                                                                                                                                                                    |
-| `@lion/ui/select-rich-test-suites.js`           | `runSelectRichSuite`, `runSelectRichInteractionSuite`, `runSelectInvokerSuite`                                                                                                                                                                                                           |
-| `@lion/ui/select-test-suites.js`                | `runSelectSuite`                                                                                                                                                                                                                                                                         |
-| `@lion/ui/steps-test-suites.js`                 | `runStepSuite`                                                                                                                                                                                                                                                                           |
-| `@lion/ui/switch-test-suites.js`                | `runSwitchSuite`                                                                                                                                                                                                                                                                         |
-| `@lion/ui/tabs-test-suites.js`                  | `runTabsSuite`                                                                                                                                                                                                                                                                           |
-| `@lion/ui/textarea-test-suites.js`              | `runTextareaSuite`                                                                                                                                                                                                                                                                       |
-| `@lion/ui/tooltip-test-suites.js`               | `runTooltipSuite`                                                                                                                                                                                                                                                                        |
+| `@lion/ui/test-suites/accordion.js`             | `runAccordionSuite`                                                                                                                                                                                                                                                                      |
+| `@lion/ui/test-suites/button.js`                | `runButtonSuite`, `runButtonResetSuite`, `runButtonSubmitSuite`                                                                                                                                                                                                                          |
+| `@lion/ui/test-suites/calendar.js`              | `runCalendarSuite`                                                                                                                                                                                                                                                                       |
+| `@lion/ui/test-suites/checkbox-group.js`        | `runCheckboxIndeterminateSuite`                                                                                                                                                                                                                                                          |
+| `@lion/ui/test-suites/collapsible.js`           | `runCollapsibleSuite`                                                                                                                                                                                                                                                                    |
+| `@lion/ui/test-suites/combobox.js`              | `runComboboxSuite`                                                                                                                                                                                                                                                                       |
+| `@lion/ui/test-suites/dialog.js`                | `runDialogSuite`                                                                                                                                                                                                                                                                         |
+| `@lion/ui/test-suites/drawer.js`                | `runDrawerSuite`                                                                                                                                                                                                                                                                         |
+| `@lion/ui/test-suites/form-core.js`             | `runFormatMixinSuite`, `runInteractionStateMixinSuite`, `runNativeTextFieldMixinSuite`, `runValidateMixinSuite`, `runValidateMixinFeedbackPart`, `runRegistrationSuite`, `runChoiceGroupMixinSuite`, `runChoiceInputMixinSuite`, `runFormGroupMixinSuite`, `runFormGroupMixinInputSuite` |
+| `@lion/ui/test-suites/form.js`                  | `runFormSuite`                                                                                                                                                                                                                                                                           |
+| `@lion/ui/test-suites/icon.js`                  | `runIconSuite`                                                                                                                                                                                                                                                                           |
+| `@lion/ui/test-suites/input-amount-dropdown.js` | `runInputAmountDropdownSuite`                                                                                                                                                                                                                                                            |
+| `@lion/ui/test-suites/input-amount.js`          | `runInputAmountSuite`                                                                                                                                                                                                                                                                    |
+| `@lion/ui/test-suites/input-date.js`            | `runInputDateSuite`                                                                                                                                                                                                                                                                      |
+| `@lion/ui/test-suites/input-datepicker.js`      | `runDatepickerSuite`                                                                                                                                                                                                                                                                     |
+| `@lion/ui/test-suites/input-email.js`           | `runInputEmailSuite`                                                                                                                                                                                                                                                                     |
+| `@lion/ui/test-suites/input-file.js`            | `runInputFileSuite`                                                                                                                                                                                                                                                                      |
+| `@lion/ui/test-suites/input-iban.js`            | `runInputIbanSuite`                                                                                                                                                                                                                                                                      |
+| `@lion/ui/test-suites/input-range.js`           | `runInputRangeSuite`                                                                                                                                                                                                                                                                     |
+| `@lion/ui/test-suites/input-stepper.js`         | `runInputStepperSuites`                                                                                                                                                                                                                                                                  |
+| `@lion/ui/test-suites/input-tel-dropdown.js`    | `runInputTelDropdownSuite`, `runInputTelDropdownParenthesesSuite`                                                                                                                                                                                                                        |
+| `@lion/ui/test-suites/input-tel.js`             | `runInputTelSuite`                                                                                                                                                                                                                                                                       |
+| `@lion/ui/test-suites/input.js`                 | `runInputSuite`                                                                                                                                                                                                                                                                          |
+| `@lion/ui/test-suites/listbox.js`               | `runListboxMixinSuite`                                                                                                                                                                                                                                                                   |
+| `@lion/ui/test-suites/menu.js`                  | `runLionMenuSuite`, `runLionMenuInteractionsSuite`                                                                                                                                                                                                                                       |
+| `@lion/ui/test-suites/overlays.js`              | `runOverlayMixinSuite`, `runWithHoverInteractionSuite`                                                                                                                                                                                                                                   |
+| `@lion/ui/test-suites/pagination.js`            | `runPaginationSuite`                                                                                                                                                                                                                                                                     |
+| `@lion/ui/test-suites/progress-indicator.js`    | `runProgressIndicatorSuite`                                                                                                                                                                                                                                                              |
+| `@lion/ui/test-suites/radio-group.js`           | `runRadioSuite`, `runRadioGroupSuite`                                                                                                                                                                                                                                                    |
+| `@lion/ui/test-suites/select-rich.js`           | `runSelectRichSuite`, `runSelectRichInteractionSuite`, `runSelectInvokerSuite`                                                                                                                                                                                                           |
+| `@lion/ui/test-suites/select.js`                | `runSelectSuite`                                                                                                                                                                                                                                                                         |
+| `@lion/ui/test-suites/steps.js`                 | `runStepSuite`, `runStepsSuite`                                                                                                                                                                                                                                                          |
+| `@lion/ui/test-suites/switch.js`                | `runSwitchSuite`                                                                                                                                                                                                                                                                         |
+| `@lion/ui/test-suites/tabs.js`                  | `runTabsSuite`                                                                                                                                                                                                                                                                           |
+| `@lion/ui/test-suites/textarea.js`              | `runTextareaSuite`                                                                                                                                                                                                                                                                       |
+| `@lion/ui/test-suites/tooltip.js`               | `runTooltipSuite`                                                                                                                                                                                                                                                                        |
+
+The longer-standing `*-test-suites.js` / `*-suites.js` entry points remain as deprecated aliases.
+New code should import from `@lion/ui/test-suites/<component>.js`.
 
 The fixtures a suite needs from the caller are the exported `*-test-helpers.js` entry points
 (`@lion/ui/form-core-test-helpers.js`, `@lion/ui/listbox-test-helpers.js`,
-`@lion/ui/input-test-helpers.js`, …). Helpers that live in a component's internal
+`@lion/ui/input-test-helpers.js`, `@lion/ui/pagination-test-helpers.js`, …). Helpers that live in a component's internal
 `test-helpers/` folder are private to Lion and are not part of this contract.
 
 ## Not yet covered
 
 - `runValidateMixinFeedbackPart`, `runRegistrationSuite` and the `form-group` runners build their
   element from Lion mixins; the map can only replace the outermost element.
-- The `LionButtonSuite*`, `runLionMenuSuite` and `runMoreButtonMenuMixinSuite` runners are not
-  exported yet, so they cannot be consumed from `@lion/ui/exports/*`.
-- `runListboxMixinSuite` still queries the literal `lion-option` in a few places and
-  `runChoiceGroupMixinSuite` hard-codes `<lion-fieldset>`; a subclasser that renames those tags will
-  see those specific assertions fail.
+- `runMoreButtonMenuMixinSuite` remains internal because its mixin is not part of
+  `@lion/ui/menu.js`.
 - `runInteractiveListMixinSuite` and `runMultiLevelListMixinSuite` are exported from
-  `@lion/ui/menu-test-suites.js` while `InteractiveListMixin` and `MultiLevelListMixin` are not
+  `@lion/ui/test-suites/menu.js` while `InteractiveListMixin` and `MultiLevelListMixin` are not
   re-exported from `@lion/ui/menu.js`, so a Subclasser cannot extend the mixin those suites
   describe. Either the mixins become public or these two runners move back into the package.
   `runMoreButtonMenuMixinSuite` and `runCustomChoiceGroupMixinSuite` are already internal, which is
@@ -169,9 +210,8 @@ The fixtures a suite needs from the caller are the exported `*-test-helpers.js` 
   registers that child in its own scope — its markup and lookups have to know the tag. A plain Lion
   subclass does not, which is why the in-repo probe passes the host only and the extension layer
   that motivated the feature exercises the child role in its own repository.
-- `runOverlayMixinSuite` and `runWithHoverInteractionSuite` take a prebuilt element (an `unsafeStatic`
-  tag object) as _required_ input: the caller builds that element, so there is no Lion element for the
-  suite to default to. Every other runner (59 of 61) takes `classes`.
+- `runOverlayMixinSuite` and `runWithHoverInteractionSuite` are legacy mixin suites and still take a
+  prebuilt element as required input.
 - `fieldset` has no suite of its own because it has no behaviour of its own: its whole test file runs
   the two form-group runners against it.
 - Unit tests of plain functions are deliberately not suites: `IconManager`, the file validators of

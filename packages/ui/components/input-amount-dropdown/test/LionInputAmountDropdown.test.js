@@ -1,5 +1,5 @@
 import { mimicUserChangingDropdown } from '@lion/ui/input-amount-dropdown-test-helpers.js';
-import { runInputAmountDropdownSuite } from '@lion/ui/input-amount-dropdown-test-suites.js';
+import { runInputAmountDropdownSuite } from '@lion/ui/test-suites/input-amount-dropdown.js';
 import { LionInputAmountDropdown } from '@lion/ui/input-amount-dropdown.js';
 import { Required } from '@lion/ui/form-core.js';
 import { aTimeout, expect, fixture } from '@open-wc/testing';
