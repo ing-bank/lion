@@ -1,23 +1,7 @@
 {
   "name": "change-graph",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "Generic change-impact engine: import graph, reference (token) tree, content hashing and verification state. Configure it per codebase.",
-  "type": "module",
-  "main": "src/index.js",
-  "exports": {
-    ".": "./src/index.js"
-  },
-  "scripts": {
-    "test": "npm run test:node",
-    "test:node": "mocha './test-node/**/*.test.js' --timeout 8000",
-    "change-graph": "node ./src/cli.js",
-    "types": "tsc --build"
-  },
-  "dependencies": {
-    "oxc-parser": "0.137.0",
-    "oxc-resolver": "^1.12.0",
-    "yaml": "^2.5.1"
-  },
   "license": "MIT",
   "author": "ing-bank",
   "homepage": "https://github.com/ing-bank/lion/",
@@ -26,10 +10,26 @@
     "url": "https://github.com/ing-bank/lion.git",
     "directory": "packages-node/change-graph"
   },
+  "type": "module",
+  "exports": {
+    ".": "./src/index.js"
+  },
+  "main": "src/index.js",
+  "bin": {
+    "change-graph": "./src/cli.js"
+  },
   "files": [
     "src"
   ],
-  "bin": {
-    "change-graph": "./src/cli.js"
+  "scripts": {
+    "change-graph": "node ./src/cli.js",
+    "test": "npm run test:node",
+    "test:node": "mocha './test-node/**/*.test.js' --timeout 8000",
+    "types": "tsc --build"
+  },
+  "dependencies": {
+    "oxc-parser": "0.137.0",
+    "oxc-resolver": "^1.12.0",
+    "yaml": "^2.5.1"
   }
 }
