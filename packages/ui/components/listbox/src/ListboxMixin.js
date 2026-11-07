@@ -551,6 +551,7 @@ const ListboxMixinImplementation = /** @type {ListboxMixin} */ (superclass =>
     _onChildActiveChanged({ target }) {
       if (target.active === true) {
         this.__setChildActive(target);
+        this.dispatchEvent(new Event('user-input-changed', { bubbles: true }));
       }
     }
 
