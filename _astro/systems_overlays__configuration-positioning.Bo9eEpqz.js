@@ -1,0 +1,31 @@
+const __vite__mapDeps=(i,m=__vite__mapDeps,d=(m.f||(m.f=["_astro/define.D5IFK1jp.js","_astro/MdJsPreview.B62up6PK.js","_astro/lit-element.DxRhnkit.js","_astro/lit-html.BX7rm8u-.js","_astro/dedupeMixin.6XPTJgK8.js","_astro/lit-element.BOikny4r.js","_astro/uuid.DjYKNjre.js","_astro/define.DBgp7shK.js"])))=>i.map(i=>d[i]);
+import{_ as n}from"./preload-helper.CVfkMyKi.js";import"./MdJsPreview.B62up6PK.js";import"./lit-element.DxRhnkit.js";import{b as t}from"./lit-html.BX7rm8u-.js";import"./unsafe-html.FHlAasnX.js";import"./applyDemoOverlayStyles.CBkaIoxB.js";import"./demo-overlay-positioning.DejuhNnH.js";const i=()=>t`<demo-overlay-positioning></demo-overlay-positioning>`,s=()=>t`<demo-overlay-positioning
+    placement-mode="global"
+    simulate-viewport
+  ></demo-overlay-positioning>`,a=()=>t`
+    <demo-el-using-overlaymixin .config="${{placementMode:"local"}}">
+      <button slot="invoker">Click me to open the local overlay!</button>
+      <div slot="content" class="demo-overlay">
+        Hello! You can close this notification here:
+        <button
+          class="close-button"
+          @click="${o=>o.target.dispatchEvent(new Event("close-overlay",{bubbles:!0}))}"
+        >
+          ⨯
+        </button>
+      </div>
+    </demo-el-using-overlaymixin>
+  `,r=()=>t`
+    <demo-el-using-overlaymixin .config="${{placementMode:"global"}}">
+      <button slot="invoker">Click me to open the global overlay!</button>
+      <div slot="content" class="demo-overlay">
+        Hello! You can close this notification here:
+        <button
+          class="close-button"
+          @click="${o=>o.target.dispatchEvent(new Event("close-overlay",{bubbles:!0}))}"
+        >
+          ⨯
+        </button>
+      </div>
+    </demo-el-using-overlaymixin>
+  `,c=document,m=[{key:"localPositioning",story:i},{key:"globalPositioning",story:s},{key:"placementLocal",story:a},{key:"placementGlobal",story:r}];let l=!1;for(const e of m){const o=c.querySelector(`[mdjs-story-name="${e.key}"]`);o&&(o.story=e.story,o.key=e.key,l=!0,Object.assign(o,{simulatorUrl:"/simulator",languages:[{key:"de-DE",name:"German"},{key:"en-GB",name:"English (United Kingdom)"},{key:"en-US",name:"English (United States)"},{key:"nl-NL",name:"Dutch"}]}))}l&&(customElements.get("mdjs-preview")||n(()=>import("./define.D5IFK1jp.js"),__vite__mapDeps([0,1,2,3,4,5,6])),customElements.get("mdjs-story")||n(()=>import("./define.DBgp7shK.js"),__vite__mapDeps([7,2,3])));export{s as globalPositioning,i as localPositioning,r as placementGlobal,a as placementLocal};
