@@ -27,7 +27,7 @@
     "lint:versions": "node ./scripts/lint-versions.js",
     "prepare": "husky install",
     "preview": "npx serve _site",
-    "release": "changeset publish",
+    "release": "npm run release --workspace staged-publish",
     "repo:clean-slate": "git clean -dfX",
     "repo:diff-package-lock": "npx diff-package-lock",
     "repo:lockfile:check": "npm run lockfile:check --workspace @lion/lockfile-interop",
