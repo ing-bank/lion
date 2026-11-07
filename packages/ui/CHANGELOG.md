@@ -1,5 +1,39 @@
 # @lion/ui
 
+## 0.27.0
+
+### Minor Changes
+
+- 6859179: [browser support] drop support for browsers without `<dialog>.showModal()`.
+
+  A modal overlay is opened as a native modal dialog: the browser then keeps the keyboard focus inside it and
+  makes the rest of the page unreachable, which is also why a screen reader does not read that other content.
+  The library never had a fallback for browsers that cannot do this - the platform capability _is_ the
+  mechanism - so the support policy now states what the implementation requires instead of leaving it
+  implicit. Safari 16 is the oldest supported browser; Chrome, Edge and Firefox are supported for their last
+  four versions. This is recorded in `.browserslistrc`.
+
+### Patch Changes
+
+- 90eeca3: [button] a keyboard click needs its keydown on the button too. A keyup on its own, for example after a closing dialog moves the focus back to its lion-button invoker, no longer clicks it (#2555).
+- 65b8580: Make the combobox and steps suites work with renamed children, and let pagination suites query custom navigation elements and await deferred click handlers.
+
+  Allow combobox suites to configure label-property options before their values are formatted, including dynamically rendered options.
+
+  Make collapsible suite height fixtures independent of text wrapping and await switch host updates before asserting inner button events.
+
+  Configure pagination, calendar and datepicker suite page objects consistently through `pageObjects: { host: MyPageObject }`.
+
+  Build shared-suite fixtures from constructors without importing definition entry points or registering fixed global custom-element names.
+
+  Restore inherited SelectRich option-position accessibility updates when options are added, removed or reordered.
+
+- 1a35b59: [form-core] Keep registered fields in DOM order when groups are moved, fixing keyboard navigation and option positions in grouped country dropdowns.
+
+  Registration and removal remain synchronous. DOM ordering and listbox option positions are reconciled once per microtask batch, before the next browser paint.
+
+- aeb07b9: Fix the issue regarding async suggestion in combobox
+
 ## 0.26.0
 
 ### Minor Changes
