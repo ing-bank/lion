@@ -15,11 +15,15 @@ export type SrReader = 'virtual' | 'nvda' | 'voiceover';
  * - `exact`: the spoken phrase log has to match `phrases` one to one
  * - `contains`: `phrases` have to appear in the log, in this order, allowing
  *   other phrases in between
+ * - `containsLike`: like `contains`, but a phrase may be part of an utterance
+ * - `once`: every phrase has to be spoken in exactly one utterance, so text that
+ *   is read out twice fails the run
  */
 export type SrPhraseList =
   | { mode: 'exact'; phrases: string[] }
   | { mode: 'contains'; phrases: string[] }
-  | { mode: 'containsLike'; phrases: string[] };
+  | { mode: 'containsLike'; phrases: string[] }
+  | { mode: 'once'; phrases: string[] };
 
 /**
  * What each reader is expected to speak for one state of a component.
@@ -33,7 +37,7 @@ export type SrExpectation = Record<SrReader, SrPhraseList>;
 /** One observed run of `sr.expect()`, handed to the reporter. */
 export interface SrObservation {
   reader: SrReader;
-  mode: 'exact' | 'contains' | 'containsLike';
+  mode: 'exact' | 'contains' | 'containsLike' | 'once';
   expected: string[];
   heard: string[];
   ok: boolean;
