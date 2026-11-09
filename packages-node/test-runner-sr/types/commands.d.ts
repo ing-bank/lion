@@ -9,6 +9,12 @@ export function containsLike(
   ...phrases: string[]
 ): Extract<SrPhraseList, { mode: 'containsLike' }>;
 
+/**
+ * Expect every phrase to be spoken in exactly one utterance, so text that is read
+ * out twice (the most common announcement bug) fails the run.
+ */
+export function once(...phrases: string[]): Extract<SrPhraseList, { mode: 'once' }>;
+
 export interface ScreenreaderCommands {
   /**
    * Focus the control a component delegates focus to, so the screen reader talks

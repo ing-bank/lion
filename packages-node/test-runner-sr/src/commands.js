@@ -47,6 +47,24 @@ export function containsLike(...phrases) {
 }
 
 /**
+ * Expect every phrase to be spoken in exactly one utterance - the check for the
+ * announcement that is read out twice (the most common screen reader bug: a live
+ * region that fires again, a description that is both rendered and described, a
+ * field announced by two nodes).
+ *
+ * `contains` and `containsLike` cannot catch it: a phrase read twice satisfies
+ * them exactly as well as one read once. The text has to be distinctive, because
+ * matching is a substring of the utterance - `once('Name')` also matches the
+ * label's own utterance next to the control's.
+ *
+ * @param {...string} phrases
+ * @returns {SrPhraseList}
+ */
+export function once(...phrases) {
+  return { mode: 'once', phrases };
+}
+
+/**
  * @returns {Promise<SrReader>}
  */
 async function currentReader() {
