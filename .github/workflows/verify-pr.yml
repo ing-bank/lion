@@ -14,6 +14,9 @@ jobs:
       - name: Sanity check
         run: node ./scripts/lock-scan.mjs
 
+      - name: Bin modes
+        run: node ./scripts/lint-bin-modes.mjs
+
       - name: Setup Node 22.x
         uses: actions/setup-node@v4
         with:
@@ -21,7 +24,7 @@ jobs:
           cache: npm
 
       - name: Install Dependencies
-        run: npm install --ci
+        run: npm ci
 
       # Fails when package-lock.json resolves different versions than pnpm-lock.yaml, so tooling that
       # reads the npm lock cannot derive versions the install does not have. No-op while the repo has no
@@ -48,7 +51,7 @@ jobs:
           cache: npm
 
       - name: Install Dependencies
-        run: npm install --ci
+        run: npm ci
 
       - name: Playwright
         run: npx playwright install --with-deps
@@ -79,7 +82,7 @@ jobs:
           cache: npm
 
       - name: Install Dependencies
-        run: npm install --ci
+        run: npm ci
 
       - name: Pin Playwright to the Safari 16 generation
         # `--no-save --force`: the repository keeps Playwright current for the modern matrix, this job
@@ -114,7 +117,7 @@ jobs:
           cache: npm
 
       - name: Install Dependencies
-        run: npm install --ci --force
+        run: npm ci --force
 
       - name: Test
         run: npm run test:node
