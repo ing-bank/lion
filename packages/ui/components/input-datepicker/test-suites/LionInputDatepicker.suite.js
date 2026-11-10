@@ -229,6 +229,24 @@ export function runDatepickerSuite({
       });
     });
 
+    for (const property of /** @type {const} */ (['disabled', 'readOnly'])) {
+      it(`closes the open calendar when ${property} becomes true`, async () => {
+        const selectedDate = new Date(2019, 5, 15);
+        const el = await fixtureForSuite(html`<${tag} .modelValue="${selectedDate}"></${tag}>`);
+        const elObj = new InputObject(el);
+        await elObj.openCalendar({ click: true });
+        await waitUntil(() => el.opened);
+        expect(elObj.overlayController.isShown).to.be.true;
+
+        el[property] = true;
+        await waitUntil(() => !elObj.overlayController.isShown);
+        await sendKeys({ press: 'ArrowRight' });
+        await sendKeys({ press: 'Enter' });
+
+        expect(el.modelValue).to.equal(selectedDate);
+      });
+    }
+
     describe('Input - calendar synchronization', () => {
       it('syncs modelValue with lion-calendar', async () => {
         const myDate = new Date('2019/06/15');
