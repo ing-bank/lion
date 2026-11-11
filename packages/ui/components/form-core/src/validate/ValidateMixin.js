@@ -273,6 +273,34 @@ export const ValidateMixinImplementation = /** @type {ValidateMixin} */ (supercl
        */
       this.__childModelValueChanged = false;
 
+      /**
+       * Identifies the latest validation pass. Async results of an older pass are discarded.
+       * @type {number}
+       * @private
+       */
+      this.__validationPassId = 0;
+
+      /**
+       * Async Validators whose `execute` of the latest pass has not resolved yet
+       * @type {Validator[]}
+       * @private
+       */
+      this.__pendingAsyncValidators = [];
+
+      /**
+       * Resolves the `.validateComplete` Promise(s) of the current validation pass
+       * @type {((result: boolean) => void) | undefined}
+       * @private
+       */
+      this.__validateCompleteResolve = undefined;
+
+      /**
+       * The listeners added per Validator, so they can be removed again
+       * @type {Map<Validator, EventListener>}
+       * @private
+       */
+      this.__validatorListeners = new Map();
+
       /** @protected */
       this._onValidatorUpdated = this._onValidatorUpdated.bind(this);
       /** @protected */
@@ -389,6 +417,8 @@ export const ValidateMixinImplementation = /** @type {ValidateMixin} */ (supercl
      * @param {{ clearCurrentResult?: boolean }} opts
      */
     async validate({ clearCurrentResult = false } = {}) {
+      /** @type {((result: boolean) => void) | undefined} */
+      const supersededResolve = this.__validateCompleteResolve;
       /**
        * Allows Application Developer to wait for (async) validation
        * @example
@@ -398,13 +428,28 @@ export const ValidateMixinImplementation = /** @type {ValidateMixin} */ (supercl
        * @type {Promise<boolean>}
        */
       this.validateComplete = new Promise(resolve => {
-        this.__validateCompleteResolve = resolve;
+        // A promise handed out by a superseded pass settles together with this (latest) pass
+        this.__validateCompleteResolve = supersededResolve
+          ? (/** @type {boolean} */ result) => {
+              supersededResolve(result);
+              resolve(result);
+            }
+          : resolve;
       });
+
+      // A new pass supersedes a pass whose async Validators are still running
+      this.__validationPassId += 1;
+      for (const validator of this.__pendingAsyncValidators) {
+        validator.abortExecution?.();
+      }
+      this.__pendingAsyncValidators = [];
 
       if (this.disabled || this.readOnly) {
         this.__clearValidationResults();
+        this.isPending = false;
         this.__finishValidationPass();
         this._updateFeedbackComponent();
+        this.__resolveValidateComplete();
         return;
       }
       // We don't validate before firstUpdated has run
@@ -420,6 +465,16 @@ export const ValidateMixinImplementation = /** @type {ValidateMixin} */ (supercl
         this.__clearValidationResults();
       }
       await this.__executeValidators();
+    }
+
+    /**
+     * Resolves `.validateComplete` (and the ones of superseded passes) once
+     * @private
+     */
+    __resolveValidateComplete() {
+      const resolve = this.__validateCompleteResolve;
+      this.__validateCompleteResolve = undefined;
+      resolve?.(true);
     }
 
     /**
@@ -442,6 +497,7 @@ export const ValidateMixinImplementation = /** @type {ValidateMixin} */ (supercl
      * @desc step a1-3 + b (as explained in `validate()`)
      */
     async __executeValidators() {
+      const passId = this.__validationPassId;
       const value = getValueForValidators(this.modelValue);
 
       /**
@@ -486,9 +542,11 @@ export const ValidateMixinImplementation = /** @type {ValidateMixin} */ (supercl
         }
 
         if (hasSingleValue) {
+          this.isPending = false;
           this.__finishValidationPass({
             syncValidationResult: this.__syncValidationResult,
           });
+          this.__resolveValidateComplete();
           return;
         }
       }
@@ -532,7 +590,20 @@ export const ValidateMixinImplementation = /** @type {ValidateMixin} */ (supercl
       if (hasAsync) {
         // Add a hint in the ui that we're waiting for async validation
         this.isPending = true;
-        this.__asyncValidationResult = await this.__executeAsyncValidators(asyncValidators, value);
+        this.__pendingAsyncValidators = asyncValidators;
+        let asyncValidationResult;
+        try {
+          asyncValidationResult = await this.__executeAsyncValidators(asyncValidators, value);
+        } catch (error) {
+          // An aborted execution of a superseded pass may reject: the latest pass takes over
+          if (passId !== this.__validationPassId) return;
+          throw error;
+        }
+        // A newer pass started meanwhile: its results (and pending state) are leading
+        if (passId !== this.__validationPassId) return;
+
+        this.__pendingAsyncValidators = [];
+        this.__asyncValidationResult = asyncValidationResult;
         this.isPending = false;
         // Now finish the second (asynchronous) pass (including both sync and async results)
         this.__finishValidationPass({
@@ -540,10 +611,10 @@ export const ValidateMixinImplementation = /** @type {ValidateMixin} */ (supercl
           asyncValidationResult: this.__asyncValidationResult,
           metaValidators,
         });
-        this.__validateCompleteResolve?.(true);
       } else {
-        this.__validateCompleteResolve?.(true);
+        this.isPending = false;
       }
+      this.__resolveValidateComplete();
     }
 
     /**
@@ -694,8 +765,12 @@ export const ValidateMixinImplementation = /** @type {ValidateMixin} */ (supercl
       const events = ['param-changed', 'config-changed'];
 
       for (const validatorToCleanup of this.__prevValidators || []) {
-        for (const eventToCleanup of events) {
-          validatorToCleanup.removeEventListener?.(eventToCleanup, this._onValidatorUpdated);
+        const listener = this.__validatorListeners.get(validatorToCleanup);
+        if (listener) {
+          for (const eventToCleanup of events) {
+            validatorToCleanup.removeEventListener?.(eventToCleanup, listener);
+          }
+          this.__validatorListeners.delete(validatorToCleanup);
         }
         validatorToCleanup.onFormControlDisconnect(
           /** @type {import('../../types/FormControlMixinTypes.js').FormControlHost} */ (
@@ -730,11 +805,17 @@ export const ValidateMixinImplementation = /** @type {ValidateMixin} */ (supercl
          * Updated the code to fix issue #1607 to sync the calendar date with validators params
          * Here _onValidatorUpdated is responsible for responding to the event
          */
-        for (const eventToSetup of events) {
-          validatorToSetup.addEventListener?.(eventToSetup, e => {
+        if (!this.__validatorListeners.has(validatorToSetup)) {
+          /** @param {Event} e */
+          const listener = e => {
             // @ts-ignore for making validator param dynamic
             this._onValidatorUpdated(e, { validator: validatorToSetup });
-          });
+          };
+          for (const eventToSetup of events) {
+            validatorToSetup.addEventListener?.(eventToSetup, listener);
+          }
+          // Stored, so the exact same listener can be removed when the Validator is removed
+          this.__validatorListeners.set(validatorToSetup, listener);
         }
         validatorToSetup.onFormControlConnect(this);
       }

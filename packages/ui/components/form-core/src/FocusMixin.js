@@ -51,6 +51,13 @@ const FocusMixinImplementation = /** @type {FocusMixin} */ (superclass =>
        */
       this.focusedVisible = false;
       this.autofocus = false;
+
+      /**
+       * The node the focus listeners were added to, so they can be removed from the same node
+       * @type {HTMLElement|undefined}
+       * @private
+       */
+      this.__focusEventsNode = undefined;
     }
 
     /**
@@ -61,6 +68,15 @@ const FocusMixinImplementation = /** @type {FocusMixin} */ (superclass =>
       super.firstUpdated(changedProperties);
       this.__registerEventsForFocusMixin();
       this.__syncAutofocusToFocusableElement();
+    }
+
+    connectedCallback() {
+      super.connectedCallback();
+      // The first connect is handled in firstUpdated, when `_focusableNode` is available.
+      // On a reconnect (after being moved in the DOM), restore what disconnectedCallback removed.
+      if (this.hasUpdated) {
+        this.__registerEventsForFocusMixin();
+      }
     }
 
     disconnectedCallback() {
@@ -150,6 +166,12 @@ const FocusMixinImplementation = /** @type {FocusMixin} */ (superclass =>
      * @private
      */
     __registerEventsForFocusMixin() {
+      // Idempotent: listeners stay on the node they were added to until teardown
+      if (this.__focusEventsNode) return;
+      const focusableNode = this._focusableNode;
+      if (!focusableNode) return;
+      this.__focusEventsNode = focusableNode;
+
       applyFocusVisiblePolyfillWhenNeeded(this.getRootNode());
 
       /**
@@ -160,7 +182,7 @@ const FocusMixinImplementation = /** @type {FocusMixin} */ (superclass =>
         ev.stopPropagation();
         this.dispatchEvent(new Event('focus'));
       };
-      this._focusableNode.addEventListener('focus', this.__redispatchFocus);
+      focusableNode.addEventListener('focus', this.__redispatchFocus);
 
       /**
        * blur
@@ -170,7 +192,7 @@ const FocusMixinImplementation = /** @type {FocusMixin} */ (superclass =>
         ev.stopPropagation();
         this.dispatchEvent(new Event('blur'));
       };
-      this._focusableNode.addEventListener('blur', this.__redispatchBlur);
+      focusableNode.addEventListener('blur', this.__redispatchBlur);
 
       /**
        * focusin
@@ -181,7 +203,7 @@ const FocusMixinImplementation = /** @type {FocusMixin} */ (superclass =>
         this.__onFocus();
         this.dispatchEvent(new Event('focusin', { bubbles: true, composed: true }));
       };
-      this._focusableNode.addEventListener('focusin', this.__redispatchFocusin);
+      focusableNode.addEventListener('focusin', this.__redispatchFocusin);
 
       /**
        * focusout
@@ -192,27 +214,29 @@ const FocusMixinImplementation = /** @type {FocusMixin} */ (superclass =>
         this.__onBlur();
         this.dispatchEvent(new Event('focusout', { bubbles: true, composed: true }));
       };
-      this._focusableNode.addEventListener('focusout', this.__redispatchFocusout);
+      focusableNode.addEventListener('focusout', this.__redispatchFocusout);
     }
 
     /**
      * @private
      */
     __teardownEventsForFocusMixin() {
-      if (!this._focusableNode) return;
-      this._focusableNode?.removeEventListener(
+      const focusableNode = this.__focusEventsNode;
+      if (!focusableNode) return;
+      this.__focusEventsNode = undefined;
+      focusableNode.removeEventListener(
         'focus',
         /** @type {EventListenerOrEventListenerObject} */ (this.__redispatchFocus),
       );
-      this._focusableNode?.removeEventListener(
+      focusableNode.removeEventListener(
         'blur',
         /** @type {EventListenerOrEventListenerObject} */ (this.__redispatchBlur),
       );
-      this._focusableNode?.removeEventListener(
+      focusableNode.removeEventListener(
         'focusin',
         /** @type {EventListenerOrEventListenerObject} */ (this.__redispatchFocusin),
       );
-      this._focusableNode?.removeEventListener(
+      focusableNode.removeEventListener(
         'focusout',
         /** @type {EventListenerOrEventListenerObject} */ (this.__redispatchFocusout),
       );
