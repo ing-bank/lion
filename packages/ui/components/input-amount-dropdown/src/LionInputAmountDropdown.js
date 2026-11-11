@@ -212,16 +212,18 @@ export class LionInputAmountDropdown extends LionInputAmount {
           @change="${refs?.dropdown?.listeners?.change}"
           style="${ifDefined(refs?.dropdown?.props?.style)}"
         >
-          ${data?.regionMetaListPreferred?.length
-            ? html`
-                <optgroup label="${refs?.dropdown?.labels?.preferredCurrencies}">
-                  ${data.regionMetaListPreferred.map(renderOption)}
-                </optgroup>
-                <optgroup label="${refs?.dropdown?.labels?.allCurrencies}">
-                  ${data?.regionMetaList?.map(renderOption)}
-                </optgroup>
-              `
-            : html` ${data?.regionMetaList?.map(renderOption)}`}
+          ${
+            data?.regionMetaListPreferred?.length
+              ? html`
+                  <optgroup label="${refs?.dropdown?.labels?.preferredCurrencies}">
+                    ${data.regionMetaListPreferred.map(renderOption)}
+                  </optgroup>
+                  <optgroup label="${refs?.dropdown?.labels?.allCurrencies}">
+                    ${data?.regionMetaList?.map(renderOption)}
+                  </optgroup>
+                `
+              : html` ${data?.regionMetaList?.map(renderOption)}`
+          }
         </select>
       `;
     },
@@ -303,8 +305,10 @@ export class LionInputAmountDropdown extends LionInputAmount {
   onLocaleUpdated() {
     super.onLocaleUpdated();
 
-    const localeSplitted = this._localizeManager.locale.split('-');
+    const { locale } = this._localizeManager;
+    const localeSplitted = locale.split('-');
     /**
+     * The region of the locale, used to derive its currency (e.g. 'BE' for 'fr-BE').
      * @protected
      * @type {RegionCode}
      */
@@ -312,7 +316,9 @@ export class LionInputAmountDropdown extends LionInputAmount {
       localeSplitted[localeSplitted.length - 1].toUpperCase()
     );
 
-    this.__namesForLocale = new Intl.DisplayNames([this._langIso], {
+    // Names and symbols follow the full locale: the region alone is not a language
+    // ('BE' would be read as Belarusian).
+    this.__namesForLocale = new Intl.DisplayNames([locale], {
       type: 'currency',
     });
 
@@ -562,7 +568,10 @@ export class LionInputAmountDropdown extends LionInputAmount {
       destinationList.push({
         currencyCode,
         nameForLocale: this.__namesForLocale?.of(currencyCode),
-        currencySymbol: this._currencyUtil.getCurrencySymbol(currencyCode, this._langIso ?? ''),
+        currencySymbol: this._currencyUtil.getCurrencySymbol(
+          currencyCode,
+          this._localizeManager.locale,
+        ),
       });
     });
   }
