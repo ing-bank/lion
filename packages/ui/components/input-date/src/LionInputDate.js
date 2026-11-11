@@ -56,6 +56,16 @@ export class LionInputDate extends LocalizeMixin(LionInput) {
    */
   // eslint-disable-next-line class-methods-use-this
   deserializer(serializedValue) {
-    return new Date(serializedValue);
+    // `new Date('2020-01-30')` is UTC midnight, which is the previous day in timezones west of
+    // UTC. The serializer writes the local date, so read it back as local midnight.
+    const isoDateMatch = /^(\d{4})-(\d{2})-(\d{2})$/.exec(serializedValue);
+    if (!isoDateMatch) {
+      return new Date(serializedValue);
+    }
+    const [, year, month, day] = isoDateMatch.map(Number);
+    const date = new Date(year, month - 1, day);
+    // years 0-99 would otherwise be mapped to 1900-1999
+    date.setFullYear(year);
+    return date;
   }
 }

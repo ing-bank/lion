@@ -2,7 +2,6 @@
 import { LionCalendar } from '@lion/ui/calendar.js';
 import { uuid } from '@lion/ui/core.js';
 import { html, css } from 'lit';
-import { ifDefined } from 'lit/directives/if-defined.js';
 import { LionInputDate } from '@lion/ui/input-date.js';
 import { IsDate } from '@lion/ui/form-core.js';
 import {
@@ -14,6 +13,13 @@ import {
 import { LocalizeMixin } from '@lion/ui/localize-no-side-effects.js';
 import { ScopedElementsMixin } from '../../core/src/ScopedElementsMixin.js';
 import { localizeNamespaceLoader } from './localizeNamespaceLoader.js';
+
+/**
+ * Calendar default for `disableDates`, passed when no IsDateDisabled validator is (or remains)
+ * configured. Binding `undefined` instead would leave the calendar without a function to call.
+ * @returns {boolean}
+ */
+const enableAllDates = () => false;
 
 /**
  * @typedef {import('../../form-core/src/validate/Validator.js').Validator} Validator
@@ -204,7 +210,7 @@ export class LionInputDatepicker extends ScopedElementsMixin(
     super.updated(changedProperties);
     if (changedProperties.has('validators')) {
       const validators = [...(this.validators || [])];
-      this.__syncDisabledDates(validators);
+      this.__syncDisabledDates(validators, { reset: true });
     }
     if (changedProperties.has('label')) {
       this.calendarHeading = this.calendarHeading || this.label;
@@ -275,7 +281,7 @@ export class LionInputDatepicker extends ScopedElementsMixin(
         }"
         .minDate="${this.__calendarMinDate}"
         .maxDate="${this.__calendarMaxDate}"
-        .disableDates="${ifDefined(this.__calendarDisableDates)}"
+        .disableDates="${this.__calendarDisableDates ?? enableAllDates}"
         @user-selected-date-changed="${this._onCalendarUserSelectedChanged}"
       ></lion-calendar>
     `;
@@ -420,8 +426,15 @@ export class LionInputDatepicker extends ScopedElementsMixin(
    * Validators contain the information to synchronize the input with
    * the min, max and enabled dates of the calendar.
    * @param {Validator[]} validators - errorValidators or warningValidators array
+   * @param {{ reset?: boolean }} [options] - reset: `validators` is the complete list, so limits
+   * of validators that are not in it anymore are released
    */
-  __syncDisabledDates(validators) {
+  __syncDisabledDates(validators, { reset = false } = {}) {
+    if (reset) {
+      this.__calendarMinDate = undefined;
+      this.__calendarMaxDate = undefined;
+      this.__calendarDisableDates = undefined;
+    }
     // On every validator change, synchronize disabled dates: this means
     // we need to extract minDate, maxDate, minMaxDate and disabledDates validators
     validators.forEach(v => {

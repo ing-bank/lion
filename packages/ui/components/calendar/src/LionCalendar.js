@@ -636,6 +636,7 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
           style: 'long',
           firstDayOfWeek: this.firstDayOfWeek,
         }),
+        getMonthNames({ locale: this.__getLocale() }),
       );
       return `${dayNumber} ${monthName} ${year}`;
     };
