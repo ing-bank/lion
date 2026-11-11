@@ -129,11 +129,6 @@ export class LionOption extends DisabledMixin(
   }
 
   /** @private */
-  __unRegisterEventListeners() {
-    this.removeEventListener('click', this.__onClick);
-  }
-
-  /** @private */
   __onClick() {
     if (this.disabled) {
       return;
