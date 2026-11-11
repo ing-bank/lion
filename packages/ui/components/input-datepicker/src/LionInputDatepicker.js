@@ -387,15 +387,7 @@ export class LionInputDatepicker extends ScopedElementsMixin(
       this._isHandlingUserInput = true;
       this._isHandlingCalendarUserInput = true;
 
-      if (
-        Array.isArray(this.__calendarDisableDates) &&
-        this.__calendarDisableDates.includes(selectedDate)
-      ) {
-        // If the selected date is disabled, reset the values
-        this.modelValue = undefined;
-      } else {
-        this.modelValue = selectedDate;
-      }
+      this.modelValue = selectedDate;
 
       this._isHandlingUserInput = false;
       this._isHandlingCalendarUserInput = false;
