@@ -393,6 +393,42 @@ export function LionButtonSuite({ classes = {}, tagString } = {}) {
         await aTimeout(0);
         expect(clickSpy.callCount).to.equal(1);
       });
+
+      it('prevents the default of a space keydown (page scroll), also while already active', async () => {
+        const el = /** @type {LionButton} */ (
+          await fixture(html`<${tagButton}>foo</${tagButton}>`)
+        );
+        const firstSpace = new KeyboardEvent('keydown', { key: ' ', cancelable: true });
+        el.dispatchEvent(firstSpace);
+        expect(el.active).to.be.true;
+        expect(firstSpace.defaultPrevented).to.be.true;
+
+        // a repeated keydown (key held down) arrives while the button is active
+        const repeatedSpace = new KeyboardEvent('keydown', { key: ' ', cancelable: true });
+        el.dispatchEvent(repeatedSpace);
+        expect(repeatedSpace.defaultPrevented).to.be.true;
+        el.dispatchEvent(new KeyboardEvent('keyup', { key: ' ' }));
+
+        const enter = new KeyboardEvent('keydown', { key: 'Enter', cancelable: true });
+        el.dispatchEvent(enter);
+        expect(enter.defaultPrevented).to.be.false;
+        el.dispatchEvent(new KeyboardEvent('keyup', { key: 'Enter' }));
+      });
+
+      it('does not click on a keyup that targets a child of the button', async () => {
+        const clickSpy = sinon.spy();
+        const onClick = /** @type {EventListener} */ (clickSpy);
+        const el = /** @type {LionButton} */ (
+          await fixture(html`<${tagButton} @click="${onClick}"><span>foo</span></${tagButton}>`)
+        );
+        const child = /** @type {HTMLElement} */ (el.querySelector('span'));
+
+        el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+        child.dispatchEvent(new KeyboardEvent('keyup', { key: 'Enter', bubbles: true }));
+        await aTimeout(0);
+        expect(clickSpy.callCount).to.equal(0);
+        expect(el.active).to.be.false;
+      });
     });
   });
 }

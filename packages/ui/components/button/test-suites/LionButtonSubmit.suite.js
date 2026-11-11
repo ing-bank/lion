@@ -119,9 +119,22 @@ export function LionButtonSubmitSuite({ classes = {}, tagString } = {}) {
             elForm.querySelector('button[type=submit]')
           );
           helperBtnEl.remove();
-          expect(elForm).to.not.include(helperBtnEl);
+          expect(elForm.contains(helperBtnEl)).to.be.false;
           await aTimeout(0);
-          expect(elForm).to.include(helperBtnEl);
+          expect(elForm.contains(helperBtnEl)).to.be.true;
+        });
+
+        it('helper submit button gets reconnected when its wrapper is removed from the form', async () => {
+          const elForm = /** @type {HTMLFormElement} */ (
+            await fixture(html`<form><${tagButton} type="submit">foo</${tagButton}></form>`)
+          );
+          const helperBtnEl = /** @type {HTMLButtonElement} */ (
+            elForm.querySelector('button[type=submit]')
+          );
+          /** @type {HTMLElement} */ (helperBtnEl.parentElement).remove();
+          expect(elForm.contains(helperBtnEl)).to.be.false;
+          await aTimeout(0);
+          expect(elForm.contains(helperBtnEl)).to.be.true;
         });
 
         it('helper submit button gets removed when last LionbuttonSubmit gets disconnected from form', async () => {
@@ -146,7 +159,11 @@ export function LionButtonSubmitSuite({ classes = {}, tagString } = {}) {
           elForm.removeChild(lionBtnEl2);
           // @ts-ignore [allow-protected] in test
           expect(helperBtnEl).to.not.equal(lionBtnEl2._nativeButtonNode);
-          expect(Array.from(elForm.children)).to.not.include(helperBtnEl);
+          expect(elForm.contains(helperBtnEl)).to.be.false;
+          // nothing of the helper (nor its wrapper) is left behind in the form
+          expect(elForm.children.length).to.equal(0);
+          await aTimeout(0);
+          expect(elForm.children.length).to.equal(0);
         });
 
         it('hides the helper submit button in the UI', async () => {

@@ -294,6 +294,97 @@ export function runInputStepperSuite({
         expect(incrementButton?.getAttribute('disabled')).to.equal('true');
       });
 
+      it('does not duplicate its default validators when reconnected', async () => {
+        const el = await fixture(inputStepperWithAttrs);
+        const stepperValidators = ['IsNumber', 'MinNumber', 'MaxNumber'];
+        const countDefaultValidators = () =>
+          el.defaultValidators.reduce((/** @type {Record<string, number>} */ acc, validator) => {
+            const name = /** @type {typeof import('@lion/ui/form-core.js').Validator} */ (
+              validator.constructor
+            ).validatorName;
+            if (stepperValidators.includes(name)) {
+              acc[name] = (acc[name] || 0) + 1;
+            }
+            return acc;
+          }, {});
+        expect(countDefaultValidators()).to.deep.equal({ IsNumber: 1, MinNumber: 1, MaxNumber: 1 });
+        const parent = /** @type {HTMLElement} */ (el.parentElement);
+        el.remove();
+        parent.appendChild(el);
+        el.remove();
+        parent.appendChild(el);
+        await el.updateComplete;
+        expect(countDefaultValidators()).to.deep.equal({ IsNumber: 1, MinNumber: 1, MaxNumber: 1 });
+      });
+
+      it('validates against min and max set after connecting', async () => {
+        const el = await fixture(html`<${tag} label="Label"></${tag}>`);
+        el.modelValue = 50;
+        await el.updateComplete;
+        await el.validateComplete;
+        expect(el.validationStates.error).to.deep.equal({});
+
+        el.min = 100;
+        await el.updateComplete;
+        await el.validateComplete;
+        expect(el.validationStates.error).to.have.property('MinNumber');
+
+        el.min = 10;
+        el.max = 40;
+        await el.updateComplete;
+        await el.validateComplete;
+        expect(el.validationStates.error).to.not.have.property('MinNumber');
+        expect(el.validationStates.error).to.have.property('MaxNumber');
+
+        el.max = Infinity;
+        await el.updateComplete;
+        await el.validateComplete;
+        expect(el.validationStates.error).to.deep.equal({});
+        const names = el.defaultValidators.map(
+          validator =>
+            /** @type {typeof import('@lion/ui/form-core.js').Validator} */ (validator.constructor)
+              .validatorName,
+        );
+        expect(names).to.include('MinNumber');
+        expect(names).to.not.include('MaxNumber');
+      });
+
+      it('moves focus to the input when the focused increment/decrement button gets disabled', async () => {
+        const el = await fixture(inputStepperWithAttrs);
+        const incrementButton = /** @type {HTMLButtonElement} */ (
+          el.querySelector('[slot=suffix]')
+        );
+        const decrementButton = /** @type {HTMLButtonElement} */ (
+          el.querySelector('[slot=prefix]')
+        );
+        el.modelValue = 190;
+        await el.updateComplete;
+
+        incrementButton.focus();
+        expect(document.activeElement).to.equal(incrementButton);
+        incrementButton.click();
+        await el.updateComplete;
+        expect(el.modelValue).to.equal(200);
+        expect(incrementButton.hasAttribute('disabled')).to.be.true;
+        expect(document.activeElement).to.equal(el._inputNode);
+
+        el.modelValue = 110;
+        await el.updateComplete;
+        decrementButton.focus();
+        expect(document.activeElement).to.equal(decrementButton);
+        decrementButton.click();
+        await el.updateComplete;
+        expect(el.modelValue).to.equal(100);
+        expect(decrementButton.hasAttribute('disabled')).to.be.true;
+        expect(document.activeElement).to.equal(el._inputNode);
+
+        // a button that stays enabled keeps focus
+        incrementButton.focus();
+        incrementButton.click();
+        await el.updateComplete;
+        expect(document.activeElement).to.equal(incrementButton);
+      });
+
       it('should react to changes in the modelValue by adjusting the disabled state of the button', async () => {
         const el = await fixture(inputStepperWithAttrs);
         const incrementButton = el.querySelector('[slot=suffix]');
