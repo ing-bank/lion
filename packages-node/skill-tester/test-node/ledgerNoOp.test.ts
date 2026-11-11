@@ -18,7 +18,12 @@ type FakeRun = {
   model: string;
   scenario: string;
   score: { score: number };
-  agentRun: { attempted: boolean; totalTokens: number; promptTokens: number; completionTokens: number };
+  agentRun: {
+    attempted: boolean;
+    totalTokens: number;
+    promptTokens: number;
+    completionTokens: number;
+  };
   behaviour?: { passed: boolean };
 };
 
@@ -46,7 +51,12 @@ function run(attempted: boolean, score: number): FakeRun {
 
 test('a no-op is excluded from the ledger score, not counted as zero', () => {
   // Measured case: component/menu, three runs, none of which wrote the file.
-  const allNoOp = updateLedger(emptyLedger, reportWith([run(false, 0), run(false, 0), run(false, 0)]), [scenario], 'rev1');
+  const allNoOp = updateLedger(
+    emptyLedger,
+    reportWith([run(false, 0), run(false, 0), run(false, 0)]),
+    [scenario],
+    'rev1',
+  );
   const entry = allNoOp.entries[0];
   assert.equal(entry.samples, 3, 'the real run count is kept, so the page can show 0/3');
   assert.equal(entry.attempts, 0, 'no run modified the deliverable');
@@ -55,7 +65,12 @@ test('a no-op is excluded from the ledger score, not counted as zero', () => {
 
 test('a mixed cell is scored over the runs that actually attempted', () => {
   // Measured case: 2 of 3 no-ops, which used to publish 28.6% instead of the comparable mean.
-  const mixed = updateLedger(emptyLedger, reportWith([run(false, 0), run(false, 0), run(true, 0.857)]), [scenario], 'rev1');
+  const mixed = updateLedger(
+    emptyLedger,
+    reportWith([run(false, 0), run(false, 0), run(true, 0.857)]),
+    [scenario],
+    'rev1',
+  );
   const entry = mixed.entries[0];
   assert.equal(entry.samples, 3);
   assert.equal(entry.attempts, 1);
@@ -63,7 +78,12 @@ test('a mixed cell is scored over the runs that actually attempted', () => {
 });
 
 test('a fully attempted cell is unchanged', () => {
-  const clean = updateLedger(emptyLedger, reportWith([run(true, 1), run(true, 1)]), [scenario], 'rev1');
+  const clean = updateLedger(
+    emptyLedger,
+    reportWith([run(true, 1), run(true, 1)]),
+    [scenario],
+    'rev1',
+  );
   const entry = clean.entries[0];
   assert.equal(entry.samples, 2);
   assert.equal(entry.attempts, 2);
@@ -73,7 +93,12 @@ test('a fully attempted cell is unchanged', () => {
 test('a scenario with no comparable run is recorded as an absence, not omitted', () => {
   const other = { name: 'component/other', kind: 'component' } as TestScenario;
   // Two runs for component/demo, none of which wrote the file: component/other was never run at all.
-  const ledger = updateLedger(emptyLedger, reportWith([run(false, 0), run(false, 0)]), [scenario, other], 'rev1');
+  const ledger = updateLedger(
+    emptyLedger,
+    reportWith([run(false, 0), run(false, 0)]),
+    [scenario, other],
+    'rev1',
+  );
   const demo = ledger.entries.find(entry => entry.scenario === 'component/demo');
   const otherEntry = ledger.entries.find(entry => entry.scenario === 'component/other');
   assert.equal(demo?.samples, 2, 'the attempted count is kept for the run scenario');
@@ -87,10 +112,22 @@ test('the ledger key is revision-scoped, so a re-run replaces a row and a new sk
   assert.equal(sameRevision.entries.length, 1, 'same revision: replaced, not appended');
   assert.equal(sameRevision.entries[0].mean, 0.9);
   const newRevision = updateLedger(first, reportWith([run(true, 0.9)]), [scenario], 'rev2');
-  assert.equal(newRevision.entries.length, 2, 'new revision: a row per revision, so before/after stays visible');
+  assert.equal(
+    newRevision.entries.length,
+    2,
+    'new revision: a row per revision, so before/after stays visible',
+  );
   // Rows sort by scenario then model, so the two revisions of the same cell stay in insertion order:
   // find the entry by revision instead of trusting a position.
   const rev2Entry = newRevision.entries.find(entry => entry.skillRevision === 'rev2');
   assert.ok(rev2Entry, 'the new revision has an entry of its own');
-  assert.equal(ledgerKey(rev2Entry), 'rev2|test-model|component/demo');
+  assert.equal(ledgerKey(rev2Entry), 'rev2|test-model|component/demo|openai');
+  // The provider is part of the identity: the same model run through an agent runtime is a different cell,
+  // so it can neither overwrite the API row nor be averaged with it. Rows from before the field existed
+  // default to `openai`, which is what they were.
+  assert.equal(
+    ledgerKey({ ...rev2Entry, provider: 'claude-code' }),
+    'rev2|test-model|component/demo|claude-code',
+  );
+  assert.notEqual(ledgerKey({ ...rev2Entry, provider: 'claude-code' }), ledgerKey(rev2Entry));
 });

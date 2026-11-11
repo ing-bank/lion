@@ -169,7 +169,7 @@ function printHelp(): void {
 Usage: node src/cli.ts [options]
 
 Options:
-  --provider <p>          "openai" (any OpenAI-compatible endpoint, default) or "copilot"
+  --provider <p>          "openai" (any OpenAI-compatible endpoint, default), "copilot" or "claude-code"
   --models <m1,m2>        Models to test. No default: pass --models or set $SKILL_TESTER_MODELS
   --samples <n>           Runs per (scenario, model) pair (default: 1)
   --max-turns <n>         Max model round-trips per run, "openai" provider only (default: 25)
@@ -225,7 +225,9 @@ async function main(): Promise<void> {
   const scenarios = selectScenarios(options);
 
   if (options.list) {
-    console.log(`${scenarios.length} scenario(s)${scenarios.length === manualScenarios.length ? '' : ''}:`);
+    console.log(
+      `${scenarios.length} scenario(s)${scenarios.length === manualScenarios.length ? '' : ''}:`,
+    );
     for (const scenario of scenarios) {
       console.log(`  ${scenario.kind.padEnd(12)} ${scenario.name}`);
     }

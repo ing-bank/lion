@@ -90,9 +90,22 @@ export {
   type LlmConfig,
 } from './config.ts';
 
-export { runAgent as runOpenAiCompatibleAgent, type AgentRunResult, type AgentEvent } from './llm/agentRunner.ts';
+export {
+  runAgent as runOpenAiCompatibleAgent,
+  type AgentRunResult,
+  type AgentEvent,
+} from './llm/agentRunner.ts';
 
-export { runCopilotAgent, isCopilotSdkAvailable, type CopilotAgentOptions } from './llm/copilotRunner.ts';
+export {
+  runCopilotAgent,
+  isCopilotSdkAvailable,
+  type CopilotAgentOptions,
+} from './llm/copilotRunner.ts';
+export {
+  runClaudeCodeAgent,
+  isClaudeCodeAvailable,
+  type ClaudeCodeOptions,
+} from './llm/claudeCodeRunner.ts';
 
 export { createFileToolset } from './llm/tools.ts';
 

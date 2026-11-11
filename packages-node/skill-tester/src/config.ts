@@ -13,7 +13,7 @@
  * No model is pinned: the model is whatever the caller passes.
  */
 
-export type Provider = 'openai' | 'copilot';
+export type Provider = 'openai' | 'copilot' | 'claude-code';
 
 export type LlmConfig = {
   provider: Provider;
@@ -39,9 +39,11 @@ const PROVIDER_ALIASES: Record<string, Provider> = {
   compatible: 'openai',
   copilot: 'copilot',
   'github-copilot': 'copilot',
+  'claude-code': 'claude-code',
+  claude: 'claude-code',
 };
 
-const PROVIDER_ALIAS_LIST = '"openai" (any OpenAI-compatible endpoint) or "copilot"';
+const PROVIDER_ALIAS_LIST = '"openai" (any OpenAI-compatible endpoint), "copilot" or "claude-code"';
 
 function firstDefined(...values: (string | undefined)[]): string | undefined {
   return values.find(value => typeof value === 'string' && value.length > 0);

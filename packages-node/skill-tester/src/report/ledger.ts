@@ -39,13 +39,31 @@ export type LedgerEntry = {
   dependencyBytesRead?: number;
   /** USD for the whole cell, or undefined when the model has no published rate. */
   cost?: number;
+  /**
+   * Which route produced the cell: an OpenAI-compatible endpoint, the Copilot SDK, or the Claude Code CLI.
+   * Part of the cell identity, so an agent run can never silently overwrite a model run that happens to use
+   * the same model name.
+   */
+  provider?: 'openai' | 'copilot' | 'claude-code';
+  /**
+   * Derived from the provider: `model` for the raw API route, `agent` for a runtime that brings its own
+   * system prompt and plan. The reporting rule is that the two are never averaged together.
+   */
+  subject?: 'model' | 'agent';
   ranAt: string;
 };
 
 export type Ledger = { version: 1; updatedAt: string; entries: LedgerEntry[] };
 
-export function ledgerKey(entry: Pick<LedgerEntry, 'skillRevision' | 'model' | 'scenario'>): string {
-  return [entry.skillRevision, entry.model, entry.scenario].join('|');
+/**
+ * The cell identity. `provider` belongs in it: an agent runtime can run the same model name as the raw API
+ * route, and without the provider those two runs would merge into one row. Rows written before the field
+ * existed were all `openai`, so that is the default.
+ */
+export function ledgerKey(
+  entry: Pick<LedgerEntry, 'skillRevision' | 'model' | 'scenario' | 'provider'>,
+): string {
+  return [entry.skillRevision, entry.model, entry.scenario, entry.provider ?? 'openai'].join('|');
 }
 
 export function loadLedger(file: string): Ledger {
@@ -99,6 +117,9 @@ export function updateLedger(
       model: summary.model,
       scenario: summary.scenario,
       kind: kinds.get(summary.scenario) ?? 'unknown',
+      // Recorded per cell so an agent run can never be read as a model run, nor averaged with one.
+      provider: report.provider,
+      subject: report.provider === 'openai' ? 'model' : 'agent',
       samples: runs.length,
       ...statsOf(attempted.map(run => run.score.score)),
       behaviourPassed: withBehaviour.filter(run => run.behaviour?.passed).length,

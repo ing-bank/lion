@@ -1,10 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {
-  DEFAULT_OPENAI_BASE_URL,
-  resolveLlmConfig,
-  resolveProvider,
-} from '../src/config.ts';
+import { DEFAULT_OPENAI_BASE_URL, resolveLlmConfig, resolveProvider } from '../src/config.ts';
 
 const MANAGED_ENV = [
   'SKILL_TESTER_PROVIDER',
@@ -48,7 +44,7 @@ test('resolveProvider rejects an unknown provider with a helpful message', () =>
   withEnv({}, () => {
     assert.throws(
       () => resolveProvider({ provider: 'bedrock' as never }),
-      /Unknown provider "bedrock"\. Expected "openai".*or "copilot"/,
+      /Unknown provider "bedrock"\. Expected "openai".*"copilot" or "claude-code"/,
     );
   });
 });
@@ -70,12 +66,15 @@ test('no model is pinned: an unrecognised model name does not change the endpoin
 
 test('an explicit base URL and key win over the defaults', () => {
   withEnv({ OPENAI_BASE_URL: 'https://env.example/v1', OPENAI_API_KEY: 'env-key' }, () => {
-    assert.deepEqual(resolveLlmConfig('m', { baseUrl: 'https://explicit.example/v1/', apiKey: 'k' }), {
-      provider: 'openai',
-      baseUrl: 'https://explicit.example/v1',
-      apiKey: 'k',
-      model: 'm',
-    });
+    assert.deepEqual(
+      resolveLlmConfig('m', { baseUrl: 'https://explicit.example/v1/', apiKey: 'k' }),
+      {
+        provider: 'openai',
+        baseUrl: 'https://explicit.example/v1',
+        apiKey: 'k',
+        model: 'm',
+      },
+    );
   });
 });
 

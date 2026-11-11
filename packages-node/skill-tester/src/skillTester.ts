@@ -21,6 +21,7 @@ import { runAgent as runOpenAiCompatibleAgent } from './llm/agentRunner.ts';
 import type { AgentEvent } from './llm/agentRunner.ts';
 import { countReads } from './scoring/reads.ts';
 import { runCopilotAgent } from './llm/copilotRunner.ts';
+import { runClaudeCodeAgent } from './llm/claudeCodeRunner.ts';
 import {
   aggregate,
   applyGates,
@@ -327,8 +328,8 @@ export async function runSkillTester(config: SkillTesterConfig): Promise<SkillTe
           }
         };
 
-        // The Copilot provider manages its own agent loop and needs the agent registered by name
-        // (and optionally restricted to a tool list); the OpenAI-compatible one runs our loop.
+        // The Copilot and Claude Code providers manage their own agent loop and get the prompt as their own
+        // agent prompt; the OpenAI-compatible one runs our loop.
         const runAgentForScenario = () =>
           llmConfig.provider === 'copilot'
             ? runCopilotAgent({
@@ -340,14 +341,22 @@ export async function runSkillTester(config: SkillTesterConfig): Promise<SkillTe
                 tools: skillOrAgent.tools,
                 onEvent: onAgentEvent,
               })
-            : runOpenAiCompatibleAgent({
-                llmConfig,
-                systemPrompt,
-                userPrompt: scenario.prompt,
-                sandboxRoot,
-                maxTurns,
-                onEvent: onAgentEvent,
-              });
+            : llmConfig.provider === 'claude-code'
+              ? runClaudeCodeAgent({
+                  llmConfig,
+                  systemPrompt,
+                  userPrompt: scenario.prompt,
+                  sandboxRoot,
+                  onEvent: onAgentEvent,
+                })
+              : runOpenAiCompatibleAgent({
+                  llmConfig,
+                  systemPrompt,
+                  userPrompt: scenario.prompt,
+                  sandboxRoot,
+                  maxTurns,
+                  onEvent: onAgentEvent,
+                });
 
         let agentRun: Awaited<ReturnType<typeof runAgentForScenario>>;
         try {
@@ -419,9 +428,9 @@ export async function runSkillTester(config: SkillTesterConfig): Promise<SkillTe
             gray(
               `(${agentRun.turns} turns, ${agentRun.toolCalls} tool calls, ` +
                 `RAG read ${skillFilesRead} skill file(s) / ${(skillBytesRead / 1024).toFixed(0)} KB` +
-                  (dependencyFilesRead > 0
-                    ? `, FAIL ${dependencyFilesRead} dependency file(s) / ${(dependencyBytesRead / 1024).toFixed(0)} KB - a docs gap)`
-                    : ')'),
+                (dependencyFilesRead > 0
+                  ? `, FAIL ${dependencyFilesRead} dependency file(s) / ${(dependencyBytesRead / 1024).toFixed(0)} KB - a docs gap)`
+                  : ')'),
             ),
         );
 
