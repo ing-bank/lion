@@ -203,5 +203,24 @@ export function runInputDateSuite({
       `);
       expect(el.serializedValue).to.equal('2000-12-15');
     });
+
+    it('deserializes an iso date to local midnight of that day', async () => {
+      const el = await fixture(html`<${tag}></${tag}>`);
+      el.serializedValue = '2020-01-30';
+      await el.updateComplete;
+      // `new Date('2020-01-30')` would be UTC midnight: the previous day west of Greenwich, and
+      // not midnight east of it
+      expect(el.modelValue.getTime()).to.equal(new Date(2020, 0, 30).getTime());
+      expect(el.modelValue.getHours()).to.equal(0);
+    });
+
+    it('round-trips modelValue through serializedValue', async () => {
+      const source = await fixture(html`<${tag} .modelValue="${new Date(2000, 11, 15)}"></${tag}>`);
+      const target = await fixture(html`<${tag}></${tag}>`);
+      target.serializedValue = source.serializedValue;
+      await target.updateComplete;
+      expect(target.modelValue.getTime()).to.equal(source.modelValue.getTime());
+      expect(target.serializedValue).to.equal('2000-12-15');
+    });
   });
 }
