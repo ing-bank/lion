@@ -24,6 +24,24 @@ const changeProgress = () => {
 };
 ```
 
+## Showing progress without extending
+
+You do not have to extend `LionProgressIndicator` to show progress. The element renders the accessible
+progressbar itself — role, `aria-valuenow`/`aria-valuemin`/`aria-valuemax`, and a localized "Loading"
+label while it is indeterminate — and reads its value from the `value`, `min` and `max` attributes.
+Use the plain element when the built-in behaviour is enough, and reach for an extended class (below)
+only when you need custom visuals.
+
+```js preview-story
+export const plainDeterminate = () => html`
+  <lion-progress-indicator aria-label="Interest rate" value="50"></lion-progress-indicator>
+`;
+
+export const plainIndeterminate = () => html`
+  <lion-progress-indicator aria-label="Loading"></lion-progress-indicator>
+`;
+```
+
 ## Styled progress bar example
 
 Add custom styles and more features by extending the `LionProgressIndicator`.

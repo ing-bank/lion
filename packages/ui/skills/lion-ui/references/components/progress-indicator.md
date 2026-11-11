@@ -17,7 +17,9 @@ import '@lion/ui/define/lion-progress-indicator.js';
 
 ### Features
 
-This component is designed to be extended in order to add visuals.
+The element renders the accessible progressbar on its own. It is designed to be *extended* only when you
+want to add custom visuals (see the Examples page) — the plain `<lion-progress-indicator>` is what you use
+as a consumer.
 
 - Can be indeterminate or determinate, depending on whether it has a value.
 - Accessibility compliant
@@ -53,6 +55,24 @@ const changeProgress = () => {
   const progressBar = document.getElementsByName('my-bar')[0];
   progressBar.value = Math.floor(Math.random() * 101);
 };
+```
+
+### Showing progress without extending
+
+You do not have to extend `LionProgressIndicator` to show progress. The element renders the accessible
+progressbar itself — role, `aria-valuenow`/`aria-valuemin`/`aria-valuemax`, and a localized "Loading"
+label while it is indeterminate — and reads its value from the `value`, `min` and `max` attributes.
+Use the plain element when the built-in behaviour is enough, and reach for an extended class (below)
+only when you need custom visuals.
+
+```js preview-story
+export const plainDeterminate = () => html`
+  <lion-progress-indicator aria-label="Interest rate" value="50"></lion-progress-indicator>
+`;
+
+export const plainIndeterminate = () => html`
+  <lion-progress-indicator aria-label="Loading"></lion-progress-indicator>
+`;
 ```
 
 ### Styled progress bar example
