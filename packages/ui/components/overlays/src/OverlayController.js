@@ -855,7 +855,7 @@ export class OverlayController extends EventTarget {
         if (this.invokerNode) {
           this.invokerNode.setAttribute(
             this.invokerRelation === 'label' ? 'aria-labelledby' : 'aria-describedby',
-            this._contentId,
+            this.contentNode.id,
           );
         }
         this.contentNode.setAttribute('role', 'tooltip');
@@ -929,11 +929,11 @@ export class OverlayController extends EventTarget {
       this._init();
     }
 
-    if (this.manager) {
-      this.manager.show(this);
-    }
-
     if (this.isShown) {
+      // Already shown: only move it to the top of the stack of shown overlays
+      if (this.manager) {
+        this.manager.show(this);
+      }
       /** @type {function} */
       (this._showResolve)();
       return;
@@ -941,24 +941,34 @@ export class OverlayController extends EventTarget {
 
     const event = new CustomEvent('before-show', { cancelable: true });
     this.dispatchEvent(event);
-    if (!event.defaultPrevented) {
-      if ('HTMLDialogElement' in window && this.__wrappingDialogNode instanceof HTMLDialogElement) {
-        this.__wrappingDialogNode.open = true;
-      }
-
-      // @ts-ignore
-      this.__wrappingDialogNode.style.display = '';
-      this._keepBodySize({ phase: 'before-show' });
-      await this._handleFeatures({ phase: 'show' });
-      this._keepBodySize({ phase: 'show' });
-      await this._handlePosition({ phase: 'show' });
-      this.__elementToFocusAfterHide = elementToFocusAfterHide;
-      this.dispatchEvent(new Event('show'));
-      await this._transitionShow({
-        backdropNode: this.backdropNode,
-        contentNode: this.contentNode,
-      });
+    if (event.defaultPrevented) {
+      // A prevented show leaves no trace: the overlay is not registered as shown on the
+      // manager and does not get the [data-open] state.
+      /** @type {function} */
+      (this._showResolve)();
+      return;
     }
+
+    if (this.manager) {
+      this.manager.show(this);
+    }
+
+    if ('HTMLDialogElement' in window && this.__wrappingDialogNode instanceof HTMLDialogElement) {
+      this.__wrappingDialogNode.open = true;
+    }
+
+    // @ts-ignore
+    this.__wrappingDialogNode.style.display = '';
+    this._keepBodySize({ phase: 'before-show' });
+    await this._handleFeatures({ phase: 'show' });
+    this._keepBodySize({ phase: 'show' });
+    await this._handlePosition({ phase: 'show' });
+    this.__elementToFocusAfterHide = elementToFocusAfterHide;
+    this.dispatchEvent(new Event('show'));
+    await this._transitionShow({
+      backdropNode: this.backdropNode,
+      contentNode: this.contentNode,
+    });
 
     // a styling/debug hook for open state
     this.contentNode.setAttribute('data-open', '');
@@ -1032,33 +1042,41 @@ export class OverlayController extends EventTarget {
       this.contentNode.getRootNode()
     ).activeElement;
 
-    if (this.manager && this.#isRegisteredOnManager()) {
-      this.manager.hide(this);
-    }
-
     if (!this.isShown) {
+      if (this.manager && this.#isRegisteredOnManager()) {
+        this.manager.hide(this);
+      }
       /** @type {function} */ (this._hideResolve)();
       return;
     }
 
     const event = new CustomEvent('before-hide', { cancelable: true });
     this.dispatchEvent(event);
-    if (!event.defaultPrevented) {
-      await this._transitionHide({
-        backdropNode: this.backdropNode,
-        contentNode: this.contentNode,
-      });
-
-      if ('HTMLDialogElement' in window && this.__wrappingDialogNode instanceof HTMLDialogElement) {
-        this.__wrappingDialogNode.close();
-      }
-      // @ts-ignore
-      this.__wrappingDialogNode.style.display = 'none';
-      this._handleFeatures({ phase: 'hide' });
-      this._keepBodySize({ phase: 'hide' });
-      this.dispatchEvent(new Event('hide'));
-      this._restoreFocus();
+    if (event.defaultPrevented) {
+      // A prevented hide keeps the overlay shown, so it stays registered as shown on the
+      // manager and keeps its [data-open] state.
+      /** @type {function} */ (this._hideResolve)();
+      return;
     }
+
+    if (this.manager && this.#isRegisteredOnManager()) {
+      this.manager.hide(this);
+    }
+
+    await this._transitionHide({
+      backdropNode: this.backdropNode,
+      contentNode: this.contentNode,
+    });
+
+    if ('HTMLDialogElement' in window && this.__wrappingDialogNode instanceof HTMLDialogElement) {
+      this.__wrappingDialogNode.close();
+    }
+    // @ts-ignore
+    this.__wrappingDialogNode.style.display = 'none';
+    this._handleFeatures({ phase: 'hide' });
+    this._keepBodySize({ phase: 'hide' });
+    this.dispatchEvent(new Event('hide'));
+    this._restoreFocus();
     /** @type {function} */ (this._hideResolve)();
 
     this.contentNode.removeAttribute('data-open');
@@ -1347,12 +1365,15 @@ export class OverlayController extends EventTarget {
    * move to the dialog from URL bar, nor the dialog element, nor the `contentNode` are focused.
    * Instead the first focusable element is focused right away
    */
+  #onWrappingDialogFocus = () => {
+    if (!this.#isShiftPressed) {
+      this.#getInitialElementToFocus().focus();
+    }
+  };
+
   #handleFocusInsideDialog = () => {
-    this.__wrappingDialogNode?.addEventListener('focus', () => {
-      if (!this.#isShiftPressed) {
-        this.#getInitialElementToFocus().focus();
-      }
-    });
+    // A stable listener reference, so repeated shows do not stack up listeners
+    this.__wrappingDialogNode?.addEventListener('focus', this.#onWrappingDialogFocus);
   };
 
   /**
@@ -1388,8 +1409,9 @@ export class OverlayController extends EventTarget {
        */
       this.#getInitialElementToFocus().focus();
     }
-    if (phase === 'hide') {
+    if (phase === 'hide' || phase === 'teardown') {
       this.#stopHandlingShiftKeyPress();
+      this.__wrappingDialogNode?.removeEventListener('focus', this.#onWrappingDialogFocus);
     }
   }
 
@@ -1643,6 +1665,11 @@ export class OverlayController extends EventTarget {
     }
 
     this.contentNode?.removeEventListener('click', this.#hideOnCloseButtonClick);
+
+    if (this._popper) {
+      this._popper.destroy();
+      this._popper = undefined;
+    }
 
     // if (this.config._shouldTeardownDomStructure) {
     this.__rearrangeNodesCleanup?.();
