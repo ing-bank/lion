@@ -143,6 +143,27 @@ export function runWithHoverInteractionSuite({ tagString, invokerTagString, suff
       expect(getUserSelect()).to.equal('');
     });
 
+    it('prevents the context menu of a longpress on the invoker until teardown', async () => {
+      const el = /** @type {HoverInteractionEl} */ (
+        await fixture(html`
+        <${tag}>
+          <div slot="content">Tooltip content</div>
+          <${invokerTag} slot="invoker">Invoker</${invokerTag}>
+        </${tag}>
+      `)
+      );
+      const invoker = /** @type {HTMLElement} */ (el.querySelector('[slot="invoker"]'));
+      const contextMenu = () => {
+        const ev = new Event('contextmenu', { cancelable: true });
+        invoker.dispatchEvent(ev);
+        return ev;
+      };
+      expect(contextMenu().defaultPrevented).to.be.true;
+
+      el._overlayCtrl.teardown();
+      expect(contextMenu().defaultPrevented).to.be.false;
+    });
+
     it('does not open on tap-triggered focusin', async () => {
       const el = /** @type {HoverInteractionEl} */ (
         await fixture(html`

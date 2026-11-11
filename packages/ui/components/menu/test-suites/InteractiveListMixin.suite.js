@@ -135,9 +135,7 @@ export function runInteractiveListMixinSuite({ classes = {}, tagString: legacyTa
       expect(listItemEls.includes(el.listItems[1])).to.be.true;
     });
 
-    it('inherits from DisclosureMixin', async () => {});
-
-    describe('Active mode', async () => {
+    describe('Active mode', () => {
       it('supports "activedescendant" pattern', async () => {
         const el = await fixture(html`
         <${tag} name="foo" ._activeMode="${'activedescendant'}">
@@ -381,6 +379,70 @@ export function runInteractiveListMixinSuite({ classes = {}, tagString: legacyTa
       `);
       const item0 = el.listItems[0];
       expect(item0.getAttribute('aria-current')).to.equal('page');
+    });
+
+    describe('Pointer and keyboard edge cases', () => {
+      const itemsTemplate = html`
+        <div role="menuitemradio" aria-checked="false">Item 0</div>
+        <div role="menuitemradio" aria-checked="false">Item 1</div>
+        <div role="menuitemradio" aria-checked="false">Item 2</div>
+      `;
+
+      it('activates and checks the clicked item', async () => {
+        const el = await fixture(html`<${tag}>${itemsTemplate}</${tag}>`);
+        /** @type {HTMLElement} */ (el.listItems[2]).click();
+        expect(el.activeIndex).to.equal(2);
+        expect(el.listItems[2].hasAttribute('checked')).to.be.true;
+      });
+
+      it('ignores clicks outside of the items', async () => {
+        const el = await fixture(html`<${tag}>${itemsTemplate}</${tag}>`);
+        el.activeIndex = 1;
+        // @ts-expect-error [allow-protected-in-tests]
+        /** @type {HTMLElement} */ (el._listNode).click();
+        expect(el.activeIndex).to.equal(1);
+      });
+
+      it('does not navigate with the keyboard when disabled', async () => {
+        const el = await fixture(html`<${tag} disabled>${itemsTemplate}</${tag}>`);
+        // @ts-expect-error [allow-protected-in-tests]
+        const { _listNode } = el;
+        el.activeIndex = 0;
+        mimicKeyPress(_listNode, 'ArrowDown');
+        expect(el.activeIndex).to.equal(0);
+      });
+
+      it('checks the active item on keyboard navigation when "selectionFollowsFocus" is set', async () => {
+        const el = await fixture(html`<${tag} selection-follows-focus>${itemsTemplate}</${tag}>`);
+        // @ts-expect-error [allow-protected-in-tests]
+        const { _listNode } = el;
+        el.activeIndex = 0;
+        mimicKeyPress(_listNode, 'ArrowDown');
+        expect(el.activeIndex).to.equal(1);
+        expect(el.listItems[1].hasAttribute('checked')).to.be.true;
+        mimicKeyPress(_listNode, 'End');
+        expect(el.listItems[2].hasAttribute('checked')).to.be.true;
+      });
+
+      it('stays on the current item with "wrap" when no item is enabled', async () => {
+        const el = await fixture(html`
+          <${tag} wrap>
+            <div role="menuitem" disabled>Item 0</div>
+            <div role="menuitem" disabled>Item 1</div>
+            <div role="menuitem" disabled>Item 2</div>
+          </${tag}>
+        `);
+        // @ts-expect-error [allow-protected-in-tests]
+        const { _listNode } = el;
+        el.activeIndex = 0;
+        const restore = failFastOnEndlessLoop(el);
+        try {
+          keyDownOrThrow(_listNode, 'ArrowDown');
+        } finally {
+          restore();
+        }
+        expect(el.activeIndex).to.equal(0);
+      });
     });
 
     // Copy tests from ListboxMixin. Later, make this mixin a fundament of the ListboxMixin
@@ -753,14 +815,6 @@ export function runInteractiveListMixinSuite({ classes = {}, tagString: legacyTa
           expect(el.activeIndex).to.equal(1);
         });
       });
-    });
-
-    describe('Widget extensions', () => {
-      it('can be extended to [role=listbox]', async () => {});
-      it('can be extended to [role=menu]', async () => {});
-      it('can be extended to [role=menubar]', async () => {});
-      it('can be extended to [role=toolbar]', async () => {});
-      it('can be extended to [role=tree]', async () => {});
     });
   });
 }
