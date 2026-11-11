@@ -118,6 +118,8 @@ export class LionSteps extends LitElement {
    * @param {number} oldCurrent
    */
   _goTo(newCurrent, oldCurrent) {
+    // Steps can be added or removed after first render, so derive the bound from the current steps.
+    this._max = this.steps.length - 1;
     if (newCurrent < 0 || newCurrent > this._max) {
       throw new Error(`There is no step at index ${newCurrent}.`);
     }
