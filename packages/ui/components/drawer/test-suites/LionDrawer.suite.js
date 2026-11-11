@@ -85,6 +85,22 @@ export function runDrawerSuite({
         expect(drawer.minHeight).to.equal(minHeight);
         expect(drawer.maxHeight).to.equal(maxHeight);
       });
+
+      it('fires one "opened-changed" event per toggle', async () => {
+        const drawer = await fixture(template);
+        let count = 0;
+        drawer.addEventListener('opened-changed', () => {
+          count += 1;
+        });
+
+        drawer.toggle();
+        await drawer.updateComplete;
+        expect(count).to.equal(1);
+
+        drawer.toggle();
+        await drawer.updateComplete;
+        expect(count).to.equal(2);
+      });
     });
 
     describe('Accessibility', () => {
