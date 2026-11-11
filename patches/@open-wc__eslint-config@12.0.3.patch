@@ -1,0 +1,29 @@
+diff --git a/src/eslint-plugin-wc-export.js b/src/eslint-plugin-wc-export.js
+index 34977206ee5cbab56714ee1954831dd290d75d14..185fde4bb4ea6f8e455828c03408aadd99c134d6 100644
+--- a/src/eslint-plugin-wc-export.js
++++ b/src/eslint-plugin-wc-export.js
+@@ -1,7 +1,22 @@
+ /**
+  * Eslint doesn't understand the default export pattern from eslint the plugin, so we
+  * re-export the default export here.
++ *
++ * Patched by this repo (patches/@open-wc__eslint-config@12.0.3.patch): this package is written for
++ * eslint-plugin-wc v1, where `lib/configs/best-practice` exports the config as `default`. The repo
++ * declares v2 (^2.2.0), where that module exports `{ configFactory }` and the config is a *flat* config
++ * (`{ plugins: { wc }, rules }`). npm hides the difference by nesting a v1 copy under this package; pnpm
++ * dedupes the peer onto the root's v2, so `.default` is undefined and ESLint rejects the whole config with
++ * `Property "" is the wrong type (expected object but got undefined)`.
++ *
++ * Accepting both shapes keeps npm and pnpm working, and the patch goes away with the eslint stack (the oxc
++ * toolchain replaces it).
+  */
+-const eslintPluginWc = require('eslint-plugin-wc/lib/configs/best-practice').default;
++const config = require('eslint-plugin-wc/lib/configs/best-practice');
+ 
+-module.exports = eslintPluginWc;
++const resolved =
++  config.default ?? (typeof config.configFactory === 'function' ? config.configFactory() : config);
++
++module.exports = Array.isArray(resolved.plugins)
++  ? resolved
++  : { plugins: Object.keys(resolved.plugins ?? {}), rules: resolved.rules };

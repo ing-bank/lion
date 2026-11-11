@@ -85,16 +85,29 @@ They provide an unopinionated, white-label layer that can be extended to your ow
 
 ## Astro migration
 
-- Keep using `/docs` on the root level as we used it in the `master` branch. The documentation is copied into Astro related directories on `npm run start` and when when anything in `/docs` is updated.
+- Keep using `/docs` on the root level as we used it in the `master` branch. Astro reads that tree directly (the content collection points at `../docs`), so nothing is copied into astro directories any more: editing a file under `/docs` is picked up by the dev server.
 - Replace manually all references to assets in all `md` files so that we imply that the path is produced from the directory where the md file is located. F.e. `new URL('../src/wa-combobox/assets/obama.jpeg', import.meta.url).href;` should `new URL('./src/wa-combobox/assets/obama.jpeg', import.meta.url).href;`. Note double dot is replaced with one dot. See [this PR](https://github.com/ing-bank/lion/pull/2125/files#diff-403b1e0ab54d51dcfe54248e847498e492da00383d8b33a4087994ab9035a22c) for the reference.
 - Rename all `*.mjs` files to `*.js` ones if they are used by `mdjs` examples
 
 ### Astro how to
 
-- To start in dev mode run `npm run start`
-- To start in production mode:
-  - Run `npm run build`
-  - Run `npm run preview`
+The portal is its own package ([`portal/`](./portal/README.md)) and installs separately from the root
+workspace, so a local portal flow needs that install once:
+
+```bash
+pnpm run repo:pnpm:install          # root: the library, workspace links, docs
+pnpm run repo:pnpm:install:portal   # the portal's own tree (astro + its pins); needs --ignore-workspace,
+                                    # because portal/ is not a workspace member
+```
+
+- **Dev mode:** `npm start` (alias `npm run dev`) from the repository root — the astro dev server on the
+  repository's `docs/` tree (default <http://localhost:4321>); the library and the demos resolve from this
+  checkout, so a component you edit is what you see. The config sets `trailingSlash: 'never'`, so dev urls
+  have **no** trailing slash (`/components/accordion/overview`), while the built site uses directory urls.
+- **Production build:** `npm run build` (astro + the link pass, output in `_site/`), then `npm run preview`
+  to serve it locally.
+- The portal needs the root install as well: `@lion/ui` and `@lion/astro-lit` come in through `file:` links
+  and their runtime dependencies resolve from the repository's `node_modules`.
 
 ### Issues which are not caused by the migration (not to be fixed now)
 
@@ -267,7 +280,32 @@ Check out our [coding guidelines](https://lion.js.org/guides/principles/definiti
 
 ## How to contribute
 
-**Please note:** This project uses Npm [Workspaces](https://docs.npmjs.com/cli/v8/using-npm/workspaces). If you want to run all demos locally you need to get at least npm 7+ and install all dependencies by executing `npm install`.
+**Please note:** this repository installs with [pnpm](https://pnpm.io) 10 (`packageManager` pins the
+version) and publishes an npm-formatted `package-lock.json` for the tooling that reads one. Concretely:
+
+- **pnpm installs every package.** The root workspace plus `portal/`, which is deliberately not a member
+  and installs itself. One content-addressed store is hardlinked into every checkout, so only the first
+  checkout pays for the packages: measured on this repo, a cold `pnpm install` took 32 s and left a 2 MB
+  marginal `node_modules` (267 real files, the rest hardlinks) where `npm ci` left 617 MB per checkout.
+- **`package-lock.json` stays the committed artifact** (scanners, SBOM tooling and the internal
+  singleton-version tooling read it) and pnpm derives its own lock from it, so `pnpm-lock.yaml` is
+  gitignored. Use the script instead of a bare `pnpm install` in a fresh checkout:
+
+```bash
+pnpm run repo:pnpm:install            # pnpm install, pinned to package-lock.json by .pnpmfile.cjs (root)
+pnpm --dir portal import && pnpm --dir portal install --frozen-lockfile
+```
+
+- **The two have to agree before you push.** `pnpm add`/`pnpm update` change what pnpm installs; if that
+  is not mirrored into `package-lock.json`, `pnpm run repo:lockfile:check` fails and names the declared
+  dependencies pnpm would install at a version the npm lock does not record. Husky runs it on `pre-push`
+  and CI runs it on every PR - mirror the lock with
+  `npm install --package-lock-only --ignore-scripts` and commit both files.
+- `pnpm-workspace.yaml` is generated from package.json (`pnpm run repo:workspace:sync`: member list and every
+  override; keys pnpm alone reads are preserved) and CI fails when the committed file is stale
+  (`pnpm run repo:workspace:check`). npm keeps `workspaces` + `overrides` in package.json because it produces
+  the lock external tooling reads - pnpm cannot read either field, which is the whole reason the second file
+  exists.
 
 Lion Web Components are only as good as its contributions.
 Read our [contribution guide](https://github.com/ing-bank/lion/blob/master/CONTRIBUTING.md) and feel free to enhance/improve Lion. We keep feature requests closed while we're not working on them.
@@ -287,8 +325,8 @@ That builds the portal (`npm --prefix portal run build` = `astro build` + the li
   toolchain is only needed to build the website, so no root `npm install` (CI included) pulls it in
   any more - a compromised package in that tree cannot run scripts during this repo's install. The
   root `npm run build` delegates to it, and `npm run deploy` still publishes `_site/`.
-  Run `npm install` at the root once first: the portal renders the library from this checkout and the
-  demos in `docs/` resolve their imports from the repository's `node_modules`.
+  Run the root install once first (`pnpm run repo:pnpm:install`): the portal renders the library from
+  this checkout and the demos in `docs/` resolve their imports from the repository's `node_modules`.
 - **The legacy rocket site lives at `/prev` and is frozen.** Its build lives next to the portal in
   [`prev-portal/`](./prev-portal/README.md): the rocket tree is unmaintained, so it is kept out of the
   workspace too and no pipeline installs or builds it. `cd prev-portal && npm install && npm run build`

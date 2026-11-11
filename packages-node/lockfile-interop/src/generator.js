@@ -2,7 +2,14 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { stringifyJson } from './json-notation.js';
-import { baseKey, isLocalLink, pnpmEdges, readPnpmLock, splitNameVersion } from './pnpm-lock.js';
+import {
+  baseKey,
+  edgeVersion,
+  isLocalLink,
+  pnpmEdges,
+  readPnpmLock,
+  splitNameVersion,
+} from './pnpm-lock.js';
 
 /**
  * @typedef {object} GenerateOptions
@@ -91,11 +98,21 @@ export function generateNpmLock(options) {
   };
 
   /**
+   * Places `name@version` at `<prefix>node_modules/<name>` and recurses into its resolved dependencies.
+   *
+   * `resolvable` is what a requirer at `prefix` can already reach by walking up the tree: the repo-root
+   * copies plus whatever every ancestor directory placed. A dependency that is already in there is not
+   * copied — npm's tree truncates exactly those edges, and a cyclic edge is the special case where the
+   * ancestor is the package itself. Both matter: copying a cycle never terminates, and copying every shared
+   * leaf is what turns a real lock into an explosion (`es-errors` alone is reached from thousands of
+   * requirers) that then overflows the serializer.
+   *
    * @param {string} prefix
    * @param {string} nameVersion
+   * @param {Set<string>} resolvable `name@version` reachable from `prefix` by walking up
    * @returns {void}
    */
-  const place = (prefix, nameVersion) => {
+  const place = (prefix, nameVersion, resolvable) => {
     const [name, version] = splitNameVersion(nameVersion);
     const key = `${prefix}node_modules/${name}`;
     if (packages[key]) return;
@@ -143,8 +160,15 @@ export function generateNpmLock(options) {
       }
     }
 
+    // this package's dependencies land in `${key}/node_modules`, and from there resolution also reaches
+    // everything in `resolvable` plus their siblings in this directory
+    const scope = new Set(resolvable);
+    scope.add(baseKey(nameVersion));
+    for (const dep of Object.keys(dependencies)) scope.add(`${dep}@${dependencies[dep]}`);
     for (const [dep, depVersion] of Object.entries(dependencies)) {
-      place(`${key}/`, `${dep}@${depVersion}`);
+      const childId = `${dep}@${depVersion}`;
+      // a dependency the requirer already reaches up the tree is not copied below it
+      if (!resolvable.has(childId)) place(`${key}/`, childId, scope);
     }
   };
 
@@ -152,6 +176,8 @@ export function generateNpmLock(options) {
   const rootImporter = pnpm.importers.get('.');
   /** @type {Record<string, unknown>} */
   const rootManifest = { name: 'root', version: '0.0.0' };
+  /** @type {string[]} */
+  const rootIds = [];
   for (const field of /** @type {const} */ (['dependencies', 'devDependencies'])) {
     const ranges = declaredRanges('.', [field]);
     if (Object.keys(ranges).length) rootManifest[field] = ranges;
@@ -165,10 +191,13 @@ export function generateNpmLock(options) {
           linkedEntries += 1;
         }
       } else {
-        place('', `${name}@${spec.version}`);
+        rootIds.push(`${name}@${edgeVersion(spec.version)}`);
       }
     }
   }
+  // the root copies are reachable from every requirer in the install, so a nested requirer reuses them
+  const rootVisible = new Set(rootIds);
+  for (const id of rootIds) place('', id, rootVisible);
   packages[''] = rootManifest;
 
   for (const workspace of workspaces) {
@@ -181,6 +210,8 @@ export function generateNpmLock(options) {
     packages[workspace.dir] = manifest;
     packages[`node_modules/${workspace.name}`] = { resolved: workspace.dir, link: true };
 
+    /** @type {string[]} */
+    const workspaceIds = [];
     for (const field of /** @type {const} */ (['dependencies', 'devDependencies'])) {
       for (const [name, spec] of pnpm.importers.get(workspace.dir)?.[field] ?? []) {
         if (isLocalLink(spec.version)) {
@@ -197,10 +228,13 @@ export function generateNpmLock(options) {
             }
           }
         } else {
-          place(`${workspace.dir}/`, `${name}@${spec.version}`);
+          workspaceIds.push(`${name}@${edgeVersion(spec.version)}`);
         }
       }
     }
+    // a workspace requirer walks up to the repo-root node_modules as well as its own
+    const resolvable = new Set([...rootVisible, ...workspaceIds]);
+    for (const id of workspaceIds) place(`${workspace.dir}/`, id, resolvable);
   }
 
   /** @type {Record<string, any>} */

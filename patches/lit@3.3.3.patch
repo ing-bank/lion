@@ -1,7 +1,7 @@
-diff --git a/node_modules/lit/index.js b/node_modules/lit/index.js
-index 599d7d0..68a9dcb 100644
---- a/node_modules/lit/index.js
-+++ b/node_modules/lit/index.js
+diff --git a/index.js b/index.js
+index 599d7d05d6113563d5b7bb5219d8a8781b2cf868..68a9dcb7ce3444ca174a77dccbbaa0d442ad0ee9 100644
+--- a/index.js
++++ b/index.js
 @@ -1,2 +1,2 @@
 -import"@lit/reactive-element";import"lit-html";export*from"lit-element/lit-element.js";export*from"lit-html/is-server.js";
 +import"@lit/reactive-element";import"lit-html";export { nothing } from 'lit-html';export*from"lit-element/lit-element.js";export*from"lit-html/is-server.js";

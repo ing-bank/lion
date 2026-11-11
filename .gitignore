@@ -27,6 +27,12 @@ node_modules/
 npm-debug.log
 yarn-error.log
 
+# pnpm is the installer here, but its lock is a local build artifact: package-lock.json stays the
+# committed lock that external tooling reads (see packages-node/lockfile-interop). `pnpm install`
+# writes this file; `pnpm run repo:lockfile:check` (pre-push + CI) fails when the two disagree.
+pnpm-lock.yaml
+pnpm-debug.log
+
 ## build artifacts
 /lib/
 /build/

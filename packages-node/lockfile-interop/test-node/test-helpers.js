@@ -8,6 +8,23 @@
 import { makeFixtureRepo } from './fixtures.js';
 
 /**
+ * Runs `fn` against a repo built by `makeRepo` and always cleans it up afterwards.
+ *
+ * @template T
+ * @param {() => { root: string, cleanup: () => void }} makeRepo
+ * @param {(repo: { root: string }) => T | Promise<T>} fn
+ * @returns {Promise<T>}
+ */
+export async function withRepo(makeRepo, fn) {
+  const repo = makeRepo();
+  try {
+    return await fn(repo);
+  } finally {
+    repo.cleanup();
+  }
+}
+
+/**
  * Runs `fn` against a freshly generated fixture repo and always cleans it up afterwards.
  *
  * @template T
@@ -16,10 +33,5 @@ import { makeFixtureRepo } from './fixtures.js';
  * @returns {Promise<T>}
  */
 export async function withFixtureRepo(options, fn) {
-  const repo = makeFixtureRepo(options);
-  try {
-    return await fn(repo);
-  } finally {
-    repo.cleanup();
-  }
+  return withRepo(() => makeFixtureRepo(options), fn);
 }

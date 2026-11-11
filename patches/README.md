@@ -1,3 +1,20 @@
+# Patches
+
+These are pnpm patches (`patchedDependencies` in `pnpm-workspace.yaml` for the root workspace,
+`pnpm.patchedDependencies` in `portal/package.json` for the portal, which is not a workspace member). pnpm
+applies them during `pnpm install`, keyed by the exact package version - so a patch can never land on a
+different copy of the package than the one it was written for.
+
+Update one with:
+
+```bash
+pnpm patch <name>@<version> --edit-dir /tmp/patch-<name>   # extract it
+# edit the files in that directory
+pnpm patch-commit /tmp/patch-<name>                        # writes patches/<name>@<version>.patch and records it
+```
+
+Each file below records *why* the patch exists, so the reason survives the next version bump.
+
 ## @mdjs/core@0.20.0
 
 ### mdjsStoryParse.js

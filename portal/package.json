@@ -8,10 +8,10 @@
   "scripts": {
     "build": "astro build --force && node ./src/utils/rewrite-links.mjs",
     "dev": "astro dev --force",
-    "postinstall": "patch-package --patch-dir ../patches",
     "links": "node ./src/utils/rewrite-links.mjs",
     "preview": "node ./scripts/deploy-portal-preview.mjs",
-    "sync": "astro sync"
+    "sync": "astro sync",
+    "postinstall": "node ../scripts/apply-patches.mjs --dir ."
   },
   "devDependencies": {
     "@bundled-es-modules/message-format": "^6.2.4",
@@ -38,7 +38,6 @@
     "lit-element": "^4.2.2",
     "lit-html": "^3.3.3",
     "parse5": "^8.0.0",
-    "patch-package": "^8.0.1",
     "postinstall-postinstall": "^2.1.0",
     "providence-analytics": "file:../packages-node/providence-analytics",
     "singleton-manager": "file:../packages/singleton-manager",
@@ -58,5 +57,17 @@
       ".": "$@mdjs/mdjs-preview",
       "@lion/ui": "file:../packages/ui"
     }
+  },
+  "pnpm": {
+    "patchedDependencies": {
+      "lit@3.3.3": "../patches/lit@3.3.3.patch",
+      "@lit-labs/ssr@4.1.0": "../patches/@lit-labs__ssr@4.1.0.patch",
+      "@mdjs/core@0.21.1": "../patches/@mdjs__core@0.21.1.patch",
+      "@mdjs/mdjs-preview@0.6.0": "../patches/@mdjs__mdjs-preview@0.6.0.patch"
+    },
+    "onlyBuiltDependencies": [
+      "esbuild",
+      "sharp"
+    ]
   }
 }
