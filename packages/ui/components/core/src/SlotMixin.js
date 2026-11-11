@@ -190,7 +190,8 @@ const SlotMixinImplementation = /** @type {SlotMixin} */ ((/** @type {import('@o
           // eslint-disable-next-line no-console
           console.error(`[SlotMixin] No shadowRoot was found`);
         }
-        const registryRoot = supportsScopedRegistry ? this.shadowRoot : document;
+        // Without a shadowRoot there is no scoped registry to respect: fall back to the document
+        const registryRoot = supportsScopedRegistry && hasShadowRoot ? this.shadowRoot : document;
 
         // @ts-expect-error wait for browser support
         const renderTargetThatRespectsShadowRootScoping = registryRoot.createElement('div');
