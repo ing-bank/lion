@@ -292,7 +292,7 @@ version) and publishes an npm-formatted `package-lock.json` for the tooling that
   gitignored. Use the script instead of a bare `pnpm install` in a fresh checkout:
 
 ```bash
-pnpm run repo:pnpm:install            # pnpm import + pnpm install --frozen-lockfile (root)
+pnpm run repo:pnpm:install            # pnpm install, pinned to package-lock.json by .pnpmfile.cjs (root)
 pnpm --dir portal import && pnpm --dir portal install --frozen-lockfile
 ```
 

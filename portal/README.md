@@ -24,7 +24,7 @@ Do not add this directory to `workspaces`, and do not call it from a root instal
 ```bash
 pnpm run repo:pnpm:install          # at the repo root: the library and its workspace links (see below)
 cd portal
-pnpm import --ignore-workspace      # the portal's own lock, derived from its committed package-lock.json
+pnpm install --ignore-workspace     # pinned to the portal's committed package-lock.json by portal/.pnpmfile.cjs
 pnpm install --ignore-workspace     # installs the portal's own tree in portal/node_modules
 pnpm run build        # writes <repo root>/_site (astro + the base-url link pass)
 pnpm run dev          # astro dev server on the repo's docs tree (or `npm start` at the repo root)

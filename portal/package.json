@@ -10,7 +10,8 @@
     "dev": "astro dev --force",
     "links": "node ./src/utils/rewrite-links.mjs",
     "preview": "node ./scripts/deploy-portal-preview.mjs",
-    "sync": "astro sync"
+    "sync": "astro sync",
+    "postinstall": "node ../scripts/apply-patches.mjs --dir ."
   },
   "devDependencies": {
     "@bundled-es-modules/message-format": "^6.2.4",

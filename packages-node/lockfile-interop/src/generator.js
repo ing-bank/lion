@@ -2,7 +2,14 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { stringifyJson } from './json-notation.js';
-import { baseKey, edgeVersion, isLocalLink, pnpmEdges, readPnpmLock, splitNameVersion } from './pnpm-lock.js';
+import {
+  baseKey,
+  edgeVersion,
+  isLocalLink,
+  pnpmEdges,
+  readPnpmLock,
+  splitNameVersion,
+} from './pnpm-lock.js';
 
 /**
  * @typedef {object} GenerateOptions

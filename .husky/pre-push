@@ -3,16 +3,16 @@
 # a dependency added or updated with pnpm and never mirrored into package-lock.json is exactly the drift
 # that otherwise reaches main, where it surfaces later as a version decision on a package the app does
 # not load. CI runs the same checks, this is just the earlier copy.
-pnpm run repo:workspace:check || {
+npm run repo:workspace:check || {
   echo ''
   echo "pnpm-workspace.yaml is not what package.json implies."
-  echo "Fix it with:  pnpm run repo:workspace:sync"
+  echo "Fix it with:  npm run repo:workspace:sync"
   exit 1
 }
-pnpm run repo:lockfile:check || {
+npm run repo:lockfile:check || {
   echo ''
   echo "package-lock.json is out of sync with what pnpm installs."
-  echo "Mirror it with:  npm install --package-lock-only --ignore-scripts"
+  echo "Mirror it with:  npm run repo:lockfile:sync"
   echo "then commit package.json + package-lock.json (pnpm-lock.yaml is gitignored)."
   exit 1
 }

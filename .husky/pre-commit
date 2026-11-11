@@ -1,1 +1,1 @@
-pnpm exec lint-staged
+npx --no-install lint-staged

@@ -30,29 +30,32 @@ one at acceptable cost — `pnpm import` only converts _into_ pnpm, the publishe
 (`ndom91/pnpm-lock-to-package-lock`), and an exact converter means re-implementing npm's tree placement
 (see Prior art). So the two managers split the work:
 
-- **pnpm owns installing**: one store, hardlinks, ~5x the speed, ~16x less disk per worktree.
-- **npm owns the lock artifact**: `npm install --package-lock-only` in CI, so the file the tooling reads is
-  one npm itself would write.
-- **this package owns the agreement**: it fails the build the moment the two locks resolve different
-  versions, so the tooling can never derive a version the app does not install.
-
-Without that last piece the hybrid is a silent trap: a lock one dependency behind looks fine in review and
-only shows up as a wrong version decision downstream.
+- **npm owns the lock**: `package-lock.json` is the only committed lock. CI installs from it with
+  `npm ci`, so it can never be stale without CI failing, and the file tooling reads is one npm wrote.
+- **pnpm installs locally**, from that same lock: one store, hardlinks, ~5x the speed, ~16x less disk per
+  worktree. `pnpm-lock.yaml` is gitignored and always derived.
+- **this package owns the agreement**, deterministically:
+  - `sync` generates `pnpm-workspace.yaml` (members + every override in pnpm's spelling) from
+    package.json, so pnpm reads the same constraints npm does;
+  - `src/pin-to-npm-lock.cjs`, loaded by `.pnpmfile.cjs`, pins every registry range pnpm reads to the
+    exact version `package-lock.json` installs for that same edge. `pnpm import` cannot do this: it
+    re-resolves to the newest registry match (measured: 22 declared edges drifted, e.g. `mocha ^10` ->
+    pnpm 10.8.2 | npm 10.7.3). With the pin, the same npm lock yields a byte-identical pnpm lock on any day;
+  - `check` fails when a declared dependency still resolves differently - in practice: package.json
+    changed and package-lock.json was not regenerated.
 
 ## The workflow this repository runs
 
-1. **pnpm installs, from the committed npm lock.** `pnpm import` derives `pnpm-lock.yaml` from
-   `package-lock.json`, then `pnpm install --frozen-lockfile` installs exactly that — `pnpm run
-   repo:pnpm:install` does both for the root workspace. `pnpm-lock.yaml` is gitignored: the lock tooling
-   reads stays the committed `package-lock.json`, and no install can clobber it.
-2. **Develop with pnpm.** `pnpm add` and `pnpm update` change what pnpm would install; nothing
-   regenerates the npm lock for you.
-3. **Let the gate decide.** `pnpm run repo:lockfile:check` (husky `pre-push`, and CI on every PR) exits 1
-   with every _declared_ dependency pnpm would install at a version the npm lock does not record.
-4. **Mirror the lock.** `npm install --package-lock-only --ignore-scripts`, commit `package.json` +
-   `package-lock.json`, then `pnpm import && pnpm install --frozen-lockfile`. `pnpm run
-   repo:lockfile:generate` writes the npm lock straight from the pnpm lock (no npm resolve) when the two
-   managers genuinely disagree — peer-heavy packages are the usual case.
+1. **Install with pnpm.** `pnpm install` (or `pnpm run repo:pnpm:install`); the portal is not a workspace
+   member: `pnpm run repo:pnpm:install:portal`. npm still works: `npm ci` is what CI runs.
+2. **Change dependencies in package.json**, then `npm run repo:lockfile:sync`: npm writes
+   `package-lock.json` (`--package-lock-only`, no install) and `sync --write` regenerates
+   `pnpm-workspace.yaml`. Run `pnpm install` again and pnpm follows the new lock.
+3. **Let the gates decide.** husky `pre-push` and CI run `repo:workspace:check`, `lint:workspace-lists`
+   and `repo:lockfile:check`; CI's `npm ci` additionally fails on a lock that does not match package.json.
+4. **Patches** live in `patches/` as pnpm patch files keyed by exact `name@version`
+   (`patchedDependencies`); pnpm applies them itself, and `scripts/apply-patches.mjs` (postinstall)
+   applies the same files under npm with the same exact-version rule.
 
 ## Commands
 
@@ -61,6 +64,7 @@ pnpm run repo:lockfile:check      # exit 1 on drift (declared mode + --require: 
 pnpm run repo:lockfile:generate   # write package-lock.json from pnpm-lock.yaml (no npm resolve)
 pnpm run repo:workspace:sync      # derive pnpm-workspace.yaml (members + overrides) from package.json
 pnpm run repo:workspace:check     # exit 1 when the committed file is not what package.json implies
+npm run repo:lockfile:sync        # package.json changed: rewrite package-lock.json + pnpm-workspace.yaml
 ```
 
 The binary is `lockfile-interop` (`src/cli.js`), so the same gate runs in another repo without copying

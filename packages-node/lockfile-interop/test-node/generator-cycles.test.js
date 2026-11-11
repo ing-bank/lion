@@ -36,7 +36,9 @@ describe('generate on cyclic locks', () => {
       expect(lock.packages).to.not.have.property(
         'node_modules/@fixture/cycle-a/node_modules/@fixture/cycle-b/node_modules/@fixture/cycle-a',
       );
-      expect(lock.packages).to.not.have.property('node_modules/@fixture/self/node_modules/@fixture/self');
+      expect(lock.packages).to.not.have.property(
+        'node_modules/@fixture/self/node_modules/@fixture/self',
+      );
       expect(Object.keys(lock.packages).length).to.be.lessThan(10);
     });
   });
@@ -62,26 +64,32 @@ describe('generate on cyclic locks', () => {
 describe('generate on a large tree', () => {
   it('stays linear in the tree size instead of blowing up', async () => {
     const count = 1200;
-    await withRepo(() => makeLargeTreeFixtureRepo({ count }), repo => {
-      const started = Date.now();
-      const { lock } = generateInMemory({ repoRoot: repo.root });
-      const elapsed = Date.now() - started;
-      const entries = Object.keys(lock.packages).length;
-      // one copy of each chain package plus the shared tail under every requirer — bounded, not exponential
-      expect(entries).to.be.lessThan(count * 4);
-      expect(elapsed, `generate took ${elapsed}ms`).to.be.lessThan(10000);
-      // the cycle at the end of the chain did not recurse forever
-      expect(lock.packages).to.not.have.property(
-        `node_modules/big-0/node_modules/big-1/node_modules/big-${count - 1}/node_modules/big-0`,
-      );
-    });
+    await withRepo(
+      () => makeLargeTreeFixtureRepo({ count }),
+      repo => {
+        const started = Date.now();
+        const { lock } = generateInMemory({ repoRoot: repo.root });
+        const elapsed = Date.now() - started;
+        const entries = Object.keys(lock.packages).length;
+        // one copy of each chain package plus the shared tail under every requirer — bounded, not exponential
+        expect(entries).to.be.lessThan(count * 4);
+        expect(elapsed, `generate took ${elapsed}ms`).to.be.lessThan(10000);
+        // the cycle at the end of the chain did not recurse forever
+        expect(lock.packages).to.not.have.property(
+          `node_modules/big-0/node_modules/big-1/node_modules/big-${count - 1}/node_modules/big-0`,
+        );
+      },
+    );
   });
 
   it('produces the same bytes on every run of a large tree', async () => {
-    await withRepo(() => makeLargeTreeFixtureRepo({ count: 1200 }), repo => {
-      const first = JSON.stringify(generateInMemory({ repoRoot: repo.root }).lock);
-      const second = JSON.stringify(generateInMemory({ repoRoot: repo.root }).lock);
-      expect(first).to.equal(second);
-    });
+    await withRepo(
+      () => makeLargeTreeFixtureRepo({ count: 1200 }),
+      repo => {
+        const first = JSON.stringify(generateInMemory({ repoRoot: repo.root }).lock);
+        const second = JSON.stringify(generateInMemory({ repoRoot: repo.root }).lock);
+        expect(first).to.equal(second);
+      },
+    );
   });
 });

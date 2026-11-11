@@ -8,14 +8,19 @@
  */
 import { readFileSync } from 'node:fs';
 
-const globsOf = (source) =>
-  [...source.matchAll(/^\s{2}-\s+['"]?([^'"\n]+?)['"]?\s*$/gm)].map((m) => m[1].trim());
+/* eslint-disable no-console */
 
-const yamlGlobs = globsOf(readFileSync('pnpm-workspace.yaml', 'utf8').split('patchedDependencies')[0]);
+const globsOf = source =>
+  [...source.matchAll(/^\s{2}-\s+['"]?([^'"\n]+?)['"]?\s*$/gm)].map(m => m[1].trim());
+
+const yamlGlobs = globsOf(
+  readFileSync('pnpm-workspace.yaml', 'utf8').split('patchedDependencies')[0],
+);
 const manifest = JSON.parse(readFileSync('package.json', 'utf8'));
-const npmGlobs = (manifest.workspaces ?? []).map((entry) => String(entry).replace(/\/\*$/, '/*'));
+const npmGlobs = (manifest.workspaces ?? []).map(entry => String(entry).replace(/\/\*$/, '/*'));
 
-const normalise = (globs) => [...new Set(globs.map((g) => g.replace(/^['"]|['"]$/g, '').trim()))].sort();
+const normalise = globs =>
+  [...new Set(globs.map(g => g.replace(/^['"]|['"]$/g, '').trim()))].sort();
 const a = normalise(yamlGlobs);
 const b = normalise(npmGlobs);
 
