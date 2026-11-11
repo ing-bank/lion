@@ -22,6 +22,12 @@ export class LionForm extends LionFieldset {
     this._submit = this._submit.bind(this);
     /** @protected */
     this._reset = this._reset.bind(this);
+    /**
+     * The form node the listeners were added to, so they can be removed from the same node
+     * @type {HTMLFormElement|undefined}
+     * @private
+     */
+    this.__registeredFormNode = undefined;
   }
 
   connectedCallback() {
@@ -103,13 +109,20 @@ export class LionForm extends LionFieldset {
 
   /** @private */
   __registerEventsForLionForm() {
-    this._formNode.addEventListener('submit', this._submit);
-    this._formNode.addEventListener('reset', this._reset);
+    // Without an inner <form> there is nothing to listen to; submit() and reset() report this
+    const formNode = this._formNode;
+    if (!formNode) return;
+    this.__registeredFormNode = formNode;
+    formNode.addEventListener('submit', this._submit);
+    formNode.addEventListener('reset', this._reset);
   }
 
   /** @private */
   __teardownEventsForLionForm() {
-    this._formNode.removeEventListener('submit', this._submit);
-    this._formNode.removeEventListener('reset', this._reset);
+    const formNode = this.__registeredFormNode;
+    if (!formNode) return;
+    this.__registeredFormNode = undefined;
+    formNode.removeEventListener('submit', this._submit);
+    formNode.removeEventListener('reset', this._reset);
   }
 }
