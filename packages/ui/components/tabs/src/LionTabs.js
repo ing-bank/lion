@@ -306,13 +306,11 @@ export class LionTabs extends LitElement {
     if (direction === 'Home') {
       return this.tabs.findIndex(tab => !tab.disabled);
     }
-    if (direction === 'End') {
-      const notDisabledTabs = this.tabs
-        .map((tab, i) => ({ disabled: tab.disabled, index: i }))
-        .filter(tab => !tab.disabled);
-      return notDisabledTabs[notDisabledTabs.length - 1].index;
-    }
-    return -1;
+    // direction === 'End'
+    const notDisabledTabs = this.tabs
+      .map((tab, i) => ({ disabled: tab.disabled, index: i }))
+      .filter(tab => !tab.disabled);
+    return notDisabledTabs[notDisabledTabs.length - 1].index;
   }
 
   /**
@@ -413,9 +411,11 @@ export class LionTabs extends LitElement {
 
   /** @private */
   __updateSelected(withFocus = false) {
-    if (
-      !(this.__store && typeof this.selectedIndex === 'number' && this.__store[this.selectedIndex])
-    ) {
+    if (!(
+      this.__store &&
+      typeof this.selectedIndex === 'number' &&
+      this.__store[this.selectedIndex]
+    )) {
       return;
     }
     const previousButton = this.tabs.find(child => child.hasAttribute('selected'));

@@ -67,12 +67,12 @@ function getParseMode(value, { mode = 'auto', viewValueStates } = {}) {
 function parseWithLocale(value, options) {
   const separator = getDecimalSeparator(options?.locale, options);
   const regexNumberAndLocaleSeparator = new RegExp(`[0-9${separator}-]`, 'g');
-  let numberAndLocaleSeparator = value.match(regexNumberAndLocaleSeparator)?.join('');
+  // `value` always contains a digit (see parseNumber), so the match is never null
+  let numberAndLocaleSeparator = /** @type {RegExpMatchArray} */ (
+    value.match(regexNumberAndLocaleSeparator)
+  ).join('');
   if (separator === ',') {
-    numberAndLocaleSeparator = numberAndLocaleSeparator?.replace(',', '.');
-  }
-  if (!numberAndLocaleSeparator) {
-    return NaN;
+    numberAndLocaleSeparator = numberAndLocaleSeparator.replace(',', '.');
   }
   return parseFloat(numberAndLocaleSeparator);
 }
@@ -87,15 +87,12 @@ function parseWithLocale(value, options) {
  * @return {number} parsed javascript number
  */
 function parseHeuristic(value) {
-  if (value.match(/[0-9., ]/g)) {
-    // 1. put placeholder at decimal separator
-    const numberString = value
-      .replace(/(,|\.)([^,|.]*)$/g, '_decSep_$2')
-      .replace(/(,|\.| )/g, '') // 2. remove all group separators
-      .replace(/_decSep_/, '.'); // 3. restore decimal separator
-    return parseFloat(numberString);
-  }
-  return 0;
+  // 1. put placeholder at decimal separator
+  const numberString = value
+    .replace(/(,|\.)([^,|.]*)$/g, '_decSep_$2')
+    .replace(/(,|\.| )/g, '') // 2. remove all group separators
+    .replace(/_decSep_/, '.'); // 3. restore decimal separator
+  return parseFloat(numberString);
 }
 
 /**
@@ -123,25 +120,17 @@ export function parseNumber(value, options) {
     return undefined;
   }
   const valueM = value.replace(/[−]/g, '-'); // U+002D, Hyphen-Minus, &#45;
-  const matchedInput = valueM.match(/[0-9,.\- ]/g);
-  if (!matchedInput) {
-    return undefined;
-  }
-  const cleanedInput = matchedInput.join('');
+  // `value` contains a digit (checked above), so neither this match nor the ones in the parse
+  // functions below can be null
+  const cleanedInput = /** @type {RegExpMatchArray} */ (valueM.match(/[0-9,.\- ]/g)).join('');
   const parseMode = getParseMode(cleanedInput, options);
   switch (parseMode) {
-    case 'unparseable': {
-      const cleanedInputMatchStr = cleanedInput.match(/[0-9-]/g)?.join('');
-      if (!cleanedInputMatchStr) {
-        return NaN;
-      }
-      return parseFloat(cleanedInputMatchStr);
-    }
+    case 'unparseable':
+      return parseFloat(/** @type {RegExpMatchArray} */ (cleanedInput.match(/[0-9-]/g)).join(''));
     case 'withLocale':
       return parseWithLocale(cleanedInput, options || {});
-    case 'heuristic':
-      return parseHeuristic(cleanedInput);
     default:
-      return 0;
+      // 'heuristic', the only other mode getParseMode returns
+      return parseHeuristic(cleanedInput);
   }
 }
