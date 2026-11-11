@@ -208,6 +208,38 @@ export function runStepsSuite({
         expect(() => el._goTo(3, el.current)).to.throw(Error, 'There is no step at index 3.');
         expect(() => el._goTo(-1, el.current)).to.throw(Error, 'There is no step at index -1.');
       });
+
+      it('can navigate to a step that was added after first render', async () => {
+        const el = await fixture(html`
+          <${tags.host}>
+            <${tags.step} initial-step>Step 0</${tags.step}>
+            <${tags.step}>Step 1</${tags.step}>
+          </${tags.host}>
+        `);
+        const addedStep = document.createElement(tagNameStep);
+        addedStep.textContent = 'Step 2';
+        el.appendChild(addedStep);
+
+        el.next();
+        el.next();
+        expect(el.current).to.equal(2);
+        expect(/** @type {LionStep} */ (addedStep).status).to.equal('entered');
+      });
+
+      it('throws the out of bounds error for a step that was removed after first render', async () => {
+        const el = await fixture(html`
+          <${tags.host}>
+            <${tags.step} initial-step>Step 0</${tags.step}>
+            <${tags.step}>Step 1</${tags.step}>
+            <${tags.step}>Step 2</${tags.step}>
+          </${tags.host}>
+        `);
+        /** @type {Element} */ (el.lastElementChild).remove();
+
+        el.next();
+        expect(() => el.next()).to.throw(Error, 'There is no step at index 2.');
+        expect(el.current).to.equal(1);
+      });
     });
 
     describe('events', () => {
