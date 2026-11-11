@@ -258,6 +258,8 @@ class LionMenuCore extends MultiLevelListMixin(LitElement) {
           this._listRole = 'menu';
         }
       }
+      // firstUpdated has already written the initial role, so keep it in sync from here on
+      this._listNode.setAttribute('role', this._listRole);
     }
   }
 }
