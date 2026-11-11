@@ -173,27 +173,36 @@ const FormRegistrarMixinImplementation = /** @type {FormRegistrarMixin} */ (supe
 
       // 2. Add children as object key
       if (this._isFormOrFieldset) {
-        const { name } = child;
-        if (name === this.name) {
-          console.info('Error Node:', child); // eslint-disable-line no-console
-          throw new TypeError(`You can not have the same name "${name}" as your parent`);
-        }
-
-        if (name.substr(-2) === '[]') {
-          if (!Array.isArray(this.formElements[name])) {
-            this.formElements[name] = new FormControlsCollection();
-          }
-          this.formElements[name].push(child);
-        } else if (!this.formElements[name]) {
-          this.formElements[name] = child;
-        } else {
-          console.info('Error Node:', child); // eslint-disable-line no-console
-          throw new TypeError(
-            `Name "${name}" is already registered - if you want an array add [] to the end`,
-          );
-        }
+        this.#addFormElementName(child, child.name);
       }
       this.#scheduleFormElementsUpdate();
+    }
+
+    /**
+     * Adds the child under `name` to the object keys of `.formElements`.
+     * Throws, before anything is changed, when the name is not available.
+     * @param {FormControl} child
+     * @param {string} name
+     */
+    #addFormElementName(child, name) {
+      if (name === this.name) {
+        console.info('Error Node:', child); // eslint-disable-line no-console
+        throw new TypeError(`You can not have the same name "${name}" as your parent`);
+      }
+
+      if (name.substr(-2) === '[]') {
+        if (!Array.isArray(this.formElements[name])) {
+          this.formElements[name] = new FormControlsCollection();
+        }
+        this.formElements[name].push(child);
+      } else if (!this.formElements[name]) {
+        this.formElements[name] = child;
+      } else {
+        console.info('Error Node:', child); // eslint-disable-line no-console
+        throw new TypeError(
+          `Name "${name}" is already registered - if you want an array add [] to the end`,
+        );
+      }
     }
 
     #scheduleFormElementsUpdate() {
@@ -282,10 +291,41 @@ const FormRegistrarMixinImplementation = /** @type {FormRegistrarMixin} */ (supe
      * @protected
      */
     _onRequestToChangeFormElementName(ev) {
-      const element = this.formElements[ev.detail.oldName];
-      if (element) {
-        this.formElements[ev.detail.newName] = element;
-        delete this.formElements[ev.detail.oldName];
+      // The event bubbles: only handle renames of our own registered children (not of ourselves,
+      // nor of fields registered in a nested group)
+      if (
+        !this._isFormOrFieldset ||
+        ev.target === this ||
+        !this.isRegisteredFormElement(/** @type {ElementWithParentFormGroup} */ (/** @type {unknown} */ (ev.target)))
+      ) {
+        return;
+      }
+      const child = /** @type {FormControl} */ (ev.target);
+      const { oldName, newName } = ev.detail;
+      if (oldName === newName) {
+        return;
+      }
+      const oldEntry = this.formElements[oldName];
+      const isInOldArray = Array.isArray(oldEntry) && oldEntry.includes(child);
+      if (oldEntry !== child && !isInOldArray) {
+        // Not registered under the old name (yet), so nothing to move
+        return;
+      }
+
+      // Like registration, this throws when the new name is not available
+      this.#addFormElementName(child, newName);
+      if (Array.isArray(this.formElements[newName])) {
+        this.formElements[newName].sort(compareDocumentOrder);
+      }
+
+      // Only the renamed child leaves its old name; siblings in an array name stay
+      if (isInOldArray) {
+        oldEntry.splice(oldEntry.indexOf(child), 1);
+        if (!oldEntry.length) {
+          delete this.formElements[oldName];
+        }
+      } else {
+        delete this.formElements[oldName];
       }
     }
 
