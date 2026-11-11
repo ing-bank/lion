@@ -34,17 +34,14 @@ function checkChrome(flavor = 'google-chrome') {
     return isIOSChrome;
   }
 
-  if (flavor === 'google-chrome') {
-    return (
-      isChromium !== null &&
-      typeof isChromium !== 'undefined' &&
-      vendorName === 'Google Inc.' &&
-      isOpera === false &&
-      isIEedge === false
-    );
-  }
-
-  return undefined;
+  // flavor === 'google-chrome'
+  return (
+    isChromium !== null &&
+    typeof isChromium !== 'undefined' &&
+    vendorName === 'Google Inc.' &&
+    isOpera === false &&
+    isIEedge === false
+  );
 }
 
 export const browserDetection = {

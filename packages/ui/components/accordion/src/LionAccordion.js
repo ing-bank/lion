@@ -430,9 +430,6 @@ export class LionAccordion extends LitElement {
    *  @private
    */
   __updateExpanded() {
-    if (!this.__store) {
-      return;
-    }
     this.__store.forEach((entry, index) => {
       const entryExpanded = this.expanded.indexOf(index) !== -1;
 
@@ -466,9 +463,6 @@ export class LionAccordion extends LitElement {
    *  @private
    */
   __cleanStore() {
-    if (!this.__store) {
-      return;
-    }
     this.__store.forEach(entry => {
       this._cleanInvoker(entry);
     });
