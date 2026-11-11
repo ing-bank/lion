@@ -828,12 +828,7 @@ export const ValidateMixinImplementation = /** @type {ValidateMixin} */ (supercl
      * @private
      */
     __isEmpty(v) {
-      if (typeof this._isEmpty === 'function') {
-        return this._isEmpty(v);
-      }
-      return (
-        this.modelValue === null || typeof this.modelValue === 'undefined' || this.modelValue === ''
-      );
+      return this._isEmpty(v);
     }
 
     // ------------------------------------------------------------------------------------------
