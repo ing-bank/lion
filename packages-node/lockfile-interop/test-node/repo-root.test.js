@@ -11,9 +11,13 @@ import { execFileSync } from 'node:child_process';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { expect } from 'chai';
 import { resolveRepoRoot } from '../src/repo-root.js';
 import { withFixtureRepo } from './test-helpers.js';
+
+// realpathSync.native also expands Windows 8.3 short names (RUNNER~1), which git emits long
+const canonical = (/** @type {string} */ p) => fs.realpathSync.native(p);
 
 describe('resolveRepoRoot', () => {
   it('resolves the enclosing git work tree from a nested directory', async () => {
@@ -21,14 +25,14 @@ describe('resolveRepoRoot', () => {
       execFileSync('git', ['init', '-q'], { cwd: repo.root });
       const nested = path.join(repo.root, 'packages-node', 'some-package');
       fs.mkdirSync(nested, { recursive: true });
-      expect(resolveRepoRoot(nested)).to.equal(fs.realpathSync(repo.root));
+      expect(canonical(resolveRepoRoot(nested))).to.equal(canonical(repo.root));
     });
   });
 
   it('falls back to the directory itself outside a git work tree', () => {
     const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'lockfile-interop-nogit-'));
     try {
-      expect(resolveRepoRoot(dir)).to.equal(fs.realpathSync(dir));
+      expect(canonical(resolveRepoRoot(dir))).to.equal(canonical(dir));
     } finally {
       fs.rmSync(dir, { recursive: true, force: true });
     }
@@ -42,7 +46,7 @@ describe('the gate when it is run from a workspace package directory', () => {
       // tracked, or the CLI would also report the untracked workspace file and muddle the assertion
       execFileSync('git', ['add', '-A'], { cwd: repo.root });
       const pkgDir = path.join(repo.root, 'pkgs', 'lib-a');
-      const cli = new URL('../src/cli.js', import.meta.url).pathname;
+      const cli = fileURLToPath(new URL('../src/cli.js', import.meta.url));
       /** @type {{status: number, stdout: string, stderr: string}} */
       let result;
       try {
