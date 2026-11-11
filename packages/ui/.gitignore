@@ -6,3 +6,5 @@
 vscode.css-custom-data.json
 vscode.html-custom-data.json
 web-types.json
+# also generated on prepublishing (generate-lion-exports), like /*.js above
+/test-suites/*.js
