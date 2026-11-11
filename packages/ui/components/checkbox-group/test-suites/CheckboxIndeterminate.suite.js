@@ -1,4 +1,4 @@
-import { expect, fixture, html, unsafeStatic } from '@open-wc/testing';
+import { aTimeout, expect, fixture, html, unsafeStatic } from '@open-wc/testing';
 import { getFormControlMembers } from '@lion/ui/form-core-test-helpers.js';
 import {
   LionCheckbox,
@@ -632,12 +632,57 @@ export function runCheckboxIndeterminateSuite({
       expect(elIndeterminate.hasAttribute('indeterminate')).to.be.true;
       expect(elIndeterminate.checked).to.be.false;
 
-      // Act
-      elIndeterminate.removeChild(/** @type {ChildNode} */ (elIndeterminate.lastChild));
+      // Act: remove the only unchecked child, so all remaining children are checked
+      const uncheckedChild = /** @type {LionCheckbox} */ (
+        elIndeterminate.querySelector(`${childTagString}[label="Marie Curie"]`)
+      );
+      uncheckedChild.remove();
+      await aTimeout(0);
       await elIndeterminate.updateComplete;
 
       // Assert
-      expect(elIndeterminate?.hasAttribute('indeterminate')).to.be.true;
+      const { _subCheckboxes, _inputNode } = getCheckboxIndeterminateMembers(elIndeterminate);
+      expect(_subCheckboxes).to.not.include(uncheckedChild);
+      expect(_subCheckboxes.length).to.equal(2);
+      expect(elIndeterminate.indeterminate).to.be.false;
+      expect(elIndeterminate.hasAttribute('indeterminate')).to.be.false;
+      expect(elIndeterminate.checked).to.be.true;
+
+      // Toggling the parent no longer touches the removed child
+      _inputNode.click();
+      await elIndeterminate.updateComplete;
+      expect(elIndeterminate.checked).to.be.false;
+      expect(_subCheckboxes.every(checkbox => !checkbox.checked)).to.be.true;
+      expect(uncheckedChild.checked).to.be.false;
+    });
+
+    it('updates its state when a nested child of a nested indeterminate checkbox is removed', async () => {
+      const el = /**  @type {LionCheckboxGroup} */ await fixture(html`
+      <${tags['checkbox-group']} name="scientists[]">
+        <${tags.host} label="All" id="outer">
+          <${tags.checkbox} checked label="Archimedes"></${tags.checkbox}>
+          <${tags.host} label="Nested" id="nested">
+            <${tags.checkbox} checked label="Francis Bacon"></${tags.checkbox}>
+            <${tags.checkbox} label="Marie Curie"></${tags.checkbox}>
+          </${tags.host}>
+        </${tags.host}>
+      </${tags['checkbox-group']}>
+    `);
+      const outer = /**  @type {LionCheckboxIndeterminate} */ (el.querySelector('#outer'));
+      const nested = /**  @type {LionCheckboxIndeterminate} */ (el.querySelector('#nested'));
+      expect(outer.indeterminate).to.be.true;
+      expect(nested.indeterminate).to.be.true;
+
+      /** @type {LionCheckbox} */ (
+        nested.querySelector(`${childTagString}[label="Marie Curie"]`)
+      ).remove();
+      await aTimeout(0);
+      await outer.updateComplete;
+
+      expect(nested.indeterminate).to.be.false;
+      expect(nested.checked).to.be.true;
+      expect(outer.indeterminate).to.be.false;
+      expect(outer.checked).to.be.true;
     });
 
     it('should work as expected with nested indeterminate checkboxes', async () => {

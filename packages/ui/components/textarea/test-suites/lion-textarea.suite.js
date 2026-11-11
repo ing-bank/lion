@@ -202,6 +202,34 @@ export function runTextareaSuite({
       expect(resizeSpy.calledOnce).to.be.true;
     });
 
+    it('disconnects its visibility (IntersectionObserver) observer when disconnected', async () => {
+      const observeSpy = sinon.spy(IntersectionObserver.prototype, 'observe');
+      const disconnectSpy = sinon.spy(IntersectionObserver.prototype, 'disconnect');
+      try {
+        const el = await fixture(html`<${tag}></${tag}>`);
+        const parent = /** @type {HTMLElement} */ (el.parentElement);
+        const observersOfEl = () =>
+          observeSpy
+            .getCalls()
+            .filter(call => call.args[0] === el)
+            .map(call => call.thisValue);
+
+        expect(observersOfEl().length).to.equal(1);
+        el.remove();
+        expect(disconnectSpy.getCalls().map(call => call.thisValue)).to.include(observersOfEl()[0]);
+
+        // reconnecting creates a fresh observer, which is disconnected again on the next removal
+        parent.appendChild(el);
+        expect(observersOfEl().length).to.equal(2);
+        el.remove();
+        const disconnected = disconnectSpy.getCalls().map(call => call.thisValue);
+        expect(observersOfEl().every(observer => disconnected.includes(observer))).to.be.true;
+      } finally {
+        observeSpy.restore();
+        disconnectSpy.restore();
+      }
+    });
+
     it('is accessible', async () => {
       const el = await fixture(`<${tagString} label="Label"></${tagString}>`);
       await expect(el).to.be.accessible();

@@ -160,6 +160,43 @@ export function runInputFileSuite({
       expect(el.hasAttribute('focused')).to.be.false;
     });
 
+    it('opens the file dialog via the native input when the select button is clicked', async () => {
+      const el = await fixture(html`<${tag} label="Select"></${tag}>`);
+      // @ts-expect-error [allow-protected-in-tests]
+      const { _inputNode } = getInputMembers(el);
+      // @ts-expect-error [allow-protected-in-test]
+      const buttonNode = /** @type {HTMLButtonElement} */ (el._buttonNode);
+      // do not open a real dialog
+      const inputClickStub = sinon.stub(_inputNode, 'click');
+      const hostClickSpy = sinon.spy();
+      el.addEventListener('click', hostClickSpy);
+
+      const clickEvent = new MouseEvent('click', {
+        bubbles: true,
+        cancelable: true,
+        composed: true,
+      });
+      buttonNode.dispatchEvent(clickEvent);
+
+      expect(inputClickStub).to.have.been.calledOnce;
+      expect(clickEvent.defaultPrevented).to.be.true;
+      // the click does not travel on, so it is not seen as a click on the host (or a form around it)
+      expect(hostClickSpy).to.not.have.been.called;
+      inputClickStub.restore();
+    });
+
+    it('clears the native input value on click, so selecting the same file again fires change', async () => {
+      const el = await fixture(html`<${tag} label="Select"></${tag}>`);
+      mimicSelectFile(el, [file]);
+      // @ts-expect-error [allow-protected-in-tests]
+      const { _inputNode } = getInputMembers(el);
+      expect(_inputNode.value).to.equal('C:\\fakepath\\foo.txt');
+
+      // a plain Event has no activation behaviour, so no dialog opens
+      _inputNode.dispatchEvent(new Event('click'));
+      expect(_inputNode.value).to.equal('');
+    });
+
     it('should set touched property true on change', async () => {
       const el = await fixture(html` <${tag} label="Select"></${tag}> `);
       expect(el.touched).to.be.false;

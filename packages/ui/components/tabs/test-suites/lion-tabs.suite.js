@@ -343,6 +343,48 @@ export function runTabsSuite({
         expect(el.selectedIndex).to.equal(0);
       });
 
+      it('prevents the default (page scroll) of keydown on arrow keys, [home] and [end] only', async () => {
+        const el = /** @type {LionTabs} */ (await fixture(basicTabs));
+        const tabs = el.querySelectorAll('[slot=tab]');
+        for (const key of ['ArrowDown', 'ArrowRight', 'ArrowUp', 'ArrowLeft', 'Home', 'End']) {
+          const ev = new KeyboardEvent('keydown', { key, cancelable: true, bubbles: true });
+          tabs[1].dispatchEvent(ev);
+          expect(ev.defaultPrevented, key).to.be.true;
+        }
+        for (const key of ['Enter', ' ', 'Tab', 'a']) {
+          const ev = new KeyboardEvent('keydown', { key, cancelable: true, bubbles: true });
+          tabs[1].dispatchEvent(ev);
+          expect(ev.defaultPrevented, key).to.be.false;
+        }
+        // keydown alone does not change the selection
+        expect(el.selectedIndex).to.equal(0);
+      });
+
+      it('skips disabled tabs on [home] and [end]', async () => {
+        const el = /** @type {LionTabs} */ (
+          await fixture(html`
+            <${tag}>
+              <button slot="tab" disabled>tab 0</button>
+              <div slot="panel">panel 0</div>
+              <button slot="tab">tab 1</button>
+              <div slot="panel">panel 1</div>
+              <button slot="tab">tab 2</button>
+              <div slot="panel">panel 2</div>
+              <button slot="tab">tab 3</button>
+              <div slot="panel">panel 3</div>
+              <button slot="tab" disabled>tab 4</button>
+              <div slot="panel">panel 4</div>
+            </${tag}>
+          `)
+        );
+        const tabs = el.querySelectorAll('[slot=tab]');
+        el.selectedIndex = 2;
+        tabs[2].dispatchEvent(new KeyboardEvent('keyup', { key: 'Home' }));
+        expect(el.selectedIndex).to.equal(1);
+        tabs[1].dispatchEvent(new KeyboardEvent('keyup', { key: 'End' }));
+        expect(el.selectedIndex).to.equal(3);
+      });
+
       it('cycles through tabs even if the last or first tabs are disabled', async () => {
         const el = /** @type {LionTabs} */ (
           await fixture(html`
