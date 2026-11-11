@@ -40,11 +40,12 @@ export class ScopedStylesController {
     // TODO: consider adding an id here to always win, since we are simulating shadow dom
     // behavior here.
     const highSpecifictyScope = `${this.scopedClass}.${this.scopedClass}`;
-    this.__styleTag.textContent = /** @type {typeof ScopedStylesController} */ (
-      this.host.constructor
-    )
-      .scopedStyles(unsafeCSS(highSpecifictyScope))
-      .toString();
+    const hostCtor = /** @type {Partial<typeof ScopedStylesController>} */ (this.host.constructor);
+    // Hosts without their own static scopedStyles get the (empty) default of the controller.
+    const scopedStyles =
+      hostCtor.scopedStyles ||
+      /** @type {typeof ScopedStylesController} */ (this.constructor).scopedStyles;
+    this.__styleTag.textContent = scopedStyles(unsafeCSS(highSpecifictyScope)).toString();
     this.host.insertBefore(this.__styleTag, this.host.childNodes[0]);
   }
 }
