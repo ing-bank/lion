@@ -39,7 +39,7 @@ const config = {
       // We want disclosure behavior
       placementMode: 'custom',
       hidesOnOutsideClick: true,
-      hidesOnEscape: true,
+      hidesOnEsc: true,
       inheritsReferenceWidth: 'none',
       elementToFocusOnShow: true,
     },
