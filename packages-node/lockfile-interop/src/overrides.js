@@ -38,9 +38,7 @@ export function flattenNpmOverrides(overrides, prefix = '') {
     const selector = prefix ? `${prefix}>${key}` : key;
     if (typeof value === 'string') {
       flat.set(selector, value);
-      continue;
-    }
-    if (value && typeof value === 'object') {
+    } else if (value && typeof value === 'object') {
       const nested = /** @type {Record<string, unknown>} */ (value);
       const self = nested['.'];
       if (typeof self === 'string') flat.set(selector, self);

@@ -1,13 +1,7 @@
 // @ts-check
 import fs from 'node:fs';
 import path from 'node:path';
-import {
-  compareLocks,
-  declaredDrift,
-  formatReport,
-  missingDeclarations,
-  npmResolutionFor,
-} from './compare.js';
+import { compareLocks, declaredDrift, formatReport, missingDeclarations } from './compare.js';
 import { generateNpmLock, writeNpmLock } from './generator.js';
 import { readNpmLock } from './npm-lock.js';
 import {

@@ -37,7 +37,8 @@ export function toJsonLines(value, level = 0) {
       // brace are written flush left, because a nested object gets its indent from its key
       itemLines[0] = `${pad(level + 1)}${itemLines[0]}`;
       itemLines[itemLines.length - 1] = `${itemLines[itemLines.length - 1]}${comma}`;
-      lines.push(...itemLines);
+      // pushed one by one: a spread would blow the argument limit on a large tree, which is a real lock
+      for (const line of itemLines) lines.push(line);
     });
     lines.push(`${pad(level)}]`);
     return lines;
@@ -54,7 +55,8 @@ export function toJsonLines(value, level = 0) {
     const childLines = toJsonLines(child, level + 1);
     childLines[0] = `${pad(level + 1)}${JSON.stringify(key)}: ${childLines[0]}`;
     childLines[childLines.length - 1] = `${childLines[childLines.length - 1]}${comma}`;
-    lines.push(...childLines);
+    // pushed one by one: a spread would blow the argument limit on a large tree
+    for (const line of childLines) lines.push(line);
   });
   lines.push(`${pad(level)}}`);
   return lines;

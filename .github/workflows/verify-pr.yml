@@ -39,6 +39,7 @@ jobs:
       # file is not what package.json implies
       - name: pnpm-workspace.yaml is in sync
         run: pnpm run repo:workspace:check
+          npm run lint:workspace-lists
 
       - name: Lint
         run: pnpm run lint

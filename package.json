@@ -35,7 +35,9 @@
     "repo:lockfile:generate": "node packages-node/lockfile-interop/src/cli.js generate",
     "repo:pnpm:install": "pnpm import && pnpm install --frozen-lockfile",
     "repo:pnpm:install:portal": "pnpm --dir portal import --ignore-workspace && pnpm --dir portal install --ignore-workspace --frozen-lockfile",
+    "repo:lockfile:sync": "node packages-node/lockfile-interop/src/cli.js generate",
     "repo:workspace:check": "node packages-node/lockfile-interop/src/cli.js sync",
+    "lint:workspace-lists": "node ./scripts/lint-workspace-lists.mjs",
     "repo:workspace:sync": "node packages-node/lockfile-interop/src/cli.js sync --write",
     "screenshots-comparison:generate-screenshots-diff": "node ./scripts/screenshots-comparison/generate-screenshots-diff.js --target-branch master",
     "screenshots-comparison:update-baseline": "node ./scripts/screenshots-comparison/update-baseline.js --target-branch master",
@@ -65,9 +67,10 @@
     "@changesets/cli": "^2.30.0",
     "@custom-elements-manifest/analyzer": "^0.10.10",
     "@custom-elements-manifest/to-markdown": "^0.1.0",
-    "@lion/ajax": "file:packages/ajax",
-    "@lion/ui": "file:packages/ui",
+    "@lion/ajax": "workspace:*",
+    "@lion/ui": "workspace:*",
     "@lit-labs/ssr": "4.1.0",
+    "@lit-labs/ssr-client": "1.1.8",
     "@lit-labs/testing": "^0.2.8",
     "@lit/reactive-element": "^2.1.2",
     "@mdjs/core": "^0.21.1",
@@ -111,12 +114,11 @@
     "remark-html": "^13.0.2",
     "rocket-preset-extend-lion-docs": "^0.4.0",
     "semver": "^7.6.3",
-    "singleton-manager": "file:packages/singleton-manager",
+    "singleton-manager": "workspace:*",
     "sinon": "^19.0.2",
     "typescript": "^7.0.2",
     "unist-util-visit": "^5.0.0",
-    "wireit": "^0.14.13",
-    "@lit-labs/ssr-client": "1.1.8"
+    "wireit": "^0.14.13"
   },
   "comments": {
     "overrides": {
@@ -231,13 +233,17 @@
       "lit-html": "2.8.0",
       "@lit/reactive-element": "1.6.3"
     },
-    "@web/test-runner-commands": "^0.9.0"
+    "@web/test-runner-commands": "^0.9.0",
+    "@types/chai": "4.3.20"
   },
   "packageManager": "pnpm@10.34.9",
   "pnpm": {
     "patchedDependencies": {
       "lit@3.3.3": "patches/lit@3.3.3.patch",
-      "@mdjs/mdjs-preview@0.6.0": "patches/@mdjs__mdjs-preview@0.6.0.patch"
+      "@lit-labs/ssr@4.1.0": "patches/@lit-labs__ssr@4.1.0.patch",
+      "@mdjs/core@0.21.1": "patches/@mdjs__core@0.21.1.patch",
+      "@mdjs/mdjs-preview@0.6.0": "patches/@mdjs__mdjs-preview@0.6.0.patch",
+      "@open-wc/eslint-config@12.0.3": "patches/@open-wc__eslint-config@12.0.3.patch"
     }
   },
   "prettier": {

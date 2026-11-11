@@ -15,6 +15,7 @@ patchedDependencies:
   "@lit-labs/ssr@4.1.0": patches/@lit-labs__ssr@4.1.0.patch
   "@mdjs/core@0.21.1": patches/@mdjs__core@0.21.1.patch
   "@mdjs/mdjs-preview@0.6.0": patches/@mdjs__mdjs-preview@0.6.0.patch
+  "@open-wc/eslint-config@12.0.3": patches/@open-wc__eslint-config@12.0.3.patch
 overrides:
   "@open-wc/semantic-dom-diff": ^0.21.0
   "@mdjs/core": ^0.21.1
@@ -40,3 +41,4 @@ overrides:
   "@lion/overlays>lit-html": 2.8.0
   "@lion/overlays>@lit/reactive-element": 1.6.3
   "@web/test-runner-commands": ^0.9.0
+  "@types/chai": 4.3.20

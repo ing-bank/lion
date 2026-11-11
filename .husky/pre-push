@@ -16,3 +16,4 @@ pnpm run repo:lockfile:check || {
   echo "then commit package.json + package-lock.json (pnpm-lock.yaml is gitignored)."
   exit 1
 }
+npm run lint:workspace-lists
