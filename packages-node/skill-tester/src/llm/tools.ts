@@ -121,7 +121,10 @@ export function createFileToolset(sandboxRoot: string): FileToolset {
         parameters: {
           type: 'object',
           properties: {
-            path: { type: 'string', description: 'Directory relative to the project root (default ".").' },
+            path: {
+              type: 'string',
+              description: 'Directory relative to the project root (default ".").',
+            },
           },
         },
       },

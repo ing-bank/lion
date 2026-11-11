@@ -58,29 +58,37 @@ test('every scenario ships its target file', () => {
 const iban = manualScenarios.find(scenario => scenario.name === 'repair/iban-field');
 assert.ok(iban, 'the repair/iban-field scenario is expected to exist');
 
-test('the repair/iban-field golden passes the gates, its checks and the behaviour tier', { skip }, () => {
-  const root = sandbox('iban', iban.expectedTransformedFiles);
+test(
+  'the repair/iban-field golden passes the gates, its checks and the behaviour tier',
+  { skip },
+  () => {
+    const root = sandbox('iban', iban.expectedTransformedFiles);
 
-  const gates = runGates(root);
-  assert.ok(
-    gates.every(gate => gate.passed),
-    `gates must pass the golden: ${JSON.stringify(gates.map(g => [g.name, g.passed, g.failures]))}`,
-  );
+    const gates = runGates(root);
+    assert.ok(
+      gates.every(gate => gate.passed),
+      `gates must pass the golden: ${JSON.stringify(gates.map(g => [g.name, g.passed, g.failures]))}`,
+    );
 
-  const score = scoreScenario({
-    sandboxRoot: root,
-    expectedTransformedFiles: iban.expectedTransformedFiles,
-    checks: iban.checks,
-  });
-  assert.equal(score.percent, 100, `golden must be a perfect score: ${JSON.stringify(score.checks)}`);
+    const score = scoreScenario({
+      sandboxRoot: root,
+      expectedTransformedFiles: iban.expectedTransformedFiles,
+      checks: iban.checks,
+    });
+    assert.equal(
+      score.percent,
+      100,
+      `golden must be a perfect score: ${JSON.stringify(score.checks)}`,
+    );
 
-  const behaviour = runBehaviour({
-    sandboxRoot: root,
-    testSource: iban.behaviour.testSource,
-    repoRoot,
-  });
-  assert.equal(behaviour.passed, true, `${behaviour.summary}\n${behaviour.output}`);
-});
+    const behaviour = runBehaviour({
+      sandboxRoot: root,
+      testSource: iban.behaviour.testSource,
+      repoRoot,
+    });
+    assert.equal(behaviour.passed, true, `${behaviour.summary}\n${behaviour.output}`);
+  },
+);
 
 test(
   'the behaviour tier fails code that satisfies the gate and the checks but renders the wrong thing',
@@ -98,7 +106,7 @@ test(
         '// renders a <lion-form> with a <lion-input-iban name="account"> in the real answer',
         'export class IbanField extends LitElement {',
         '  render() {',
-        "    return html`<input name=\"account\" />`;",
+        '    return html`<input name="account" />`;',
         '  }',
         '}',
         '',
@@ -106,7 +114,10 @@ test(
     });
 
     const gates = runGates(root);
-    assert.ok(gates.every(gate => gate.passed), 'the negative control must pass the gates');
+    assert.ok(
+      gates.every(gate => gate.passed),
+      'the negative control must pass the gates',
+    );
 
     const behaviour = runBehaviour({
       sandboxRoot: root,

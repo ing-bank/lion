@@ -2,10 +2,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import path from 'node:path';
-import {
-  COMPONENT_SYNONYMS,
-  SYSTEM_SYNONYMS,
-} from '../../../scripts/lib/component-synonyms.mjs';
+import { COMPONENT_SYNONYMS, SYSTEM_SYNONYMS } from '../../../scripts/lib/component-synonyms.mjs';
 
 const skillDir = path.resolve(import.meta.dirname, '../../../packages/ui/skills/lion-ui');
 const index = fs.readFileSync(path.join(skillDir, 'SKILL.md'), 'utf8');

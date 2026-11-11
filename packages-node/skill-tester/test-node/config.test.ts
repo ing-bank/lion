@@ -29,14 +29,14 @@ function withEnv<T>(values: Record<string, string>, fn: () => T): T {
 }
 
 test('resolveProvider defaults to the OpenAI-compatible provider', () => {
-  withEnv({}, () => assert.equal(resolveProvider(), 'openai'));
+  withEnv({}, () => assert.equal(resolveProvider(), 'openai-compatible'));
 });
 
 test('resolveProvider accepts aliases for both providers', () => {
   withEnv({}, () => {
     assert.equal(resolveProvider({ provider: 'copilot' }), 'copilot');
-    assert.equal(resolveProvider({ provider: 'openai-compatible' }), 'openai');
-    assert.equal(resolveProvider({ provider: 'openai' }), 'openai');
+    assert.equal(resolveProvider({ provider: 'openai-compatible' }), 'openai-compatible');
+    assert.equal(resolveProvider({ provider: 'openai' }), 'openai-compatible');
   });
 });
 
@@ -44,7 +44,7 @@ test('resolveProvider rejects an unknown provider with a helpful message', () =>
   withEnv({}, () => {
     assert.throws(
       () => resolveProvider({ provider: 'bedrock' as never }),
-      /Unknown provider "bedrock"\. Expected "openai".*"copilot" or "claude-code"/,
+      /Unknown provider "bedrock"\. Expected "openai-compatible".*"copilot" or "claude-code"/,
     );
   });
 });
@@ -69,7 +69,7 @@ test('an explicit base URL and key win over the defaults', () => {
     assert.deepEqual(
       resolveLlmConfig('m', { baseUrl: 'https://explicit.example/v1/', apiKey: 'k' }),
       {
-        provider: 'openai',
+        provider: 'openai-compatible',
         baseUrl: 'https://explicit.example/v1',
         apiKey: 'k',
         model: 'm',

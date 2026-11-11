@@ -79,5 +79,9 @@ test('every generated scenario asks for it', () => {
   const missing = loadLionUiScenarios({ repoRoot }).filter(
     scenario => !(scenario.checks ?? []).some(check => check.type === 'noUnusedImports'),
   );
-  assert.equal(missing.length, 0, `missing on: ${missing.map(scenario => scenario.name).join(', ')}`);
+  assert.equal(
+    missing.length,
+    0,
+    `missing on: ${missing.map(scenario => scenario.name).join(', ')}`,
+  );
 });

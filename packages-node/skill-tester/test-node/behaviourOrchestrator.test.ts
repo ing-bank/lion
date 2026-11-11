@@ -120,15 +120,19 @@ test('behaviour is reported as its own axis, end to end', { skip, timeout: 240_0
   assert.match(record, /\*\*1\/1 passed\*\*/, 'the record states how many cases passed');
 });
 
-test('behaviour catches output that renders an unregistered element', { skip, timeout: 240_000 }, async () => {
-  const report = await runAgainst(WRONG_TAG_EXAMPLE);
+test(
+  'behaviour catches output that renders an unregistered element',
+  { skip, timeout: 240_000 },
+  async () => {
+    const report = await runAgainst(WRONG_TAG_EXAMPLE);
 
-  const run = report.runs[0];
-  assert.ok(run.behaviour, 'the run carries a behaviour result');
-  assert.equal(run.behaviour.passed, false, 'behaviour must fail when the wrong tag is rendered');
-  assert.ok(
-    run.behaviour.failures.some(failure => /renders <lion-button>/.test(failure.message)),
-    `the failure should name what is missing, got: ${JSON.stringify(run.behaviour.failures)}`,
-  );
-  assert.equal(report.behaviour?.failed, 1);
-});
+    const run = report.runs[0];
+    assert.ok(run.behaviour, 'the run carries a behaviour result');
+    assert.equal(run.behaviour.passed, false, 'behaviour must fail when the wrong tag is rendered');
+    assert.ok(
+      run.behaviour.failures.some(failure => /renders <lion-button>/.test(failure.message)),
+      `the failure should name what is missing, got: ${JSON.stringify(run.behaviour.failures)}`,
+    );
+    assert.equal(report.behaviour?.failed, 1);
+  },
+);

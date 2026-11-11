@@ -5,9 +5,18 @@ import { stripDocNoise } from '../../../scripts/lib/strip-doc-noise.mjs';
 test('stripDocNoise rewrites every mdjs-preview import shape to lit', () => {
   const cases = [
     ["import { html } from '@mdjs/mdjs-preview';", "import { html } from 'lit';"],
-    ["import { LitElement, html } from '@mdjs/mdjs-preview';", "import { LitElement, html } from 'lit';"],
-    ["import { html, render, LitElement } from '@mdjs/mdjs-preview';", "import { html, render, LitElement } from 'lit';"],
-    ["import { html as previewHtml } from '@mdjs/mdjs-preview';", "import { html as previewHtml } from 'lit';"],
+    [
+      "import { LitElement, html } from '@mdjs/mdjs-preview';",
+      "import { LitElement, html } from 'lit';",
+    ],
+    [
+      "import { html, render, LitElement } from '@mdjs/mdjs-preview';",
+      "import { html, render, LitElement } from 'lit';",
+    ],
+    [
+      "import { html as previewHtml } from '@mdjs/mdjs-preview';",
+      "import { html as previewHtml } from 'lit';",
+    ],
     ["import { html, css } from '@mdjs/mdjs-preview';", "import { html, css } from 'lit';"],
     ["import { css, html } from '@mdjs/mdjs-preview';", "import { css, html } from 'lit';"],
   ];

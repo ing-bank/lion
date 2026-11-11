@@ -128,7 +128,9 @@ export async function createChatCompletion({
 
       const choice = json.choices?.[0];
       if (!choice?.message) {
-        throw new Error(`Malformed response from ${url}: no choices[0].message (${JSON.stringify(json).slice(0, 300)})`);
+        throw new Error(
+          `Malformed response from ${url}: no choices[0].message (${JSON.stringify(json).slice(0, 300)})`,
+        );
       }
 
       return {

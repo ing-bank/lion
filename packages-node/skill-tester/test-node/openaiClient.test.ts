@@ -4,7 +4,7 @@ import { createChatCompletion } from '../src/llm/openaiClient.ts';
 import { startMockOpenAiServer } from './mockOpenAi.ts';
 
 const llmConfig = (baseUrl: string) => ({
-  provider: 'openai' as const,
+  provider: 'openai-compatible' as const,
   baseUrl,
   apiKey: 'test-key',
   model: 'test-model',

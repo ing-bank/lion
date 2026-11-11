@@ -121,7 +121,7 @@ test('the ledger key is revision-scoped, so a re-run replaces a row and a new sk
   // find the entry by revision instead of trusting a position.
   const rev2Entry = newRevision.entries.find(entry => entry.skillRevision === 'rev2');
   assert.ok(rev2Entry, 'the new revision has an entry of its own');
-  assert.equal(ledgerKey(rev2Entry), 'rev2|test-model|component/demo|openai');
+  assert.equal(ledgerKey(rev2Entry), 'rev2|test-model|component/demo|openai-compatible');
   // The provider is part of the identity: the same model run through an agent runtime is a different cell,
   // so it can neither overwrite the API row nor be averaged with it. Rows from before the field existed
   // default to `openai`, which is what they were.

@@ -62,7 +62,7 @@ const EXPECTATIONS: Expectation[] = [
     fixture: 'form-iban/subclass.js',
     accepted: false,
     mustMention: /form context|lion-form|right component/,
-    why: 'subclassing is a subclasser\'s path and out of scope for these tests',
+    why: "subclassing is a subclasser's path and out of scope for these tests",
   },
   {
     fixture: 'form-iban/native-input.js',

@@ -137,7 +137,7 @@ export type RedoableRun = {
 
 export type SkillTesterReport = {
   skillOrAgent: { name: string; type: 'skill' | 'agent' };
-  provider: 'openai' | 'copilot';
+  provider: 'openai-compatible' | 'copilot' | 'claude-code';
   /** Endpoint used for the `openai` provider (omitted for `copilot`). */
   baseUrl?: string;
   models: string[];
@@ -510,7 +510,9 @@ export async function runSkillTester(config: SkillTesterConfig): Promise<SkillTe
   const report: SkillTesterReport = {
     skillOrAgent: { name: skillOrAgent.name, type: skillOrAgent.type },
     provider,
-    ...(provider === 'openai' ? { baseUrl: resolveLlmConfig(models[0], llm).baseUrl } : {}),
+    ...(provider === 'openai-compatible'
+      ? { baseUrl: resolveLlmConfig(models[0], llm).baseUrl }
+      : {}),
     models,
     scenarios: scenarios.map(scenario => scenario.name),
     sampleSize,
@@ -532,7 +534,7 @@ export async function runSkillTester(config: SkillTesterConfig): Promise<SkillTe
     ...(behaviourSummary ? { behaviour: behaviourSummary } : {}),
   };
 
-  if (resolveProvider(llm) === 'openai') {
+  if (resolveProvider(llm) === 'openai-compatible') {
     const missingCredentials = models.filter(model => !resolveLlmConfig(model, llm).apiKey);
     if (missingCredentials.length > 0) {
       onProgress(

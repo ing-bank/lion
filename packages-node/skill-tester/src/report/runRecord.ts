@@ -60,14 +60,16 @@ export function renderRunRecord({
   lines.push('| Field | Value |');
   lines.push('| --- | --- |');
   lines.push(`| Run number | ${campaign?.runNumber ?? 'n/a'} |`);
-  lines.push(`| Task | ${campaign?.task ?? `${report.scenarios.length} isolated lion-ui scenarios`} |`);
+  lines.push(
+    `| Task | ${campaign?.task ?? `${report.scenarios.length} isolated lion-ui scenarios`} |`,
+  );
   const defaultAgent =
     report.provider === 'copilot'
       ? 'GitHub Copilot (custom agent)'
       : 'OpenAI-compatible chat model + file tools';
   lines.push(`| Agent | ${campaign?.agent ?? defaultAgent} |`);
   lines.push(`| Provider | ${report.provider} |`);
-  if (report.provider === 'openai' && report.baseUrl) {
+  if (report.provider === 'openai-compatible' && report.baseUrl) {
     lines.push(`| Endpoint | ${report.baseUrl} |`);
   }
   lines.push(`| Target repository revision | ${campaign?.targetRepositoryRevision ?? 'n/a'} |`);
@@ -108,7 +110,9 @@ export function renderRunRecord({
   lines.push('| --- | --- | --- | --- |');
   for (const entry of [...report.perModelScenario].sort((a, b) => a.stats.mean - b.stats.mean)) {
     const kind = scenarioByName.get(entry.scenario)?.kind ?? '';
-    lines.push(`| ${entry.model} | ${entry.scenario} | ${(entry.stats.mean * 100).toFixed(1)}% | ${kind} |`);
+    lines.push(
+      `| ${entry.model} | ${entry.scenario} | ${(entry.stats.mean * 100).toFixed(1)}% | ${kind} |`,
+    );
   }
   lines.push('');
 
@@ -146,7 +150,9 @@ export function renderRunRecord({
   lines.push('| Metric | Value |');
   lines.push('| --- | --- |');
   lines.push(`| Valid runs | ${report.runs.length} |`);
-  lines.push(`| Model turns (total / mean) | ${totalTurns} / ${avg(totalTurns, report.runs.length)} |`);
+  lines.push(
+    `| Model turns (total / mean) | ${totalTurns} / ${avg(totalTurns, report.runs.length)} |`,
+  );
   lines.push(
     `| Tool calls (total / mean) | ${totalToolCalls} / ${avg(totalToolCalls, report.runs.length)} |`,
   );
@@ -212,7 +218,9 @@ export function renderRunRecord({
   lines.push('## Convergence');
   lines.push('');
   const clean = failingRuns.length === 0 && totalToolErrors === 0;
-  lines.push(`- [${passMark(report.overall.mean * 100 >= passThreshold)}] Every scenario reached the pass threshold.`);
+  lines.push(
+    `- [${passMark(report.overall.mean * 100 >= passThreshold)}] Every scenario reached the pass threshold.`,
+  );
   lines.push(
     `- [${passMark(report.runs.every(run => run.score.gates.every(gate => gate.passed)))}] Every scenario passed its deterministic gates.`,
   );

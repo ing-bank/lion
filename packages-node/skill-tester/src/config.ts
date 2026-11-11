@@ -13,7 +13,7 @@
  * No model is pinned: the model is whatever the caller passes.
  */
 
-export type Provider = 'openai' | 'copilot' | 'claude-code';
+export type Provider = 'openai-compatible' | 'copilot' | 'claude-code';
 
 export type LlmConfig = {
   provider: Provider;
@@ -34,23 +34,25 @@ export const DEFAULT_OPENAI_BASE_URL = 'https://api.openai.com/v1';
 
 /** Aliases accepted for each provider, so `--provider openai-compatible` works too. */
 const PROVIDER_ALIASES: Record<string, Provider> = {
-  openai: 'openai',
-  'openai-compatible': 'openai',
-  compatible: 'openai',
+  'openai-compatible': 'openai-compatible',
+  openai: 'openai-compatible',
+  compatible: 'openai-compatible',
   copilot: 'copilot',
   'github-copilot': 'copilot',
   'claude-code': 'claude-code',
   claude: 'claude-code',
 };
 
-const PROVIDER_ALIAS_LIST = '"openai" (any OpenAI-compatible endpoint), "copilot" or "claude-code"';
+const PROVIDER_ALIAS_LIST =
+  '"openai-compatible" (any OpenAI-compatible endpoint), "copilot" or "claude-code"';
 
 function firstDefined(...values: (string | undefined)[]): string | undefined {
   return values.find(value => typeof value === 'string' && value.length > 0);
 }
 
 export function resolveProvider(overrides: LlmConfigOverrides = {}): Provider {
-  const raw = firstDefined(overrides.provider, process.env.SKILL_TESTER_PROVIDER) ?? 'openai';
+  const raw =
+    firstDefined(overrides.provider, process.env.SKILL_TESTER_PROVIDER) ?? 'openai-compatible';
   const provider = PROVIDER_ALIASES[raw.toLowerCase()];
   if (!provider) {
     throw new Error(`Unknown provider "${raw}". Expected ${PROVIDER_ALIAS_LIST}.`);

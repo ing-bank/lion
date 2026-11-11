@@ -70,7 +70,9 @@ function demandedValues(prompt: string): string[] {
 function referencedEntrypoints(scenario: TestScenario): string[] {
   const names = new Set<string>();
   for (const check of scenario.checks ?? []) {
-    for (const match of (check.pattern ?? '').matchAll(/@lion\/ui\/(?:define\/lion-)?([a-z0-9-]+)\.js/g)) {
+    for (const match of (check.pattern ?? '').matchAll(
+      /@lion\/ui\/(?:define\/lion-)?([a-z0-9-]+)\.js/g,
+    )) {
       names.add(match[1]);
     }
   }
@@ -118,7 +120,10 @@ export function lintScenario(scenario: TestScenario, context: LintContext = {}):
   for (const name of referencedEntrypoints(scenario)) {
     const known = [...(context.components ?? []), ...(context.systems ?? [])];
     if (known.length > 0 && !known.includes(name)) {
-      add('L5', `checks reference '@lion/ui/${name}.js' but "${name}" is not a known component/system`);
+      add(
+        'L5',
+        `checks reference '@lion/ui/${name}.js' but "${name}" is not a known component/system`,
+      );
     }
   }
   if (context.skillDir) {
@@ -142,7 +147,10 @@ export function lintScenario(scenario: TestScenario, context: LintContext = {}):
 
   // L7 — exactly one deliverable, and the prompt says so.
   if (declared.length !== 1) {
-    add('L7', `expected exactly one starting file, found ${declared.length}: ${declared.join(', ')}`);
+    add(
+      'L7',
+      `expected exactly one starting file, found ${declared.length}: ${declared.join(', ')}`,
+    );
   }
   if (!/\bonly\b|nothing else/i.test(scenario.prompt)) {
     add('L7', 'prompt does not restrict the model to the single deliverable file');

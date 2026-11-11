@@ -266,7 +266,9 @@ export function scoreScenario({
 
   const totalWeight = items.reduce((sum, item) => sum + item.weight, 0);
   const score =
-    totalWeight === 0 ? 1 : items.reduce((sum, item) => sum + item.score * item.weight, 0) / totalWeight;
+    totalWeight === 0
+      ? 1
+      : items.reduce((sum, item) => sum + item.score * item.weight, 0) / totalWeight;
 
   return { score, percent: Math.round(score * 1000) / 10, files, checks: checkOutcomes, gates: [] };
 }
@@ -292,8 +294,7 @@ export function aggregate(scores: number[]): AggregateStats {
     return { count: 0, mean: 0, min: 0, max: 0, stdDev: 0 };
   }
   const mean = scores.reduce((sum, value) => sum + value, 0) / scores.length;
-  const variance =
-    scores.reduce((sum, value) => sum + (value - mean) ** 2, 0) / scores.length;
+  const variance = scores.reduce((sum, value) => sum + (value - mean) ** 2, 0) / scores.length;
   return {
     count: scores.length,
     mean,

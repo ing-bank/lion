@@ -55,10 +55,7 @@ test('reads of neither the skill nor a dependency are ignored', () => {
 
 test('repeated reads of the same file count once, and other tools are ignored', () => {
   const root = sandboxWith({ 'node_modules/@lion/ui/form.js': 'z'.repeat(50) });
-  const entries = transcript([
-    'node_modules/@lion/ui/form.js',
-    'node_modules/@lion/ui/form.js',
-  ]);
+  const entries = transcript(['node_modules/@lion/ui/form.js', 'node_modules/@lion/ui/form.js']);
   entries.push({
     tool_calls: [{ function: { name: 'search_files', arguments: '{"path":"node_modules"}' } }],
   } as never);

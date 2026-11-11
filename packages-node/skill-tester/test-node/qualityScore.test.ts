@@ -77,7 +77,11 @@ test('partial credit is a gradient between a mismatch and a full match', () => {
 
 test('scoreFile scores zero for a missing file', () => {
   const root = tempSandbox({});
-  const score = scoreFile({ sandboxRoot: root, relativePath: 'src/missing.js', expectedContent: 'x' });
+  const score = scoreFile({
+    sandboxRoot: root,
+    relativePath: 'src/missing.js',
+    expectedContent: 'x',
+  });
   assert.equal(score.exists, false);
   assert.equal(score.score, 0);
 });
@@ -96,7 +100,7 @@ test('evaluateCheck supports contains / notContains / matches / notMatches / exi
     true,
   );
   assert.equal(
-    evaluateCheck(root, { type: 'notMatches', file: 'src/a.js', pattern: "from\\s+['\"]lit['\"]" })
+    evaluateCheck(root, { type: 'notMatches', file: 'src/a.js', pattern: 'from\\s+[\'"]lit[\'"]' })
       .passed,
     true,
   );

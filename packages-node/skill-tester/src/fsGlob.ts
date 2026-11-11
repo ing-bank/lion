@@ -29,20 +29,16 @@ export default async function fsGlob(globOrGlobs, opts) {
   const negatedNonGlobPatterns = [];
 
   /** @type {(pattern: string) => boolean} */
-  const isGlobPattern = (pattern) => /[*?[\]{}]/.test(pattern);
+  const isGlobPattern = pattern => /[*?[\]{}]/.test(pattern);
 
   for (const pattern of patterns) {
     const isNegated = pattern.startsWith('!');
     const cleanPattern = isNegated ? pattern.slice(1) : pattern;
 
     if (isGlobPattern(cleanPattern)) {
-      (isNegated ? negatedGlobPatterns : positiveGlobPatterns).push(
-        cleanPattern,
-      );
+      (isNegated ? negatedGlobPatterns : positiveGlobPatterns).push(cleanPattern);
     } else {
-      (isNegated ? negatedNonGlobPatterns : positiveNonGlobPatterns).push(
-        cleanPattern,
-      );
+      (isNegated ? negatedNonGlobPatterns : positiveNonGlobPatterns).push(cleanPattern);
     }
   }
 
@@ -85,7 +81,7 @@ export default async function fsGlob(globOrGlobs, opts) {
     /** @type {Set<string>} */
     const negatedSet = new Set(negatedNonGlobPatterns);
     return results
-      .filter((result) => {
+      .filter(result => {
         return !negatedSet.has(result);
       })
       .sort();

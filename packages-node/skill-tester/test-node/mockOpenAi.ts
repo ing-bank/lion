@@ -62,7 +62,8 @@ export async function startMockOpenAiServer(responses: MockResponse[]): Promise<
             {
               index: 0,
               message: scripted.message,
-              finish_reason: scripted.finish_reason ?? (scripted.message.tool_calls ? 'tool_calls' : 'stop'),
+              finish_reason:
+                scripted.finish_reason ?? (scripted.message.tool_calls ? 'tool_calls' : 'stop'),
             },
           ],
           usage: { prompt_tokens: 1, completion_tokens: 1, total_tokens: 2 },
@@ -85,12 +86,20 @@ export async function startMockOpenAiServer(responses: MockResponse[]): Promise<
 }
 
 /** Build a scripted `write_file` tool call. */
-export function writeFileToolCall(path: string, content: string, id = 'call_1'): MockAssistantMessage {
+export function writeFileToolCall(
+  path: string,
+  content: string,
+  id = 'call_1',
+): MockAssistantMessage {
   return {
     role: 'assistant',
     content: null,
     tool_calls: [
-      { id, type: 'function', function: { name: 'write_file', arguments: JSON.stringify({ path, content }) } },
+      {
+        id,
+        type: 'function',
+        function: { name: 'write_file', arguments: JSON.stringify({ path, content }) },
+      },
     ],
   };
 }

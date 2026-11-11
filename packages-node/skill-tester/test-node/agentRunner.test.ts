@@ -64,7 +64,7 @@ test('runs a scenario end to end against an OpenAI-compatible endpoint', async (
     assert.equal(report.overall.mean, 1, 'expected a perfect score');
     assert.equal(report.runs[0].agentRun.toolCalls, 1);
     assert.equal(report.runs[0].agentRun.finished, true);
-    assert.equal(report.provider, 'openai');
+    assert.equal(report.provider, 'openai-compatible');
     assert.equal(report.baseUrl, server.baseUrl);
 
     // The mock endpoint must have received our tool definitions and the bearer token.
@@ -85,7 +85,9 @@ test('runs a scenario end to end against an OpenAI-compatible endpoint', async (
 
 test('reports a low score and evidence when the model produces the wrong output', async () => {
   const server = await startMockOpenAiServer([
-    { message: writeFileToolCall('src/example.js', "import { LionButton } from '@lion/button';\n") },
+    {
+      message: writeFileToolCall('src/example.js', "import { LionButton } from '@lion/button';\n"),
+    },
     { message: { role: 'assistant', content: 'Done.' } },
   ]);
 
@@ -100,13 +102,13 @@ test('reports a low score and evidence when the model produces the wrong output'
             {
               type: 'matches',
               file: 'src/example.js',
-              pattern: "from\\s+['\"]@lion/ui/button\\.js['\"]",
+              pattern: 'from\\s+[\'"]@lion/ui/button\\.js[\'"]',
               description: "imports from '@lion/ui/button.js'",
             },
             {
               type: 'notMatches',
               file: 'src/example.js',
-              pattern: "from\\s+['\"]@lion/button['\"]",
+              pattern: 'from\\s+[\'"]@lion/button[\'"]',
               description: "does not import '@lion/button'",
             },
           ],
@@ -124,10 +126,10 @@ test('reports a low score and evidence when the model produces the wrong output'
     const failing = report.runs[0].score.checks.filter(check => !check.passed);
     assert.equal(failing.length, 2, JSON.stringify(failing));
     const descriptions = failing.map(check => check.description).sort();
-    assert.deepEqual(descriptions, [
-      "does not import '@lion/button'",
-      "imports from '@lion/ui/button.js'",
-    ].sort());
+    assert.deepEqual(
+      descriptions,
+      ["does not import '@lion/button'", "imports from '@lion/ui/button.js'"].sort(),
+    );
   } finally {
     await server.close();
   }

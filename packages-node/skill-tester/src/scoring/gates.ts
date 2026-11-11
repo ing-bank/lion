@@ -46,7 +46,16 @@ export type GateResult = {
 };
 
 /** Extensions the gates attempt to parse. */
-const PARSEABLE_EXTENSIONS = new Set(['.js', '.mjs', '.cjs', '.jsx', '.ts', '.tsx', '.mts', '.cts']);
+const PARSEABLE_EXTENSIONS = new Set([
+  '.js',
+  '.mjs',
+  '.cjs',
+  '.jsx',
+  '.ts',
+  '.tsx',
+  '.mts',
+  '.cts',
+]);
 
 /** Directories that are never produced by the model under test. */
 const IGNORED_DIRS = new Set(['node_modules', '.git', '.skill', '.tmp']);
@@ -318,7 +327,10 @@ function policyViolation(
   }
   const openWc = openWcViolation(specifier);
   if (openWc) return openWc;
-  if (specifier === '@lion' || (specifier.startsWith('@lion/') && !specifier.startsWith('@lion/ui'))) {
+  if (
+    specifier === '@lion' ||
+    (specifier.startsWith('@lion/') && !specifier.startsWith('@lion/ui'))
+  ) {
     return `imports '${specifier}': use the '@lion/ui/*' entrypoints ('@lion/*' is not a dependency)`;
   }
   if (

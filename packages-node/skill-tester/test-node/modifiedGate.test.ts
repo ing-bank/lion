@@ -71,5 +71,8 @@ test('deleting the deliverable counts as a change (the exists check reports it)'
 test('no starter means no modified gate, so other callers are unaffected', () => {
   const root = sandbox(STARTER);
   const gates = runGates(root);
-  assert.equal(gates.some(gate => gate.name === 'modified'), false);
+  assert.equal(
+    gates.some(gate => gate.name === 'modified'),
+    false,
+  );
 });

@@ -48,7 +48,7 @@ export async function createProjectSandbox(
     outputPath = path.join(process.cwd(), '.tmp', 'projectSandbox', `${sandboxCounter++}`),
     fileSystem = fs,
     ensureModuleType = true,
-  }: CreateProjectSandboxOptions = {}
+  }: CreateProjectSandboxOptions = {},
 ) {
   const mock: ProjectMock = { ...projectSandbox };
   if (ensureModuleType && !('package.json' in mock)) {

@@ -57,7 +57,10 @@ test('the syntax gate ignores skill references and node_modules', () => {
 
 test('runGates returns both gates', () => {
   const gates = runGates(writeSandbox({ 'src/example.js': VALID }));
-  assert.deepEqual(gates.map(gate => gate.name), ['syntax', 'import-policy']);
+  assert.deepEqual(
+    gates.map(gate => gate.name),
+    ['syntax', 'import-policy'],
+  );
   assert.equal(gates[0].passed, true);
   assert.equal(gates[1].passed, true);
 });
@@ -140,7 +143,13 @@ test('a failed gate zeroes an otherwise perfect score', () => {
     {
       score: 1,
       percent: 100,
-      files: [scoreFile({ sandboxRoot: root, relativePath: 'src/example.js', expectedContent: UNPARSEABLE })],
+      files: [
+        scoreFile({
+          sandboxRoot: root,
+          relativePath: 'src/example.js',
+          expectedContent: UNPARSEABLE,
+        }),
+      ],
       checks: [],
       gates: [],
     },
@@ -167,10 +176,7 @@ test('a passing gate leaves the score untouched', () => {
 });
 
 test('the sandbox declares "type": "module" so ESM files are unambiguous', async () => {
-  const root = await createProjectSandbox(
-    { 'src/example.js': VALID },
-    { outputPath: tempDir() },
-  );
+  const root = await createProjectSandbox({ 'src/example.js': VALID }, { outputPath: tempDir() });
   const pkg = JSON.parse(fs.readFileSync(path.join(root, 'package.json'), 'utf-8'));
   assert.equal(pkg.type, 'module');
 });
@@ -186,7 +192,7 @@ test('a scenario that provides its own package.json keeps it', async () => {
 
 test('the golden-file path is formatting-insensitive but gate-sensitive', () => {
   // The two reliability defects measured on the (since deleted) fictional blob example, as one:
-  const golden = "\n      const a = 1;\n      const b = 2;\n";
+  const golden = '\n      const a = 1;\n      const b = 2;\n';
   const reindented = 'const a = 1;\nconst b = 2;\n';
   const root = writeSandbox({ 'src/a.js': reindented });
   const score = scoreFile({ sandboxRoot: root, relativePath: 'src/a.js', expectedContent: golden });

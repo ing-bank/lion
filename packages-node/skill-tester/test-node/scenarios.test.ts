@@ -55,14 +55,20 @@ test('every component and system gets exactly one small, isolated scenario', () 
     );
   }
   for (const system of systems) {
-    assert.ok(names.includes(`system/${system}`), `missing the generated scenario for system "${system}"`);
+    assert.ok(
+      names.includes(`system/${system}`),
+      `missing the generated scenario for system "${system}"`,
+    );
   }
 
   for (const scenario of scenarios) {
     const hasChecks = (scenario.checks ?? []).length > 0;
     // The golden no longer scores, so a scenario without checks would score vacuously: require checks.
     assert.ok(hasChecks, `${scenario.name} has no checks, so it would score vacuously`);
-    assert.ok(Object.keys(scenario.files).length === 1, `${scenario.name} should start from one file`);
+    assert.ok(
+      Object.keys(scenario.files).length === 1,
+      `${scenario.name} should start from one file`,
+    );
     assert.ok(scenario.prompt.length > 0);
   }
 });
@@ -132,7 +138,10 @@ test('the define entrypoint is rejected: global registration is not the skill pa
   assert.ok(defineEntrypoints.includes('form'), 'form should ship a define entrypoint');
   assert.equal(defineEntrypointFor('button'), '@lion/ui/define/lion-button.js');
 
-  const scenario = createComponentScenario('button', { knownTags: ['lion-button'], defineEntrypoints });
+  const scenario = createComponentScenario('button', {
+    knownTags: ['lion-button'],
+    defineEntrypoints,
+  });
   const viaDefine = [
     "import '@lion/ui/define/lion-button.js';",
     "import { LitElement, html } from 'lit';",
@@ -145,7 +154,11 @@ test('the define entrypoint is rejected: global registration is not the skill pa
     '',
   ].join('\n');
   const scored = scoreExample(viaDefine, scenario);
-  assert.notEqual(scored.score, 1, `define entrypoint got full marks: ${JSON.stringify(scored.checks)}`);
+  assert.notEqual(
+    scored.score,
+    1,
+    `define entrypoint got full marks: ${JSON.stringify(scored.checks)}`,
+  );
   assert.ok(
     scored.checks.some(
       check => check.description.includes('global define entrypoint') && !check.passed,

@@ -40,7 +40,9 @@ test('the allowlist is derived from the package export map', () => {
 
 test('an internal "#" subpath import is rejected', () => {
   const root = sandbox({ 'src/example.js': "import { x } from '#internal';\n" });
-  const policy = runGates(root, { allowedLionUiSpecifiers: allowed }).find(g => g.name === 'import-policy');
+  const policy = runGates(root, { allowedLionUiSpecifiers: allowed }).find(
+    g => g.name === 'import-policy',
+  );
   assert.equal(policy?.passed, false, 'a "#" specifier must be a violation');
   assert.match(policy.failures[0].message, /#/);
 });
@@ -54,7 +56,9 @@ test('the allowlist raises no false positives on documented imports', () => {
       "import { loadDefaultFeedbackMessages } from '@lion/ui/validate-messages.js';",
     ].join('\n'),
   });
-  const policy = runGates(root, { allowedLionUiSpecifiers: allowed }).find(g => g.name === 'import-policy');
+  const policy = runGates(root, { allowedLionUiSpecifiers: allowed }).find(
+    g => g.name === 'import-policy',
+  );
   assert.equal(policy?.passed, true, JSON.stringify(policy?.failures));
 });
 
@@ -62,7 +66,9 @@ test('a deep import stays rejected with the allowlist on', () => {
   const root = sandbox({
     'src/example.js': "import x from '@lion/ui/components/input-iban/src/LionInputIban.js';\n",
   });
-  const policy = runGates(root, { allowedLionUiSpecifiers: allowed }).find(g => g.name === 'import-policy');
+  const policy = runGates(root, { allowedLionUiSpecifiers: allowed }).find(
+    g => g.name === 'import-policy',
+  );
   assert.equal(policy?.passed, false);
 });
 

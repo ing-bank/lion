@@ -44,7 +44,7 @@ export type LedgerEntry = {
    * Part of the cell identity, so an agent run can never silently overwrite a model run that happens to use
    * the same model name.
    */
-  provider?: 'openai' | 'copilot' | 'claude-code';
+  provider?: 'openai-compatible' | 'copilot' | 'claude-code';
   /**
    * Derived from the provider: `model` for the raw API route, `agent` for a runtime that brings its own
    * system prompt and plan. The reporting rule is that the two are never averaged together.
@@ -63,7 +63,12 @@ export type Ledger = { version: 1; updatedAt: string; entries: LedgerEntry[] };
 export function ledgerKey(
   entry: Pick<LedgerEntry, 'skillRevision' | 'model' | 'scenario' | 'provider'>,
 ): string {
-  return [entry.skillRevision, entry.model, entry.scenario, entry.provider ?? 'openai'].join('|');
+  return [
+    entry.skillRevision,
+    entry.model,
+    entry.scenario,
+    entry.provider ?? 'openai-compatible',
+  ].join('|');
 }
 
 export function loadLedger(file: string): Ledger {
@@ -119,7 +124,7 @@ export function updateLedger(
       kind: kinds.get(summary.scenario) ?? 'unknown',
       // Recorded per cell so an agent run can never be read as a model run, nor averaged with one.
       provider: report.provider,
-      subject: report.provider === 'openai' ? 'model' : 'agent',
+      subject: report.provider === 'openai-compatible' ? 'model' : 'agent',
       samples: runs.length,
       ...statsOf(attempted.map(run => run.score.score)),
       behaviourPassed: withBehaviour.filter(run => run.behaviour?.passed).length,

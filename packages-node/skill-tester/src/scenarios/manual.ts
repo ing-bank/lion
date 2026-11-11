@@ -113,7 +113,7 @@ export const ibanFieldScenario: TestScenario = {
       '',
       'export class IbanField extends LitElement {',
       '  render() {',
-      "    return html`<input name=\"account\" />`;",
+      '    return html`<input name="account" />`;',
       '  }',
       '}',
       '',
@@ -367,7 +367,11 @@ const comboboxSymptomScenarios: TestScenario[] = [
         pattern: 'extends\\s+Lion',
         description: 'consumes lion rather than subclassing it',
       },
-      { type: 'noUnusedImports', file: 'src/my-elem.js', description: 'imports nothing it does not use' },
+      {
+        type: 'noUnusedImports',
+        file: 'src/my-elem.js',
+        description: 'imports nothing it does not use',
+      },
       {
         type: 'noExtraFiles',
         file: 'src/my-elem.js',
@@ -419,7 +423,11 @@ const comboboxSymptomScenarios: TestScenario[] = [
         pattern: 'extends\\s+Lion',
         description: 'consumes lion rather than subclassing it',
       },
-      { type: 'noUnusedImports', file: 'src/my-elem.js', description: 'imports nothing it does not use' },
+      {
+        type: 'noUnusedImports',
+        file: 'src/my-elem.js',
+        description: 'imports nothing it does not use',
+      },
       {
         type: 'noExtraFiles',
         file: 'src/my-elem.js',

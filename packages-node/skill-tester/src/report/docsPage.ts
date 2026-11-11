@@ -46,7 +46,9 @@ function behaviourCell(entry: LedgerEntry): string {
 }
 
 function tokensPerRun(entry: LedgerEntry): string {
-  return entry.samples === 0 ? 'n/a' : Math.round(entry.tokens / entry.samples).toLocaleString('en-US');
+  return entry.samples === 0
+    ? 'n/a'
+    : Math.round(entry.tokens / entry.samples).toLocaleString('en-US');
 }
 
 /** Cost for the whole cell, or an explicit absence — never a guessed number. */
@@ -108,9 +110,7 @@ export function renderQualityPage(ledger: Ledger): string {
     lines.push(
       '| Model | Mean | Min | Max | sd | n | Behaviour | Attempts | Redo | Tokens/run | Cost | Rev |',
     );
-    lines.push(
-      '| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |',
-    );
+    lines.push('| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |');
     for (const entry of rows) {
       lines.push(
         `| \`${entry.model}\` ` +
@@ -155,7 +155,9 @@ export function renderQualityPage(ledger: Ledger): string {
   lines.push('## Rates used for the cost column');
   lines.push('');
   lines.push('USD per 1M tokens, as read from the sources below. Input and output are priced');
-  lines.push('separately; cached input is not discounted here, so a published cost is an upper bound.');
+  lines.push(
+    'separately; cached input is not discounted here, so a published cost is an upper bound.',
+  );
   lines.push('');
   lines.push('| Model | Input /1M | Output /1M | Source | Confidence | Read |');
   lines.push('| --- | --- | --- | --- | --- | --- |');
@@ -174,7 +176,10 @@ export function renderQualityPage(ledger: Ledger): string {
   }
   lines.push('');
 
-  return `${lines.join('\n').replace(/\n{3,}/g, '\n\n').trimEnd()}\n`;
+  return `${lines
+    .join('\n')
+    .replace(/\n{3,}/g, '\n\n')
+    .trimEnd()}\n`;
 }
 
 export function writeQualityPage(file: string, ledger: Ledger): string {

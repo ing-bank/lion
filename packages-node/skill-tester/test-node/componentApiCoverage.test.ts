@@ -5,13 +5,20 @@ import path from 'node:path';
 
 const repoRoot = path.resolve(import.meta.dirname, '../../..');
 const skillRefs = path.join(repoRoot, 'packages/ui/skills/lion-ui/references/components');
-const cem = JSON.parse(fs.readFileSync(path.join(repoRoot, 'packages/ui/custom-elements.json'), 'utf8'));
+const cem = JSON.parse(
+  fs.readFileSync(path.join(repoRoot, 'packages/ui/custom-elements.json'), 'utf8'),
+);
 
 /**
  * Members that are *inherited* from a shared mixin, documented once in the systems references rather
  * than repeated on every component. Excluded from the per-component completeness check on purpose.
  */
-const MIXIN_MEMBERS = new Set(['enabledWarnings', 'scopedElements', 'templates', 'validationTypes']);
+const MIXIN_MEMBERS = new Set([
+  'enabledWarnings',
+  'scopedElements',
+  'templates',
+  'validationTypes',
+]);
 
 /**
  * Real, measured coverage gaps: own public members that no component reference mentions yet. Pinned so
@@ -40,7 +47,11 @@ function ownPublicMembers(componentName: string): Set<string> {
     for (const declaration of mod.declarations ?? []) {
       if (declaration.kind !== 'class') continue;
       for (const member of declaration.members ?? []) {
-        if (member.inheritedFrom || member.privacy === 'private' || member.privacy === 'protected') {
+        if (
+          member.inheritedFrom ||
+          member.privacy === 'private' ||
+          member.privacy === 'protected'
+        ) {
           continue;
         }
         if (member.name && !member.name.startsWith('_')) own.add(member.name);
@@ -62,7 +73,10 @@ function apis(): Record<string, ComponentApi> {
 
 test('every component document its own public members (mixins documented in the systems references)', () => {
   const subject = apis();
-  assert.ok(Object.keys(subject).length > 20, `expected the component set, got ${Object.keys(subject).length}`);
+  assert.ok(
+    Object.keys(subject).length > 20,
+    `expected the component set, got ${Object.keys(subject).length}`,
+  );
   const unexpected: string[] = [];
   for (const [name, { text, own }] of Object.entries(subject)) {
     const known = new Set(KNOWN_GAPS[name] ?? []);
