@@ -125,8 +125,22 @@ export function runInputDateSuite({
         `);
         expect(el.formattedValue).to.equal('15/06/2017'); // british
         localizeManager.locale = 'en-US';
+        await localizeManager.loadingComplete;
         await el.updateComplete;
         expect(el.formattedValue).to.equal('15/06/2017'); // should stay british
+      });
+
+      it('reformats on global locale change if formatOptions.locale is not provided', async () => {
+        localizeManager.locale = 'en-GB';
+        const el = await fixture(html`
+          <${tag} .modelValue=${new Date('2017/06/15')}></${tag}>
+        `);
+        expect(el.formattedValue).to.equal('15/06/2017');
+        localizeManager.locale = 'en-US';
+        await localizeManager.loadingComplete;
+        await el.updateComplete;
+        expect(el.formattedValue).to.equal('06/15/2017');
+        expect(el.modelValue.getTime()).to.equal(new Date('2017/06/15').getTime());
       });
     });
 
@@ -221,6 +235,13 @@ export function runInputDateSuite({
       await target.updateComplete;
       expect(target.modelValue.getTime()).to.equal(source.modelValue.getTime());
       expect(target.serializedValue).to.equal('2000-12-15');
+    });
+
+    it('deserializes a non iso date string via the Date constructor', async () => {
+      const el = await fixture(html`<${tag}></${tag}>`);
+      el.serializedValue = '2020/01/30';
+      await el.updateComplete;
+      expect(el.modelValue.getTime()).to.equal(new Date(2020, 0, 30).getTime());
     });
   });
 }

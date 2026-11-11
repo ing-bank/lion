@@ -28,12 +28,15 @@ export class LionInputDate extends LocalizeMixin(LionInput) {
     this.type = 'text';
   }
 
-  /** @param {import('lit').PropertyValues } changedProperties */
-  updated(changedProperties) {
-    super.updated(changedProperties);
-    if (changedProperties.has('locale')) {
-      this._calculateValues({ source: null });
-    }
+  /**
+   * Reformats the date for the new global locale (unless `formatOptions.locale` overrides it)
+   * @param {string} newLocale
+   * @param {string} oldLocale
+   * @enhance LocalizeMixin
+   */
+  onLocaleChanged(newLocale, oldLocale) {
+    super.onLocaleChanged(newLocale, oldLocale);
+    this._calculateValues({ source: null });
   }
 
   /**
