@@ -665,11 +665,13 @@ const InteractiveListMixinImplementation = /** @type {InteractiveListMixinType} 
           break;
         case 'Home':
           ev.preventDefault();
-          this.activeIndex = this._getNextEnabledOption(0, 0);
+          // Search from just before the first item, so the first item itself is a candidate
+          this.activeIndex = this._getNextEnabledOption(-1);
           break;
         case 'End':
           ev.preventDefault();
-          this.activeIndex = this._getPreviousEnabledOption(this.listItems.length - 1, 0);
+          // Search from just after the last item, so the last item itself is a candidate
+          this.activeIndex = this._getPreviousEnabledOption(this.listItems.length);
           break;
         /* no default */
       }
@@ -694,18 +696,16 @@ const InteractiveListMixinImplementation = /** @type {InteractiveListMixinType} 
       if (code.startsWith('Key') || code.startsWith('Digit') || code.startsWith('Numpad')) {
         this.__typedChars.push(key);
         // TODO: schedule in updated loop for perf
-        const chars = this.__typedChars.join('');
+        const chars = this.__typedChars.join('').toLowerCase();
         const matchItem = this.listItems.find(item =>
           this._matchCharsAgainstItem({ chars: [chars], item }),
         );
         // @ts-ignore - matchItem might be undefined
         this.activeIndex = this.listItems.indexOf(matchItem);
 
-        // @ts-ignore - __clearCharTimeout can be a function
-        if (typeof this.__clearCharTimeout === 'function') {
-          // @ts-ignore
-          this.__clearCharTimeout();
-        }
+        // Every typed character restarts the window in which the next one continues the sequence
+        // @ts-ignore - __clearCharTimeout holds the id of the pending timeout
+        clearTimeout(this.__clearCharTimeout);
         this.__clearCharTimeout = setTimeout(() => {
           this.__typedChars = [];
         }, this._activateOnCharTimeout);
@@ -721,8 +721,9 @@ const InteractiveListMixinImplementation = /** @type {InteractiveListMixinType} 
      */
     // eslint-disable-next-line class-methods-use-this
     _matchCharsAgainstItem({ chars, item }) {
-      const value = getValue(item).toLowerCase();
-      return value.startsWith(chars);
+      // A value can be a non-string (like a number), so stringify it before matching
+      const value = String(getValue(item)).toLowerCase();
+      return value.startsWith(chars.join('').toLowerCase());
     }
 
     /**
@@ -803,20 +804,23 @@ const InteractiveListMixinImplementation = /** @type {InteractiveListMixinType} 
      * @param {number} offset
      */
     __getNextOption(currentIndex, offset) {
+      // Only the direction of the offset matters: stepping by anything else than one item
+      // (an offset of 0 in particular) would skip items or never end
+      const step = offset < 0 ? -1 : 1;
       /**
        * @param {number} i
        */
-      const until = i => (offset === 1 ? i < this.listItems.length : i >= 0);
+      const until = i => (step === 1 ? i < this.listItems.length : i >= 0);
 
-      for (let i = currentIndex + offset; until(i); i += offset) {
+      for (let i = currentIndex + step; until(i); i += step) {
         if (this.listItems[i] && !isDisabled(this.listItems[i])) {
           return i;
         }
       }
 
       if (this.wrap) {
-        const startIndex = offset === -1 ? this.listItems.length - 1 : 0;
-        for (let i = startIndex; until(i); i += 1) {
+        const startIndex = step === -1 ? this.listItems.length - 1 : 0;
+        for (let i = startIndex; until(i); i += step) {
           if (this.listItems[i] && !isDisabled(this.listItems[i])) {
             return i;
           }
