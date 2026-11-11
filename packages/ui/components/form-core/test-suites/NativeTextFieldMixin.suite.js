@@ -49,6 +49,40 @@ export function runNativeTextFieldMixinSuite({ classes = {}, tagString: legacyTa
       expect(_inputNode.selectionEnd).to.equal(2);
     });
 
+    it('delegates selectionStart and selectionEnd to its native text field', async () => {
+      const el = /** @type {NativeTextFieldClass} */ (await fixture(html`<${tag}></${tag}>`));
+      const { _inputNode } = getFormControlMembers(el);
+      _inputNode.value = 'hello world';
+      _inputNode.setSelectionRange(1, 2);
+      expect(el.selectionStart).to.equal(1);
+      expect(el.selectionEnd).to.equal(2);
+
+      // Also when the caret is at the very start
+      _inputNode.setSelectionRange(0, 0);
+      el.selectionStart = 3;
+      el.selectionEnd = 5;
+      expect(_inputNode.selectionStart).to.equal(3);
+      expect(_inputNode.selectionEnd).to.equal(5);
+      expect(el.selectionStart).to.equal(3);
+      expect(el.selectionEnd).to.equal(5);
+    });
+
+    it('has selectionStart and selectionEnd 0 when its native field has no selection', async () => {
+      const el = /** @type {NativeTextFieldClass} */ (await fixture(html`<${tag}></${tag}>`));
+      const { _inputNode } = getFormControlMembers(el);
+      if (!(_inputNode instanceof HTMLInputElement)) {
+        return;
+      }
+      // input types like 'number' do not support selection (selectionStart is null)
+      _inputNode.type = 'number';
+      expect(el.selectionStart).to.equal(0);
+      expect(el.selectionEnd).to.equal(0);
+      expect(() => {
+        el.selectionStart = 1;
+        el.selectionEnd = 1;
+      }).to.not.throw();
+    });
+
     it('moves focus to a next focusable element after writing some text', async () => {
       const el = /** @type {NativeTextFieldClass} */ (await fixture(html`<${tag}></${tag}>`));
       // @ts-ignore [allow-protected] in test

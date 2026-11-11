@@ -47,7 +47,9 @@ const NativeTextFieldMixinImplementation = /** @type {NativeTextFieldMixin} */ (
 
     set selectionStart(value) {
       const native = this._inputNode;
-      if (native && native.selectionStart) {
+      // Also when the caret is at 0. It is null for input types without selection support, which
+      // would throw on assignment
+      if (typeof native?.selectionStart === 'number') {
         native.selectionStart = value;
       }
     }
@@ -63,7 +65,9 @@ const NativeTextFieldMixinImplementation = /** @type {NativeTextFieldMixin} */ (
 
     set selectionEnd(value) {
       const native = this._inputNode;
-      if (native && native.selectionEnd) {
+      // Also when the caret is at 0. It is null for input types without selection support, which
+      // would throw on assignment
+      if (typeof native?.selectionEnd === 'number') {
         native.selectionEnd = value;
       }
     }
