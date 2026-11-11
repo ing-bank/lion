@@ -22,6 +22,14 @@ export function runSelectSuite({
   const tag = unsafeStatic(resolveSuiteTag(host, legacyTagString));
 
   describe('lion-select', () => {
+    it('has operationMode "select", for select specific Required messages', async () => {
+      const el = await fixture(html`
+        <${tag}><select slot="input"><option value="nr1">Item 1</option></select></${tag}>
+      `);
+      // @ts-ignore [allow-private] in test
+      expect(el.operationMode).to.equal('select');
+    });
+
     it('can preselect an option', async () => {
       const lionSelect = await fixture(html`
         <${tag} .modelValue="${'nr2'}">

@@ -897,6 +897,23 @@ export function runFormGroupMixinSuite({
 
     // TODO: this should be tested in FormGroupMixin
     describe('serializedValue', () => {
+      it('sets formattedValue of its form elements', async () => {
+        const fieldset = /**  @type {FormGroup} */ (
+          await fixture(html`
+            <${tag}>
+              <${childTag} name="firstName" .parser=${(/** @type {string} */ v) => v.toUpperCase()}></${childTag}>
+              <${childTag} name="lastName"></${childTag}>
+            </${tag}>
+          `)
+        );
+        // @ts-ignore [allow-private] in test
+        fieldset.formattedValue = { firstName: 'Foo', lastName: 'Bar' };
+        // the formattedValue is parsed by the children into their modelValue
+        expect(fieldset.formElements.firstName.modelValue).to.equal('FOO');
+        expect(fieldset.formElements.lastName.modelValue).to.equal('Bar');
+        expect(fieldset.formattedValue).to.deep.equal({ firstName: 'Foo', lastName: 'Bar' });
+      });
+
       it('use form elements serializedValue', async () => {
         const fieldset = /**  @type {FormGroup} */ (
           await fixture(html`<${tag}>${inputSlots}</${tag}>`)
@@ -1104,6 +1121,25 @@ export function runFormGroupMixinSuite({
         // keeps dom order within the target array
         expect([...fieldset.formElements['b[]']]).to.deep.equal([first, second]);
         expect(fieldset.serializedValue).to.deep.equal({ 'b[]': ['1', '2'], c: '3' });
+      });
+
+      it('ignores a name change event that does not change the name', async () => {
+        const fieldset = /**  @type {FormGroup} */ (
+          await fixture(html`
+          <${tag}>
+            <${childTag} name="foo" .modelValue=${'1'}></${childTag}>
+          </${tag}>
+        `)
+        );
+        const [foo] = fieldset.formElements;
+        foo.dispatchEvent(
+          new CustomEvent('form-element-name-changed', {
+            detail: { oldName: 'foo', newName: 'foo' },
+            bubbles: true,
+          }),
+        );
+        expect(fieldset.formElements.foo).to.equal(foo);
+        expect(fieldset.serializedValue).to.deep.equal({ foo: '1' });
       });
 
       it('throws when a child is renamed onto an already registered name', async () => {

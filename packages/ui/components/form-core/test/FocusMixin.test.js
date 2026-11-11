@@ -390,4 +390,64 @@ describe('FocusMixin', () => {
       });
     });
   });
+
+  it('does not fail when its focusable node is not available (yet)', async () => {
+    const el = /** @type {Focusable} */ (await fixture(html`<${tag} autofocus></${tag}>`));
+    // @ts-ignore [allow-protected] in test
+    expect(el._focusableNode).to.equal(null);
+    expect(() => {
+      el.focus();
+      el.blur();
+    }).to.not.throw();
+    el.removeAttribute('autofocus');
+    await el.updateComplete;
+    expect(el.focused).to.be.false;
+  });
+
+  it('sets focusedVisible to false when matching :focus-visible throws (Safari)', async () => {
+    const el = /** @type {Focusable} */ (
+      await fixture(html`<${tag}><input slot="input"></${tag}>`)
+    );
+    // @ts-ignore [allow-protected] in test
+    const { _focusableNode } = el;
+    const originalPolyfill = windowWithOptionalPolyfill.applyFocusVisiblePolyfill;
+    windowWithOptionalPolyfill.applyFocusVisiblePolyfill = undefined;
+    // @ts-ignore [allow-private] in test
+    _focusableNode.matches = () => {
+      throw new Error('SyntaxError: not a valid selector');
+    };
+
+    _focusableNode.dispatchEvent(new Event('focusin', { bubbles: true, composed: true }));
+    await el.updateComplete;
+    expect(el.focused).to.be.true;
+    expect(el.focusedVisible).to.be.false;
+    windowWithOptionalPolyfill.applyFocusVisiblePolyfill = originalPolyfill;
+  });
+
+  describe('Default focusable node', () => {
+    it('is the _inputNode, when available', async () => {
+      class WithInputNode extends FocusMixin(LitElement) {
+        get _inputNode() {
+          return /** @type {HTMLInputElement} */ (this.querySelector('input'));
+        }
+      }
+      const withInputTag = unsafeStatic(defineCE(WithInputNode));
+      const el = /** @type {WithInputNode} */ (
+        await fixture(html`<${withInputTag}><input></${withInputTag}>`)
+      );
+      // @ts-ignore [allow-protected] in test
+      expect(el._focusableNode).to.equal(el.querySelector('input'));
+    });
+
+    it('is a detached input otherwise, so that the FocusMixin API does not fail', async () => {
+      class Bare extends FocusMixin(LitElement) {}
+      const bareTag = unsafeStatic(defineCE(Bare));
+      const el = /** @type {Bare} */ (await fixture(html`<${bareTag}></${bareTag}>`));
+      // @ts-ignore [allow-protected] in test
+      const { _focusableNode } = el;
+      expect(_focusableNode).to.be.instanceOf(HTMLInputElement);
+      expect(_focusableNode.isConnected).to.be.false;
+      expect(() => el.focus()).to.not.throw();
+    });
+  });
 });

@@ -262,6 +262,22 @@ export const runRegistrationSuite = ({
       expect(el.formElements.length).to.equal(1);
     });
 
+    it('does not register an already registered element twice', async () => {
+      const el = /** @type {RegistrarClass} */ (
+        await fixture(html`
+        <${parentTag}>
+          <${childTag}></${childTag}>
+        </${parentTag}>
+      `)
+      );
+      const [child] = el.formElements;
+      child.dispatchEvent(
+        new CustomEvent('form-element-register', { detail: { element: child }, bubbles: true }),
+      );
+      expect(el.formElements.length).to.equal(1);
+      expect(el.formElements[0]).to.equal(child);
+    });
+
     it('adds elements to formElements in the right order (DOM)', async () => {
       const el = /** @type {RegistrarClass} */ (
         await fixture(html`

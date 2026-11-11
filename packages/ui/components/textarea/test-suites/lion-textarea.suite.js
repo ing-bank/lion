@@ -76,6 +76,15 @@ export function runTextareaSuite({
       expect(el.querySelector('textarea')?.readOnly).to.be.true;
     });
 
+    it('sync autocomplete down to the native textarea', async () => {
+      const el = await fixture(`<${tagString} autocomplete="off">foo</${tagString}>`);
+      const textarea = /** @type {HTMLTextAreaElement} */ (el.querySelector('textarea'));
+      expect(textarea.autocomplete).to.equal('off');
+      el.autocomplete = 'street-address';
+      await el.updateComplete;
+      expect(textarea.autocomplete).to.equal('street-address');
+    });
+
     it('disables user resize behavior', async () => {
       if (!hasBrowserResizeSupport()) {
         return;

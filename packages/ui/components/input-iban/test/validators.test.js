@@ -1,4 +1,7 @@
 import { expect } from '@open-wc/testing';
+import { Unparseable } from '@lion/ui/form-core.js';
+import { getLocalizeManager } from '@lion/ui/localize-no-side-effects.js';
+import { localizeTearDown } from '@lion/ui/localize-test-helpers.js';
 
 import { IsIBAN, IsCountryIBAN, IsNotCountryIBAN } from '@lion/ui/input-iban.js';
 
@@ -72,5 +75,76 @@ describe('IBAN validation', () => {
     expect(deskValidator.execute('FR1420041010050500013M02606')).to.be.false;
     expect(deskValidator.execute('DE89370400440532013000')).to.be.true;
     expect(deskValidator.execute('SK3112000000198742637541')).to.be.true;
+  });
+
+  it('marks an invalid IBAN as invalid for IsNotCountryIBAN, whatever its country', () => {
+    expect(IsNotCountryIBAN.validatorName).to.equal('IsNotCountryIBAN');
+    expect(new IsNotCountryIBAN('NL').execute('DE89370400440532013001')).to.be.true;
+    expect(new IsNotCountryIBAN(['NL', 'FR']).execute('foo')).to.be.true;
+  });
+
+  describe('messages', () => {
+    // The translations are loaded once per page (on first use), so no tear down between tests
+    before(() => {
+      getLocalizeManager().locale = 'en-GB';
+    });
+
+    after(() => {
+      localizeTearDown();
+    });
+
+    it('provides a message for IsIBAN', async () => {
+      expect(await IsIBAN.getMessage({ fieldName: 'IBAN' })).to.equal('Please enter a valid IBAN.');
+    });
+
+    it('names the required country in the IsCountryIBAN message', async () => {
+      expect(
+        await IsCountryIBAN.getMessage({
+          fieldName: 'IBAN',
+          params: 'NL',
+          modelValue: 'DE89370400440532013000',
+        }),
+      ).to.equal('Please enter a valid Dutch IBAN.');
+      expect(
+        await IsCountryIBAN.getMessage({ fieldName: 'IBAN', params: 'XX', modelValue: 'DE89' }),
+      ).to.equal('Please enter a valid XX IBAN.');
+    });
+
+    it('gives the IsIBAN message for IsCountryIBAN when the value is unparseable', async () => {
+      expect(
+        await IsCountryIBAN.getMessage({
+          fieldName: 'IBAN',
+          params: 'NL',
+          modelValue: new Unparseable('foo'),
+        }),
+      ).to.equal('Please enter a valid IBAN.');
+    });
+
+    it('names the country of the entered IBAN in the IsNotCountryIBAN message', async () => {
+      expect(
+        await IsNotCountryIBAN.getMessage({
+          fieldName: 'IBAN',
+          params: 'NL',
+          modelValue: 'NL17INGB0002822608',
+        }),
+      ).to.equal('Dutch IBAN is not allowed.');
+      expect(
+        await IsNotCountryIBAN.getMessage({
+          fieldName: 'IBAN',
+          params: 'XX',
+          modelValue: 'XX17INGB0002822608',
+        }),
+      ).to.equal('XX IBAN is not allowed.');
+    });
+
+    it('gives the IsIBAN message for IsNotCountryIBAN when the value is unparseable', async () => {
+      expect(
+        await IsNotCountryIBAN.getMessage({
+          fieldName: 'IBAN',
+          params: 'NL',
+          modelValue: new Unparseable('foo'),
+        }),
+      ).to.equal('Please enter a valid IBAN.');
+    });
   });
 });
