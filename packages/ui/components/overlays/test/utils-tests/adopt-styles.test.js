@@ -54,6 +54,19 @@ describe('adoptStyle()', () => {
     cleanupShadowHost();
   });
 
+  it('throws when the style is not a CSSResult or CSSStyleSheet', async () => {
+    const { shadowHost, cleanupShadowHost } = createShadowHost();
+    const root = /** @type {ShadowRoot} */ (shadowHost.shadowRoot);
+    try {
+      // @ts-ignore - testing invalid input
+      expect(() => adoptStyle(root, { cssText: '.x { color: red; }' })).to.throw(
+        'Please provide a CSSResultOrNative style',
+      );
+    } finally {
+      cleanupShadowHost();
+    }
+  });
+
   it('works as well when document is the root', async () => {
     const myCssResult = css``;
     const root = document;
@@ -107,6 +120,29 @@ describe('adoptStyle()', () => {
       expect(lastAddedSheet.textContent).to.equal(myCssResult.cssText);
 
       cleanupShadowHost();
+    });
+
+    it('puts window.litNonce on the "traditional" stylesheet (for CSP)', async () => {
+      const { shadowHost, cleanupShadowHost } = createShadowHost();
+      const root = /** @type {ShadowRoot} */ (shadowHost.shadowRoot);
+      // @ts-ignore - litNonce is set by apps that use a CSP
+      window.litNonce = 'my-nonce';
+      try {
+        adoptStyle(
+          root,
+          css`
+            .nonce-check {
+              color: red;
+            }
+          `,
+        );
+        const sheets = Array.from(root.querySelectorAll('style'));
+        expect(sheets[sheets.length - 1].getAttribute('nonce')).to.equal('my-nonce');
+      } finally {
+        // @ts-ignore
+        delete window.litNonce;
+        cleanupShadowHost();
+      }
     });
 
     it('adds a "traditional" stylesheet to the body', async () => {
