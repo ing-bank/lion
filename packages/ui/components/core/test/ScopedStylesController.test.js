@@ -72,4 +72,25 @@ describe('ScopedStylesMixin', () => {
     wrapper2.appendChild(el);
     expect(el.children[1]).to.be.undefined;
   });
+
+  it('falls back to the default (empty) scoped styles when the host has no static scopedStyles', async () => {
+    class ScopedWithoutStyles extends LitElement {
+      constructor() {
+        super();
+        this.scopedStylesController = new ScopedStylesController(this);
+      }
+
+      createRenderRoot() {
+        return this;
+      }
+    }
+    customElements.define('scoped-without-styles-el', ScopedWithoutStyles);
+
+    const el = /** @type {ScopedWithoutStyles} */ (
+      await fixture(html`<scoped-without-styles-el></scoped-without-styles-el>`)
+    );
+    expect(el.classList.contains(el.scopedStylesController.scopedClass)).to.be.true;
+    expect(el.children[0].tagName).to.equal('STYLE');
+    expect(el.children[0].textContent).to.equal('');
+  });
 });
