@@ -63,6 +63,12 @@ describe('formatNumber', () => {
     expect(formatNumber(-12.6, { roundMode: 'ceiling' })).to.equal('−12');
   });
 
+  it('throws for an unknown `roundMode`', () => {
+    expect(() => formatNumber(12.4, { roundMode: 'up' })).to.throw(
+      'roundMode can only be round|floor|ceiling',
+    );
+  });
+
   it('rounds (negative) numbers down when `roundMode: floor`', () => {
     expect(formatNumber(12.4, { roundMode: 'floor' })).to.equal('12');
     expect(formatNumber(12.6, { roundMode: 'floor' })).to.equal('12');

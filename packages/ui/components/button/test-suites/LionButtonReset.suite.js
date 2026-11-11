@@ -1,6 +1,6 @@
 /* eslint-disable lit-a11y/click-events-have-key-events */
 import { LionButtonReset } from '@lion/ui/button.js';
-import { aTimeout, expect, fixture, html, unsafeStatic } from '@open-wc/testing';
+import { aTimeout, expect, fixture, fixtureSync, html, unsafeStatic } from '@open-wc/testing';
 import sinon from 'sinon';
 import { resolveSuiteTag } from '../../core/test-helpers/resolveSuiteTag.js';
 
@@ -34,6 +34,22 @@ export function LionButtonResetSuite({ classes = {}, tagString } = {}) {
      * For buttons that should support all three types (like native <button>); use LionButton.
      */
     describe('Form integration', () => {
+      it('submits the form when clicked before its form is known (first update pending)', async () => {
+        const formSubmitSpy = /** @type {EventListener} */ (sinon.spy(e => e.preventDefault()));
+        const form = /** @type {HTMLFormElement} */ (
+          fixtureSync(html`
+            <form @submit="${formSubmitSpy}">
+              <${tagButtonReset} type="submit">foo</${tagButtonReset}>
+            </form>
+          `)
+        );
+        const button = /** @type {LionButtonReset} */ (form.querySelector(tagStringButtonReset));
+        button.click();
+        await button.updateComplete;
+        await aTimeout(0);
+        expect(/** @type {sinon.SinonSpy} */ (formSubmitSpy).callCount).to.equal(1);
+      });
+
       describe('With submit event', () => {
         it('behaves like native `button` when clicked', async () => {
           const formSubmitSpy = /** @type {EventListener} */ (sinon.spy(e => e.preventDefault()));
