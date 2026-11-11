@@ -443,6 +443,42 @@ export function runCalendarSuite({
         );
       });
 
+      it('updates focusedDate when a day button receives real focus', async () => {
+        const el = await fixtureForSuite(html`
+          <${tagCalendar} .centralDate="${new Date('2019/06/01')}"></${tagCalendar}>
+        `);
+        const elObj = new CalendarObject(el);
+        expect(el.focusedDate).to.be.null;
+        /** @type {DayObject} */ (elObj.centralDayObj).buttonEl.focus();
+        expect(isSameDate(/** @type {Date} */ (el.focusedDate), new Date('2019/06/01'))).to.be.true;
+      });
+
+      it('clears focusedDate when focus moves from a day to another calendar control', async () => {
+        const el = await fixtureForSuite(html`
+          <${tagCalendar} .centralDate="${new Date('2019/06/01')}"></${tagCalendar}>
+        `);
+        const elObj = new CalendarObject(el);
+        /** @type {DayObject} */ (elObj.centralDayObj).buttonEl.focus();
+        await el.updateComplete;
+        expect(el.focusedDate).to.not.be.null;
+        /** @type {HTMLElement} */ (elObj.nextMonthButtonEl).focus();
+        await waitUntil(() => el.focusedDate === null);
+        expect(el.focusedDate).to.be.null;
+      });
+
+      it('stops handling keyboard navigation after it is disconnected', async () => {
+        const el = await fixtureForSuite(html`
+          <${tagCalendar} .centralDate="${new Date('2019/06/10')}"></${tagCalendar}>
+        `);
+        const elObj = new CalendarObject(el);
+        const dayButton = /** @type {HTMLElement} */ (elObj.centralDayObj?.buttonEl);
+        el.remove();
+        dayButton.dispatchEvent(
+          new KeyboardEvent('keyup', { key: 'ArrowRight', bubbles: true, composed: true }),
+        );
+        expect(isSameDate(el.centralDate, new Date('2019/06/10'))).to.be.true;
+      });
+
       it('has a focusDate() method to focus an arbitrary date', async () => {
         const el = await fixtureForSuite(html`<${tagCalendar}></${tagCalendar}>`);
         const elObj = new CalendarObject(el);

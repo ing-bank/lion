@@ -222,7 +222,7 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
     this.__boundKeyboardNavigationEvent = this.__keyboardNavigationEvent.bind(this);
     this.__boundClickDateDelegation = this.__clickDateDelegation.bind(this);
     this.__boundFocusDateDelegation = this.__focusDateDelegation.bind(this);
-    this.__boundBlurDateDelegation = this.__focusDateDelegation.bind(this);
+    this.__boundBlurDateDelegation = this.__blurDateDelegation.bind(this);
   }
 
   static get styles() {
@@ -271,8 +271,10 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
       this.shadowRoot?.querySelector('#js-content-wrapper')
     );
     const button = /** @type {HTMLElement} */ (datesTable.querySelector('[tabindex="0"]'));
-    button?.focus();
+    // Set the date before moving focus: the focusin delegation only fills an empty focusedDate, so
+    // it must not pick up the date of a button that has not been re-rendered yet.
     this.__focusedDate = this.centralDate;
+    button?.focus();
   }
 
   async focusSelectedDate() {
@@ -310,8 +312,8 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
         this.shadowRoot?.getElementById('js-content-wrapper')
       );
       this.__contentWrapperElement.addEventListener('click', this.__boundClickDateDelegation);
-      this.__contentWrapperElement.addEventListener('focus', this.__boundFocusDateDelegation);
-      this.__contentWrapperElement.addEventListener('blur', this.__boundBlurDateDelegation);
+      this.__contentWrapperElement.addEventListener('focusin', this.__boundFocusDateDelegation);
+      this.__contentWrapperElement.addEventListener('focusout', this.__boundBlurDateDelegation);
       this.__contentWrapperElement.addEventListener('keyup', this.__boundKeyboardNavigationEvent);
       this.__eventsAdded = true;
     }
@@ -330,10 +332,10 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
     super.disconnectedCallback();
     if (this.__contentWrapperElement) {
       this.__contentWrapperElement.removeEventListener('click', this.__boundClickDateDelegation);
-      this.__contentWrapperElement.removeEventListener('focus', this.__boundFocusDateDelegation);
-      this.__contentWrapperElement.removeEventListener('blur', this.__boundBlurDateDelegation);
+      this.__contentWrapperElement.removeEventListener('focusin', this.__boundFocusDateDelegation);
+      this.__contentWrapperElement.removeEventListener('focusout', this.__boundBlurDateDelegation);
       this.__contentWrapperElement.removeEventListener(
-        'keydown',
+        'keyup',
         this.__boundKeyboardNavigationEvent,
       );
 
