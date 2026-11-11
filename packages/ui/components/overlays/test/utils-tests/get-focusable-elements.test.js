@@ -1,6 +1,8 @@
 import { expect, fixture, defineCE } from '@open-wc/testing';
 import { LitElement, html } from 'lit';
+
 import { getFocusableElements } from '@lion/ui/overlays.js';
+
 class ElementB extends LitElement {
   render() {
     const marker = this.getAttribute('marker') || '';
@@ -15,7 +17,9 @@ class ElementB extends LitElement {
     `;
   }
 }
+
 customElements.define('element-b', ElementB);
+
 describe('getFocusableElements()', () => {
   it('collects focusable nodes', async () => {
     const element = await fixture(`
@@ -32,9 +36,11 @@ describe('getFocusableElements()', () => {
       </div>
     `);
     const nodes = getFocusableElements(element);
-    const ids = nodes.map((n) => n.id);
+    const ids = nodes.map(n => n.id);
+
     expect(ids).eql(['el1', 'el2', 'el3', 'el4', 'el5', 'el6', 'el7']);
   });
+
   it('handles nested nodes', async () => {
     const element = await fixture(`
       <div>
@@ -54,9 +60,11 @@ describe('getFocusableElements()', () => {
       </div>
     `);
     const nodes = getFocusableElements(element);
-    const ids = nodes.map((n) => n.id);
+    const ids = nodes.map(n => n.id);
+
     expect(ids).eql(['el1', 'el2', 'el3', 'el4', 'el5']);
   });
+
   it('skips elements that should not receive focus', async () => {
     const element = await fixture(`
       <div>
@@ -81,9 +89,11 @@ describe('getFocusableElements()', () => {
       </div>
     `);
     const nodes = getFocusableElements(element);
-    const ids = nodes.map((n) => n.id);
+    const ids = nodes.map(n => n.id);
+
     expect(ids).eql(['el1', 'el3', 'el8', 'el11']);
   });
+
   it('respects tabindex order', async () => {
     const element = await fixture(`
       <div>
@@ -102,19 +112,24 @@ describe('getFocusableElements()', () => {
       </div>
     `);
     const nodes = getFocusableElements(element);
-    const ids = nodes.map((n) => n.id);
+    const ids = nodes.map(n => n.id);
+
     expect(ids).eql(['el8', 'el10', 'el5', 'el6', 'el7', 'el9', 'el1', 'el2', 'el3']);
   });
+
   it('handles shadow dom', async () => {
     const element = await fixture(`
       <div>
         <element-b marker='marker'></element-b>
       </div>
     `);
+
     const nodes = getFocusableElements(element);
-    const ids = nodes.map((n) => n.id);
+    const ids = nodes.map(n => n.id);
+
     expect(ids).eql(['el-b-marker-1', 'el-b-marker-2', 'el-b-marker-3']);
   });
+
   it('handles slotted elements', async () => {
     const elTag = defineCE(
       class extends LitElement {
@@ -137,6 +152,7 @@ describe('getFocusableElements()', () => {
         }
       },
     );
+
     const element = await fixture(`
       <div>
         <${elTag}>
@@ -157,7 +173,8 @@ describe('getFocusableElements()', () => {
       </div>
     `);
     const nodes = getFocusableElements(element);
-    const ids = nodes.map((n) => n.id);
+    const ids = nodes.map(n => n.id);
+
     expect(ids).eql([
       'el-a-1',
       'el-b-marker-1-1',

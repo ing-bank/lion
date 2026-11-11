@@ -52,7 +52,7 @@ export class Required extends Validator {
     if (inputNode) {
       const role = inputNode.getAttribute('role') || '';
       const elementTagName = inputNode.tagName.toLowerCase();
-      const ctor = /** @type {typeof Required} */ this.constructor;
+      const ctor = /** @type {typeof Required} */ (this.constructor);
       if (ctor._compatibleRoles.includes(role) || ctor._compatibleTags.includes(elementTagName)) {
         inputNode.setAttribute('aria-required', 'true');
       }

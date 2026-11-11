@@ -26,23 +26,18 @@ export class LionAccordion extends LitElement {
       /**
        * index number of the focused accordion
        */
-      focusedIndex: {
-        type: Number,
-      },
+      focusedIndex: { type: Number },
       /**
        * array of indices of the expanded accordions
        */
-      expanded: {
-        type: Array,
-      },
+      expanded: { type: Array },
       /**
        * exclusive property allows only one accordion slot to be open at a time
        */
-      exclusive: {
-        type: Boolean,
-      },
+      exclusive: { type: Boolean },
     };
   }
+
   static get styles() {
     return [
       css`
@@ -83,6 +78,7 @@ export class LionAccordion extends LitElement {
     this.dispatchEvent(new Event('focused-changed'));
     this.requestUpdate('focusedIndex', stale);
   }
+
   get focusedIndex() {
     return this.__focusedIndex;
   }
@@ -97,6 +93,7 @@ export class LionAccordion extends LitElement {
     this.dispatchEvent(new Event('expanded-changed'));
     this.requestUpdate('expanded', stale);
   }
+
   get expanded() {
     return this.__expanded;
   }
@@ -118,6 +115,7 @@ export class LionAccordion extends LitElement {
    * @private
    */
   __store;
+
   constructor() {
     super();
     this.styles = {};
@@ -126,6 +124,7 @@ export class LionAccordion extends LitElement {
      * @type {boolean}
      */
     this.exclusive = false;
+
     this.__store = [];
   }
 
@@ -134,6 +133,7 @@ export class LionAccordion extends LitElement {
     super.firstUpdated(changedProperties);
     this.__setupSlots();
   }
+
   render() {
     return html`
       <div class="accordion">
@@ -148,9 +148,9 @@ export class LionAccordion extends LitElement {
    *  @private
    */
   __setupSlots() {
-    const invokerSlot =
-      /** @type {HTMLSlotElement} */
-      this.shadowRoot?.querySelector('slot[name=invoker]');
+    const invokerSlot = /** @type {HTMLSlotElement} */ (
+      this.shadowRoot?.querySelector('slot[name=invoker]')
+    );
     const handleSlotChange = () => {
       if (invokerSlot.assignedNodes().length > 0) {
         this.__cleanStore();
@@ -168,29 +168,33 @@ export class LionAccordion extends LitElement {
    *  @private
    */
   __setupStore() {
-    const accordion =
-      /** @type {HTMLSlotElement} */
-      this.shadowRoot?.querySelector('slot[name=_accordion]');
+    const accordion = /** @type {HTMLSlotElement} */ (
+      this.shadowRoot?.querySelector('slot[name=_accordion]')
+    );
     const existingInvokers = accordion
-      ? accordion.assignedElements().filter((child) => child.classList.contains('invoker'))
+      ? accordion.assignedElements().filter(child => child.classList.contains('invoker'))
       : [];
     const existingContent = accordion
-      ? accordion.assignedElements().filter((child) => child.classList.contains('content'))
+      ? accordion.assignedElements().filter(child => child.classList.contains('content'))
       : [];
-    const invokers = /** @type {HTMLElement[]} */ [
+
+    const invokers = /** @type {HTMLElement[]} */ ([
       ...Array.from(existingInvokers),
       ...Array.from(this.querySelectorAll(':scope > [slot="invoker"]')),
-    ];
-    const contents = /** @type {HTMLElement[]} */ [
+    ]);
+
+    const contents = /** @type {HTMLElement[]} */ ([
       ...Array.from(existingContent),
       ...Array.from(this.querySelectorAll(':scope > [slot="content"]')),
-    ];
+    ]);
+
     if (invokers.length !== contents.length) {
       // eslint-disable-next-line no-console
       console.warn(
         `The amount of invokers (${invokers.length}) doesn't match the amount of contents (${contents.length}).`,
       );
     }
+
     invokers.forEach((invoker, index) => {
       const uid = uuid();
       const content = contents[index];
@@ -210,6 +214,7 @@ export class LionAccordion extends LitElement {
       this._collapse(entry);
       this.__store.push(entry);
     });
+
     this.__rearrangeInvokersAndContent();
   }
 
@@ -220,18 +225,22 @@ export class LionAccordion extends LitElement {
    *  correctly when the user tabs.
    */
   __rearrangeInvokersAndContent() {
-    const invokers =
-      /** @type {HTMLElement[]} */
-      Array.from(this.children).filter((child) => child.slot === 'invoker');
-    const contents =
-      /** @type {HTMLElement[]} */
-      Array.from(this.children).filter((child) => child.slot === 'content');
+    const invokers = /** @type {HTMLElement[]} */ (
+      Array.from(this.children).filter(child => child.slot === 'invoker')
+    );
+
+    const contents = /** @type {HTMLElement[]} */ (
+      Array.from(this.children).filter(child => child.slot === 'content')
+    );
+
     const accordion = this.shadowRoot?.querySelector('slot[name=_accordion]');
+
     if (accordion) {
       invokers.forEach((invoker, index) => {
         invoker.classList.add('invoker');
         // eslint-disable-next-line no-param-reassign
         invoker.slot = '_accordion';
+
         contents[index].classList.add('content');
         contents[index].slot = '_accordion';
       });
@@ -267,7 +276,7 @@ export class LionAccordion extends LitElement {
    * @private
    */
   __handleInvokerKeydown(e) {
-    const _e = /** @type {KeyboardEvent} */ e;
+    const _e = /** @type {KeyboardEvent} */ (e);
     switch (_e.key) {
       case 'ArrowDown':
       case 'ArrowRight':
@@ -352,7 +361,7 @@ export class LionAccordion extends LitElement {
    */
   _focusInvoker(entry) {
     const { invoker } = entry;
-    const firstChild = /** @type {HTMLElement|null} */ invoker.firstElementChild;
+    const firstChild = /** @type {HTMLElement|null} */ (invoker.firstElementChild);
     if (firstChild) {
       firstChild.focus();
       firstChild.setAttribute('focused', `${true}`);
@@ -407,7 +416,7 @@ export class LionAccordion extends LitElement {
   __updateFocused() {
     const focusedEntry = this.__store[this.focusedIndex];
     const previousFocusedEntry = Array.from(this.__store).find(
-      (entry) => entry.invoker && entry.invoker.firstElementChild?.hasAttribute('focused'),
+      entry => entry.invoker && entry.invoker.firstElementChild?.hasAttribute('focused'),
     );
     if (previousFocusedEntry) {
       this._unfocusInvoker(previousFocusedEntry);
@@ -426,6 +435,7 @@ export class LionAccordion extends LitElement {
     }
     this.__store.forEach((entry, index) => {
       const entryExpanded = this.expanded.indexOf(index) !== -1;
+
       if (entryExpanded) {
         this._expand(entry);
       } else {
@@ -441,6 +451,7 @@ export class LionAccordion extends LitElement {
   __toggleExpanded(indexClicked) {
     const indexFound = this.expanded.indexOf(indexClicked);
     const expandedNewValues = this.exclusive ? [] : [...this.expanded];
+
     if (indexFound === -1) {
       expandedNewValues.push(indexClicked);
     } else {
@@ -458,7 +469,7 @@ export class LionAccordion extends LitElement {
     if (!this.__store) {
       return;
     }
-    this.__store.forEach((entry) => {
+    this.__store.forEach(entry => {
       this._cleanInvoker(entry);
     });
     this.__store = [];

@@ -19,6 +19,7 @@ export function normalizeIntlDate(str, locale = '', { weekday, year, month, day 
       dateString.push(str.charAt(i));
     }
   }
+
   const result = dateString.join('');
   // Normalize webkit date formatting without year
   if (!year && weekday === 'long' && month === 'long' && day === '2-digit') {
@@ -35,9 +36,11 @@ export function normalizeIntlDate(str, locale = '', { weekday, year, month, day 
       'zh-Hant-HK',
       'zh-Hant-MO',
     ];
+
     if (CHINESE_LOCALES.includes(locale)) {
       return result.replace(' ', '');
     }
+
     if ((result.indexOf(',') === -1 && locale === 'en-GB') || locale === 'en-AU') {
       // Saturday 12 October -> Saturday, 12 October
       const match = result.match(/^(\w*) (\d*) (\w*)$/);
@@ -45,10 +48,12 @@ export function normalizeIntlDate(str, locale = '', { weekday, year, month, day 
         return `${match[1]}, ${match[2]} ${match[3]}`;
       }
     }
+
     if (result.indexOf(', ') !== -1 && locale === 'sk-SK') {
       // sobota, 12. októbra -> sobota 12. októbra
       return result.replace(', ', ' ');
     }
+
     if (locale === 'en-PH') {
       // Saturday, October 12 -> Saturday, 12 October
       const match = result.match(/^(\w*), (\w*) (\d*)$/);
@@ -56,6 +61,7 @@ export function normalizeIntlDate(str, locale = '', { weekday, year, month, day 
         return `${match[1]}, ${match[3]} ${match[2]}`;
       }
     }
+
     if (locale === 'uk-UA') {
       // суботу => субота
       return result.replace('суботу', 'субота');
@@ -68,5 +74,6 @@ export function normalizeIntlDate(str, locale = '', { weekday, year, month, day 
       return `${_weekDayName}, ${_monthDayNumber} ${_monthName} ${_year}`;
     }
   }
+
   return result;
 }

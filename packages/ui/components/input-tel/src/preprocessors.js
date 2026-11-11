@@ -25,23 +25,20 @@ export function liveFormatPhoneNumber(
   if (diff <= 0 || !PhoneUtilManager.isLoaded) {
     return undefined;
   }
+
   const AwesomePhoneNumber = PhoneUtilManager.PhoneUtil;
   const ayt = AwesomePhoneNumber.getAsYouType(regionCode);
+
   for (const char of viewValue) {
     if (char !== '') {
       ayt.addChar(char);
     }
   }
+
   let parenthesesAdded = false;
-  let newViewValue = formatPhoneNumber(ayt.number(), {
-    regionCode,
-    formatStrategy,
-  });
+  let newViewValue = formatPhoneNumber(ayt.number(), { regionCode, formatStrategy });
   if (formatCountryCodeStyle === 'parentheses' && regionCode && !newViewValue.includes(`(`)) {
-    newViewValue = getFormatCountryCodeStyle(newViewValue, {
-      regionCode,
-      formatCountryCodeStyle,
-    });
+    newViewValue = getFormatCountryCodeStyle(newViewValue, { regionCode, formatCountryCodeStyle });
     parenthesesAdded = true;
   }
 
@@ -63,10 +60,5 @@ export function liveFormatPhoneNumber(
   ) {
     newCaretIndex -= 2;
   }
-  return newViewValue
-    ? {
-        viewValue: newViewValue,
-        caretIndex: newCaretIndex,
-      }
-    : undefined;
+  return newViewValue ? { viewValue: newViewValue, caretIndex: newCaretIndex } : undefined;
 }

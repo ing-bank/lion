@@ -1,4 +1,5 @@
 import { CalendarObject } from '@lion/ui/calendar-test-helpers.js';
+
 export class DatepickerInputObject {
   /** @param {import('../src/LionInputDatepicker.js').LionInputDatepicker} el */
   constructor(el) {
@@ -25,6 +26,7 @@ export class DatepickerInputObject {
     }
     return this.el.__openCalendarOverlay();
   }
+
   async closeCalendar() {
     this.overlayCloseButtonEl.click();
     await this.el.updateComplete;
@@ -48,25 +50,26 @@ export class DatepickerInputObject {
     // @ts-ignore [allow-protected] in test
     return this.el._invokerNode;
   }
+
   get overlayEl() {
     // @ts-expect-error not supposed to call _overlayCtrl publicly here on this.el
-    return /** @type {import('lit').LitElement} */ this.el._overlayCtrl.contentNode;
+    return /** @type {import('lit').LitElement} */ (this.el._overlayCtrl.contentNode);
   }
+
   get overlayHeadingEl() {
-    return (
-      /** @type {HTMLElement} */ this.overlayEl &&
-      this.el.shadowRoot?.querySelector('.calendar-overlay__heading')
+    return /** @type {HTMLElement} */ (
+      this.overlayEl && this.el.shadowRoot?.querySelector('.calendar-overlay__heading')
     );
   }
+
   get overlayCloseButtonEl() {
-    return (
-      /** @type {HTMLElement} */ this.calendarEl &&
-      this.el.shadowRoot?.querySelector('#close-button')
+    return /** @type {HTMLElement} */ (
+      this.calendarEl && this.el.shadowRoot?.querySelector('#close-button')
     );
   }
+
   get calendarEl() {
-    return (
-      /** @type {import('../../calendar/src/LionCalendar.js').LionCalendar} */
+    return /** @type {import('../../calendar/src/LionCalendar.js').LionCalendar} */ (
       // @ts-ignore [allow-protected] in test
       this.el && this.el._calendarNode
     );
@@ -85,23 +88,20 @@ export class DatepickerInputObject {
    * through this object, never by querying that markup themselves.
    */
   get overlayRootEl() {
-    return (
-      /** @type {HTMLElement|null} */ this.el?.shadowRoot?.querySelector('.calendar-overlay') ??
-      null
+    return /** @type {HTMLElement|null} */ (
+      this.el?.shadowRoot?.querySelector('.calendar-overlay') ?? null
     );
   }
+
   get overlayHeaderEl() {
-    return (
-      /** @type {HTMLElement|null} */ this.el?.shadowRoot?.querySelector(
-        '.calendar-overlay__header',
-      ) ?? null
+    return /** @type {HTMLElement|null} */ (
+      this.el?.shadowRoot?.querySelector('.calendar-overlay__header') ?? null
     );
   }
+
   get overlayCloseButtonContainerEl() {
-    return (
-      /** @type {HTMLElement|null} */ this.el?.shadowRoot?.querySelector(
-        '.calendar-overlay__close-button',
-      ) ?? null
+    return /** @type {HTMLElement|null} */ (
+      this.el?.shadowRoot?.querySelector('.calendar-overlay__close-button') ?? null
     );
   }
 

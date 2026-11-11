@@ -11,10 +11,7 @@ export function forceSpaceBetweenCurrencyCodeAndNumber(
   { currency, currencyDisplay } = {},
 ) {
   const numberOfParts = formattedParts.length;
-  const literalObject = {
-    type: 'literal',
-    value: ' ',
-  };
+  const literalObject = { type: 'literal', value: ' ' };
   if (numberOfParts > 1 && currency && currencyDisplay === 'code') {
     if (formattedParts[0].type === 'currency' && formattedParts[1].type !== 'literal') {
       // currency in front of a number: EUR 1.00

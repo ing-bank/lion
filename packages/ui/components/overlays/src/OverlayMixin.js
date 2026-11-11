@@ -28,17 +28,16 @@ export function _addOverlayMixinPostProcessor(postProcessor) {
  * @param {import('@open-wc/dedupe-mixin').Constructor<import('lit').LitElement>} superclass
  */
 // @ts-ignore https://github.com/microsoft/TypeScript/issues/36821#issuecomment-588375051
-export const OverlayMixinImplementation = (superclass) => {
+export const OverlayMixinImplementation = superclass => {
   class OverlayMixin extends superclass {
     static get properties() {
       return {
-        opened: {
-          type: Boolean,
-          reflect: true,
-        },
+        opened: { type: Boolean, reflect: true },
       };
     }
+
     #hasSetup = false;
+
     constructor() {
       super();
       /**
@@ -60,8 +59,9 @@ export const OverlayMixinImplementation = (superclass) => {
       /** @type {EventListener} */
       this.close = this.close.bind(this);
     }
+
     get config() {
-      return /** @type {OverlayConfig} */ this.__config;
+      return /** @type {OverlayConfig} */ (this.__config);
     }
 
     /** @param {OverlayConfig} value */
@@ -88,9 +88,7 @@ export const OverlayMixinImplementation = (superclass) => {
       if (name === 'opened' && this.opened !== oldValue) {
         this.dispatchEvent(
           new CustomEvent('opened-changed', {
-            detail: {
-              opened: this.opened,
-            },
+            detail: { opened: this.opened },
           }),
         );
       }
@@ -113,10 +111,8 @@ export const OverlayMixinImplementation = (superclass) => {
         referenceNode,
         backdropNode,
         contentWrapperNode,
-        ...overlayConfig,
-        // wc provided in the class as defaults
-        ...this.config,
-        // user provided (e.g. in template)
+        ...overlayConfig, // wc provided in the class as defaults
+        ...this.config, // user provided (e.g. in template)
         popperConfig: {
           ...(overlayConfig.popperConfig || {}),
           ...(this.config?.popperConfig || {}),
@@ -147,6 +143,7 @@ export const OverlayMixinImplementation = (superclass) => {
      */
     updated(changedProperties) {
       super.updated(changedProperties);
+
       if (changedProperties.has('opened') && this._overlayCtrl && !this.__blockSyncToOverlayCtrl) {
         this.__syncToOverlayController();
       }
@@ -165,10 +162,9 @@ export const OverlayMixinImplementation = (superclass) => {
       /**
        * @param {{ stopPropagation: () => void; }} ev
        */
-      this.__closeEventInContentNodeHandler = (ev) => {
+      this.__closeEventInContentNodeHandler = ev => {
         ev.stopPropagation();
-        /** @type {OverlayController} */
-        this._overlayCtrl.hide();
+        /** @type {OverlayController} */ (this._overlayCtrl).hide();
       };
       if (this._overlayContentNode) {
         this._overlayContentNode.addEventListener(
@@ -188,12 +184,14 @@ export const OverlayMixinImplementation = (superclass) => {
       if (this._overlayContentNode) {
         this._overlayContentNode.removeEventListener(
           'close-overlay',
-          /** @type {EventListener} */ this.__closeEventInContentNodeHandler,
+          /** @type {EventListener} */ (this.__closeEventInContentNodeHandler),
         );
       }
     }
+
     connectedCallback() {
       super.connectedCallback();
+
       this.updateComplete.then(() => {
         if (!this.isConnected) return;
         if (this.#hasSetup) return;
@@ -201,8 +199,10 @@ export const OverlayMixinImplementation = (superclass) => {
         this.#hasSetup = true;
       });
     }
+
     async disconnectedCallback() {
       super.disconnectedCallback();
+
       if (await this._isPermanentlyDisconnected()) {
         this._teardownOverlayCtrl();
         this.#hasSetup = false;
@@ -214,7 +214,7 @@ export const OverlayMixinImplementation = (superclass) => {
      * @configure ReactiveElement
      */
     // @ts-expect-error
-    static enabledWarnings = super.enabledWarnings?.filter((w) => w !== 'change-in-update') || [];
+    static enabledWarnings = super.enabledWarnings?.filter(w => w !== 'change-in-update') || [];
 
     /**
      * @overridable
@@ -223,25 +223,28 @@ export const OverlayMixinImplementation = (superclass) => {
     get _overlayReferenceNode() {
       return undefined;
     }
+
     get _overlayBackdropNode() {
       if (!this.__cachedOverlayBackdropNode) {
-        this.__cachedOverlayBackdropNode =
-          /** @type {HTMLElement | undefined} */
-          Array.from(this.children).find((child) => child.slot === 'backdrop');
+        this.__cachedOverlayBackdropNode = /** @type {HTMLElement | undefined} */ (
+          Array.from(this.children).find(child => child.slot === 'backdrop')
+        );
       }
       return this.__cachedOverlayBackdropNode;
     }
+
     get _overlayContentNode() {
       if (!this._cachedOverlayContentNode) {
         this._cachedOverlayContentNode =
-          Array.from(this.children).find((child) => child.slot === 'content') ||
+          Array.from(this.children).find(child => child.slot === 'content') ||
           this.config.contentNode;
       }
-      return /** @type {HTMLElement} */ this._cachedOverlayContentNode;
+      return /** @type {HTMLElement} */ (this._cachedOverlayContentNode);
     }
+
     get _overlayContentWrapperNode() {
-      return /** @type {HTMLElement | undefined} */ this.shadowRoot?.querySelector(
-        '#overlay-content-node-wrapper',
+      return /** @type {HTMLElement | undefined} */ (
+        this.shadowRoot?.querySelector('#overlay-content-node-wrapper')
       );
     }
 
@@ -284,14 +287,16 @@ export const OverlayMixinImplementation = (superclass) => {
      * @returns {Element|null}
      */
     _getInvokerNode() {
-      const ctor = /** @type {typeof OverlayMixin} */ this.constructor;
-      const slottedNode = Array.from(this.children).find((child) => child.slot === 'invoker');
+      const ctor = /** @type {typeof OverlayMixin} */ (this.constructor);
+
+      const slottedNode = Array.from(this.children).find(child => child.slot === 'invoker');
       if (slottedNode) {
         return ctor._getFocusableInvokerEl(slottedNode);
       }
+
       if (this.id) {
         // Reference the invoker declaratively: `<button data-invoker for="my-menu">`
-        const root = /** @type {Document|ShadowRoot} */ this.getRootNode();
+        const root = /** @type {Document|ShadowRoot} */ (this.getRootNode());
         const explicitInvoker = root.querySelector?.(`[data-invoker][for="${this.id}"]`);
         if (explicitInvoker) {
           return ctor._getFocusableInvokerEl(explicitInvoker);
@@ -308,7 +313,9 @@ export const OverlayMixinImplementation = (superclass) => {
     /** @protected */
     _setupOverlayCtrl() {
       if (this.#hasSetup) return;
+
       const invokerNode = this._overlayInvokerNode;
+
       const config = {
         contentNode: this._overlayContentNode,
         contentWrapperNode: this._overlayContentWrapperNode,
@@ -325,6 +332,7 @@ export const OverlayMixinImplementation = (superclass) => {
         /** @type {OverlayController} */
         this._overlayCtrl = this._defineOverlay(config);
       }
+
       this.__syncToOverlayController();
       this.__setupSyncFromOverlayController();
       this._setupOpenCloseListeners();
@@ -335,11 +343,11 @@ export const OverlayMixinImplementation = (superclass) => {
       // Make sure that dynamic behavior (e.g. responsive) is possible by allowing multiple setups and teardowns of the overlay controller.
       this.#hasSetup = false;
       if (!this._overlayCtrl) return;
+
       this._teardownOpenCloseListeners();
       this.__teardownSyncFromOverlayController();
 
-      /** @type {OverlayController} */
-      this._overlayCtrl.teardown();
+      /** @type {OverlayController} */ (this._overlayCtrl).teardown();
     }
 
     /**
@@ -362,6 +370,7 @@ export const OverlayMixinImplementation = (superclass) => {
       this.__onOverlayCtrlShow = () => {
         this.opened = true;
       };
+
       this.__onOverlayCtrlHide = () => {
         this.opened = false;
       };
@@ -369,15 +378,13 @@ export const OverlayMixinImplementation = (superclass) => {
       /**
        * @param {{ preventDefault: () => void; }} beforeShowEvent
        */
-      this.__onBeforeShow = (beforeShowEvent) => {
-        const event = new CustomEvent('before-opened', {
-          cancelable: true,
-        });
+      this.__onBeforeShow = beforeShowEvent => {
+        const event = new CustomEvent('before-opened', { cancelable: true });
         this.dispatchEvent(event);
         if (event.defaultPrevented) {
           // Check whether our current `.opened` state is not out of sync with overlayCtrl
           this._setOpenedWithoutPropertyEffects(
-            /** @type {OverlayController} */ this._overlayCtrl.isShown,
+            /** @type {OverlayController} */ (this._overlayCtrl).isShown,
           );
           beforeShowEvent.preventDefault();
         }
@@ -386,52 +393,47 @@ export const OverlayMixinImplementation = (superclass) => {
       /**
        * @param {{ preventDefault: () => void; }} beforeHideEvent
        */
-      this.__onBeforeHide = (beforeHideEvent) => {
-        const event = new CustomEvent('before-closed', {
-          cancelable: true,
-        });
+      this.__onBeforeHide = beforeHideEvent => {
+        const event = new CustomEvent('before-closed', { cancelable: true });
         this.dispatchEvent(event);
         if (event.defaultPrevented) {
           // Check whether our current `.opened` state is not out of sync with overlayCtrl
           this._setOpenedWithoutPropertyEffects(
             /** @type {OverlayController} */
-            this._overlayCtrl.isShown,
+            (this._overlayCtrl).isShown,
           );
           beforeHideEvent.preventDefault();
         }
       };
 
       /** @type {OverlayController} */
-      this._overlayCtrl.addEventListener('show', this.__onOverlayCtrlShow);
+      (this._overlayCtrl).addEventListener('show', this.__onOverlayCtrlShow);
       /** @type {OverlayController} */
-      this._overlayCtrl.addEventListener('hide', this.__onOverlayCtrlHide);
+      (this._overlayCtrl).addEventListener('hide', this.__onOverlayCtrlHide);
       /** @type {OverlayController} */
-      this._overlayCtrl.addEventListener('before-show', this.__onBeforeShow);
+      (this._overlayCtrl).addEventListener('before-show', this.__onBeforeShow);
       /** @type {OverlayController} */
-      this._overlayCtrl.addEventListener('before-hide', this.__onBeforeHide);
+      (this._overlayCtrl).addEventListener('before-hide', this.__onBeforeHide);
     }
 
     /** @private */
     __teardownSyncFromOverlayController() {
       /** @type {OverlayController} */
-      this._overlayCtrl.removeEventListener(
+      (this._overlayCtrl).removeEventListener(
         'show',
-        /** @type {EventListener} */ this.__onOverlayCtrlShow,
+        /** @type {EventListener} */ (this.__onOverlayCtrlShow),
       );
-      /** @type {OverlayController} */
-      this._overlayCtrl.removeEventListener(
+      /** @type {OverlayController} */ (this._overlayCtrl).removeEventListener(
         'hide',
-        /** @type {EventListener} */ this.__onOverlayCtrlHide,
+        /** @type {EventListener} */ (this.__onOverlayCtrlHide),
       );
-      /** @type {OverlayController} */
-      this._overlayCtrl.removeEventListener(
+      /** @type {OverlayController} */ (this._overlayCtrl).removeEventListener(
         'before-show',
-        /** @type {EventListener} */ this.__onBeforeShow,
+        /** @type {EventListener} */ (this.__onBeforeShow),
       );
-      /** @type {OverlayController} */
-      this._overlayCtrl.removeEventListener(
+      /** @type {OverlayController} */ (this._overlayCtrl).removeEventListener(
         'before-hide',
-        /** @type {EventListener} */ this.__onBeforeHide,
+        /** @type {EventListener} */ (this.__onBeforeHide),
       );
     }
 
@@ -439,10 +441,10 @@ export const OverlayMixinImplementation = (superclass) => {
     __syncToOverlayController() {
       if (this.opened) {
         /** @type {OverlayController} */
-        this._overlayCtrl.show();
+        (this._overlayCtrl).show();
       } else {
         /** @type {OverlayController} */
-        this._overlayCtrl.hide();
+        (this._overlayCtrl).hide();
       }
     }
 
@@ -450,21 +452,21 @@ export const OverlayMixinImplementation = (superclass) => {
      * Toggles the overlay
      */
     async toggle() {
-      await /** @type {OverlayController} */ this._overlayCtrl.toggle();
+      await /** @type {OverlayController} */ (this._overlayCtrl).toggle();
     }
 
     /**
      * Shows the overlay
      */
     async open() {
-      await /** @type {OverlayController} */ this._overlayCtrl.show();
+      await /** @type {OverlayController} */ (this._overlayCtrl).show();
     }
 
     /**
      * Hides the overlay
      */
     async close() {
-      await /** @type {OverlayController} */ this._overlayCtrl.hide();
+      await /** @type {OverlayController} */ (this._overlayCtrl).hide();
     }
 
     /**
@@ -473,7 +475,7 @@ export const OverlayMixinImplementation = (superclass) => {
      * increases vertically)
      */
     repositionOverlay() {
-      const ctrl = /** @type {OverlayController} */ this._overlayCtrl;
+      const ctrl = /** @type {OverlayController} */ (this._overlayCtrl);
       if (ctrl.placementMode === 'local' && ctrl._popper) {
         ctrl._popper.update();
       }

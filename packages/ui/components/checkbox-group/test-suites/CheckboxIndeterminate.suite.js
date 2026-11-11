@@ -43,11 +43,13 @@ export function runCheckboxIndeterminateSuite({
   const tagString = resolveSuiteTag(hostEl, legacyTagString);
   const groupTagString = resolveSuiteTag(groupEl, legacyGroupTagString);
   const childTagString = resolveSuiteTag(childEl, legacyChildTagString);
+
   const tags = {
     host: unsafeStatic(tagString),
     'checkbox-group': unsafeStatic(groupTagString),
     checkbox: unsafeStatic(childTagString),
   };
+
   describe('CheckboxIndeterminate', async () => {
     /** @type {{_$litStatic$: any}} */
 
@@ -63,6 +65,7 @@ export function runCheckboxIndeterminateSuite({
       // Assert
       expect(el.getAttribute('type')).to.equal('checkbox');
     });
+
     it('should not be indeterminate by default if all children are unchecked', async () => {
       // Arrange
       const el = await fixture(html`
@@ -74,13 +77,14 @@ export function runCheckboxIndeterminateSuite({
           </${tags.host}>
         </${tags['checkbox-group']}>
       `);
-      const elIndeterminate =
-        /**  @type {LionCheckboxIndeterminate} */
-        el.querySelector(`${tagString}`);
+      const elIndeterminate = /**  @type {LionCheckboxIndeterminate} */ (
+        el.querySelector(`${tagString}`)
+      );
 
       // Assert
       expect(elIndeterminate?.hasAttribute('indeterminate')).to.be.false;
     });
+
     it('should be indeterminate if one child is checked', async () => {
       // Arrange
       const el = /**  @type {LionCheckboxGroup} */ await fixture(html`
@@ -92,16 +96,17 @@ export function runCheckboxIndeterminateSuite({
         </${tags.host}>
       </${tags['checkbox-group']}>
     `);
-      const elIndeterminate =
-        /**  @type {LionCheckboxIndeterminate} */
-        el.querySelector(`${tagString}`);
+
+      const elIndeterminate = /**  @type {LionCheckboxIndeterminate} */ (
+        el.querySelector(`${tagString}`)
+      );
       // Assert
       expect(elIndeterminate?.hasAttribute('indeterminate')).to.be.true;
     });
+
     it('should be checked if all children are checked', async () => {
       // Arrange
-      const el =
-        /**  @type {LionCheckboxGroup} */
+      const el = /**  @type {LionCheckboxGroup} */ (
         await fixture(html`
         <${tags['checkbox-group']} name="scientists[]">
           <${tags.host} label="Favorite scientists">
@@ -110,19 +115,20 @@ export function runCheckboxIndeterminateSuite({
             <${tags.checkbox} label="Marie Curie" checked></${tags.checkbox}>
           </${tags.host}>
         </${tags['checkbox-group']}>
-      `);
-      const elIndeterminate =
-        /**  @type {LionCheckboxIndeterminate} */
-        el.querySelector(`${tagString}`);
+      `)
+      );
+      const elIndeterminate = /**  @type {LionCheckboxIndeterminate} */ (
+        el.querySelector(`${tagString}`)
+      );
 
       // Assert
       expect(elIndeterminate?.hasAttribute('indeterminate')).to.be.false;
       expect(elIndeterminate?.checked).to.be.true;
     });
+
     it('should become indeterminate if one child is checked', async () => {
       // Arrange
-      const el =
-        /**  @type {LionCheckboxGroup} */
+      const el = /**  @type {LionCheckboxGroup} */ (
         await fixture(html`
         <${tags['checkbox-group']} name="scientists[]">
           <${tags.host} label="Favorite scientists">
@@ -131,10 +137,12 @@ export function runCheckboxIndeterminateSuite({
             <${tags.checkbox} label="Marie Curie"></${tags.checkbox}>
           </${tags.host}>
         </${tags['checkbox-group']}>
-      `);
-      const elIndeterminate =
-        /**  @type {LionCheckboxIndeterminate} */
-        el.querySelector(`${tagString}`);
+      `)
+      );
+      const elIndeterminate = /**  @type {LionCheckboxIndeterminate} */ (
+        el.querySelector(`${tagString}`)
+      );
+
       const { _subCheckboxes } = getCheckboxIndeterminateMembers(elIndeterminate);
 
       // Act
@@ -144,10 +152,10 @@ export function runCheckboxIndeterminateSuite({
       // Assert
       expect(elIndeterminate?.hasAttribute('indeterminate')).to.be.true;
     });
+
     it('should become checked if all children are checked', async () => {
       // Arrange
-      const el =
-        /**  @type {LionCheckboxGroup} */
+      const el = /**  @type {LionCheckboxGroup} */ (
         await fixture(html`
         <${tags['checkbox-group']} name="scientists[]">
           <${tags.host} label="Favorite scientists">
@@ -156,10 +164,11 @@ export function runCheckboxIndeterminateSuite({
             <${tags.checkbox} label="Marie Curie"></${tags.checkbox}>
           </${tags.host}>
         </${tags['checkbox-group']}>
-      `);
-      const elIndeterminate =
-        /**  @type {LionCheckboxIndeterminate} */
-        el.querySelector(`${tagString}`);
+      `)
+      );
+      const elIndeterminate = /**  @type {LionCheckboxIndeterminate} */ (
+        el.querySelector(`${tagString}`)
+      );
       const { _subCheckboxes } = getCheckboxIndeterminateMembers(elIndeterminate);
 
       // Act
@@ -172,10 +181,10 @@ export function runCheckboxIndeterminateSuite({
       expect(elIndeterminate?.hasAttribute('indeterminate')).to.be.false;
       expect(elIndeterminate?.checked).to.be.true;
     });
+
     it('should become indeterminate if all children except disabled ones are checked', async () => {
       // Arrange
-      const el =
-        /**  @type {LionCheckboxGroup} */
+      const el = /**  @type {LionCheckboxGroup} */ (
         await fixture(html`
         <${tags['checkbox-group']} name="scientists[]">
           <${tags.host} label="Favorite scientists">
@@ -184,10 +193,11 @@ export function runCheckboxIndeterminateSuite({
             <${tags.checkbox} label="Marie Curie"></${tags.checkbox}>
           </${tags.host}>
         </${tags['checkbox-group']}>
-      `);
-      const elIndeterminate =
-        /**  @type {LionCheckboxIndeterminate} */
-        el.querySelector(`${tagString}`);
+      `)
+      );
+      const elIndeterminate = /**  @type {LionCheckboxIndeterminate} */ (
+        el.querySelector(`${tagString}`)
+      );
       const { _subCheckboxes } = getCheckboxIndeterminateMembers(elIndeterminate);
 
       // Act
@@ -199,6 +209,7 @@ export function runCheckboxIndeterminateSuite({
       expect(elIndeterminate?.hasAttribute('indeterminate')).to.be.true;
       expect(elIndeterminate?.checked).to.be.true;
     });
+
     it('should be checked when all children are prechecked', async () => {
       // Arrange
       const el = /**  @type {LionCheckboxGroup} */ await fixture(html`
@@ -210,13 +221,15 @@ export function runCheckboxIndeterminateSuite({
         </${tags.host}>
       </${tags['checkbox-group']}>
     `);
-      const elIndeterminate =
-        /**  @type {LionCheckboxIndeterminate} */
-        el.querySelector(`${tagString}`);
+
+      const elIndeterminate = /**  @type {LionCheckboxIndeterminate} */ (
+        el.querySelector(`${tagString}`)
+      );
 
       // Assert
       expect(elIndeterminate?.hasAttribute('checked')).to.be.true;
     });
+
     it('should be checked when it has one prechecked child', async () => {
       // Arrange
       const el = /**  @type {LionCheckboxGroup} */ await fixture(html`
@@ -226,13 +239,15 @@ export function runCheckboxIndeterminateSuite({
         </${tags.host}>
       </${tags['checkbox-group']}>
     `);
-      const elIndeterminate =
-        /**  @type {LionCheckboxIndeterminate} */
-        el.querySelector(`${tagString}`);
+
+      const elIndeterminate = /**  @type {LionCheckboxIndeterminate} */ (
+        el.querySelector(`${tagString}`)
+      );
 
       // Assert
       expect(elIndeterminate?.hasAttribute('checked')).to.be.true;
     });
+
     it('should be unchecked when it has an disabled checked child and an unchecked child', async () => {
       // Arrange
       const el = /**  @type {LionCheckboxGroup} */ await fixture(html`
@@ -243,13 +258,15 @@ export function runCheckboxIndeterminateSuite({
         </${tags.host}>
       </${tags['checkbox-group']}>
     `);
-      const elIndeterminate =
-        /**  @type {LionCheckboxIndeterminate} */
-        el.querySelector(`${tagString}`);
+
+      const elIndeterminate = /**  @type {LionCheckboxIndeterminate} */ (
+        el.querySelector(`${tagString}`)
+      );
 
       // Assert
       expect(elIndeterminate?.hasAttribute('checked')).to.be.false;
     });
+
     it('should be indeterminated when some of the children are prechecked', async () => {
       // Arrange
       const el = /**  @type {LionCheckboxGroup} */ await fixture(html`
@@ -261,17 +278,18 @@ export function runCheckboxIndeterminateSuite({
         </${tags.host}>
       </${tags['checkbox-group']}>
     `);
-      const elIndeterminate =
-        /**  @type {LionCheckboxIndeterminate} */
-        el.querySelector(`${tagString}`);
+
+      const elIndeterminate = /**  @type {LionCheckboxIndeterminate} */ (
+        el.querySelector(`${tagString}`)
+      );
 
       // Assert
       expect(elIndeterminate.hasAttribute('indeterminate')).to.be.true;
     });
+
     it('should sync all children when parent is checked (from indeterminate to checked)', async () => {
       // Arrange
-      const el =
-        /**  @type {LionCheckboxGroup} */
+      const el = /**  @type {LionCheckboxGroup} */ (
         await fixture(html`
         <${tags['checkbox-group']} name="scientists[]">
           <${tags.host} label="Favorite scientists">
@@ -280,10 +298,11 @@ export function runCheckboxIndeterminateSuite({
             <${tags.checkbox} label="Marie Curie"></${tags.checkbox}>
           </${tags.host}>
         </${tags['checkbox-group']}>
-      `);
-      const elIndeterminate =
-        /**  @type {LionCheckboxIndeterminate} */
-        el.querySelector(`${tagString}`);
+      `)
+      );
+      const elIndeterminate = /**  @type {LionCheckboxIndeterminate} */ (
+        el.querySelector(`${tagString}`)
+      );
       const { _subCheckboxes, _inputNode } = getCheckboxIndeterminateMembers(elIndeterminate);
 
       // Act
@@ -296,10 +315,10 @@ export function runCheckboxIndeterminateSuite({
       expect(_subCheckboxes[1].hasAttribute('checked')).to.be.true;
       expect(_subCheckboxes[2].hasAttribute('checked')).to.be.true;
     });
+
     it('should not sync any disabled children when parent is checked (from indeterminate to checked)', async () => {
       // Arrange
-      const el =
-        /**  @type {LionCheckboxGroup} */
+      const el = /**  @type {LionCheckboxGroup} */ (
         await fixture(html`
         <${tags['checkbox-group']} name="scientists[]">
           <${tags.host} label="Favorite scientists">
@@ -308,10 +327,11 @@ export function runCheckboxIndeterminateSuite({
             <${tags.checkbox} label="Marie Curie"></${tags.checkbox}>
           </${tags.host}>
         </${tags['checkbox-group']}>
-      `);
-      const elIndeterminate =
-        /**  @type {LionCheckboxIndeterminate} */
-        el.querySelector(`${tagString}`);
+      `)
+      );
+      const elIndeterminate = /**  @type {LionCheckboxIndeterminate} */ (
+        el.querySelector(`${tagString}`)
+      );
       const { _subCheckboxes, _inputNode } = getCheckboxIndeterminateMembers(elIndeterminate);
 
       // Act
@@ -324,10 +344,10 @@ export function runCheckboxIndeterminateSuite({
       expect(_subCheckboxes[1].hasAttribute('checked')).to.be.false;
       expect(_subCheckboxes[2].hasAttribute('checked')).to.be.true;
     });
+
     it('should remain unchecked when parent is clicked and all children are disabled', async () => {
       // Arrange
-      const el =
-        /**  @type {LionCheckboxGroup} */
+      const el = /**  @type {LionCheckboxGroup} */ (
         await fixture(html`
         <${tags['checkbox-group']} name="scientists[]">
           <${tags.host} label="Favorite scientists">
@@ -336,10 +356,11 @@ export function runCheckboxIndeterminateSuite({
             <${tags.checkbox} label="Marie Curie" disabled></${tags.checkbox}>
           </${tags.host}>
         </${tags['checkbox-group']}>
-      `);
-      const elIndeterminate =
-        /**  @type {LionCheckboxIndeterminate} */
-        el.querySelector(`${tagString}`);
+      `)
+      );
+      const elIndeterminate = /**  @type {LionCheckboxIndeterminate} */ (
+        el.querySelector(`${tagString}`)
+      );
       const { _subCheckboxes, _inputNode } = getCheckboxIndeterminateMembers(elIndeterminate);
 
       // Act
@@ -353,10 +374,10 @@ export function runCheckboxIndeterminateSuite({
       expect(_subCheckboxes[1].hasAttribute('checked')).to.be.false;
       expect(_subCheckboxes[2].hasAttribute('checked')).to.be.false;
     });
+
     it('should remain checked when parent is clicked and all children are disabled and checked', async () => {
       // Arrange
-      const el =
-        /**  @type {LionCheckboxGroup} */
+      const el = /**  @type {LionCheckboxGroup} */ (
         await fixture(html`
         <${tags['checkbox-group']} name="scientists[]">
           <${tags.host} label="Favorite scientists">
@@ -365,10 +386,11 @@ export function runCheckboxIndeterminateSuite({
             <${tags.checkbox} label="Marie Curie" disabled checked></${tags.checkbox}>
           </${tags.host}>
         </${tags['checkbox-group']}>
-      `);
-      const elIndeterminate =
-        /**  @type {LionCheckboxIndeterminate} */
-        el.querySelector(`${tagString}`);
+      `)
+      );
+      const elIndeterminate = /**  @type {LionCheckboxIndeterminate} */ (
+        el.querySelector(`${tagString}`)
+      );
       const { _subCheckboxes, _inputNode } = getCheckboxIndeterminateMembers(elIndeterminate);
 
       // Act
@@ -382,10 +404,10 @@ export function runCheckboxIndeterminateSuite({
       expect(_subCheckboxes[1].hasAttribute('checked')).to.be.true;
       expect(_subCheckboxes[2].hasAttribute('checked')).to.be.true;
     });
+
     it('should sync all children when parent is checked (from unchecked to checked)', async () => {
       // Arrange
-      const el =
-        /**  @type {LionCheckboxGroup} */
+      const el = /**  @type {LionCheckboxGroup} */ (
         await fixture(html`
         <${tags['checkbox-group']} name="scientists[]">
           <${tags.host} label="Favorite scientists">
@@ -394,10 +416,11 @@ export function runCheckboxIndeterminateSuite({
             <${tags.checkbox} label="Marie Curie"></${tags.checkbox}>
           </${tags.host}>
         </${tags['checkbox-group']}>
-      `);
-      const elIndeterminate =
-        /**  @type {LionCheckboxIndeterminate} */
-        el.querySelector(`${tagString}`);
+      `)
+      );
+      const elIndeterminate = /**  @type {LionCheckboxIndeterminate} */ (
+        el.querySelector(`${tagString}`)
+      );
       const { _subCheckboxes, _inputNode } = getCheckboxIndeterminateMembers(elIndeterminate);
 
       // Act
@@ -410,10 +433,10 @@ export function runCheckboxIndeterminateSuite({
       expect(_subCheckboxes[1].hasAttribute('checked')).to.be.true;
       expect(_subCheckboxes[2].hasAttribute('checked')).to.be.true;
     });
+
     it('should sync all children when parent is checked (from checked to unchecked)', async () => {
       // Arrange
-      const el =
-        /**  @type {LionCheckboxGroup} */
+      const el = /**  @type {LionCheckboxGroup} */ (
         await fixture(html`
         <${tags['checkbox-group']} name="scientists[]">
           <${tags.host} label="Favorite scientists">
@@ -422,10 +445,11 @@ export function runCheckboxIndeterminateSuite({
             <${tags.checkbox} label="Marie Curie" checked></${tags.checkbox}>
           </${tags.host}>
         </${tags['checkbox-group']}>
-      `);
-      const elIndeterminate =
-        /**  @type {LionCheckboxIndeterminate} */
-        el.querySelector(`${tagString}`);
+      `)
+      );
+      const elIndeterminate = /**  @type {LionCheckboxIndeterminate} */ (
+        el.querySelector(`${tagString}`)
+      );
       const { _subCheckboxes, _inputNode } = getCheckboxIndeterminateMembers(elIndeterminate);
 
       // Act
@@ -438,10 +462,10 @@ export function runCheckboxIndeterminateSuite({
       expect(_subCheckboxes[1].hasAttribute('checked')).to.be.false;
       expect(_subCheckboxes[2].hasAttribute('checked')).to.be.false;
     });
+
     it('should sync all prechecked children when parent is indeterminate and some of the children are disabled (from checked to unchecked)', async () => {
       // Arrange
-      const el =
-        /**  @type {LionCheckboxGroup} */
+      const el = /**  @type {LionCheckboxGroup} */ (
         await fixture(html`
         <${tags['checkbox-group']} name="scientists[]">
           <${tags.host} label="Favorite scientists">
@@ -450,10 +474,11 @@ export function runCheckboxIndeterminateSuite({
             <${tags.checkbox} checked label="Marie Curie"></${tags.checkbox}>
           </${tags.host}>
         </${tags['checkbox-group']}>
-      `);
-      const elIndeterminate =
-        /**  @type {LionCheckboxIndeterminate} */
-        el.querySelector(`${tagString}`);
+      `)
+      );
+      const elIndeterminate = /**  @type {LionCheckboxIndeterminate} */ (
+        el.querySelector(`${tagString}`)
+      );
       const { _subCheckboxes, _inputNode } = getCheckboxIndeterminateMembers(elIndeterminate);
 
       // Act
@@ -467,10 +492,10 @@ export function runCheckboxIndeterminateSuite({
       expect(_subCheckboxes[1].hasAttribute('checked')).to.be.false;
       expect(_subCheckboxes[2].hasAttribute('checked')).to.be.false;
     });
+
     it('should stay as indeterminated after it is clicked, when it is interminated already and some children are disabled', async () => {
       // Arrange
-      const el =
-        /**  @type {LionCheckboxGroup} */
+      const el = /**  @type {LionCheckboxGroup} */ (
         await fixture(html`
         <${tags['checkbox-group']} name="scientists[]">
           <${tags.host} label="Favorite scientists">
@@ -479,10 +504,11 @@ export function runCheckboxIndeterminateSuite({
             <${tags.checkbox} label="Marie Curie"></${tags.checkbox}>
           </${tags.host}>
         </${tags['checkbox-group']}>
-      `);
-      const elIndeterminate =
-        /**  @type {LionCheckboxIndeterminate} */
-        el.querySelector(`${tagString}`);
+      `)
+      );
+      const elIndeterminate = /**  @type {LionCheckboxIndeterminate} */ (
+        el.querySelector(`${tagString}`)
+      );
       const { _subCheckboxes, _inputNode } = getCheckboxIndeterminateMembers(elIndeterminate);
 
       // Act
@@ -495,10 +521,10 @@ export function runCheckboxIndeterminateSuite({
       expect(_subCheckboxes[0].hasAttribute('checked')).to.be.true;
       expect(_subCheckboxes[2].hasAttribute('checked')).to.be.true;
     });
+
     it('should work as expected with siblings checkbox-indeterminate', async () => {
       // Arrange
-      const el =
-        /**  @type {LionCheckboxGroup} */
+      const el = /**  @type {LionCheckboxGroup} */ (
         await fixture(html`
         <${tags['checkbox-group']} name="scientists[]" label="Favorite scientists">
           <${tags.host}
@@ -533,13 +559,16 @@ export function runCheckboxIndeterminateSuite({
             ></${tags.checkbox}>
           </${tags.host}>
         </${tags['checkbox-group']}>
-      `);
-      const elFirstIndeterminate =
-        /**  @type {LionCheckboxIndeterminate} */
-        el.querySelector('#first-checkbox-indeterminate');
-      const elSecondIndeterminate =
-        /**  @type {LionCheckboxIndeterminate} */
-        el.querySelector('#second-checkbox-indeterminate');
+      `)
+      );
+      const elFirstIndeterminate = /**  @type {LionCheckboxIndeterminate} */ (
+        el.querySelector('#first-checkbox-indeterminate')
+      );
+
+      const elSecondIndeterminate = /**  @type {LionCheckboxIndeterminate} */ (
+        el.querySelector('#second-checkbox-indeterminate')
+      );
+
       const elFirstSubCheckboxes = getCheckboxIndeterminateMembers(elFirstIndeterminate);
       const elSecondSubCheckboxes = getCheckboxIndeterminateMembers(elSecondIndeterminate);
 
@@ -554,9 +583,11 @@ export function runCheckboxIndeterminateSuite({
       expect(elFirstSubCheckboxes._subCheckboxes[0].hasAttribute('checked')).to.be.true;
       expect(elFirstSubCheckboxes._subCheckboxes[1].hasAttribute('checked')).to.be.true;
       expect(elFirstSubCheckboxes._subCheckboxes[2].hasAttribute('checked')).to.be.true;
+
       expect(elSecondSubCheckboxes._subCheckboxes[0].hasAttribute('checked')).to.be.false;
       expect(elSecondSubCheckboxes._subCheckboxes[1].hasAttribute('checked')).to.be.false;
     });
+
     it('should work as expected when new checkbox was added', async () => {
       // Arrange
       const el = /**  @type {LionCheckboxGroup} */ await fixture(html`
@@ -568,19 +599,21 @@ export function runCheckboxIndeterminateSuite({
         </${tags.host}>
       </${tags['checkbox-group']}>
     `);
-      const elIndeterminate =
-        /**  @type {LionCheckboxIndeterminate} */
-        el.querySelector(`${tagString}`);
+
+      const elIndeterminate = /**  @type {LionCheckboxIndeterminate} */ (
+        el.querySelector(`${tagString}`)
+      );
       expect(elIndeterminate.hasAttribute('indeterminate')).to.be.false;
 
       // Act
-      const newChild = document.createElement(/** @type {string} */ childTagString);
+      const newChild = document.createElement(/** @type {string} */ (childTagString));
       elIndeterminate.appendChild(newChild);
       await elIndeterminate.updateComplete;
 
       // Assert
       expect(elIndeterminate.hasAttribute('indeterminate')).to.be.true;
     });
+
     it('should work as expected when an existing checkbox was removed', async () => {
       // Arrange
       const el = /**  @type {LionCheckboxGroup} */ await fixture(html`
@@ -592,23 +625,24 @@ export function runCheckboxIndeterminateSuite({
         </${tags.host}>
       </${tags['checkbox-group']}>
     `);
-      const elIndeterminate =
-        /**  @type {LionCheckboxIndeterminate} */
-        el.querySelector(`${tagString}`);
+
+      const elIndeterminate = /**  @type {LionCheckboxIndeterminate} */ (
+        el.querySelector(`${tagString}`)
+      );
       expect(elIndeterminate.hasAttribute('indeterminate')).to.be.true;
       expect(elIndeterminate.checked).to.be.false;
 
       // Act
-      elIndeterminate.removeChild(/** @type {ChildNode} */ elIndeterminate.lastChild);
+      elIndeterminate.removeChild(/** @type {ChildNode} */ (elIndeterminate.lastChild));
       await elIndeterminate.updateComplete;
 
       // Assert
       expect(elIndeterminate?.hasAttribute('indeterminate')).to.be.true;
     });
+
     it('should work as expected with nested indeterminate checkboxes', async () => {
       // Arrange
-      const el =
-        /**  @type {LionCheckboxGroup} */
+      const el = /**  @type {LionCheckboxGroup} */ (
         await fixture(html`
         <${tags['checkbox-group']} name="scientists[]" label="Favorite scientists">
           <${tags.host} label="Scientists" id="parent-checkbox-indeterminate">
@@ -641,13 +675,14 @@ export function runCheckboxIndeterminateSuite({
             </${tags.host}>
           </${tags.host}>
         </${tags['checkbox-group']}>
-      `);
-      const elNestedIndeterminate =
-        /**  @type {LionCheckboxIndeterminate} */
-        el.querySelector('#nested-checkbox-indeterminate');
-      const elParentIndeterminate =
-        /**  @type {LionCheckboxIndeterminate} */
-        el.querySelector('#parent-checkbox-indeterminate');
+      `)
+      );
+      const elNestedIndeterminate = /**  @type {LionCheckboxIndeterminate} */ (
+        el.querySelector('#nested-checkbox-indeterminate')
+      );
+      const elParentIndeterminate = /**  @type {LionCheckboxIndeterminate} */ (
+        el.querySelector('#parent-checkbox-indeterminate')
+      );
       const elNestedSubCheckboxes = getCheckboxIndeterminateMembers(elNestedIndeterminate);
       const elParentSubCheckboxes = getCheckboxIndeterminateMembers(elParentIndeterminate);
 
@@ -692,10 +727,10 @@ export function runCheckboxIndeterminateSuite({
       expect(elParentIndeterminate?.hasAttribute('checked')).to.be.true;
       expect(elParentIndeterminate?.hasAttribute('indeterminate')).to.be.false;
     });
+
     it('should work as expected if extra html', async () => {
       // Arrange
-      const el =
-        /**  @type {LionCheckboxGroup} */
+      const el = /**  @type {LionCheckboxGroup} */ (
         await fixture(html`
         <${tags['checkbox-group']} name="scientists[]">
           <div>
@@ -711,10 +746,11 @@ export function runCheckboxIndeterminateSuite({
           </div>
           <div>Too much fun, stop it !</div>
         </${tags['checkbox-group']}>
-      `);
-      const elIndeterminate =
-        /**  @type {LionCheckboxIndeterminate} */
-        el.querySelector(`${tagString}`);
+      `)
+      );
+      const elIndeterminate = /**  @type {LionCheckboxIndeterminate} */ (
+        el.querySelector(`${tagString}`)
+      );
       const { _subCheckboxes } = getCheckboxIndeterminateMembers(elIndeterminate);
 
       // Act
@@ -740,9 +776,10 @@ export function runCheckboxIndeterminateSuite({
           </${tags.host}>
         </${tags['checkbox-group']}>
       `);
-        const elIndeterminate =
-          /**  @type {LionCheckboxIndeterminate} */
-          el.querySelector(`${tagString}`);
+        const elIndeterminate = /**  @type {LionCheckboxIndeterminate} */ (
+          el.querySelector(`${tagString}`)
+        );
+
         expect(elIndeterminate.mixedState).to.be.true;
         expect(elIndeterminate.checked).to.be.false;
         expect(elIndeterminate.indeterminate).to.be.true;
@@ -765,6 +802,7 @@ export function runCheckboxIndeterminateSuite({
         expect(elIndeterminate.checked).to.be.false;
         expect(elIndeterminate.indeterminate).to.be.true;
       });
+
       it('should reset to old child checkbox states when reaching indeterminate state', async () => {
         const el = await fixture(html`
         <${tags['checkbox-group']} name="scientists[]">
@@ -775,29 +813,31 @@ export function runCheckboxIndeterminateSuite({
           </${tags.host}>
         </${tags['checkbox-group']}>
       `);
-        const elIndeterminate =
-          /**  @type {LionCheckboxIndeterminate} */
-          el.querySelector(`${tagString}`);
-        const checkboxEls =
-          /** @type {LionCheckbox[]} */
-          Array.from(el.querySelectorAll(`${childTagString}`));
-        expect(checkboxEls.map((checkboxEl) => checkboxEl.checked)).to.eql([true, false, false]);
+        const elIndeterminate = /**  @type {LionCheckboxIndeterminate} */ (
+          el.querySelector(`${tagString}`)
+        );
+        const checkboxEls = /** @type {LionCheckbox[]} */ (
+          Array.from(el.querySelectorAll(`${childTagString}`))
+        );
+
+        expect(checkboxEls.map(checkboxEl => checkboxEl.checked)).to.eql([true, false, false]);
 
         // @ts-ignore for testing purposes, we access this protected getter
         elIndeterminate._inputNode.click();
         await elIndeterminate.updateComplete;
-        expect(checkboxEls.map((checkboxEl) => checkboxEl.checked)).to.eql([true, true, true]);
+        expect(checkboxEls.map(checkboxEl => checkboxEl.checked)).to.eql([true, true, true]);
 
         // @ts-ignore for testing purposes, we access this protected getter
         elIndeterminate._inputNode.click();
         await elIndeterminate.updateComplete;
-        expect(checkboxEls.map((checkboxEl) => checkboxEl.checked)).to.eql([false, false, false]);
+        expect(checkboxEls.map(checkboxEl => checkboxEl.checked)).to.eql([false, false, false]);
 
         // @ts-ignore for testing purposes, we access this protected getter
         elIndeterminate._inputNode.click();
         await elIndeterminate.updateComplete;
-        expect(checkboxEls.map((checkboxEl) => checkboxEl.checked)).to.eql([true, false, false]);
+        expect(checkboxEls.map(checkboxEl => checkboxEl.checked)).to.eql([true, false, false]);
       });
+
       it('should no longer reach indeterminate state if the child boxes are all checked or all unchecked during indeterminate state', async () => {
         const el = await fixture(html`
         <${tags['checkbox-group']} name="scientists[]">
@@ -808,12 +848,12 @@ export function runCheckboxIndeterminateSuite({
           </${tags.host}>
         </${tags['checkbox-group']}>
       `);
-        const elIndeterminate =
-          /**  @type {LionCheckboxIndeterminate} */
-          el.querySelector(`${tagString}`);
-        const checkboxEls =
-          /** @type {LionCheckbox[]} */
-          Array.from(el.querySelectorAll(`${childTagString}`));
+        const elIndeterminate = /**  @type {LionCheckboxIndeterminate} */ (
+          el.querySelector(`${tagString}`)
+        );
+        const checkboxEls = /** @type {LionCheckbox[]} */ (
+          Array.from(el.querySelectorAll(`${childTagString}`))
+        );
 
         // Check when all child boxes in indeterminate state are unchecked
         // we don't have a tri-state, but a duo-state.
@@ -854,6 +894,7 @@ export function runCheckboxIndeterminateSuite({
           await checkEl.updateComplete;
           await elIndeterminate.updateComplete;
         }
+
         expect(elIndeterminate.checked).to.be.true;
         expect(elIndeterminate.indeterminate).to.be.false;
 
@@ -870,10 +911,10 @@ export function runCheckboxIndeterminateSuite({
         expect(elIndeterminate.indeterminate).to.be.false;
       });
     });
+
     describe('accessibility', () => {
       it('is accessible', async () => {
-        const el =
-          /** @type {LionCheckboxGroup} */
+        const el = /** @type {LionCheckboxGroup} */ (
           await fixture(html`
             <${tags['checkbox-group']} name="scientists[]">
               <${tags.host} label="Favorite scientists">
@@ -882,9 +923,11 @@ export function runCheckboxIndeterminateSuite({
                 <${tags.checkbox} label="Marie Curie"></${tags.checkbox}>
               </${tags.host}>
             </${tags['checkbox-group']}>
-          `);
+          `)
+        );
         await expect(el).to.be.accessible();
       });
+
       it('has role="list" and its children role="listitem"', async () => {
         const el = await fixture(html`
           <${tags['checkbox-group']} name="scientists[]">
@@ -895,9 +938,10 @@ export function runCheckboxIndeterminateSuite({
             </${tags.host}>
           </${tags['checkbox-group']}>
         `);
-        const elIndeterminate =
-          /**  @type {LionCheckboxIndeterminate} */
-          el.querySelector(`${tagString}`);
+        const elIndeterminate = /**  @type {LionCheckboxIndeterminate} */ (
+          el.querySelector(`${tagString}`)
+        );
+
         expect(
           elIndeterminate.shadowRoot
             ?.querySelector('.choice-field__nested-checkboxes')

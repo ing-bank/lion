@@ -8,7 +8,7 @@ import { resolveSuiteTag } from '../../core/test-helpers/resolveSuiteTag.js';
  * @typedef {import('lit').TemplateResult} TemplateResult
  */
 
-const fixture = /** @type {(arg: TemplateResult) => Promise<LionProgressIndicator>} */ _fixture;
+const fixture = /** @type {(arg: TemplateResult) => Promise<LionProgressIndicator>} */ (_fixture);
 
 /**
  * Runs the `lion-progress-indicator` behavioural suite, moved out of `test/lion-progress-indicator.test.js` so a Subclasser can run
@@ -23,17 +23,20 @@ export function runProgressIndicatorSuite({
   tagString: legacyTagString,
 } = {}) {
   const tag = unsafeStatic(resolveSuiteTag(host, legacyTagString));
+
   describe('lion-progress-indicator', () => {
     describe('indeterminate', async () => {
       it('is indeterminate when has no value attribute', async () => {
         const el = await fixture(html` <${tag}></${tag}> `);
         expect(el.indeterminate).to.be.true;
       });
+
       it('adds a label by default', async () => {
         const el = await fixture(html` <${tag}></${tag}> `);
         await el.localizeNamespacesLoaded;
         expect(el.getAttribute('aria-label')).to.equal('Loading');
       });
+
       it('can override a label with "aria-label"', async () => {
         const el = await fixture(html`
           <${tag} aria-label="foo"></${tag}>
@@ -46,6 +49,7 @@ export function runProgressIndicatorSuite({
         await el.updateComplete;
         expect(el.getAttribute('aria-label')).to.equal('Loading');
       });
+
       it('can override a label with "aria-labelledby"', async () => {
         const el = await fixture(html`
           <${tag} aria-labelledby="foo-id"></${tag}>
@@ -61,6 +65,7 @@ export function runProgressIndicatorSuite({
         expect(el.hasAttribute('aria-labelledby')).to.be.false;
         expect(el.getAttribute('aria-label')).to.equal('Loading');
       });
+
       it('loosses default aria-label when switch to determinate state', async () => {
         const el = await fixture(html` <${tag}></${tag}> `);
         await el.localizeNamespacesLoaded;
@@ -69,6 +74,7 @@ export function runProgressIndicatorSuite({
         await el.updateComplete;
         expect(el.hasAttribute('aria-label')).to.be.false;
       });
+
       it('keeps own aria-label when switch to determinate state', async () => {
         const el = await fixture(html`
           <${tag} aria-label="foo"></${tag}>
@@ -79,6 +85,7 @@ export function runProgressIndicatorSuite({
         expect(el.getAttribute('aria-label')).to.equal('foo');
       });
     });
+
     describe('determinate', async () => {
       it('is determinate when it has a value', async () => {
         const el = await fixture(html`
@@ -86,6 +93,7 @@ export function runProgressIndicatorSuite({
         `);
         expect(el.indeterminate).to.be.false;
       });
+
       it('can update value', async () => {
         const el = await fixture(html`
           <${tag} value="25" aria-label="foo"></${tag}>
@@ -95,6 +103,7 @@ export function runProgressIndicatorSuite({
         await el.updateComplete;
         expect(el.getAttribute('aria-valuenow')).to.equal('30');
       });
+
       it('can update min', async () => {
         const el = await fixture(html`
           <${tag} value="50" aria-label="foo"></${tag}>
@@ -104,6 +113,7 @@ export function runProgressIndicatorSuite({
         await el.updateComplete;
         expect(el.getAttribute('aria-valuemin')).to.equal('30');
       });
+
       it('can update max', async () => {
         const el = await fixture(html`
           <${tag} value="50" aria-label="foo"></${tag}>
@@ -113,6 +123,7 @@ export function runProgressIndicatorSuite({
         await el.updateComplete;
         expect(el.getAttribute('aria-valuemax')).to.equal('70');
       });
+
       it('min & max limits value', async () => {
         const el = await fixture(html`
           <${tag} value="150" aria-label="foo"></${tag}>
@@ -135,6 +146,7 @@ export function runProgressIndicatorSuite({
         `);
         expect(el.getAttribute('aria-valuetext')).to.equal('8% (34 minutes) remaining');
       });
+
       it('becomes indeterminate if value gets removed', async () => {
         const el = await fixture(html`<${tag} value="30"></${tag}> `);
         el.removeAttribute('value');
@@ -142,6 +154,7 @@ export function runProgressIndicatorSuite({
         expect(el.indeterminate).to.be.true;
         expect(el.getAttribute('aria-label')).to.equal('Loading');
       });
+
       it("becomes indeterminate if value ain't a number", async () => {
         const el = await fixture(html`<${tag} value="30"></${tag}> `);
         // when the attribute is defined, lit set the property to Number(attributeValue)
@@ -155,6 +168,7 @@ export function runProgressIndicatorSuite({
         expect(el.hasAttribute('aria-valuemax')).to.be.false;
         expect(el.getAttribute('aria-label')).to.equal('Loading');
       });
+
       it('can update value to 0', async () => {
         const el = await fixture(html`<${tag} value="0"></${tag}> `);
         await el.updateComplete;
@@ -168,6 +182,7 @@ export function runProgressIndicatorSuite({
         expect(el.indeterminate).to.be.false;
       });
     });
+
     describe('Subclasers', () => {
       it('can use _progressPercentage getter to get the progress percentage', async () => {
         const el = await fixture(html`
@@ -176,17 +191,20 @@ export function runProgressIndicatorSuite({
         expect(el._progressPercentage).to.equal(20);
       });
     });
+
     describe('Accessibility', () => {
       it('by default', async () => {
         const el = await fixture(html` <${tag}></${tag}> `);
         expect(el.getAttribute('role')).to.equal('progressbar');
       });
+
       describe('indeterminate', () => {
         it('passes a11y test', async () => {
           const el = await fixture(html` <${tag}></${tag}> `);
           await expect(el).to.be.accessible();
         });
       });
+
       describe('determinate', () => {
         it('passes a11y test', async () => {
           const el = await fixture(html`
@@ -194,12 +212,14 @@ export function runProgressIndicatorSuite({
           `);
           await expect(el).to.be.accessible();
         });
+
         it('once value is set', async () => {
           const el = await fixture(html`
             <${tag} value="25" aria-label="foo"></${tag}>
           `);
           expect(el.getAttribute('aria-valuenow')).to.equal('25');
         });
+
         it('allows to set min & max values', async () => {
           const el = await fixture(html`
             <${tag} value="25" aria-label="foo"></${tag}>

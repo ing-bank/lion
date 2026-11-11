@@ -1,5 +1,6 @@
 import { html, css } from 'lit';
 import { ref, createRef } from 'lit/directives/ref.js';
+
 import { LionInputTel } from '@lion/ui/input-tel.js';
 import { getLocalizeManager } from '@lion/ui/localize-no-side-effects.js';
 import { getFlagSymbol } from './getFlagSymbol.js';
@@ -45,7 +46,7 @@ import { regionCodeToLocale } from './regionCodeToLocale.js';
 export class LionInputTelDropdown extends LionInputTel {
   refs = {
     /** @type {DropdownRef} */
-    dropdown: /** @type {DropdownRef} */ createRef(),
+    dropdown: /** @type {DropdownRef} */ (createRef()),
   };
 
   /**
@@ -96,6 +97,7 @@ export class LionInputTelDropdown extends LionInputTel {
       },
       input: this._inputNode,
     };
+
     return {
       refs,
       data: {
@@ -105,6 +107,7 @@ export class LionInputTelDropdown extends LionInputTel {
       },
     };
   }
+
   static templates = {
     dropdown: (/** @type {TemplateDataForDropdownInputTel} */ templateDataForDropdown) => {
       const { refs, data } = templateDataForDropdown;
@@ -119,18 +122,16 @@ export class LionInputTelDropdown extends LionInputTel {
           @change="${refs?.dropdown?.listeners?.change}"
           style="${refs?.dropdown?.props?.style}"
         >
-          ${
-            data?.regionMetaListPreferred?.length
-              ? html`
-                  <optgroup label="${refs?.dropdown?.labels?.preferredCountries}">
-                    ${data.regionMetaListPreferred.map(renderOption)}
-                  </optgroup>
-                  <optgroup label="${refs?.dropdown?.labels?.allCountries}">
-                    ${data?.regionMetaList?.map(renderOption)}
-                  </optgroup>
-                `
-              : html` ${data?.regionMetaList?.map(renderOption)}`
-          }
+          ${data?.regionMetaListPreferred?.length
+            ? html`
+                <optgroup label="${refs?.dropdown?.labels?.preferredCountries}">
+                  ${data.regionMetaListPreferred.map(renderOption)}
+                </optgroup>
+                <optgroup label="${refs?.dropdown?.labels?.allCountries}">
+                  ${data?.regionMetaList?.map(renderOption)}
+                </optgroup>
+              `
+            : html` ${data?.regionMetaList?.map(renderOption)}`}
         </select>
       `;
     },
@@ -170,8 +171,9 @@ export class LionInputTelDropdown extends LionInputTel {
     return {
       ...super.slots,
       prefix: () => {
-        const ctor = /** @type {typeof LionInputTelDropdown} */ this.constructor;
+        const ctor = /** @type {typeof LionInputTelDropdown} */ (this.constructor);
         const { templates } = ctor;
+
         return {
           template: templates.dropdown(this._templateDataDropdown),
           renderAsDirectHostChild: true,
@@ -185,6 +187,7 @@ export class LionInputTelDropdown extends LionInputTel {
    */
   onLocaleUpdated() {
     super.onLocaleUpdated();
+
     this.__namesForLocale = new Intl.DisplayNames([this._localizeManager.locale], {
       type: 'region',
     });
@@ -231,9 +234,12 @@ export class LionInputTelDropdown extends LionInputTel {
    */
   constructor() {
     super();
+
     this._allCountriesLabel = '';
     this._preferredCountriesLabel = '';
+
     this.__regionMetaList = [];
+
     this.__regionMetaListPreferred = [];
 
     /**
@@ -254,6 +260,7 @@ export class LionInputTelDropdown extends LionInputTel {
    */
   willUpdate(changedProperties) {
     super.willUpdate(changedProperties);
+
     if (changedProperties.has('allowedRegions')) {
       this.__createRegionMeta();
     }
@@ -264,7 +271,9 @@ export class LionInputTelDropdown extends LionInputTel {
    */
   updated(changedProperties) {
     super.updated(changedProperties);
+
     this.__syncRegionWithDropdown();
+
     if (changedProperties.has('disabled') || changedProperties.has('readOnly')) {
       if (this.disabled || this.readOnly) {
         this.refs.dropdown?.value?.setAttribute('disabled', '');
@@ -272,6 +281,7 @@ export class LionInputTelDropdown extends LionInputTel {
         this.refs.dropdown?.value?.removeAttribute('disabled');
       }
     }
+
     if (changedProperties.has('_phoneUtil')) {
       this._initModelValueBasedOnDropdown();
     }
@@ -315,12 +325,14 @@ export class LionInputTelDropdown extends LionInputTel {
   _onDropdownValueChange(event) {
     const isInitializing = event.detail?.initialize || !this._phoneUtil;
     const dropdownElement = event.target;
-    const dropdownValue =
-      /** @type {RegionCode} */
-      dropdownElement.modelValue || dropdownElement.value;
+    const dropdownValue = /** @type {RegionCode} */ (
+      dropdownElement.modelValue || dropdownElement.value
+    );
+
     if (isInitializing || this.activeRegion === dropdownValue) {
       return;
     }
+
     const prevActiveRegion = this.activeRegion;
     this._setActiveRegion(dropdownValue);
 
@@ -329,6 +341,7 @@ export class LionInputTelDropdown extends LionInputTel {
     if (prevActiveRegion !== this.activeRegion && !this.focused && this._phoneUtil) {
       const prevCountryCode = this._phoneUtil.getCountryCodeForRegionCode(prevActiveRegion);
       const countryCode = this._phoneUtil.getCountryCodeForRegionCode(this.activeRegion);
+
       if (this.value.includes(`+${prevCountryCode}`)) {
         this.modelValue = this._callParser(
           this.value.replace(`+${prevCountryCode}`, `+${countryCode}`),
@@ -354,6 +367,7 @@ export class LionInputTelDropdown extends LionInputTel {
       return;
     }
     const inputCountryCode = this._phoneUtil?.getCountryCodeForRegionCode(regionCode);
+
     if ('modelValue' in dropdownElement) {
       const dropdownCountryCode = this._phoneUtil?.getCountryCodeForRegionCode(
         dropdownElement.modelValue,
@@ -361,8 +375,7 @@ export class LionInputTelDropdown extends LionInputTel {
       if (dropdownCountryCode === inputCountryCode) {
         return;
       }
-      /** @type {* & FormatHost} */
-      dropdownElement.modelValue = regionCode;
+      /** @type {* & FormatHost} */ (dropdownElement).modelValue = regionCode;
     } else {
       const dropdownCountryCode = this._phoneUtil?.getCountryCodeForRegionCode(
         dropdownElement.value,
@@ -370,8 +383,7 @@ export class LionInputTelDropdown extends LionInputTel {
       if (dropdownCountryCode === inputCountryCode) {
         return;
       }
-      /** @type {HTMLSelectElement} */
-      dropdownElement.value = regionCode;
+      /** @type {HTMLSelectElement} */ (dropdownElement).value = regionCode;
     }
   }
 
@@ -388,19 +400,23 @@ export class LionInputTelDropdown extends LionInputTel {
     if (!this._allowedOrAllRegions?.length || !this.__namesForLocale) {
       return;
     }
+
     this.__regionMetaList = [];
     this.__regionMetaListPreferred = [];
-    this._allowedOrAllRegions.forEach((regionCode) => {
+    this._allowedOrAllRegions.forEach(regionCode => {
       // @ts-ignore relatively new platform api
       const namesForRegion = new Intl.DisplayNames([regionCodeToLocale(regionCode)], {
         type: 'region',
       });
       const countryCode =
         this._phoneUtil && this._phoneUtil.getCountryCodeForRegionCode(regionCode);
+
       const flagSymbol = getFlagSymbol(regionCode);
+
       const destinationList = this.preferredRegions.includes(regionCode)
         ? this.__regionMetaListPreferred
         : this.__regionMetaList;
+
       destinationList.push({
         regionCode,
         countryCode,

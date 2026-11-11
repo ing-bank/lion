@@ -7,6 +7,7 @@ import { LionButtonReset } from './LionButtonReset.js';
 
 /** @type {WeakMap<HTMLFormElement, HelperRegistration>} */
 const implicitHelperMap = new WeakMap();
+
 function createImplicitSubmitHelperButton() {
   const buttonEl = document.createElement('button');
   buttonEl.tabIndex = -1;
@@ -47,8 +48,9 @@ export class LionButtonSubmit extends LionButtonReset {
    * @protected
    */
   get _nativeButtonNode() {
-    return implicitHelperMap.get(/** @type {HTMLFormElement} */ this._form)?.helper || null;
+    return implicitHelperMap.get(/** @type {HTMLFormElement} */ (this._form))?.helper || null;
   }
+
   constructor() {
     super();
     this.type = 'submit';
@@ -56,14 +58,17 @@ export class LionButtonSubmit extends LionButtonReset {
     /** @type {HTMLButtonElement|null} */
     this.__implicitSubmitHelperButton = null;
   }
+
   _setupSubmitAndResetHelperOnConnected() {
     super._setupSubmitAndResetHelperOnConnected();
+
     if (!this._form || this.type !== 'submit') {
       return;
     }
     /** @type {HTMLFormElement} */
     const form = this._form;
     const registrationForCurForm = implicitHelperMap.get(this._form);
+
     if (!registrationForCurForm) {
       const buttonEl = createImplicitSubmitHelperButton();
       const wrapperEl = document.createElement('div');
@@ -78,19 +83,19 @@ export class LionButtonSubmit extends LionButtonReset {
       form.appendChild(wrapperEl);
 
       // Prevent that the just created button gets lost during rerender
-      implicitHelperMap.get(form)?.observer.observe(wrapperEl, {
-        childList: true,
-      });
+      implicitHelperMap.get(form)?.observer.observe(wrapperEl, { childList: true });
     }
     implicitHelperMap.get(form)?.lionButtons.add(this);
   }
+
   _teardownSubmitAndResetHelperOnDisconnected() {
     super._teardownSubmitAndResetHelperOnDisconnected();
+
     if (this._form) {
       // If we are the last button to leave the form, clean up the
-      const registrationForCurForm =
-        /** @type {HelperRegistration} */
-        implicitHelperMap.get(/** @type {HTMLFormElement} */ this._form);
+      const registrationForCurForm = /** @type {HelperRegistration} */ (
+        implicitHelperMap.get(/** @type {HTMLFormElement} */ (this._form))
+      );
       if (registrationForCurForm) {
         registrationForCurForm.lionButtons.delete(this);
         if (!registrationForCurForm.lionButtons.size) {

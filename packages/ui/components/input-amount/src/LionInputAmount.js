@@ -39,14 +39,11 @@ export class LionInputAmount extends LocalizeMixin(LionInput) {
        * The slot to put the currency display node in. Can be 'prefix', 'suffix', 'before' and 'after'.
        * Default will be 'after'.
        */
-      _currencyDisplayNodeSlot: {
-        attribute: false,
-      },
-      locale: {
-        attribute: false,
-      },
+      _currencyDisplayNodeSlot: { attribute: false },
+      locale: { attribute: false },
     };
   }
+
   get slots() {
     return {
       ...super.slots,
@@ -60,6 +57,7 @@ export class LionInputAmount extends LocalizeMixin(LionInput) {
       },
     };
   }
+
   static get styles() {
     return [
       ...super.styles,
@@ -70,6 +68,7 @@ export class LionInputAmount extends LocalizeMixin(LionInput) {
       `,
     ];
   }
+
   constructor() {
     super();
     this.parser = parseAmount;
@@ -84,11 +83,13 @@ export class LionInputAmount extends LocalizeMixin(LionInput) {
     /** @protected */
     this._currencyDisplayNodeSlot = 'after';
   }
+
   connectedCallback() {
     // eslint-disable-next-line wc/guard-super-call
     super.connectedCallback();
     this.type = 'text';
     this._inputNode.setAttribute('inputmode', 'decimal');
+
     if (this.currency) {
       this.__setCurrencyDisplayLabel();
     }
@@ -98,16 +99,15 @@ export class LionInputAmount extends LocalizeMixin(LionInput) {
   updated(changedProperties) {
     super.updated(changedProperties);
     if (changedProperties.has('currency')) {
-      this._onCurrencyChanged({
-        currency: this.currency || null,
-      });
+      this._onCurrencyChanged({ currency: this.currency || null });
     }
+
     if (changedProperties.has('locale') && this.locale !== changedProperties.get('locale')) {
       if (this.locale) {
         /** @type {AmountFormatOptions} */
-        this.formatOptions.locale = this.locale;
+        (this.formatOptions).locale = this.locale;
       } else {
-        delete (/** @type {AmountFormatOptions} */ this.formatOptions.locale);
+        delete (/** @type {AmountFormatOptions} */ (this.formatOptions).locale);
       }
       this.__reformat();
     }
@@ -123,9 +123,7 @@ export class LionInputAmount extends LocalizeMixin(LionInput) {
   _connectSlotMixin() {
     super._connectSlotMixin();
     if (this._isPrivateSlot(this._currencyDisplayNodeSlot)) {
-      this._onCurrencyChanged({
-        currency: this.currency || null,
-      });
+      this._onCurrencyChanged({ currency: this.currency || null });
     }
   }
 
@@ -162,7 +160,7 @@ export class LionInputAmount extends LocalizeMixin(LionInput) {
     }
 
     /** @type {AmountFormatOptions} */
-    this.formatOptions.currency = currency || undefined;
+    (this.formatOptions).currency = currency || undefined;
     if (currency) {
       if (!this.__currencyDisplayNodeIsConnected) {
         this.appendChild(this.__currencyDisplayNode);
@@ -172,10 +170,9 @@ export class LionInputAmount extends LocalizeMixin(LionInput) {
         this.__currencyDisplayNodeIsConnected = true;
       }
       this.__currencyDisplayNode.textContent = this.__currencyLabel;
+
       try {
-        this._calculateValues({
-          source: null,
-        });
+        this._calculateValues({ source: null });
       } catch (e) {
         // In case Intl.NumberFormat gives error for invalid currency
         // we should catch, remove the node, and rethrow (since it's still a user error)
@@ -197,12 +194,13 @@ export class LionInputAmount extends LocalizeMixin(LionInput) {
    * @private
    */
   get __currencyDisplayNode() {
-    const node = /** @type {HTMLElement[]} */ Array.from(this.children).find(
-      (child) => child.slot === this._currencyDisplayNodeSlot,
+    const node = /** @type {HTMLElement[]} */ (Array.from(this.children)).find(
+      child => child.slot === this._currencyDisplayNodeSlot,
     );
     if (node) {
       this.__storedCurrencyDisplayNode = node;
     }
+
     return node || this.__storedCurrencyDisplayNode;
   }
 
@@ -220,6 +218,7 @@ export class LionInputAmount extends LocalizeMixin(LionInput) {
       );
     }
   }
+
   get __currencyLabel() {
     let label = this.currencyLabel || '';
     if (!label && this.currency) {
@@ -227,6 +226,7 @@ export class LionInputAmount extends LocalizeMixin(LionInput) {
     }
     return label;
   }
+
   __reformat() {
     this.formattedValue = this._callFormatter();
   }

@@ -6,9 +6,10 @@ import { Validator } from '../Validator.js';
  *
  * @param {number} value to check
  */
-const isNumber = (value) =>
+const isNumber = value =>
   // eslint-disable-next-line no-self-compare
   value === value && typeof value === 'number';
+
 export class IsNumber extends Validator {
   static get validatorName() {
     return 'IsNumber';
@@ -26,6 +27,7 @@ export class IsNumber extends Validator {
     return isEnabled;
   }
 }
+
 export class MinNumber extends Validator {
   static get validatorName() {
     return 'MinNumber';
@@ -42,6 +44,7 @@ export class MinNumber extends Validator {
     return isEnabled;
   }
 }
+
 export class MaxNumber extends Validator {
   static get validatorName() {
     return 'MaxNumber';
@@ -58,6 +61,7 @@ export class MaxNumber extends Validator {
     return isEnabled;
   }
 }
+
 export class MinMaxNumber extends Validator {
   static get validatorName() {
     return 'MinMaxNumber';

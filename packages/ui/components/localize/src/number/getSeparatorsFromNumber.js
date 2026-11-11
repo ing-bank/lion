@@ -19,6 +19,7 @@ export function getSeparatorsFromNumber(parsedNumber, formattedNumber, options) 
       separators.push(match.groups?.sep);
     }
   }
+
   let groupSeparator = null;
   let decimalSeparator = null;
   if (separators) {
@@ -39,7 +40,7 @@ export function getSeparatorsFromNumber(parsedNumber, formattedNumber, options) 
       } else {
         [decimalSeparator] = separators;
       }
-    } else if (separators.every((val) => val === separators[0])) {
+    } else if (separators.every(val => val === separators[0])) {
       // multiple separators, check if they are all the same or not
       // if the same, it means they are group separators
       // if not, it means that the last one must be the decimal separator
@@ -49,6 +50,7 @@ export function getSeparatorsFromNumber(parsedNumber, formattedNumber, options) 
       decimalSeparator = separators[separators.length - 1];
     }
   }
+
   return {
     groupSeparator,
     decimalSeparator,

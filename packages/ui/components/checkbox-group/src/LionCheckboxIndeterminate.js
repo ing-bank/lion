@@ -45,18 +45,20 @@ export class LionCheckboxIndeterminate extends LionCheckbox {
    * @protected
    */
   get _checkboxGroupNode() {
-    return /** @type LionCheckboxGroup */ this._parentFormGroup;
+    return /** @type LionCheckboxGroup */ (this._parentFormGroup);
   }
 
   /**
    * @protected
    */
   get _subCheckboxes() {
-    return /** @type LionCheckbox[] */ this.__subCheckboxes;
+    return /** @type LionCheckbox[] */ (this.__subCheckboxes);
   }
+
   _storeIndeterminateState() {
-    this._indeterminateSubStates = this._subCheckboxes.map((checkbox) => checkbox.checked);
+    this._indeterminateSubStates = this._subCheckboxes.map(checkbox => checkbox.checked);
   }
+
   _setOldState() {
     if (this.indeterminate) {
       this._oldState = 'indeterminate';
@@ -73,8 +75,10 @@ export class LionCheckboxIndeterminate extends LionCheckbox {
     if (!subCheckboxes.length) {
       return;
     }
+
     this.__settingOwnChecked = true;
-    const checkedElements = subCheckboxes.filter((checkbox) => checkbox.checked);
+    const checkedElements = subCheckboxes.filter(checkbox => checkbox.checked);
+
     switch (subCheckboxes.length - checkedElements.length) {
       // all checked
       case 0:
@@ -89,7 +93,7 @@ export class LionCheckboxIndeterminate extends LionCheckbox {
       default: {
         this.indeterminate = true;
         const disabledUncheckedElements = subCheckboxes.filter(
-          (checkbox) => checkbox.disabled && checkbox.checked === false,
+          checkbox => checkbox.disabled && checkbox.checked === false,
         );
         this.checked =
           subCheckboxes.length - checkedElements.length - disabledUncheckedElements.length === 0;
@@ -99,6 +103,7 @@ export class LionCheckboxIndeterminate extends LionCheckbox {
       this.__settingOwnChecked = false;
     });
   }
+
   _setBasedOnMixedState() {
     switch (this._oldState) {
       case 'checked':
@@ -128,27 +133,31 @@ export class LionCheckboxIndeterminate extends LionCheckbox {
     if (this.disabled) {
       return;
     }
-    const _ev = /** @type {CustomEvent} */ ev;
+    const _ev = /** @type {CustomEvent} */ (ev);
 
     // If the model value change event is coming from out own _inputNode
     // and we're not already setting our own (mixed) state programmatically
     if (_ev.detail.formPath[0] === this && !this.__settingOwnChecked) {
-      const allEqual = (/** @type {any[]} */ arr) => arr.every((val) => val === arr[0]);
+      const allEqual = (/** @type {any[]} */ arr) => arr.every(val => val === arr[0]);
       // If our child checkboxes states are all the same, we shouldn't be able to reach indeterminate (mixed) state
       if (this.mixedState && !allEqual(this._indeterminateSubStates)) {
         this._setBasedOnMixedState();
       }
+
       this.__settingOwnSubs = true;
+
       const subCheckboxes = this._subCheckboxes;
-      const checkedElements = subCheckboxes.filter((checkbox) => checkbox.checked);
-      const disabledElements = subCheckboxes.filter((checkbox) => checkbox.disabled);
+      const checkedElements = subCheckboxes.filter(checkbox => checkbox.checked);
+      const disabledElements = subCheckboxes.filter(checkbox => checkbox.disabled);
       const allChecked =
         subCheckboxes.length > 0 && subCheckboxes.length === checkedElements.length;
       const allDisabled =
         subCheckboxes.length > 0 && subCheckboxes.length === disabledElements.length;
+
       if (allDisabled) {
         this.checked = allChecked;
       }
+
       if (this.indeterminate && this.mixedState) {
         this._subCheckboxes.forEach((checkbox, i) => {
           // eslint-disable-next-line no-param-reassign
@@ -156,8 +165,8 @@ export class LionCheckboxIndeterminate extends LionCheckbox {
         });
       } else {
         this._subCheckboxes
-          .filter((checkbox) => !checkbox.disabled)
-          .forEach((checkbox) => {
+          .filter(checkbox => !checkbox.disabled)
+          .forEach(checkbox => {
             // eslint-disable-next-line no-param-reassign
             checkbox.checked = this._inputNode.checked;
           });
@@ -173,6 +182,7 @@ export class LionCheckboxIndeterminate extends LionCheckbox {
         }
       });
     }
+
     if (this.mixedState) {
       this._setOldState();
     }
@@ -195,10 +205,10 @@ export class LionCheckboxIndeterminate extends LionCheckbox {
    * @protected
    */
   _onRequestToAddFormElement(ev) {
-    if (!(/** @type {HTMLElement} */ ev.target.hasAttribute('role'))) {
-      /** @type {HTMLElement} */ ev.target?.setAttribute('role', 'listitem');
+    if (!(/** @type {HTMLElement} */ (ev.target).hasAttribute('role'))) {
+      /** @type {HTMLElement} */ (ev.target)?.setAttribute('role', 'listitem');
     }
-    this.__addToSubCheckboxes(/** @type {CustomEvent} */ ev.detail.element);
+    this.__addToSubCheckboxes(/** @type {CustomEvent} */ (ev).detail.element);
     this._setOwnCheckedState();
   }
 
@@ -208,10 +218,10 @@ export class LionCheckboxIndeterminate extends LionCheckbox {
    */
   // eslint-disable-next-line class-methods-use-this
   _onRequestToRemoveFormElement(ev) {
-    if (/** @type {HTMLElement} */ ev.target.getAttribute('role') === 'listitem') {
-      /** @type {HTMLElement} */ ev.target?.removeAttribute('role');
+    if (/** @type {HTMLElement} */ (ev.target).getAttribute('role') === 'listitem') {
+      /** @type {HTMLElement} */ (ev.target)?.removeAttribute('role');
     }
-    this.__removeFromSubCheckboxes(/** @type {CustomEvent} */ ev.detail.element);
+    this.__removeFromSubCheckboxes(/** @type {CustomEvent} */ (ev).detail.element);
   }
 
   /**
@@ -232,6 +242,7 @@ export class LionCheckboxIndeterminate extends LionCheckbox {
       this.__subCheckboxes.splice(index, 1);
     }
   }
+
   constructor() {
     super();
     this.indeterminate = false;
@@ -243,11 +254,13 @@ export class LionCheckboxIndeterminate extends LionCheckbox {
     this._indeterminateSubStates = [];
     this.mixedState = false;
   }
+
   connectedCallback() {
     super.connectedCallback();
     this.addEventListener('model-value-changed', this.__onModelValueChanged);
     this.addEventListener('form-element-register', this._onRequestToAddFormElement);
   }
+
   disconnectedCallback() {
     super.disconnectedCallback();
     this.removeEventListener('model-value-changed', this.__onModelValueChanged);

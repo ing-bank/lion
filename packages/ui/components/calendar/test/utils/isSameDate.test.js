@@ -1,5 +1,6 @@
 import { expect } from '@open-wc/testing';
 import { isSameDate } from '@lion/ui/calendar.js';
+
 describe('isSameDate', () => {
   it('returns true if the same date is given', () => {
     const day1 = new Date('2001/01/01');

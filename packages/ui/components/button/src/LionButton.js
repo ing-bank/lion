@@ -1,5 +1,6 @@
 import { html, LitElement, css } from 'lit';
 import { DisabledWithTabIndexMixin } from '@lion/ui/core.js';
+
 const isKeyboardClickEvent = (/** @type {KeyboardEvent} */ e) => e.key === ' ' || e.key === 'Enter';
 const isSpaceKeyboardClickEvent = (/** @type {KeyboardEvent} */ e) => e.key === ' ';
 
@@ -32,19 +33,15 @@ const isSpaceKeyboardClickEvent = (/** @type {KeyboardEvent} */ e) => e.key === 
 export class LionButton extends DisabledWithTabIndexMixin(LitElement) {
   static get properties() {
     return {
-      active: {
-        type: Boolean,
-        reflect: true,
-      },
-      type: {
-        type: String,
-        reflect: true,
-      },
+      active: { type: Boolean, reflect: true },
+      type: { type: String, reflect: true },
     };
   }
+
   render() {
     return html` <div class="button-content"><slot></slot></div> `;
   }
+
   static get styles() {
     return [
       css`
@@ -126,14 +123,17 @@ export class LionButton extends DisabledWithTabIndexMixin(LitElement) {
       `,
     ];
   }
+
   constructor() {
     super();
     this.type = 'button';
     this.active = false;
     /** @private */
     this.__keyboardClickStarted = false;
+
     this.__setupEvents();
   }
+
   connectedCallback() {
     super.connectedCallback();
     if (!this.hasAttribute('role')) {
@@ -146,6 +146,7 @@ export class LionButton extends DisabledWithTabIndexMixin(LitElement) {
    */
   updated(changedProperties) {
     super.updated(changedProperties);
+
     if (changedProperties.has('disabled')) {
       if (this.disabled) {
         this.setAttribute('aria-disabled', 'true');
@@ -189,15 +190,17 @@ export class LionButton extends DisabledWithTabIndexMixin(LitElement) {
       }
       return;
     }
+
     if (isSpaceKeyboardClickEvent(event)) {
       event.preventDefault();
     }
+
     this.active = true;
     this.__keyboardClickStarted = true;
     /**
      * @param {KeyboardEvent} keyupEvent
      */
-    const keyupHandler = (keyupEvent) => {
+    const keyupHandler = keyupEvent => {
       if (isKeyboardClickEvent(keyupEvent)) {
         this.active = false;
         // A keyup that lands elsewhere (focus moved away in between) ends it without a click

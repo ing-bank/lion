@@ -35,10 +35,11 @@ export class LionPagination extends LocalizeMixin(LitElement) {
       `,
     ];
   }
+
   static get localizeNamespaces() {
     return [
       {
-        'lion-pagination': /** @param {string} locale */ (locale) => {
+        'lion-pagination': /** @param {string} locale */ locale => {
           switch (locale) {
             case 'bg-BG':
               return import('@lion/ui/pagination-translations/bg.js');
@@ -86,6 +87,7 @@ export class LionPagination extends LocalizeMixin(LitElement) {
       ...super.localizeNamespaces,
     ];
   }
+
   static get properties() {
     return {
       current: {
@@ -116,6 +118,7 @@ export class LionPagination extends LocalizeMixin(LitElement) {
 
   /** @private */
   __visiblePages;
+
   constructor() {
     super();
     this.__visiblePages = 5;
@@ -203,16 +206,16 @@ export class LionPagination extends LocalizeMixin(LitElement) {
       const pos5 = this.current + 1;
       //  if pos 3 is lower than 4 we have a predefined list of elements
       if (pos4 <= 4) {
-        const list =
-          /** @type {(number|'...')[]} */
-          [...Array(this.__visiblePages)].map((_, idx) => start + idx);
+        const list = /** @type {(number|'...')[]} */ (
+          [...Array(this.__visiblePages)].map((_, idx) => start + idx)
+        );
         list.push('...');
         list.push(this.count);
         return list;
       }
       //  if we are close to the end of the list with the current page then we have again a predefined list
       if (finish - pos4 <= 3) {
-        const list = /** @type {(number|'...')[]} */ [];
+        const list = /** @type {(number|'...')[]} */ ([]);
         list.push(1);
         list.push('...');
         const listRemaining = [...Array(this.__visiblePages)].map(
@@ -220,6 +223,7 @@ export class LionPagination extends LocalizeMixin(LitElement) {
         );
         return list.concat(listRemaining);
       }
+
       return [start, '...', pos3, pos4, pos5, '...', finish];
     }
     return [...Array(finish - start + 1)].map((_, idx) => start + idx);
@@ -280,15 +284,13 @@ export class LionPagination extends LocalizeMixin(LitElement) {
    * @protected
    */
   _renderNavList() {
-    return this.__calculateNavList().map((page) =>
+    return this.__calculateNavList().map(page =>
       page === '...'
         ? html` <li><span>${page}</span></li> `
         : html`
             <li>
               <button
-                aria-label="${this.msgLit('lion-pagination:page', {
-                  page,
-                })}"
+                aria-label="${this.msgLit('lion-pagination:page', { page })}"
                 aria-current=${page === this.current}
                 aria-live="${page === this.current ? 'polite' : 'off'}"
                 @click=${() => this.__fire(page)}
@@ -299,13 +301,18 @@ export class LionPagination extends LocalizeMixin(LitElement) {
           `,
     );
   }
+
   render() {
     return html`
       <nav role="navigation" aria-label="${this.msgLit('lion-pagination:label')}">
         <ul>
-          ${this.current > 1 ? this._prevNextButtonTemplate('previous', this.current - 1) : this._disabledButtonTemplate('previous')}
+          ${this.current > 1
+            ? this._prevNextButtonTemplate('previous', this.current - 1)
+            : this._disabledButtonTemplate('previous')}
           ${this._renderNavList()}
-          ${this.current < this.count ? this._prevNextButtonTemplate('next', this.current + 1) : this._disabledButtonTemplate('next')}
+          ${this.current < this.count
+            ? this._prevNextButtonTemplate('next', this.current + 1)
+            : this._disabledButtonTemplate('next')}
         </ul>
       </nav>
     `;

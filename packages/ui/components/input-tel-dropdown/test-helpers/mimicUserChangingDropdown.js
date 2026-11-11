@@ -11,11 +11,7 @@ export function mimicUserChangingDropdown(dropdownEl, value) {
     // eslint-disable-next-line no-param-reassign
     dropdownEl.modelValue = value;
     dropdownEl.dispatchEvent(
-      new CustomEvent('model-value-changed', {
-        detail: {
-          isTriggeredByUser: true,
-        },
-      }),
+      new CustomEvent('model-value-changed', { detail: { isTriggeredByUser: true } }),
     );
   } else {
     // eslint-disable-next-line no-param-reassign

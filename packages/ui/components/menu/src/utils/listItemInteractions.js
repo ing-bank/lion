@@ -56,10 +56,10 @@ export function setChecked(item, unset = false) {
     ariaAttr = 'selected';
   }
   let text;
-  if (/** @type {HTMLAnchorElement} */ item.href) {
+  if (/** @type {HTMLAnchorElement} */ (item).href) {
     text = 'page';
   }
-  if (/** @type {LionCheckboxIndeterminate} */ item.mixedState) {
+  if (/** @type {LionCheckboxIndeterminate} */ (item).mixedState) {
     text = 'mixed';
   }
   if (!unset) {
@@ -102,8 +102,8 @@ export function setActive(item, unset = false) {
  */
 function getDirectTextContent(item) {
   return Array.from(item.childNodes)
-    .filter((n) => n.nodeName === '#text')
-    .map((n) => n.textContent)
+    .filter(n => n.nodeName === '#text')
+    .map(n => n.textContent)
     .join('')
     .trim();
 }

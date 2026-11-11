@@ -29,11 +29,9 @@ export function supportsScopedRegistry() {
  * (TS2322/TS2345) - making a lockfile/hoisting detail decide whether the type gate passes.
  * Restating the mixin in our own types keeps this file independent of how lit gets hoisted.
  */
-const OpenWcScopedElementsMixinV3 =
-  /**
-   * @type {<T extends LitElementConstructor>(superclass: T) => T & ScopedElementsHostConstructor}
-   */
-  OpenWcLitScopedElementsMixin;
+const OpenWcScopedElementsMixinV3 = /**
+ * @type {<T extends LitElementConstructor>(superclass: T) => T & ScopedElementsHostConstructor}
+ */ (OpenWcLitScopedElementsMixin);
 
 /**
  * This file is a combination of '@open-wc/scoped-elements@v3/lit-element.js' and '@open-wc/scoped-elements@v3/html-element.js'.
@@ -66,11 +64,12 @@ const OpenWcScopedElementsMixinV3 =
  * @param {T} superclass
  * @return {T & ScopedElementsHostConstructor & ScopedElementsHostV2Constructor}
  */
-const ScopedElementsMixinImplementation = (superclass) =>
+const ScopedElementsMixinImplementation = superclass =>
   /** @type {ScopedElementsHost} */
   class ScopedElementsHost extends OpenWcScopedElementsMixinV3(superclass) {
     constructor() {
       super();
+
       if (isServer) {
         // We are on the server: this means we can't support scoped registries...
         // So we must treat it like the "no-polyfill scenario", that registers scoped
@@ -88,6 +87,7 @@ const ScopedElementsMixinImplementation = (superclass) =>
         }
       }
     }
+
     createScopedElement(/** @type {string} */ tagName) {
       const root = supportsScopedRegistry() ? this.shadowRoot : document;
       // @ts-expect-error polyfill to support createElement on shadowRoot is loaded
@@ -101,7 +101,7 @@ const ScopedElementsMixinImplementation = (superclass) =>
      * @param {typeof HTMLElement} classToBeRegistered
      */
     defineScopedElement(tagName, classToBeRegistered) {
-      const { registry } = /** @type {{ registry: CustomElementRegistry }} */ this;
+      const { registry } = /** @type {{ registry: CustomElementRegistry }} */ (this);
       const registeredClass = registry.get(tagName);
       const isNewClassWithSameName = registeredClass && registeredClass !== classToBeRegistered;
       if (!supportsScopedRegistry() && isNewClassWithSameName) {
@@ -129,7 +129,8 @@ const ScopedElementsMixinImplementation = (superclass) =>
      */
     attachShadow(options) {
       // @ts-expect-error
-      const { scopedElements } = /** @type {typeof ScopedElementsHost} */ this.constructor;
+      const { scopedElements } = /** @type {typeof ScopedElementsHost} */ (this.constructor);
+
       const shouldCreateRegistry =
         !this.registry ||
         // @ts-expect-error
@@ -148,6 +149,7 @@ const ScopedElementsMixinImplementation = (superclass) =>
           this.defineScopedElement(tagName, klass);
         }
       }
+
       return Element.prototype.attachShadow.call(this, {
         ...options,
         // The polyfill currently expects the registry to be passed as `customElements`
@@ -157,18 +159,25 @@ const ScopedElementsMixinImplementation = (superclass) =>
         registry: this.registry,
       });
     }
+
     createRenderRoot() {
-      const { shadowRootOptions, elementStyles } = /** @type {TypeofLitElement} */ this.constructor;
+      const { shadowRootOptions, elementStyles } = /** @type {TypeofLitElement} */ (
+        this.constructor
+      );
+
       const createdRoot = this.attachShadow(shadowRootOptions);
       if (supportsScopedRegistry()) {
         // @ts-expect-error
         this.renderOptions.creationScope = createdRoot;
       }
+
       if (createdRoot instanceof ShadowRoot) {
         adoptStyles(createdRoot, elementStyles);
         this.renderOptions.renderBefore = this.renderOptions.renderBefore || createdRoot.firstChild;
       }
+
       return createdRoot;
     }
   };
+
 export const ScopedElementsMixin = dedupeMixin(ScopedElementsMixinImplementation);

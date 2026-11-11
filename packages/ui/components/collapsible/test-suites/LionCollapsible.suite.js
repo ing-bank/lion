@@ -1,5 +1,6 @@
 import { expect, fixture as _fixture, unsafeStatic } from '@open-wc/testing';
 import { html } from 'lit/static-html.js';
+
 import { LionCollapsible } from '@lion/ui/collapsible.js';
 import { resolveSuiteTag } from '../../core/test-helpers/resolveSuiteTag.js';
 
@@ -41,7 +42,8 @@ export function runCollapsibleSuite({
     invoker: unsafeStatic(resolveSuiteTag(invokerEl)),
     content: unsafeStatic(resolveSuiteTag(contentEl)),
   };
-  const fixture = /** @type {(arg: TemplateResult) => Promise<LionCollapsible>} */ _fixture;
+  const fixture = /** @type {(arg: TemplateResult) => Promise<LionCollapsible>} */ (_fixture);
+
   const collapsibleTemplate = html`
     <${tags.invoker} slot="invoker">More about cars</${tags.invoker}>
     <${tags.content} slot="content" style="height: 32px; font-size: 12px; line-height: 16px; font-family: Arial;">
@@ -51,29 +53,35 @@ export function runCollapsibleSuite({
   `;
   let isCollapsibleOpen = false;
   /** @param {boolean} state */
-  const collapsibleToggle = (state) => {
+  const collapsibleToggle = state => {
     isCollapsibleOpen = state;
   };
   const defaultCollapsible = html` <${tags.host}>${collapsibleTemplate}</${tags.host}> `;
   const collapsibleWithEvents = html`
     <${tags.host}
-      @opened-changed=${/** @param {Event} e */ (e) => collapsibleToggle(/** @type {LionCollapsible} */ e.target?.opened)}
+      @opened-changed=${
+        /** @param {Event} e */ e =>
+          collapsibleToggle(/** @type {LionCollapsible} */ (e.target)?.opened)
+      }
     >
       ${collapsibleTemplate}
     </${tags.host}>
   `;
+
   describe('<lion-collapsible>', () => {
     describe('Collapsible', () => {
       it('sets opened to false by default', async () => {
         const collapsible = await fixture(defaultCollapsible);
         expect(collapsible.opened).to.equal(false);
       });
+
       it('has [opened] on current expanded invoker which serves as styling hook', async () => {
         const collapsible = await fixture(defaultCollapsible);
         collapsible.opened = true;
         await collapsible.updateComplete;
         expect(collapsible).to.have.attribute('opened');
       });
+
       it('should return content node height before and after collapsing', async () => {
         const collapsible = await fixture(defaultCollapsible);
         const collHeight1 = getProtectedMembers(collapsible);
@@ -84,6 +92,7 @@ export function runCollapsibleSuite({
         expect(collHeight2.contentHeight).to.equal('32px');
       });
     });
+
     describe('User interaction', () => {
       it('opens a invoker on click', async () => {
         const collapsible = await fixture(defaultCollapsible);
@@ -91,11 +100,13 @@ export function runCollapsibleSuite({
         invoker?.dispatchEvent(new Event('click'));
         expect(collapsible.opened).to.equal(true);
       });
+
       it('should toggle the content using `toggle()`', async () => {
         const collapsible = await fixture(defaultCollapsible);
         collapsible.toggle();
         expect(collapsible.opened).to.equal(true);
       });
+
       it('should expand and collapse the content using `show()` and `hide()`', async () => {
         const collapsible = await fixture(defaultCollapsible);
         collapsible.show();
@@ -103,6 +114,7 @@ export function runCollapsibleSuite({
         collapsible.hide();
         expect(collapsible.opened).to.equal(false);
       });
+
       it('should listen to the open and close state change', async () => {
         const collapsible = await fixture(collapsibleWithEvents);
         collapsible.show();
@@ -113,16 +125,19 @@ export function runCollapsibleSuite({
         expect(isCollapsibleOpen).to.equal(false);
       });
     });
+
     describe('Accessibility', () => {
       it('[collapsed] is a11y AXE accessible', async () => {
         const collapsible = await fixture(defaultCollapsible);
         await expect(collapsible).to.be.accessible();
       });
+
       it('[expanded] is a11y AXE accessible', async () => {
         const collapsible = await fixture(defaultCollapsible);
         collapsible.show();
         await expect(collapsible).to.be.accessible();
       });
+
       describe('Invoker', () => {
         it('links id of content items to invoker via [aria-controls]', async () => {
           const collapsibleElement = await fixture(defaultCollapsible);
@@ -130,11 +145,13 @@ export function runCollapsibleSuite({
           const content = collapsibleElement.querySelector('[slot=content]');
           expect(invoker?.getAttribute('aria-controls')).to.equal(content?.id);
         });
+
         it('adds aria-expanded="false" to invoker when its content is not expanded', async () => {
           const collapsibleElement = await fixture(defaultCollapsible);
           const invoker = collapsibleElement.querySelector('[slot=invoker]');
           expect(invoker).to.have.attribute('aria-expanded', 'false');
         });
+
         it('adds aria-expanded="true" to invoker when its content is expanded', async () => {
           const collapsibleElement = await fixture(defaultCollapsible);
           const invoker = collapsibleElement.querySelector('[slot=invoker]');

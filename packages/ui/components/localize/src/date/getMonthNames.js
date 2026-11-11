@@ -14,13 +14,14 @@ const monthsLocaleCache = {};
  */
 export function getMonthNames({ locale = 'en-GB', style = 'long' } = {}) {
   let months = monthsLocaleCache[locale] && monthsLocaleCache[locale][style];
+
   if (months) {
     return months;
   }
+
   months = [];
-  const formatter = new Intl.DateTimeFormat(locale, {
-    month: style,
-  });
+
+  const formatter = new Intl.DateTimeFormat(locale, { month: style });
   for (let i = 0; i < 12; i += 1) {
     const date = new Date(2019, i, 1);
     const formattedDate = formatter.format(date);
@@ -34,5 +35,6 @@ export function getMonthNames({ locale = 'en-GB', style = 'long' } = {}) {
   }
   monthsLocaleCache[locale] = monthsLocaleCache[locale] || {};
   monthsLocaleCache[locale][style] = months;
+
   return months;
 }

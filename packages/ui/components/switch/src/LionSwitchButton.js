@@ -13,13 +13,10 @@ export class LionSwitchButton extends DisabledWithTabIndexMixin(LitElement) {
         type: Boolean,
         reflect: true,
       },
-      readOnly: {
-        type: Boolean,
-        attribute: 'readonly',
-        reflect: true,
-      },
+      readOnly: { type: Boolean, attribute: 'readonly', reflect: true },
     };
   }
+
   static get styles() {
     return [
       css`
@@ -66,6 +63,7 @@ export class LionSwitchButton extends DisabledWithTabIndexMixin(LitElement) {
       `,
     ];
   }
+
   render() {
     return html`
       <div class="btn">
@@ -80,6 +78,7 @@ export class LionSwitchButton extends DisabledWithTabIndexMixin(LitElement) {
 
   /** @private */
   __handleKeyup;
+
   constructor() {
     super();
     // inputNode = this, which always requires a value prop
@@ -92,6 +91,7 @@ export class LionSwitchButton extends DisabledWithTabIndexMixin(LitElement) {
     this.__handleKeydown = this._handleKeydown.bind(this);
     this.__handleKeyup = this._handleKeyup.bind(this);
   }
+
   connectedCallback() {
     super.connectedCallback();
     this.setAttribute('role', 'switch');
@@ -100,6 +100,7 @@ export class LionSwitchButton extends DisabledWithTabIndexMixin(LitElement) {
     this.addEventListener('keydown', this.__handleKeydown);
     this.addEventListener('keyup', this.__handleKeyup);
   }
+
   disconnectedCallback() {
     super.disconnectedCallback();
     this.removeEventListener('click', this._toggleChecked);

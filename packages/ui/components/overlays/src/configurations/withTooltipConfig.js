@@ -13,18 +13,16 @@ export const withTooltipConfig = ({
   invokerRelation = 'description',
   delayIn = 300,
   delayOut = 300,
-} = {}) => /** @type {OverlayConfig} */ ({
-  placementMode: 'local',
-  elementToFocusAfterHide: undefined,
-  hidesOnEsc: true,
-  handlesAccessibility: true,
-  isTooltip: true,
-  invokerRelation,
-  popperConfig: {
-    strategy: 'absolute',
-  },
-  ...withHoverInteraction({
-    delayIn,
-    delayOut,
-  }),
-});
+} = {}) =>
+  /** @type {OverlayConfig} */ ({
+    placementMode: 'local',
+    elementToFocusAfterHide: undefined,
+    hidesOnEsc: true,
+    handlesAccessibility: true,
+    isTooltip: true,
+    invokerRelation,
+    popperConfig: {
+      strategy: 'absolute',
+    },
+    ...withHoverInteraction({ delayIn, delayOut }),
+  });

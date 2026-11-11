@@ -8,6 +8,7 @@ import '@lion/ui/define/lion-option.js';
 import '@lion/ui/define/lion-radio.js';
 import { sendKeys } from '@web/test-runner-commands';
 import { html } from 'lit';
+
 import { isActiveElement } from '../../core/test-helpers/isActiveElement.js';
 import { isElementVisible } from '../../core/test-helpers/isElementVisible.js';
 import { getAllTagNames } from './helpers/helpers.js';
@@ -31,10 +32,11 @@ describe('Form inside dialog Integrations', () => {
 
     // @ts-expect-error [allow-protected-in-tests]
     const umbrellaEl = el._overlayCtrl.contentNode;
-    const formEl = /** @type {LionForm} */ umbrellaEl._lionFormNode;
+    const formEl = /** @type {LionForm} */ (umbrellaEl._lionFormNode);
     await formEl.registrationComplete;
     const registeredEls = getAllTagNames(formEl);
     await umbrellaEl.waitForAllChildrenUpdates();
+
     expect(registeredEls).to.eql([
       'lion-fieldset',
       '  lion-input',
@@ -80,6 +82,7 @@ describe('Form inside dialog Integrations', () => {
       'lion-textarea',
     ]);
   });
+
   it('sets focus on first focusable element with autofocus', async () => {
     const el = /** @type {LionDialog} */ await fixture(html`
       <lion-dialog>
@@ -100,8 +103,7 @@ describe('Form inside dialog Integrations', () => {
 
   // #2555, the test is the one from #2556
   it('does not reopen when a form submit closes it and a lion-button is the invoker', async () => {
-    const el =
-      /** @type {LionDialog} */
+    const el = /** @type {LionDialog} */ (
       await fixture(html`
         <lion-dialog opened>
           <div slot="content">
@@ -114,18 +116,17 @@ describe('Form inside dialog Integrations', () => {
           </div>
           <lion-button slot="invoker">Invoker</lion-button>
         </lion-dialog>
-      `);
+      `)
+    );
     // @ts-expect-error [allow-protected-in-tests]
-    const dialogEl = /** @type {HTMLDialogElement} */ el._overlayCtrl.__wrappingDialogNode;
+    const dialogEl = /** @type {HTMLDialogElement} */ (el._overlayCtrl.__wrappingDialogNode);
     expect(isElementVisible(dialogEl)).to.be.true;
 
-    /** @type {HTMLInputElement} */
-    el.querySelector('input[type="text"]').focus();
-    await sendKeys({
-      press: 'Enter',
-    });
+    /** @type {HTMLInputElement} */ (el.querySelector('input[type="text"]')).focus();
+    await sendKeys({ press: 'Enter' });
     await el.updateComplete;
     await el.updateComplete;
+
     expect(isElementVisible(dialogEl)).to.be.false;
   });
 });

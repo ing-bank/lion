@@ -69,9 +69,12 @@ function getLocalizeManager() {
     });
     singletonManager.set('@lion/ui::localize::0.x', localizeManager);
   }
+
   return singletonManager.get('@lion/ui::localize::0.x');
 }
+
 function getLocalizeManagerLazily() {
   return lazifyInstantiation(getLocalizeManager);
 }
+
 export { getLocalizeManagerLazily as getLocalizeManager };

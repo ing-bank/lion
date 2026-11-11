@@ -26,7 +26,8 @@ export function getAriaElementsInRightDomOrder(descriptionElements, { reverse } 
     const pos = a.compareDocumentPosition(b);
     return moveDownConditions.includes(pos) ? 1 : -1;
   };
-  const descriptionEls = descriptionElements.filter((el) => el); // filter out null references
+
+  const descriptionEls = descriptionElements.filter(el => el); // filter out null references
   descriptionEls.sort(putPrecedingSiblingsAndLocalParentsFirst);
   if (reverse) {
     descriptionEls.reverse();

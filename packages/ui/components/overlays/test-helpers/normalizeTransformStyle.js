@@ -9,6 +9,8 @@ export function normalizeTransformStyle(cssValue) {
   const [, transformType, positionPart] = cssValue.match(/(.*)\((.*?)\)/) || [];
   const normalizedNumbers = positionPart
     .split(',')
-    .map((p) => Math.round(Number(p.replace('px', ''))));
-  return `${transformType}(${normalizedNumbers.map((n, i) => `${n}px${normalizedNumbers.length - 1 === i ? '' : ', '}`).join('')})`;
+    .map(p => Math.round(Number(p.replace('px', ''))));
+  return `${transformType}(${normalizedNumbers
+    .map((n, i) => `${n}px${normalizedNumbers.length - 1 === i ? '' : ', '}`)
+    .join('')})`;
 }

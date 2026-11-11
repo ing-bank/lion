@@ -2,7 +2,7 @@ import {
   runFormatMixinSuite,
   runInteractionStateMixinSuite,
 } from '@lion/ui/test-suites/form-core.js';
-import '@open-wc/testing';
+import {} from '@open-wc/testing';
 import { LionInputStepper } from '../src/LionInputStepper.js';
 import { resolveSuiteTag } from '../../core/test-helpers/resolveSuiteTag.js';
 
@@ -21,6 +21,7 @@ export const runInputStepperIntegrationSuite = ({
     tagString,
     allowedModelValueTypes: [Number],
   });
+
   runFormatMixinSuite({
     tagString,
     modelValueType: Number,

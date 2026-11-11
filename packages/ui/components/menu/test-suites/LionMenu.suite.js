@@ -8,7 +8,7 @@ import { resolveSuiteTag } from '../../core/test-helpers/resolveSuiteTag.js';
  *
  */
 
-const fixture = /** @type {(arg: TemplateResult) => Promise<LionMenu>} */ _fixture;
+const fixture = /** @type {(arg: TemplateResult) => Promise<LionMenu>} */ (_fixture);
 
 /**
  * @typedef {import('@lion/ui/types/test-suites.js').SuiteElement} SuiteElement
@@ -16,6 +16,7 @@ const fixture = /** @type {(arg: TemplateResult) => Promise<LionMenu>} */ _fixtu
  */
 export function runLionMenuSuite({ classes = {}, tagString: legacyTagString } = {}) {
   const tag = unsafeStatic(resolveSuiteTag(classes?.host, legacyTagString, LionMenu));
+
   describe('LionMenu', () => {
     it('sets the correct role to the listNode', async () => {
       const el = await fixture(html`
@@ -28,9 +29,11 @@ export function runLionMenuSuite({ classes = {}, tagString: legacyTagString } = 
           </div>
         </${tag}>
       `);
+
       const listNode = el.querySelector('[slot="list"]');
       expect(listNode?.getAttribute('role')).to.equal('menu');
     });
+
     it('sets the correct role to the listNode when activeMode is tabbable-disclosure', async () => {
       const el = await fixture(html`
         <${tag} ._activeMode=${'tabbable-disclosure'}>
@@ -45,6 +48,7 @@ export function runLionMenuSuite({ classes = {}, tagString: legacyTagString } = 
       const listNode = el.querySelector('[slot="list"]');
       expect(listNode?.getAttribute('role')).to.equal('list');
     });
+
     it('sets the correct roles when it is a bar', async () => {
       const el = await fixture(html`
         <${tag}>
@@ -56,6 +60,7 @@ export function runLionMenuSuite({ classes = {}, tagString: legacyTagString } = 
           </div>
         </${tag}>
       `);
+
       el._listRole = 'menu';
       expect(el._listRole).to.equal('menu');
       expect(el.axis).to.equal('block');
@@ -65,6 +70,7 @@ export function runLionMenuSuite({ classes = {}, tagString: legacyTagString } = 
       expect(el._listRole).to.equal('menubar');
       expect(el.axis).to.equal('inline');
     });
+
     describe('Programmatic interaction', () => {
       it('allows groups within one menu level', async () => {
         const el = await fixture(html`

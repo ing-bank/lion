@@ -21,20 +21,15 @@ export class LionProgressIndicator extends LocalizeMixin(LitElement) {
       max: {
         type: Number,
       },
-      _ariaLabel: {
-        attribute: 'aria-label',
-        type: String,
-      },
-      _ariaLabelledby: {
-        attribute: 'aria-labelledby',
-        type: String,
-      },
+      _ariaLabel: { attribute: 'aria-label', type: String },
+      _ariaLabelledby: { attribute: 'aria-labelledby', type: String },
     };
   }
+
   static get localizeNamespaces() {
     return [
       {
-        'lion-progress-indicator': /** @param {string} locale */ (locale) => {
+        'lion-progress-indicator': /** @param {string} locale */ locale => {
           switch (locale) {
             case 'bg-BG':
             case 'bg':
@@ -105,7 +100,7 @@ export class LionProgressIndicator extends LocalizeMixin(LitElement) {
    * // TODO: check if this is a false positive or if we can improve
    * @configure ReactiveElement
    */
-  static enabledWarnings = super.enabledWarnings?.filter((w) => w !== 'change-in-update') || [];
+  static enabledWarnings = super.enabledWarnings?.filter(w => w !== 'change-in-update') || [];
 
   /**
    * In case of a determinate progress-indicator it returns the progress percentage
@@ -121,6 +116,7 @@ export class LionProgressIndicator extends LocalizeMixin(LitElement) {
     }
     return ((this.value - this.min) / (this.max - this.min)) * 100;
   }
+
   constructor() {
     super();
     this.value = 0;
@@ -136,9 +132,11 @@ export class LionProgressIndicator extends LocalizeMixin(LitElement) {
   _graphicTemplate() {
     return nothing;
   }
+
   render() {
     return this._graphicTemplate();
   }
+
   connectedCallback() {
     super.connectedCallback();
     this.setAttribute('role', 'progressbar');
@@ -150,6 +148,7 @@ export class LionProgressIndicator extends LocalizeMixin(LitElement) {
    */
   updated(changedProperties) {
     super.updated(changedProperties);
+
     if (this.indeterminate) {
       if (changedProperties.has('_ariaLabel') || changedProperties.has('_ariaLabelledby')) {
         this._setDefaultLabel();
@@ -189,6 +188,7 @@ export class LionProgressIndicator extends LocalizeMixin(LitElement) {
       }
     }
   }
+
   onLocaleUpdated() {
     super.onLocaleUpdated();
     // only set default label for indeterminate
@@ -196,11 +196,13 @@ export class LionProgressIndicator extends LocalizeMixin(LitElement) {
       this._setDefaultLabel();
     }
   }
+
   _resetAriaValueAttributes() {
     this.removeAttribute('aria-valuenow');
     this.removeAttribute('aria-valuemin');
     this.removeAttribute('aria-valuemax');
   }
+
   _setDefaultLabel() {
     const localizeManager = getLocalizeManager();
     if (this._ariaLabelledby) {

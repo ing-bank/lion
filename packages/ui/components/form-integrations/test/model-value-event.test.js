@@ -10,8 +10,9 @@ import sinon from 'sinon';
  * @typedef {import('../../fieldset/src/LionFieldset.js').LionFieldset} LionFieldset
  * @typedef {import('lit').TemplateResult} TemplateResult
  */
-const inputFixture = /** @type {(arg: TemplateResult) => Promise<LionInput>} */ fixture;
-const fieldsetFixture = /** @type {(arg: TemplateResult) => Promise<LionFieldset>} */ fixture;
+const inputFixture = /** @type {(arg: TemplateResult) => Promise<LionInput>} */ (fixture);
+const fieldsetFixture = /** @type {(arg: TemplateResult) => Promise<LionFieldset>} */ (fixture);
+
 describe('model value event', () => {
   describe('form path', () => {
     it('should be property', async () => {
@@ -22,6 +23,7 @@ describe('model value event', () => {
       const e = spy.firstCall.args[0];
       expect(e.detail).to.have.property('formPath');
     });
+
     it('should contain dispatching field', async () => {
       const spy = sinon.spy();
       const input = await inputFixture(html`<lion-input></lion-input>`);
@@ -30,6 +32,7 @@ describe('model value event', () => {
       const e = spy.firstCall.args[0];
       expect(e.detail.formPath).to.eql([input]);
     });
+
     it('should contain field and group', async () => {
       const spy = sinon.spy();
       const fieldset = await fieldsetFixture(html`
@@ -39,11 +42,12 @@ describe('model value event', () => {
       `);
       await fieldset.registrationComplete;
       fieldset.addEventListener('model-value-changed', spy);
-      const input = /** @type {LionInput} */ fieldset.querySelector('lion-input');
+      const input = /** @type {LionInput} */ (fieldset.querySelector('lion-input'));
       input.modelValue = 'foo';
       const e = spy.firstCall.args[0];
       expect(e.detail.formPath).to.eql([input, fieldset]);
     });
+
     it('should contain deep elements', async () => {
       const spy = sinon.spy();
       const grandparent = await fieldsetFixture(html`
@@ -53,15 +57,17 @@ describe('model value event', () => {
           </lion-fieldset>
         </lion-fieldset>
       `);
-      const parent = /** @type {LionFieldset} */ grandparent.querySelector('[name=parent]');
-      const input = /** @type {LionInput} */ grandparent.querySelector('[name=input]');
+      const parent = /** @type {LionFieldset} */ (grandparent.querySelector('[name=parent]'));
+      const input = /** @type {LionInput} */ (grandparent.querySelector('[name=input]'));
       await grandparent.registrationComplete;
       await parent.registrationComplete;
+
       grandparent.addEventListener('model-value-changed', spy);
       input.modelValue = 'foo';
       const e = spy.firstCall.args[0];
       expect(e.detail.formPath).to.eql([input, parent, grandparent]);
     });
+
     it('should ignore elements that are not fields or fieldsets', async () => {
       const spy = sinon.spy();
       const grandparent = await fieldsetFixture(html`
@@ -77,16 +83,18 @@ describe('model value event', () => {
           </div>
         </lion-fieldset>
       `);
-      const parent = /** @type {LionFieldset} */ grandparent.querySelector('[name=parent]');
-      const input = /** @type {LionInput} */ grandparent.querySelector('[name=input]');
+      const parent = /** @type {LionFieldset} */ (grandparent.querySelector('[name=parent]'));
+      const input = /** @type {LionInput} */ (grandparent.querySelector('[name=input]'));
       await grandparent.registrationComplete;
       await parent.registrationComplete;
+
       grandparent.addEventListener('model-value-changed', spy);
       input.modelValue = 'foo';
       const e = spy.firstCall.args[0];
       expect(e.detail.formPath).to.eql([input, parent, grandparent]);
     });
   });
+
   describe('signature', () => {
     /** @type {any} */
     let e;
@@ -106,10 +114,12 @@ describe('model value event', () => {
     it.skip('should not bubble', async () => {
       expect(e.bubbles).to.be.false;
     });
+
     it('should not leave shadow boundary', async () => {
       expect(e.composed).to.be.false;
     });
   });
+
   describe('propagation', () => {
     it('should dispatch different event at each level', async () => {
       const grandparent = await fieldsetFixture(html`
@@ -119,14 +129,14 @@ describe('model value event', () => {
           </lion-fieldset>
         </lion-fieldset>
       `);
-      const parent = /** @type {LionFieldset} */ grandparent.querySelector('[name="parent"]');
-      const input = /** @type {LionInput} */ grandparent.querySelector('[name="input"]');
+      const parent = /** @type {LionFieldset} */ (grandparent.querySelector('[name="parent"]'));
+      const input = /** @type {LionInput} */ (grandparent.querySelector('[name="input"]'));
       await grandparent.registrationComplete;
       await parent.registrationComplete;
 
       /** @type {sinon.SinonSpy[]} */
       const spies = [];
-      [grandparent, parent, input].forEach((element) => {
+      [grandparent, parent, input].forEach(element => {
         const spy = sinon.spy();
         spies.push(spy);
         element.addEventListener('model-value-changed', spy);

@@ -5,6 +5,7 @@ import { sendKeys } from '@web/test-runner-commands';
 import { browserDetection } from '@lion/ui/core.js';
 import { LitElement } from 'lit';
 import { spy } from 'sinon';
+
 import { resolveSuiteTag } from '../../core/test-helpers/resolveSuiteTag.js';
 import { isActiveElement } from '../../core/test-helpers/isActiveElement.js';
 
@@ -29,9 +30,11 @@ export function runNativeTextFieldMixinSuite({ classes = {}, tagString: legacyTa
         };
       }
     }
+
     const tag = unsafeStatic(resolveSuiteTag(classes?.host, legacyTagString, NativeTextFieldClass));
+
     it('preserves the caret position on value change', async () => {
-      const el = /** @type {NativeTextFieldClass} */ await fixture(html`<${tag}></${tag}>`);
+      const el = /** @type {NativeTextFieldClass} */ (await fixture(html`<${tag}></${tag}>`));
       // @ts-ignore [allow-protected] in test
       const setValueAndPreserveCaretSpy = spy(el, '_setValueAndPreserveCaret');
       const { _inputNode } = getFormControlMembers(el);
@@ -45,26 +48,25 @@ export function runNativeTextFieldMixinSuite({ classes = {}, tagString: legacyTa
       expect(_inputNode.selectionStart).to.equal(2);
       expect(_inputNode.selectionEnd).to.equal(2);
     });
+
     it('moves focus to a next focusable element after writing some text', async () => {
-      const el = /** @type {NativeTextFieldClass} */ await fixture(html`<${tag}></${tag}>`);
+      const el = /** @type {NativeTextFieldClass} */ (await fixture(html`<${tag}></${tag}>`));
       // @ts-ignore [allow-protected] in test
       const setValueAndPreserveCaretSpy = spy(el, '_setValueAndPreserveCaret');
       const { _inputNode } = getFormControlMembers(el);
       await triggerFocusFor(el);
       await el.updateComplete;
       expect(isActiveElement(_inputNode)).to.be.true;
-      await sendKeys({
-        press: 'h',
-      });
-      await sendKeys({
-        press: 'Tab',
-      });
+      await sendKeys({ press: 'h' });
+      await sendKeys({ press: 'Tab' });
+
       expect(setValueAndPreserveCaretSpy.calledOnce).to.be.false;
 
       // TODO: This seems to work in practice, but not in the test. Investigate.
       if (browserDetection.isMacSafari || browserDetection.isFirefox) {
         return;
       }
+
       expect(isActiveElement(_inputNode)).to.be.false;
     });
   });

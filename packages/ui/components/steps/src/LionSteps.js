@@ -23,6 +23,7 @@ export class LionSteps extends LitElement {
       `,
     ];
   }
+
   static get properties() {
     /**
      * Fired when a transition between steps happens.
@@ -46,6 +47,7 @@ export class LionSteps extends LitElement {
       },
     };
   }
+
   constructor() {
     super();
     /** @type {{[key: string]: any}} */
@@ -60,6 +62,7 @@ export class LionSteps extends LitElement {
   firstUpdated(changedProperties) {
     super.firstUpdated(changedProperties);
     this._max = this.steps.length - 1;
+
     let hasInitial = false;
     this.steps.forEach((step, i) => {
       if (step.initialStep && i !== 0) {
@@ -77,38 +80,38 @@ export class LionSteps extends LitElement {
     super.updated(changedProperties);
     if (changedProperties.has('current')) {
       this._onCurrentChanged(
-        {
-          current: this.current,
-        },
-        {
-          current: /** @type {number} */ changedProperties.get('current'),
-        },
+        { current: this.current },
+        { current: /** @type {number} */ (changedProperties.get('current')) },
       );
     }
   }
+
   render() {
     return html`<slot></slot>`;
   }
+
   next() {
     this._goTo(this.current + 1, this.current);
   }
+
   previous() {
     this._goTo(this.current - 1, this.current);
   }
+
   get steps() {
-    const defaultSlot =
-      /** @type {HTMLSlotElement} */
-      this.shadowRoot?.querySelector('slot:not([name])');
-    return /** @type {LionStep[]} */ defaultSlot
-      .assignedNodes()
-      .filter((node) => node.nodeType === Node.ELEMENT_NODE);
+    const defaultSlot = /** @type {HTMLSlotElement} */ (
+      this.shadowRoot?.querySelector('slot:not([name])')
+    );
+    return /** @type {LionStep[]} */ (defaultSlot.assignedNodes()).filter(
+      node => node.nodeType === Node.ELEMENT_NODE,
+    );
   }
 
   /**
    * // TODO: check if this is a false positive or if we can improve
    * @configure ReactiveElement
    */
-  static enabledWarnings = super.enabledWarnings?.filter((w) => w !== 'change-in-update') || [];
+  static enabledWarnings = super.enabledWarnings?.filter(w => w !== 'change-in-update') || [];
 
   /**
    * @param {number} newCurrent
@@ -118,8 +121,10 @@ export class LionSteps extends LitElement {
     if (newCurrent < 0 || newCurrent > this._max) {
       throw new Error(`There is no step at index ${newCurrent}.`);
     }
+
     const nextStep = this.steps[newCurrent];
     const back = newCurrent < oldCurrent;
+
     if (nextStep.passesCondition(this.data)) {
       if (back && nextStep.forwardOnly) {
         this._goTo(newCurrent - 1, oldCurrent);
@@ -143,20 +148,18 @@ export class LionSteps extends LitElement {
   _changeStep(newCurrent, oldCurrent) {
     const oldStepElement = this.steps[oldCurrent];
     const newStepElement = this.steps[newCurrent];
-    const fromStep = {
-      number: oldCurrent,
-      element: oldStepElement,
-    };
-    const toStep = {
-      number: newCurrent,
-      element: newStepElement,
-    };
+    const fromStep = { number: oldCurrent, element: oldStepElement };
+    const toStep = { number: newCurrent, element: newStepElement };
+
     oldStepElement.leave();
+
     if (this.current !== newCurrent) {
       this._internalCurrentSync = true;
       this.current = newCurrent;
     }
+
     newStepElement.enter();
+
     this._dispatchTransitionEvent(fromStep, toStep);
   }
 
@@ -169,10 +172,7 @@ export class LionSteps extends LitElement {
       new CustomEvent('transition', {
         bubbles: true,
         composed: true,
-        detail: {
-          fromStep,
-          toStep,
-        },
+        detail: { fromStep, toStep },
       }),
     );
   }

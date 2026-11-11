@@ -24,6 +24,7 @@ export const _adoptStyleUtils = {
   // @ts-ignore
   adoptStyles: undefined,
 };
+
 const styleCache = new WeakMap();
 
 /**
@@ -31,7 +32,7 @@ const styleCache = new WeakMap();
  */
 export function serializeConstructableStylesheet(cssStyleSheet) {
   return Array.from(cssStyleSheet.cssRules)
-    .map((r) => r.cssText)
+    .map(r => r.cssText)
     .join('');
 }
 
@@ -45,16 +46,17 @@ function adoptStyleWhenAdoptedStylesheetsNotSupported(
   style,
   { teardown = false } = {},
 ) {
-  const adoptRoot =
-    /** @type {ShadowRoot|Document['body']} */
-    renderRoot === document ? document.body : renderRoot;
+  const adoptRoot = /** @type {ShadowRoot|Document['body']} */ (
+    renderRoot === document ? document.body : renderRoot
+  );
   // @ts-ignore
   const styleText = style.cssText || serializeConstructableStylesheet(style);
+
   if (!teardown) {
     const styleEl = document.createElement('style');
     // keep notation, so it's not renamed in minification/build
     // eslint-disable-next-line dot-notation
-    const nonce = /** @type {{ litNonce?: string }} */ window['litNonce'];
+    const nonce = /** @type {{ litNonce?: string }} */ (window)['litNonce'];
     if (nonce !== undefined) {
       styleEl.setAttribute('nonce', nonce);
     }
@@ -62,6 +64,7 @@ function adoptStyleWhenAdoptedStylesheetsNotSupported(
     adoptRoot.appendChild(styleEl);
   } else {
     const foundStyleEls = Array.from(adoptRoot.querySelectorAll('style'));
+
     for (const foundStyleEl of foundStyleEls) {
       if (foundStyleEl.textContent === styleText) {
         foundStyleEl.remove();
@@ -85,6 +88,7 @@ function handleCache(renderRoot, style, { teardown = false } = {}) {
   const foundStyle = addedStylesForRoot.find(
     (/** @type {import("lit").CSSResultOrNative} */ addedStyle) => style === addedStyle,
   );
+
   if (foundStyle && teardown) {
     addedStylesForRoot.splice(addedStylesForRoot.indexOf(style), 1);
   } else if (!foundStyle && !teardown) {
@@ -93,16 +97,13 @@ function handleCache(renderRoot, style, { teardown = false } = {}) {
     // Already removed or added. We're done
     haltFurtherExecution = true;
   }
-  return {
-    haltFurtherExecution,
-  };
+
+  return { haltFurtherExecution };
 }
 
 /** @type {AdoptStyleFn} */
 export function adoptStyle(renderRoot, style, { teardown = false } = {}) {
-  const { haltFurtherExecution } = handleCache(renderRoot, style, {
-    teardown,
-  });
+  const { haltFurtherExecution } = handleCache(renderRoot, style, { teardown });
   if (haltFurtherExecution) {
     return;
   }
@@ -111,15 +112,15 @@ export function adoptStyle(renderRoot, style, { teardown = false } = {}) {
   // while others are ignored so the overlays are rendered incorrectly, to mitigate it we use
   // traditional "stylesheet".
   if (!_adoptStyleUtils.supportsAdoptingStyleSheets || browserDetection.isIOS) {
-    adoptStyleWhenAdoptedStylesheetsNotSupported(renderRoot, style, {
-      teardown,
-    });
+    adoptStyleWhenAdoptedStylesheetsNotSupported(renderRoot, style, { teardown });
     return;
   }
+
   const sheet = style instanceof CSSStyleSheet ? style : style.styleSheet;
   if (!sheet) {
     throw new Error(`Please provide a CSSResultOrNative style`);
   }
+
   if (!teardown) {
     // @ts-ignore
     // eslint-disable-next-line no-param-reassign
@@ -127,17 +128,16 @@ export function adoptStyle(renderRoot, style, { teardown = false } = {}) {
   } else if (renderRoot.adoptedStyleSheets.includes(sheet)) {
     // @ts-ignore
     // eslint-disable-next-line no-param-reassign
-    renderRoot.adoptedStyleSheets = renderRoot.adoptedStyleSheets.filter((s) => s !== sheet);
+    renderRoot.adoptedStyleSheets = renderRoot.adoptedStyleSheets.filter(s => s !== sheet);
   }
 }
 
 /** @type {AdoptStylesFn} */
 export function adoptStyles(renderRoot, styles, { teardown = false } = {}) {
   for (const style of styles) {
-    _adoptStyleUtils.adoptStyle(renderRoot, style, {
-      teardown,
-    });
+    _adoptStyleUtils.adoptStyle(renderRoot, style, { teardown });
   }
 }
+
 _adoptStyleUtils.adoptStyle = adoptStyle;
 _adoptStyleUtils.adoptStyles = adoptStyles;

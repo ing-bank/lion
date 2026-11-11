@@ -8,6 +8,7 @@ export class PaginationObject {
   constructor(paginationEl) {
     this.el = paginationEl;
   }
+
   get previousButtonEl() {
     const previousButton = this.el.shadowRoot?.querySelector('nav li:first-child > *');
     if (!(previousButton instanceof HTMLElement)) {
@@ -15,6 +16,7 @@ export class PaginationObject {
     }
     return previousButton;
   }
+
   get nextButtonEl() {
     const nextButton = this.el.shadowRoot?.querySelector('nav li:last-child > *');
     if (!(nextButton instanceof HTMLElement)) {
@@ -22,14 +24,16 @@ export class PaginationObject {
     }
     return nextButton;
   }
+
   get pageButtonEls() {
-    return /** @type {HTMLElement[]} */ Array.from(
-      this.el.shadowRoot?.querySelectorAll('nav li > [aria-current]') || [],
+    return /** @type {HTMLElement[]} */ (
+      Array.from(this.el.shadowRoot?.querySelectorAll('nav li > [aria-current]') || [])
     );
   }
+
   get ellipsisEls() {
-    return /** @type {HTMLElement[]} */ Array.from(
-      this.el.shadowRoot?.querySelectorAll('nav li > span') || [],
+    return /** @type {HTMLElement[]} */ (
+      Array.from(this.el.shadowRoot?.querySelectorAll('nav li > span') || [])
     );
   }
 }

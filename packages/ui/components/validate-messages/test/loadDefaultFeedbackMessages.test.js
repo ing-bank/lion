@@ -17,6 +17,7 @@ function getProtectedMembers(validatorEl) {
     getMessage: (...args) => validatorEl._getMessage(...args),
   };
 }
+
 describe('loadDefaultFeedbackMessages', () => {
   it('will work without providing a LocalizeManager instance', async () => {
     const el = new Required();
@@ -24,11 +25,8 @@ describe('loadDefaultFeedbackMessages', () => {
     expect(await getMessage()).to.equals(
       'Please configure an error message for "Required" by overriding "static async getMessage()"',
     );
+
     loadDefaultFeedbackMessages();
-    expect(
-      await getMessage({
-        fieldName: 'password',
-      }),
-    ).to.equal('Please enter a(n) password.');
+    expect(await getMessage({ fieldName: 'password' })).to.equal('Please enter a(n) password.');
   });
 });

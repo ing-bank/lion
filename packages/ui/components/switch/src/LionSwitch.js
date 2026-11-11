@@ -21,6 +21,7 @@ export class LionSwitch extends ScopedElementsMixin(ChoiceInputMixin(LionField))
       `,
     ];
   }
+
   static get scopedElements() {
     return {
       // @ts-ignore [ts7-2855] TS7 rejects field access via super (the parent declares this as a field). Dot form kept deliberately: bracket access is exempt from property mangling (terser keep_quoted), which could split this property into two names. Upstream fix: declare an accessor in the parent type
@@ -37,10 +38,11 @@ export class LionSwitch extends ScopedElementsMixin(ChoiceInputMixin(LionField))
    */
   // @ts-ignore [editor]: prevents vscode from complaining
   get _inputNode() {
-    return /** @type {LionSwitchButton} */ Array.from(this.children).find(
-      (el) => el.slot === 'input',
+    return /** @type {LionSwitchButton} */ (
+      Array.from(this.children).find(el => el.slot === 'input')
     );
   }
+
   get slots() {
     return {
       ...super.slots,
@@ -72,12 +74,14 @@ export class LionSwitch extends ScopedElementsMixin(ChoiceInputMixin(LionField))
   _groupTwoTemplate() {
     return html`${this._inputGroupTemplate()}`;
   }
+
   constructor() {
     super();
     this.checked = false;
     /** @private */
     this.__handleButtonSwitchCheckedChanged = this.__handleButtonSwitchCheckedChanged.bind(this);
   }
+
   connectedCallback() {
     super.connectedCallback();
     this.addEventListener('checked-changed', this.__handleButtonSwitchCheckedChanged);
@@ -86,6 +90,7 @@ export class LionSwitch extends ScopedElementsMixin(ChoiceInputMixin(LionField))
     }
     this._syncButtonSwitch();
   }
+
   disconnectedCallback() {
     super.disconnectedCallback();
     if (this._inputNode) {

@@ -26,6 +26,7 @@ export class ScopedStylesController {
     this.__styleTag = document.createElement('style');
     this.scopedClass = `${this.host.localName}-${Math.floor(Math.random() * 10000)}`;
   }
+
   hostConnected() {
     if (!this.#hasConnected) {
       this.host.classList.add(this.scopedClass);
@@ -33,12 +34,15 @@ export class ScopedStylesController {
       this.#hasConnected = true;
     }
   }
+
   __setupStyleTag() {
     // Make it win from other elements on the page.
     // TODO: consider adding an id here to always win, since we are simulating shadow dom
     // behavior here.
     const highSpecifictyScope = `${this.scopedClass}.${this.scopedClass}`;
-    this.__styleTag.textContent = /** @type {typeof ScopedStylesController} */ this.host.constructor
+    this.__styleTag.textContent = /** @type {typeof ScopedStylesController} */ (
+      this.host.constructor
+    )
       .scopedStyles(unsafeCSS(highSpecifictyScope))
       .toString();
     this.host.insertBefore(this.__styleTag, this.host.childNodes[0]);

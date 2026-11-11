@@ -26,10 +26,11 @@ import '@lion/ui/define/lion-switch.js';
 import '@lion/ui/define/lion-textarea.js';
 import { MinLength, Required } from '@lion/ui/form-core.js';
 import { html, LitElement } from 'lit';
+
 export class UmbrellaForm extends LitElement {
   get _lionFormNode() {
-    return /** @type {import('../../../form/src/LionForm.js').LionForm} */ this.shadowRoot?.querySelector(
-      'lion-form',
+    return /** @type {import('../../../form/src/LionForm.js').LionForm} */ (
+      this.shadowRoot?.querySelector('lion-form')
     );
   }
 
@@ -44,8 +45,9 @@ export class UmbrellaForm extends LitElement {
    * Prevents errors outside test from being thrown
    */
   async waitForAllChildrenUpdates() {
-    return Promise.all(this._lionFormNode.formElements.map((child) => child.updateComplete));
+    return Promise.all(this._lionFormNode.formElements.map(child => child.updateComplete));
   }
+
   render() {
     return html`
       <lion-form .serializedValue="${this.__serializedValue}">

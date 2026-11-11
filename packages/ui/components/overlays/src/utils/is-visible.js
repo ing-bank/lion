@@ -28,6 +28,7 @@ export function isVisible(element) {
   if (!hasStyleVisibility(element.style)) {
     return false;
   }
+
   const computedStyle = window.getComputedStyle(element);
 
   // Check computed styles

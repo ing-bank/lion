@@ -20,6 +20,7 @@ export class LionTooltip extends ArrowMixin(OverlayMixin(LitElement)) {
       },
     };
   }
+
   static get styles() {
     return [
       ...super.styles,
@@ -38,6 +39,7 @@ export class LionTooltip extends ArrowMixin(OverlayMixin(LitElement)) {
       `,
     ];
   }
+
   constructor() {
     super();
     /**
@@ -57,16 +59,14 @@ export class LionTooltip extends ArrowMixin(OverlayMixin(LitElement)) {
    * // TODO: check if this is a false positive or if we can improve
    * @configure ReactiveElement
    */
-  static enabledWarnings = super.enabledWarnings?.filter((w) => w !== 'change-in-update') || [];
+  static enabledWarnings = super.enabledWarnings?.filter(w => w !== 'change-in-update') || [];
 
   /** @protected */
   // eslint-disable-next-line class-methods-use-this
   _defineOverlayConfig() {
     const superCfg = super._defineOverlayConfig();
-    const tooltipCfg = withTooltipConfig({
-      invokerRelation: this.invokerRelation,
-    });
-    return /** @type {OverlayConfig} */ {
+    const tooltipCfg = withTooltipConfig({ invokerRelation: this.invokerRelation });
+    return /** @type {OverlayConfig} */ ({
       ...superCfg,
       ...tooltipCfg,
       popperConfig: {
@@ -77,6 +77,6 @@ export class LionTooltip extends ArrowMixin(OverlayMixin(LitElement)) {
           ...(tooltipCfg.popperConfig?.modifiers || []),
         ],
       },
-    };
+    });
   }
 }

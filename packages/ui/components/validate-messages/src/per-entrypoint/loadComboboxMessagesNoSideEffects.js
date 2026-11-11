@@ -16,10 +16,7 @@ export function loadComboboxMessagesNoSideEffects({ localize }) {
   if (isLoaded === true) return;
 
   /** @param {FeedbackMessageData} data */
-  MatchesOption.getMessage = async (data) =>
-    getLocalizedMessage({
-      data,
-      localize,
-    });
+  MatchesOption.getMessage = async data => getLocalizedMessage({ data, localize });
+
   isLoaded = true;
 }

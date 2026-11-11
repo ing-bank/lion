@@ -11,7 +11,8 @@ async function combineLocalizeImports(importPromises) {
   }
   return combinedResult;
 }
-export const localizeNamespaceLoader = /** @param {string} locale */ (locale) => {
+
+export const localizeNamespaceLoader = /** @param {string} locale */ locale => {
   switch (locale) {
     case 'bg-BG':
       return combineLocalizeImports([

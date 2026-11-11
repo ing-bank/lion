@@ -1,14 +1,14 @@
 import { html, LitElement } from 'lit';
+
 class TestRouter extends LitElement {
   static properties = {
     routingMap: {
       type: Object,
       attribute: false,
     },
-    path: {
-      type: String,
-    },
+    path: { type: String },
   };
+
   constructor() {
     super();
 
@@ -17,12 +17,13 @@ class TestRouter extends LitElement {
     /** @type {string} */
     this.path = '';
   }
+
   render() {
     return html`
       <div>
         <div id="selector">
           ${Object.keys(this.routingMap).map(
-            (path) =>
+            path =>
               html`<button
                 id="path-${path}"
                 @click="${() => {
@@ -38,4 +39,5 @@ class TestRouter extends LitElement {
     `;
   }
 }
+
 customElements.define('test-router', TestRouter);

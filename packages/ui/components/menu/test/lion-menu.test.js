@@ -10,9 +10,5 @@ import '@lion/ui/define/lion-menu.js';
 // suites.
 runInteractiveListMixinSuite();
 runMultiLevelListMixinSuite();
-runMoreButtonMenuMixinSuite({
-  tagString: 'lion-menu',
-});
-runLionMenuSuite({
-  tagString: 'lion-menu',
-});
+runMoreButtonMenuMixinSuite({ tagString: 'lion-menu' });
+runLionMenuSuite({ tagString: 'lion-menu' });

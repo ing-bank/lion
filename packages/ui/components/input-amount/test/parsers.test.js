@@ -2,14 +2,18 @@ import { expect } from '@open-wc/testing';
 import { getLocalizeManager } from '@lion/ui/localize-no-side-effects.js';
 import { localizeTearDown } from '@lion/ui/localize-test-helpers.js';
 import { parseAmount } from '@lion/ui/input-amount.js';
+
 describe('parseAmount()', async () => {
   const localizeManager = getLocalizeManager();
+
   beforeEach(() => {
     localizeManager.locale = 'en-GB';
   });
+
   afterEach(() => {
     localizeTearDown();
   });
+
   it('with currency set to correct amount of decimals', async () => {
     expect(
       parseAmount('1.015', {
@@ -32,6 +36,7 @@ describe('parseAmount()', async () => {
       }),
     ).to.equal(100.124);
   });
+
   it('with no currency keeps all decimals', async () => {
     expect(parseAmount('1.015')).to.equal(1.015);
   });
@@ -43,71 +48,48 @@ describe('parseAmount()', async () => {
     // eslint-disable-next-line no-loss-of-precision
     expect(parseAmount('12,345,678,987,654,321.42')).to.equal(12345678987654321.42);
   });
+
   it('returns undefined if an invalid value is entered', async () => {
     expect(parseAmount('foo')).to.equal(undefined);
     expect(parseAmount('foo1')).to.equal(undefined);
     expect(parseAmount('EUR 1,50')).to.equal(undefined);
     expect(parseAmount('--1')).to.equal(undefined);
   });
+
   it('ignores letters when "pasted" mode used', async () => {
-    expect(
-      parseAmount('foo1', {
-        mode: 'pasted',
-      }),
-    ).to.equal(1);
-    expect(
-      parseAmount('EUR 1,50', {
-        mode: 'pasted',
-      }),
-    ).to.equal(1.5);
+    expect(parseAmount('foo1', { mode: 'pasted' })).to.equal(1);
+    expect(parseAmount('EUR 1,50', { mode: 'pasted' })).to.equal(1.5);
   });
+
   it('trim spaces when "pasted" mode used', async () => {
     // Use case: there is a cell in Excel which is formatted as Accounting, Currency: Zl, Decimal 2
     // and the whole cell is copied
-    expect(
-      parseAmount(' 1,00 zł ', {
-        mode: 'pasted',
-      }),
-    ).to.equal(1);
+    expect(parseAmount(' 1,00 zł ', { mode: 'pasted' })).to.equal(1);
   });
+
   it('parses based on locale when "user-edited" mode used combined with viewValueStates "formatted"', async () => {
+    expect(parseAmount('123,456.78', { mode: 'auto' })).to.equal(123456.78);
     expect(
-      parseAmount('123,456.78', {
-        mode: 'auto',
-      }),
+      parseAmount('123,456.78', { mode: 'user-edited', viewValueStates: ['formatted'] }),
     ).to.equal(123456.78);
+    expect(parseAmount('123.456,78', { mode: 'auto' })).to.equal(123456.78);
     expect(
-      parseAmount('123,456.78', {
-        mode: 'user-edited',
-        viewValueStates: ['formatted'],
-      }),
-    ).to.equal(123456.78);
-    expect(
-      parseAmount('123.456,78', {
-        mode: 'auto',
-      }),
-    ).to.equal(123456.78);
-    expect(
-      parseAmount('123.456,78', {
-        mode: 'user-edited',
-        viewValueStates: ['formatted'],
-      }),
+      parseAmount('123.456,78', { mode: 'user-edited', viewValueStates: ['formatted'] }),
     ).to.equal(123456.78);
   });
+
   it('parses negative numbers', async () => {
     expect(parseAmount('−15.00')).to.equal(-15);
     expect(parseAmount('-333.33')).to.equal(-333.33);
   });
+
   it('does not return NaN for big numbers that turn into exponent notation when rounding', async () => {
-    expect(
-      parseAmount('11111111111111111111', {
-        currency: 'EUR',
-      }),
-    ).to.equal(Number(11111111111111111111n));
-    expect(
-      parseAmount('111111111111111111111', {
-        currency: 'EUR',
-      }),
-    ).to.equal(Number(111111111111111111111n));
+    expect(parseAmount('11111111111111111111', { currency: 'EUR' })).to.equal(
+      Number(11111111111111111111n),
+    );
+
+    expect(parseAmount('111111111111111111111', { currency: 'EUR' })).to.equal(
+      Number(111111111111111111111n),
+    );
   });
 });

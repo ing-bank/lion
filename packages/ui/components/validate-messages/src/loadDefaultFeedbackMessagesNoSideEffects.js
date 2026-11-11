@@ -18,14 +18,10 @@ export function loadDefaultFeedbackMessagesNoSideEffects({ localize }) {
   if (isLoaded === true) {
     return;
   }
-  loadComboboxMessagesNoSideEffects({
-    localize,
-  });
-  loadFormCoreMessagesNoSideEffects({
-    localize,
-  });
-  loadInputTelMessagesNoSideEffects({
-    localize,
-  });
+
+  loadComboboxMessagesNoSideEffects({ localize });
+  loadFormCoreMessagesNoSideEffects({ localize });
+  loadInputTelMessagesNoSideEffects({ localize });
+
   isLoaded = true;
 }

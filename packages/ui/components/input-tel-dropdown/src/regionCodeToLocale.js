@@ -4,9 +4,7 @@
  * @param {string} regionCode
  */
 export function regionCodeToLocale(regionCode) {
-  const locale = new Intl.Locale('und', {
-    region: regionCode,
-  }); // Set language as undetermined.
+  const locale = new Intl.Locale('und', { region: regionCode }); // Set language as undetermined.
   const maximizedLocale = locale.maximize(); // Determine the most likely full locale for a region with an undetermined language.
   return maximizedLocale.baseName;
 }

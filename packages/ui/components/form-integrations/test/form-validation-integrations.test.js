@@ -5,12 +5,14 @@ import { getLocalizeManager } from '@lion/ui/localize-no-side-effects.js';
 import { loadDefaultFeedbackMessages } from '@lion/ui/validate-messages.js';
 import { defineCE, expect, fixture, html, unsafeStatic } from '@open-wc/testing';
 import sinon from 'sinon';
+
 describe('Form Validation Integrations', () => {
   const localizeManager = getLocalizeManager();
   const lightDom = '';
   before(() => {
     loadDefaultFeedbackMessages();
   });
+
   describe('DefaultSuccess', () => {
     it('does not show success feedback if the user is not recovering from a shown error/warning feedback', async () => {
       class WarnValidator extends Validator {
@@ -33,6 +35,7 @@ describe('Form Validation Integrations', () => {
           return hasError;
         }
       }
+
       class ValidateElementCustomTypes extends LionInput {
         static get validationTypes() {
           return ['error', 'warning', 'success'];
@@ -40,35 +43,36 @@ describe('Form Validation Integrations', () => {
       }
       const elTagString = defineCE(ValidateElementCustomTypes);
       const elTag = unsafeStatic(elTagString);
-      const el =
-        /** @type {ValidateElementCustomTypes} */
+      const el = /** @type {ValidateElementCustomTypes} */ (
         await fixture(html`
         <${elTag}
           .validators=${[
-            new Required(null, {
-              getMessage: async () => 'error',
-            }),
-            new WarnValidator(null, {
-              getMessage: () => 'warning',
-            }),
+            new Required(null, { getMessage: async () => 'error' }),
+            new WarnValidator(null, { getMessage: () => 'warning' }),
             new DefaultSuccess(),
           ]}
         >${lightDom}</${elTag}>
-      `);
+      `)
+      );
       const { _feedbackNode } = getFormControlMembers(el);
+
       expect(_feedbackNode.feedbackData?.length).to.equal(0);
+
       el.modelValue = 'w';
       el.touched = true;
       await el.updateComplete;
       await el.feedbackComplete;
       expect(el.showsFeedbackFor).to.eql([]);
+
       el.modelValue = 'warn';
       await el.updateComplete;
       await el.feedbackComplete;
       expect(_feedbackNode.feedbackData?.[0].message).to.equal('warning');
+
       el.modelValue = 'war';
       await el.updateComplete;
       await el.feedbackComplete;
+
       expect([
         'Okay',
         'Correct',
@@ -79,15 +83,18 @@ describe('Form Validation Integrations', () => {
         'Ok, correct.',
       ]).to.include(
         /** @type {{  message: string ;type: string; validator?: Validator | undefined;}[]} */
-        _feedbackNode.feedbackData[0].message,
+        (_feedbackNode.feedbackData)[0].message,
       );
+
       el.modelValue = '';
       await el.updateComplete;
       await el.feedbackComplete;
       expect(_feedbackNode.feedbackData?.[0].message).to.equal('error');
+
       el.modelValue = 'war';
       await el.updateComplete;
       await el.feedbackComplete;
+
       expect([
         'Okay',
         'Correct',
@@ -98,7 +105,7 @@ describe('Form Validation Integrations', () => {
         'Ok, correct.',
       ]).to.include(
         /** @type {{  message: string ;type: string; validator?: Validator | undefined;}[]} */
-        _feedbackNode.feedbackData[0].message,
+        (_feedbackNode.feedbackData)[0].message,
       );
 
       // Check that change in focused or other interaction states does not refresh the success message
@@ -111,27 +118,26 @@ describe('Form Validation Integrations', () => {
       await el.feedbackComplete;
       expect(spy.called).to.be.false;
     });
+
     it('correctly renders localized fieldName (label), even on locale changes', async () => {
       class DefaultLabelInput extends LionInput {
         constructor() {
           super();
           this.setDefaultLabel();
         }
+
         async updateLabel() {
           this.label = localizeManager.msg('test-default-label:label');
         }
+
         async setDefaultLabel() {
           localizeManager.loadNamespace({
-            'test-default-label': /** @param {string} locale */ async (locale) => {
+            'test-default-label': /** @param {string} locale */ async locale => {
               switch (locale) {
                 case 'nl-NL':
-                  return {
-                    label: 'Tekst',
-                  };
+                  return { label: 'Tekst' };
                 default:
-                  return {
-                    label: 'Text',
-                  };
+                  return { label: 'Text' };
               }
             },
           });
@@ -148,25 +154,27 @@ describe('Form Validation Integrations', () => {
       }
       const elTagString = defineCE(DefaultLabelInput);
       const elTag = unsafeStatic(elTagString);
-      const el =
-        /** @type {LionInput} */
+      const el = /** @type {LionInput} */ (
         await fixture(html`
         <${elTag}
           .validators=${[new Required()]}
         >${lightDom}</${elTag}>
-      `);
+      `)
+      );
       el.touched = true;
       el.dirty = true;
       await el.updateComplete;
       await el.feedbackComplete;
       const { _feedbackNode } = getFormControlMembers(el);
       expect(_feedbackNode.feedbackData?.[0].message).to.equal('Please enter a(n) Text.');
+
       localizeManager.locale = 'nl-NL';
       await localizeManager.loadingComplete;
       await el.updateComplete;
       await el.feedbackComplete;
       expect(el.label).to.equal('Tekst');
       expect(_feedbackNode.feedbackData?.[0].message).to.equal('Vul een Tekst in.');
+
       localizeManager.locale = 'en-GB';
       await localizeManager.loadingComplete;
       await el.updateComplete;

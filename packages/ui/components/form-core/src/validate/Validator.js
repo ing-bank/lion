@@ -80,7 +80,7 @@ export class Validator extends EventTarget {
    */
   // eslint-disable-next-line no-unused-vars, class-methods-use-this
   execute(modelValue, param, config) {
-    const ctor = /** @type {typeof Validator} */ this.constructor;
+    const ctor = /** @type {typeof Validator} */ (this.constructor);
     if (!ctor.validatorName) {
       throw new Error(
         'A validator needs to have a name! Please set it via "static get validatorName() { return \'IsCat\'; }"',
@@ -111,6 +111,7 @@ export class Validator extends EventTarget {
      */
     this.dispatchEvent(new Event('param-changed'));
   }
+
   get param() {
     return this.__param;
   }
@@ -138,6 +139,7 @@ export class Validator extends EventTarget {
      */
     this.dispatchEvent(new Event('config-changed'));
   }
+
   get config() {
     return this.__config;
   }
@@ -169,7 +171,7 @@ export class Validator extends EventTarget {
    * @protected
    */
   async _getMessage(data) {
-    const ctor = /** @type {typeof Validator} */ this.constructor;
+    const ctor = /** @type {typeof Validator} */ (this.constructor);
     const composedData = {
       name: ctor.validatorName,
       type: this.type,
@@ -182,7 +184,8 @@ export class Validator extends EventTarget {
         return this.config.getMessage(composedData);
       }
       throw new Error(
-        `You must provide a value for getMessage of type 'function', you provided a value of type: ${typeof this.config.getMessage}`,
+        `You must provide a value for getMessage of type 'function', you provided a value of type: ${typeof this
+          .config.getMessage}`,
       );
     }
     return ctor.getMessage(composedData);

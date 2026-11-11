@@ -6,6 +6,7 @@ import { css } from 'lit';
 import { getDeepActiveElement } from '@lion/ui/overlays.js';
 import { LionMenu } from '../src/LionMenu.js';
 import { resolveSuiteTag } from '../../core/test-helpers/resolveSuiteTag.js';
+
 const l2Style = css`
   [level='2'] > [slot='list'] {
     position: absolute;
@@ -18,6 +19,7 @@ const l2Style = css`
     box-sizing: border-box;
   }
 `;
+
 const config = {
   l1: {
     isBar: true,
@@ -54,26 +56,27 @@ const config = {
 export function runLionMenuInteractionsSuite({ classes = {}, tagString } = {}) {
   const tagName = resolveSuiteTag(classes.host, tagString, LionMenu);
   const tag = unsafeStatic(tagName);
+
   describe('LionMenu interactions', () => {
     /** @type {import('sinon').SinonFakeTimers | null} */
     let clock = null;
 
     /** @param {LionMenu} el */
-    const isMoreButtonMenuShown = (el) => {
+    const isMoreButtonMenuShown = el => {
       const menu = el.querySelector('[data-more-button-menu]');
       return menu ? getComputedStyle(menu).width !== '0px' : false;
     };
 
     /** @param {LionMenu} el */
-    const getMoreButton = (el) =>
-      /** @type {HTMLElement | null} */ el.querySelector('[data-more-button]');
+    const getMoreButton = el =>
+      /** @type {HTMLElement | null} */ (el.querySelector('[data-more-button]'));
 
     /** @param {LionMenu} el */
-    const isAnyL2MenuShown = (el) =>
-      Array.from(el.querySelectorAll('[level="2"]')).some((menu) => menu.hasAttribute('opened'));
+    const isAnyL2MenuShown = el =>
+      Array.from(el.querySelectorAll('[level="2"]')).some(menu => menu.hasAttribute('opened'));
 
     /** @param {LionMenu} el */
-    const focusLastVisibleItemInMainMenu = async (el) => {
+    const focusLastVisibleItemInMainMenu = async el => {
       const moreButton = el.querySelector('[data-more-button]');
       const previousElement = moreButton?.parentElement?.previousElementSibling;
       const anchor = previousElement?.querySelector('a');
@@ -82,6 +85,7 @@ export function runLionMenuInteractionsSuite({ classes = {}, tagString } = {}) {
       }
       await aTimeout(0);
     };
+
     const hitShiftTab = async () => {
       await sendKeys({
         down: 'Shift',
@@ -99,6 +103,7 @@ export function runLionMenuInteractionsSuite({ classes = {}, tagString } = {}) {
      */
     function getCoordinates(element) {
       const { x, y, height } = element.getBoundingClientRect();
+
       return {
         x: Math.floor(x + window.pageXOffset),
         y: Math.floor(y + window.pageYOffset + height / 2),
@@ -112,22 +117,19 @@ export function runLionMenuInteractionsSuite({ classes = {}, tagString } = {}) {
      * events and otherwise we need to emit those events programmatically
      * @param {LionMenu} el
      */
-    const clickOnMoreButton = async (el) => {
+    const clickOnMoreButton = async el => {
       const moreButton = getMoreButton(el);
       if (!moreButton) {
         return;
       }
       const { x, y } = getCoordinates(moreButton);
-      await sendMouse({
-        type: 'click',
-        position: [x, y],
-      });
+      await sendMouse({ type: 'click', position: [x, y] });
       clock?.tick(100);
       await aTimeout(0);
     };
 
     /** @param {LionMenu} el */
-    const waitResizeEventDebounce = async (el) => {
+    const waitResizeEventDebounce = async el => {
       await el.updateComplete;
       // wait for resize event debouncer
       clock?.tick(55);
@@ -143,7 +145,7 @@ export function runLionMenuInteractionsSuite({ classes = {}, tagString } = {}) {
     };
 
     /** @param {LionMenu} el */
-    const getDirectListItemsUnderMoreButtonMenu = (el) => [
+    const getDirectListItemsUnderMoreButtonMenu = el => [
       ...Array.from(el.querySelectorAll('[data-more-button-menu] > [role="listitem"]')),
     ];
 
@@ -200,10 +202,12 @@ export function runLionMenuInteractionsSuite({ classes = {}, tagString } = {}) {
           ${l2Style}
         </style>    
       `);
-      const hybridEl = /** @type {LionMenu} */ el;
+
+      const hybridEl = /** @type {LionMenu} */ (el);
       await waitResizeEventDebounce(hybridEl);
       return hybridEl;
     };
+
     beforeEach(() => {
       clock = useFakeTimers({
         shouldAdvanceTime: true,
@@ -213,6 +217,7 @@ export function runLionMenuInteractionsSuite({ classes = {}, tagString } = {}) {
       clock?.restore();
       await resetMouse();
     });
+
     it(`[
           {
             action: 'Click on More button',
@@ -230,8 +235,7 @@ export function runLionMenuInteractionsSuite({ classes = {}, tagString } = {}) {
       const el = await getFixture();
       expect(isAnyL2MenuShown(el)).to.be.false;
       await clickOnMoreButton(el);
-      /** @type {HTMLButtonElement | null} */
-      el.querySelector('#item4 > button')?.click();
+      /** @type {HTMLButtonElement | null} */ (el.querySelector('#item4 > button'))?.click();
       await waitAfterMoreButtonMenuHides();
       expect(isMoreButtonMenuShown(el)).to.be.false;
       expect(isAnyL2MenuShown(el)).to.be.true;
@@ -239,6 +243,7 @@ export function runLionMenuInteractionsSuite({ classes = {}, tagString } = {}) {
       expect(isAnyL2MenuShown(el)).to.be.false;
       expect(isMoreButtonMenuShown(el)).to.be.true;
     });
+
     it(`[
       {
         action: 'Focus last visible L1 item in the main menu',
@@ -258,12 +263,14 @@ export function runLionMenuInteractionsSuite({ classes = {}, tagString } = {}) {
       await sendKeys({
         press: 'Tab',
       });
+
       expect(isMoreButtonMenuShown(el)).to.be.true;
 
       // make sure the first L1 inside More button menu is focused
       const firstItemInMoreMenu = getDirectListItemsUnderMoreButtonMenu(el)[0];
       expect(firstItemInMoreMenu.contains(getDeepActiveElement())).to.be.true;
     });
+
     it(`[
       {
         action: 'Click on the L1 item that has children in the *main* menu',
@@ -283,15 +290,17 @@ export function runLionMenuInteractionsSuite({ classes = {}, tagString } = {}) {
       expect(isAnyL2MenuShown(el)).to.be.false;
 
       // click on the first L1 item that has L2 children
-      /** @type {HTMLButtonElement | null} */
-      el.querySelector('#item1 > button')?.click();
+      /** @type {HTMLButtonElement | null} */ (el.querySelector('#item1 > button'))?.click();
       await aTimeout(0);
+
       expect(isMoreButtonMenuShown(el)).to.be.false;
       expect(isAnyL2MenuShown(el)).to.be.true;
+
       await clickOnMoreButton(el);
       expect(isMoreButtonMenuShown(el)).to.be.true;
       expect(isAnyL2MenuShown(el)).to.be.false;
     });
+
     it(`[
       {
         action: 'Click on the L1 item that has children in the *main* menu',
@@ -319,8 +328,7 @@ export function runLionMenuInteractionsSuite({ classes = {}, tagString } = {}) {
       const el = await getFixture();
       expect(isAnyL2MenuShown(el)).to.be.false;
       // click on the first L1 item that has L2 children
-      /** @type {HTMLButtonElement | null} */
-      el.querySelector('#item1 > button')?.click();
+      /** @type {HTMLButtonElement | null} */ (el.querySelector('#item1 > button'))?.click();
 
       // focus #item1.1
       await sendKeys({
@@ -337,9 +345,11 @@ export function runLionMenuInteractionsSuite({ classes = {}, tagString } = {}) {
       await sendKeys({
         press: 'Tab',
       });
+
       expect(isMoreButtonMenuShown(el)).to.be.true;
       expect(isAnyL2MenuShown(el)).to.be.false;
     });
+
     it(`[
       {
         action: 'Focus last visible L1 item in the main menu',
@@ -365,12 +375,14 @@ export function runLionMenuInteractionsSuite({ classes = {}, tagString } = {}) {
       await sendKeys({
         press: 'Tab',
       });
+
       expect(isMoreButtonMenuShown(el)).to.be.true;
       expect(isAnyL2MenuShown(el)).to.be.false;
       await clickOnMoreButton(el);
       expect(isMoreButtonMenuShown(el)).to.be.false;
       expect(isAnyL2MenuShown(el)).to.be.false;
     });
+
     it(`[
       {
         action: 'Focus last visible L1 item in the main menu',
@@ -397,15 +409,18 @@ export function runLionMenuInteractionsSuite({ classes = {}, tagString } = {}) {
       await sendKeys({
         press: 'Tab',
       });
+
       expect(isMoreButtonMenuShown(el)).to.be.true;
       expect(isAnyL2MenuShown(el)).to.be.false;
 
       // hit Shift + Tab
       await hitShiftTab();
       await waitAfterMoreButtonMenuHides();
+
       expect(isMoreButtonMenuShown(el)).to.be.false;
       expect(isAnyL2MenuShown(el)).to.be.false;
     });
+
     it(`[
       {
         action: 'Focus last visible L1 item in the main menu',
@@ -437,6 +452,7 @@ export function runLionMenuInteractionsSuite({ classes = {}, tagString } = {}) {
       await sendKeys({
         press: 'Tab',
       });
+
       expect(isMoreButtonMenuShown(el)).to.be.true;
       expect(isAnyL2MenuShown(el)).to.be.false;
 
@@ -445,9 +461,11 @@ export function runLionMenuInteractionsSuite({ classes = {}, tagString } = {}) {
         press: 'Enter',
       });
       await waitAfterMoreButtonMenuHides();
+
       expect(isMoreButtonMenuShown(el)).to.be.false;
       expect(isAnyL2MenuShown(el)).to.be.true;
     });
+
     it(`[
       {
         action: 'Focus last visible L1 item in the main menu',
@@ -497,6 +515,7 @@ export function runLionMenuInteractionsSuite({ classes = {}, tagString } = {}) {
       await sendKeys({
         press: 'Tab',
       });
+
       expect(isMoreButtonMenuShown(el)).to.be.true;
       expect(isAnyL2MenuShown(el)).to.be.false;
 
@@ -505,6 +524,7 @@ export function runLionMenuInteractionsSuite({ classes = {}, tagString } = {}) {
         press: 'Enter',
       });
       await waitAfterMoreButtonMenuHides();
+
       expect(isMoreButtonMenuShown(el)).to.be.false;
       expect(isAnyL2MenuShown(el)).to.be.true;
 
@@ -525,9 +545,11 @@ export function runLionMenuInteractionsSuite({ classes = {}, tagString } = {}) {
       // Focus #item2. It is the last visible item in the main menu
       await hitShiftTab();
       await waitAfterMoreButtonMenuHides();
+
       expect(isMoreButtonMenuShown(el)).to.be.false;
       expect(isAnyL2MenuShown(el)).to.be.false;
     });
+
     it(`[
       {
         action: 'Click on More button',
@@ -549,8 +571,7 @@ export function runLionMenuInteractionsSuite({ classes = {}, tagString } = {}) {
       const el = await getFixture();
       await clickOnMoreButton(el);
       // Inside more button menu, click on L1 item that has L2
-      /** @type {HTMLButtonElement | null} */
-      el.querySelector('#item4 > button')?.click();
+      /** @type {HTMLButtonElement | null} */ (el.querySelector('#item4 > button'))?.click();
       await waitAfterMoreButtonMenuHides();
       expect(isMoreButtonMenuShown(el)).to.be.false;
       expect(isAnyL2MenuShown(el)).to.be.true;

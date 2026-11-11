@@ -10,26 +10,31 @@ function checkChrome(flavor = 'google-chrome') {
   }
 
   // eslint-disable-next-line prefer-destructuring
-  const navigator =
-    /** @type {Navigator & {userAgentData: {brands:{brand:string}[]}}} */
-    globalThis.navigator;
+  const navigator = /** @type {Navigator & {userAgentData: {brands:{brand:string}[]}}} */ (
+    globalThis.navigator
+  );
+
   const isChromium =
     !!navigator.userAgentData &&
-    navigator.userAgentData.brands.some((data) => data.brand === 'Chromium');
+    navigator.userAgentData.brands.some(data => data.brand === 'Chromium');
+
   if (flavor === 'chromium') {
     return isChromium;
   }
+
   const winNav = globalThis.navigator;
   const vendorName = winNav?.vendor;
   const isOpera =
-    typeof (/** @type {typeof window & { opr?: boolean}} */ globalThis.opr) !== 'undefined';
+    typeof (/** @type {typeof window & { opr?: boolean}} */ (globalThis).opr) !== 'undefined';
   // @ts-ignore
   const isIEedge = globalThis.userAgent?.indexOf('Edge') > -1;
   // @ts-ignore
   const isIOSChrome = globalThis.userAgent?.match('CriOS');
+
   if (flavor === 'ios') {
     return isIOSChrome;
   }
+
   if (flavor === 'google-chrome') {
     return (
       isChromium !== null &&
@@ -39,8 +44,10 @@ function checkChrome(flavor = 'google-chrome') {
       isIEedge === false
     );
   }
+
   return undefined;
 }
+
 export const browserDetection = {
   isIE11: /Trident/.test(globalThis.navigator?.userAgent),
   isChrome: checkChrome(),

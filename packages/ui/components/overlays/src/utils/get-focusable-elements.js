@@ -50,11 +50,10 @@ function getTabindex(element) {
  */
 function getChildNodes(element) {
   if (element.localName === 'slot') {
-    const slot = /** @type {HTMLSlotElement} */ element;
-    return slot.assignedNodes({
-      flatten: true,
-    });
+    const slot = /** @type {HTMLSlotElement} */ (element);
+    return slot.assignedNodes({ flatten: true });
   }
+
   const { children } = element.shadowRoot || element;
   // On IE11, SVGElement.prototype.children is undefined
   return children || [];
@@ -74,7 +73,8 @@ function isVisibleElement(element) {
   if (element.localName === 'slot') {
     return true;
   }
-  return isVisible(/** @type {HTMLElement} */ element);
+
+  return isVisible(/** @type {HTMLElement} */ (element));
 }
 
 /**
@@ -91,13 +91,15 @@ function collectFocusableElements(element, nodes) {
   if (!isVisibleElement(element)) {
     return false;
   }
-  const el = /** @type {HTMLElement} */ element;
+
+  const el = /** @type {HTMLElement} */ (element);
   const tabIndex = getTabindex(el);
   let needsSort = tabIndex > 0;
   if (tabIndex >= 0) {
     nodes.push(el);
   }
-  const childNodes = /** @type {Element[]} */ getChildNodes(el);
+
+  const childNodes = /** @type {Element[]} */ (getChildNodes(el));
   for (let i = 0; i < childNodes.length; i += 1) {
     needsSort = collectFocusableElements(childNodes[i], nodes) || needsSort;
   }
@@ -111,6 +113,7 @@ function collectFocusableElements(element, nodes) {
 export function getFocusableElements(element) {
   /** @type {HTMLElement[]} */
   const nodes = [];
+
   const needsSort = collectFocusableElements(element, nodes);
   return needsSort ? sortByTabIndex(nodes) : nodes;
 }

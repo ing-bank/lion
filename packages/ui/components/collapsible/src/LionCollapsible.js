@@ -23,6 +23,7 @@ export class LionCollapsible extends LitElement {
       `,
     ];
   }
+
   static get properties() {
     return {
       opened: {
@@ -31,28 +32,35 @@ export class LionCollapsible extends LitElement {
       },
     };
   }
+
   render() {
     return html`
       <slot name="invoker"></slot>
       <slot name="content"></slot>
     `;
   }
+
   constructor() {
     super();
     this.opened = false;
     this.toggle = this.toggle.bind(this);
   }
+
   connectedCallback() {
     super.connectedCallback();
+
     const uid = uuid();
+
     if (this._invokerNode) {
       this._invokerNode.addEventListener('click', this.toggle);
       this._invokerNode.setAttribute('aria-expanded', `${this.opened}`);
       this._invokerNode.setAttribute('aria-controls', `collapsible-content-${uid}`);
     }
+
     if (this._contentNode) {
       this._contentNode.setAttribute('id', `collapsible-content-${uid}`);
     }
+
     this.__setDefaultState();
   }
 
@@ -66,6 +74,7 @@ export class LionCollapsible extends LitElement {
       this.__openedChanged();
     }
   }
+
   disconnectedCallback() {
     super.disconnectedCallback();
     if (this._invokerNode) {
@@ -122,8 +131,8 @@ export class LionCollapsible extends LitElement {
    * @protected
    */
   get _invokerNode() {
-    return /** @type {HTMLElement[]} */ Array.from(this.children).find(
-      (child) => child.slot === 'invoker',
+    return /** @type {HTMLElement[]} */ (Array.from(this.children)).find(
+      child => child.slot === 'invoker',
     );
   }
 
@@ -131,8 +140,8 @@ export class LionCollapsible extends LitElement {
    * @protected
    */
   get _contentNode() {
-    return /** @type {HTMLElement[]} */ Array.from(this.children).find(
-      (child) => child.slot === 'content',
+    return /** @type {HTMLElement[]} */ (Array.from(this.children)).find(
+      child => child.slot === 'content',
     );
   }
 
@@ -164,13 +173,9 @@ export class LionCollapsible extends LitElement {
     if (this._contentNode) {
       if (this.opened) {
         this._contentNode.style.setProperty('display', '');
-        await this._showAnimation({
-          contentNode: this._contentNode,
-        });
+        await this._showAnimation({ contentNode: this._contentNode });
       } else {
-        await this._hideAnimation({
-          contentNode: this._contentNode,
-        });
+        await this._hideAnimation({ contentNode: this._contentNode });
         this._contentNode.style.setProperty('display', 'none');
       }
     }

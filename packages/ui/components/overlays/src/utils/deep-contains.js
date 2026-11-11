@@ -35,11 +35,12 @@ export function deepContains(el, targetEl, cache = {}) {
     if (slotName) {
       const cachedItemsWithSameName = cache[slotName];
       if (cachedItemsWithSameName) {
-        result = cachedItemsWithSameName.filter((item) => item?.element === element)[0] || null;
+        result = cachedItemsWithSameName.filter(item => item?.element === element)[0] || null;
       }
     }
     return result;
   }
+
   const cachedItem = getCachedItem(el);
   if (cachedItem) {
     return cachedItem.deepContains;
@@ -58,12 +59,10 @@ export function deepContains(el, targetEl, cache = {}) {
     if (slotName) {
       // eslint-disable-next-line no-param-reassign
       cache[slotName] = cache[slotName] || [];
-      cache[slotName].push({
-        element: el,
-        deepContains: contains,
-      });
+      cache[slotName].push({ element: el, deepContains: contains });
     }
   }
+
   let containsTarget = el.contains(targetEl);
   if (containsTarget) {
     cacheItem(true);
@@ -101,7 +100,7 @@ export function deepContains(el, targetEl, cache = {}) {
    * @returns {Element[]}
    * */
   function getSlotProjections(htmlElement) {
-    return isSlot(htmlElement) ? /** @type {Element[]}  */ htmlElement.assignedElements() : [];
+    return isSlot(htmlElement) ? /** @type {Element[]}  */ (htmlElement.assignedElements()) : [];
   }
 
   /**
@@ -136,7 +135,7 @@ export function deepContains(el, targetEl, cache = {}) {
   /** @param {HTMLElement|ShadowRoot} elem */
   function checkChildren(elem) {
     for (let i = 0; i < elem.children.length; i += 1) {
-      const child = /** @type {HTMLElement}  */ elem.children[i];
+      const child = /** @type {HTMLElement}  */ (elem.children[i]);
       const cachedChild = getCachedItem(child);
       if (cachedChild) {
         containsTarget = cachedChild.deepContains || containsTarget;

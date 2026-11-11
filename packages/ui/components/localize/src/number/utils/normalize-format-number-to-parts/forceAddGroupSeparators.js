@@ -11,6 +11,7 @@ export function forceAddGroupSeparators(formattedParts, groupSeparator) {
   let concatArray = [];
   let firstPart;
   let integerPart;
+
   for (let i = 0; i < formattedParts.length; i += 1) {
     if (formattedParts[i].type === 'integer' && formattedParts[i].value.length > 3) {
       firstPart = formattedParts.splice(0, i);

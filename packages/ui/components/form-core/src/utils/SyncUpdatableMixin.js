@@ -24,117 +24,128 @@ import { dedupeMixin } from '@open-wc/dedupe-mixin';
  * @param {import('@open-wc/dedupe-mixin').Constructor<import('lit').LitElement>} superclass
  */
 // prettier-ignore
-const SyncUpdatableMixinImplementation = /** @type {SyncUpdatableMixin} */superclass => class extends superclass {
-  /** @param {...any} args */
-  constructor(...args) {
-    super(...args);
+const SyncUpdatableMixinImplementation = /** @type {SyncUpdatableMixin} */ (superclass =>
+  class extends superclass {
+    /** @param {...any} args */
+    constructor(...args) {
+      super(...args);
+
+      /**
+       * Namespace for this mixin that guarantees naming clashes will not occur...
+       * @type {SyncUpdatableNamespace}
+       */
+      this.__SyncUpdatableNamespace = {};
+    }
 
     /**
-     * Namespace for this mixin that guarantees naming clashes will not occur...
-     * @type {SyncUpdatableNamespace}
+     * Empty pending queue in order to guarantee order independence
+     *
+     * @param {import('lit').PropertyValues } changedProperties
      */
-    this.__SyncUpdatableNamespace = {};
-  }
-
-  /**
-   * Empty pending queue in order to guarantee order independence
-   *
-   * @param {import('lit').PropertyValues } changedProperties
-   */
-  firstUpdated(changedProperties) {
-    super.firstUpdated(changedProperties);
-    this.__syncUpdatableInitialize();
-  }
-  connectedCallback() {
-    super.connectedCallback();
-    this.__SyncUpdatableNamespace.connected = true;
-  }
-  disconnectedCallback() {
-    super.disconnectedCallback();
-    this.__SyncUpdatableNamespace.connected = false;
-  }
-
-  /**
-   * // TODO: check if this is a false positive or if we can improve
-   * @configure ReactiveElement
-   */
-  // @ts-expect-error
-  static enabledWarnings = super.enabledWarnings?.filter(w => w !== 'change-in-update') || [];
-
-  /**
-   * Makes the propertyAccessor.`hasChanged` compatible in synchronous updates
-   * @param {string} name
-   * @param {*} newValue
-   * @param {*} oldValue
-   * @returns {boolean}
-   * @private
-   */
-  static __syncUpdatableHasChanged(name, newValue, oldValue) {
-    // @ts-expect-error [external]: accessing private lit property
-    const properties = this.elementProperties;
-    if (properties.get(name) && properties.get(name).hasChanged) {
-      return properties.get(name).hasChanged(newValue, oldValue);
+    firstUpdated(changedProperties) {
+      super.firstUpdated(changedProperties);
+      this.__syncUpdatableInitialize();
     }
-    return newValue !== oldValue;
-  }
 
-  /** @private */
-  __syncUpdatableInitialize() {
-    const ns = this.__SyncUpdatableNamespace;
-    const ctor = /** @type {typeof SyncUpdatableMixin & typeof import('../../types/utils/SyncUpdatableMixinTypes.js').SyncUpdatableHost} */
-    this.constructor;
-    ns.initialized = true;
-    // Empty queue...
-    if (ns.queue) {
-      Array.from(ns.queue).forEach(name => {
-        // @ts-ignore [allow-private] in test
-        if (ctor.__syncUpdatableHasChanged(name, this[name], undefined)) {
-          this.updateSync(name, undefined);
-        }
-      });
+    connectedCallback() {
+      super.connectedCallback();
+      this.__SyncUpdatableNamespace.connected = true;
     }
-  }
 
-  /**
-   * @param {string} [name]
-   * @param {unknown} [oldValue]
-   * @param {import('lit').PropertyDeclaration} [options]
-   * @returns {void}
-   */
-  requestUpdate(name, oldValue, options) {
-    super.requestUpdate(name, oldValue, options);
-    if (name === undefined) {
-      return;
+    disconnectedCallback() {
+      super.disconnectedCallback();
+      this.__SyncUpdatableNamespace.connected = false;
     }
-    this.__SyncUpdatableNamespace = this.__SyncUpdatableNamespace || {};
-    const ns = this.__SyncUpdatableNamespace;
-    const ctor = /** @type {typeof SyncUpdatableMixin & typeof import('../../types/utils/SyncUpdatableMixinTypes.js').SyncUpdatableHost} */
-    this.constructor;
-    // Before connectedCallback: queue
-    if (!ns.initialized) {
-      ns.queue = ns.queue || new Set();
-      // Makes sure that we only initialize one time, with most up to date value
-      ns.queue.add(name);
-    } // After connectedCallback: guarded proxy to updateSync
-    // @ts-ignore [allow-private] in test
-    else if (ctor.__syncUpdatableHasChanged(name, this[name], oldValue)) {
-      this.updateSync(name, oldValue);
-    }
-  }
 
-  /**
-   * An abstraction that has the exact same api as `requestUpdate`, but taking
-   * into account:
-   * - [member order independence](https://github.com/webcomponents/gold-standard/wiki/Member-Order-Independence)
-   * - property effects start when all (light) dom has initialized (on firstUpdated)
-   * - property effects don't interrupt the first meaningful paint
-   * - compatible with propertyAccessor.`hasChanged`: no manual checks needed or accidentally
-   * run property effects / events when no change happened
-   * effects when values didn't change
-   * All code previously present in requestUpdate can be placed in this method.
-   * @param {string} name
-   * @param {*} oldValue
-   */
-  updateSync(name, oldValue) {} // eslint-disable-line class-methods-use-this, no-unused-vars
-};
+    /**
+     * // TODO: check if this is a false positive or if we can improve
+     * @configure ReactiveElement
+     */
+    // @ts-expect-error
+    static enabledWarnings = super.enabledWarnings?.filter(w => w !== 'change-in-update') || [];
+
+    /**
+     * Makes the propertyAccessor.`hasChanged` compatible in synchronous updates
+     * @param {string} name
+     * @param {*} newValue
+     * @param {*} oldValue
+     * @returns {boolean}
+     * @private
+     */
+    static __syncUpdatableHasChanged(name, newValue, oldValue) {
+      // @ts-expect-error [external]: accessing private lit property
+      const properties = this.elementProperties;
+      if (properties.get(name) && properties.get(name).hasChanged) {
+        return properties.get(name).hasChanged(newValue, oldValue);
+      }
+      return newValue !== oldValue;
+    }
+
+    /** @private */
+    __syncUpdatableInitialize() {
+      const ns = this.__SyncUpdatableNamespace;
+      const ctor =
+        /** @type {typeof SyncUpdatableMixin & typeof import('../../types/utils/SyncUpdatableMixinTypes.js').SyncUpdatableHost} */ (
+          this.constructor
+        );
+
+      ns.initialized = true;
+      // Empty queue...
+      if (ns.queue) {
+        Array.from(ns.queue).forEach(name => {
+          // @ts-ignore [allow-private] in test
+          if (ctor.__syncUpdatableHasChanged(name, this[name], undefined)) {
+            this.updateSync(name, undefined);
+          }
+        });
+      }
+    }
+
+    /**
+     * @param {string} [name]
+     * @param {unknown} [oldValue]
+     * @param {import('lit').PropertyDeclaration} [options]
+     * @returns {void}
+     */
+    requestUpdate(name, oldValue, options) {
+      super.requestUpdate(name, oldValue, options);
+      if (name === undefined) {
+        return;
+      }
+
+      this.__SyncUpdatableNamespace = this.__SyncUpdatableNamespace || {};
+      const ns = this.__SyncUpdatableNamespace;
+
+      const ctor =
+        /** @type {typeof SyncUpdatableMixin & typeof import('../../types/utils/SyncUpdatableMixinTypes.js').SyncUpdatableHost} */ (
+          this.constructor
+        );
+      // Before connectedCallback: queue
+      if (!ns.initialized) {
+        ns.queue = ns.queue || new Set();
+        // Makes sure that we only initialize one time, with most up to date value
+        ns.queue.add(name);
+      } // After connectedCallback: guarded proxy to updateSync
+      // @ts-ignore [allow-private] in test
+      else if (ctor.__syncUpdatableHasChanged(name, this[name], oldValue)) {
+        this.updateSync(name, oldValue);
+      }
+    }
+
+    /**
+     * An abstraction that has the exact same api as `requestUpdate`, but taking
+     * into account:
+     * - [member order independence](https://github.com/webcomponents/gold-standard/wiki/Member-Order-Independence)
+     * - property effects start when all (light) dom has initialized (on firstUpdated)
+     * - property effects don't interrupt the first meaningful paint
+     * - compatible with propertyAccessor.`hasChanged`: no manual checks needed or accidentally
+     * run property effects / events when no change happened
+     * effects when values didn't change
+     * All code previously present in requestUpdate can be placed in this method.
+     * @param {string} name
+     * @param {*} oldValue
+     */
+    updateSync(name, oldValue) {} // eslint-disable-line class-methods-use-this, no-unused-vars
+  });
+
 export const SyncUpdatableMixin = dedupeMixin(SyncUpdatableMixinImplementation);

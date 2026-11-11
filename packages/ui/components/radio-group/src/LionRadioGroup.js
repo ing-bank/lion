@@ -18,7 +18,7 @@ export class LionRadioGroup extends ChoiceGroupMixin(FormGroupMixin(LitElement))
    */
   resetGroup() {
     let initValue;
-    this.formElements.forEach((child) => {
+    this.formElements.forEach(child => {
       if (typeof child.resetGroup === 'function') {
         child.resetGroup();
       } else if (typeof child.reset === 'function') {
@@ -30,6 +30,7 @@ export class LionRadioGroup extends ChoiceGroupMixin(FormGroupMixin(LitElement))
       }
     });
     this.modelValue = initValue;
+
     this.resetInteractionState();
   }
 }

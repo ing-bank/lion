@@ -1,4 +1,5 @@
 import { css } from 'lit';
+
 export const calendarStyle = css`
   :host {
     display: block;

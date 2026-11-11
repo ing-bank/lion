@@ -8,9 +8,10 @@
  * @param {HTMLElement} element
  */
 export function setSiblingsInert(element) {
-  const parentChildren = /** @type {HTMLCollection} */ element.parentElement?.children;
+  const parentChildren = /** @type {HTMLCollection} */ (element.parentElement?.children);
   for (let i = 0; i < parentChildren.length; i += 1) {
     const sibling = parentChildren[i];
+
     if (sibling !== element) {
       sibling.setAttribute('inert', '');
       sibling.setAttribute('aria-hidden', 'true');
@@ -23,9 +24,10 @@ export function setSiblingsInert(element) {
  * @param {HTMLElement} element
  */
 export function unsetSiblingsInert(element) {
-  const parentChildren = /** @type {HTMLCollection} */ element.parentElement?.children;
+  const parentChildren = /** @type {HTMLCollection} */ (element.parentElement?.children);
   for (let i = 0; i < parentChildren.length; i += 1) {
     const sibling = parentChildren[i];
+
     if (sibling !== element) {
       sibling.removeAttribute('inert');
       sibling.removeAttribute('aria-hidden');

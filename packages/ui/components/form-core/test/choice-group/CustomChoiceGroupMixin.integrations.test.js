@@ -6,10 +6,13 @@ import '@lion/ui/define/lion-checkbox.js';
 import { FormGroupMixin, ChoiceInputMixin } from '@lion/ui/form-core.js';
 import { LionInput } from '@lion/ui/input.js';
 import { CustomChoiceGroupMixin } from '../../src/choice-group/CustomChoiceGroupMixin.js';
+
 class CustomChoiceGroup extends CustomChoiceGroupMixin(FormGroupMixin(LitElement)) {}
 customElements.define('custom-choice-input-group', CustomChoiceGroup);
+
 class ChoiceInput extends ChoiceInputMixin(LionInput) {}
 customElements.define('custom-choice-input', ChoiceInput);
+
 class CustomChoiceGroupAllowCustom extends CustomChoiceGroupMixin(FormGroupMixin(LitElement)) {
   constructor() {
     super();
@@ -17,6 +20,7 @@ class CustomChoiceGroupAllowCustom extends CustomChoiceGroupMixin(FormGroupMixin
   }
 }
 customElements.define('allow-custom-choice-input-group', CustomChoiceGroupAllowCustom);
+
 class MultipleCustomChoiceGroup extends CustomChoiceGroupMixin(FormGroupMixin(LitElement)) {
   constructor() {
     super();
@@ -24,6 +28,7 @@ class MultipleCustomChoiceGroup extends CustomChoiceGroupMixin(FormGroupMixin(Li
   }
 }
 customElements.define('multiple-custom-choice-input-group', MultipleCustomChoiceGroup);
+
 class MultipleCustomChoiceGroupAllowCustom extends CustomChoiceGroupMixin(
   FormGroupMixin(LitElement),
 ) {
@@ -37,30 +42,23 @@ customElements.define(
   'multiple-allow-custom-choice-input-group',
   MultipleCustomChoiceGroupAllowCustom,
 );
+
 runChoiceGroupMixinSuite({
-  classes: {
-    host: CustomChoiceGroup,
-  },
+  classes: { host: CustomChoiceGroup },
   // synthetic tag: not derivable from the class name, so the deprecated key names the element
   parentTagString: 'custom-choice-input-group',
 });
 runChoiceGroupMixinSuite({
-  classes: {
-    host: MultipleCustomChoiceGroup,
-  },
+  classes: { host: MultipleCustomChoiceGroup },
   parentTagString: 'multiple-custom-choice-input-group',
   choiceType: 'multiple',
 });
 runChoiceGroupMixinSuite({
-  classes: {
-    host: CustomChoiceGroupAllowCustom,
-  },
+  classes: { host: CustomChoiceGroupAllowCustom },
   parentTagString: 'allow-custom-choice-input-group',
 });
 runChoiceGroupMixinSuite({
-  classes: {
-    host: MultipleCustomChoiceGroupAllowCustom,
-  },
+  classes: { host: MultipleCustomChoiceGroupAllowCustom },
   parentTagString: 'multiple-allow-custom-choice-input-group',
   choiceType: 'multiple',
 });

@@ -3,6 +3,7 @@
 import { getLocalizeManager } from '@lion/ui/localize-no-side-effects.js';
 import { Unparseable, Validator } from '@lion/ui/form-core.js';
 import { isValidIBAN } from 'ibantools';
+
 let loaded = false;
 const loadTranslations = async () => {
   const localizeManager = getLocalizeManager();
@@ -11,7 +12,7 @@ const loadTranslations = async () => {
   }
   await localizeManager.loadNamespace(
     {
-      'lion-validate+iban': /** @param {string} locale */ (locale) => {
+      'lion-validate+iban': /** @param {string} locale */ locale => {
         switch (locale) {
           case 'bg-BG':
             return import('@lion/ui/input-iban-translations/bg-BG.js');
@@ -86,12 +87,11 @@ const loadTranslations = async () => {
         }
       },
     },
-    {
-      locale: localizeManager.locale,
-    },
+    { locale: localizeManager.locale },
   );
   loaded = true;
 };
+
 export class IsIBAN extends Validator {
   static get validatorName() {
     return 'IsIBAN';
@@ -119,6 +119,7 @@ export class IsIBAN extends Validator {
     return localizeManager.msg('lion-validate+iban:error.IsIBAN', data);
   }
 }
+
 export class IsCountryIBAN extends IsIBAN {
   static get validatorName() {
     return 'IsCountryIBAN';
@@ -137,7 +138,7 @@ export class IsCountryIBAN extends IsIBAN {
       }
     } else if (Array.isArray(this.param)) {
       isInvalid = !this.param.some(
-        (country) => String(modelValue.slice(0, 2)) === country.toUpperCase(),
+        country => String(modelValue.slice(0, 2)) === country.toUpperCase(),
       );
     }
     if (notIBAN) {
@@ -158,6 +159,7 @@ export class IsCountryIBAN extends IsIBAN {
    */
   static async getMessage(data) {
     const localizeManager = getLocalizeManager();
+
     await loadTranslations();
     // If modelValue is Unparseable, the IsIBAN message is the more appropriate feedback
     return data?.modelValue instanceof Unparseable
@@ -165,6 +167,7 @@ export class IsCountryIBAN extends IsIBAN {
       : localizeManager.msg('lion-validate+iban:error.IsCountryIBAN', data);
   }
 }
+
 export class IsNotCountryIBAN extends IsIBAN {
   static get validatorName() {
     return 'IsNotCountryIBAN';
@@ -183,9 +186,10 @@ export class IsNotCountryIBAN extends IsIBAN {
       }
     } else if (Array.isArray(this.param)) {
       isInvalid = this.param.some(
-        (country) => String(modelValue.slice(0, 2)) === country.toUpperCase(),
+        country => String(modelValue.slice(0, 2)) === country.toUpperCase(),
       );
     }
+
     if (notIBAN) {
       isInvalid = true;
     }
@@ -204,6 +208,7 @@ export class IsNotCountryIBAN extends IsIBAN {
    */
   static async getMessage(data) {
     const localizeManager = getLocalizeManager();
+
     await loadTranslations();
     const _data = {
       ...data,

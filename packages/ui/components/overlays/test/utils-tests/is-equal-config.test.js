@@ -1,8 +1,9 @@
 import { expect } from '@open-wc/testing';
 import { isEqualConfig } from '../../src/utils/is-equal-config.js';
+
 function TestConfig() {
   return {
-    placementMode: /** @type {'local'|'global'} */ 'local',
+    placementMode: /** @type {'local'|'global'} */ ('local'),
     hidesOnOutsideClick: true,
     popperConfig: {
       modifiers: [
@@ -21,6 +22,7 @@ describe('isEqualConfig()', () => {
     const config = TestConfig();
     expect(isEqualConfig(config, config)).eql(true);
   });
+
   it('compares null props', () => {
     const config = TestConfig();
     const nullPropConfig = {
@@ -32,46 +34,25 @@ describe('isEqualConfig()', () => {
     // @ts-ignore
     expect(isEqualConfig(nullPropConfig, nullPropConfig)).eql(true);
   });
+
   it('compares shallow props', () => {
     const config = TestConfig();
-    expect(
-      isEqualConfig(config, {
-        ...config,
-      }),
-    ).eql(true);
-    const differentConfig = {
-      ...config,
-      hidesOnOutsideClick: !config.hidesOnOutsideClick,
-    };
+    expect(isEqualConfig(config, { ...config })).eql(true);
+    const differentConfig = { ...config, hidesOnOutsideClick: !config.hidesOnOutsideClick };
     expect(isEqualConfig(config, differentConfig)).eql(false);
   });
+
   it('compares prop count', () => {
     const config = TestConfig();
-    expect(
-      isEqualConfig(config, {
-        ...config,
-        isBlocking: true,
-      }),
-    ).eql(false);
-    expect(
-      isEqualConfig(
-        {
-          ...config,
-          isBlocking: true,
-        },
-        config,
-      ),
-    ).eql(false);
+    expect(isEqualConfig(config, { ...config, isBlocking: true })).eql(false);
+    expect(isEqualConfig({ ...config, isBlocking: true }, config)).eql(false);
   });
+
   it('regards missing props different from ones with undefined value', () => {
     const config = TestConfig();
-    expect(
-      isEqualConfig(config, {
-        ...config,
-        referenceNode: undefined,
-      }),
-    ).eql(false);
+    expect(isEqualConfig(config, { ...config, referenceNode: undefined })).eql(false);
   });
+
   it('compares nested props', () => {
     const config = TestConfig();
     const sameConfig = {
@@ -90,7 +71,7 @@ describe('isEqualConfig()', () => {
           ...config.popperConfig.modifiers,
           {
             name: 'offset',
-            enabled: !config.popperConfig.modifiers.find((mod) => mod.name === 'offset')?.enabled,
+            enabled: !config.popperConfig.modifiers.find(mod => mod.name === 'offset')?.enabled,
           },
         ],
       },

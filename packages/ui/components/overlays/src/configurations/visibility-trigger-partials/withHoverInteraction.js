@@ -49,6 +49,7 @@ export function withHoverInteraction({
       // completion to intercept it, as capture runs before bubble so we stop it regardless of registration order.
       /** @type {((e: Event) => void) | null} */
       let pendingClickSuppressor = null;
+
       function resetActive() {
         isFocused = false;
         isHovered = false;
@@ -88,11 +89,7 @@ export function withHoverInteraction({
           if (!controller.invokerNode?.matches(':focus-visible')) return;
         }
         const shouldOpen = isFocused || isHovered;
-        openClose({
-          shouldOpen,
-          openTimeout: delayIn,
-          closeTimeout: delayOut,
-        });
+        openClose({ shouldOpen, openTimeout: delayIn, closeTimeout: delayOut });
       }
 
       /** @param {Event} e */
@@ -105,6 +102,7 @@ export function withHoverInteraction({
         clearTimeout(pendingLongpressTimeout);
         if (event.pointerType !== 'touch') return;
         const { type } = event;
+
         if (type === 'pointerdown') {
           longpressCompleted = false;
           isLastPointerTouch = true;
@@ -112,15 +110,12 @@ export function withHoverInteraction({
             longpressCompleted = true;
             // Intercept the compatibility click the browser generates at the end of the touch sequence.
             // Capture phase ensures we run before any bubble-phase handler (e.g. a dialog opener).
-            pendingClickSuppressor = (e) => e.stopImmediatePropagation();
+            pendingClickSuppressor = e => e.stopImmediatePropagation();
             controller.invokerNode?.addEventListener('click', pendingClickSuppressor, {
-              once: true,
-              // auto-removes after first click
+              once: true, // auto-removes after first click
               capture: true,
             });
-            openClose({
-              shouldOpen: true,
-            });
+            openClose({ shouldOpen: true });
           }, longpressDuration);
         } else {
           openClose({
@@ -129,11 +124,14 @@ export function withHoverInteraction({
           });
         }
       }
+
       return {
         init: () => {
           controller.addEventListener('hide', resetActive);
+
           controller.invokerNode?.addEventListener('focusin', handleHoverAndFocus);
           controller.invokerNode?.addEventListener('focusout', handleHoverAndFocus);
+
           if (isHoverSupported) {
             controller.contentNode?.addEventListener('mouseenter', handleHoverAndFocus);
             controller.contentNode?.addEventListener('mouseleave', handleHoverAndFocus);
@@ -151,8 +149,10 @@ export function withHoverInteraction({
         },
         teardown: () => {
           controller.removeEventListener('hide', resetActive);
+
           controller.invokerNode?.removeEventListener('focusin', handleHoverAndFocus);
           controller.invokerNode?.removeEventListener('focusout', handleHoverAndFocus);
+
           if (isHoverSupported) {
             controller.contentNode?.removeEventListener('mouseenter', handleHoverAndFocus);
             controller.contentNode?.removeEventListener('mouseleave', handleHoverAndFocus);

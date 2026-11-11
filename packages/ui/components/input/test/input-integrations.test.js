@@ -4,6 +4,7 @@ import {
   runNativeTextFieldMixinSuite,
 } from '@lion/ui/test-suites/form-core.js';
 import { LionInput } from '@lion/ui/input.js';
+
 class FieldInput extends LionInput {
   get slots() {
     return {
@@ -13,21 +14,18 @@ class FieldInput extends LionInput {
     };
   }
 }
+
 describe('<lion-input> integrations', () => {
   runInteractionStateMixinSuite({
-    classes: {
-      host: FieldInput,
-    },
+    classes: { host: FieldInput },
   });
+
   runFormatMixinSuite({
-    classes: {
-      host: FieldInput,
-    },
+    classes: { host: FieldInput },
     modelValueType: String,
   });
+
   runNativeTextFieldMixinSuite({
-    classes: {
-      host: FieldInput,
-    },
+    classes: { host: FieldInput },
   });
 });

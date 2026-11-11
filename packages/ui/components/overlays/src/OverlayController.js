@@ -46,6 +46,7 @@ function rearrangeNodes({ wrappingDialogNodeL1, contentWrapperNodeL2, contentNod
   // We could be initialized via a directive (in offline dom). It's important that we know about the parents,
   // as we cannot deal with single content nodes
   const hasContentNodeAttachmentPoints = Boolean(contentNodeL3.parentNode);
+
   if (!hasLegacyMethodOfProvidingWrapperNode && !hasContentNodeAttachmentPoints) {
     throw new Error(
       '[OverlayController] Could not find a render target, makes sure contentNode has a parent element (or contentWrapperNode is connected)',
@@ -58,6 +59,7 @@ function rearrangeNodes({ wrappingDialogNodeL1, contentWrapperNodeL2, contentNod
   // Moving the wrapper can change slot assignment, so capture the node we relocate up front
   // and restore that same node during cleanup.
   const contentNodeOrSlot = contentNodeL3.assignedSlot || contentNodeL3;
+
   if (hasLegacyMethodOfProvidingWrapperNode) {
     // This is the case when contentWrapperNode (living in shadow dom, wrapping <slot name="my-content-outlet">) is already provided via controller.
     parentElement = contentWrapperNodeL2.parentElement || contentWrapperNodeL2.getRootNode();
@@ -96,6 +98,7 @@ function rearrangeNodes({ wrappingDialogNodeL1, contentWrapperNodeL2, contentNod
    * ```
    */
   parentElement.insertBefore(wrappingDialogNodeL1, tempMarker);
+
   return function cleanup() {
     if (hasLegacyMethodOfProvidingWrapperNode) {
       parentElement?.insertBefore(contentWrapperNodeL2, tempMarker);
@@ -106,6 +109,7 @@ function rearrangeNodes({ wrappingDialogNodeL1, contentWrapperNodeL2, contentNod
       }
     }
     parentElement?.removeChild(tempMarker);
+
     if (parentElement.contains(wrappingDialogNodeL1)) {
       parentElement?.removeChild(wrappingDialogNodeL1);
     }
@@ -117,8 +121,9 @@ function rearrangeNodes({ wrappingDialogNodeL1, contentWrapperNodeL2, contentNod
  */
 async function preloadPopper() {
   // @ts-ignore [external]: import complains about untyped module, but we typecast it ourselves
-  return /** @type {* & Promise<PopperModule>} */ import('@popperjs/core/dist/esm/popper.js');
+  return /** @type {* & Promise<PopperModule>} */ (import('@popperjs/core/dist/esm/popper.js'));
 }
+
 const childDialogsClosedInEventLoopWeakmap = new WeakMap();
 
 /**
@@ -203,10 +208,12 @@ export class OverlayController extends EventTarget {
     super();
     this.manager = manager;
     this.__sharedConfig = config;
+
     this.__activeElementRightBeforeHide = null;
 
     /** @type {OverlayConfig} */
     this.config = {};
+
     this._defaultConfig = {
       placementMode: undefined,
       contentNode: config.contentNode,
@@ -273,11 +280,13 @@ export class OverlayController extends EventTarget {
       // @ts-ignore - hideVisually is an extension property
       hideVisually: false,
       requireConnectedNodes: true,
+
       // hides children overlays when parent is closed...
       syncChildrenCloseState: false,
       // // In next major, we remove this prop. Now we disable it for backwards compatibility and enable it in the places we need it internally
       // _shouldTeardownDomStructure: false,
     };
+
     this._contentId = `overlay-content--${Math.random().toString(36).slice(2, 10)}`;
     this.__originalAttrs = new Map();
     /** @private */
@@ -288,6 +297,7 @@ export class OverlayController extends EventTarget {
     this.__cancelHandler = this.__cancelHandler.bind(this);
     this.__escKeyHandlerCalled = false;
   }
+
   __hasSetup = false;
 
   /**
@@ -305,9 +315,8 @@ export class OverlayController extends EventTarget {
    * @type {HTMLDialogElement | HTMLDivElement}
    */
   get content() {
-    return (
-      /** @type {HTMLDialogElement | HTMLDivElement} */ this.__wrappingDialogNode ||
-      this.contentNode
+    return /** @type {HTMLDialogElement | HTMLDivElement} */ (
+      this.__wrappingDialogNode || this.contentNode
     );
   }
 
@@ -334,7 +343,7 @@ export class OverlayController extends EventTarget {
    * @type {HTMLElement}
    */
   get referenceNode() {
-    return /** @type {HTMLElement} */ this.config?.referenceNode;
+    return /** @type {HTMLElement} */ (this.config?.referenceNode);
   }
 
   /**
@@ -342,7 +351,7 @@ export class OverlayController extends EventTarget {
    * @type {HTMLElement}
    */
   get contentNode() {
-    return /** @type {HTMLElement} */ this.config?.contentNode;
+    return /** @type {HTMLElement} */ (this.config?.contentNode);
   }
 
   /**
@@ -353,7 +362,9 @@ export class OverlayController extends EventTarget {
    * @type {HTMLElement}
    */
   get contentWrapperNode() {
-    return /** @type {HTMLElement} */ this.__contentWrapperNode || this.config?.contentWrapperNode;
+    return /** @type {HTMLElement} */ (
+      this.__contentWrapperNode || this.config?.contentWrapperNode
+    );
   }
 
   /**
@@ -362,7 +373,7 @@ export class OverlayController extends EventTarget {
    * @type {HTMLElement}
    */
   get backdropNode() {
-    return /** @type {HTMLElement} */ this.__backdropNode || this.config?.backdropNode;
+    return /** @type {HTMLElement} */ (this.__backdropNode || this.config?.backdropNode);
   }
 
   /**
@@ -370,9 +381,8 @@ export class OverlayController extends EventTarget {
    * @type {HTMLElement}
    */
   get elementToFocusAfterHide() {
-    return (
-      /** @type {HTMLElement} */ this.__elementToFocusAfterHide ||
-      this.config?.elementToFocusAfterHide
+    return /** @type {HTMLElement} */ (
+      this.__elementToFocusAfterHide || this.config?.elementToFocusAfterHide
     );
   }
 
@@ -381,7 +391,7 @@ export class OverlayController extends EventTarget {
    * @type {boolean}
    */
   get hasBackdrop() {
-    return /** @type {boolean} */ !!this.backdropNode || this.config?.hasBackdrop;
+    return /** @type {boolean} */ (!!this.backdropNode || this.config?.hasBackdrop);
   }
 
   /**
@@ -389,7 +399,7 @@ export class OverlayController extends EventTarget {
    * @type {boolean}
    */
   get isBlocking() {
-    return /** @type {boolean} */ this.config?.isBlocking;
+    return /** @type {boolean} */ (this.config?.isBlocking);
   }
 
   /**
@@ -397,7 +407,7 @@ export class OverlayController extends EventTarget {
    * @type {boolean}
    */
   get preventsScroll() {
-    return /** @type {boolean} */ this.config?.preventsScroll;
+    return /** @type {boolean} */ (this.config?.preventsScroll);
   }
 
   /**
@@ -405,7 +415,7 @@ export class OverlayController extends EventTarget {
    * @type {boolean}
    */
   get trapsKeyboardFocus() {
-    return /** @type {boolean} */ this.config?.trapsKeyboardFocus;
+    return /** @type {boolean} */ (this.config?.trapsKeyboardFocus);
   }
 
   /**
@@ -413,7 +423,7 @@ export class OverlayController extends EventTarget {
    * @type {boolean}
    */
   get hidesOnEsc() {
-    return /** @type {boolean} */ this.config?.hidesOnEsc;
+    return /** @type {boolean} */ (this.config?.hidesOnEsc);
   }
 
   /**
@@ -421,7 +431,7 @@ export class OverlayController extends EventTarget {
    * @type {boolean}
    */
   get hidesOnOutsideClick() {
-    return /** @type {boolean} */ this.config?.hidesOnOutsideClick;
+    return /** @type {boolean} */ (this.config?.hidesOnOutsideClick);
   }
 
   /**
@@ -429,7 +439,7 @@ export class OverlayController extends EventTarget {
    * @type {boolean}
    */
   get hidesOnOutsideEsc() {
-    return /** @type {boolean} */ this.config?.hidesOnOutsideEsc;
+    return /** @type {boolean} */ (this.config?.hidesOnOutsideEsc);
   }
 
   /**
@@ -456,7 +466,7 @@ export class OverlayController extends EventTarget {
    * @type {boolean}
    */
   get handlesAccessibility() {
-    return /** @type {boolean} */ this.config?.handlesAccessibility;
+    return /** @type {boolean} */ (this.config?.handlesAccessibility);
   }
 
   /**
@@ -465,7 +475,7 @@ export class OverlayController extends EventTarget {
    * @type {boolean}
    */
   get isTooltip() {
-    return /** @type {boolean} */ this.config?.isTooltip;
+    return /** @type {boolean} */ (this.config?.isTooltip);
   }
 
   /**
@@ -473,7 +483,7 @@ export class OverlayController extends EventTarget {
    * to communicate an important message and require a response.
    */
   get isAlertDialog() {
-    return /** @type {boolean} */ this.config?.isAlertDialog;
+    return /** @type {boolean} */ (this.config?.isAlertDialog);
   }
 
   /**
@@ -490,7 +500,7 @@ export class OverlayController extends EventTarget {
    * @type {PopperOptions}
    */
   get popperConfig() {
-    return /** @type {PopperOptions} */ this.config?.popperConfig;
+    return /** @type {PopperOptions} */ (this.config?.popperConfig);
   }
 
   /**
@@ -498,10 +508,11 @@ export class OverlayController extends EventTarget {
    * @type {ViewportConfig}
    */
   get viewportConfig() {
-    return /** @type {ViewportConfig} */ this.config?.viewportConfig;
+    return /** @type {ViewportConfig} */ (this.config?.viewportConfig);
   }
+
   get visibilityTriggerFunction() {
-    return /** @type {function} */ this.config?.visibilityTriggerFunction;
+    return /** @type {function} */ (this.config?.visibilityTriggerFunction);
   }
 
   /**
@@ -544,12 +555,9 @@ export class OverlayController extends EventTarget {
 
     /** @type {OverlayConfig} */
     const newConfig = {
-      ...this._defaultConfig,
-      // our basic ingredients
-      ...this.__sharedConfig,
-      // the initial configured overlayController
-      ...cfgToAdd,
-      // the added config
+      ...this._defaultConfig, // our basic ingredients
+      ...this.__sharedConfig, // the initial configured overlayController
+      ...cfgToAdd, // the added config
       popperConfig: {
         ...(this._defaultConfig.popperConfig || {}),
         ...(this.__sharedConfig.popperConfig || {}),
@@ -561,23 +569,27 @@ export class OverlayController extends EventTarget {
         ],
       },
     };
+
     const shouldUpdate = !this.__hasSetup || !isEqualConfig(prevConfig, newConfig);
     if (!shouldUpdate) return;
     // Teardown all previous configs
 
     this.teardown();
+
     this.config = newConfig;
 
     /** @private */
     this.__validateConfiguration(this.config);
     /** @protected */
     this._init();
+
     if (!this.#isRegisteredOnManager()) {
       this.manager.add(this);
     }
   }
+
   #isRegisteredOnManager() {
-    return Boolean(this.manager.list.find((ctrl) => this === ctrl));
+    return Boolean(this.manager.list.find(ctrl => this === ctrl));
   }
 
   /**
@@ -627,32 +639,33 @@ export class OverlayController extends EventTarget {
       this.contentWrapperNode.removeAttribute('style');
       this.contentWrapperNode.removeAttribute('class');
     }
+
     if (this.placementMode === 'local') {
       // Lazily load Popper as soon as the first local overlay is used...
       if (!OverlayController.popperModule) {
         OverlayController.popperModule = preloadPopper();
       }
     }
-    this.__handleOverlayStyles({
-      phase: 'init',
-    });
-    this._handleFeatures({
-      phase: 'init',
-    });
+    this.__handleOverlayStyles({ phase: 'init' });
+    this._handleFeatures({ phase: 'init' });
 
     /** @private */
     this.__elementToFocusAfterHide = undefined;
+
     this.contentNode.dataset.content = '';
 
     // Use event delegation to listen for clicks on close buttons...
     this.contentNode.addEventListener('click', this.#hideOnCloseButtonClick);
+
     this.__hasSetup = true;
   }
+
   #hideOnCloseButtonClick = (/** @type {{ target: any; }} */ ev) => {
     const isOurCloseButton =
       ev.target.hasAttribute('data-close') &&
       deepClosest(ev.target, '[data-content]') === this.contentNode;
     if (!isOurCloseButton) return;
+
     this.hide();
   };
 
@@ -661,13 +674,11 @@ export class OverlayController extends EventTarget {
    * @private
    */
   __handleOverlayStyles({ phase }) {
-    const rootNode = /** @type {ShadowRoot} */ this.contentWrapperNode?.getRootNode();
+    const rootNode = /** @type {ShadowRoot} */ (this.contentWrapperNode?.getRootNode());
     if (phase === 'init') {
       _adoptStyleUtils.adoptStyle(rootNode, overlayShadowDomStyle);
     } else if (phase === 'teardown') {
-      _adoptStyleUtils.adoptStyle(rootNode, overlayShadowDomStyle, {
-        teardown: true,
-      });
+      _adoptStyleUtils.adoptStyle(rootNode, overlayShadowDomStyle, { teardown: true });
     }
   }
 
@@ -732,6 +743,7 @@ export class OverlayController extends EventTarget {
       this.contentWrapperNode.setAttribute('data-id', 'content-wrapper');
       // 'hack' that makes sure popperjs (that is applied one level lower) works correctly in deeply nested shadow roots
       this.contentWrapperNode.style.transform = 'translateZ(0px)';
+
       this.__rearrangeNodesCleanup = rearrangeNodes({
         wrappingDialogNodeL1: wrappingDialogElement,
         contentWrapperNodeL2: this.contentWrapperNode,
@@ -739,6 +751,7 @@ export class OverlayController extends EventTarget {
         // requireConnectedNodes: Boolean(this.config.requireConnectedNodes),
       });
       wrappingDialogElement.open = true;
+
       if (this.isTooltip) {
         // needed to prevent tooltip getting focus in Safari and Firefox
         wrappingDialogElement.setAttribute('tabindex', '-1');
@@ -774,10 +787,10 @@ export class OverlayController extends EventTarget {
             }
           },
         );
-        wrappingDialogElement.addEventListener('cancel', (event) => {
+        wrappingDialogElement.addEventListener('cancel', event => {
           event.stopPropagation();
         });
-        wrappingDialogElement.addEventListener('close', (event) => {
+        wrappingDialogElement.addEventListener('close', event => {
           event.stopPropagation();
         });
       }
@@ -787,18 +800,17 @@ export class OverlayController extends EventTarget {
       this.__wrappingDialogNode = this.contentNode;
     }
   }
+
   __initVisibility() {
     // TODO: allow defaultOpen?
-    /** @type {HTMLDialogElement} */
-    this.__wrappingDialogNode.style.display = 'none';
+    /** @type {HTMLDialogElement} */ (this.__wrappingDialogNode).style.display = 'none';
   }
 
   // Clean up the DOM structure, leaving it as we found it.
   // TODO: __teardownContentDomStructure method... use Resettable (rename ro Restorable) found in VisibilitToggleCtrl
   __teardownVisibility() {
     // TODO: full structure. For now we just reset display prop...
-    /** @type {HTMLDialogElement} */
-    this.__wrappingDialogNode.style.display = '';
+    /** @type {HTMLDialogElement} */ (this.__wrappingDialogNode).style.display = '';
   }
 
   /**
@@ -810,6 +822,7 @@ export class OverlayController extends EventTarget {
     if (this.placementMode !== 'local') {
       return;
     }
+
     if (phase === 'setup') {
       const zIndexNumber = Number(getComputedStyle(this.contentNode).zIndex);
       if (zIndexNumber < 1 || Number.isNaN(zIndexNumber)) {
@@ -826,6 +839,7 @@ export class OverlayController extends EventTarget {
     if (phase === 'init') {
       this.__storeOriginalAttrs(this.contentNode, ['role', 'id']);
       const isModal = this.trapsKeyboardFocus;
+
       if (this.invokerNode) {
         const attributesToStore = ['aria-labelledby', 'aria-describedby'];
         if (!isModal) {
@@ -833,6 +847,7 @@ export class OverlayController extends EventTarget {
         }
         this.__storeOriginalAttrs(this.invokerNode, attributesToStore);
       }
+
       if (!this.contentNode.id) {
         this.contentNode.setAttribute('id', this._contentId);
       }
@@ -868,7 +883,7 @@ export class OverlayController extends EventTarget {
   __storeOriginalAttrs(node, attrs) {
     /** @type {Record<string, any>} */
     const attrMap = {};
-    attrs.forEach((attrName) => {
+    attrs.forEach(attrName => {
       attrMap[attrName] = node.getAttribute(attrName);
     });
     this.__originalAttrs.set(node, attrMap);
@@ -887,6 +902,7 @@ export class OverlayController extends EventTarget {
     }
     this.__originalAttrs.clear();
   }
+
   get isShown() {
     return Boolean(this.__wrappingDialogNode && this.__wrappingDialogNode.style.display !== 'none');
   }
@@ -902,7 +918,7 @@ export class OverlayController extends EventTarget {
     if (this._showComplete) {
       await this._showComplete;
     }
-    this._showComplete = new Promise((resolve) => {
+    this._showComplete = new Promise(resolve => {
       this._showResolve = resolve;
     });
 
@@ -912,17 +928,18 @@ export class OverlayController extends EventTarget {
     if (!this.__wrappingDialogNode) {
       this._init();
     }
+
     if (this.manager) {
       this.manager.show(this);
     }
+
     if (this.isShown) {
       /** @type {function} */
-      this._showResolve();
+      (this._showResolve)();
       return;
     }
-    const event = new CustomEvent('before-show', {
-      cancelable: true,
-    });
+
+    const event = new CustomEvent('before-show', { cancelable: true });
     this.dispatchEvent(event);
     if (!event.defaultPrevented) {
       if ('HTMLDialogElement' in window && this.__wrappingDialogNode instanceof HTMLDialogElement) {
@@ -931,18 +948,10 @@ export class OverlayController extends EventTarget {
 
       // @ts-ignore
       this.__wrappingDialogNode.style.display = '';
-      this._keepBodySize({
-        phase: 'before-show',
-      });
-      await this._handleFeatures({
-        phase: 'show',
-      });
-      this._keepBodySize({
-        phase: 'show',
-      });
-      await this._handlePosition({
-        phase: 'show',
-      });
+      this._keepBodySize({ phase: 'before-show' });
+      await this._handleFeatures({ phase: 'show' });
+      this._keepBodySize({ phase: 'show' });
+      await this._handlePosition({ phase: 'show' });
       this.__elementToFocusAfterHide = elementToFocusAfterHide;
       this.dispatchEvent(new Event('show'));
       await this._transitionShow({
@@ -953,14 +962,13 @@ export class OverlayController extends EventTarget {
 
     // a styling/debug hook for open state
     this.contentNode.setAttribute('data-open', '');
+
     if (this.config.elementToFocusOnShow) {
-      this.contentNode.focus({
-        preventScroll: true,
-      });
+      this.contentNode.focus({ preventScroll: true });
     }
 
     /** @type {function} */
-    this._showResolve();
+    (this._showResolve)();
   }
 
   /**
@@ -970,6 +978,7 @@ export class OverlayController extends EventTarget {
   async _handlePosition({ phase }) {
     if (this.placementMode === 'global') {
       const placementClass = `overlays__overlay-container--${this.viewportConfig.placement}`;
+
       if (phase === 'show') {
         this.contentWrapperNode.classList.add('overlays__overlay-container');
         this.contentWrapperNode.classList.add(placementClass);
@@ -988,8 +997,7 @@ export class OverlayController extends EventTarget {
        * This is however necessary for initial placement.
        */
       await this.__createPopperInstance();
-      /** @type {import('@popperjs/core').Instance} */
-      this._popper.forceUpdate();
+      /** @type {import('@popperjs/core').Instance} */ (this._popper).forceUpdate();
     }
     // N.B. leave it up to the user if placementMode === 'custom'
   }
@@ -1000,9 +1008,8 @@ export class OverlayController extends EventTarget {
    */
   _keepBodySize({ phase }) {
     if (!this.preventsScroll) return;
-    this.manager.requestToKeepBodySize({
-      phase,
-    });
+
+    this.manager.requestToKeepBodySize({ phase });
   }
 
   /**
@@ -1012,7 +1019,8 @@ export class OverlayController extends EventTarget {
   async hide() {
     // Function like a no-op for dynamic edge cases...
     if (!this.config.isActivated) return;
-    this._hideComplete = new Promise((resolve) => {
+
+    this._hideComplete = new Promise(resolve => {
       this._hideResolve = resolve;
     });
 
@@ -1020,40 +1028,39 @@ export class OverlayController extends EventTarget {
     // while the dialog was open.
     // We need this in the _restoreFocus method to determine if we should focus this.elementToFocusAfterHide when the
     // dialog is closed or keep focus on the element that the user deliberately gave focus
-    this.__activeElementRightBeforeHide =
-      /** @type {ShadowRoot} */ this.contentNode.getRootNode().activeElement;
+    this.__activeElementRightBeforeHide = /** @type {ShadowRoot} */ (
+      this.contentNode.getRootNode()
+    ).activeElement;
+
     if (this.manager && this.#isRegisteredOnManager()) {
       this.manager.hide(this);
     }
+
     if (!this.isShown) {
-      /** @type {function} */ this._hideResolve();
+      /** @type {function} */ (this._hideResolve)();
       return;
     }
-    const event = new CustomEvent('before-hide', {
-      cancelable: true,
-    });
+
+    const event = new CustomEvent('before-hide', { cancelable: true });
     this.dispatchEvent(event);
     if (!event.defaultPrevented) {
       await this._transitionHide({
         backdropNode: this.backdropNode,
         contentNode: this.contentNode,
       });
+
       if ('HTMLDialogElement' in window && this.__wrappingDialogNode instanceof HTMLDialogElement) {
         this.__wrappingDialogNode.close();
       }
       // @ts-ignore
       this.__wrappingDialogNode.style.display = 'none';
-      this._handleFeatures({
-        phase: 'hide',
-      });
-      this._keepBodySize({
-        phase: 'hide',
-      });
+      this._handleFeatures({ phase: 'hide' });
+      this._keepBodySize({ phase: 'hide' });
       this.dispatchEvent(new Event('hide'));
       this._restoreFocus();
     }
-    /** @type {function} */
-    this._hideResolve();
+    /** @type {function} */ (this._hideResolve)();
+
     this.contentNode.removeAttribute('data-open');
   }
 
@@ -1073,13 +1080,8 @@ export class OverlayController extends EventTarget {
   // eslint-disable-next-line class-methods-use-this, no-empty-function, no-unused-vars
   async _transitionHide({ backdropNode, contentNode }) {
     // `this.transitionHide` is a hook for our users
-    await this.transitionHide({
-      backdropNode,
-      contentNode,
-    });
-    this._handlePosition({
-      phase: 'hide',
-    });
+    await this.transitionHide({ backdropNode, contentNode });
+    this._handlePosition({ phase: 'hide' });
     if (!backdropNode) {
       return;
     }
@@ -1101,10 +1103,8 @@ export class OverlayController extends EventTarget {
   // eslint-disable-next-line class-methods-use-this, no-empty-function, no-unused-vars
   async _transitionShow(showConfig) {
     // `this.transitionShow` is a hook for our users
-    await this.transitionShow({
-      backdropNode: this.backdropNode,
-      contentNode: this.contentNode,
-    });
+    await this.transitionShow({ backdropNode: this.backdropNode, contentNode: this.contentNode });
+
     if (showConfig.backdropNode) {
       showConfig.backdropNode.classList.add(`overlays__backdrop--animation-in`);
     }
@@ -1117,18 +1117,19 @@ export class OverlayController extends EventTarget {
     const weStillOwnActiveElement =
       this.__activeElementRightBeforeHide instanceof HTMLElement &&
       this.contentNode.contains(this.__activeElementRightBeforeHide);
+
     if (!weStillOwnActiveElement) {
       return;
     }
+
     if (this.elementToFocusAfterHide instanceof HTMLElement) {
       this.elementToFocusAfterHide.focus();
-      this.elementToFocusAfterHide.scrollIntoView({
-        block: 'nearest',
-      });
+      this.elementToFocusAfterHide.scrollIntoView({ block: 'nearest' });
     } else {
-      /** @type {HTMLElement} */ this.__activeElementRightBeforeHide.blur();
+      /** @type {HTMLElement} */ (this.__activeElementRightBeforeHide).blur();
     }
   }
+
   async toggle() {
     return this.isShown ? this.hide() : this.show();
   }
@@ -1139,66 +1140,43 @@ export class OverlayController extends EventTarget {
    * @protected
    */
   _handleFeatures({ phase }) {
-    this._handleZIndex({
-      phase,
-    });
+    this._handleZIndex({ phase });
+
     if (this.preventsScroll) {
-      this._handlePreventsScroll({
-        phase,
-      });
+      this._handlePreventsScroll({ phase });
     }
     if (this.isBlocking) {
-      this._handleBlocking({
-        phase,
-      });
+      this._handleBlocking({ phase });
     }
     if (this.hasBackdrop) {
-      this._handleBackdrop({
-        phase,
-      });
+      this._handleBackdrop({ phase });
     }
     if (this.trapsKeyboardFocus) {
-      this._handleTrapsKeyboardFocus({
-        phase,
-      });
+      this._handleTrapsKeyboardFocus({ phase });
     }
     if (this.hidesOnEsc) {
-      this._handleHidesOnEsc({
-        phase,
-      });
+      this._handleHidesOnEsc({ phase });
     }
     if (this.hidesOnOutsideEsc) {
-      this._handleHidesOnOutsideEsc({
-        phase,
-      });
+      this._handleHidesOnOutsideEsc({ phase });
     }
     if (this.hidesOnOutsideClick) {
-      this._handleHidesOnOutsideClick({
-        phase,
-      });
+      this._handleHidesOnOutsideClick({ phase });
     }
     if (this.handlesAccessibility) {
-      this._handleAccessibility({
-        phase,
-      });
+      this._handleAccessibility({ phase });
     }
     if (this.inheritsReferenceWidth) {
       this._handleInheritsReferenceWidth();
     }
     if (this.visibilityTriggerFunction) {
-      this._handleVisibilityTriggers({
-        phase,
-      });
+      this._handleVisibilityTriggers({ phase });
     }
     if (this.config.syncChildrenCloseState) {
-      this._handleSyncChildrenCloseState({
-        phase,
-      });
+      this._handleSyncChildrenCloseState({ phase });
     }
     if (this.config.elementToFocusOnShow) {
-      this._handleElementToFocusOnShow({
-        phase,
-      });
+      this._handleElementToFocusOnShow({ phase });
     }
   }
 
@@ -1221,10 +1199,11 @@ export class OverlayController extends EventTarget {
    */
   _handleSyncChildrenCloseState({ phase }) {
     if (phase !== 'hide') return;
+
     const visibleChildren = this.manager.shownList.filter(
-      (ctrl) => ctrl !== this && deepContains(this.contentNode, ctrl.contentNode),
+      ctrl => ctrl !== this && deepContains(this.contentNode, ctrl.contentNode),
     );
-    visibleChildren.forEach((ctrl) => ctrl.hide());
+    visibleChildren.forEach(ctrl => ctrl.hide());
   }
 
   /**
@@ -1236,9 +1215,7 @@ export class OverlayController extends EventTarget {
     // Here we initialize the __visibilityTriggerHandler of our invokerNode. It's important that we ONLY do this on init,
     // otherwise we risk not being able to properly clean up listeners...
     if (phase === 'init') {
-      this.__visibilityTriggerHandler = this.visibilityTriggerFunction({
-        controller: this,
-      });
+      this.__visibilityTriggerHandler = this.visibilityTriggerFunction({ controller: this });
     }
     // Here we run the appropriate lifecycle, if defined in our handler
     this.__visibilityTriggerHandler[phase]?.();
@@ -1278,6 +1255,7 @@ export class OverlayController extends EventTarget {
       /* no default */
     }
   }
+
   get hasActiveBackdrop() {
     return this.__hasActiveBackdrop;
   }
@@ -1322,7 +1300,7 @@ export class OverlayController extends EventTarget {
   /**
    * @param {KeyboardEvent} event
    */
-  #isShiftPressedOnKeyDownHandler = (event) => {
+  #isShiftPressedOnKeyDownHandler = event => {
     if (event.key === 'Shift') {
       this.#isShiftPressed = true;
     }
@@ -1331,23 +1309,26 @@ export class OverlayController extends EventTarget {
   /**
    * @param {KeyboardEvent} event
    */
-  #isShiftPressedOnKeyUpHandler = (event) => {
+  #isShiftPressedOnKeyUpHandler = event => {
     if (event.key === 'Shift') {
       this.#isShiftPressed = false;
     }
   };
+
   #handleShiftKeyPress = () => {
     window.addEventListener('keydown', this.#isShiftPressedOnKeyDownHandler);
     window.addEventListener('keyup', this.#isShiftPressedOnKeyUpHandler);
   };
+
   #stopHandlingShiftKeyPress = () => {
     window.removeEventListener('keydown', this.#isShiftPressedOnKeyDownHandler);
     window.removeEventListener('keyup', this.#isShiftPressedOnKeyUpHandler);
   };
+
   #getInitialElementToFocus = () => {
     const focusableElements = getFocusableElements(this.contentNode);
     // Initial focus goes to first element with autofocus, or `contentNode`
-    return focusableElements.find((e) => e.hasAttribute('autofocus')) || this.contentNode;
+    return focusableElements.find(e => e.hasAttribute('autofocus')) || this.contentNode;
   };
 
   /**
@@ -1382,6 +1363,7 @@ export class OverlayController extends EventTarget {
     if (phase === 'init') {
       this.contentNode.style.outline = 'none';
       this.contentNode.tabIndex = -1;
+
       const isContentShadowHost = Boolean(this.contentNode.shadowRoot);
       if (isContentShadowHost) {
         // eslint-disable-next-line no-console
@@ -1434,6 +1416,7 @@ export class OverlayController extends EventTarget {
     ) {
       return;
     }
+
     if (this.#hasPressedInside(event)) {
       this.__escKeyHandlerCalled = true;
       this.hide();
@@ -1448,17 +1431,18 @@ export class OverlayController extends EventTarget {
    * @param {KeyboardEvent} event
    * @returns {boolean}
    */
-  #hasPressedInside = (event) =>
-    event.composedPath().includes(/** @type {EventTarget} */ this.__wrappingDialogNode) ||
+  #hasPressedInside = event =>
+    event.composedPath().includes(/** @type {EventTarget} */ (this.__wrappingDialogNode)) ||
     (this.invokerNode && event.composedPath().includes(this.invokerNode)) ||
-    deepContains(this.contentNode, /** @type {HTMLElement|ShadowRoot} */ event.target);
+    deepContains(this.contentNode, /** @type {HTMLElement|ShadowRoot} */ (event.target));
 
   /**
    * @param {KeyboardEvent} event
    * @returns {void}
    */
-  #outsideEscKeyHandler = (event) => {
+  #outsideEscKeyHandler = event => {
     if (event.key !== 'Escape') return;
+
     if (this.#hasPressedInside(event)) return;
     this.hide();
   };
@@ -1530,6 +1514,7 @@ export class OverlayController extends EventTarget {
    */
   _handleHidesOnOutsideClick({ phase }) {
     const addOrRemoveListener = phase === 'show' ? 'addEventListener' : 'removeEventListener';
+
     if (phase === 'show') {
       /**
        * We listen to click (more specifically mouseup and mousedown) events
@@ -1557,6 +1542,7 @@ export class OverlayController extends EventTarget {
         // [1]. was mousedown inside content or invoker
         wasMouseDownInside = true;
       };
+
       this.__onInsideMouseUp = () => {
         // [3]. was mouseup inside content or invoker
         wasMouseUpInside = true;
@@ -1585,6 +1571,7 @@ export class OverlayController extends EventTarget {
         });
       };
     }
+
     this.contentWrapperNode[addOrRemoveListener](
       'mousedown',
       /** @type {EventListenerOrEventListenerObject} */
@@ -1595,7 +1582,7 @@ export class OverlayController extends EventTarget {
     this.contentWrapperNode[addOrRemoveListener](
       'mouseup',
       /** @type {EventListenerOrEventListenerObject} */
-      this.__onInsideMouseUp,
+      (this.__onInsideMouseUp),
       true,
     );
     if (this.invokerNode) {
@@ -1611,7 +1598,7 @@ export class OverlayController extends EventTarget {
       this.invokerNode[addOrRemoveListener](
         'mouseup',
         /** @type {EventListenerOrEventListenerObject} */
-        this.__onInsideMouseUp,
+        (this.__onInsideMouseUp),
         true,
       );
     }
@@ -1636,31 +1623,25 @@ export class OverlayController extends EventTarget {
    */
   _handleAccessibility({ phase }) {
     if (phase === 'init' || phase === 'teardown') {
-      this.__setupTeardownAccessibility({
-        phase,
-      });
+      this.__setupTeardownAccessibility({ phase });
     }
     const isModal = this.trapsKeyboardFocus;
     if (this.invokerNode && !this.isTooltip && !isModal) {
       this.invokerNode.setAttribute('aria-expanded', `${phase === 'show'}`);
     }
   }
+
   teardown() {
     if (!this.__hasSetup) return;
-    this.__handleOverlayStyles({
-      phase: 'teardown',
-    });
+    this.__handleOverlayStyles({ phase: 'teardown' });
     if (this.isShown) {
-      this._keepBodySize({
-        phase: 'teardown',
-      });
+      this._keepBodySize({ phase: 'teardown' });
     }
-    this._handleFeatures({
-      phase: 'teardown',
-    });
+    this._handleFeatures({ phase: 'teardown' });
     if (this.#isRegisteredOnManager()) {
       this.manager.remove(this);
     }
+
     this.contentNode?.removeEventListener('click', this.#hideOnCloseButtonClick);
 
     // if (this.config._shouldTeardownDomStructure) {
@@ -1679,6 +1660,7 @@ export class OverlayController extends EventTarget {
       this.__contentWrapperNode = undefined;
       this.__wrappingDialogNode = undefined;
     }
+
     this.__hasSetup = false;
   }
 
@@ -1688,10 +1670,11 @@ export class OverlayController extends EventTarget {
       this._popper.destroy();
       this._popper = undefined;
     }
+
     if (OverlayController.popperModule !== undefined) {
       const { createPopper } = await OverlayController.popperModule;
       this._popper = createPopper(
-        /** @type {HTMLElement} */ this._referenceNode,
+        /** @type {HTMLElement} */ (this._referenceNode),
         this.contentWrapperNode,
         {
           ...this.config?.popperConfig,
@@ -1699,10 +1682,11 @@ export class OverlayController extends EventTarget {
       );
     }
   }
+
   _hasDisabledInvoker() {
     if (this.invokerNode) {
       return (
-        /** @type {HTMLElement & { disabled: boolean }} */ this.invokerNode.disabled ||
+        /** @type {HTMLElement & { disabled: boolean }} */ (this.invokerNode).disabled ||
         this.invokerNode.getAttribute('aria-disabled') === 'true'
       );
     }

@@ -40,16 +40,18 @@ export function formatPhoneNumber(
   if (!PhoneUtilManager.isLoaded) {
     return modelValue;
   }
+
   const AwesomePhoneNumber = PhoneUtilManager.PhoneUtil;
+
   let pn;
   try {
-    pn = AwesomePhoneNumber.parsePhoneNumber(modelValue, {
-      regionCode,
-    });
+    pn = AwesomePhoneNumber.parsePhoneNumber(modelValue, { regionCode });
     // eslint-disable-next-line no-empty
   } catch (_) {}
+
   if (modelValue?.length >= 4 && modelValue?.length <= 16 && pn?.valid) {
     let formattedValue;
+
     switch (formatStrategy) {
       case 'e164':
         formattedValue = pn.number.e164; // -> '+46707123456' (default)
@@ -69,19 +71,15 @@ export function formatPhoneNumber(
       default:
         break;
     }
+
     if (formatCountryCodeStyle !== 'default') {
-      return getFormatCountryCodeStyle(formattedValue, {
-        regionCode,
-        formatCountryCodeStyle,
-      });
+      return getFormatCountryCodeStyle(formattedValue, { regionCode, formatCountryCodeStyle });
     }
     return formattedValue;
   }
+
   if (formatCountryCodeStyle !== 'default') {
-    return getFormatCountryCodeStyle(modelValue, {
-      regionCode,
-      formatCountryCodeStyle,
-    });
+    return getFormatCountryCodeStyle(modelValue, { regionCode, formatCountryCodeStyle });
   }
   return modelValue;
 }

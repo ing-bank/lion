@@ -46,9 +46,9 @@ export function runComboboxSuite({
    * @returns {import('lit/directive.js').DirectiveResult}
    */
   function optionFixture(label) {
-    return ref((element) => {
+    return ref(element => {
       if (element) {
-        configureOption?.(/** @type {LionOption} */ element, label);
+        configureOption?.(/** @type {LionOption} */ (element), label);
       }
     });
   }
@@ -61,8 +61,7 @@ export function runComboboxSuite({
    * @param {{ autocomplete?:'none'|'list'|'both', matchMode?:'begin'|'all', disabled?: boolean, readonly?: boolean }} config
    */
   async function fruitFixture({ autocomplete, matchMode, disabled, readonly } = {}) {
-    const el =
-      /** @type {LionCombobox} */
+    const el = /** @type {LionCombobox} */ (
       await fixture(html`
         <${tags.host} label="Search" name="foo">
           <${tags.option} ${optionFixture(`Artichoke`)} .choiceValue="${'Artichoke'}">Artichoke</${tags.option}>
@@ -70,7 +69,8 @@ export function runComboboxSuite({
           <${tags.option} ${optionFixture(`Chicory`)} .choiceValue="${'Chicory'}">Chicory</${tags.option}>
           <${tags.option} ${optionFixture(`Victoria Plum`)} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tags.option}>
         </${tags.host}>
-      `);
+      `)
+    );
     if (autocomplete) {
       el.autocomplete = autocomplete;
     }
@@ -86,6 +86,7 @@ export function runComboboxSuite({
     await el.updateComplete;
     return [el, el.formElements];
   }
+
   describe('lion-combobox', () => {
     describe('Rendering on API change', () => {
       it('renders when options changed', async () => {
@@ -111,55 +112,63 @@ export function runComboboxSuite({
             label: 'Pineapple',
           },
         ];
+
         class Wrapper extends LitElement {
           static properties = {
             ...super.properties,
-            entries: {
-              type: Array,
-            },
+            entries: { type: Array },
           };
+
           constructor() {
             super();
             this.entries = entries;
           }
+
           render() {
             return html`<${tags.host} name="foo">
-              ${this.entries.map((entry) => html`<${tags.option} ${optionFixture(`${entry.label}`)} .choiceValue="${entry.id}">${entry.label}</${tags.option}>`)}
+              ${this.entries.map(
+                entry =>
+                  html`<${tags.option} ${optionFixture(`${entry.label}`)} .choiceValue="${entry.id}">${entry.label}</${tags.option}>`,
+              )}
             </${tags.host}>`;
           }
         }
+
         const tagString = defineCE(Wrapper);
         const tag = unsafeStatic(tagString);
-        const wrapperElement = /** @type {Wrapper} */ await fixture(html`<${tag}></${tag}>`);
-        const combobox =
-          /** @type {LionCombobox} */
-          wrapperElement.shadowRoot?.querySelector(tagNameHost);
+        const wrapperElement = /** @type {Wrapper} */ (await fixture(html`<${tag}></${tag}>`));
+        const combobox = /** @type {LionCombobox} */ (
+          wrapperElement.shadowRoot?.querySelector(tagNameHost)
+        );
         await waitUntil(
           () =>
             getComboboxMembers(combobox)._listboxNode?.querySelectorAll(tagNameOption).length ===
             entries.length,
         );
+
         wrapperElement.entries = [
           {
             id: '4',
             label: 'Banana',
           },
         ];
+
         await waitUntil(
           () =>
             getComboboxMembers(combobox)._listboxNode?.querySelectorAll(tagNameOption).length ===
             wrapperElement.entries.length,
         );
+
         const optionElements = wrapperElement.shadowRoot?.querySelectorAll(tagNameOption);
         expect(optionElements?.length).to.equal(wrapperElement.entries.length);
         const optionElement = optionElements?.item(0);
         expect(optionElement?.textContent).to.equal('Banana');
       });
     });
+
     describe('Options visibility', () => {
       it('hides options when text in input node is cleared after typing something by default', async () => {
-        const el =
-          /** @type {LionCombobox} */
+        const el = /** @type {LionCombobox} */ (
           await fixture(html`
             <${tags.host} name="foo">
               <${tags.option} ${optionFixture(`Artichoke`)} .choiceValue="${'Artichoke'}">Artichoke</${tags.option}>
@@ -167,10 +176,12 @@ export function runComboboxSuite({
               <${tags.option} ${optionFixture(`Chicory`)} .choiceValue="${'Chicory'}">Chicory</${tags.option}>
               <${tags.option} ${optionFixture(`Victoria Plum`)} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tags.option}>
             </${tags.host}>
-          `);
+          `)
+        );
+
         const options = el.formElements;
-        const visibleOptions = () =>
-          options.filter((o) => o.getAttribute('aria-hidden') !== 'true');
+        const visibleOptions = () => options.filter(o => o.getAttribute('aria-hidden') !== 'true');
+
         async function performChecks() {
           await mimicUserTyping(el, 'c');
           await el.updateComplete;
@@ -180,6 +191,7 @@ export function runComboboxSuite({
           await el.updateComplete;
           expect(visibleOptions().length).to.equal(0, `autocompleteMode is ${el.autocomplete}`);
         }
+
         el.autocomplete = 'none';
         await performChecks();
         el.autocomplete = 'list';
@@ -189,9 +201,9 @@ export function runComboboxSuite({
         el.autocomplete = 'both';
         await performChecks();
       });
+
       it('hides all options on reset()', async () => {
-        const el =
-          /** @type {LionCombobox} */
+        const el = /** @type {LionCombobox} */ (
           await fixture(html`
             <${tags.host} name="foo">
               <${tags.option} ${optionFixture(`Artichoke`)} .choiceValue="${'Artichoke'}">Artichoke</${tags.option}>
@@ -199,9 +211,12 @@ export function runComboboxSuite({
               <${tags.option} ${optionFixture(`Chicory`)} .choiceValue="${'Chicory'}">Chicory</${tags.option}>
               <${tags.option} ${optionFixture(`Victoria Plum`)} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tags.option}>
             </${tags.host}>
-          `);
+          `)
+        );
+
         const options = el.formElements;
-        const visibleOptions = () => options.filter((o) => o.style.display !== 'none');
+        const visibleOptions = () => options.filter(o => o.style.display !== 'none');
+
         await mimicUserTyping(el, 'cha');
         await el.updateComplete;
         expect(visibleOptions().length).to.equal(1);
@@ -209,9 +224,9 @@ export function runComboboxSuite({
         await el.updateComplete;
         expect(visibleOptions().length).to.equal(0);
       });
+
       it('shows all options on reset() when showAllOnEmpty is set to true and overlay was open', async () => {
-        const el =
-          /** @type {LionCombobox} */
+        const el = /** @type {LionCombobox} */ (
           await fixture(html`
             <${tags.host} name="foo" show-all-on-empty>
               <${tags.option} ${optionFixture(`Artichoke`)} .choiceValue="${'Artichoke'}">Artichoke</${tags.option}>
@@ -219,21 +234,24 @@ export function runComboboxSuite({
               <${tags.option} ${optionFixture(`Chicory`)} .choiceValue="${'Chicory'}">Chicory</${tags.option}>
               <${tags.option} ${optionFixture(`Victoria Plum`)} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tags.option}>
             </${tags.host}>
-          `);
+          `)
+        );
+
         const options = el.formElements;
-        const visibleOptions = () =>
-          options.filter((o) => o.getAttribute('aria-hidden') !== 'true');
+        const visibleOptions = () => options.filter(o => o.getAttribute('aria-hidden') !== 'true');
+
         await mimicUserTyping(el, 'cha');
         await el.updateComplete;
         expect(visibleOptions().length).to.equal(1);
         expect(el.opened).to.be.true;
+
         el.reset();
         await el.updateComplete;
         expect(visibleOptions().length).to.equal(4);
       });
+
       it('hides listbox on click/enter (when multiple-choice is false)', async () => {
-        const el =
-          /** @type {LionCombobox} */
+        const el = /** @type {LionCombobox} */ (
           await fixture(html`
             <${tags.host} name="foo">
               <${tags.option} ${optionFixture(`Artichoke`)} .choiceValue="${'Artichoke'}">Artichoke</${tags.option}>
@@ -241,15 +259,19 @@ export function runComboboxSuite({
               <${tags.option} ${optionFixture(`Chicory`)} .choiceValue="${'Chicory'}">Chicory</${tags.option}>
               <${tags.option} ${optionFixture(`Victoria Plum`)} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tags.option}>
             </${tags.host}>
-          `);
+          `)
+        );
+
         const { _listboxNode } = getComboboxMembers(el);
+
         async function open() {
           await mimicUserTyping(el, 'ch');
           return el.updateComplete;
         }
+
         await open();
         expect(el.opened).to.be.true;
-        const visibleOptions = el.formElements.filter((o) => o.style.display !== 'none');
+        const visibleOptions = el.formElements.filter(o => o.style.display !== 'none');
         visibleOptions[0].click();
         expect(el.opened).to.be.false;
         await open();
@@ -259,10 +281,10 @@ export function runComboboxSuite({
         await el.updateComplete;
         expect(el.opened).to.be.false;
       });
+
       describe('With ".showAllOnEmpty"', () => {
         it('keeps showing options when text in input node is cleared after typing something', async () => {
-          const el =
-            /** @type {LionCombobox} */
+          const el = /** @type {LionCombobox} */ (
             await fixture(html`
               <${tags.host} name="foo" autocomplete="list" show-all-on-empty>
                 <${tags.option} ${optionFixture(`Artichoke`)} .choiceValue="${'Artichoke'}">Artichoke</${tags.option}>
@@ -270,10 +292,13 @@ export function runComboboxSuite({
                 <${tags.option} ${optionFixture(`Chicory`)} .choiceValue="${'Chicory'}">Chicory</${tags.option}>
                 <${tags.option} ${optionFixture(`Victoria Plum`)} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tags.option}>
               </${tags.host}>
-            `);
+            `)
+          );
+
           const options = el.formElements;
           const visibleOptions = () =>
-            options.filter((o) => o.getAttribute('aria-hidden') !== 'true');
+            options.filter(o => o.getAttribute('aria-hidden') !== 'true');
+
           async function performChecks() {
             await mimicUserTyping(el, 'c');
             await el.updateComplete;
@@ -282,6 +307,7 @@ export function runComboboxSuite({
             await el.updateComplete;
             expect(visibleOptions().length).to.equal(options.length);
           }
+
           el.autocomplete = 'none';
           await performChecks();
           el.autocomplete = 'list';
@@ -291,9 +317,9 @@ export function runComboboxSuite({
           el.autocomplete = 'both';
           await performChecks();
         });
+
         it('shows overlay on click', async () => {
-          const el =
-            /** @type {LionCombobox} */
+          const el = /** @type {LionCombobox} */ (
             await fixture(html`
               <${tags.host} name="foo" .showAllOnEmpty="${true}">
                 <${tags.option} ${optionFixture(`Artichoke`)} .choiceValue="${'Artichoke'}">Artichoke</${tags.option}>
@@ -301,21 +327,18 @@ export function runComboboxSuite({
                 <${tags.option} ${optionFixture(`Chicory`)} .choiceValue="${'Chicory'}">Chicory</${tags.option}>
                 <${tags.option} ${optionFixture(`Victoria Plum`)} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tags.option}>
               </${tags.host}>
-            `);
-          const { _inputNode } = getComboboxMembers(el);
-          expect(el.opened).to.be.false;
-          _inputNode.dispatchEvent(
-            new Event('click', {
-              bubbles: true,
-              composed: true,
-            }),
+            `)
           );
+          const { _inputNode } = getComboboxMembers(el);
+
+          expect(el.opened).to.be.false;
+          _inputNode.dispatchEvent(new Event('click', { bubbles: true, composed: true }));
           await el.updateComplete;
           expect(el.opened).to.be.true;
         });
+
         it('hides overlay on [Escape] after being opened', async () => {
-          const el =
-            /** @type {LionCombobox} */
+          const el = /** @type {LionCombobox} */ (
             await fixture(html`
               <${tags.host} name="foo" .showAllOnEmpty="${true}" opened>
                 <${tags.option} ${optionFixture(`Artichoke`)} .choiceValue="${'Artichoke'}">Artichoke</${tags.option}>
@@ -323,20 +346,19 @@ export function runComboboxSuite({
                 <${tags.option} ${optionFixture(`Chicory`)} .choiceValue="${'Chicory'}">Chicory</${tags.option}>
                 <${tags.option} ${optionFixture(`Victoria Plum`)} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tags.option}>
               </${tags.host}>
-            `);
-          await el.updateComplete;
-          const { _inputNode } = getComboboxMembers(el);
-          _inputNode.dispatchEvent(
-            new KeyboardEvent('keyup', {
-              key: 'Escape',
-            }),
+            `)
           );
+          await el.updateComplete;
+
+          const { _inputNode } = getComboboxMembers(el);
+
+          _inputNode.dispatchEvent(new KeyboardEvent('keyup', { key: 'Escape' }));
           await el.updateComplete;
           expect(el.opened).to.be.false;
         });
+
         it('hides listbox on click/enter (when multiple-choice is false)', async () => {
-          const el =
-            /** @type {LionCombobox} */
+          const el = /** @type {LionCombobox} */ (
             await fixture(html`
               <${tags.host} name="foo" .showAllOnEmpty="${true}">
                 <${tags.option} ${optionFixture(`Artichoke`)} .choiceValue="${'Artichoke'}">Artichoke</${tags.option}>
@@ -344,8 +366,11 @@ export function runComboboxSuite({
                 <${tags.option} ${optionFixture(`Chicory`)} .choiceValue="${'Chicory'}">Chicory</${tags.option}>
                 <${tags.option} ${optionFixture(`Victoria Plum`)} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tags.option}>
               </${tags.host}>
-            `);
+            `)
+          );
+
           const { _listboxNode, _inputNode } = getComboboxMembers(el);
+
           async function open() {
             await mimicUserTyping(el, 'ch');
             return el.updateComplete;
@@ -359,66 +384,75 @@ export function runComboboxSuite({
           if (isSafari) {
             return;
           }
+
           await open();
           expect(el.opened).to.be.true;
-          const visibleOptions = el.formElements.filter((o) => o.style.display !== 'none');
+          const visibleOptions = el.formElements.filter(o => o.style.display !== 'none');
           visibleOptions[0].click();
           await el.updateComplete;
           expect(el.opened).to.be.false;
+
           _inputNode.value = '';
           _inputNode.blur();
           await open();
           await el.updateComplete;
+
           el.activeIndex = el.formElements.indexOf(visibleOptions[0]);
           mimicKeyPress(_listboxNode, 'Enter');
           expect(el.opened).to.be.false;
         });
       });
     });
+
     describe('Structure', () => {
       it('has a listbox node', async () => {
-        const el =
-          /** @type {LionCombobox} */
+        const el = /** @type {LionCombobox} */ (
           await fixture(html`
             <${tags.host} name="foo">
               <${tags.option} ${optionFixture(`Item 1`)} .choiceValue="${'10'}" checked>Item 1</${tags.option}>
               <${tags.option} ${optionFixture(`Item 2`)} .choiceValue="${'20'}">Item 2</${tags.option}>
             </${tags.host}>
-          `);
+          `)
+        );
         const { _listboxNode } = getComboboxMembers(el);
+
         expect(_listboxNode).to.exist;
         // TODO: worked before, find out what has changed in ScopedElements
         // expect(_listboxNode instanceof LionOptions).to.be.true;
         expect(el.querySelector('[role=listbox]')).to.equal(_listboxNode);
       });
+
       it('has a textbox element', async () => {
-        const el =
-          /** @type {LionCombobox} */
+        const el = /** @type {LionCombobox} */ (
           await fixture(html`
             <${tags.host} name="foo">
               <${tags.option} ${optionFixture(`Item 1`)} .choiceValue="${'10'}" checked>Item 1</${tags.option}>
               <${tags.option} ${optionFixture(`Item 2`)} .choiceValue="${'20'}">Item 2</${tags.option}>
             </${tags.host}>
-          `);
+          `)
+        );
         const { _comboboxNode } = getComboboxMembers(el);
+
         expect(_comboboxNode).to.exist;
         expect(el.querySelector('[role=combobox]')).to.equal(_comboboxNode);
       });
+
       it('has validator "MatchesOption" applied by default', async () => {
-        const el =
-          /** @type {LionCombobox} */
+        const el = /** @type {LionCombobox} */ (
           await fixture(html`
             <${tags.host} name="foo">
               <${tags.option} ${optionFixture(`Item 1`)} .choiceValue="${'10'}" checked>Item 1</${tags.option}>
               <${tags.option} ${optionFixture(`Item 2`)} .choiceValue="${'20'}">Item 2</${tags.option}>
             </${tags.host}>
-          `);
+          `)
+        );
         await mimicUserTyping(el, '30');
         await el.updateComplete;
         expect(el.hasFeedbackFor).to.include('error');
         expect(el.validationStates).to.have.property('error');
         expect(el.validationStates.error).to.have.property('MatchesOption');
       });
+
       it('keeps slottable provided in `slots` getter as direct host child', async () => {
         class MyEl extends SlotMixin(LionCombobox) {
           // @ts-ignore
@@ -433,6 +467,7 @@ export function runComboboxSuite({
               }),
             };
           }
+
           _labelTemplate() {
             return html`
               <div class="form-field__label">
@@ -442,6 +477,7 @@ export function runComboboxSuite({
               </div>
             `;
           }
+
           constructor() {
             super();
             this.renderSlot = false;
@@ -449,39 +485,44 @@ export function runComboboxSuite({
         }
         const tagName = defineCE(MyEl);
         const wrappingTag = unsafeStatic(tagName);
-        const el =
-          /** @type {MyEl} */
+
+        const el = /** @type {MyEl} */ (
           await fixture(html`
             <${wrappingTag} label="my label">
               <${tags.option} ${optionFixture(`${'one'}`)} .choiceValue="${'1'}">${'one'}</${tags.option}>
             </${wrappingTag}>
-          `);
+          `)
+        );
         await el.registrationComplete;
+
         el.renderSlot = true;
         await el.updateComplete;
         const lazyRenderedSlot = el.querySelector('#lazyRenderedSlotId');
         expect(lazyRenderedSlot?.parentElement === el).to.be.true;
       });
     });
+
     describe('Values', () => {
       it('syncs modelValue with textbox', async () => {
-        const el =
-          /** @type {LionCombobox} */
+        const el = /** @type {LionCombobox} */ (
           await fixture(html`
             <${tags.host} name="foo" .modelValue="${'10'}">
               <${tags.option} ${optionFixture(`Item 1`)} .choiceValue="${'10'}" checked>Item 1</${tags.option}>
               <${tags.option} ${optionFixture(`Item 2`)} .choiceValue="${'20'}">Item 2</${tags.option}>
             </${tags.host}>
-          `);
+          `)
+        );
         const { _inputNode } = getComboboxMembers(el);
+
         expect(_inputNode.value).to.equal('10');
+
         el.modelValue = '20';
         await el.updateComplete;
         expect(_inputNode.value).to.equal('20');
       });
+
       it('sets modelValue to Unparseable if no option is selected', async () => {
-        const el =
-          /** @type {LionCombobox} */
+        const el = /** @type {LionCombobox} */ (
           await fixture(html`
             <${tags.host} name="foo" .modelValue="${'Artichoke'}">
               <${tags.option} ${optionFixture(`Artichoke`)} .choiceValue="${'Artichoke'}">Artichoke</${tags.option}>
@@ -489,8 +530,10 @@ export function runComboboxSuite({
               <${tags.option} ${optionFixture(`Chicory`)} .choiceValue="${'Chicory'}">Chicory</${tags.option}>
               <${tags.option} ${optionFixture(`Victoria Plum`)} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tags.option}>
             </${tags.host}>
-          `);
+          `)
+        );
         const { _inputNode } = getComboboxMembers(el);
+
         expect(el.modelValue).to.equal('Artichoke');
         expect(el.formElements[0].checked).to.be.true;
         el.setCheckedIndex(-1);
@@ -499,6 +542,7 @@ export function runComboboxSuite({
         expect(el.modelValue instanceof Unparseable).to.be.true;
         expect(el.modelValue.viewValue).to.equal('Artichoke');
         expect(el.formElements[0].checked).to.be.false;
+
         el.setCheckedIndex(-1);
         _inputNode.value = 'Foo';
         el.__shouldAutocompleteNextUpdate = true;
@@ -506,6 +550,7 @@ export function runComboboxSuite({
         expect(el.modelValue instanceof Unparseable).to.be.true;
         expect(el.modelValue.viewValue).to.equal('Foo');
         expect(el.formElements[0].checked).to.be.false;
+
         el.setCheckedIndex(0);
         el.__shouldAutocompleteNextUpdate = true;
         await el.updateComplete;
@@ -513,9 +558,9 @@ export function runComboboxSuite({
         expect(el.modelValue).to.equal('Artichoke');
         expect(el.formElements[0].checked).to.be.true;
       });
+
       it('sets modelValue to _inputNode.value if no option is selected when requireOptionMatch is false', async () => {
-        const el =
-          /** @type {LionCombobox} */
+        const el = /** @type {LionCombobox} */ (
           await fixture(html`
             <${tags.host} name="foo" .modelValue="${'Artichoke'}" .requireOptionMatch="${false}">
               <${tags.option} ${optionFixture(`Artichoke`)} .choiceValue="${'Artichoke'}">Artichoke</${tags.option}>
@@ -523,8 +568,10 @@ export function runComboboxSuite({
               <${tags.option} ${optionFixture(`Chicory`)} .choiceValue="${'Chicory'}">Chicory</${tags.option}>
               <${tags.option} ${optionFixture(`Victoria Plum`)} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tags.option}>
             </${tags.host}>
-          `);
+          `)
+        );
         const { _inputNode } = getComboboxMembers(el);
+
         expect(el.modelValue).to.equal('Artichoke');
         expect(el.formElements[0].checked).to.be.true;
         el.setCheckedIndex(-1);
@@ -532,6 +579,7 @@ export function runComboboxSuite({
         await el.updateComplete;
         expect(el.modelValue).to.equal('Artichoke');
         expect(el.formElements[0].checked).to.be.true;
+
         el.setCheckedIndex(-1);
         _inputNode.value = 'Foo';
         el.__shouldAutocompleteNextUpdate = true;
@@ -539,9 +587,9 @@ export function runComboboxSuite({
         expect(el.modelValue).to.equal('Foo');
         expect(el.formElements[0].checked).to.be.false;
       });
+
       it('sets modelValue to empty array if no option is selected for multiple choice', async () => {
-        const el =
-          /** @type {LionCombobox} */
+        const el = /** @type {LionCombobox} */ (
           await fixture(html`
             <${tags.host} name="foo" multiple-choice .modelValue="${['Artichoke']}">
               <${tags.option} ${optionFixture(`Artichoke`)} .choiceValue="${'Artichoke'}">Artichoke</${tags.option}>
@@ -549,7 +597,8 @@ export function runComboboxSuite({
               <${tags.option} ${optionFixture(`Chicory`)} .choiceValue="${'Chicory'}">Chicory</${tags.option}>
               <${tags.option} ${optionFixture(`Victoria Plum`)} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tags.option}>
             </${tags.host}>
-          `);
+          `)
+        );
         expect(el.modelValue).to.deep.equal(['Artichoke']);
         expect(el.formElements[0].checked).to.be.true;
         el.setCheckedIndex([]);
@@ -557,9 +606,9 @@ export function runComboboxSuite({
         expect(el.modelValue).to.deep.equal([]);
         expect(el.formElements[0].checked).to.be.false;
       });
+
       it('clears modelValue and textbox value on clear()', async () => {
-        const el =
-          /** @type {LionCombobox} */
+        const el = /** @type {LionCombobox} */ (
           await fixture(html`
             <${tags.host} name="foo" .modelValue="${'Artichoke'}">
               <${tags.option} ${optionFixture(`Artichoke`)} .choiceValue="${'Artichoke'}">Artichoke</${tags.option}>
@@ -567,13 +616,16 @@ export function runComboboxSuite({
               <${tags.option} ${optionFixture(`Chicory`)} .choiceValue="${'Chicory'}">Chicory</${tags.option}>
               <${tags.option} ${optionFixture(`Victoria Plum`)} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tags.option}>
             </${tags.host}>
-          `);
+          `)
+        );
+
         const { _inputNode } = getComboboxMembers(el);
+
         el.clear();
         expect(el.modelValue).to.equal('');
         expect(_inputNode.value).to.equal('');
-        const el2 =
-          /** @type {LionCombobox} */
+
+        const el2 = /** @type {LionCombobox} */ (
           await fixture(html`
             <${tags.host} name="foo" multiple-choice .modelValue="${['Artichoke']}">
               <${tags.option} ${optionFixture(`Artichoke`)} .choiceValue="${'Artichoke'}">Artichoke</${tags.option}>
@@ -581,34 +633,43 @@ export function runComboboxSuite({
               <${tags.option} ${optionFixture(`Chicory`)} .choiceValue="${'Chicory'}">Chicory</${tags.option}>
               <${tags.option} ${optionFixture(`Victoria Plum`)} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tags.option}>
             </${tags.host}>
-          `);
+          `)
+        );
+
         el2.clear();
         expect(el2.modelValue).to.eql([]);
         // @ts-ignore [allow-protected] in test
         expect(el2._inputNode.value).to.equal('');
       });
+
       it('correctly emits event with an empty value when clear() is called', async () => {
-        const el =
-          /** @type {LionCombobox} */
-          await fixture(html`<${tags.host}>
+        const el = /** @type {LionCombobox} */ (
+          await fixture(
+            html`<${tags.host}>
               <${tags.option} ${optionFixture(`Red`)} .choiceValue=${'red'}>Red</${tags.option}>
               <${tags.option} ${optionFixture(`Green`)} .choiceValue=${'green'}>Green</${tags.option}>
               <${tags.option} ${optionFixture(`Blue`)} .choiceValue=${'blue'}>Blue</${tags.option}>
-            </${tags.host}>`);
+            </${tags.host}>`,
+          )
+        );
+
         el.modelValue = 'red';
         await el.updateComplete;
+
         el.addEventListener('model-value-changed', ({ target }) => {
           expect(target).to.not.be.null;
-          const { modelValue, value } = /** @type {LionCombobox} */ target;
+
+          const { modelValue, value } = /** @type {LionCombobox} */ (target);
           expect(value).to.equal('');
           expect(modelValue).to.equal('');
         });
+
         el.clear();
         await el.updateComplete;
       });
+
       it('updates option list after clear()', async () => {
-        const el =
-          /** @type {LionCombobox} */
+        const el = /** @type {LionCombobox} */ (
           await fixture(html`
             <${tags.host} name="foo" multiple-choice>
               <${tags.option} ${optionFixture(`Artichoke`)} .choiceValue="${'Artichoke'}">Artichoke</${tags.option}>
@@ -616,19 +677,22 @@ export function runComboboxSuite({
               <${tags.option} ${optionFixture(`Chicory`)} .choiceValue="${'Chicory'}">Chicory</${tags.option}>
               <${tags.option} ${optionFixture(`Victoria Plum`)} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tags.option}>
             </${tags.host}>
-          `);
+          `)
+        );
         const options = el.formElements;
         await mimicUserTyping(el, 'a');
         await el.updateComplete;
-        const visibleOptions = () => options.filter((o) => o.style.display !== 'none');
+
+        const visibleOptions = () => options.filter(o => o.style.display !== 'none');
         expect(visibleOptions().length).to.equal(3, 'after input');
+
         el.clear();
         await el.updateComplete;
         expect(visibleOptions().length).to.equal(0, 'after clear');
       });
+
       it('keeps interaction states on clear()', async () => {
-        const el =
-          /** @type {LionCombobox} */
+        const el = /** @type {LionCombobox} */ (
           await fixture(html`
             <${tags.host} name="foo">
               <${tags.option} ${optionFixture(`Artichoke`)} .choiceValue="${'Artichoke'}">Artichoke</${tags.option}>
@@ -636,17 +700,19 @@ export function runComboboxSuite({
               <${tags.option} ${optionFixture(`Chicory`)} .choiceValue="${'Chicory'}">Chicory</${tags.option}>
               <${tags.option} ${optionFixture(`Victoria Plum`)} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tags.option}>
             </${tags.host}>
-          `);
+          `)
+        );
         await mimicUserTyping(el, 'a');
         await el.updateComplete;
         expect(el.dirty).to.equal(true);
+
         el.clear();
         await el.updateComplete;
         expect(el.dirty).to.equal(true);
       });
+
       it('resets modelValue and textbox value on reset()', async () => {
-        const el =
-          /** @type {LionCombobox} */
+        const el = /** @type {LionCombobox} */ (
           await fixture(html`
             <${tags.host} name="foo" .modelValue="${'Artichoke'}">
               <${tags.option} ${optionFixture(`Artichoke`)} .choiceValue="${'Artichoke'}">Artichoke</${tags.option}>
@@ -654,14 +720,16 @@ export function runComboboxSuite({
               <${tags.option} ${optionFixture(`Chicory`)} .choiceValue="${'Chicory'}">Chicory</${tags.option}>
               <${tags.option} ${optionFixture(`Victoria Plum`)} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tags.option}>
             </${tags.host}>
-          `);
+          `)
+        );
+
         const { _inputNode } = getComboboxMembers(el);
         el.modelValue = 'Chard';
         el.reset();
         expect(el.modelValue).to.equal('Artichoke');
         expect(_inputNode.value).to.equal('Artichoke');
-        const el2 =
-          /** @type {LionCombobox} */
+
+        const el2 = /** @type {LionCombobox} */ (
           await fixture(html`
             <${tags.host} name="foo" multiple-choice .modelValue="${['Artichoke']}">
               <${tags.option} ${optionFixture(`Artichoke`)} .choiceValue="${'Artichoke'}">Artichoke</${tags.option}>
@@ -669,37 +737,40 @@ export function runComboboxSuite({
               <${tags.option} ${optionFixture(`Chicory`)} .choiceValue="${'Chicory'}">Chicory</${tags.option}>
               <${tags.option} ${optionFixture(`Victoria Plum`)} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tags.option}>
             </${tags.host}>
-          `);
+          `)
+        );
         el2.modelValue = ['Artichoke', 'Chard'];
         el2.reset();
         expect(el2.modelValue).to.deep.equal(['Artichoke']);
         // @ts-ignore [allow-protected] in test
         expect(el2._inputNode.value).to.equal('');
       });
+
       it('syncs textbox to modelValue', async () => {
         for (const autocompleteMode of ['none', 'list', 'inline', 'both']) {
-          const el =
-            /** @type {LionCombobox} */
+          const el = /** @type {LionCombobox} */ (
             await fixture(html`
               <${tags.host} name="foo" show-all-on-empty .autocomplete="${autocompleteMode}">
                 <${tags.option} ${optionFixture(`Aa`)} .choiceValue="${'Aa'}" checked>Aa</${tags.option}>
                 <${tags.option} ${optionFixture(`Bb`)} .choiceValue="${'Bb'}">Bb</${tags.option}>
               </${tags.host}>
-            `);
+            `)
+          );
           const { _inputNode } = getComboboxMembers(el);
+
           expect(_inputNode.value).to.equal('Aa', `autocompleteMode is ${autocompleteMode}`);
+
           el.formElements[0].click();
           await el.updateComplete;
+
           expect(_inputNode.value).to.equal('Aa', `autocompleteMode is ${autocompleteMode}`);
           expect(el.checkedIndex).to.equal(0, `autocompleteMode is ${autocompleteMode}`);
+
           await mimicUserTyping(el, 'B');
           await el.updateComplete;
           if (autocompleteMode === 'none' || autocompleteMode === 'list') {
             expect(el.modelValue).to.deep.equal(
-              {
-                type: 'unparseable',
-                viewValue: 'B',
-              },
+              { type: 'unparseable', viewValue: 'B' },
               `autocompleteMode is ${autocompleteMode}`,
             );
             await el.updateComplete;
@@ -710,9 +781,9 @@ export function runComboboxSuite({
           }
         }
       });
+
       it('works with Required validator', async () => {
-        const el =
-          /** @type {LionCombobox} */
+        const el = /** @type {LionCombobox} */ (
           await fixture(html`
             <${tags.host} name="foo" .validators=${[new Required()]}>
               <${tags.option} ${optionFixture(`Artichoke`)} .choiceValue="${'Artichoke'}">Artichoke</${tags.option}>
@@ -720,16 +791,17 @@ export function runComboboxSuite({
               <${tags.option} ${optionFixture(`Chicory`)} .choiceValue="${'Chicory'}">Chicory</${tags.option}>
               <${tags.option} ${optionFixture(`Victoria Plum`)} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tags.option}>
             </${tags.host}>
-          `);
+          `)
+        );
         el.submitted = true;
         await el.feedbackComplete;
         expect(el.hasFeedbackFor).to.include('error', 'hasFeedbackFor');
         await el.feedbackComplete;
         expect(el.showsFeedbackFor).to.include('error', 'showsFeedbackFor');
       });
+
       it('ignores empty string modelValue inputs', async () => {
-        const el =
-          /** @type {LionCombobox} */
+        const el = /** @type {LionCombobox} */ (
           await fixture(html`
             <${tags.host} name="foo" multiple-choice autocomplete="none">
               <${tags.option} ${optionFixture(`Artichoke`)} .choiceValue="${'Artichoke'}">Artichoke</${tags.option}>
@@ -737,22 +809,26 @@ export function runComboboxSuite({
               <${tags.option} ${optionFixture(`Chicory`)} .choiceValue="${'Chicory'}">Chicory</${tags.option}>
               <${tags.option} ${optionFixture(`Victoria Plum`)} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tags.option}>
             </${tags.host}>
-          `);
+          `)
+        );
+
         el.requireOptionMatch = false;
         await el.updateComplete;
         const { _inputNode } = getComboboxMembers(el);
+
         mimicKeyPress(_inputNode, 'Enter');
         await el.updateComplete;
         expect(el.modelValue).to.eql([]);
+
         await mimicUserTyping(el, ' ');
         await el.updateComplete;
         mimicKeyPress(_inputNode, 'Enter');
         await el.updateComplete;
         expect(el.modelValue).to.eql([]);
       });
+
       it('allows a value outside of the option list when requireOptionMatch is false', async () => {
-        const el =
-          /** @type {LionCombobox} */
+        const el = /** @type {LionCombobox} */ (
           await fixture(html`
             <${tags.host} name="foo" .validators=${[new Required()]}>
               <${tags.option} ${optionFixture(`Artichoke`)} checked .choiceValue="${'Artichoke'}">Artichoke</${tags.option}>
@@ -760,20 +836,23 @@ export function runComboboxSuite({
               <${tags.option} ${optionFixture(`Chicory`)} .choiceValue="${'Chicory'}">Chicory</${tags.option}>
               <${tags.option} ${optionFixture(`Victoria Plum`)} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tags.option}>
             </${tags.host}>
-          `);
+          `)
+        );
         el.requireOptionMatch = false;
         const { _inputNode } = getComboboxMembers(el);
         expect(el.checkedIndex).to.equal(0);
+
         await mimicUserTyping(el, 'Foo');
         _inputNode.dispatchEvent(new Event('input'));
         await el.updateComplete;
+
         expect(el.checkedIndex).to.equal(-1);
         expect(el.modelValue).to.equal('Foo');
         expect(_inputNode.value).to.equal('Foo');
       });
+
       it('fires "model-value-changed" on every textbox change when requireOptionMatch is false and autocomplete is both', async () => {
-        const el =
-          /** @type {LionCombobox} */
+        const el = /** @type {LionCombobox} */ (
           await fixture(html`
             <${tags.host} name="foo" autocomplete="both" .requireOptionMatch="${false}">
               <${tags.option} ${optionFixture(`Artichoke`)} checked .choiceValue="${'Artichoke'}">Artichoke</${tags.option}>
@@ -781,9 +860,12 @@ export function runComboboxSuite({
               <${tags.option} ${optionFixture(`Chicory`)} .choiceValue="${'Chicory'}">Chicory</${tags.option}>
               <${tags.option} ${optionFixture(`Victoria Plum`)} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tags.option}>
             </${tags.host}>
-          `);
-        const fake = sinon.fake((ev) => ev.target.modelValue);
+          `)
+        );
+
+        const fake = sinon.fake(ev => ev.target.modelValue);
         el.addEventListener('model-value-changed', fake);
+
         await mimicUserTyping(el, 'Foo');
         await el.updateComplete;
         expect(fake).to.have.been.calledThrice;
@@ -792,9 +874,9 @@ export function runComboboxSuite({
         expect(fake.thirdCall.returnValue).to.equal('Foo');
         expect(el.modelValue).to.equal('Foo');
       });
+
       it('fires "model-value-changed" on every textbox change when requireOptionMatch is false and autocomplete is none', async () => {
-        const el =
-          /** @type {LionCombobox} */
+        const el = /** @type {LionCombobox} */ (
           await fixture(html`
             <${tags.host} name="foo" autocomplete="none" .requireOptionMatch="${false}">
               <${tags.option} ${optionFixture(`Artichoke`)} checked .choiceValue="${'Artichoke'}">Artichoke</${tags.option}>
@@ -802,9 +884,12 @@ export function runComboboxSuite({
               <${tags.option} ${optionFixture(`Chicory`)} .choiceValue="${'Chicory'}">Chicory</${tags.option}>
               <${tags.option} ${optionFixture(`Victoria Plum`)} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tags.option}>
             </${tags.host}>
-          `);
-        const fake = sinon.fake((ev) => ev.target.modelValue);
+          `)
+        );
+
+        const fake = sinon.fake(ev => ev.target.modelValue);
         el.addEventListener('model-value-changed', fake);
+
         await mimicUserTyping(el, 'Foo');
         await el.updateComplete;
         expect(fake.callCount).to.equal(4);
@@ -814,9 +899,9 @@ export function runComboboxSuite({
         expect(fake.getCall(3).returnValue).to.equal('Foo');
         expect(el.modelValue).to.equal('Foo');
       });
+
       it('does not fire "model-value-changed" when requireOptionMatch is false but the textbox value did not change', async () => {
-        const el =
-          /** @type {LionCombobox} */
+        const el = /** @type {LionCombobox} */ (
           await fixture(html`
             <${tags.host} name="foo" autocomplete="none" .requireOptionMatch="${false}">
               <${tags.option} ${optionFixture(`Artichoke`)} .choiceValue="${'Artichoke'}">Artichoke</${tags.option}>
@@ -824,20 +909,23 @@ export function runComboboxSuite({
               <${tags.option} ${optionFixture(`Chicory`)} .choiceValue="${'Chicory'}">Chicory</${tags.option}>
               <${tags.option} ${optionFixture(`Victoria Plum`)} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tags.option}>
             </${tags.host}>
-          `);
+          `)
+        );
         await mimicUserTyping(el, 'Foo');
         await el.updateComplete;
+
         const spy = sinon.spy();
         el.addEventListener('model-value-changed', spy);
 
         // Re-triggering autocompletion with the exact same textbox value should not dispatch again
         el.__shouldAutocompleteNextUpdate = true;
         await el.updateComplete;
+
         expect(spy).to.not.have.been.called;
       });
+
       it('fires "model-value-changed" via checked option repropagation (not the manual dispatch) when requireOptionMatch is true', async () => {
-        const el =
-          /** @type {LionCombobox} */
+        const el = /** @type {LionCombobox} */ (
           await fixture(html`
             <${tags.host} name="foo" autocomplete="both">
               <${tags.option} ${optionFixture(`Artichoke`)} .choiceValue="${'Artichoke'}">Artichoke</${tags.option}>
@@ -845,13 +933,16 @@ export function runComboboxSuite({
               <${tags.option} ${optionFixture(`Chicory`)} .choiceValue="${'Chicory'}">Chicory</${tags.option}>
               <${tags.option} ${optionFixture(`Victoria Plum`)} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tags.option}>
             </${tags.host}>
-          `);
+          `)
+        );
         const spy = sinon.spy();
         el.addEventListener('model-value-changed', spy);
+
         await mimicUserTyping(el, 'cha');
         await el.updateComplete;
         expect(el.modelValue).to.equal('Chard');
         expect(spy).to.have.been.calledOnce;
+
         spy.resetHistory();
         // No option matches "xyz", so checkedIndex stays -1 and requireOptionMatch is true:
         // no event should be manually dispatched (normal Unparseable flow, no double event)
@@ -860,9 +951,9 @@ export function runComboboxSuite({
         expect(el.modelValue instanceof Unparseable).to.be.true;
         expect(spy).to.have.been.calledOnce;
       });
+
       it('fires "model-value-changed" via checked option repropagation (not the manual dispatch) when requireOptionMatch is false and no option matches the input', async () => {
-        const el =
-          /** @type {LionCombobox} */
+        const el = /** @type {LionCombobox} */ (
           await fixture(html`
             <${tags.host} name="foo" autocomplete="both">
               <${tags.option} ${optionFixture(`Artichoke`)} .choiceValue="${'Artichoke'}">Artichoke</${tags.option}>
@@ -870,9 +961,12 @@ export function runComboboxSuite({
               <${tags.option} ${optionFixture(`Chicory`)} .choiceValue="${'Chicory'}">Chicory</${tags.option}>
               <${tags.option} ${optionFixture(`Victoria Plum`)} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tags.option}>
             </${tags.host}>
-          `);
+          `)
+        );
+
         el.requireOptionMatch = false;
         await el.updateComplete;
+
         const spy = sinon.spy();
         el.addEventListener('model-value-changed', spy);
 
@@ -884,9 +978,9 @@ export function runComboboxSuite({
         expect(spy.args.length).to.equal(3);
         expect(spy.args[2][0].target.modelValue).to.equal('Chicorys');
       });
+
       it("doesn't select any similar options after using delete when requireOptionMatch is false", async () => {
-        const el =
-          /** @type {LionCombobox} */
+        const el = /** @type {LionCombobox} */ (
           await fixture(html`
             <${tags.host} name="foo" .validators=${[new Required()]}>
               <${tags.option} ${optionFixture(`Artichoke`)} .choiceValue="${'Artichoke'}">Artichoke</${tags.option}>
@@ -894,24 +988,29 @@ export function runComboboxSuite({
               <${tags.option} ${optionFixture(`Chicory`)} .choiceValue="${'Chicory'}">Chicory</${tags.option}>
               <${tags.option} ${optionFixture(`Victoria Plum`)} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tags.option}>
             </${tags.host}>
-          `);
+          `)
+        );
         el.requireOptionMatch = false;
         const { _inputNode } = getComboboxMembers(el);
+
         await mimicUserTyping(el, 'Art');
         await el.updateComplete;
+
         await mimicUserTypingAdvanced(el, ['Delete']);
         await el.updateComplete;
         await el.updateComplete;
+
         mimicKeyPress(_inputNode, 'Enter');
         await el.updateComplete;
+
         expect(el.checkedIndex).to.equal(-1);
         expect(el.modelValue).to.equal('Art');
         expect(_inputNode.value).to.equal('Art');
       });
+
       it("when removing a letter it won't select the option", async () => {
         // We don't autocomplete when characters are removed
-        const el =
-          /** @type {LionCombobox} */
+        const el = /** @type {LionCombobox} */ (
           await fixture(html`
             <${tags.host} name="foo">
               <${tags.option} ${optionFixture(`Artichoke`)} checked .choiceValue="${'Artichoke'}">Artichoke</${tags.option}>
@@ -919,7 +1018,8 @@ export function runComboboxSuite({
               <${tags.option} ${optionFixture(`Chicory`)} .choiceValue="${'Chicory'}">Chicory</${tags.option}>
               <${tags.option} ${optionFixture(`Victoria Plum`)} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tags.option}>
             </${tags.host}>
-          `);
+          `)
+        );
         const { _inputNode } = getComboboxMembers(el);
         expect(el.checkedIndex).to.equal(0);
 
@@ -931,25 +1031,28 @@ export function runComboboxSuite({
         _inputNode.value = arr.join('');
         await el.updateComplete;
         el.dispatchEvent(new Event('blur'));
+
         expect(el.checkedIndex).to.equal(-1);
         expect(el.modelValue instanceof Unparseable).to.be.true;
         expect(el.modelValue.viewValue).to.equal('Artichok');
       });
+
       it('allows the user to override the parser', async () => {
-        const el =
-          /** @type {LionCombobox} */
+        const el = /** @type {LionCombobox} */ (
           await fixture(html`
             <${tags.host}
               name="foo"
-              .parser="${/** @param {string} value */ (value) => value.replace(/[0-9]/g, '')}"
+              .parser="${/** @param {string} value */ value => value.replace(/[0-9]/g, '')}"
             >
               <${tags.option} ${optionFixture(`Artichoke`)} .choiceValue="${'Artichoke'}">Artichoke</${tags.option}>
               <${tags.option} ${optionFixture(`Chard`)} .choiceValue="${'Chard'}">Chard</${tags.option}>
               <${tags.option} ${optionFixture(`Chicory`)} .choiceValue="${'Chicory'}">Chicory</${tags.option}>
               <${tags.option} ${optionFixture(`Victoria Plum`)} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tags.option}>
             </${tags.host}>
-          `);
+          `)
+        );
         const { _inputNode } = getComboboxMembers(el);
+
         el.setCheckedIndex(-1);
         _inputNode.value = 'Foo123';
         el.__shouldAutocompleteNextUpdate = true;
@@ -957,9 +1060,9 @@ export function runComboboxSuite({
         expect(el.modelValue).to.equal('Foo');
         expect(el.formElements[0].checked).to.be.false;
       });
+
       it('allows custom selections when multi-choice when requireOptionMatch is false', async () => {
-        const el =
-          /** @type {LionCombobox} */
+        const el = /** @type {LionCombobox} */ (
           await fixture(html`
             <${tags.host}
               name="foo"
@@ -972,26 +1075,32 @@ export function runComboboxSuite({
               <${tags.option} ${optionFixture(`Chicory`)} .choiceValue="${'Chicory'}">Chicory</${tags.option}>
               <${tags.option} ${optionFixture(`Victoria Plum`)} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tags.option}>
             </${tags.host}>
-          `);
+          `)
+        );
+
         el.requireOptionMatch = false;
         await el.updateComplete;
+
         const { _inputNode } = getComboboxMembers(el);
         expect(el.modelValue).to.eql(['Chard']);
         expect(el.checkedIndex).to.eql([1]);
+
         await mimicUserTyping(el, 'Foo');
         await el.updateComplete;
         mimicKeyPress(_inputNode, 'Enter');
         await el.updateComplete;
+
         expect(el.modelValue).to.eql(['Chard', 'Foo']);
         expect(el.checkedIndex).to.eql([1]);
+
         await mimicUserTyping(el, 'Bar');
         await el.updateComplete;
         mimicKeyPress(_inputNode, 'Enter');
         await el.updateComplete;
       });
+
       it('allows many custom selections when multi-choice when requireOptionMatch is false', async () => {
-        const el =
-          /** @type {LionCombobox} */
+        const el = /** @type {LionCombobox} */ (
           await fixture(html`
             <${tags.host}
               name="foo"
@@ -1004,26 +1113,33 @@ export function runComboboxSuite({
               <${tags.option} ${optionFixture(`Chicory`)} .choiceValue="${'Chicory'}">Chicory</${tags.option}>
               <${tags.option} ${optionFixture(`Victoria Plum`)} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tags.option}>
             </${tags.host}>
-          `);
+          `)
+        );
+
         el.requireOptionMatch = false;
         await el.updateComplete;
+
         const { _inputNode } = getComboboxMembers(el);
+
         await mimicUserTyping(el, 'Foo');
         await el.updateComplete;
         mimicKeyPress(_inputNode, 'Enter');
         await el.updateComplete;
+
         expect(el.modelValue).to.eql(['Foo']);
         expect(el.checkedIndex).to.eql([]);
+
         await mimicUserTyping(el, 'Bar');
         await el.updateComplete;
         mimicKeyPress(_inputNode, 'Enter');
         await el.updateComplete;
+
         expect(el.modelValue).to.eql(['Foo', 'Bar']);
         expect(el.checkedIndex).to.eql([]);
       });
+
       it('allows new options when multi-choice when requireOptionMatch=false and autocomplete="both", without selecting similar values', async () => {
-        const el =
-          /** @type {LionCombobox} */
+        const el = /** @type {LionCombobox} */ (
           await fixture(html`
             <${tags.host}
               name="foo"
@@ -1036,18 +1152,23 @@ export function runComboboxSuite({
               <${tags.option} ${optionFixture(`Chicory`)} .choiceValue="${'Chicory'}">Chicory</${tags.option}>
               <${tags.option} ${optionFixture(`Victoria Plum`)} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tags.option}>
             </${tags.host}>
-          `);
+          `)
+        );
+
         await el.updateComplete;
+
         const { _inputNode } = getComboboxMembers(el);
+
         await mimicUserTyping(el, 'Artist');
         await el.updateComplete;
         mimicKeyPress(_inputNode, 'Enter');
         await el.updateComplete;
+
         expect(el.modelValue).to.eql(['Artist']);
       });
+
       it('allows new options when multi-choice when requireOptionMatch=false and autocomplete="both", when deleting autocomplete values using Backspace', async () => {
-        const el =
-          /** @type {LionCombobox} */
+        const el = /** @type {LionCombobox} */ (
           await fixture(html`
             <${tags.host}
               name="foo"
@@ -1060,8 +1181,11 @@ export function runComboboxSuite({
               <${tags.option} ${optionFixture(`Chicory`)} .choiceValue="${'Chicory'}">Chicory</${tags.option}>
               <${tags.option} ${optionFixture(`Victoria Plum`)} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tags.option}>
             </${tags.host}>
-          `);
+          `)
+        );
+
         await el.updateComplete;
+
         const { _inputNode } = getComboboxMembers(el);
         await mimicUserTyping(el, 'Art');
         await el.updateComplete;
@@ -1069,11 +1193,12 @@ export function runComboboxSuite({
         await el.updateComplete;
         mimicKeyPress(_inputNode, 'Enter');
         await el.updateComplete;
+
         expect(el.modelValue).to.eql(['Art']);
       });
+
       it('allows new custom options when multi-choice when requireOptionMatch=false and autocomplete="both", when deleting autocompleted values using Delete', async () => {
-        const el =
-          /** @type {LionCombobox} */
+        const el = /** @type {LionCombobox} */ (
           await fixture(html`
             <${tags.host}
               name="foo"
@@ -1086,10 +1211,14 @@ export function runComboboxSuite({
               <${tags.option} ${optionFixture(`Chicory`)} .choiceValue="${'Chicory'}">Chicory</${tags.option}>
               <${tags.option} ${optionFixture(`Victoria Plum`)} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tags.option}>
             </${tags.host}>
-          `);
+          `)
+        );
+
         await el.updateComplete;
+
         const { _inputNode } = getComboboxMembers(el);
         el.modelValue = [];
+
         await mimicUserTyping(el, 'Art');
         await el.updateComplete;
         await mimicUserTypingAdvanced(el, ['Delete']);
@@ -1098,11 +1227,12 @@ export function runComboboxSuite({
         await el.updateComplete;
         expect(el.modelValue).to.eql(['Art']);
       });
+
       it('allows prefilling the combobox', async () => {
         const autocompleteValues = ['inline', 'none', 'both', 'list'];
+
         for (const autocompleteValue of autocompleteValues) {
-          const el =
-            /** @type {LionCombobox} */
+          const el = /** @type {LionCombobox} */ (
             await fixture(html`
               <${tags.host} autocomplete="${autocompleteValue}" .modelValue="${'Chard'}" name="foo">
                 <${tags.option} ${optionFixture(`Artichoke`)} .choiceValue="${'Artichoke'}">Artichoke</${tags.option}>
@@ -1110,16 +1240,18 @@ export function runComboboxSuite({
                 <${tags.option} ${optionFixture(`Chicory`)} .choiceValue="${'Chicory'}">Chicory</${tags.option}>
                 <${tags.option} ${optionFixture(`Victoria Plum`)} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tags.option}>
               </${tags.host}>
-            `);
+            `)
+          );
+
           expect(el.modelValue).to.equal('Chard');
           // @ts-expect-error
           expect(el._inputNode.value).to.equal('Chard');
         }
       });
+
       it('submits form on [Enter] when listbox is closed', async () => {
-        const submitSpy = sinon.spy((e) => e.preventDefault());
-        const el =
-          /** @type {HTMLFormElement}  */
+        const submitSpy = sinon.spy(e => e.preventDefault());
+        const el = /** @type {HTMLFormElement}  */ (
           await fixture(html`
             <form @submit=${submitSpy}>
               <${tags.host} name="foo">
@@ -1130,8 +1262,9 @@ export function runComboboxSuite({
               </${tags.host}>
               <button type="submit">submit</button>
             </form>
-          `);
-        const combobox = /** @type {LionCombobox} */ el.querySelector('[name="foo"]');
+          `)
+        );
+        const combobox = /** @type {LionCombobox} */ (el.querySelector('[name="foo"]'));
         const { _inputNode } = getComboboxMembers(combobox);
         await combobox.updateComplete;
         _inputNode.focus();
@@ -1140,10 +1273,10 @@ export function runComboboxSuite({
         });
         expect(submitSpy.callCount).to.equal(1);
       });
+
       it('does not submit form on [Enter] when listbox is opened', async () => {
-        const submitSpy = sinon.spy((e) => e.preventDefault());
-        const el =
-          /** @type {HTMLFormElement}  */
+        const submitSpy = sinon.spy(e => e.preventDefault());
+        const el = /** @type {HTMLFormElement}  */ (
           await fixture(html`
             <form @submit=${submitSpy}>
               <${tags.host} name="foo">
@@ -1154,8 +1287,9 @@ export function runComboboxSuite({
               </${tags.host}>
               <button type="submit">submit</button>
             </form>
-          `);
-        const combobox = /** @type {LionCombobox} */ el.querySelector('[name="foo"]');
+          `)
+        );
+        const combobox = /** @type {LionCombobox} */ (el.querySelector('[name="foo"]'));
         const { _inputNode } = getComboboxMembers(combobox);
         combobox.opened = true;
         await combobox.updateComplete;
@@ -1166,10 +1300,10 @@ export function runComboboxSuite({
         expect(submitSpy.callCount).to.equal(0);
       });
     });
+
     describe('Overlay visibility', () => {
       it('does not show overlay on click', async () => {
-        const el =
-          /** @type {LionCombobox} */
+        const el = /** @type {LionCombobox} */ (
           await fixture(html`
             <${tags.host} name="foo">
               <${tags.option} ${optionFixture(`Artichoke`)} .choiceValue="${'Artichoke'}">Artichoke</${tags.option}>
@@ -1177,28 +1311,27 @@ export function runComboboxSuite({
               <${tags.option} ${optionFixture(`Chicory`)} .choiceValue="${'Chicory'}">Chicory</${tags.option}>
               <${tags.option} ${optionFixture(`Victoria Plum`)} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tags.option}>
             </${tags.host}>
-          `);
-        const { _comboboxNode } = getComboboxMembers(el);
-        expect(el.opened).to.equal(false);
-        _comboboxNode.dispatchEvent(
-          new Event('click', {
-            bubbles: true,
-            composed: true,
-          }),
+          `)
         );
+        const { _comboboxNode } = getComboboxMembers(el);
+
+        expect(el.opened).to.equal(false);
+        _comboboxNode.dispatchEvent(new Event('click', { bubbles: true, composed: true }));
         await el.updateComplete;
         expect(el.opened).to.equal(false);
       });
+
       it('does not flash the menu when _showOverlayCondition returns "false"', async () => {
         class ComplexCombobox extends LionCombobox {
           _showOverlayCondition() {
             return false;
           }
         }
+
         const tagName = defineCE(ComplexCombobox);
         const tag = unsafeStatic(tagName);
-        const el =
-          /** @type {LionCombobox} */
+
+        const el = /** @type {LionCombobox} */ (
           await fixture(html` 
             <${tag} name="combo" label="Display only the label once selected">
               <${tags.option} ${optionFixture(`Artichoke`)} .choiceValue="${'Artichoke'}">Artichoke</${tags.option}>
@@ -1206,13 +1339,15 @@ export function runComboboxSuite({
               <${tags.option} ${optionFixture(`Chicory`)} .choiceValue="${'Chicory'}">Chicory</${tags.option}>
               <${tags.option} ${optionFixture(`Victoria Plum`)} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tags.option}>
             </${tag}>
-          `);
+          `)
+        );
+
         const dialog = el.shadowRoot?.querySelector('dialog');
         /**
          * hasDropdownFlashed is `true` if the menu was shown for a short period of time and then got closed
          */
         let hasDropdownFlashed = false;
-        const observer = new MutationObserver((mutationList) => {
+        const observer = new MutationObserver(mutationList => {
           // eslint-disable-next-line no-unused-vars
           for (const mutation of mutationList) {
             if (dialog?.style.display === '') {
@@ -1220,9 +1355,8 @@ export function runComboboxSuite({
             }
           }
         });
-        observer.observe(/** @type {Node} */ dialog, {
-          attributeFilter: ['style'],
-        });
+        observer.observe(/** @type {Node} */ (dialog), { attributeFilter: ['style'] });
+
         const { _inputNode } = getComboboxMembers(el);
         _inputNode.focus();
         await sendKeys({
@@ -1230,9 +1364,9 @@ export function runComboboxSuite({
         });
         expect(hasDropdownFlashed).to.be.false;
       });
+
       it('shows overlay on click when filled', async () => {
-        const el =
-          /** @type {LionCombobox} */
+        const el = /** @type {LionCombobox} */ (
           await fixture(html`
             <${tags.host} name="foo">
               <${tags.option} ${optionFixture(`Artichoke`)} .choiceValue="${'Artichoke'}">Artichoke</${tags.option}>
@@ -1240,19 +1374,16 @@ export function runComboboxSuite({
               <${tags.option} ${optionFixture(`Chicory`)} .choiceValue="${'Chicory'}">Chicory</${tags.option}>
               <${tags.option} ${optionFixture(`Victoria Plum`)} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tags.option}>
             </${tags.host}>
-          `);
+          `)
+        );
         const { _comboboxNode } = getComboboxMembers(el);
         el.modelValue = 'Art';
         expect(el.opened).to.equal(false);
-        _comboboxNode.dispatchEvent(
-          new Event('click', {
-            bubbles: true,
-            composed: true,
-          }),
-        );
+        _comboboxNode.dispatchEvent(new Event('click', { bubbles: true, composed: true }));
         await el.updateComplete;
         expect(el.opened).to.equal(false);
       });
+
       it('shows overlay again after select and char keyup', async () => {
         /**
          * Scenario:
@@ -1262,8 +1393,7 @@ export function runComboboxSuite({
          * still has focus
          * [4] user changes textbox value to "Artichoke": the overlay should show again
          */
-        const el =
-          /** @type {LionCombobox} */
+        const el = /** @type {LionCombobox} */ (
           await fixture(html`
             <${tags.host} name="foo">
               <${tags.option} ${optionFixture(`Artichoke`)} .choiceValue="${'Artichoke'}">Artichoke</${tags.option}>
@@ -1271,18 +1401,15 @@ export function runComboboxSuite({
               <${tags.option} ${optionFixture(`Chicory`)} .choiceValue="${'Chicory'}">Chicory</${tags.option}>
               <${tags.option} ${optionFixture(`Victoria Plum`)} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tags.option}>
             </${tags.host}>
-          `);
+          `)
+        );
         const options = el.formElements;
         const { _inputNode } = getComboboxMembers(el);
+
         expect(el.opened).to.equal(false);
 
         // step [1]
-        _inputNode.dispatchEvent(
-          new Event('click', {
-            bubbles: true,
-            composed: true,
-          }),
-        );
+        _inputNode.dispatchEvent(new Event('click', { bubbles: true, composed: true }));
         await el.updateComplete;
         expect(el.opened).to.equal(false);
 
@@ -1303,34 +1430,40 @@ export function runComboboxSuite({
         await el.updateComplete;
         expect(el.opened).to.equal(true);
       });
+
       it('syncs a manually checked selection on overlay close while the input remains focused', async () => {
-        const el =
-          /** @type {LionCombobox} */
+        const el = /** @type {LionCombobox} */ (
           await fixture(html`
             <${tags.host} name="foo" autocomplete="list">
               <${tags.option} ${optionFixture(`Artichoke`)} .choiceValue="${'Artichoke'}">Artichoke</${tags.option}>
               <${tags.option} ${optionFixture(`Chard`)} .choiceValue="${'Chard'}">Chard</${tags.option}>
             </${tags.host}>
-          `);
+          `)
+        );
         const { _inputNode } = getComboboxMembers(el);
+
         _inputNode.focus();
         el.opened = true;
         await el.updateComplete;
         expect(el.opened).to.equal(true);
         expect(isActiveElement(_inputNode)).to.be.true;
+
         el.setCheckedIndex(0);
         await el.updateComplete;
+
         expect(el.modelValue).to.equal('Artichoke');
         expect(el.checkedIndex).to.equal(0);
         expect(_inputNode.value).to.equal('');
+
         el.opened = false;
         await el.updateComplete;
+
         expect(_inputNode.value).to.equal('Artichoke');
         expect(isActiveElement(_inputNode)).to.be.true;
       });
+
       it('hides (and clears) overlay on [Escape]', async () => {
-        const el =
-          /** @type {LionCombobox} */
+        const el = /** @type {LionCombobox} */ (
           await fixture(html`
             <${tags.host} name="foo">
               <${tags.option} ${optionFixture(`Artichoke`)} .choiceValue="${'Artichoke'}">Artichoke</${tags.option}>
@@ -1338,23 +1471,23 @@ export function runComboboxSuite({
               <${tags.option} ${optionFixture(`Chicory`)} .choiceValue="${'Chicory'}">Chicory</${tags.option}>
               <${tags.option} ${optionFixture(`Victoria Plum`)} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tags.option}>
             </${tags.host}>
-          `);
+          `)
+        );
+
         const { _inputNode } = getComboboxMembers(el);
+
         await mimicUserTyping(el, 'art');
         await el.updateComplete;
         expect(el.opened).to.equal(true);
         expect(_inputNode.value).to.equal('Artichoke');
-        _inputNode.dispatchEvent(
-          new KeyboardEvent('keydown', {
-            key: 'Escape',
-          }),
-        );
+
+        _inputNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }));
         expect(el.opened).to.equal(false);
         expect(_inputNode.value).to.equal('');
       });
+
       it('hides overlay on [Enter]', async () => {
-        const el =
-          /** @type {LionCombobox} */
+        const el = /** @type {LionCombobox} */ (
           await fixture(html`
             <${tags.host} name="foo">
               <${tags.option} ${optionFixture(`Artichoke`)} .choiceValue="${'Artichoke'}">Artichoke</${tags.option}>
@@ -1362,8 +1495,11 @@ export function runComboboxSuite({
               <${tags.option} ${optionFixture(`Chicory`)} .choiceValue="${'Chicory'}">Chicory</${tags.option}>
               <${tags.option} ${optionFixture(`Victoria Plum`)} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tags.option}>
             </${tags.host}>
-          `);
+          `)
+        );
+
         const { _inputNode } = getComboboxMembers(el);
+
         await mimicUserTyping(el, 'art');
         await el.updateComplete;
         expect(el.opened).to.equal(true);
@@ -1371,17 +1507,13 @@ export function runComboboxSuite({
 
         // N.B. we do only trigger keydown here (and not mimicKeypress (both keyup and down)),
         // because this closely mimics what happens in the browser
-        _inputNode.dispatchEvent(
-          new KeyboardEvent('keydown', {
-            key: 'Enter',
-          }),
-        );
+        _inputNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
         expect(el.opened).to.equal(false);
         expect(_inputNode.value).to.equal('Artichoke');
       });
+
       it('hides overlay on [Tab]', async () => {
-        const el =
-          /** @type {LionCombobox} */
+        const el = /** @type {LionCombobox} */ (
           await fixture(html`
             <${tags.host} name="foo">
               <${tags.option} ${optionFixture(`Artichoke`)} .choiceValue="${'Artichoke'}">Artichoke</${tags.option}>
@@ -1389,8 +1521,11 @@ export function runComboboxSuite({
               <${tags.option} ${optionFixture(`Chicory`)} .choiceValue="${'Chicory'}">Chicory</${tags.option}>
               <${tags.option} ${optionFixture(`Victoria Plum`)} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tags.option}>
             </${tags.host}>
-          `);
+          `)
+        );
+
         const { _inputNode } = getComboboxMembers(el);
+
         await mimicUserTyping(el, 'art');
         await el.updateComplete;
         expect(el.opened).to.equal(true);
@@ -1398,17 +1533,13 @@ export function runComboboxSuite({
 
         // N.B. we do only trigger keydown here (and not mimicKeypress (both keyup and down)),
         // because this closely mimics what happens in the browser
-        _inputNode.dispatchEvent(
-          new KeyboardEvent('keydown', {
-            key: 'Tab',
-          }),
-        );
+        _inputNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab' }));
         expect(el.opened).to.equal(false);
         expect(_inputNode.value).to.equal('Artichoke');
       });
+
       it('keeps overlay open on [Shift]', async () => {
-        const el =
-          /** @type {LionCombobox} */
+        const el = /** @type {LionCombobox} */ (
           await fixture(html`
             <${tags.host} name="foo">
               <${tags.option} ${optionFixture(`Artichoke`)} .choiceValue="${'Artichoke'}">Artichoke</${tags.option}>
@@ -1416,8 +1547,11 @@ export function runComboboxSuite({
               <${tags.option} ${optionFixture(`Chicory`)} .choiceValue="${'Chicory'}">Chicory</${tags.option}>
               <${tags.option} ${optionFixture(`Victoria Plum`)} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tags.option}>
             </${tags.host}>
-          `);
+          `)
+        );
+
         const { _inputNode } = getComboboxMembers(el);
+
         await mimicUserTyping(el, 'art');
         await el.updateComplete;
         expect(el.opened).to.equal(true);
@@ -1425,17 +1559,13 @@ export function runComboboxSuite({
 
         // N.B. we do only trigger keydown here (and not mimicKeypress (both keyup and down)),
         // because this closely mimics what happens in the browser
-        _inputNode.dispatchEvent(
-          new KeyboardEvent('keydown', {
-            key: 'Shift',
-          }),
-        );
+        _inputNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'Shift' }));
         expect(el.opened).to.equal(true);
         expect(_inputNode.value).to.equal('Artichoke');
       });
+
       it('clears checkedIndex on empty text', async () => {
-        const el =
-          /** @type {LionCombobox} */
+        const el = /** @type {LionCombobox} */ (
           await fixture(html`
             <${tags.host} name="foo">
               <${tags.option} ${optionFixture(`Artichoke`)} .choiceValue="${'Artichoke'}">Artichoke</${tags.option}>
@@ -1443,8 +1573,11 @@ export function runComboboxSuite({
               <${tags.option} ${optionFixture(`Chicory`)} .choiceValue="${'Chicory'}">Chicory</${tags.option}>
               <${tags.option} ${optionFixture(`Victoria Plum`)} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tags.option}>
             </${tags.host}>
-          `);
+          `)
+        );
+
         const { _inputNode } = getComboboxMembers(el);
+
         await mimicUserTyping(el, 'art');
         await el.updateComplete;
         expect(el.opened).to.equal(true);
@@ -1452,17 +1585,15 @@ export function runComboboxSuite({
         expect(el.checkedIndex).to.equal(0);
 
         // await mimicUserTyping(el, '');
-        await sendKeys({
-          press: 'Backspace',
-        });
+        await sendKeys({ press: 'Backspace' });
         await el.updateComplete;
         el.opened = false;
         await el.updateComplete;
         expect(el.checkedIndex).to.equal(-1);
       });
+
       it('has the correct Overlay Config defined', async () => {
-        const el =
-          /** @type {LionCombobox} */
+        const el = /** @type {LionCombobox} */ (
           await fixture(html`
             <${tags.host} name="foo" .showAllOnEmpty="${true}">
               <${tags.option} ${optionFixture(`Artichoke`)} .choiceValue="${'Artichoke'}">Artichoke</${tags.option}>
@@ -1470,14 +1601,17 @@ export function runComboboxSuite({
               <${tags.option} ${optionFixture(`Chicory`)} .choiceValue="${'Chicory'}">Chicory</${tags.option}>
               <${tags.option} ${optionFixture(`Victoria Plum`)} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tags.option}>
             </${tags.host}>
-          `);
+          `)
+        );
         // @ts-expect-error [allow-protected] in test
         const overlayCfg = el._defineOverlayConfig();
+
         const equalsOrContainsInput = (
           /** @type {HTMLInputElement|HTMLDivElement} */ invokerNode,
         ) =>
           // @ts-expect-error [allow-protected] in test
           invokerNode === el._inputNode || invokerNode.contains(el._inputNode);
+
         expect(overlayCfg.elementToFocusAfterHide).to.equal(undefined);
         // @ts-expect-error
         expect(equalsOrContainsInput(overlayCfg.invokerNode)).to.be.true;
@@ -1498,8 +1632,8 @@ export function runComboboxSuite({
           }
           const tagName = defineCE(ShowOverlayConditionCombobox);
           const tag = unsafeStatic(tagName);
-          const el =
-            /** @type {LionCombobox} */
+
+          const el = /** @type {LionCombobox} */ (
             await fixture(html`
             <${tag} name="foo">
               <${tags.option} ${optionFixture(`Artichoke`)} .choiceValue="${'Artichoke'}">Artichoke</${tags.option}>
@@ -1507,10 +1641,13 @@ export function runComboboxSuite({
               <${tags.option} ${optionFixture(`Chicory`)} .choiceValue="${'Chicory'}">Chicory</${tags.option}>
               <${tags.option} ${optionFixture(`Victoria Plum`)} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tags.option}>
             </${tag}>
-          `);
+          `)
+          );
+
           await mimicUserTyping(el, 'aaa');
           expect(el.opened).to.be.false;
         });
+
         it('allows to control overlay visibility via "_showOverlayCondition": should display overlay if currentValue length condition is fulfilled', async () => {
           class ShowOverlayConditionCombobox extends LionCombobox {
             /** @param {{ currentValue: string, lastKey:string }} options */
@@ -1523,8 +1660,8 @@ export function runComboboxSuite({
           }
           const tagName = defineCE(ShowOverlayConditionCombobox);
           const tag = unsafeStatic(tagName);
-          const el =
-            /** @type {LionCombobox} */
+
+          const el = /** @type {LionCombobox} */ (
             await fixture(html`
             <${tag} name="foo">
               <${tags.option} ${optionFixture(`Artichoke`)} .choiceValue="${'Artichoke'}">Artichoke</${tags.option}>
@@ -1532,10 +1669,13 @@ export function runComboboxSuite({
               <${tags.option} ${optionFixture(`Chicory`)} .choiceValue="${'Chicory'}">Chicory</${tags.option}>
               <${tags.option} ${optionFixture(`Victoria Plum`)} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tags.option}>
             </${tag}>
-          `);
+          `)
+          );
+
           await mimicUserTyping(el, 'aaaa');
           expect(el.opened).to.be.true;
         });
+
         it('allows to control overlay visibility via "_showOverlayCondition": should not display overlay if currentValue length condition is not fulfilled after once fulfilled', async () => {
           class ShowOverlayConditionCombobox extends LionCombobox {
             /** @param {{ currentValue: string, lastKey:string }} options */
@@ -1548,8 +1688,8 @@ export function runComboboxSuite({
           }
           const tagName = defineCE(ShowOverlayConditionCombobox);
           const tag = unsafeStatic(tagName);
-          const el =
-            /** @type {LionCombobox} */
+
+          const el = /** @type {LionCombobox} */ (
             await fixture(html`
             <${tag} name="foo">
               <${tags.option} ${optionFixture(`Artichoke`)} .choiceValue="${'Artichoke'}">Artichoke</${tags.option}>
@@ -1557,18 +1697,21 @@ export function runComboboxSuite({
               <${tags.option} ${optionFixture(`Chicory`)} .choiceValue="${'Chicory'}">Chicory</${tags.option}>
               <${tags.option} ${optionFixture(`Victoria Plum`)} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tags.option}>
             </${tag}>
-          `);
+          `)
+          );
+
           await mimicUserTyping(el, 'aaaa');
           expect(el.opened).to.be.true;
+
           await mimicUserTyping(el, 'aaa');
           await el.updateComplete;
           expect(el.opened).to.be.false;
         });
       });
+
       describe('Accessibility', () => {
         it('sets "aria-posinset" and "aria-setsize" on visible entries', async () => {
-          const el =
-            /** @type {LionCombobox} */
+          const el = /** @type {LionCombobox} */ (
             await fixture(html`
               <${tags.host} name="foo" multiple-choice>
                 <${tags.option} ${optionFixture(`Artichoke`)} .choiceValue="${'Artichoke'}">Artichoke</${tags.option}>
@@ -1576,13 +1719,16 @@ export function runComboboxSuite({
                 <${tags.option} ${optionFixture(`Chicory`)} .choiceValue="${'Chicory'}">Chicory</${tags.option}>
                 <${tags.option} ${optionFixture(`Victoria Plum`)} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tags.option}>
               </${tags.host}>
-            `);
+            `)
+          );
           const options = el.formElements;
           expect(el.opened).to.equal(false);
+
           await mimicUserTyping(el, 'art');
           await el.updateComplete;
           expect(el.opened).to.equal(true);
-          const visibleOptions = options.filter((o) => o.style.display !== 'none');
+
+          const visibleOptions = options.filter(o => o.style.display !== 'none');
           expect(visibleOptions.length).to.not.equal(0);
           visibleOptions.forEach((o, i) => {
             expect(o.getAttribute('aria-posinset')).to.equal(`${i + 1}`);
@@ -1591,11 +1737,11 @@ export function runComboboxSuite({
           /**
            * @param {{ style: { display: string; }; }} o
            */
-          const hiddenOptions = options.filter((o) => o.style.display === 'none');
+          const hiddenOptions = options.filter(o => o.style.display === 'none');
           /**
            * @param {{ hasAttribute: (arg0: string) => any; }} o
            */
-          hiddenOptions.forEach((o) => {
+          hiddenOptions.forEach(o => {
             expect(o.hasAttribute('aria-posinset')).to.equal(false);
             expect(o.hasAttribute('aria-setsize')).to.equal(false);
           });
@@ -1606,8 +1752,7 @@ export function runComboboxSuite({
          * (like fade in/out)
          */
         it('sets aria-hidden="true" on hidden entries', async () => {
-          const el =
-            /** @type {LionCombobox} */
+          const el = /** @type {LionCombobox} */ (
             await fixture(html`
               <${tags.host} name="foo">
                 <${tags.option} ${optionFixture(`Artichoke`)} .choiceValue="${'Artichoke'}">Artichoke</${tags.option}>
@@ -1615,24 +1760,27 @@ export function runComboboxSuite({
                 <${tags.option} ${optionFixture(`Chicory`)} .choiceValue="${'Chicory'}">Chicory</${tags.option}>
                 <${tags.option} ${optionFixture(`Victoria Plum`)} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tags.option}>
               </${tags.host}>
-            `);
+            `)
+          );
           const options = el.formElements;
           expect(el.opened).to.equal(false);
+
           await mimicUserTyping(el, 'art');
           expect(el.opened).to.equal(true);
           await el.updateComplete;
-          const visibleOptions = options.filter((o) => o.style.display !== 'none');
-          visibleOptions.forEach((o) => {
+
+          const visibleOptions = options.filter(o => o.style.display !== 'none');
+          visibleOptions.forEach(o => {
             expect(o.hasAttribute('aria-hidden')).to.be.false;
           });
-          const hiddenOptions = options.filter((o) => o.style.display === 'none');
-          hiddenOptions.forEach((o) => {
+          const hiddenOptions = options.filter(o => o.style.display === 'none');
+          hiddenOptions.forEach(o => {
             expect(o.getAttribute('aria-hidden')).to.equal('true');
           });
         });
+
         it('dropdown has a label', async () => {
-          const el =
-            /** @type {LionCombobox} */
+          const el = /** @type {LionCombobox} */ (
             await fixture(html`
               <${tags.host} name="foo" .validators=${[new Required()]}>
                 <${tags.option} ${optionFixture(`Artichoke`)} checked .choiceValue="${'Artichoke'}">Artichoke</${tags.option}>
@@ -1640,7 +1788,8 @@ export function runComboboxSuite({
                 <${tags.option} ${optionFixture(`Chicory`)} .choiceValue="${'Chicory'}">Chicory</${tags.option}>
                 <${tags.option} ${optionFixture(`Victoria Plum`)} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tags.option}>
               </${tags.host}>
-            `);
+            `)
+          );
           const { _overlayCtrl } = getComboboxMembers(el);
           expect(_overlayCtrl.contentWrapperNode.getAttribute('aria-label')).to.equal(
             'Combobox options popup',
@@ -1654,59 +1803,67 @@ export function runComboboxSuite({
     describe('Invoker component integration', () => {
       describe('Accessibility', () => {
         it('sets role="combobox" on textbox wrapper/listbox sibling', async () => {
-          const el =
-            /** @type {LionCombobox} */
+          const el = /** @type {LionCombobox} */ (
             await fixture(html`
               <${tags.host} name="foo">
                 <${tags.option} ${optionFixture(`Item 1`)} .choiceValue="${'10'}" checked>Item 1</${tags.option}>
                 <${tags.option} ${optionFixture(`Item 2`)} .choiceValue="${'20'}">Item 2</${tags.option}>
               </${tags.host}>
-            `);
+            `)
+          );
           const { _comboboxNode } = getComboboxMembers(el);
+
           expect(_comboboxNode.getAttribute('role')).to.equal('combobox');
         });
+
         it('sets aria-expanded to element with role="combobox" in wai-aria 1.0 and 1.1', async () => {
-          const el =
-            /** @type {LionCombobox} */
+          const el = /** @type {LionCombobox} */ (
             await fixture(html`
               <${tags.host} name="foo" ._ariaVersion="${'1.0'}">
                 <${tags.option} ${optionFixture(`Item 1`)} .choiceValue="${'10'}" checked>Item 1</${tags.option}>
                 <${tags.option} ${optionFixture(`Item 2`)} .choiceValue="${'20'}">Item 2</${tags.option}>
               </${tags.host}>
-            `);
+            `)
+          );
           const { _comboboxNode } = getComboboxMembers(el);
+
           expect(_comboboxNode.getAttribute('aria-expanded')).to.equal('false');
           el.opened = true;
           await el.updateComplete;
           expect(_comboboxNode.getAttribute('aria-expanded')).to.equal('true');
-          const el2 =
-            /** @type {LionCombobox} */
+
+          const el2 = /** @type {LionCombobox} */ (
             await fixture(html`
               <${tags.host} name="foo" ._ariaVersion="${'1.1'}">
                 <${tags.option} ${optionFixture(`Item 1`)} .choiceValue="${'10'}" checked>Item 1</${tags.option}>
                 <${tags.option} ${optionFixture(`Item 2`)} .choiceValue="${'20'}">Item 2</${tags.option}>
               </${tags.host}>
-            `);
+            `)
+          );
           const { _comboboxNode: comboboxNode2 } = getComboboxMembers(el2);
+
           expect(comboboxNode2.getAttribute('aria-expanded')).to.equal('false');
           el2.opened = true;
           await el2.updateComplete;
           expect(_comboboxNode.getAttribute('aria-expanded')).to.equal('true');
         });
+
         it('makes sure listbox node is not focusable', async () => {
-          const el =
-            /** @type {LionCombobox} */
+          const el = /** @type {LionCombobox} */ (
             await fixture(html`
               <${tags.host} name="foo">
                 <${tags.option} ${optionFixture(`Item 1`)} .choiceValue="${'10'}" checked>Item 1</${tags.option}>
                 <${tags.option} ${optionFixture(`Item 2`)} .choiceValue="${'20'}">Item 2</${tags.option}>
               </${tags.host}>
-            `);
+            `)
+          );
           const { _listboxNode } = getComboboxMembers(el);
+
           expect(_listboxNode.hasAttribute('tabindex')).to.be.false;
         });
       });
     });
+
     describe('Selection display', () => {
       class MySelectionDisplay extends LitElement {
         /**
@@ -1723,39 +1880,43 @@ export function runComboboxSuite({
         }
       }
       const selectionDisplayTag = unsafeStatic(defineCE(MySelectionDisplay));
+
       it('stores internal reference _selectionDisplayNode in LionCombobox', async () => {
-        const el =
-          /** @type {LionCombobox} */
+        const el = /** @type {LionCombobox} */ (
           await fixture(html`
           <${tags.host} name="foo">
             <${selectionDisplayTag} slot="selection-display"></${selectionDisplayTag}>
             <${tags.option} ${optionFixture(`Item 1`)} .choiceValue="${'10'}" checked>Item 1</${tags.option}>
           </${tags.host}>
-        `);
+        `)
+        );
         const { _selectionDisplayNode } = getComboboxMembers(el);
+
         expect(_selectionDisplayNode).to.equal(el.querySelector('[slot=selection-display]'));
       });
+
       it('sets a reference to combobox element in _selectionDisplayNode', async () => {
-        const el =
-          /** @type {LionCombobox} */
+        const el = /** @type {LionCombobox} */ (
           await fixture(html`
           <${tags.host} name="foo">
             <${selectionDisplayTag} slot="selection-display"></${selectionDisplayTag}>
             <${tags.option} ${optionFixture(`Item 1`)} .choiceValue="${'10'}" checked>Item 1</${tags.option}>
           </${tags.host}>
-        `);
+        `)
+        );
         // @ts-ignore allow protected members
         expect(el._selectionDisplayNode.comboboxElement).to.equal(el);
       });
+
       it('calls "onComboboxElementUpdated(changedProperties)" on "updated" in _selectionDisplayNode', async () => {
-        const el =
-          /** @type {LionCombobox} */
+        const el = /** @type {LionCombobox} */ (
           await fixture(html`
           <${tags.host} name="foo">
             <${selectionDisplayTag} slot="selection-display"></${selectionDisplayTag}>
             <${tags.option} ${optionFixture(`Item 1`)} .choiceValue="${'10'}" checked>Item 1</${tags.option}>
           </${tags.host}>
-        `);
+        `)
+        );
         // @ts-ignore sinon type error
         const spy = sinon.spy(el._selectionDisplayNode, 'onComboboxElementUpdated');
         el.requestUpdate('modelValue', undefined);
@@ -1827,20 +1988,21 @@ export function runComboboxSuite({
         // });
       });
     });
+
     describe('Autocompletion', () => {
       it('has autocomplete "both" by default', async () => {
-        const el =
-          /** @type {LionCombobox} */
+        const el = /** @type {LionCombobox} */ (
           await fixture(html`
             <${tags.host} name="foo">
               <${tags.option} ${optionFixture(`Item 1`)} .choiceValue="${'10'}" checked>Item 1</${tags.option}>
             </${tags.host}>
-          `);
+          `)
+        );
         expect(el.autocomplete).to.equal('both');
       });
+
       it('filters options when autocomplete is "both"', async () => {
-        const el =
-          /** @type {LionCombobox} */
+        const el = /** @type {LionCombobox} */ (
           await fixture(html`
             <${tags.host} name="foo" autocomplete="both">
               <${tags.option} ${optionFixture(`Artichoke`)} .choiceValue="${'Artichoke'}">Artichoke</${tags.option}>
@@ -1848,14 +2010,15 @@ export function runComboboxSuite({
               <${tags.option} ${optionFixture(`Chicory`)} .choiceValue="${'Chicory'}">Chicory</${tags.option}>
               <${tags.option} ${optionFixture(`Victoria Plum`)} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tags.option}>
             </${tags.host}>
-          `);
+          `)
+        );
         await mimicUserTyping(el, 'ch');
         await el.updateComplete;
         expect(getFilteredOptionValues(el)).to.eql(['Artichoke', 'Chard', 'Chicory']);
       });
+
       it('completes textbox when autocomplete is "both"', async () => {
-        const el =
-          /** @type {LionCombobox} */
+        const el = /** @type {LionCombobox} */ (
           await fixture(html`
             <${tags.host} name="foo" autocomplete="both">
               <${tags.option} ${optionFixture(`Artichoke`)} .choiceValue="${'Artichoke'}">Artichoke</${tags.option}>
@@ -1863,10 +2026,12 @@ export function runComboboxSuite({
               <${tags.option} ${optionFixture(`Chicory`)} .choiceValue="${'Chicory'}">Chicory</${tags.option}>
               <${tags.option} ${optionFixture(`Victoria Plum`)} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tags.option}>
             </${tags.host}>
-          `);
+          `)
+        );
         await mimicUserTyping(el, 'ch');
         await el.updateComplete;
         const { _inputNode } = getComboboxMembers(el);
+
         expect(_inputNode.value).to.equal('Chard');
         expect(_inputNode.selectionStart).to.equal(2);
         expect(_inputNode.selectionEnd).to.equal(_inputNode.value.length);
@@ -1876,9 +2041,9 @@ export function runComboboxSuite({
         expect(_inputNode.value).to.equal('c');
         expect(_inputNode.selectionStart).to.equal(_inputNode.value.length);
       });
+
       it('filters options when autocomplete is "list"', async () => {
-        const el =
-          /** @type {LionCombobox} */
+        const el = /** @type {LionCombobox} */ (
           await fixture(html`
             <${tags.host} name="foo" autocomplete="list">
               <${tags.option} ${optionFixture(`Artichoke`)} .choiceValue="${'Artichoke'}">Artichoke</${tags.option}>
@@ -1886,16 +2051,18 @@ export function runComboboxSuite({
               <${tags.option} ${optionFixture(`Chicory`)} .choiceValue="${'Chicory'}">Chicory</${tags.option}>
               <${tags.option} ${optionFixture(`Victoria Plum`)} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tags.option}>
             </${tags.host}>
-          `);
+          `)
+        );
         const { _inputNode } = getComboboxMembers(el);
+
         await mimicUserTyping(el, 'ch');
         await el.updateComplete;
         expect(getFilteredOptionValues(el)).to.eql(['Artichoke', 'Chard', 'Chicory']);
         expect(_inputNode.value).to.equal('ch');
       });
+
       it('does not filter options when autocomplete is "none"', async () => {
-        const el =
-          /** @type {LionCombobox} */
+        const el = /** @type {LionCombobox} */ (
           await fixture(html`
             <${tags.host} name="foo" autocomplete="none">
               <${tags.option} ${optionFixture(`Artichoke`)} .choiceValue="${'Artichoke'}">Artichoke</${tags.option}>
@@ -1903,7 +2070,8 @@ export function runComboboxSuite({
               <${tags.option} ${optionFixture(`Chicory`)} .choiceValue="${'Chicory'}">Chicory</${tags.option}>
               <${tags.option} ${optionFixture(`Victoria Plum`)} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tags.option}>
             </${tags.host}>
-          `);
+          `)
+        );
         await mimicUserTyping(el, 'ch');
         await el.updateComplete;
         expect(getFilteredOptionValues(el)).to.eql([
@@ -1913,16 +2081,17 @@ export function runComboboxSuite({
           'Victoria Plum',
         ]);
       });
+
       it('does not autocomplete on [Enter] when textbox content does not match options', async () => {
-        const el =
-          /** @type {LionCombobox} */
+        const el = /** @type {LionCombobox} */ (
           await fixture(html`
             <${tags.host} name="foo">
               <${tags.option} ${optionFixture(`Mango`)} .choiceValue="${'Mango'}">Mango</${tags.option}>
               <${tags.option} ${optionFixture(`Lemon`)} .choiceValue="${'Lemon'}">Lemon</${tags.option}>
               <${tags.option} ${optionFixture(`Apple`)} .choiceValue="${'Apple'}">Apple</${tags.option}>
             </${tags.host}>
-          `);
+          `)
+        );
         const { _inputNode } = getComboboxMembers(el);
         mimicUserTypingAdvanced(el, ['m', 'a', 'k']);
         await el.updateComplete;
@@ -1931,16 +2100,17 @@ export function runComboboxSuite({
         await el.updateComplete;
         expect(_inputNode.value).to.equal('Mak');
       });
+
       it('does not autocomplete on [Enter] when textbox content does not match options and content was cleared via [Backspace]', async () => {
-        const el =
-          /** @type {LionCombobox} */
+        const el = /** @type {LionCombobox} */ (
           await fixture(html`
             <${tags.host} name="foo">
               <${tags.option} ${optionFixture(`Mango`)} .choiceValue="${'Mango'}">Mango</${tags.option}>
               <${tags.option} ${optionFixture(`Lemon`)} .choiceValue="${'Lemon'}">Lemon</${tags.option}>
               <${tags.option} ${optionFixture(`Apple`)} .choiceValue="${'Apple'}">Apple</${tags.option}>
             </${tags.host}>
-          `);
+          `)
+        );
         const { _inputNode } = getComboboxMembers(el);
         mimicUserTypingAdvanced(el, ['m', 'o', 'Backspace', 'Backspace', 'm', 'o']);
         await el.updateComplete;
@@ -1952,9 +2122,9 @@ export function runComboboxSuite({
         await el.updateComplete;
         expect(_inputNode.value).to.equal('Mo');
       });
+
       it('does not filter options when autocomplete is "inline"', async () => {
-        const el =
-          /** @type {LionCombobox} */
+        const el = /** @type {LionCombobox} */ (
           await fixture(html`
             <${tags.host} name="foo" autocomplete="inline">
               <${tags.option} ${optionFixture(`Artichoke`)} .choiceValue="${'Artichoke'}">Artichoke</${tags.option}>
@@ -1962,7 +2132,8 @@ export function runComboboxSuite({
               <${tags.option} ${optionFixture(`Chicory`)} .choiceValue="${'Chicory'}">Chicory</${tags.option}>
               <${tags.option} ${optionFixture(`Victoria Plum`)} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tags.option}>
             </${tags.host}>
-          `);
+          `)
+        );
         await mimicUserTyping(el, 'ch');
         await el.updateComplete;
         expect(getFilteredOptionValues(el)).to.eql([
@@ -1972,9 +2143,9 @@ export function runComboboxSuite({
           'Victoria Plum',
         ]);
       });
+
       it('resets "checkedIndex" when going from matched to unmatched textbox value', async () => {
-        const el =
-          /** @type {LionCombobox} */
+        const el = /** @type {LionCombobox} */ (
           await fixture(html`
             <${tags.host} name="foo" autocomplete="inline">
               <${tags.option} ${optionFixture(`Artichoke`)} .choiceValue="${'Artichoke'}">Artichoke</${tags.option}>
@@ -1982,17 +2153,19 @@ export function runComboboxSuite({
               <${tags.option} ${optionFixture(`Chicory`)} .choiceValue="${'Chicory'}">Chicory</${tags.option}>
               <${tags.option} ${optionFixture(`Victoria Plum`)} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tags.option}>
             </${tags.host}>
-          `);
+          `)
+        );
+
         await mimicUserTyping(el, 'ch');
         await el.updateComplete;
         expect(el.checkedIndex).to.equal(1);
+
         await mimicUserTyping(el, 'cho');
         await el.updateComplete;
         expect(el.checkedIndex).to.equal(-1);
 
         // Works for autocomplete 'both' as well.
-        const el2 =
-          /** @type {LionCombobox} */
+        const el2 = /** @type {LionCombobox} */ (
           await fixture(html`
             <${tags.host} name="foo" autocomplete="both">
               <${tags.option} ${optionFixture(`Artichoke`)} .choiceValue="${'Artichoke'}">Artichoke</${tags.option}>
@@ -2000,7 +2173,9 @@ export function runComboboxSuite({
               <${tags.option} ${optionFixture(`Chicory`)} .choiceValue="${'Chicory'}">Chicory</${tags.option}>
               <${tags.option} ${optionFixture(`Victoria Plum`)} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tags.option}>
             </${tags.host}>
-          `);
+          `)
+        );
+
         await mimicUserTyping(el2, 'ch');
         await el2.updateComplete;
         expect(el2.checkedIndex).to.equal(1);
@@ -2010,9 +2185,9 @@ export function runComboboxSuite({
         await el2.updateComplete;
         expect(el2.checkedIndex).to.equal(-1);
       });
+
       it('resets "checkedIndex" when going from matched to another matched textbox value', async () => {
-        const el =
-          /** @type {LionCombobox} */
+        const el = /** @type {LionCombobox} */ (
           await fixture(html`
             <${tags.host} name="foo" autocomplete="both">
               <${tags.option} ${optionFixture(`Artichoke`)} .choiceValue="${'Artichoke'}">Artichoke</${tags.option}>
@@ -2020,17 +2195,19 @@ export function runComboboxSuite({
               <${tags.option} ${optionFixture(`Chicory`)} .choiceValue="${'Chicory'}">Chicory</${tags.option}>
               <${tags.option} ${optionFixture(`Victoria Plum`)} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tags.option}>
             </${tags.host}>
-          `);
+          `)
+        );
 
         /** Goes from 2nd option Chard to 3rd option Chicory */
         await mimicUserTyping(el, 'ch');
         await el.updateComplete;
         expect(el.checkedIndex).to.equal(1);
+
         await mimicUserTyping(el, 'chi');
         await el.updateComplete;
         expect(el.checkedIndex).to.equal(2);
-        const el2 =
-          /** @type {LionCombobox} */
+
+        const el2 = /** @type {LionCombobox} */ (
           await fixture(html`
             <${tags.host} name="foo" autocomplete="both">
               <${tags.option} ${optionFixture(`Artichoke`)} .choiceValue="${'Artichoke'}">Artichoke</${tags.option}>
@@ -2038,7 +2215,9 @@ export function runComboboxSuite({
               <${tags.option} ${optionFixture(`Chicory`)} .choiceValue="${'Chicory'}">Chicory</${tags.option}>
               <${tags.option} ${optionFixture(`Victoria Plum`)} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tags.option}>
             </${tags.host}>
-          `);
+          `)
+        );
+
         await mimicUserTyping(el2, 'ch');
         await el2.updateComplete;
         expect(el2.checkedIndex).to.equal(1);
@@ -2051,9 +2230,9 @@ export function runComboboxSuite({
         expect(el2.checkedIndex).to.equal(-1);
         expect(getFilteredOptionValues(el2)).to.eql(['Artichoke']);
       });
+
       it('sets "checkedIndex" only if the match, matches from the beginning of the word', async () => {
-        const el =
-          /** @type {LionCombobox} */
+        const el = /** @type {LionCombobox} */ (
           await fixture(html`
             <${tags.host} name="foo" autocomplete="both">
               <${tags.option} ${optionFixture(`Artichoke`)} .choiceValue="${'Artichoke'}">Artichoke</${tags.option}>
@@ -2061,7 +2240,8 @@ export function runComboboxSuite({
               <${tags.option} ${optionFixture(`Victoria Plum`)} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tags.option}>
               <${tags.option} ${optionFixture(`Daikon`)} .choiceValue="${'Daikon'}">Daikon</${tags.option}>
             </${tags.host}>
-          `);
+          `)
+        );
 
         // first match is Char'd', but better match is 'D'aikon
         await mimicUserTyping(el, 'd');
@@ -2069,9 +2249,9 @@ export function runComboboxSuite({
         expect(el.checkedIndex).to.equal(3);
         expect(getFilteredOptionValues(el)).to.eql(['Chard', 'Daikon']);
       });
+
       it('completes chars inside textbox', async () => {
-        const el =
-          /** @type {LionCombobox} */
+        const el = /** @type {LionCombobox} */ (
           await fixture(html`
             <${tags.host} name="foo" autocomplete="inline">
               <${tags.option} ${optionFixture(`Artichoke`)} .choiceValue="${'Artichoke'}">Artichoke</${tags.option}>
@@ -2079,13 +2259,16 @@ export function runComboboxSuite({
               <${tags.option} ${optionFixture(`Chicory`)} .choiceValue="${'Chicory'}">Chicory</${tags.option}>
               <${tags.option} ${optionFixture(`Victoria Plum`)} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tags.option}>
             </${tags.host}>
-          `);
+          `)
+        );
         const { _inputNode } = getComboboxMembers(el);
+
         await mimicUserTyping(el, 'ch');
         await el.updateComplete;
         expect(_inputNode.value).to.equal('Chard');
         expect(_inputNode.selectionStart).to.equal('ch'.length);
         expect(_inputNode.selectionEnd).to.equal('Chard'.length);
+
         await mimicUserTypingAdvanced(el, ['i', 'c']);
         await el.updateComplete;
         expect(_inputNode.value).to.equal('Chicory');
@@ -2099,9 +2282,9 @@ export function runComboboxSuite({
         expect(_inputNode.selectionStart).to.equal('ch'.length);
         expect(_inputNode.selectionEnd).to.equal('ch'.length);
       });
+
       it('synchronizes textbox on overlay close', async () => {
-        const el =
-          /** @type {LionCombobox} */
+        const el = /** @type {LionCombobox} */ (
           await fixture(html`
             <${tags.host} name="foo" autocomplete="none">
               <${tags.option} ${optionFixture(`Artichoke`)} .choiceValue="${'Artichoke'}">Artichoke</${tags.option}>
@@ -2109,7 +2292,8 @@ export function runComboboxSuite({
               <${tags.option} ${optionFixture(`Chicory`)} .choiceValue="${'Chicory'}">Chicory</${tags.option}>
               <${tags.option} ${optionFixture(`Victoria Plum`)} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tags.option}>
             </${tags.host}>
-          `);
+          `)
+        );
         const { _inputNode } = getComboboxMembers(el);
         await el.updateComplete;
         expect(_inputNode.value).to.equal('');
@@ -2131,19 +2315,21 @@ export function runComboboxSuite({
           await el.updateComplete;
           expect(_inputNode.value).to.equal(valueOnClose, autocomplete);
         }
+
         await performChecks('none', 0, 'Artichoke');
         await performChecks('list', 0, 'Artichoke');
         await performChecks('inline', 0, 'Artichoke');
         await performChecks('both', 0, 'Artichoke');
+
         el.multipleChoice = true;
         await performChecks('none', [0, 1], '');
         await performChecks('list', [0, 1], '');
         await performChecks('inline', [0, 1], '');
         await performChecks('both', [0, 1], '');
       });
+
       it('is possible to adjust textbox synchronize condition on overlay close', async () => {
-        const el =
-          /** @type {LionCombobox} */
+        const el = /** @type {LionCombobox} */ (
           await fixture(html`
             <${tags.host} name="foo" autocomplete="none" ._syncToTextboxCondition="${() => false}">
               <${tags.option} ${optionFixture(`Artichoke`)} .choiceValue="${'Artichoke'}">Artichoke</${tags.option}>
@@ -2151,7 +2337,9 @@ export function runComboboxSuite({
               <${tags.option} ${optionFixture(`Chicory`)} .choiceValue="${'Chicory'}">Chicory</${tags.option}>
               <${tags.option} ${optionFixture(`Victoria Plum`)} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tags.option}>
             </${tags.host}>
-          `);
+          `)
+        );
+
         const { _inputNode } = getComboboxMembers(el);
         expect(_inputNode.value).to.equal('');
 
@@ -2171,19 +2359,21 @@ export function runComboboxSuite({
           await el.updateComplete;
           expect(_inputNode.value).to.equal(valueOnClose);
         }
+
         await performChecks('none', 0, '');
         await performChecks('list', 0, '');
         await performChecks('inline', 0, '');
         await performChecks('both', 0, '');
+
         el.multipleChoice = true;
         await performChecks('none', [0, 1], '');
         await performChecks('list', [0, 1], '');
         await performChecks('inline', [0, 1], '');
         await performChecks('both', [0, 1], '');
       });
+
       it('does inline autocompletion when adding chars', async () => {
-        const el =
-          /** @type {LionCombobox} */
+        const el = /** @type {LionCombobox} */ (
           await fixture(html`
             <${tags.host} name="foo" autocomplete="inline">
               <${tags.option} ${optionFixture(`Artichoke`)} .choiceValue="${'Artichoke'}">Artichoke</${tags.option}>
@@ -2191,15 +2381,19 @@ export function runComboboxSuite({
               <${tags.option} ${optionFixture(`Chicory`)} .choiceValue="${'Chicory'}">Chicory</${tags.option}>
               <${tags.option} ${optionFixture(`Victoria Plum`)} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tags.option}>
             </${tags.host}>
-          `);
+          `)
+        );
+
         await mimicUserTyping(el, 'ch'); // ch
         await el.updateComplete; // Ch[ard]
         expect(el.activeIndex).to.equal(1);
         expect(el.checkedIndex).to.equal(1);
+
         await mimicUserTypingAdvanced(el, ['i', 'c']); // Chic
         await el.updateComplete; // Chic[ory]
         expect(el.activeIndex).to.equal(2);
         expect(el.checkedIndex).to.equal(2);
+
         await mimicUserTypingAdvanced(el, [
           'Backspace',
           'Backspace',
@@ -2211,9 +2405,9 @@ export function runComboboxSuite({
         expect(el.activeIndex).to.equal(1);
         expect(el.checkedIndex).to.equal(1);
       });
+
       it('does inline autocompletion when changing the word', async () => {
-        const el =
-          /** @type {LionCombobox} */
+        const el = /** @type {LionCombobox} */ (
           await fixture(html`
             <${tags.host} name="foo" autocomplete="inline">
               <${tags.option} ${optionFixture(`Artichoke`)} .choiceValue="${'Artichoke'}">Artichoke</${tags.option}>
@@ -2221,11 +2415,14 @@ export function runComboboxSuite({
               <${tags.option} ${optionFixture(`Chicory`)} .choiceValue="${'Chicory'}">Chicory</${tags.option}>
               <${tags.option} ${optionFixture(`Victoria Plum`)} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tags.option}>
             </${tags.host}>
-          `);
+          `)
+        );
+
         await mimicUserTyping(el, 'ch');
         await el.updateComplete;
         expect(el.activeIndex).to.equal(1);
         expect(el.checkedIndex).to.equal(1);
+
         await mimicUserTypingAdvanced(el, ['i']);
         await el.updateComplete;
         expect(el.activeIndex).to.equal(2);
@@ -2243,9 +2440,9 @@ export function runComboboxSuite({
         expect(el.activeIndex).to.equal(0);
         expect(el.checkedIndex).to.equal(0);
       });
+
       it('filters options correctly when changing the middle of the word', async () => {
-        const el =
-          /** @type {LionCombobox} */
+        const el = /** @type {LionCombobox} */ (
           await fixture(html`
             <${tags.host} name="foo" autocomplete="list" match-mode="all">
               <${tags.option} ${optionFixture(`Artichoke`)} .choiceValue="${'Artichoke'}">Artichoke</${tags.option}>
@@ -2253,13 +2450,17 @@ export function runComboboxSuite({
               <${tags.option} ${optionFixture(`Chicory`)} .choiceValue="${'Chicory'}">Chicory</${tags.option}>
               <${tags.option} ${optionFixture(`Victoria Plum`)} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tags.option}>
             </${tags.host}>
-          `);
+          `)
+        );
+
         const { _inputNode } = getComboboxMembers(el);
+
         await mimicUserTyping(el, 'char');
         expect(_inputNode.value).to.equal('char');
         await el.updateComplete; // Char
 
         expect(getFilteredOptionValues(el)).to.eql(['Chard']);
+
         _inputNode.setSelectionRange(3, 3);
         await mimicUserTypingAdvanced(el, ['Backspace', 'i', 'c', 'o']);
         await el.updateComplete; // Chicor
@@ -2267,9 +2468,9 @@ export function runComboboxSuite({
         expect(_inputNode.value).to.equal('chicor');
         expect(getFilteredOptionValues(el)).to.eql(['Chicory']);
       });
+
       it('computation of "user intends autofill" works correctly afer autofill', async () => {
-        const el =
-          /** @type {LionCombobox} */
+        const el = /** @type {LionCombobox} */ (
           await fixture(html`
             <${tags.host} name="foo" autocomplete="inline">
               <${tags.option} ${optionFixture(`Artichoke`)} .choiceValue="${'Artichoke'}">Artichoke</${tags.option}>
@@ -2277,8 +2478,10 @@ export function runComboboxSuite({
               <${tags.option} ${optionFixture(`Chicory`)} .choiceValue="${'Chicory'}">Chicory</${tags.option}>
               <${tags.option} ${optionFixture(`Victoria Plum`)} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tags.option}>
             </${tags.host}>
-          `);
+          `)
+        );
         const { _inputNode } = getComboboxMembers(el);
+
         await mimicUserTyping(el, 'ch');
         await el.updateComplete;
         expect(_inputNode.value).to.equal('Chard');
@@ -2293,42 +2496,53 @@ export function runComboboxSuite({
         expect(_inputNode.selectionStart).to.equal('Ch'.length);
         expect(_inputNode.selectionEnd).to.equal('Ch'.length);
       });
+
       describe('Server side completion support', () => {
         const defaultOptions = ['lorem', 'ipsum', 'dolor', 'sit', 'amet'];
+
         class MyEl extends LitElement {
           constructor() {
             super();
             /** @type {string[]} */
             this.options = [...defaultOptions];
           }
+
           clearOptions() {
             /** @type {string[]} */
             this.options = [];
             this.requestUpdate();
           }
+
           addOption() {
             this.options.push(`option ${this.options.length + 1}`);
             this.requestUpdate();
           }
+
           updateOptions(/** @type {string[]} */ options) {
             this.options = [...options];
             this.requestUpdate();
           }
+
           get combobox() {
-            return /** @type {LionCombobox} */ this.shadowRoot?.querySelector('#combobox');
+            return /** @type {LionCombobox} */ (this.shadowRoot?.querySelector('#combobox'));
           }
+
           render() {
             return html`
               <${tags.host} id="combobox" label="Server side completion" allow-custom-choice>
-                ${this.options.map((option) => html` <${tags.option} ${optionFixture(`${option}`)} .choiceValue="${option}">${option}</${tags.option}> `)}
+                ${this.options.map(
+                  option =>
+                    html` <${tags.option} ${optionFixture(`${option}`)} .choiceValue="${option}">${option}</${tags.option}> `,
+                )}
               </${tags.host}>
             `;
           }
         }
         const tagName = defineCE(MyEl);
         const wrappingTag = unsafeStatic(tagName);
+
         it('calls "_handleAutocompletion" after externally changing options', async () => {
-          const el = /** @type {MyEl} */ await fixture(html`<${wrappingTag}></${wrappingTag}>`);
+          const el = /** @type {MyEl} */ (await fixture(html`<${wrappingTag}></${wrappingTag}>`));
           await el.combobox.registrationComplete;
           // @ts-ignore [allow-protected] in test
           const spy = sinon.spy(el.combobox, '_handleAutocompletion');
@@ -2341,9 +2555,10 @@ export function runComboboxSuite({
           await el.updateComplete;
           expect(spy).to.have.been.calledTwice;
         });
+
         it('should handle dynamic options', async () => {
           // Arrange
-          const el = /** @type {MyEl} */ await fixture(html`<${wrappingTag}></${wrappingTag}>`);
+          const el = /** @type {MyEl} */ (await fixture(html`<${wrappingTag}></${wrappingTag}>`));
           await el.combobox.registrationComplete;
           const { _inputNode } = getComboboxMembers(el.combobox);
 
@@ -2384,9 +2599,10 @@ export function runComboboxSuite({
           expect(_inputNode.value).to.equal('l');
           expect(_inputNode.selectionStart).to.equal(_inputNode.value.length);
         });
+
         it('should handle dynamic options with initial suggestions', async () => {
           // Arrange
-          const el = /** @type {MyEl} */ await fixture(html`<${wrappingTag}></${wrappingTag}>`);
+          const el = /** @type {MyEl} */ (await fixture(html`<${wrappingTag}></${wrappingTag}>`));
           await el.combobox.registrationComplete;
           const { _inputNode } = getComboboxMembers(el.combobox);
 
@@ -2415,22 +2631,28 @@ export function runComboboxSuite({
           expect(_inputNode.selectionStart).to.equal(1);
           expect(_inputNode.selectionEnd).to.equal(_inputNode.value.length);
         });
+
         it('should work when dynamic options are updated to without any matching optionswhile inline completing', async () => {
-          const el = /** @type {MyEl} */ await fixture(html`<${wrappingTag}></${wrappingTag}>`);
+          const el = /** @type {MyEl} */ (await fixture(html`<${wrappingTag}></${wrappingTag}>`));
           await el.combobox.registrationComplete;
           const { _inputNode } = getComboboxMembers(el.combobox);
+
           el.updateOptions(['apple', 'banana', 'orange']);
           await el.updateComplete;
+
           await mimicUserTypingAdvanced(el.combobox, ['a']);
           expect(_inputNode.value).to.equal('apple');
           expect(_inputNode.selectionStart).to.equal(1);
           expect(_inputNode.selectionEnd).to.equal(_inputNode.value.length);
+
           el.clearOptions();
           await el.updateComplete;
           await el.updateComplete;
+
           expect(_inputNode.value).to.equal('a');
           expect(_inputNode.selectionStart).to.equal(1);
           expect(_inputNode.selectionEnd).to.equal(1);
+
           el.updateOptions(['apple', 'apricot', 'avocado']);
           await el.updateComplete;
           await el.updateComplete;
@@ -2439,6 +2661,7 @@ export function runComboboxSuite({
           expect(_inputNode.selectionEnd).to.equal(_inputNode.value.length);
         });
       });
+
       describe('Subclassers', () => {
         it('allows to configure autoselect', async () => {
           class X extends LionCombobox {
@@ -2448,8 +2671,8 @@ export function runComboboxSuite({
           }
           const tagName = defineCE(X);
           const tag = unsafeStatic(tagName);
-          const el =
-            /** @type {LionCombobox} */
+
+          const el = /** @type {LionCombobox} */ (
             await fixture(html`
             <${tag} name="foo" opened>
               <${tags.option} ${optionFixture(`Artichoke`)} .choiceValue="${'Artichoke'}">Artichoke</${tags.option}>
@@ -2457,15 +2680,17 @@ export function runComboboxSuite({
               <${tags.option} ${optionFixture(`Chicory`)} .choiceValue="${'Chicory'}">Chicory</${tags.option}>
               <${tags.option} ${optionFixture(`Victoria Plum`)} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tags.option}>
             </${tag}>
-          `);
+          `)
+          );
+
           await mimicUserTypingAdvanced(el, ['v', 'i']); // so we have options ['Victoria Plum']
           await el.updateComplete;
           expect(el.checkedIndex).to.equal(3);
         });
       });
+
       it('highlights first occurrence of matching option', async () => {
-        const el =
-          /** @type {LionCombobox} */
+        const el = /** @type {LionCombobox} */ (
           await fixture(html`
             <${tags.host} name="foo" match-mode="all">
               <${tags.option} ${optionFixture(`Artichoke`)} .choiceValue="${'Artichoke'}">Artichoke</${tags.option}>
@@ -2473,9 +2698,12 @@ export function runComboboxSuite({
               <${tags.option} ${optionFixture(`Chicory`)} .choiceValue="${'Chicory'}">Chicory</${tags.option}>
               <${tags.option} ${optionFixture(`Victoria Plum`)} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tags.option}>
             </${tags.host}>
-          `);
+          `)
+        );
         const options = el.formElements;
-        await mimicUserTyping(/** @type {LionCombobox} */ el, 'c');
+
+        await mimicUserTyping(/** @type {LionCombobox} */ (el), 'c');
+
         await el.updateComplete;
         expect(options[0]).lightDom.to.equal(
           `<span aria-label="Artichoke">Arti<b>c</b>hoke</span>`,
@@ -2485,7 +2713,9 @@ export function runComboboxSuite({
         expect(options[3]).lightDom.to.equal(
           `<span aria-label="Victoria Plum">Vi<b>c</b>toria Plum</span>`,
         );
-        await mimicUserTyping(/** @type {LionCombobox} */ el, 'ch');
+
+        await mimicUserTyping(/** @type {LionCombobox} */ (el), 'ch');
+
         await el.updateComplete;
         expect(options[0]).lightDom.to.equal(
           `<span aria-label="Artichoke">Arti<b>ch</b>oke</span>`,
@@ -2493,16 +2723,18 @@ export function runComboboxSuite({
         expect(options[1]).lightDom.to.equal(`<span aria-label="Chard"><b>Ch</b>ard</span>`);
         expect(options[2]).lightDom.to.equal(`<span aria-label="Chicory"><b>Ch</b>icory</span>`);
         expect(options[3]).lightDom.to.equal(`Victoria Plum`);
-        await mimicUserTyping(/** @type {LionCombobox} */ el, 'D');
+
+        await mimicUserTyping(/** @type {LionCombobox} */ (el), 'D');
+
         await el.updateComplete;
         expect(options[0]).lightDom.to.equal(`Artichoke`);
         expect(options[1]).lightDom.to.equal(`<span aria-label="Chard">Char<b>d</b></span>`);
         expect(options[2]).lightDom.to.equal(`Chicory`);
         expect(options[3]).lightDom.to.equal(`Victoria Plum`);
       });
+
       it('highlights matching complex options', async () => {
-        const el =
-          /** @type {LionCombobox} */
+        const el = /** @type {LionCombobox} */ (
           await fixture(html`
             <${tags.host} name="foo" match-mode="all">
               <${tags.option} ${optionFixture('Artichoke')} .choiceValue="${'Artichoke'}">
@@ -2522,9 +2754,12 @@ export function runComboboxSuite({
                 <small>Prunus domestica</small>
               </${tags.option}>
             </${tags.host}>
-          `);
+          `)
+        );
         const options = el.formElements;
-        await mimicUserTyping(/** @type {LionCombobox} */ el, 'ch');
+
+        await mimicUserTyping(/** @type {LionCombobox} */ (el), 'ch');
+
         await el.updateComplete;
         expect(options[0]).lightDom.to.equal(
           `<span aria-label=" Artichoke Cardoon "><div>Arti<b>ch</b>oke</div><small>Cardoon</small>`,
@@ -2539,9 +2774,9 @@ export function runComboboxSuite({
           `<div>Victoria Plum</div><small>Prunus domestica</small>`,
         );
       });
+
       it('resets removes highlights on reset()', async () => {
-        const el =
-          /** @type {LionCombobox} */
+        const el = /** @type {LionCombobox} */ (
           await fixture(html`
             <${tags.host} name="foo" match-mode="all">
               <${tags.option} ${optionFixture(`Artichoke`)} .choiceValue="${'Artichoke'}">Artichoke</${tags.option}>
@@ -2549,9 +2784,12 @@ export function runComboboxSuite({
               <${tags.option} ${optionFixture(`Chicory`)} .choiceValue="${'Chicory'}">Chicory</${tags.option}>
               <${tags.option} ${optionFixture(`Victoria Plum`)} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tags.option}>
             </${tags.host}>
-          `);
+          `)
+        );
         const options = el.formElements;
-        await mimicUserTyping(/** @type {LionCombobox} */ el, 'c');
+
+        await mimicUserTyping(/** @type {LionCombobox} */ (el), 'c');
+
         await el.updateComplete;
         expect(options[0]).lightDom.to.equal(
           `<span aria-label="Artichoke">Arti<b>c</b>hoke</span>`,
@@ -2560,9 +2798,9 @@ export function runComboboxSuite({
         await el.updateComplete;
         expect(options[0]).lightDom.to.equal(`Artichoke`);
       });
+
       it('synchronizes textbox when autocomplete is "inline" or "both"', async () => {
-        const el =
-          /** @type {LionCombobox} */
+        const el = /** @type {LionCombobox} */ (
           await fixture(html`
             <${tags.host} name="foo" autocomplete="none">
               <${tags.option} ${optionFixture(`Artichoke`)} .choiceValue="${'Artichoke'}">Artichoke</${tags.option}>
@@ -2570,32 +2808,38 @@ export function runComboboxSuite({
               <${tags.option} ${optionFixture(`Chicory`)} .choiceValue="${'Chicory'}">Chicory</${tags.option}>
               <${tags.option} ${optionFixture(`Victoria Plum`)} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tags.option}>
             </${tags.host}>
-          `);
+          `)
+        );
         const { _inputNode } = getComboboxMembers(el);
+
         expect(_inputNode.value).to.equal('');
+
         el.setCheckedIndex(-1);
         el.autocomplete = 'list';
         await mimicUserTypingAdvanced(el, ['a', 'r', 't']);
         expect(_inputNode.value).to.equal('art');
+
         el.setCheckedIndex(-1);
         el.value = '';
         el.autocomplete = 'none';
         await mimicUserTypingAdvanced(el, ['a', 'r', 't']);
         expect(_inputNode.value).to.equal('art');
+
         el.setCheckedIndex(-1);
         el.value = '';
         el.autocomplete = 'inline';
         await mimicUserTypingAdvanced(el, ['a', 'r', 't']);
         expect(_inputNode.value).to.equal('Artichoke');
+
         el.setCheckedIndex(-1);
         el.value = '';
         el.autocomplete = 'both';
         await mimicUserTypingAdvanced(el, ['a', 'r', 't']);
         expect(_inputNode.value).to.equal('Artichoke');
       });
+
       it('synchronizes last index to textbox when autocomplete is "inline" or "both" when multipleChoice', async () => {
-        const el =
-          /** @type {LionCombobox} */
+        const el = /** @type {LionCombobox} */ (
           await fixture(html`
             <${tags.host} name="foo" autocomplete="none" multiple-choice>
               <${tags.option} ${optionFixture(`Artichoke`)} .choiceValue="${'Artichoke'}">Artichoke</${tags.option}>
@@ -2603,30 +2847,37 @@ export function runComboboxSuite({
               <${tags.option} ${optionFixture(`Chicory`)} .choiceValue="${'Chicory'}">Chicory</${tags.option}>
               <${tags.option} ${optionFixture(`Victoria Plum`)} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tags.option}>
             </${tags.host}>
-          `);
+          `)
+        );
         const { _inputNode } = getComboboxMembers(el);
+
         expect(_inputNode.value).to.eql('');
+
         el.setCheckedIndex(-1);
         el.setCheckedIndex(-1);
         el.autocomplete = 'list';
         await mimicUserTypingAdvanced(el, ['a', 'r', 't']);
         expect(_inputNode.value).to.equal('art');
+
         el.setCheckedIndex(-1);
         el.value = '';
         el.autocomplete = 'none';
         await mimicUserTypingAdvanced(el, ['a', 'r', 't']);
         expect(_inputNode.value).to.equal('art');
+
         el.setCheckedIndex(-1);
         el.value = '';
         el.autocomplete = 'inline';
         await mimicUserTypingAdvanced(el, ['a', 'r', 't']);
         expect(_inputNode.value).to.equal('Artichoke');
+
         el.setCheckedIndex(-1);
         el.value = '';
         el.autocomplete = 'both';
         await mimicUserTypingAdvanced(el, ['a', 'r', 't']);
         expect(_inputNode.value).to.equal('Artichoke');
       });
+
       describe('Subclassers', () => {
         it('allows to override "_syncCheckedWithTextboxMultiple"', async () => {
           class X extends LionCombobox {
@@ -2648,8 +2899,8 @@ export function runComboboxSuite({
           }
           const tagName = defineCE(X);
           const tag = unsafeStatic(tagName);
-          const el =
-            /** @type {LionCombobox} */
+
+          const el = /** @type {LionCombobox} */ (
             await fixture(html`
             <${tag} name="foo" autocomplete="none" multiple-choice>
               <${tags.option} ${optionFixture(`Artichoke`)} .choiceValue="${'Artichoke'}">Artichoke</${tags.option}>
@@ -2657,25 +2908,31 @@ export function runComboboxSuite({
               <${tags.option} ${optionFixture(`Chicory`)} .choiceValue="${'Chicory'}">Chicory</${tags.option}>
               <${tags.option} ${optionFixture(`Victoria Plum`)} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tags.option}>
             </${tag}>
-          `);
+          `)
+          );
           const { _inputNode } = getComboboxMembers(el);
+
           el.setCheckedIndex(-1);
           el.autocomplete = 'none';
           el.setCheckedIndex([0]);
           expect(_inputNode.value).to.equal('Artichoke--multi');
+
           el.setCheckedIndex(-1);
           el.autocomplete = 'list';
           el.setCheckedIndex([0]);
           expect(_inputNode.value).to.equal('Artichoke--multi');
+
           el.setCheckedIndex(-1);
           el.autocomplete = 'inline';
           el.setCheckedIndex([0]);
           expect(_inputNode.value).to.equal('Artichoke--multi');
+
           el.setCheckedIndex(-1);
           el.autocomplete = 'both';
           el.setCheckedIndex([0]);
           expect(_inputNode.value).to.equal('Artichoke--multi');
         });
+
         describe('Override _getTextboxValueFromOption', () => {
           it('allows to override "_getTextboxValueFromOption" and sync to textbox when multiple', async () => {
             class X extends LionCombobox {
@@ -2692,8 +2949,8 @@ export function runComboboxSuite({
             }
             const tagName = defineCE(X);
             const tag = unsafeStatic(tagName);
-            const el =
-              /** @type {LionCombobox} */
+
+            const el = /** @type {LionCombobox} */ (
               await fixture(html`
               <${tag} name="foo" autocomplete="both" multiple-choice>
                 <${tags.option} ${optionFixture('Artichoke as label')} .label="${'Artichoke as label'}" .choiceValue="${{
@@ -2709,7 +2966,8 @@ export function runComboboxSuite({
                   value: 'Victoria Plum',
                 }}">Victoria Plum</${tags.option}>
               </${tag}>
-            `);
+            `)
+            );
             const { _inputNode } = getComboboxMembers(el);
             el.setCheckedIndex(-1);
 
@@ -2725,6 +2983,7 @@ export function runComboboxSuite({
             // Assert
             expect(_inputNode.value).to.equal('Victoria Plum as label');
           });
+
           it('allows to override "_getTextboxValueFromOption" and sync modelValue with textbox', async () => {
             class X extends LionCombobox {
               /**
@@ -2743,8 +3002,8 @@ export function runComboboxSuite({
             }
             const tagName = defineCE(X);
             const tag = unsafeStatic(tagName);
-            const el =
-              /** @type {LionCombobox} */
+
+            const el = /** @type {LionCombobox} */ (
               await fixture(html`
               <${tag} name="foo">
                 <${tags.option} ${optionFixture('Artichoke as label')} .label="${'Artichoke as label'}" .choiceValue="${{
@@ -2760,21 +3019,21 @@ export function runComboboxSuite({
                   value: 'Victoria Plum',
                 }}">Victoria Plum</${tags.option}>
               </${tag}>
-            `);
+            `)
+            );
             const { _inputNode } = getComboboxMembers(el);
 
             // Assume
             expect(_inputNode.value).to.equal('Chard as label');
 
             // Act
-            el.modelValue = {
-              value: 'Chicory',
-            };
+            el.modelValue = { value: 'Chicory' };
             await el.updateComplete;
 
             // Assert
             expect(_inputNode.value).to.equal('Chicory as label');
           });
+
           it('allows to override "_getTextboxValueFromOption" and clears modelValue and textbox value on clear()', async () => {
             class X extends LionCombobox {
               /**
@@ -2793,12 +3052,10 @@ export function runComboboxSuite({
             }
             const tagName = defineCE(X);
             const tag = unsafeStatic(tagName);
-            const el =
-              /** @type {LionCombobox} */
+
+            const el = /** @type {LionCombobox} */ (
               await fixture(html`
-              <${tag} name="foo" .modelValue="${{
-                value: 'Artichoke',
-              }}">
+              <${tag} name="foo" .modelValue="${{ value: 'Artichoke' }}">
                 <${tags.option} ${optionFixture('Artichoke as label')} .label="${'Artichoke as label'}" .choiceValue="${{
                   value: 'Artichoke',
                 }}">Artichoke</${tags.option}>
@@ -2812,7 +3069,8 @@ export function runComboboxSuite({
                   value: 'Victoria Plum',
                 }}">Victoria Plum</${tags.option}>
               </${tag}>
-            `);
+            `)
+            );
             const { _inputNode } = getComboboxMembers(el);
 
             // Assume
@@ -2825,6 +3083,7 @@ export function runComboboxSuite({
             expect(el.modelValue).to.equal('');
             expect(_inputNode.value).to.equal('');
           });
+
           it('allows to override "_getTextboxValueFromOption" and syncs textbox to modelValue', async () => {
             class X extends LionCombobox {
               /**
@@ -2840,8 +3099,8 @@ export function runComboboxSuite({
             }
             const tagName = defineCE(X);
             const tag = unsafeStatic(tagName);
-            const el =
-              /** @type {LionCombobox} */
+
+            const el = /** @type {LionCombobox} */ (
               await fixture(html`
               <${tag} name="foo">
                 <${tags.option} ${optionFixture('Artichoke as label')} .label="${'Artichoke as label'}" .choiceValue="${{
@@ -2857,25 +3116,31 @@ export function runComboboxSuite({
                   value: 'Victoria Plum',
                 }}">Victoria Plum</${tags.option}>
               </${tag}>
-            `);
+            `)
+            );
             const { _inputNode } = getComboboxMembers(el);
 
             /** @param {string} autocompleteMode */
             async function performChecks(autocompleteMode) {
               await el.updateComplete;
+
               await mimicUserTypingAdvanced(el, ['A', 'r', 't', 'i']);
               await el.updateComplete;
               expect(_inputNode.value).to.equal('Arti', `autocompleteMode is ${autocompleteMode}`);
+
               await el.updateComplete;
               expect(el.checkedIndex).to.equal(-1, `autocompleteMode is ${autocompleteMode}`);
               _inputNode.value = '';
             }
+
             el.autocomplete = 'none';
             await performChecks('none');
+
             el.autocomplete = 'list';
             await performChecks('list');
           });
         });
+
         it('allows to override "_onFilterMatch" and "_onFilterUmatch"', async () => {
           class X extends LionCombobox {
             /**
@@ -2885,7 +3150,7 @@ export function runComboboxSuite({
              * @protected
              */
             _onFilterMatch(option, matchingString) {
-              Array.from(option.children).forEach((child) => {
+              Array.from(option.children).forEach(child => {
                 if (child.hasAttribute('data-key')) {
                   this._highlightMatchedOption(child, matchingString);
                 }
@@ -2903,7 +3168,7 @@ export function runComboboxSuite({
              */
             // eslint-disable-next-line no-unused-vars
             _onFilterUnmatch(option, curValue, prevValue) {
-              Array.from(option.children).forEach((child) => {
+              Array.from(option.children).forEach(child => {
                 if (child.hasAttribute('data-key')) {
                   this._unhighlightMatchedOption(child);
                 }
@@ -2914,8 +3179,8 @@ export function runComboboxSuite({
           }
           const tagName = defineCE(X);
           const tag = unsafeStatic(tagName);
-          const el =
-            /** @type {LionCombobox} */
+
+          const el = /** @type {LionCombobox} */ (
             await fixture(html`
               <${tag} name="foo" autocomplete="both">
                 <${tags.option} ${optionFixture('Artichoke')} .choiceValue="${'Artichoke'}">
@@ -2935,9 +3200,12 @@ export function runComboboxSuite({
                   <small>Prunus domestica</small>
                 </${tags.option}>
               </${tag}>
-            `);
+            `)
+          );
           const options = el.formElements;
-          await mimicUserTyping(/** @type {LionCombobox} */ el, 'ch');
+
+          await mimicUserTyping(/** @type {LionCombobox} */ (el), 'ch');
+
           await el.updateComplete;
           expect(options[0]).lightDom.to.equal(
             `<div data-key><span aria-label="Artichoke">Arti<b>ch</b>oke</span></div><small>Cardoon</small>`,
@@ -2951,7 +3219,9 @@ export function runComboboxSuite({
           expect(options[3]).lightDom.to.equal(
             `<div data-key>Victoria Plum</div><small>Prunus domestica</small>`,
           );
-          await mimicUserTyping(/** @type {LionCombobox} */ el, 'D');
+
+          await mimicUserTyping(/** @type {LionCombobox} */ (el), 'D');
+
           await el.updateComplete;
           expect(options[0]).lightDom.to.equal(
             `<div data-key>Artichoke</div><small>Cardoon</small>`,
@@ -2965,10 +3235,10 @@ export function runComboboxSuite({
           );
         });
       });
+
       describe('Active index behavior', () => {
         it('sets the active index to the closest match on open by default', async () => {
-          const el =
-            /** @type {LionCombobox} */
+          const el = /** @type {LionCombobox} */ (
             await fixture(html`
               <${tags.host} name="foo">
                 <${tags.option} ${optionFixture(`Artichoke`)} .choiceValue="${'Artichoke'}">Artichoke</${tags.option}>
@@ -2976,11 +3246,13 @@ export function runComboboxSuite({
                 <${tags.option} ${optionFixture(`Chicory`)} .choiceValue="${'Chicory'}">Chicory</${tags.option}>
                 <${tags.option} ${optionFixture(`Victoria Plum`)} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tags.option}>
               </${tags.host}>
-            `);
-          await mimicUserTyping(/** @type {LionCombobox} */ el, 'cha');
+            `)
+          );
+          await mimicUserTyping(/** @type {LionCombobox} */ (el), 'cha');
           await el.updateComplete;
           expect(el.activeIndex).to.equal(1);
         });
+
         it('changes whether activeIndex is set to the closest match automatically depending on autocomplete', async () => {
           /**
            * Automatic selection (setting activeIndex to closest matching option) in lion is set for
@@ -2988,8 +3260,7 @@ export function runComboboxSuite({
            * For 'list' & 'none' autocomplete, it is turned off and manual selection is required.
            * TODO: Make this configurable for list & none autocomplete?
            */
-          const el =
-            /** @type {LionCombobox} */
+          const el = /** @type {LionCombobox} */ (
             await fixture(html`
               <${tags.host} name="foo" autocomplete="none">
                 <${tags.option} ${optionFixture(`Artichoke`)} .choiceValue="${'Artichoke'}">Artichoke</${tags.option}>
@@ -2997,7 +3268,8 @@ export function runComboboxSuite({
                 <${tags.option} ${optionFixture(`Chicory`)} .choiceValue="${'Chicory'}">Chicory</${tags.option}>
                 <${tags.option} ${optionFixture(`Victoria Plum`)} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tags.option}>
               </${tags.host}>
-            `);
+            `)
+          );
           const { _inputNode } = getComboboxMembers(el);
 
           /**
@@ -3020,10 +3292,12 @@ export function runComboboxSuite({
           // Example 1. List Autocomplete with Manual Selection:
           // does not set active at all until user selects
           await setup(el, 'none');
-          await mimicUserTyping(/** @type {LionCombobox} */ el, 'cha');
+
+          await mimicUserTyping(/** @type {LionCombobox} */ (el), 'cha');
           await el.updateComplete;
           expect(el.activeIndex).to.equal(-1);
           expect(el.opened).to.be.true;
+
           mimicKeyPress(_inputNode, 'Enter');
           expect(el.opened).to.be.false;
           expect(el.activeIndex).to.equal(-1);
@@ -3032,10 +3306,12 @@ export function runComboboxSuite({
           // Example 2. List Autocomplete with Automatic Selection:
           // does not set active at all until user selects
           await setup(el, 'list');
-          await mimicUserTyping(/** @type {LionCombobox} */ el, 'cha');
+
+          await mimicUserTyping(/** @type {LionCombobox} */ (el), 'cha');
           await el.updateComplete;
           expect(el.opened).to.be.true;
           expect(el.activeIndex).to.equal(-1);
+
           mimicKeyPress(_inputNode, 'Enter');
           expect(el.activeIndex).to.equal(-1);
           expect(el.opened).to.be.false;
@@ -3043,33 +3319,37 @@ export function runComboboxSuite({
           // https://www.w3.org/TR/wai-aria-practices/examples/combobox/aria1.1pattern/listbox-combo.html
           // Example 3. List with Inline Autocomplete (mostly, but with aria-autocomplete="inline")
           await setup(el, 'inline');
-          await mimicUserTyping(/** @type {LionCombobox} */ el, '');
+
+          await mimicUserTyping(/** @type {LionCombobox} */ (el), '');
           await el.updateComplete;
-          await mimicUserTyping(/** @type {LionCombobox} */ el, 'cha');
+          await mimicUserTyping(/** @type {LionCombobox} */ (el), 'cha');
           await el.updateComplete;
           await el.updateComplete;
           expect(el.opened).to.be.true;
+
           expect(el.activeIndex).to.equal(1);
+
           mimicKeyPress(_inputNode, 'Enter');
           await el.updateComplete;
           await el.updateComplete;
+
           expect(el.activeIndex).to.equal(-1);
           expect(el.opened).to.be.false;
 
           // https://www.w3.org/TR/wai-aria-practices/examples/combobox/aria1.1pattern/listbox-combo.html
           // Example 3. List with Inline Autocomplete
           await setup(el, 'both');
-          await mimicUserTyping(/** @type {LionCombobox} */ el, '');
+          await mimicUserTyping(/** @type {LionCombobox} */ (el), '');
           await el.updateComplete;
-          await mimicUserTyping(/** @type {LionCombobox} */ el, 'cha');
+          await mimicUserTyping(/** @type {LionCombobox} */ (el), 'cha');
           await el.updateComplete;
           mimicKeyPress(_inputNode, 'Enter');
           expect(el.activeIndex).to.equal(1);
           expect(el.opened).to.be.false;
         });
+
         it('sets the active index to the closest match on autocomplete', async () => {
-          const el =
-            /** @type {LionCombobox} */
+          const el = /** @type {LionCombobox} */ (
             await fixture(html`
               <${tags.host} name="foo" autocomplete="both">
                 <${tags.option} ${optionFixture(`Artichoke`)} .choiceValue="${'Artichoke'}">Artichoke</${tags.option}>
@@ -3077,32 +3357,37 @@ export function runComboboxSuite({
                 <${tags.option} ${optionFixture(`Chicory`)} .choiceValue="${'Chicory'}">Chicory</${tags.option}>
                 <${tags.option} ${optionFixture(`Victoria Plum`)} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tags.option}>
               </${tags.host}>
-            `);
+            `)
+          );
           const { _inputNode } = getComboboxMembers(el);
-          await mimicUserTyping(/** @type {LionCombobox} */ el, 'cha');
+
+          await mimicUserTyping(/** @type {LionCombobox} */ (el), 'cha');
           await el.updateComplete;
           expect(el.activeIndex).to.equal(1);
-          await mimicUserTyping(/** @type {LionCombobox} */ el, 'ch');
+
+          await mimicUserTyping(/** @type {LionCombobox} */ (el), 'ch');
           await el.updateComplete;
-          await mimicUserTyping(/** @type {LionCombobox} */ el, 'chi');
+          await mimicUserTyping(/** @type {LionCombobox} */ (el), 'chi');
           // Chard no longer matches, so should switch active to Chicory
           await el.updateComplete;
+
           expect(el.activeIndex).to.equal(2);
 
           // select artichoke
-          await mimicUserTyping(/** @type {LionCombobox} */ el, 'artichoke');
+          await mimicUserTyping(/** @type {LionCombobox} */ (el), 'artichoke');
           await el.updateComplete;
           mimicKeyPress(_inputNode, 'Enter');
-          await mimicUserTyping(/** @type {LionCombobox} */ el, '');
+
+          await mimicUserTyping(/** @type {LionCombobox} */ (el), '');
           await el.updateComplete;
           // change selection, active index should update to closest match
-          await mimicUserTyping(/** @type {LionCombobox} */ el, 'vic');
+          await mimicUserTyping(/** @type {LionCombobox} */ (el), 'vic');
           await el.updateComplete;
           expect(el.activeIndex).to.equal(3);
         });
+
         it('supports clearing by [Escape] key and resets active state on all options', async () => {
-          const el =
-            /** @type {LionCombobox} */
+          const el = /** @type {LionCombobox} */ (
             await fixture(html`
               <${tags.host} name="foo">
                 <${tags.option} ${optionFixture(`Artichoke`)} .choiceValue="${'Artichoke'}">Artichoke</${tags.option}>
@@ -3110,56 +3395,56 @@ export function runComboboxSuite({
                 <${tags.option} ${optionFixture(`Chicory`)} .choiceValue="${'Chicory'}">Chicory</${tags.option}>
                 <${tags.option} ${optionFixture(`Victoria Plum`)} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tags.option}>
               </${tags.host}>
-            `);
+            `)
+          );
           const { _inputNode } = getComboboxMembers(el);
 
           // Select something
-          await mimicUserTyping(/** @type {LionCombobox} */ el, 'cha');
+          await mimicUserTyping(/** @type {LionCombobox} */ (el), 'cha');
           await el.updateComplete;
           mimicKeyPress(_inputNode, 'Enter');
           expect(el.activeIndex).to.equal(1);
+
           mimicKeyPress(_inputNode, 'Escape');
           await el.updateComplete;
           expect(_inputNode.textContent).to.equal('');
-          el.formElements.forEach((option) => expect(option.active).to.be.false);
+
+          el.formElements.forEach(option => expect(option.active).to.be.false);
 
           // change selection, active index should update to closest match
-          await mimicUserTyping(/** @type {LionCombobox} */ el, 'vic');
+          await mimicUserTyping(/** @type {LionCombobox} */ (el), 'vic');
           await el.updateComplete;
           expect(el.activeIndex).to.equal(3);
         });
       });
+
       describe('Accessibility', () => {
         it('synchronizes autocomplete option to textbox', async () => {
           let el;
-          [el] = await fruitFixture({
-            autocomplete: 'both',
-          });
+          [el] = await fruitFixture({ autocomplete: 'both' });
           expect(
-            getComboboxMembers(/** @type {LionCombobox} */ el)._inputNode.getAttribute(
+            getComboboxMembers(/** @type {LionCombobox} */ (el))._inputNode.getAttribute(
               'aria-autocomplete',
             ),
           ).to.equal('both');
-          [el] = await fruitFixture({
-            autocomplete: 'list',
-          });
+
+          [el] = await fruitFixture({ autocomplete: 'list' });
           expect(
-            getComboboxMembers(/** @type {LionCombobox} */ el)._inputNode.getAttribute(
+            getComboboxMembers(/** @type {LionCombobox} */ (el))._inputNode.getAttribute(
               'aria-autocomplete',
             ),
           ).to.equal('list');
-          [el] = await fruitFixture({
-            autocomplete: 'none',
-          });
+
+          [el] = await fruitFixture({ autocomplete: 'none' });
           expect(
-            getComboboxMembers(/** @type {LionCombobox} */ el)._inputNode.getAttribute(
+            getComboboxMembers(/** @type {LionCombobox} */ (el))._inputNode.getAttribute(
               'aria-autocomplete',
             ),
           ).to.equal('none');
         });
+
         it('updates aria-activedescendant on textbox node', async () => {
-          const el =
-            /** @type {LionCombobox} */
+          const el = /** @type {LionCombobox} */ (
             await fixture(html`
               <${tags.host} name="foo" autocomplete="none">
                 <${tags.option} ${optionFixture(`Artichoke`)} .choiceValue="${'Artichoke'}" id="artichoke-option"
@@ -3169,13 +3454,17 @@ export function runComboboxSuite({
                 <${tags.option} ${optionFixture(`Chicory`)} .choiceValue="${'Chicory'}">Chicory</${tags.option}>
                 <${tags.option} ${optionFixture(`Victoria Plum`)} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tags.option}>
               </${tags.host}>
-            `);
+            `)
+          );
+
           const elProts = getComboboxMembers(el);
+
           expect(elProts._activeDescendantOwnerNode.getAttribute('aria-activedescendant')).to.equal(
             null,
           );
           expect(el.formElements[1].active).to.equal(false);
-          await mimicUserTyping(/** @type {LionCombobox} */ el, 'ch');
+
+          await mimicUserTyping(/** @type {LionCombobox} */ (el), 'ch');
           await el.updateComplete;
           expect(elProts._activeDescendantOwnerNode.getAttribute('aria-activedescendant')).to.equal(
             null,
@@ -3186,8 +3475,8 @@ export function runComboboxSuite({
             'artichoke-option',
           );
           expect(el.formElements[1].active).to.equal(false);
-          const el2 =
-            /** @type {LionCombobox} */
+
+          const el2 = /** @type {LionCombobox} */ (
             await fixture(html`
               <${tags.host} name="foo" autocomplete="both" match-mode="begin">
                 <${tags.option} ${optionFixture(`Artichoke`)} .choiceValue="${'Artichoke'}">Artichoke</${tags.option}>
@@ -3195,37 +3484,39 @@ export function runComboboxSuite({
                 <${tags.option} ${optionFixture(`Chicory`)} .choiceValue="${'Chicory'}">Chicory</${tags.option}>
                 <${tags.option} ${optionFixture(`Victoria Plum`)} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tags.option}>
               </${tags.host}>
-            `);
+            `)
+          );
+
           const el2Prots = getComboboxMembers(el2);
-          await mimicUserTyping(/** @type {LionCombobox} */ el2, 'ch');
+
+          await mimicUserTyping(/** @type {LionCombobox} */ (el2), 'ch');
           await el2.updateComplete;
           expect(
             el2Prots._activeDescendantOwnerNode.getAttribute('aria-activedescendant'),
           ).to.equal(el2.formElements[1].id);
           expect(el2.formElements[1].active).to.equal(true);
+
           el2.autocomplete = 'list';
-          await mimicUserTyping(/** @type {LionCombobox} */ el, 'ch');
+          await mimicUserTyping(/** @type {LionCombobox} */ (el), 'ch');
           await el2.updateComplete;
           expect(
             el2Prots._activeDescendantOwnerNode.getAttribute('aria-activedescendant'),
           ).to.equal(el2.formElements[1].id);
           expect(el2.formElements[1].active).to.equal(true);
         });
+
         it('adds aria-label to highlighted options', async () => {
-          const [el, options] = await fruitFixture({
-            autocomplete: 'both',
-            matchMode: 'all',
-          });
-          await mimicUserTyping(/** @type {LionCombobox} */ el, 'choke');
+          const [el, options] = await fruitFixture({ autocomplete: 'both', matchMode: 'all' });
+          await mimicUserTyping(/** @type {LionCombobox} */ (el), 'choke');
           await el.updateComplete;
           // @ts-ignore [dynamic-key-access-in-test]
           const labelledElement = options[0].querySelector('span[aria-label="Artichoke"]');
           expect(labelledElement).to.not.be.null;
           expect(labelledElement.innerText).to.equal('Artichoke');
         });
+
         it('adds aria-label to highlighted complex options', async () => {
-          const el =
-            /** @type {LionCombobox} */
+          const el = /** @type {LionCombobox} */ (
             await fixture(html`
               <${tags.host} name="foo" match-mode="all">
                 <${tags.option} ${optionFixture('Artichoke')} .choiceValue="${'Artichoke'}">
@@ -3233,9 +3524,11 @@ export function runComboboxSuite({
                   <small>Cardoon</small>
                 </${tags.option}>
               </${tags.host}>
-            `);
+            `)
+          );
           const options = el.formElements;
-          await mimicUserTyping(/** @type {LionCombobox} */ el, 'choke');
+
+          await mimicUserTyping(/** @type {LionCombobox} */ (el), 'choke');
           await el.updateComplete;
           const labelledElement = options[0].querySelector(
             'span[aria-label=" Artichoke Cardoon "]',
@@ -3245,51 +3538,60 @@ export function runComboboxSuite({
         });
       });
     });
+
     describe('Accessibility', () => {
       describe('Aria versions', () => {
         it('[role=combobox] wraps input node in v1.1', async () => {
-          const el =
-            /** @type {LionCombobox} */
+          const el = /** @type {LionCombobox} */ (
             await fixture(html`
               <${tags.host} name="foo" ._ariaVersion="${'1.1'}">
                 <${tags.option} ${optionFixture(`Item 1`)} .choiceValue="${'10'}" checked>Item 1</${tags.option}>
               </${tags.host}>
-            `);
+            `)
+          );
           const { _comboboxNode, _inputNode } = getComboboxMembers(el);
+
           expect(_comboboxNode.contains(_inputNode)).to.be.true;
         });
+
         it('has one input node with [role=combobox] in v1.0', async () => {
-          const el =
-            /** @type {LionCombobox} */
+          const el = /** @type {LionCombobox} */ (
             await fixture(html`
               <${tags.host} name="foo" ._ariaVersion="${'1.0'}">
                 <${tags.option} ${optionFixture(`Item 1`)} .choiceValue="${'10'}" checked>Item 1</${tags.option}>
               </${tags.host}>
-            `);
+            `)
+          );
           const { _comboboxNode, _inputNode } = getComboboxMembers(el);
+
           expect(_comboboxNode).to.equal(_inputNode);
         });
+
         it('autodetects aria version and sets it to 1.1 on Chromium browsers', async () => {
           const browserDetectionIsChromiumOriginal = browserDetection.isChromium;
+
           browserDetection.isChromium = true;
-          const el =
-            /** @type {LionCombobox} */
+          const el = /** @type {LionCombobox} */ (
             await fixture(html`
               <${tags.host} name="foo">
                 <${tags.option} ${optionFixture(`Item 1`)} .choiceValue="${'10'}" checked>Item 1</${tags.option}>
               </${tags.host}>
-            `);
+            `)
+          );
           const elProts = getComboboxMembers(el);
+
           expect(elProts._ariaVersion).to.equal('1.1');
+
           browserDetection.isChromium = false;
-          const el2 =
-            /** @type {LionCombobox} */
+          const el2 = /** @type {LionCombobox} */ (
             await fixture(html`
               <${tags.host} name="foo">
                 <${tags.option} ${optionFixture(`Item 1`)} .choiceValue="${'10'}" checked>Item 1</${tags.option}>
               </${tags.host}>
-            `);
+            `)
+          );
           const el2Prots = getComboboxMembers(el2);
+
           expect(el2Prots._ariaVersion).to.equal('1.0');
 
           // restore...
@@ -3297,11 +3599,11 @@ export function runComboboxSuite({
         });
       });
     });
+
     describe('Multiple Choice', () => {
       // TODO: possibly later share test with select-rich if it officially supports multipleChoice
       it('does not close listbox on click', async () => {
-        const el =
-          /** @type {LionCombobox} */
+        const el = /** @type {LionCombobox} */ (
           await fixture(html`
             <${tags.host} name="foo" multiple-choice>
               <${tags.option} ${optionFixture(`Artichoke`)} .choiceValue="${'Artichoke'}">Artichoke</${tags.option}>
@@ -3309,19 +3611,21 @@ export function runComboboxSuite({
               <${tags.option} ${optionFixture(`Chicory`)} .choiceValue="${'Chicory'}">Chicory</${tags.option}>
               <${tags.option} ${optionFixture(`Victoria Plum`)} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tags.option}>
             </${tags.host}>
-          `);
+          `)
+        );
 
         // activate opened listbox
         await mimicUserTyping(el, 'ch');
         await el.updateComplete;
+
         expect(el.opened).to.equal(true);
-        const visibleOptions = el.formElements.filter((o) => o.style.display !== 'none');
+        const visibleOptions = el.formElements.filter(o => o.style.display !== 'none');
         visibleOptions[0].click();
         expect(el.opened).to.equal(true);
       });
+
       it('does not close listbox on [Enter]', async () => {
-        const el =
-          /** @type {LionCombobox} */
+        const el = /** @type {LionCombobox} */ (
           await fixture(html`
             <${tags.host} name="foo" multiple-choice>
               <${tags.option} ${optionFixture(`Artichoke`)} .choiceValue="${'Artichoke'}">Artichoke</${tags.option}>
@@ -3329,24 +3633,23 @@ export function runComboboxSuite({
               <${tags.option} ${optionFixture(`Chicory`)} .choiceValue="${'Chicory'}">Chicory</${tags.option}>
               <${tags.option} ${optionFixture(`Victoria Plum`)} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tags.option}>
             </${tags.host}>
-          `);
+          `)
+        );
+
         const { _inputNode } = getComboboxMembers(el);
+
         await mimicUserTyping(el, 'art');
         await el.updateComplete;
         expect(el.opened).to.equal(true);
 
         // N.B. we do only trigger keydown here (and not mimicKeypress (both keyup and down)),
         // because this closely mimics what happens in the browser
-        _inputNode.dispatchEvent(
-          new KeyboardEvent('keydown', {
-            key: 'Enter',
-          }),
-        );
+        _inputNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
         expect(el.opened).to.equal(true);
       });
+
       it('clears textbox after selection of a new item on [enter]', async () => {
-        const el =
-          /** @type {LionCombobox} */
+        const el = /** @type {LionCombobox} */ (
           await fixture(html`
             <${tags.host} name="foo" multiple-choice>
               <${tags.option} ${optionFixture(`Artichoke`)} .choiceValue="${'Artichoke'}">Artichoke</${tags.option}>
@@ -3354,29 +3657,29 @@ export function runComboboxSuite({
               <${tags.option} ${optionFixture(`Chicory`)} .choiceValue="${'Chicory'}">Chicory</${tags.option}>
               <${tags.option} ${optionFixture(`Victoria Plum`)} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tags.option}>
             </${tags.host}>
-          `);
+          `)
+        );
+
         const { _inputNode } = getComboboxMembers(el);
         const options = el.formElements;
+
         await mimicUserTyping(el, 'art');
         await el.updateComplete;
+
         expect(el.opened).to.equal(true);
-        const visibleOptions = () => options.filter((o) => o.style.display !== 'none');
+        const visibleOptions = () => options.filter(o => o.style.display !== 'none');
         expect(visibleOptions().length).to.equal(1);
 
         // N.B. we do only trigger keydown here (and not mimicKeypress (both keyup and down)),
         // because this closely mimics what happens in the browser
-        _inputNode.dispatchEvent(
-          new KeyboardEvent('keydown', {
-            key: 'Enter',
-          }),
-        );
+        _inputNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
         expect(el.opened).to.equal(true);
         expect(visibleOptions().length).to.equal(0);
         expect(_inputNode.value).to.equal('');
       });
+
       it('clears textbox after selection of a new item on click', async () => {
-        const el =
-          /** @type {LionCombobox} */
+        const el = /** @type {LionCombobox} */ (
           await fixture(html`
             <${tags.host} name="foo" multiple-choice>
               <${tags.option} ${optionFixture(`Artichoke`)} .choiceValue="${'Artichoke'}">Artichoke</${tags.option}>
@@ -3384,23 +3687,28 @@ export function runComboboxSuite({
               <${tags.option} ${optionFixture(`Chicory`)} .choiceValue="${'Chicory'}">Chicory</${tags.option}>
               <${tags.option} ${optionFixture(`Victoria Plum`)} .choiceValue="${'Victoria Plum'}">Victoria Plum</${tags.option}>
             </${tags.host}>
-          `);
+          `)
+        );
+
         const { _inputNode } = getComboboxMembers(el);
         const options = el.formElements;
+
         await mimicUserTyping(el, 'art');
         await el.updateComplete;
+
         expect(el.opened).to.equal(true);
-        const visibleOptions = () => options.filter((o) => o.style.display !== 'none');
+        const visibleOptions = () => options.filter(o => o.style.display !== 'none');
         expect(visibleOptions().length).to.equal(1);
+
         visibleOptions()[0].click();
         expect(el.opened).to.equal(true);
         expect(visibleOptions().length).to.equal(0);
         expect(_inputNode.value).to.equal('');
       });
+
       it('submits form on [Enter] when listbox is closed', async () => {
-        const submitSpy = sinon.spy((e) => e.preventDefault());
-        const el =
-          /** @type {HTMLFormElement}  */
+        const submitSpy = sinon.spy(e => e.preventDefault());
+        const el = /** @type {HTMLFormElement}  */ (
           await fixture(html`
             <form @submit=${submitSpy}>
               <${tags.host} name="foo" multiple-choice>
@@ -3411,8 +3719,9 @@ export function runComboboxSuite({
               </${tags.host}>
               <button type="submit">submit</button>
             </form>
-          `);
-        const combobox = /** @type {LionCombobox} */ el.querySelector('[name="foo"]');
+          `)
+        );
+        const combobox = /** @type {LionCombobox} */ (el.querySelector('[name="foo"]'));
         const { _inputNode } = getComboboxMembers(combobox);
         await combobox.updateComplete;
         _inputNode.focus();
@@ -3421,10 +3730,10 @@ export function runComboboxSuite({
         });
         expect(submitSpy.callCount).to.equal(1);
       });
+
       it('does not submit form on [Enter] when listbox is opened', async () => {
-        const submitSpy = sinon.spy((e) => e.preventDefault());
-        const el =
-          /** @type {HTMLFormElement}  */
+        const submitSpy = sinon.spy(e => e.preventDefault());
+        const el = /** @type {HTMLFormElement}  */ (
           await fixture(html`
             <form @submit=${submitSpy}>
               <${tags.host} name="foo" multiple-choice>
@@ -3435,8 +3744,9 @@ export function runComboboxSuite({
               </${tags.host}>
               <button type="submit">submit</button>
             </form>
-          `);
-        const combobox = /** @type {LionCombobox} */ el.querySelector('[name="foo"]');
+          `)
+        );
+        const combobox = /** @type {LionCombobox} */ (el.querySelector('[name="foo"]'));
         const { _inputNode } = getComboboxMembers(combobox);
         combobox.opened = true;
         await combobox.updateComplete;
@@ -3447,33 +3757,35 @@ export function runComboboxSuite({
         expect(submitSpy.callCount).to.equal(0);
       });
     });
+
     describe('Match Mode', () => {
       it('has a default value of "all"', async () => {
         const [el] = await fruitFixture();
         expect(el.matchMode).to.equal('all');
       });
+
       it('will suggest partial matches (in the middle of the word) when set to "all"', async () => {
         const [el] = await fruitFixture();
-        await mimicUserTyping(/** @type {LionCombobox} */ el, 'c');
+        await mimicUserTyping(/** @type {LionCombobox} */ (el), 'c');
         await el.updateComplete;
-        expect(getFilteredOptionValues(/** @type {LionCombobox} */ el)).to.eql([
+        expect(getFilteredOptionValues(/** @type {LionCombobox} */ (el))).to.eql([
           'Artichoke',
           'Chard',
           'Chicory',
           'Victoria Plum',
         ]);
       });
+
       it('will only suggest beginning matches when set to "begin"', async () => {
-        const [el] = await fruitFixture({
-          matchMode: 'begin',
-        });
-        await mimicUserTyping(/** @type {LionCombobox} */ el, 'ch');
+        const [el] = await fruitFixture({ matchMode: 'begin' });
+        await mimicUserTyping(/** @type {LionCombobox} */ (el), 'ch');
         await el.updateComplete;
-        expect(getFilteredOptionValues(/** @type {LionCombobox} */ el)).to.eql([
+        expect(getFilteredOptionValues(/** @type {LionCombobox} */ (el))).to.eql([
           'Chard',
           'Chicory',
         ]);
       });
+
       describe('Subclassers', () => {
         it('allows for custom matching functions', async () => {
           const [el] = await fruitFixture();
@@ -3485,71 +3797,65 @@ export function runComboboxSuite({
             return option.value === curValue;
           }
           el.matchCondition = onlyExactMatches;
-          await mimicUserTyping(/** @type {LionCombobox} */ el, 'Chicory');
+          await mimicUserTyping(/** @type {LionCombobox} */ (el), 'Chicory');
           await el.updateComplete;
-          expect(getFilteredOptionValues(/** @type {LionCombobox} */ el)).to.eql(['Chicory']);
-          await mimicUserTyping(/** @type {LionCombobox} */ el, 'Chicor');
+          expect(getFilteredOptionValues(/** @type {LionCombobox} */ (el))).to.eql(['Chicory']);
+          await mimicUserTyping(/** @type {LionCombobox} */ (el), 'Chicor');
           await el.updateComplete;
-          expect(getFilteredOptionValues(/** @type {LionCombobox} */ el)).to.eql([]);
+          expect(getFilteredOptionValues(/** @type {LionCombobox} */ (el))).to.eql([]);
         });
       });
     });
+
     describe('Disabled state', () => {
       it('does not open overlay or allow input when disabled', async () => {
-        const [el] = await fruitFixture({
-          disabled: true,
-        });
+        const [el] = await fruitFixture({ disabled: true });
         expect(el.disabled).to.equal(true);
-        const { _inputNode } = getComboboxMembers(/** @type {LionCombobox} */ el);
+
+        const { _inputNode } = getComboboxMembers(/** @type {LionCombobox} */ (el));
+
         expect(el.disabled).to.be.true;
         expect(_inputNode.disabled).to.be.true;
 
         // Try to open overlay by clicking input
-        _inputNode.dispatchEvent(
-          new Event('click', {
-            bubbles: true,
-            composed: true,
-          }),
-        );
+        _inputNode.dispatchEvent(new Event('click', { bubbles: true, composed: true }));
         await el.updateComplete;
         expect(el.opened).to.be.false;
       });
+
       it('does open overlay or allow input when disabled state is removed after it was previously disabled', async () => {
-        const [el] = await fruitFixture({
-          disabled: true,
-        });
+        const [el] = await fruitFixture({ disabled: true });
         expect(el.disabled).to.equal(true);
-        const { _inputNode } = getComboboxMembers(/** @type {LionCombobox} */ el);
+
+        const { _inputNode } = getComboboxMembers(/** @type {LionCombobox} */ (el));
+
         expect(el.disabled).to.be.true;
         expect(_inputNode.disabled).to.be.true;
 
         // Try to open overlay by clicking input
-        _inputNode.dispatchEvent(
-          new Event('click', {
-            bubbles: true,
-            composed: true,
-          }),
-        );
+        _inputNode.dispatchEvent(new Event('click', { bubbles: true, composed: true }));
         await el.updateComplete;
         expect(el.opened).to.be.false;
+
         el.disabled = false;
         await el.updateComplete;
+
         expect(el.disabled).to.be.false;
         expect(_inputNode.disabled).to.be.false;
 
         // Try to open overlay by clicking input
         async function open() {
-          await mimicUserTyping(/** @type {LionCombobox} */ el, 'ch');
+          await mimicUserTyping(/** @type {LionCombobox} */ (el), 'ch');
           return el.updateComplete;
         }
+
         await open();
         expect(el.opened).to.be.true;
       });
+
       it('sets aria-disabled and disables focus when combobox is disabled', async () => {
-        const [el] = await fruitFixture({
-          disabled: true,
-        });
-        const { _comboboxNode, _inputNode } = getComboboxMembers(/** @type {LionCombobox} */ el);
+        const [el] = await fruitFixture({ disabled: true });
+        const { _comboboxNode, _inputNode } = getComboboxMembers(/** @type {LionCombobox} */ (el));
 
         // input should not be focusable
         expect(_comboboxNode.tabIndex).to.equal(-1);
@@ -3560,13 +3866,13 @@ export function runComboboxSuite({
 
         // aria-disabled should be set
         expect(_inputNode.getAttribute('aria-disabled')).to.equal('true');
+
         await expect(el).to.be.accessible();
       });
+
       it('ensure focus when combobox is readonly', async () => {
-        const [el] = await fruitFixture({
-          readonly: true,
-        });
-        const { _comboboxNode, _inputNode } = getComboboxMembers(/** @type {LionCombobox} */ el);
+        const [el] = await fruitFixture({ readonly: true });
+        const { _comboboxNode, _inputNode } = getComboboxMembers(/** @type {LionCombobox} */ (el));
 
         // input should be focusable
         expect(_inputNode.tabIndex).to.equal(0);
@@ -3576,65 +3882,61 @@ export function runComboboxSuite({
 
         // aria-disabled should be set
         expect(_inputNode.getAttribute('aria-readonly')).to.equal('true');
+
         await expect(el).to.be.accessible();
       });
     });
+
     describe('Readonly state', () => {
       it('does not open overlay or allow input when readonly', async () => {
-        const [el] = await fruitFixture({
-          readonly: true,
-        });
-        const { _inputNode } = getComboboxMembers(/** @type {LionCombobox} */ el);
+        const [el] = await fruitFixture({ readonly: true });
+
+        const { _inputNode } = getComboboxMembers(/** @type {LionCombobox} */ (el));
         expect(el.readOnly).to.equal(true);
+
         expect(el.readOnly).to.be.true;
         expect(_inputNode.readOnly).to.be.true;
 
         // Try to open overlay by clicking input
-        _inputNode.dispatchEvent(
-          new Event('click', {
-            bubbles: true,
-            composed: true,
-          }),
-        );
+        _inputNode.dispatchEvent(new Event('click', { bubbles: true, composed: true }));
         await el.updateComplete;
         expect(el.opened).to.be.false;
       });
+
       it('does open overlay or allow input when readonly state is removed after it was previously set', async () => {
-        const [el] = await fruitFixture({
-          readonly: true,
-        });
+        const [el] = await fruitFixture({ readonly: true });
         expect(el.readOnly).to.equal(true);
-        const { _inputNode } = getComboboxMembers(/** @type {LionCombobox} */ el);
+
+        const { _inputNode } = getComboboxMembers(/** @type {LionCombobox} */ (el));
+
         expect(el.readOnly).to.be.true;
         expect(_inputNode.readOnly).to.be.true;
 
         // Try to open overlay by clicking input
-        _inputNode.dispatchEvent(
-          new Event('click', {
-            bubbles: true,
-            composed: true,
-          }),
-        );
+        _inputNode.dispatchEvent(new Event('click', { bubbles: true, composed: true }));
         await el.updateComplete;
         expect(el.opened).to.be.false;
+
         el.readOnly = false;
         await el.updateComplete;
+
         expect(el.readOnly).to.be.false;
         expect(_inputNode.readOnly).to.be.false;
 
         // Try to open overlay by clicking input
         async function open() {
-          await mimicUserTyping(/** @type {LionCombobox} */ el, 'ch');
+          await mimicUserTyping(/** @type {LionCombobox} */ (el), 'ch');
           return el.updateComplete;
         }
+
         await open();
         expect(el.opened).to.be.true;
       });
     });
+
     describe('Special Characters in Search', () => {
       it('correctly escapes all regex special characters in search queries', async () => {
-        const el =
-          /** @type {LionCombobox} */
+        const el = /** @type {LionCombobox} */ (
           await fixture(html`
             <${tags.host} label="Search" name="foo">
               <${tags.option} ${optionFixture(`test.com`)} .choiceValue="${'test.com'}">test.com</${tags.option}>
@@ -3656,7 +3958,8 @@ export function runComboboxSuite({
               <${tags.option} ${optionFixture(`funcXargX`)} .choiceValue="${'funcXargX'}">funcXargX</${tags.option}>
               <${tags.option} ${optionFixture(`arrayX0X`)} .choiceValue="${'arrayX0X'}">arrayX0X</${tags.option}>
             </${tags.host}>
-          `);
+          `)
+        );
 
         // Test dot - should not act as wildcard
         await mimicUserTyping(el, 'test.com');

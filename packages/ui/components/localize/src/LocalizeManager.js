@@ -1,6 +1,7 @@
 // @ts-expect-error
 import MessageFormat from '@bundled-es-modules/message-format/MessageFormat.js';
 import { isServer } from 'lit';
+
 import isLocalizeESModule from './isLocalizeESModule.js';
 
 /**
@@ -16,10 +17,7 @@ import isLocalizeESModule from './isLocalizeESModule.js';
  * In the future, we might want to look into more advanced SSR of localized messages
  */
 const documentElement = isServer
-  ? {
-      getAttribute: () => null,
-      lang: '',
-    }
+  ? { getAttribute: () => null, lang: '' }
   : globalThis.document?.documentElement;
 
 /**
@@ -119,13 +117,15 @@ export class LocalizeManager extends EventTarget {
    */
   set locale(newLocale) {
     this.#assertCorrectLocale(newLocale);
+
     if (!this.#shouldHandleTranslationTools) {
       const oldLocale = documentElement.lang;
       this._setHtmlLangAttribute(newLocale);
       this._onLocaleChanged(newLocale, oldLocale);
       return;
     }
-    const oldLocale = /** @type {string} */ this.#localeProvidedViaDataLangAttr;
+
+    const oldLocale = /** @type {string} */ (this.#localeProvidedViaDataLangAttr);
     this.#localeProvidedViaDataLangAttr = newLocale;
     const isLangAutoOrTranslationToolNotProcessed = this.#localeSetByTranslationTool === null;
     if (isLangAutoOrTranslationToolNotProcessed) {
@@ -140,6 +140,7 @@ export class LocalizeManager extends EventTarget {
   get loadingComplete() {
     const hasPendingCacheForLocale =
       typeof this.__namespaceLoaderPromisesCache[this.locale] === 'object';
+
     return !hasPendingCacheForLocale
       ? Promise.resolve()
       : Promise.all(Object.values(this.__namespaceLoaderPromisesCache[this.locale]));
@@ -156,6 +157,7 @@ export class LocalizeManager extends EventTarget {
 
   /** @protected */
   _fallbackLocale;
+
   constructor({
     allowOverridesForExistingNamespaces = false,
     autoLoadOnLocaleChange = false,
@@ -163,19 +165,24 @@ export class LocalizeManager extends EventTarget {
     fallbackLocale = '',
   } = {}) {
     super();
+
     this.__allowOverridesForExistingNamespaces = allowOverridesForExistingNamespaces;
     this._autoLoadOnLocaleChange = !!autoLoadOnLocaleChange;
     this._showKeyAsFallback = showKeyAsFallback;
     this._fallbackLocale = fallbackLocale;
+
     const localeProvidedViaDataLangAttr = documentElement.getAttribute('data-localize-lang');
     this.#shouldHandleTranslationTools = Boolean(localeProvidedViaDataLangAttr);
+
     if (this.#shouldHandleTranslationTools) {
-      this.locale = /** @type {string} */ localeProvidedViaDataLangAttr;
+      this.locale = /** @type {string} */ (localeProvidedViaDataLangAttr);
       this._setupTranslationToolSupport();
     }
+
     if (!documentElement.lang) {
       documentElement.lang = this.locale || 'en-GB';
     }
+
     this._setupHtmlLangAttributeObserver();
   }
 
@@ -195,7 +202,9 @@ export class LocalizeManager extends EventTarget {
         `Namespace "${namespace}" has been already added for the locale "${locale}".`,
       );
     }
+
     this.__storage[locale] = this.__storage[locale] || {};
+
     if (this.__allowOverridesForExistingNamespaces) {
       this.__storage[locale][namespace] = {
         ...this.__storage[locale][namespace],
@@ -224,10 +233,7 @@ export class LocalizeManager extends EventTarget {
     return Promise.all(
       namespaces.map(
         /** @param {NamespaceObject} namespace */
-        (namespace) =>
-          this.loadNamespace(namespace, {
-            locale,
-          }),
+        namespace => this.loadNamespace(namespace, { locale }),
       ),
     );
   }
@@ -238,23 +244,22 @@ export class LocalizeManager extends EventTarget {
    * @param {string} [options.locale]
    * @returns {Promise<Object|void>}
    */
-  loadNamespace(
-    namespaceObj,
-    { locale = this.locale } = {
-      locale: this.locale,
-    },
-  ) {
+  loadNamespace(namespaceObj, { locale = this.locale } = { locale: this.locale }) {
     const isDynamicImport = typeof namespaceObj === 'object';
-    const namespace =
-      /** @type {string} */
-      isDynamicImport ? Object.keys(namespaceObj)[0] : namespaceObj;
+
+    const namespace = /** @type {string} */ (
+      isDynamicImport ? Object.keys(namespaceObj)[0] : namespaceObj
+    );
+
     if (this._isNamespaceInCache(locale, namespace)) {
       return Promise.resolve();
     }
+
     const existingLoaderPromise = this._getCachedNamespaceLoaderPromise(locale, namespace);
     if (existingLoaderPromise) {
       return existingLoaderPromise;
     }
+
     return this._loadNamespaceData(locale, namespaceObj, isDynamicImport, namespace);
   }
 
@@ -274,9 +279,11 @@ export class LocalizeManager extends EventTarget {
     const formatter = new MessageFormat(message, locale);
     return formatter.format(vars);
   }
+
   teardown() {
     this._teardownHtmlLangAttributeObserver();
   }
+
   reset() {
     this.__storage = {};
     this.__namespacePatternsMap = new Map();
@@ -340,9 +347,10 @@ export class LocalizeManager extends EventTarget {
   /** @protected */
   _setupHtmlLangAttributeObserver() {
     if (isServer) return;
+
     if (!this._htmlLangAttributeObserver) {
-      this._htmlLangAttributeObserver = new MutationObserver((mutations) => {
-        mutations.forEach((mutation) => {
+      this._htmlLangAttributeObserver = new MutationObserver(mutations => {
+        mutations.forEach(mutation => {
           if (this.#shouldHandleTranslationTools) {
             if (documentElement.lang === 'auto') {
               // Google Translate is switched off
@@ -409,7 +417,7 @@ export class LocalizeManager extends EventTarget {
        * @param {Object} obj
        * @param {Object} obj.default
        */
-      (obj) => {
+      obj => {
         // add data only if we have the promise in cache
         if (
           this.__namespaceLoaderPromisesCache[locale] &&
@@ -433,7 +441,7 @@ export class LocalizeManager extends EventTarget {
     let loader = this.__namespaceLoadersCache[namespace];
     if (!loader) {
       if (isDynamicImport) {
-        const _namespaceObj = /** @type {Object<string,function>} */ namespaceObj;
+        const _namespaceObj = /** @type {Object<string,function>} */ (namespaceObj);
         loader = _namespaceObj[namespace];
         this.__namespaceLoadersCache[namespace] = loader;
       } else {
@@ -441,10 +449,13 @@ export class LocalizeManager extends EventTarget {
         this.__namespaceLoadersCache[namespace] = loader;
       }
     }
+
     if (!loader) {
       throw new Error(`Namespace "${namespace}" was not properly setup.`);
     }
+
     this.__namespaceLoadersCache[namespace] = loader;
+
     return loader;
   }
 
@@ -532,27 +543,14 @@ export class LocalizeManager extends EventTarget {
     // Event firing immediately, does not wait for loading the translations
     this.dispatchEvent(new CustomEvent('__localeChanging'));
     if (newLocale === oldLocale) return;
+
     if (this._autoLoadOnLocaleChange) {
       this._loadAllMissing(newLocale, oldLocale);
       this.loadingComplete.then(() => {
-        this.dispatchEvent(
-          new CustomEvent('localeChanged', {
-            detail: {
-              newLocale,
-              oldLocale,
-            },
-          }),
-        );
+        this.dispatchEvent(new CustomEvent('localeChanged', { detail: { newLocale, oldLocale } }));
       });
     } else {
-      this.dispatchEvent(
-        new CustomEvent('localeChanged', {
-          detail: {
-            newLocale,
-            oldLocale,
-          },
-        }),
-      );
+      this.dispatchEvent(new CustomEvent('localeChanged', { detail: { newLocale, oldLocale } }));
     }
   }
 
@@ -564,7 +562,7 @@ export class LocalizeManager extends EventTarget {
   _loadAllMissing(newLocale, oldLocale) {
     const oldLocaleNamespaces = this.__storage[oldLocale] || {};
     const newLocaleNamespaces = this.__storage[newLocale] || {};
-    Object.keys(oldLocaleNamespaces).forEach((namespace) => {
+    Object.keys(oldLocaleNamespaces).forEach(namespace => {
       const newNamespaceData = newLocaleNamespaces[namespace];
       if (!newNamespaceData) {
         this.loadNamespace(namespace, {
@@ -624,6 +622,7 @@ export class LocalizeManager extends EventTarget {
       (message, name) => (typeof message === 'object' ? message[name] : message),
       messages,
     );
+
     return String(result || (this._showKeyAsFallback ? key : ''));
   }
 
@@ -634,6 +633,7 @@ export class LocalizeManager extends EventTarget {
   // eslint-disable-next-line class-methods-use-this
   #assertCorrectLocale(value) {
     if (value.includes('-')) return;
+
     throw new Error(`
       Locale was set to ${value}.
       Language only locales are not allowed, please use the full language locale e.g. 'en-GB' instead of 'en'.

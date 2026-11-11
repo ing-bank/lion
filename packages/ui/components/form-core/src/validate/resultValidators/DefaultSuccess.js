@@ -23,10 +23,11 @@ export class DefaultSuccess extends ResultValidator {
    */
   // eslint-disable-next-line class-methods-use-this
   executeOnResults({ regularValidationResult, prevShownValidationResult }) {
-    const errorOrWarning = /** @param {Validator} v */ (v) =>
+    const errorOrWarning = /** @param {Validator} v */ v =>
       v.type === 'error' || v.type === 'warning';
     const hasErrorOrWarning = !!regularValidationResult.filter(errorOrWarning).length;
     const hasShownErrorOrWarning = !!prevShownValidationResult.filter(errorOrWarning).length;
+
     return !hasErrorOrWarning && hasShownErrorOrWarning;
   }
 }

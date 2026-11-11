@@ -1,4 +1,5 @@
-const html = /** @param {TemplateStringsArray} strings */ (strings) => strings[0];
+const html = /** @param {TemplateStringsArray} strings */ strings => strings[0];
+
 export default html`
   <div id="js-content-wrapper">
     <table

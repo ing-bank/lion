@@ -48,10 +48,9 @@ export class LionInputRange extends LocalizeMixin(LionInput) {
       },
     };
   }
+
   static localizeNamespaces = [
-    {
-      'lion-input-range': localizeNamespaceLoader,
-    },
+    { 'lion-input-range': localizeNamespaceLoader },
     ...super.localizeNamespaces,
   ];
 
@@ -68,6 +67,7 @@ export class LionInputRange extends LocalizeMixin(LionInput) {
       }
     `;
   }
+
   static get styles() {
     return [
       super.styles,
@@ -87,8 +87,9 @@ export class LionInputRange extends LocalizeMixin(LionInput) {
       `,
     ];
   }
+
   get _inputNode() {
-    return /** @type {HTMLInputElement} */ super._inputNode;
+    return /** @type {HTMLInputElement} */ (super._inputNode);
   }
 
   /**
@@ -97,24 +98,19 @@ export class LionInputRange extends LocalizeMixin(LionInput) {
    * @returns {{ text: string, showUnit: boolean }}
    */
   get _valueDisplay() {
-    const currentValue = parseFloat(/** @type {string} */ this.formattedValue);
+    const currentValue = parseFloat(/** @type {string} */ (this.formattedValue));
+
     if (this.minLabel && currentValue === this.min) {
-      return {
-        text: this.minLabel,
-        showUnit: false,
-      };
+      return { text: this.minLabel, showUnit: false };
     }
+
     if (this.maxLabel && currentValue === this.max) {
-      return {
-        text: this.maxLabel,
-        showUnit: false,
-      };
+      return { text: this.maxLabel, showUnit: false };
     }
-    return {
-      text: formatNumber(currentValue),
-      showUnit: true,
-    };
+
+    return { text: formatNumber(currentValue), showUnit: true };
   }
+
   constructor() {
     super();
     /** @type {ScopedStylesController} */
@@ -130,21 +126,25 @@ export class LionInputRange extends LocalizeMixin(LionInput) {
     /**
      * @param {string} modelValue
      */
-    this.parser = (modelValue) => parseFloat(modelValue);
+    this.parser = modelValue => parseFloat(modelValue);
   }
 
   /** @param {import('lit').PropertyValues } changedProperties */
   updated(changedProperties) {
     super.updated(changedProperties);
+
     if (changedProperties.has('min')) {
       this._inputNode.min = `${this.min}`;
     }
+
     if (changedProperties.has('max')) {
       this._inputNode.max = `${this.max}`;
     }
+
     if (changedProperties.has('step')) {
       this._inputNode.step = `${this.step}`;
     }
+
     if (changedProperties.has('modelValue')) {
       if (this.minLabel && this.modelValue === this.min) {
         this._inputNode.setAttribute('aria-valuetext', `${this.minLabel}`);
@@ -170,6 +170,7 @@ export class LionInputRange extends LocalizeMixin(LionInput) {
   /** @protected */
   _inputGroupTemplate() {
     const display = this._valueDisplay;
+
     return html`
       <div>
         <span class="input-range__value">${display.text}</span>
@@ -191,22 +192,24 @@ export class LionInputRange extends LocalizeMixin(LionInput) {
     return html`
       <div class="input-group__input">
         <slot name="input"></slot>
-        ${
-          !this.noMinMaxLabels
-            ? html`
-                <div class="input-range__limits">
-                  <div>
-                    <span class="sr-only">${this.msgLit('lion-input-range:minimum')} </span
-                    >${this.minLabel ? this.minLabel : formatNumber(this.min)}
-                  </div>
-                  <div>
-                    <span class="sr-only">${this.msgLit('lion-input-range:maximum')} </span
-                    >${this.maxLabel ? this.maxLabel : formatNumber(this.max)}
-                  </div>
+        ${!this.noMinMaxLabels
+          ? html`
+              <div class="input-range__limits">
+                <div>
+                  <span class="sr-only">${this.msgLit('lion-input-range:minimum')} </span>${this
+                    .minLabel
+                    ? this.minLabel
+                    : formatNumber(this.min)}
                 </div>
-              `
-            : ''
-        }
+                <div>
+                  <span class="sr-only">${this.msgLit('lion-input-range:maximum')} </span>${this
+                    .maxLabel
+                    ? this.maxLabel
+                    : formatNumber(this.max)}
+                </div>
+              </div>
+            `
+          : ''}
       </div>
     `;
   }

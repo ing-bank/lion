@@ -5,27 +5,21 @@ import path from 'node:path';
 import test from 'node:test';
 import url from 'node:url';
 import util from 'node:util';
+
 const execFile = util.promisify(childProcess.execFile);
 const packageRoot = new URL('../', import.meta.url);
+
 test('declaration postprocessing preserves consumer fixes and is idempotent', async () => {
   const scratchRoot = url.fileURLToPath(new URL('../../../.tmp/', import.meta.url));
-  await fs.mkdir(scratchRoot, {
-    recursive: true,
-  });
+  await fs.mkdir(scratchRoot, { recursive: true });
   const fixture = await fs.mkdtemp(path.join(scratchRoot, 'declaration-postprocess-'));
   try {
     const relative = 'components/select-rich/src/LionSelectRich';
     const declaration = path.join(fixture, `dist-types/${relative}.d.ts`);
     const script = path.join(fixture, 'scripts/postprocess-declarations.js');
-    await fs.mkdir(path.dirname(declaration), {
-      recursive: true,
-    });
-    await fs.mkdir(path.dirname(script), {
-      recursive: true,
-    });
-    await fs.mkdir(path.dirname(path.join(fixture, relative)), {
-      recursive: true,
-    });
+    await fs.mkdir(path.dirname(declaration), { recursive: true });
+    await fs.mkdir(path.dirname(script), { recursive: true });
+    await fs.mkdir(path.dirname(path.join(fixture, relative)), { recursive: true });
     await fs.writeFile(path.join(fixture, `${relative}.js`), '');
     await fs.writeFile(path.join(fixture, 'package.json'), '{"type":"module"}');
     await fs.copyFile(new URL('scripts/postprocess-declarations.js', packageRoot), script);
@@ -61,9 +55,6 @@ test('declaration postprocessing preserves consumer fixes and is idempotent', as
     await fs.writeFile(declaration, 'export declare class LionSelectRich { get slots(): Other; }');
     await assert.rejects(execFile(process.execPath, [script]), /Unexpected LionSelectRich slots/);
   } finally {
-    await fs.rm(fixture, {
-      recursive: true,
-      force: true,
-    });
+    await fs.rm(fixture, { recursive: true, force: true });
   }
 });

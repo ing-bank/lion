@@ -1,12 +1,15 @@
 /* eslint-disable max-classes-per-file, class-methods-use-this */
 import { Validator } from '@lion/ui/form-core.js';
+
 export class AlwaysInvalid extends Validator {
   static validatorName = 'AlwaysInvalid';
+
   execute() {
     const showMessage = true;
     return showMessage;
   }
 }
+
 export class AlwaysValid extends Validator {
   static get validatorName() {
     return 'AlwaysValid';
@@ -20,6 +23,7 @@ export class AlwaysValid extends Validator {
     return showMessage;
   }
 }
+
 export class AsyncAlwaysValid extends AlwaysValid {
   static get async() {
     return true;
@@ -32,6 +36,7 @@ export class AsyncAlwaysValid extends AlwaysValid {
     return true;
   }
 }
+
 export class AsyncAlwaysInvalid extends AlwaysValid {
   static get async() {
     return true;

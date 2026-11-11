@@ -1,6 +1,7 @@
 import { expect } from '@open-wc/testing';
 import { isSameDate } from '@lion/ui/calendar.js';
 import { getLastDayPreviousMonth } from '../../src/utils/getLastDayPreviousMonth.js';
+
 describe('getLastDayPreviousMonth', () => {
   it('returns the last day of the previous month', () => {
     expect(

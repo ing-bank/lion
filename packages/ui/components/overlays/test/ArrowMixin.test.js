@@ -1,6 +1,7 @@
 import { expect, fixture } from '@open-wc/testing';
 import { LitElement, html } from 'lit';
 import { ArrowMixin, OverlayMixin } from '@lion/ui/overlays.js';
+
 describe('ArrowMixin', () => {
   class ArrowTest extends ArrowMixin(OverlayMixin(LitElement)) {
     /**
@@ -19,20 +20,24 @@ describe('ArrowMixin', () => {
         },
       };
     }
+
     constructor() {
       super();
       this.__toggle = this.__toggle.bind(this);
     }
+
     __toggle() {
       // @ts-ignore [ts7-2565] TS7 checks definite assignment on this inferred field; Lit reactive property: read through a typed local instead (e.g. const next = this.x ?? DEFAULT) - a class field would shadow the accessor Lit creates from static properties
       this.opened = !this.opened;
     }
+
     _setupOpenCloseListeners() {
       super._setupOpenCloseListeners();
       if (this._overlayInvokerNode) {
         this._overlayInvokerNode.addEventListener('click', this.__toggle);
       }
     }
+
     _teardownOpenCloseListeners() {
       super._teardownOpenCloseListeners();
       if (this._overlayInvokerNode) {
@@ -43,68 +48,75 @@ describe('ArrowMixin', () => {
   before(() => {
     customElements.define('arrow-test', ArrowTest);
   });
+
   it('shows by default', async () => {
-    const el =
-      /** @type {ArrowTest} */
+    const el = /** @type {ArrowTest} */ (
       await fixture(html`
         <arrow-test>
           <div slot="content">This is a tooltip</div>
           <button slot="invoker">Tooltip button</button>
         </arrow-test>
-      `);
+      `)
+    );
     expect(el.hasAttribute('has-arrow')).to.be.true;
-    const arrowNode = /** @type {Element} */ el._arrowNode;
+    const arrowNode = /** @type {Element} */ (el._arrowNode);
     expect(window.getComputedStyle(arrowNode).getPropertyValue('display')).to.equal('block');
   });
+
   it('hides for screen readers', async () => {
-    const el =
-      /** @type {ArrowTest} */
+    const el = /** @type {ArrowTest} */ (
       await fixture(html`
         <arrow-test>
           <div slot="content">This is a tooltip</div>
           <button slot="invoker">Tooltip button</button>
         </arrow-test>
-      `);
-    const arrowNode = /** @type {Element} */ el._arrowNode;
+      `)
+    );
+
+    const arrowNode = /** @type {Element} */ (el._arrowNode);
     expect(arrowNode.getAttribute('aria-hidden')).to.equal('true');
   });
+
   it('hides the arrow when has-arrow is false', async () => {
-    const el =
-      /** @type {ArrowTest} */
+    const el = /** @type {ArrowTest} */ (
       await fixture(html`
         <arrow-test>
           <div slot="content">This is a tooltip</div>
           <button slot="invoker">Tooltip button</button>
         </arrow-test>
-      `);
+      `)
+    );
     el.hasArrow = false;
     await el.updateComplete;
     expect(el.hasAttribute('has-arrow')).to.be.false;
-    const arrowNode = /** @type {Element} */ el._arrowNode;
+    const arrowNode = /** @type {Element} */ (el._arrowNode);
     expect(window.getComputedStyle(arrowNode).getPropertyValue('display')).to.equal('none');
   });
+
   it('makes sure positioning of the arrow is correct', async () => {
-    const el =
-      /** @type {ArrowTest} */
+    const el = /** @type {ArrowTest} */ (
       await fixture(html`
         <arrow-test
           .config="${
-            /** @type {import('../types/OverlayConfig.js').OverlayConfig} */ {
+            /** @type {import('../types/OverlayConfig.js').OverlayConfig} */ ({
               popperConfig: {
                 placement: 'right',
               },
-            }
+            })
           }"
           style="position: relative; top: 10px;"
         >
           <div slot="content" style="height: 30px; background-color: red;">Hey there</div>
           <button slot="invoker" style="height: 30px;">Tooltip button</button>
         </arrow-test>
-      `);
+      `)
+    );
+
     el.opened = true;
+
     await el.repositionComplete;
     expect(
-      getComputedStyle(/** @type {HTMLElement} */ el._arrowNode).getPropertyValue('left'),
+      getComputedStyle(/** @type {HTMLElement} */ (el._arrowNode)).getPropertyValue('left'),
     ).to.equal(
       '-10px',
       `

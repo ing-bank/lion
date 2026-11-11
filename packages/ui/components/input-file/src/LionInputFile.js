@@ -48,53 +48,27 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
       'lion-selected-file-list': LionSelectedFileList,
     };
   }
+
   static get properties() {
     return {
       ...super.properties,
-      accept: {
-        type: String,
-      },
-      multiple: {
-        type: Boolean,
-        reflect: true,
-      },
-      buttonLabel: {
-        type: String,
-        attribute: 'button-label',
-      },
-      maxFileSize: {
-        type: Number,
-        attribute: 'max-file-size',
-      },
-      enableDropZone: {
-        type: Boolean,
-        attribute: 'enable-drop-zone',
-      },
-      uploadOnSelect: {
-        type: Boolean,
-        attribute: 'upload-on-select',
-      },
-      isDragging: {
-        type: Boolean,
-        attribute: 'is-dragging',
-        reflect: true,
-      },
-      uploadResponse: {
-        type: Array,
-        state: false,
-      },
-      _selectedFilesMetaData: {
-        type: Array,
-        state: true,
-      },
+      accept: { type: String },
+      multiple: { type: Boolean, reflect: true },
+      buttonLabel: { type: String, attribute: 'button-label' },
+      maxFileSize: { type: Number, attribute: 'max-file-size' },
+      enableDropZone: { type: Boolean, attribute: 'enable-drop-zone' },
+      uploadOnSelect: { type: Boolean, attribute: 'upload-on-select' },
+      isDragging: { type: Boolean, attribute: 'is-dragging', reflect: true },
+      uploadResponse: { type: Array, state: false },
+      _selectedFilesMetaData: { type: Array, state: true },
     };
   }
+
   static localizeNamespaces = [
-    {
-      'lion-input-file': localizeNamespaceLoader,
-    },
+    { 'lion-input-file': localizeNamespaceLoader },
     ...super.localizeNamespaces,
   ];
+
   static get validationTypes() {
     return ['error', 'info'];
   }
@@ -132,7 +106,7 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
    * @protected
    */
   get _inputNode() {
-    return /** @type {HTMLInputElement} */ super._inputNode;
+    return /** @type {HTMLInputElement} */ (super._inputNode);
   }
 
   /**
@@ -189,8 +163,9 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
    * @returns {import('../../form-core/types/FormControlMixinTypes.js').HTMLElementWithValue & HTMLButtonElement}
    */
   get _focusableNode() {
-    return /** @type {import('../../form-core/types/FormControlMixinTypes.js').HTMLElementWithValue & HTMLButtonElement} */ this
-      ._buttonNode;
+    return /** @type {import('../../form-core/types/FormControlMixinTypes.js').HTMLElementWithValue & HTMLButtonElement} */ (
+      this._buttonNode
+    );
   }
 
   /**
@@ -215,6 +190,7 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
    * @type {FileList | null}
    */
   __previouslyParsedFiles;
+
   constructor() {
     super();
     this.type = 'file';
@@ -243,9 +219,8 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
      * @type {EventListener}
      */
     this._onRemoveFile = this._onRemoveFile.bind(this);
-    this.__duplicateFileNamesValidator = new DuplicateFileNames({
-      show: false,
-    });
+
+    this.__duplicateFileNamesValidator = new DuplicateFileNames({ show: false });
     this.__previouslyParsedFiles = null;
   }
 
@@ -254,10 +229,11 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
    * @type {LionSelectedFileList}
    */
   get _fileListNode() {
-    return /** @type {LionSelectedFileList} */ Array.from(this.children).find(
-      (child) => child.slot === 'selected-file-list',
+    return /** @type {LionSelectedFileList} */ (
+      Array.from(this.children).find(child => child.slot === 'selected-file-list')
     );
   }
+
   connectedCallback() {
     super.connectedCallback();
     this.__initialUploadResponse = this.uploadResponse;
@@ -265,6 +241,7 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
     this._inputNode.addEventListener('change', this._onChange);
     this._inputNode.addEventListener('click', this._onClick);
   }
+
   disconnectedCallback() {
     super.disconnectedCallback();
     this._inputNode.removeEventListener('change', this._onChange);
@@ -291,6 +268,7 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
   get operationMode() {
     return 'upload';
   }
+
   get _acceptCriteria() {
     /** @type {string[]} */
     let allowedFileTypes = [];
@@ -298,8 +276,8 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
     let allowedFileExtensions = [];
     if (this.accept) {
       const acceptedFiles = this.accept.replace(/\s+/g, '').split(',');
-      allowedFileTypes = acceptedFiles.filter((acceptedFile) => acceptedFile.includes('/'));
-      allowedFileExtensions = acceptedFiles.filter((acceptedFile) => !acceptedFile.includes('/'));
+      allowedFileTypes = acceptedFiles.filter(acceptedFile => acceptedFile.includes('/'));
+      allowedFileExtensions = acceptedFiles.filter(acceptedFile => !acceptedFile.includes('/'));
     }
     return {
       allowedFileTypes,
@@ -358,12 +336,14 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
       return this.modelValue;
     }
     this.__previouslyParsedFiles = this._inputNode.files;
+
     const files = this._inputNode.files
-      ? /** @type {InputFile[]} */ Array.from(this._inputNode.files)
+      ? /** @type {InputFile[]} */ (Array.from(this._inputNode.files))
       : [];
     if (this.multiple) {
       return [...(this.modelValue ?? []), ...files];
     }
+
     return files;
   }
 
@@ -381,7 +361,7 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
   __setupDragDropEventListeners() {
     // TODO: this will break as soon as a Subclasser changes the template ... (changing class names is allowed, ids should be kept)
     const dropZone = this.shadowRoot?.querySelector('.input-file__drop-zone');
-    ['dragenter', 'dragover', 'dragleave'].forEach((eventName) => {
+    ['dragenter', 'dragover', 'dragleave'].forEach(eventName => {
       dropZone?.addEventListener(
         eventName,
         (/** @type {Event} */ ev) => {
@@ -392,9 +372,10 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
         false,
       );
     });
+
     window.addEventListener(
       'drop',
-      (ev) => {
+      ev => {
         if (ev.target === this._inputNode) {
           ev.preventDefault();
         }
@@ -409,6 +390,7 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
    */
   firstUpdated(changedProperties) {
     super.firstUpdated(changedProperties);
+
     this.__setupFileValidators();
 
     // TODO: if there's no inputNode by now, we should either throw an error or add a slot change listener
@@ -423,15 +405,15 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
         this._inputNode.accept = this.accept;
       }
     }
+
     if (this.enableDropZone && this._isDragAndDropSupported) {
       this.__setupDragDropEventListeners();
       this.setAttribute('drop-zone', '');
     }
 
-    /** @type {LionSelectedFileList} */
-    this._fileListNode.addEventListener(
+    /** @type {LionSelectedFileList} */ (this._fileListNode).addEventListener(
       'file-remove-requested',
-      /** @type {EventListener} */ this._onRemoveFile,
+      /** @type {EventListener} */ (this._onRemoveFile),
     );
   }
 
@@ -446,6 +428,7 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
       this._inputNode.disabled = this.disabled;
       this.validate();
     }
+
     if (changedProperties.has('buttonLabel') && this._buttonNode) {
       this._buttonNode.textContent = this.buttonLabel;
     }
@@ -454,9 +437,11 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
     if (changedProperties.has('name')) {
       this._inputNode.name = this.name;
     }
+
     if (changedProperties.has('_ariaLabelledNodes')) {
       this.__syncAriaLabelledByAttributesToButton();
     }
+
     if (changedProperties.has('_ariaDescribedNodes')) {
       this.__syncAriaDescribedByAttributesToButton();
     }
@@ -468,7 +453,7 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
      */
     if (changedProperties.has('uploadResponse')) {
       if (this._selectedFilesMetaData.length === 0) {
-        this.uploadResponse.forEach((preResponse) => {
+        this.uploadResponse.forEach(preResponse => {
           const file = {
             systemFile: {
               name: preResponse.name,
@@ -485,14 +470,14 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
           this._selectedFilesMetaData = [...this._selectedFilesMetaData, file];
         });
       }
-      this._selectedFilesMetaData.forEach((file) => {
+      this._selectedFilesMetaData.forEach(file => {
         if (
-          !this.uploadResponse.some((response) => response.name === file.systemFile.name) &&
+          !this.uploadResponse.some(response => response.name === file.systemFile.name) &&
           this.uploadOnSelect
         ) {
           this.__removeFileFromList(file);
         } else {
-          this.uploadResponse.forEach((response) => {
+          this.uploadResponse.forEach(response => {
             if (response.name === file.systemFile.name) {
               // eslint-disable-next-line no-param-reassign
               file.response = response;
@@ -527,9 +512,9 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
    */
   __computeNewAddedFiles(fileList) {
     const computedFileList = fileList.filter(
-      (file) =>
+      file =>
         this._selectedFilesMetaData.findIndex(
-          (existLionFile) => existLionFile.systemFile.name === file.name,
+          existLionFile => existLionFile.systemFile.name === file.name,
         ) === -1,
     );
     // TODO: put this logic in the Validator itself. Changing the param should trigger a re-validate
@@ -537,6 +522,7 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
       show: fileList.length !== computedFileList.length,
     };
     this.validate();
+
     return computedFileList;
   }
 
@@ -547,21 +533,25 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
   _processDroppedFiles(ev) {
     ev.preventDefault();
     this.isDragging = false;
+
     const isDraggingMultipleWhileNotSupported =
       ev.dataTransfer && ev.dataTransfer.items.length > 1 && !this.multiple;
     if (isDraggingMultipleWhileNotSupported || !ev.dataTransfer?.files) {
       return;
     }
+
     this._inputNode.files = ev.dataTransfer.files;
+
     if (this.multiple) {
       const computedFiles = this.__computeNewAddedFiles(
-        /** @type {InputFile[]} */ Array.from(ev.dataTransfer.files),
+        /** @type {InputFile[]} */ (Array.from(ev.dataTransfer.files)),
       );
       this.modelValue = [...(this.modelValue ?? []), ...computedFiles];
     } else {
-      this.modelValue = /** @type {InputFile[]} */ Array.from(ev.dataTransfer.files);
+      this.modelValue = /** @type {InputFile[]} */ (Array.from(ev.dataTransfer.files));
     }
-    this._processFiles(/** @type {InputFile[]} */ Array.from(ev.dataTransfer.files));
+
+    this._processFiles(/** @type {InputFile[]} */ (Array.from(ev.dataTransfer.files)));
   }
 
   /**
@@ -577,7 +567,7 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
     // Here, we connect ourselves to the FormatMixin flow...
     // TODO: should we call super._onChange(ev) here instead?
     this._onUserInputChanged();
-    this._processFiles(/** @type {HTMLInputElement & {files:InputFile[]}} */ ev?.target?.files);
+    this._processFiles(/** @type {HTMLInputElement & {files:InputFile[]}} */ (ev?.target)?.files);
   }
 
   /**
@@ -675,9 +665,10 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
     const _successFiles = this._selectedFilesMetaData
       .filter(
         ({ systemFile, status }) =>
-          newFiles.includes(/** @type {InputFile} */ systemFile) && status === 'SUCCESS',
+          newFiles.includes(/** @type {InputFile} */ (systemFile)) && status === 'SUCCESS',
       )
-      .map(({ systemFile }) => /** @type {InputFile} */ systemFile);
+      .map(({ systemFile }) => /** @type {InputFile} */ (systemFile));
+
     if (_successFiles.length > 0) {
       this._dispatchFileListChangeEvent(_successFiles);
     }
@@ -705,7 +696,7 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
    */
   _handleErrors() {
     let hasErrors = false;
-    this._selectedFilesMetaData.forEach((fileObj) => {
+    this._selectedFilesMetaData.forEach(fileObj => {
       if (fileObj.failedProp && fileObj.failedProp.length > 0) {
         hasErrors = true;
       }
@@ -741,12 +732,13 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
     let array = [];
     let arrayLength = 0;
     let lastItem;
+
     if (allowedFileExtensions.length) {
       array = allowedFileExtensions;
       lastItem = array.pop();
       arrayLength = array.length;
     } else if (allowedFileTypes.length) {
-      allowedFileTypes.forEach((MIMETypes) => {
+      allowedFileTypes.forEach(MIMETypes => {
         if (MIMETypes.endsWith('/*')) {
           array.push(MIMETypes.slice(0, -2));
         } else if (MIMETypes === 'text/plain') {
@@ -754,6 +746,7 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
         } else {
           const index = MIMETypes.indexOf('/');
           const subTypes = MIMETypes.slice(index + 1);
+
           if (!subTypes.includes('+')) {
             array.push(`.${subTypes}`);
           } else {
@@ -782,6 +775,7 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
         maxSize: formatBytes(this.maxFileSize),
       })}`;
     }
+
     const errorObj = {
       message,
       type: 'error',
@@ -794,36 +788,38 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
    * @protected
    */
   _updateUploadButtonDescription() {
-    const erroneousFilesNames = /** @type {string[]} */ [];
+    const erroneousFilesNames = /** @type {string[]} */ ([]);
     let errorMessage;
-    this._selectedFilesMetaData.forEach((file) => {
+
+    this._selectedFilesMetaData.forEach(file => {
       if (file.status === 'FAIL') {
         errorMessage = file.validationFeedback ? file.validationFeedback[0].message.toString() : '';
-        erroneousFilesNames.push(/** @type {string} */ file.systemFile.name);
+        erroneousFilesNames.push(/** @type {string} */ (file.systemFile.name));
       }
     });
+
     const selectedFiles = this.querySelector('[slot="after"]');
     if (selectedFiles) {
       if (!this._selectedFilesMetaData || this._selectedFilesMetaData.length === 0) {
         if (this.uploadOnSelect) {
-          selectedFiles.textContent =
-            /** @type {string} */
-            this.msgLit('lion-input-file:noFilesUploaded');
+          selectedFiles.textContent = /** @type {string} */ (
+            this.msgLit('lion-input-file:noFilesUploaded')
+          );
         } else {
-          selectedFiles.textContent =
-            /** @type {string} */
-            this.msgLit('lion-input-file:noFilesSelected');
+          selectedFiles.textContent = /** @type {string} */ (
+            this.msgLit('lion-input-file:noFilesSelected')
+          );
         }
       } else if (this._selectedFilesMetaData.length === 1) {
         const { name } = this._selectedFilesMetaData[0].systemFile;
         if (this.uploadOnSelect) {
-          selectedFiles.textContent =
-            /** @type {string} */
-            errorMessage || this.msgLit('lion-input-file:fileUploaded') + (name ?? '');
+          selectedFiles.textContent = /** @type {string} */ (
+            errorMessage || this.msgLit('lion-input-file:fileUploaded') + (name ?? '')
+          );
         } else {
-          selectedFiles.textContent =
-            /** @type {string} */
-            errorMessage || this.msgLit('lion-input-file:fileSelected') + (name ?? '');
+          selectedFiles.textContent = /** @type {string} */ (
+            errorMessage || this.msgLit('lion-input-file:fileSelected') + (name ?? '')
+          );
         }
       } else if (this.uploadOnSelect) {
         selectedFiles.textContent = `${this.msgLit('lion-input-file:filesUploaded', {
@@ -857,7 +853,7 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
    */
   __removeFileFromList(removedFile) {
     this._selectedFilesMetaData = this._selectedFilesMetaData.filter(
-      (currentFile) => currentFile.systemFile.name !== removedFile.systemFile.name,
+      currentFile => currentFile.systemFile.name !== removedFile.systemFile.name,
     );
     // checks if the file is not a pre-filled file
     if (this.modelValue) {
@@ -882,6 +878,7 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
     if (!this.uploadOnSelect && removedFile) {
       this.__removeFileFromList(removedFile);
     }
+
     this._removeFile(removedFile);
   }
 
@@ -960,17 +957,16 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
     return html`
       <slot name="input"> </slot>
       <slot name="after"> </slot>
-      ${
-        this.enableDropZone && this._isDragAndDropSupported
-          ? this._dropZoneTemplate()
-          : html`
-              <div class="input-group__file-select-button">
-                <slot name="file-select-button"></slot>
-              </div>
-            `
-      }
+      ${this.enableDropZone && this._isDragAndDropSupported
+        ? this._dropZoneTemplate()
+        : html`
+            <div class="input-group__file-select-button">
+              <slot name="file-select-button"></slot>
+            </div>
+          `}
     `;
   }
+
   static get styles() {
     return [
       super.styles,

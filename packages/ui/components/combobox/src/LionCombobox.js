@@ -7,6 +7,7 @@ import { css, html } from 'lit';
 import { CustomChoiceGroupMixin } from '../../form-core/src/choice-group/CustomChoiceGroupMixin.js';
 import { makeMatchingTextBold, unmakeMatchingTextBold } from './utils/makeMatchingTextBold.js';
 import { MatchesOption } from './validators.js';
+
 const matchA11ySpanReverseFns = new WeakMap();
 
 // TODO: make ListboxOverlayMixin that is shared between SelectRich and Combobox
@@ -41,10 +42,7 @@ export class LionCombobox extends LocalizeMixin(OverlayMixin(CustomChoiceGroupMi
   /** @type {any} */
   static get properties() {
     return {
-      autocomplete: {
-        type: String,
-        reflect: true,
-      },
+      autocomplete: { type: String, reflect: true },
       matchMode: {
         type: String,
         attribute: 'match-mode',
@@ -63,6 +61,7 @@ export class LionCombobox extends LocalizeMixin(OverlayMixin(CustomChoiceGroupMi
       __shouldAutocompleteNextUpdate: Boolean,
     };
   }
+
   static get styles() {
     return [
       ...super.styles,
@@ -96,10 +95,11 @@ export class LionCombobox extends LocalizeMixin(OverlayMixin(CustomChoiceGroupMi
       `,
     ];
   }
+
   static get localizeNamespaces() {
     return [
       {
-        'lion-combobox': /** @param {string} locale */ (locale) => {
+        'lion-combobox': /** @param {string} locale */ locale => {
           switch (locale) {
             case 'bg-BG':
             case 'bg':
@@ -208,6 +208,7 @@ export class LionCombobox extends LocalizeMixin(OverlayMixin(CustomChoiceGroupMi
       this.__value = value;
     }
   }
+
   reset() {
     super.reset();
     if (!this.multipleChoice) {
@@ -307,6 +308,7 @@ export class LionCombobox extends LocalizeMixin(OverlayMixin(CustomChoiceGroupMi
           border-radius: inherit;
           box-sizing: border-box;
           padding: 0;`;
+
           combobox.appendChild(textbox);
           return combobox;
         }
@@ -332,7 +334,7 @@ export class LionCombobox extends LocalizeMixin(OverlayMixin(CustomChoiceGroupMi
    * @protected
    */
   get _comboboxNode() {
-    return /** @type {HTMLElement} */ this.querySelector('[slot="input"]');
+    return /** @type {HTMLElement} */ (this.querySelector('[slot="input"]'));
   }
 
   /**
@@ -351,12 +353,11 @@ export class LionCombobox extends LocalizeMixin(OverlayMixin(CustomChoiceGroupMi
    */
   get _inputNode() {
     if (this._ariaVersion === '1.1' && this._comboboxNode) {
-      return (
-        /** @type {HTMLInputElement} */ this._comboboxNode.querySelector('input') ||
-        this._comboboxNode
+      return /** @type {HTMLInputElement} */ (
+        this._comboboxNode.querySelector('input') || this._comboboxNode
       );
     }
-    return /** @type {HTMLInputElement} */ this._comboboxNode;
+    return /** @type {HTMLInputElement} */ (this._comboboxNode);
   }
 
   /**
@@ -372,7 +373,7 @@ export class LionCombobox extends LocalizeMixin(OverlayMixin(CustomChoiceGroupMi
    * @protected
    */
   get _overlayReferenceNode() {
-    return /** @type {ShadowRoot} */ this.shadowRoot.querySelector('.input-group__container');
+    return /** @type {ShadowRoot} */ (this.shadowRoot).querySelector('.input-group__container');
   }
 
   /**
@@ -388,9 +389,9 @@ export class LionCombobox extends LocalizeMixin(OverlayMixin(CustomChoiceGroupMi
    * @protected
    */
   get _listboxNode() {
-    return (
-      /** @type {LionOptions} */ (this._overlayCtrl && this._overlayCtrl.contentNode) ||
-      Array.from(this.children).find((child) => child.slot === 'listbox')
+    return /** @type {LionOptions} */ (
+      (this._overlayCtrl && this._overlayCtrl.contentNode) ||
+        Array.from(this.children).find(child => child.slot === 'listbox')
     );
   }
 
@@ -451,6 +452,7 @@ export class LionCombobox extends LocalizeMixin(OverlayMixin(CustomChoiceGroupMi
    * @private
    */
   __listboxContentChanged;
+
   constructor() {
     super();
     /**
@@ -521,11 +523,13 @@ export class LionCombobox extends LocalizeMixin(OverlayMixin(CustomChoiceGroupMi
      */
     this._textboxOnKeydown = this._textboxOnKeydown.bind(this);
   }
+
   connectedCallback() {
     super.connectedCallback();
     if (this._selectionDisplayNode) {
       this._selectionDisplayNode.comboboxElement = this;
     }
+
     if (this.disabled || this.readOnly) {
       this.__setComboboxDisabledAndReadOnly();
     }
@@ -546,7 +550,7 @@ export class LionCombobox extends LocalizeMixin(OverlayMixin(CustomChoiceGroupMi
       if (this._syncToTextboxCondition(this.modelValue, this._oldModelValue)) {
         if (!this.multipleChoice) {
           const textboxValue = this._getTextboxValueFromOption(
-            this.formElements[/** @type {number} */ this.checkedIndex],
+            this.formElements[/** @type {number} */ (this.checkedIndex)],
           );
           this._setTextboxValue(textboxValue);
         } else {
@@ -580,7 +584,7 @@ export class LionCombobox extends LocalizeMixin(OverlayMixin(CustomChoiceGroupMi
    */
   __unsyncCheckedIndexOnInputChange() {
     const autoselect = this._autoSelectCondition();
-    const checkedElement = this.formElements[/** @type {number} */ this.checkedIndex];
+    const checkedElement = this.formElements[/** @type {number} */ (this.checkedIndex)];
     if (!this.multipleChoice && !autoselect && checkedElement) {
       const textboxValue = this._getTextboxValueFromOption(checkedElement);
       if (!this._inputNode.value.startsWith(textboxValue)) {
@@ -594,17 +598,20 @@ export class LionCombobox extends LocalizeMixin(OverlayMixin(CustomChoiceGroupMi
    */
   updated(changedProperties) {
     super.updated(changedProperties);
+
     if (changedProperties.has('__shouldAutocompleteNextUpdate')) {
       // This check should take place before those below of 'opened' and
       // '__shouldAutocompleteNextUpdate', to avoid race conditions
       this.__unsyncCheckedIndexOnInputChange();
     }
+
     if (changedProperties.has('opened')) {
       if (this.opened) {
         // Note we always start with -1 as a 'fundament'
         // For [autocomplete="inline|both"] activeIndex might be changed by a match
         this.activeIndex = -1;
       }
+
       if (!this.opened && changedProperties.get('opened') !== undefined) {
         this.__onOverlayClose();
         this.activeIndex = -1;
@@ -625,6 +632,7 @@ export class LionCombobox extends LocalizeMixin(OverlayMixin(CustomChoiceGroupMi
       this.__shouldAutocompleteNextUpdate = false;
       this.__listboxContentChanged = false;
     }
+
     if (typeof this._selectionDisplayNode?.onComboboxElementUpdated === 'function') {
       this._selectionDisplayNode.onComboboxElementUpdated(changedProperties);
     }
@@ -644,6 +652,7 @@ export class LionCombobox extends LocalizeMixin(OverlayMixin(CustomChoiceGroupMi
     if (typeof inputValue === 'string' && typeof textboxValue === 'string') {
       idx = inputValue.toLowerCase().indexOf(textboxValue.toLowerCase());
     }
+
     if (this.matchMode === 'all') {
       return idx > -1; // matches part of word
     }
@@ -695,7 +704,7 @@ export class LionCombobox extends LocalizeMixin(OverlayMixin(CustomChoiceGroupMi
       return true;
     }
     // when no keyboard action involved (on focused change), return current opened state
-    return /** @type {boolean} */ this.opened;
+    return /** @type {boolean} */ (this.opened);
   }
 
   /**
@@ -788,7 +797,7 @@ export class LionCombobox extends LocalizeMixin(OverlayMixin(CustomChoiceGroupMi
         })
       ) {
         this._inputNode.value = this._getTextboxValueFromOption(
-          this.formElements[/** @type {number} */ this.checkedIndex],
+          this.formElements[/** @type {number} */ (this.checkedIndex)],
         );
       }
     } else {
@@ -811,7 +820,7 @@ export class LionCombobox extends LocalizeMixin(OverlayMixin(CustomChoiceGroupMi
    * @param {FormControlHost} target
    */
   _repropagationCondition(target) {
-    return super._repropagationCondition(target) || this.formElements.every((el) => !el.checked);
+    return super._repropagationCondition(target) || this.formElements.every(el => !el.checked);
   }
 
   /* eslint-disable no-param-reassign */
@@ -842,12 +851,13 @@ export class LionCombobox extends LocalizeMixin(OverlayMixin(CustomChoiceGroupMi
     if (option.textContent) {
       const a11ySpan = document.createElement('span');
       a11ySpan.setAttribute('aria-label', option.textContent.replace(/\s+/g, ' '));
-      Array.from(option.childNodes).forEach((childNode) => {
+      Array.from(option.childNodes).forEach(childNode => {
         a11ySpan.appendChild(childNode);
       });
       option.appendChild(a11ySpan);
+
       matchA11ySpanReverseFns.set(option, () => {
-        Array.from(a11ySpan.childNodes).forEach((childNode) => {
+        Array.from(a11ySpan.childNodes).forEach(childNode => {
           option.appendChild(childNode);
         });
         if (option.contains(a11ySpan)) {
@@ -880,6 +890,7 @@ export class LionCombobox extends LocalizeMixin(OverlayMixin(CustomChoiceGroupMi
   // eslint-disable-next-line class-methods-use-this
   _unhighlightMatchedOption(option) {
     unmakeMatchingTextBold(option);
+
     if (matchA11ySpanReverseFns.has(option)) {
       matchA11ySpanReverseFns.get(option)();
     }
@@ -924,13 +935,16 @@ export class LionCombobox extends LocalizeMixin(OverlayMixin(CustomChoiceGroupMi
     // (which already fire an event via child repropagation) vs. a value change while staying unmatched.
     const prevCheckedIndexForCustomEvent = this.checkedIndex;
     const prevModelValueForCustomEvent = this.__prevModelValueForCustomEvent;
+
     const isSelectionEmpty = this._inputNode.selectionStart === this._inputNode.selectionEnd;
     const hasSelection =
       !isSelectionEmpty && this._inputNode.value.length !== this._inputNode.selectionStart;
+
     const inputValue = this._inputNode.value;
     const inputSelectionStart = this._inputNode.selectionStart;
     const curValue =
       hasSelection && inputSelectionStart ? inputValue.slice(0, inputSelectionStart) : inputValue;
+
     const prevValue =
       hasSelection || this.__hadSelectionLastAutofill
         ? this.__prevCboxValueNonSelected
@@ -944,14 +958,12 @@ export class LionCombobox extends LocalizeMixin(OverlayMixin(CustomChoiceGroupMi
     const visibleOptions = [];
     /** Whether autofill (activeIndex/checkedIndex and ) has taken place in this 'cycle' */
     let hasAutoFilled = false;
-    const userIntendsInlineAutoFill = this.__computeUserIntendsAutoFill({
-      prevValue,
-      curValue,
-    });
+    const userIntendsInlineAutoFill = this.__computeUserIntendsAutoFill({ prevValue, curValue });
     const isInlineAutoFillCandidate =
       this.autocomplete === 'both' || this.autocomplete === 'inline';
     const autoselect = this._autoSelectCondition();
     const noFilter = this.autocomplete === 'inline' || this.autocomplete === 'none';
+
     this.formElements.forEach((/** @type {OptionWithFilterFn} */ option, i) => {
       // [1]. Decide whether option should be shown
       const matches = this.matchCondition(option, curValue);
@@ -971,6 +983,7 @@ export class LionCombobox extends LocalizeMixin(OverlayMixin(CustomChoiceGroupMi
           }
           hasAutoFilled = true;
         };
+
         if (userIntendsInlineAutoFill) {
           // We should never directly select when removing chars or starting a new word
           // This leads to bad UX and unwanted syncing of modelValue (based on checkedIndex)
@@ -1050,10 +1063,7 @@ export class LionCombobox extends LocalizeMixin(OverlayMixin(CustomChoiceGroupMi
       this.dispatchEvent(
         new CustomEvent('model-value-changed', {
           bubbles: true,
-          detail: {
-            formPath: [this],
-            isTriggeredByUser: true,
-          },
+          detail: { formPath: [this], isTriggeredByUser: true },
         }),
       );
     }
@@ -1118,12 +1128,12 @@ export class LionCombobox extends LocalizeMixin(OverlayMixin(CustomChoiceGroupMi
    */
   // eslint-disable-next-line class-methods-use-this
   _defineOverlayConfig() {
-    return /** @type {OverlayConfig} */ {
+    return /** @type {OverlayConfig} */ ({
       ...withDropdownConfig(),
       elementToFocusAfterHide: undefined,
       invokerNode: this._comboboxNode,
       visibilityTriggerFunction: undefined,
-    };
+    });
   }
 
   /**
@@ -1190,6 +1200,7 @@ export class LionCombobox extends LocalizeMixin(OverlayMixin(CustomChoiceGroupMi
         if (this.opened) {
           ev.preventDefault();
         }
+
         if (
           !this.requireOptionMatch &&
           this.multipleChoice &&
@@ -1243,10 +1254,10 @@ export class LionCombobox extends LocalizeMixin(OverlayMixin(CustomChoiceGroupMi
   // eslint-disable-next-line no-unused-vars
   _syncToTextboxMultiple(modelValue, oldModelValue = []) {
     if (this.requireOptionMatch) {
-      const diff = modelValue.filter((x) => !oldModelValue.includes(x));
+      const diff = modelValue.filter(x => !oldModelValue.includes(x));
       const newValue = this.formElements
-        .filter((option) => diff.includes(option.choiceValue))
-        .map((option) => this._getTextboxValueFromOption(option))
+        .filter(option => diff.includes(option.choiceValue))
+        .map(option => this._getTextboxValueFromOption(option))
         .join(' ');
       this._setTextboxValue(newValue);
     }
@@ -1256,7 +1267,7 @@ export class LionCombobox extends LocalizeMixin(OverlayMixin(CustomChoiceGroupMi
    * @override FormControlMixin - add form-control to [slot=input] instead of _inputNode
    */
   _enhanceLightDomClasses() {
-    const formControl = /** @type {HTMLInputElement} */ this.querySelector('[slot=input]');
+    const formControl = /** @type {HTMLInputElement} */ (this.querySelector('[slot=input]'));
     if (formControl) {
       formControl.classList.add('form-control');
     }
@@ -1274,11 +1285,13 @@ export class LionCombobox extends LocalizeMixin(OverlayMixin(CustomChoiceGroupMi
       this._comboboxNode.toggleAttribute('readonly', this.readOnly);
       this._comboboxNode.setAttribute('aria-readonly', `${this.readOnly}`);
     }
+
     if (this._inputNode) {
       // N.B. in case ._inputNode === ._comboboxNode (we have <input role="combobox">)
       // this value has already been set above. This is fine, as a toggle with boolean flag is idempotent.
       this._inputNode.toggleAttribute('disabled', this.disabled);
       this._inputNode.toggleAttribute('readOnly', this.readOnly);
+
       this._inputNode.setAttribute('aria-readonly', `${this.readOnly}`);
       this._inputNode.tabIndex = this.disabled ? -1 : 0;
     }
@@ -1293,14 +1306,18 @@ export class LionCombobox extends LocalizeMixin(OverlayMixin(CustomChoiceGroupMi
 
     this._comboboxNode.setAttribute('role', 'combobox');
     this._comboboxNode.setAttribute('aria-haspopup', 'listbox');
+
     this._inputNode.setAttribute('aria-autocomplete', this.autocomplete);
     this._comboboxNode.setAttribute('aria-controls', this._listboxNode.id);
+
     if (this._ariaVersion === '1.1') {
       this._comboboxNode.setAttribute('aria-owns', this._listboxNode.id);
     } else {
       this._inputNode.setAttribute('aria-owns', this._listboxNode.id);
     }
+
     this._listboxNode.setAttribute('aria-labelledby', this._labelNode.id);
+
     this._inputNode.addEventListener('keydown', this._listboxOnKeyDown);
     this._inputNode.addEventListener('input', this._textboxOnInput);
     this._inputNode.addEventListener('keydown', this._textboxOnKeydown);
@@ -1335,6 +1352,7 @@ export class LionCombobox extends LocalizeMixin(OverlayMixin(CustomChoiceGroupMi
   _textboxOnClick(ev) {
     this.opened = this._showOverlayCondition({});
   }
+
   clear() {
     this.value = '';
     super.clear();

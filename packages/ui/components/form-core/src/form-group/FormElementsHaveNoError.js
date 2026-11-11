@@ -1,4 +1,5 @@
 import { Validator } from '../validate/Validator.js';
+
 export class FormElementsHaveNoError extends Validator {
   static get validatorName() {
     return 'FormElementsHaveNoError';
@@ -14,6 +15,7 @@ export class FormElementsHaveNoError extends Validator {
     const hasError = config?.node._anyFormElementHasFeedbackFor('error');
     return hasError;
   }
+
   static async getMessage() {
     return '';
   }

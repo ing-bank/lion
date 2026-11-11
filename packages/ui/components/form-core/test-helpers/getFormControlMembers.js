@@ -12,10 +12,10 @@ export function getFormControlMembers(el) {
   // eslint-disable-next-line
   const { _inputNode, _helpTextNode, _labelNode, _feedbackNode, _allValidators } = el;
   return {
-    _inputNode: /** @type {* & FormControlHost} */ el._inputNode,
+    _inputNode: /** @type {* & FormControlHost} */ (el)._inputNode,
     _helpTextNode,
     _labelNode,
     _feedbackNode,
-    _allValidators: /** @type {* & ValidateHost} */ el._allValidators,
+    _allValidators: /** @type {* & ValidateHost} */ (el)._allValidators,
   };
 }

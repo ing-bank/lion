@@ -17,10 +17,7 @@ export class LionListbox extends ListboxMixin(
    * @configure InteractionStateMixin, ValidateMixin
    */
   get _feedbackConditionMeta() {
-    return {
-      ...super._feedbackConditionMeta,
-      focused: this.focused,
-    };
+    return { ...super._feedbackConditionMeta, focused: this.focused };
   }
 
   /**

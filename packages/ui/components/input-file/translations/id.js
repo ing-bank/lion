@@ -3,8 +3,7 @@ export default {
   allowedFileValidatorSimple: 'Unggah file {allowedType} dengan ukuran maks. {maxSize}.',
   allowedFileValidatorComplex:
     'Unggah file {allowedTypesArray}, atau {allowedTypesLastItem} dengan ukuran maks. {maxSize}.',
-  dragAndDropText: 'Seret & Jatuhkan file di sini atau',
-  // TODO: or what? Why is Drag & Drop capitalized?
+  dragAndDropText: 'Seret & Jatuhkan file di sini atau', // TODO: or what? Why is Drag & Drop capitalized?
   fileNameDescriptionLabel: 'Nama file: ',
   generalValidatorMessage: '"{validatorMessage}", untuk {listOfErroneousFiles}.',
   noFilesSelected: 'Tidak ada file yang dipilih.',

@@ -2,19 +2,18 @@ import {
   runFormatMixinSuite,
   runInteractionStateMixinSuite,
 } from '@lion/ui/test-suites/form-core.js';
+
 import { LionInputAmount } from '@lion/ui/input-amount.js';
 import '@lion/ui/define/lion-input-amount.js';
+
 describe('<lion-input-amount> integrations', () => {
   runInteractionStateMixinSuite({
-    classes: {
-      host: LionInputAmount,
-    },
+    classes: { host: LionInputAmount },
     allowedModelValueTypes: [Number],
   });
+
   runFormatMixinSuite({
-    classes: {
-      host: LionInputAmount,
-    },
+    classes: { host: LionInputAmount },
     modelValueType: Number,
   });
 });

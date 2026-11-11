@@ -1,14 +1,18 @@
 import { expect } from '@open-wc/testing';
 import { getLocalizeManager } from '@lion/ui/localize-no-side-effects.js';
 import { localizeTearDown } from '@lion/ui/localize-test-helpers.js';
+
 import { formatAmount } from '@lion/ui/input-amount.js';
 import { formatCurrencyLabel } from '../src/formatters.js';
+
 describe('formatters', () => {
   describe('formatAmount()', () => {
     const localizeManager = getLocalizeManager();
+
     afterEach(() => {
       localizeTearDown();
     });
+
     it('formats number with options', async () => {
       expect(
         formatAmount(12.345678, {
@@ -60,20 +64,12 @@ describe('formatters', () => {
         }),
       ).to.equal('−12.35');
     });
+
     it('formats the right amount of fraction digits for a certain currency', async () => {
-      expect(
-        formatAmount(123456.78, {
-          locale: 'en-GB',
-          currency: 'EUR',
-        }),
-      ).to.equal('123,456.78');
-      expect(
-        formatAmount(123456.78, {
-          locale: 'en-GB',
-          currency: 'JOD',
-        }),
-      ).to.equal('123,456.780');
+      expect(formatAmount(123456.78, { locale: 'en-GB', currency: 'EUR' })).to.equal('123,456.78');
+      expect(formatAmount(123456.78, { locale: 'en-GB', currency: 'JOD' })).to.equal('123,456.780');
     });
+
     it('fallbacks to global locale and EUR by default', async () => {
       localizeManager.locale = 'en-GB';
       expect(formatAmount(12345678)).to.equal('12,345,678.00');
@@ -83,26 +79,22 @@ describe('formatters', () => {
 
     // TODO: make it work with big numbers, e.g. make use of BigInt
     it.skip('rounds up big numbers', async () => {
-      expect(
-        formatAmount(1e21, {
-          locale: 'en-GB',
-          currency: 'EUR',
-        }),
-      ).to.equal('1,000,000,000,000,000,000,000.00');
+      expect(formatAmount(1e21, { locale: 'en-GB', currency: 'EUR' })).to.equal(
+        '1,000,000,000,000,000,000,000.00',
+      );
       // eslint-disable-next-line no-loss-of-precision
-      expect(
-        formatAmount(12345678987654321.42, {
-          locale: 'en-GB',
-          currency: 'EUR',
-        }),
-      ).to.equal('12,345,678,987,654,321.42');
+      expect(formatAmount(12345678987654321.42, { locale: 'en-GB', currency: 'EUR' })).to.equal(
+        '12,345,678,987,654,321.42',
+      );
     });
   });
+
   describe('formatCurrencyLabel()', () => {
     it('gives back the correct currency label', async () => {
       expect(formatCurrencyLabel('EUR', 'en-GB')).to.equal('EUR');
       expect(formatCurrencyLabel('USD', 'en-GB')).to.equal('USD');
     });
+
     it('gives nothing back if no currency has been provided', async () => {
       expect(formatCurrencyLabel('', 'en-GB')).to.equal('');
     });

@@ -22,9 +22,12 @@ export class EventTargetShim {
     /**
      * @param {Event|CustomEvent} event
      */
-    const delegatedDispatchEvent = (event) => delegate.dispatchEvent(event);
+    const delegatedDispatchEvent = event => delegate.dispatchEvent(event);
+
     this.addEventListener = delegatedAddEventListener;
+
     this.removeEventListener = delegatedRemoveEventListener;
+
     this.dispatchEvent = delegatedDispatchEvent;
   }
 }

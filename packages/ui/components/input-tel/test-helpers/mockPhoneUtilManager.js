@@ -1,4 +1,5 @@
 import { PhoneUtilManager } from '../src/PhoneUtilManager.js';
+
 const originalLoadComplete = PhoneUtilManager.loadComplete;
 const originalIsLoadedGetter = (() => {
   const getter = Object.getOwnPropertyDescriptor(PhoneUtilManager, 'isLoaded')?.get;
@@ -7,24 +8,21 @@ const originalIsLoadedGetter = (() => {
   }
   return getter;
 })();
+
 export function mockPhoneUtilManager() {
   /** @type {(value: any) => void} */
   let resolveLoaded;
   let isLoaded = false;
-  PhoneUtilManager.loadComplete = new Promise((resolve) => {
+  PhoneUtilManager.loadComplete = new Promise(resolve => {
     resolveLoaded = () => {
       isLoaded = true;
       resolve(undefined);
     };
   });
-  Object.defineProperty(PhoneUtilManager, 'isLoaded', {
-    get: () => isLoaded,
-  });
+  Object.defineProperty(PhoneUtilManager, 'isLoaded', { get: () => isLoaded });
 
   // @ts-ignore
-  return {
-    resolveLoaded,
-  };
+  return { resolveLoaded };
 }
 
 /**
@@ -34,7 +32,5 @@ export function mockPhoneUtilManager() {
  */
 export function restorePhoneUtilManager() {
   PhoneUtilManager.loadComplete = originalLoadComplete;
-  Object.defineProperty(PhoneUtilManager, 'isLoaded', {
-    get: originalIsLoadedGetter,
-  });
+  Object.defineProperty(PhoneUtilManager, 'isLoaded', { get: originalIsLoadedGetter });
 }

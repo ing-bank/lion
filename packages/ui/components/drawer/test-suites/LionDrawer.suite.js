@@ -1,5 +1,6 @@
 import { expect, fixture as _fixture, unsafeStatic } from '@open-wc/testing';
 import { html } from 'lit/static-html.js';
+
 import { LionDrawer } from '@lion/ui/drawer.js';
 import { resolveSuiteTag } from '../../core/test-helpers/resolveSuiteTag.js';
 
@@ -30,7 +31,8 @@ export function runDrawerSuite({
     headline: unsafeStatic(resolveSuiteTag(headlineEl)),
     content: unsafeStatic(resolveSuiteTag(contentEl)),
   };
-  const fixture = /** @type {(arg: TemplateResult) => Promise<LionDrawer>} */ _fixture;
+  const fixture = /** @type {(arg: TemplateResult) => Promise<LionDrawer>} */ (_fixture);
+
   const template = html`
     <${tags.host}>
       <${tags.invoker} slot="invoker">Open</${tags.invoker}>
@@ -38,52 +40,65 @@ export function runDrawerSuite({
       <${tags.content} slot="content" class="drawer">This is the content of the drawer</${tags.content}>
     </${tags.host}>
   `;
+
   describe('<lion-drawer>', () => {
     describe('Drawer', () => {
       it('sets position to "left" by default', async () => {
         const drawer = await fixture(template);
         expect(drawer.position).to.equal('left');
       });
+
       it('has [position] attribute which serves as styling hook', async () => {
         const drawer = await fixture(template);
         expect(drawer).to.have.attribute('position').equal('left');
       });
+
       it('sets the minimum and maximum width when position=left', async () => {
         const drawer = await fixture(template);
         const minWidth = getComputedStyle(drawer).getPropertyValue('--min-width');
         const maxWidth = getComputedStyle(drawer).getPropertyValue('--max-width');
+
         expect(drawer.minWidth).to.equal(minWidth);
         expect(drawer.maxWidth).to.equal(maxWidth);
       });
+
       it('sets the minimum and maximum width when position=right', async () => {
         const drawer = await fixture(template);
         drawer.position = 'right';
         await drawer.updateComplete;
+
         const minWidth = getComputedStyle(drawer).getPropertyValue('--min-width');
         const maxWidth = getComputedStyle(drawer).getPropertyValue('--max-width');
+
         expect(drawer.minWidth).to.equal(minWidth);
         expect(drawer.maxWidth).to.equal(maxWidth);
       });
+
       it('sets the minimum and maximum height when position=top', async () => {
         const drawer = await fixture(template);
         drawer.position = 'top';
         await drawer.updateComplete;
+
         const minHeight = getComputedStyle(drawer).getPropertyValue('--min-height');
         const maxHeight = getComputedStyle(drawer).getPropertyValue('--max-height');
+
         expect(drawer.minHeight).to.equal(minHeight);
         expect(drawer.maxHeight).to.equal(maxHeight);
       });
     });
+
     describe('Accessibility', () => {
       it('[collapsed] is a11y AXE accessible', async () => {
         const drawer = await fixture(template);
         await expect(drawer).to.be.accessible();
       });
+
       it('[opened] is a11y AXE accessible', async () => {
         const drawer = await fixture(template);
         drawer.opened = true;
         await expect(drawer).to.be.accessible();
       });
+
       describe('Invoker', () => {
         it('links id of content items to invoker via [aria-controls]', async () => {
           const drawerElement = await fixture(template);
@@ -91,11 +106,13 @@ export function runDrawerSuite({
           const content = drawerElement.querySelector('[slot=content]');
           expect(invoker?.getAttribute('aria-controls')).to.equal(content?.id);
         });
+
         it('adds aria-expanded="false" to invoker when its content is not expanded', async () => {
           const drawerElement = await fixture(template);
           const invoker = drawerElement.querySelector('[slot=invoker]');
           expect(invoker).to.have.attribute('aria-expanded', 'false');
         });
+
         it('adds aria-expanded="true" to invoker when its content is expanded', async () => {
           const drawerElement = await fixture(template);
           const invoker = drawerElement.querySelector('[slot=invoker]');

@@ -31,6 +31,7 @@ function getParseMode(value, { mode = 'auto', viewValueStates } = {}) {
   // For best UX, we stick with this locale. However, we only do this when the user has
   // entered at least 3 decimal places.
   const shouldUseCurLocale = isCurViewFormattedAndUserIsEditing && decimalPlaces > 2;
+
   const shouldUseLocale =
     shouldUseCurLocale ||
     !separators.length ||
@@ -38,6 +39,7 @@ function getParseMode(value, { mode = 'auto', viewValueStates } = {}) {
   if (shouldUseLocale) {
     return 'withLocale';
   }
+
   const shouldUseHeuristic =
     (isCurViewFormattedAndUserIsEditing && decimalPlaces <= 2) ||
     separators.length === 1 ||
@@ -45,6 +47,7 @@ function getParseMode(value, { mode = 'auto', viewValueStates } = {}) {
   if (shouldUseHeuristic) {
     return 'heuristic';
   }
+
   return 'unparseable';
 }
 

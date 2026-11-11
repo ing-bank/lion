@@ -19,11 +19,13 @@ import { resolveSuiteTag } from '../../core/test-helpers/resolveSuiteTag.js';
  * @typedef {import('../types/input-file.js').SystemFile} SystemFile
  * @typedef {import('lit').TemplateResult} TemplateResult
  */
-const fixture = /** @type {(arg: TemplateResult|string) => Promise<LionInputFile>} */ _fixture;
+const fixture = /** @type {(arg: TemplateResult|string) => Promise<LionInputFile>} */ (_fixture);
+
 const filesListChanged = (/** @type {LionInputFile} */ el, /** @type { CustomEvent } */ ev) => {
   // eslint-disable-next-line no-param-reassign
   el.uploadResponse = [...ev.detail.newFiles];
 };
+
 function mimicSelectFile(
   /** @type {LionInputFile} */ formControl,
   /** @type {InputFile[]}  */ mockFiles,
@@ -31,7 +33,7 @@ function mimicSelectFile(
   // @ts-expect-error [allow-protected-in-tests]
   formControl._processFiles(mockFiles);
   // TODO: doesn't this set latest file.name only to formControl._inputNode.value?
-  mockFiles.forEach((file) => {
+  mockFiles.forEach(file => {
     // @ts-expect-error [allow-protected-in-tests]
     Object.defineProperty(formControl._inputNode, 'value', {
       value: `C:\\fakepath\\${file.name}`,
@@ -39,37 +41,31 @@ function mimicSelectFile(
     });
   });
   // @ts-expect-error [allow-protected-in-tests]
-  Object.defineProperty(formControl._inputNode, 'files', {
-    value: mockFiles,
-    writable: true,
-  });
+  Object.defineProperty(formControl._inputNode, 'files', { value: mockFiles, writable: true });
   // @ts-expect-error [allow-protected-in-tests]
-  formControl._inputNode.dispatchEvent(
-    new Event('input', {
-      bubbles: true,
-    }),
-  );
+  formControl._inputNode.dispatchEvent(new Event('input', { bubbles: true }));
 }
-const file =
-  /** @type {InputFile} */
+
+const file = /** @type {InputFile} */ (
   new File(['foo'], 'foo.txt', {
     type: 'text/plain',
-  });
-const file2 =
-  /** @type {InputFile} */
+  })
+);
+const file2 = /** @type {InputFile} */ (
   new File(['bar'], 'bar.txt', {
     type: 'text/plain',
-  });
-const file3 =
-  /** @type {InputFile} */
+  })
+);
+const file3 = /** @type {InputFile} */ (
   new File(['foo3'], 'foo3.txt', {
     type: 'text/plain',
-  });
-const file4 =
-  /** @type {InputFile} */
+  })
+);
+const file4 = /** @type {InputFile} */ (
   new File(['foo4'], 'foo4.txt', {
     type: 'text/plain',
-  });
+  })
+);
 
 /**
  * Runs the `lion-input-file` behavioural suite, moved out of `test/lion-input-file.test.js` so a Subclasser can run
@@ -93,44 +89,50 @@ export function runInputFileSuite({
     selectedFileListEl,
     legacySelectedFileListTagString,
   );
+
   describe('lion-input-file', () => {
     const localizeManager = getLocalizeManager();
+
     afterEach(localizeTearDown);
+
     it('has a type of "file"', async () => {
       const el = await fixture(html`<${tag}></${tag}>`);
       // @ts-expect-error [allow-protected-in-tests]
       const { _inputNode } = getInputMembers(el);
       expect(_inputNode.type).to.equal('file');
     });
+
     it('should add single file and dispatch "file-list-changed" event with newly added file', async () => {
       const el = await fixture(html`<${tag}></${tag}>`);
+
       const fileListChangedEventPromise = oneEvent(el, 'file-list-changed');
       mimicSelectFile(el, [file]);
       const fileListChangedEvent = await fileListChangedEventPromise;
       // @ts-expect-error [allow-protected-in-tests]
       expect(el._selectedFilesMetaData.length).to.equal(1);
       expect(el.uploadResponse.length).to.equal(1);
+
       expect(fileListChangedEvent).to.exist;
       expect(fileListChangedEvent.detail.newFiles.length).to.equal(1);
       expect(fileListChangedEvent.detail.newFiles[0].name).to.equal('foo.txt');
     });
+
     it('should select 1 file', async () => {
       const el = await fixture(html`<${tag}></${tag}>`);
       // @ts-expect-error [allow-protected-in-test]
       const processedFilesSpy = sinon.spy(el, '_processFiles');
 
       // @ts-expect-error [allow-protected-in-test]
-      await el._onChange({
-        target: {
-          files: [file],
-        },
-      });
+      await el._onChange({ target: { files: [file] } });
       expect(processedFilesSpy).have.been.calledOnce;
       processedFilesSpy.restore();
     });
+
     it('should retain selected file when "Cancel" button is clicked in system file explorer dialog', async () => {
       const el = await fixture(html`<${tag}></${tag}>`);
+
       mimicSelectFile(el, [file]);
+
       await el.updateComplete;
       // @ts-expect-error [allow-protected-in-test]
       expect(el._selectedFilesMetaData.length).to.equal(1);
@@ -138,10 +140,12 @@ export function runInputFileSuite({
 
       // when cancel is clicked, native input value is blank which means modelValue is blank
       el.modelValue = [];
+
       await el.updateComplete;
       // @ts-expect-error [allow-protected-in-test]
       expect(el._selectedFilesMetaData.length).to.equal(1);
     });
+
     it('has an attribute focused when focused', async () => {
       const el = await fixture(html` <${tag} label="Select"></${tag}> `);
 
@@ -155,26 +159,26 @@ export function runInputFileSuite({
       await el.updateComplete;
       expect(el.hasAttribute('focused')).to.be.false;
     });
+
     it('should set touched property true on change', async () => {
       const el = await fixture(html` <${tag} label="Select"></${tag}> `);
       expect(el.touched).to.be.false;
 
       // @ts-expect-error [allow-protected-in-test]
-      await el._onChange({
-        target: {
-          files: [file],
-        },
-      });
+      await el._onChange({ target: { files: [file] } });
       expect(el.touched).to.be.true;
     });
+
     it('should replace previous file when new file is selected', async () => {
       const el = await fixture(html`<${tag}></${tag}>`);
+
       mimicSelectFile(el, [file]);
       await el.updateComplete;
       // @ts-expect-error [allow-protected-in-test]
       expect(el._selectedFilesMetaData.length).to.equal(1);
       // @ts-expect-error [allow-protected-in-test]
       expect(el._selectedFilesMetaData[0].systemFile.name).to.equal('foo.txt');
+
       mimicSelectFile(el, [file2]);
       await el.updateComplete;
       // @ts-expect-error [allow-protected-in-test]
@@ -182,55 +186,67 @@ export function runInputFileSuite({
       // @ts-expect-error [allow-protected-in-test]
       expect(el._selectedFilesMetaData[0].systemFile.name).to.equal('bar.txt');
     });
+
     describe('structure', async () => {
       it('can has a button label by default', async () => {
         const el = await fixture(html`<${tag}></${tag}>`);
         // @ts-expect-error [allow-protected-in-test]
         expect(el._buttonNode.textContent).to.equal('Select file');
       });
+
       it('can has a button label by default when multiple', async () => {
         const el = await fixture(html`<${tag} multiple></${tag}>`);
         // @ts-expect-error [allow-protected-in-test]
         expect(el._buttonNode.textContent).to.equal('Select files');
       });
+
       it('will update the button label on locale change', async () => {
         const el = await fixture(html`<${tag}></${tag}>`);
         // @ts-expect-error [allow-protected-in-test]
         expect(el._buttonNode.textContent).to.equal('Select file');
+
         localizeManager.locale = 'nl-NL';
         await localizeManager.loadingComplete;
         await el.updateComplete;
         // @ts-expect-error [allow-protected-in-test]
         expect(el._buttonNode.textContent).to.equal('Selecteer bestand');
       });
+
       it('can overwrite the button label', async () => {
         const el = await fixture(html`<${tag} .buttonLabel="${'Foo'}"></${tag}>`);
         // @ts-expect-error [allow-protected-in-test]
         expect(el._buttonNode.textContent).to.equal('Foo');
+
         el.buttonLabel = 'Bar';
         await el.updateComplete;
         // @ts-expect-error [allow-protected-in-test]
         expect(el._buttonNode.textContent).to.equal('Bar');
       });
     });
+
     describe('invalid file types', async () => {
-      const fileWrongType =
-        /** @type {InputFile} */
+      const fileWrongType = /** @type {InputFile} */ (
         new File(['foobar'], 'foobar.txt', {
           type: 'xxxxx',
-        });
+        })
+      );
+
       it('error should not be there when the file extensions are accepted', async () => {
         const el = await fixture(html`
           <${tag} label="Select" accept=".txt"></${tag}>
         `);
+
         mimicSelectFile(el, [fileWrongType]);
         await el.updateComplete;
+
         expect(el.hasFeedbackFor.length).to.equal(0);
       });
+
       it('should not be added to the selected list', async () => {
         const el = await fixture(html`
           <${tag} label="Select" accept="text/plain"></${tag}>
         `);
+
         mimicSelectFile(el, [fileWrongType]);
         await el.updateComplete;
 
@@ -244,101 +260,118 @@ export function runInputFileSuite({
         expect(el._selectedFilesMetaData[0].status).to.equal('FAIL');
         expect(el.uploadResponse[0].status).to.equal('FAIL');
       });
+
       it('error message should use main type when "/*" is used', async () => {
         const el = await fixture(html`
           <${tag} label="Select" accept="text/*"></${tag}>
         `);
+
         mimicSelectFile(el, [fileWrongType]);
         await el.updateComplete;
 
         // @ts-expect-error [allow-protected-in-test]
-        el._selectedFilesMetaData[0].validationFeedback?.forEach((error) => {
+        el._selectedFilesMetaData[0].validationFeedback?.forEach(error => {
           expect(error.message).to.deep.equal('Please select a(n) text file with max 500MB.');
         });
       });
+
       it('error message should use main type when "text/plain" is used', async () => {
         const el = await fixture(html`
           <${tag} label="Select" accept="text/plain"></${tag}>
         `);
+
         mimicSelectFile(el, [fileWrongType]);
         await el.updateComplete;
 
         // @ts-expect-error [allow-protected-in-test]
-        el._selectedFilesMetaData[0].validationFeedback?.forEach((error) => {
+        el._selectedFilesMetaData[0].validationFeedback?.forEach(error => {
           expect(error.message).to.deep.equal('Please select a(n) text file with max 500MB.');
         });
       });
+
       it('error message should use sub type when e.g. "text/html" is used', async () => {
         const el = await fixture(html`
           <${tag} label="Select" accept="text/html"></${tag}>
         `);
+
         mimicSelectFile(el, [fileWrongType]);
         await el.updateComplete;
 
         // @ts-expect-error [allow-protected-in-test]
-        el._selectedFilesMetaData[0].validationFeedback?.forEach((error) => {
+        el._selectedFilesMetaData[0].validationFeedback?.forEach(error => {
           expect(error.message).to.deep.equal('Please select a(n) .html file with max 500MB.');
         });
       });
+
       it('error message should use the first sub type when e.g. "image/svg+xml" is used', async () => {
         const el = await fixture(html`
           <${tag} label="Select" accept="image/svg+xml"></${tag}>
         `);
+
         mimicSelectFile(el, [fileWrongType]);
         await el.updateComplete;
 
         // @ts-expect-error [allow-protected-in-test]
-        el._selectedFilesMetaData[0].validationFeedback?.forEach((error) => {
+        el._selectedFilesMetaData[0].validationFeedback?.forEach(error => {
           expect(error.message).to.deep.equal('Please select a(n) .svg file with max 500MB.');
         });
       });
+
       it('can reflect multiple types in the error message', async () => {
         const el = await fixture(html`
           <${tag} label="Select" accept="text/html, text/csv"></${tag}>
         `);
+
         mimicSelectFile(el, [fileWrongType]);
         await el.updateComplete;
 
         // @ts-expect-error [allow-protected-in-test]
-        el._selectedFilesMetaData[0].validationFeedback?.forEach((error) => {
+        el._selectedFilesMetaData[0].validationFeedback?.forEach(error => {
           expect(error.message).to.deep.equal('Please select a .html or .csv file with max 500MB.');
         });
       });
+
       it('can reflect multiple types in the error message also with a space " "', async () => {
         const el = await fixture(html`
           <${tag} label="Select" accept="text/html,text/csv"></${tag}>
         `);
+
         mimicSelectFile(el, [fileWrongType]);
         await el.updateComplete;
 
         // @ts-expect-error [allow-protected-in-test]
-        el._selectedFilesMetaData[0].validationFeedback?.forEach((error) => {
+        el._selectedFilesMetaData[0].validationFeedback?.forEach(error => {
           expect(error.message).to.deep.equal('Please select a .html or .csv file with max 500MB.');
         });
       });
+
       it('can reflect multiple types in the error message with preference to extensions', async () => {
         const el = await fixture(html`
           <${tag} label="Select" accept=".jpg,image/svg+xml"></${tag}>
         `);
+
         mimicSelectFile(el, [fileWrongType]);
         await el.updateComplete;
 
         // @ts-expect-error [allow-protected-in-test]
-        el._selectedFilesMetaData[0].validationFeedback?.forEach((error) => {
+        el._selectedFilesMetaData[0].validationFeedback?.forEach(error => {
           expect(error.message).to.deep.equal('Please select a(n) .jpg file with max 500MB.');
         });
       });
     });
+
     describe('invalid file extensions', async () => {
-      const fileWrongType =
-        /** @type {InputFile} */
+      const fileWrongType = /** @type {InputFile} */ (
         new File(['foobar'], 'foobar.txt', {
           type: 'xxxxx',
-        });
+        })
+      );
+
       it('should not be added to the selected list', async () => {
         const el = await fixture(html`
           <${tag} label="Select" accept=".jpg, .png, .pdf"></${tag}>
         `);
+
         mimicSelectFile(el, [fileWrongType]);
         await el.updateComplete;
 
@@ -352,48 +385,57 @@ export function runInputFileSuite({
         expect(el._selectedFilesMetaData[0].status).to.equal('FAIL');
         expect(el.uploadResponse[0].status).to.equal('FAIL');
       });
+
       it('error message should add the file extension to the validator message', async () => {
         const el = await fixture(html`
           <${tag} label="Select" accept=".jpg"></${tag}>
         `);
+
         mimicSelectFile(el, [fileWrongType]);
         await el.updateComplete;
 
         // @ts-expect-error [allow-protected-in-test]
-        el._selectedFilesMetaData[0].validationFeedback?.forEach((error) => {
+        el._selectedFilesMetaData[0].validationFeedback?.forEach(error => {
           expect(error.message).to.equal('Please select a(n) .jpg file with max 500MB.');
         });
       });
+
       it('error message should add all file extensions to the validator message', async () => {
         const el = await fixture(html`
           <${tag} label="Select" accept=".jpg, .png, .pdf"></${tag}>
         `);
+
         mimicSelectFile(el, [fileWrongType]);
         await el.updateComplete;
 
         // @ts-expect-error [allow-protected-in-test]
-        el._selectedFilesMetaData[0].validationFeedback?.forEach((error) => {
+        el._selectedFilesMetaData[0].validationFeedback?.forEach(error => {
           expect(error.message).to.equal('Please select a .jpg, .png or .pdf file with max 500MB.');
         });
       });
+
       it('error message should add all file extensions to the validator message also works without spaces " "', async () => {
         const el = await fixture(html`
           <${tag} label="Select" accept=".jpg,.png,.pdf"></${tag}>
         `);
+
         mimicSelectFile(el, [fileWrongType]);
         await el.updateComplete;
 
         // @ts-expect-error [allow-protected-in-test]
-        el._selectedFilesMetaData[0].validationFeedback?.forEach((error) => {
+        el._selectedFilesMetaData[0].validationFeedback?.forEach(error => {
           expect(error.message).to.equal('Please select a .jpg, .png or .pdf file with max 500MB.');
         });
       });
     });
+
     describe('invalid file sizes', async () => {
       // Size of this file is 4 bytes
-      const fileWrongSize = /** @type {InputFile} */ new File(['foobar'], 'foobar.txt');
+      const fileWrongSize = /** @type {InputFile} */ (new File(['foobar'], 'foobar.txt'));
+
       it('should not be added to the selected list', async () => {
         const el = await fixture(html` <${tag} max-file-size="2"></${tag}> `);
+
         mimicSelectFile(el, [fileWrongSize]);
         await el.updateComplete;
 
@@ -407,18 +449,21 @@ export function runInputFileSuite({
         expect(el._selectedFilesMetaData[0].status).to.equal('FAIL');
         expect(el.uploadResponse[0].status).to.equal('FAIL');
       });
+
       it('error message should show only the max file size if no type/extension restrictions are defined', async () => {
         const el = await fixture(html`
           <${tag} label="Select" max-file-size="2"></${tag}>
         `);
+
         mimicSelectFile(el, [fileWrongSize]);
         await el.updateComplete;
 
         // @ts-expect-error [allow-protected-in-test]
-        el._selectedFilesMetaData[0].validationFeedback?.forEach((error) => {
+        el._selectedFilesMetaData[0].validationFeedback?.forEach(error => {
           expect(error.message).to.equal('Please select a file with max 2 bytes.');
         });
       });
+
       it('error message should show the correct max file size if type/extension restrictions are defined', async () => {
         const el = await fixture(html`
           <${tag}
@@ -427,25 +472,29 @@ export function runInputFileSuite({
             accept=".jpg, .png, .pdf"
           ></${tag}>
         `);
+
         mimicSelectFile(el, [fileWrongSize]);
         await el.updateComplete;
 
         // @ts-expect-error [allow-protected-in-test]
-        el._selectedFilesMetaData[0].validationFeedback?.forEach((error) => {
+        el._selectedFilesMetaData[0].validationFeedback?.forEach(error => {
           expect(error.message).to.equal(
             'Please select a .jpg, .png or .pdf file with max 2 bytes.',
           );
         });
       });
     });
+
     it('should send "file-list-changed" event if selecting files succeeded partially', async () => {
       const el = await fixture(html`<${tag} multiple max-file-size="3"></${tag}>`);
 
       // Size of this file is 4 bytes
-      const fileWrongSize = /** @type {InputFile} */ new File(['foobar'], 'foobar.txt');
+      const fileWrongSize = /** @type {InputFile} */ (new File(['foobar'], 'foobar.txt'));
+
       setTimeout(() => {
         mimicSelectFile(el, [fileWrongSize, file2]);
       });
+
       const fileListChangedEvent = await oneEvent(el, 'file-list-changed');
 
       // @ts-expect-error [allow-protected-in-test]
@@ -453,10 +502,13 @@ export function runInputFileSuite({
       // @ts-expect-error [allow-protected-in-test]
       expect(el._selectedFilesMetaData[0].status).to.equal('FAIL');
       expect(el.uploadResponse[0].status).to.equal('FAIL');
+
       expect(fileListChangedEvent.detail.newFiles.length).to.equal(1);
     });
+
     it('should update downloadurl for successful files', async () => {
       const el = await fixture(html`<${tag}></${tag}>`);
+
       setTimeout(() => {
         mimicSelectFile(el, [file]);
       });
@@ -466,41 +518,54 @@ export function runInputFileSuite({
       // @ts-expect-error [allow-protected-in-test]
       expect(el._selectedFilesMetaData[0].downloadUrl).to.exist;
     });
+
     describe('format', () => {
       it('modelValue is an array of files', async () => {
         const el = await fixture(html` <${tag} name="select"></${tag}> `);
+
         mimicSelectFile(el, [file]);
         await el.updateComplete;
         expect(el.modelValue).to.deep.equal([file]);
       });
+
       it('view value is a string', async () => {
         const el = await fixture(html` <${tag} name="select"></${tag}> `);
+
         mimicSelectFile(el, [file]);
         await el.updateComplete;
+
         expect(el.value).to.equal('C:\\fakepath\\foo.txt');
         // @ts-expect-error [allow-protected-in-tests]
         expect(el._inputNode.value).to.equal('C:\\fakepath\\foo.txt');
       });
+
       it('formattedValue is a string', async () => {
         const el = await fixture(html` <${tag} name="select"></${tag}> `);
+
         mimicSelectFile(el, [file]);
         await el.updateComplete;
+
         expect(el.formattedValue).to.equal('C:\\fakepath\\foo.txt');
       });
+
       it('serializedValue is an array of files', async () => {
         const el = await fixture(html` <${tag} name="select"></${tag}> `);
+
         mimicSelectFile(el, [file]);
         await el.updateComplete;
         expect(el.serializedValue).to.deep.equal([file]);
       });
+
       it('fires `model-value-changed` for every programmatic modelValue change', async () => {
         const el = await fixture(html` <${tag} name="select"></${tag}> `);
         let counter = 0;
         let isTriggeredByUser = false;
-        el.addEventListener('model-value-changed', (event) => {
+
+        el.addEventListener('model-value-changed', event => {
           counter += 1;
-          isTriggeredByUser = /** @type {CustomEvent} */ event.detail.isTriggeredByUser;
+          isTriggeredByUser = /** @type {CustomEvent} */ (event).detail.isTriggeredByUser;
         });
+
         el.modelValue = [file];
         expect(counter).to.equal(1);
         expect(isTriggeredByUser).to.be.false;
@@ -512,29 +577,36 @@ export function runInputFileSuite({
         el.modelValue = [file, file2];
         expect(counter).to.equal(2);
       });
+
       it('fires `model-value-changed` for every user input, adding `isTriggeredByUser` in event detail', async () => {
         const el = await fixture(html` <${tag} name="select"></${tag}> `);
         let counter = 0;
         let isTriggeredByUser = false;
-        el.addEventListener('model-value-changed', (event) => {
+
+        el.addEventListener('model-value-changed', event => {
           counter += 1;
-          isTriggeredByUser = /** @type {CustomEvent} */ event.detail.isTriggeredByUser;
+          isTriggeredByUser = /** @type {CustomEvent} */ (event).detail.isTriggeredByUser;
         });
+
         mimicSelectFile(el, [file]);
         await el.updateComplete;
         expect(counter).to.equal(1);
         expect(isTriggeredByUser).to.be.true;
+
         mimicSelectFile(el, [file, file2]);
         await el.updateComplete;
         expect(counter).to.equal(2);
       });
     });
+
     describe('multiple file select', () => {
       it('should add multiple files', async () => {
         const el = await fixture(html`
           <${tag} label="Select" .multiple="${true}"> </${tag}>
         `);
+
         mimicSelectFile(el, [file, file2]);
+
         await el.updateComplete;
         // @ts-expect-error [allow-protected-in-test]
         expect(el._selectedFilesMetaData.length).to.equal(2);
@@ -542,12 +614,15 @@ export function runInputFileSuite({
         expect(el._selectedFilesMetaData[0].systemFile.name).to.equal('foo.txt');
         // @ts-expect-error [allow-protected-in-test]
         expect(el._selectedFilesMetaData[1].systemFile.name).to.equal('bar.txt');
+
         expect(el.uploadResponse.length).to.equal(2);
         expect(el.uploadResponse[0].name).to.equal('foo.txt');
         expect(el.uploadResponse[1].name).to.equal('bar.txt');
       });
+
       it('should add new files and retain previous files', async () => {
         const el = await fixture(html` <${tag} .multiple="${true}"></${tag}> `);
+
         setTimeout(() => {
           mimicSelectFile(el, [file, file2]);
         });
@@ -558,6 +633,7 @@ export function runInputFileSuite({
         // @ts-expect-error [allow-protected-in-test]
         expect(el._selectedFilesMetaData.length).to.equal(2);
         expect(el.modelValue.length).to.equal(2);
+
         setTimeout(() => {
           mimicSelectFile(el, [file3, file4]);
         });
@@ -569,18 +645,23 @@ export function runInputFileSuite({
         expect(el._selectedFilesMetaData.length).to.equal(4);
         expect(el.modelValue.length).to.equal(4);
       });
+
       it('should add multiple files and dispatch file-list-changed event ONLY with newly added file', async () => {
         const el = await fixture(html` <${tag} .multiple="${true}"></${tag}> `);
+
         setTimeout(() => {
           mimicSelectFile(el, [file, file2]);
         });
         const fileListChangedEvent = await oneEvent(el, 'file-list-changed');
         filesListChanged(el, fileListChangedEvent);
+
         setTimeout(() => {
           mimicSelectFile(el, [file3, file4]);
         });
+
         const fileListChangedEvent1 = await oneEvent(el, 'file-list-changed');
         filesListChanged(el, fileListChangedEvent1);
+
         expect(fileListChangedEvent1).to.exist;
         // @ts-expect-error [allow-protected-in-test]
         expect(el._selectedFilesMetaData.length).to.equal(4);
@@ -588,8 +669,10 @@ export function runInputFileSuite({
         expect(fileListChangedEvent1.detail.newFiles[0].name).to.equal('foo3.txt');
         expect(fileListChangedEvent1.detail.newFiles[1].name).to.equal('foo4.txt');
       });
+
       it('should not allow duplicate files to be selected and show notification message', async () => {
         const el = await fixture(html` <${tag} .multiple="${true}"></${tag}> `);
+
         setTimeout(() => {
           mimicSelectFile(el, [file]);
         });
@@ -602,14 +685,17 @@ export function runInputFileSuite({
         expect(el._selectedFilesMetaData.length).to.equal(1);
         // @ts-expect-error [allow-protected-in-test]
         expect(el._selectedFilesMetaData[0].systemFile.name).to.equal('foo.txt');
+
         expect(fileListChangedEvent).to.exist;
         expect(fileListChangedEvent.detail.newFiles.length).to.equal(1);
         expect(fileListChangedEvent.detail.newFiles[0].name).to.equal('foo.txt');
-        const fileDuplicate =
-          /** @type {InputFile} */
+
+        const fileDuplicate = /** @type {InputFile} */ (
           new File(['foo'], 'foo.txt', {
             type: 'text/plain',
-          });
+          })
+        );
+
         mimicSelectFile(el, [fileDuplicate]);
         await el.updateComplete;
         // @ts-expect-error [allow-protected-in-test]
@@ -617,19 +703,23 @@ export function runInputFileSuite({
         expect(el.hasFeedbackFor).to.deep.equals(['info'], 'hasFeedbackFor');
         expect(el.showsFeedbackFor).to.deep.equals(['info'], 'showsFeedbackFor');
       });
+
       it('should add valid files and skip invalid ones', async () => {
-        const fileWrongSize = /** @type {InputFile} */ new File(['foobar'], 'foobar.txt');
-        const fileWrongType =
-          /** @type {InputFile} */
+        const fileWrongSize = /** @type {InputFile} */ (new File(['foobar'], 'foobar.txt'));
+        const fileWrongType = /** @type {InputFile} */ (
           new File(['foobar'], 'foobar.txt', {
             type: 'xxxxx',
-          });
+          })
+        );
+
         const el = await fixture(html`
           <${tag} multiple max-file-size="3" accept=".txt"></${tag}>
         `);
+
         setTimeout(() => {
           mimicSelectFile(el, [file, fileWrongSize, file2, fileWrongType]);
         });
+
         const fileListChangedEvent = await oneEvent(el, 'file-list-changed');
         // @ts-expect-error [allow-protected-in-test]
         expect(el._selectedFilesMetaData.length).to.equal(4);
@@ -639,6 +729,7 @@ export function runInputFileSuite({
         expect(fileListChangedEvent.detail.newFiles[1].name).to.equal('bar.txt');
       });
     });
+
     describe('status and error', () => {
       /**
        * @type {LionInputFile}
@@ -647,15 +738,12 @@ export function runInputFileSuite({
       beforeEach(async () => {
         el = await fixture(html`<${tag} accept="text/plain"></${tag}>`);
       });
+
       it('should set uploadResponse data to _selectedFilesMetaData for rendering error and status', async () => {
         mimicSelectFile(el, [file]);
-        el.uploadResponse = [
-          {
-            name: 'foo.txt',
-            status: 'LOADING',
-            errorMessage: '500',
-          },
-        ];
+
+        el.uploadResponse = [{ name: 'foo.txt', status: 'LOADING', errorMessage: '500' }];
+
         await el.updateComplete;
 
         // @ts-expect-error [allow-protected-in-test]
@@ -663,27 +751,32 @@ export function runInputFileSuite({
         // @ts-ignore
         expect(el._selectedFilesMetaData[0].validationFeedback[0].message).to.equal('500');
       });
+
       it('should not fire file-list-changed event if invalid file is selected', async () => {
-        const filePdf =
-          /** @type {InputFile} */
+        const filePdf = /** @type {InputFile} */ (
           new File(['foo'], 'foo.pdf', {
             type: 'application/pdf',
-          });
+          })
+        );
         // @ts-ignore
         const fileListChangedSpy = sinon.spy(el, '_dispatchFileListChangeEvent');
+
         mimicSelectFile(el, [filePdf]);
+
         expect(fileListChangedSpy).have.not.been.called;
         fileListChangedSpy.restore();
       });
+
       it('updates showFeedbackFor when a wrong file has been added/removed', async () => {
-        const fileWrongType =
-          /** @type {InputFile} */
+        const fileWrongType = /** @type {InputFile} */ (
           new File(['foobar'], 'foobar.txt', {
             type: 'xxxxx',
-          });
+          })
+        );
 
         // create condition to also show the feedback
         el.prefilled = true;
+
         mimicSelectFile(el, [fileWrongType]);
         await el.updateComplete;
         expect(el.hasFeedbackFor).to.deep.equals(['error'], 'hasFeedbackFor');
@@ -696,22 +789,17 @@ export function runInputFileSuite({
         expect(el.showsFeedbackFor).to.deep.equals([]);
       });
     });
+
     describe('validations when used with lion-form', () => {
       it('should throw error with Required validator', async () => {
         const el = await fixture(html`
           <${tag}
             name="myFileInput"
-            .validators="${[
-              new Required(
-                {},
-                {
-                  getMessage: () => 'FooBar',
-                },
-              ),
-            ]}"
+            .validators="${[new Required({}, { getMessage: () => 'FooBar' })]}"
           >
           </${tag}>
         `);
+
         el.touched = true;
         el.dirty = true;
         await el.updateComplete;
@@ -721,6 +809,7 @@ export function runInputFileSuite({
         expect(_feedbackNode.feedbackData?.[0].message).to.equal('FooBar');
         expect(el.hasFeedbackFor.includes('error')).to.be.true;
       });
+
       it('reset method should remove File from modelValue but keep uploadResponse', async () => {
         const uploadResponse = [
           {
@@ -737,14 +826,17 @@ export function runInputFileSuite({
         // @ts-expect-error [allow-protected-in-test]
         el.uploadResponse = uploadResponse;
         await el.updateComplete;
+
         mimicSelectFile(el, [file]);
         await el.updateComplete;
+
         await el.reset();
         expect(el.modelValue).to.deep.equal([]);
         // @ts-expect-error [allow-protected-in-test]
         expect(el._selectedFilesMetaData).to.deep.equal([]);
         expect(el.uploadResponse).to.deep.equal(uploadResponse);
       });
+
       it('clear method should remove File from modelValue and uploadResponse', async () => {
         const uploadResponse = [
           {
@@ -758,6 +850,7 @@ export function runInputFileSuite({
 
         // @ts-expect-error [allow-protected-in-test]
         el.uploadResponse = uploadResponse;
+
         setTimeout(() => {
           mimicSelectFile(el, [file]);
         });
@@ -769,6 +862,7 @@ export function runInputFileSuite({
         expect(el._selectedFilesMetaData).to.deep.equal([]);
       });
     });
+
     describe('file select component with prefilled state', () => {
       /**
        * @type {LionInputFile}
@@ -787,6 +881,7 @@ export function runInputFileSuite({
           errorMessage: 'something went wrong',
         },
       ];
+
       beforeEach(async () => {
         el = await fixture(html`
           <${tag} name="myFiles" multiple="${true}"> </${tag}>
@@ -794,8 +889,10 @@ export function runInputFileSuite({
 
         // @ts-expect-error [allow-protected-in-test]
         el.uploadResponse = uploadResponse;
+
         await el.updateComplete;
       });
+
       it('should update the _selectedFilesMetaData according to uploadResponse', () => {
         // @ts-expect-error [allow-protected-in-test]
         expect(el._selectedFilesMetaData.length).to.equal(2);
@@ -810,6 +907,7 @@ export function runInputFileSuite({
           'something went wrong',
         );
       });
+
       it('should remove file on click of cross button', async () => {
         /**
          * @type {Partial<InputFile>}
@@ -817,13 +915,8 @@ export function runInputFileSuite({
         const removedFile = {
           name: 'file2.txt',
           status: 'FAIL',
-          systemFile: {
-            name: 'file2.txt',
-          },
-          response: {
-            name: 'file2.txt',
-            status: 'FAIL',
-          },
+          systemFile: { name: 'file2.txt' },
+          response: { name: 'file2.txt', status: 'FAIL' },
         };
         // @ts-expect-error [allow-protected-in-test]
         const removeFileSpy = sinon.spy(el, '_removeFile');
@@ -844,12 +937,14 @@ export function runInputFileSuite({
             },
           }),
         );
+
         await el.updateComplete;
         expect(removeFileSpy).have.been.calledOnce;
         // @ts-expect-error [allow-protected-in-test]
         expect(el._selectedFilesMetaData.length).to.equal(1);
         removeFileSpy.restore();
       });
+
       it('should fire file-removed event with uploadResponse in the details', async () => {
         /**
          * @type {Partial<InputFile>}
@@ -857,19 +952,17 @@ export function runInputFileSuite({
         const removedFile = {
           name: 'file2.txt',
           status: 'FAIL',
-          systemFile: {
-            name: 'file2.txt',
-          },
-          response: {
-            name: 'file2.txt',
-            status: 'FAIL',
-          },
+          systemFile: { name: 'file2.txt' },
+          response: { name: 'file2.txt', status: 'FAIL' },
         };
+
         setTimeout(() => {
           // @ts-ignore ignore file typing
           el._removeFile(removedFile);
         });
+
         await el.updateComplete;
+
         const removeFileEvent = await oneEvent(el, 'file-removed');
 
         // assertion for event data
@@ -892,6 +985,7 @@ export function runInputFileSuite({
         });
       });
     });
+
     describe('drag and drop', () => {
       /**
        * @type {LionInputFile}
@@ -901,60 +995,44 @@ export function runInputFileSuite({
         el = await fixture(html`
           <${tag} name="myFiles" multiple enable-drop-zone></${tag}>
         `);
+
         await el.updateComplete;
       });
+
       it('should set "is-dragging" on dragenter', async () => {
         const dropzone = el.shadowRoot?.querySelector('.input-file__drop-zone');
-        dropzone?.dispatchEvent(
-          new Event('dragenter', {
-            bubbles: true,
-          }),
-        );
+        dropzone?.dispatchEvent(new Event('dragenter', { bubbles: true }));
         await el.updateComplete;
         expect(el.hasAttribute('is-dragging')).to.equal(true);
       });
+
       it('should set "is-dragging" on dragover', async () => {
         const dropzone = el.shadowRoot?.querySelector('.input-file__drop-zone');
-        dropzone?.dispatchEvent(
-          new Event('dragover', {
-            bubbles: true,
-          }),
-        );
+        dropzone?.dispatchEvent(new Event('dragover', { bubbles: true }));
         await el.updateComplete;
         expect(el.hasAttribute('is-dragging')).to.equal(true);
       });
+
       it('should remove "is-dragging" on dragleave', async () => {
         const dropzone = el.shadowRoot?.querySelector('.input-file__drop-zone');
-        dropzone?.dispatchEvent(
-          new Event('dragenter', {
-            bubbles: true,
-          }),
-        );
+        dropzone?.dispatchEvent(new Event('dragenter', { bubbles: true }));
         await el.updateComplete;
-        dropzone?.dispatchEvent(
-          new Event('dragleave', {
-            bubbles: true,
-          }),
-        );
+
+        dropzone?.dispatchEvent(new Event('dragleave', { bubbles: true }));
         await el.updateComplete;
         expect(el.hasAttribute('is-dragging')).to.equal(false);
       });
+
       it('should remove "is-dragging" on drop', async () => {
         const dropzone = el.shadowRoot?.querySelector('.input-file__drop-zone');
-        dropzone?.dispatchEvent(
-          new Event('dragenter', {
-            bubbles: true,
-          }),
-        );
+        dropzone?.dispatchEvent(new Event('dragenter', { bubbles: true }));
         await el.updateComplete;
-        window.dispatchEvent(
-          new Event('drop', {
-            bubbles: true,
-          }),
-        );
+
+        window.dispatchEvent(new Event('drop', { bubbles: true }));
         await el.updateComplete;
         expect(el.hasAttribute('is-dragging')).to.equal(false);
       });
+
       it('should update modelValue on drop', async () => {
         const list = new DataTransfer();
         // @ts-ignore
@@ -964,18 +1042,13 @@ export function runInputFileSuite({
         // @ts-expect-error [allow-protected-in-test]
         await el._processDroppedFiles({
           // @ts-ignore
-          dataTransfer: {
-            files: droppedFiles,
-            items: [
-              {
-                name: 'test.txt',
-              },
-            ],
-          },
+          dataTransfer: { files: droppedFiles, items: [{ name: 'test.txt' }] },
           preventDefault: () => {},
         });
         await el.updateComplete;
+
         expect(el.modelValue.length).to.equal(1);
+
         const list2 = new DataTransfer();
         // @ts-ignore
         list2.items.add(file2);
@@ -983,19 +1056,14 @@ export function runInputFileSuite({
         // @ts-expect-error [allow-protected-in-test]
         await el._processDroppedFiles({
           // @ts-ignore
-          dataTransfer: {
-            files: list2.files,
-            items: [
-              {
-                name: 'test2.txt',
-              },
-            ],
-          },
+          dataTransfer: { files: list2.files, items: [{ name: 'test2.txt' }] },
           preventDefault: () => {},
         });
         await el.updateComplete;
+
         expect(el.modelValue.length).to.equal(2);
       });
+
       it('should call _processFiles method', async () => {
         const list = new DataTransfer();
         // @ts-ignore
@@ -1007,20 +1075,15 @@ export function runInputFileSuite({
         // @ts-expect-error [allow-protected-in-test]
         await el._processDroppedFiles({
           // @ts-ignore
-          dataTransfer: {
-            files: droppedFiles,
-            items: [
-              {
-                name: 'test.txt',
-              },
-            ],
-          },
+          dataTransfer: { files: droppedFiles, items: [{ name: 'test.txt' }] },
           preventDefault: () => {},
         });
+
         expect(_processFilesSpy).have.been.calledOnce;
         _processFilesSpy.restore();
       });
     });
+
     describe('uploadOnSelect as true', () => {
       it('should not remove file on click of cross button and fire file-removed event', async () => {
         /**
@@ -1029,24 +1092,24 @@ export function runInputFileSuite({
         const removeFile = {
           name: 'foo.txt',
           status: 'SUCCESS',
-          systemFile: {
-            name: 'foo.txt',
-          },
-          response: {
-            name: 'foo.txt',
-            status: 'SUCCESS',
-          },
+          systemFile: { name: 'foo.txt' },
+          response: { name: 'foo.txt', status: 'SUCCESS' },
         };
+
         const el = await fixture(html`
           <${tag} .uploadOnSelect="${true}"> </${tag}>
         `);
+
         el.modelValue = [file];
         mimicSelectFile(el, [file]);
+
         await el.updateComplete;
+
         setTimeout(() => {
           // @ts-ignore ignore file typing
           el._removeFile(removeFile);
         });
+
         const removeFileEvent = await oneEvent(el, 'file-removed');
 
         // assertion for displayed file list to be same
@@ -1074,6 +1137,7 @@ export function runInputFileSuite({
           status: 'SUCCESS',
         });
       });
+
       it('should remove file from displayed list if not available in uploadResponse array', async () => {
         const uploadResponse = [
           {
@@ -1088,12 +1152,14 @@ export function runInputFileSuite({
             errorMessage: 'something went wrong',
           },
         ];
+
         const el = await fixture(html`
           <${tag} label="Select" .uploadOnSelect="${true}"> </${tag}>
         `);
 
         // @ts-expect-error [allow-protected-in-test]
         el.uploadResponse = uploadResponse;
+
         await el.updateComplete;
         // assertion for displayed file list to be same
         // @ts-expect-error [allow-protected-in-test]
@@ -1116,11 +1182,13 @@ export function runInputFileSuite({
         expect(el._inputNode.value).to.equal('');
       });
     });
+
     describe('Accessibility', async () => {
       it('is accessible', async () => {
         const el = await fixture(html`<${tag} label="Select"></${tag}>`);
         await expect(el).to.be.accessible();
       });
+
       it('is accessible when a file is selected', async () => {
         const uploadResponse = [
           {
@@ -1134,8 +1202,10 @@ export function runInputFileSuite({
 
         // @ts-expect-error [allow-protected-in-test]
         el.uploadResponse = uploadResponse;
+
         await expect(el).to.be.accessible();
       });
+
       it('is accessible with an selected file and disabled', async () => {
         const uploadResponse = [
           {
@@ -1145,12 +1215,15 @@ export function runInputFileSuite({
             downloadUrl: '/downloadFile',
           },
         ];
+
         const el = await fixture(html` <${tag} label="Select" disabled></${tag}> `);
 
         // @ts-expect-error [allow-protected-in-test]
         el.uploadResponse = uploadResponse;
+
         await expect(el).to.be.accessible();
       });
+
       describe('has correct aria-roles', async () => {
         it('select-button has aria-labelledby set to itself and the label', async () => {
           const el = await fixture(html` <${tag} label="Select"></${tag}> `);
@@ -1165,6 +1238,7 @@ export function runInputFileSuite({
             `label-${el._inputId}`,
           );
         });
+
         it('select-button has aria-describedby set to the help-text, after and the feedback message', async () => {
           const uploadResponse = [
             {
@@ -1197,6 +1271,7 @@ export function runInputFileSuite({
             `after-${el._inputId}`,
           );
         });
+
         it('after contains upload name of file when uploadOnSelect is true and status is SUCCESS', async () => {
           const uploadResponse = [
             {
@@ -1209,6 +1284,7 @@ export function runInputFileSuite({
           const el = await fixture(html`
             <${tag} label="Select" upload-on-select></${tag}>
           `);
+
           expect(el.querySelector('[slot="after"]')?.textContent).to.equal('No files uploaded.');
           // @ts-expect-error
           el.uploadResponse = uploadResponse;
@@ -1217,6 +1293,7 @@ export function runInputFileSuite({
             'Uploaded file: file1.txt',
           );
         });
+
         it('after contains upload name of file when uploadOnSelect is false and status is SUCCESS', async () => {
           const uploadResponse = [
             {
@@ -1227,6 +1304,7 @@ export function runInputFileSuite({
             },
           ];
           const el = await fixture(html` <${tag} label="Select"></${tag}> `);
+
           expect(el.querySelector('[slot="after"]')?.textContent).to.equal('No files selected.');
           // @ts-expect-error
           el.uploadResponse = uploadResponse;
@@ -1235,6 +1313,7 @@ export function runInputFileSuite({
             'Selected file: file1.txt',
           );
         });
+
         it('after contains upload validator message of file when FAIL', async () => {
           const uploadResponse = [
             {
@@ -1245,12 +1324,14 @@ export function runInputFileSuite({
             },
           ];
           const el = await fixture(html` <${tag} label="Select"></${tag}> `);
+
           expect(el.querySelector('[slot="after"]')?.textContent).to.equal('No files selected.');
           // @ts-expect-error
           el.uploadResponse = uploadResponse;
           await el.updateComplete;
           expect(el.querySelector('[slot="after"]')?.textContent).to.equal('something went wrong');
         });
+
         it('after contains upload status of files when uploadOnSelect is true and multiple files have been selected', async () => {
           const uploadResponse = [
             {
@@ -1271,11 +1352,13 @@ export function runInputFileSuite({
           `);
           // @ts-expect-error
           el.uploadResponse = uploadResponse;
+
           await el.updateComplete;
           expect(el.querySelector('[slot="after"]')?.textContent?.trim()).to.equal(
             'Uploaded files: 2 files. "something went wrong", for file2.txt.',
           );
         });
+
         it('after contains upload status of files when uploadOnSelect is false and multiple files have been selected', async () => {
           const uploadResponse = [
             {
@@ -1296,6 +1379,7 @@ export function runInputFileSuite({
           `);
           // @ts-expect-error
           el.uploadResponse = uploadResponse;
+
           await el.updateComplete;
           expect(el.querySelector('[slot="after"]')?.textContent?.trim()).to.equal(
             'Selected files: 2 files. "something went wrong", for file2.txt.',
@@ -1304,11 +1388,12 @@ export function runInputFileSuite({
       });
     });
   });
+
   describe('lion-selected-file-list, the file list lion-input-file renders', () => {
     // The list is its own element with its own type: cast the shared fixture for these tests.
-    const listFixture =
-      /** @type {(arg: TemplateResult) => Promise<LionSelectedFileList>} */
-      _fixture;
+    const listFixture = /** @type {(arg: TemplateResult) => Promise<LionSelectedFileList>} */ (
+      _fixture
+    );
     // The list is a separate element the input renders and a subclasser may replace, so it keeps its
     // own role key here instead of a suite and an entry point of its own.
     const listTagString = selectedFileListTagString;
@@ -1359,17 +1444,14 @@ export function runInputFileSuite({
         status: 'FAIL',
       },
       status: 'FAIL',
-      validationFeedback: [
-        {
-          message: 'foobar',
-          type: 'error',
-        },
-      ],
+      validationFeedback: [{ message: 'foobar', type: 'error' }],
     };
+
     it('when empty show nothing', async () => {
       const el = await listFixture(html`<${listTag}></${listTag}>`);
       expect(el.children.length).to.equal(0);
     });
+
     it('can have 1 item', async () => {
       const el = await listFixture(html`
           <${listTag} .fileList="${[fileSuccess]}"></${listTag}>
@@ -1377,6 +1459,7 @@ export function runInputFileSuite({
       const fileItems = el.shadowRoot?.querySelectorAll('.selected__list__item');
       expect(fileItems?.length).to.equal(1);
     });
+
     it('shows a list when multiple', async () => {
       const el = await listFixture(html`
           <${listTag}
@@ -1389,6 +1472,7 @@ export function runInputFileSuite({
       const fileList = el.shadowRoot?.querySelector('.selected__list');
       expect(fileList?.tagName).to.equal('UL');
     });
+
     it('displays an anchor when status="SUCCESS" and a downloadUrl is available', async () => {
       const el = await listFixture(html`
           <${listTag}
@@ -1404,6 +1488,7 @@ export function runInputFileSuite({
       // @ts-ignore
       expect(fileItems[2].querySelector('.selected__list__item__label__link')).to.not.exist;
     });
+
     it('displays a feedback message when status="FAIL"', async () => {
       const el = await listFixture(html`
           <${listTag} .fileList="${[fileFail]}"></${listTag}>
@@ -1417,6 +1502,7 @@ export function runInputFileSuite({
       expect(feedback).to.exist;
       expect(el.shadowRoot?.textContent).to.include('foobar');
     });
+
     it('should call removeFile method on click of remove button', async () => {
       const el = await listFixture(html`
           <${listTag} .fileList="${[fileSuccess, fileLoading]}"></${listTag}>
@@ -1426,11 +1512,15 @@ export function runInputFileSuite({
        * @type {HTMLButtonElement | null | undefined}
        */
       const removeButton = el.shadowRoot?.querySelector('.selected__list__item__remove-button');
-      const removeFileSpy = sinon.spy(el, /** @type {keyof LionSelectedFileList} */ '_removeFile');
+      const removeFileSpy = sinon.spy(
+        el,
+        /** @type {keyof LionSelectedFileList} */ ('_removeFile'),
+      );
       removeButton?.click();
       expect(removeFileSpy).have.been.calledOnce;
       removeFileSpy.restore();
     });
+
     it('should fire file-remove-requested event with removed file data', async () => {
       const el = await listFixture(html`
           <${listTag} .fileList="${[fileSuccess, fileLoading]}"></${listTag}>
@@ -1450,10 +1540,12 @@ export function runInputFileSuite({
           status: el.fileList[0].status,
         },
       };
+
       setTimeout(() => {
         // @ts-ignore ignore file typing
         el._removeFile(removedFile);
       });
+
       const removeFileEvent = await oneEvent(el, 'file-remove-requested');
       expect(removeFileEvent).to.exist;
       expect(removeFileEvent.detail.removedFile).to.deep.equal({
@@ -1473,27 +1565,33 @@ export function runInputFileSuite({
         status: 'SUCCESS',
       });
     });
+
     describe('Accessibility', async () => {
       it('is accessible', async () => {
-        const el = await listFixture(html`<${listTag}
+        const el = await listFixture(
+          html`<${listTag}
               .fileList="${[fileSuccess, fileLoading, fileFail]}"
-            ></${listTag}>`);
+            ></${listTag}>`,
+        );
         await expect(el).to.be.accessible();
       });
+
       it(`adds aria-live="polite" to the feedback slot on focus, aria-live="assertive" to the feedback slot on blur,
             so error messages appearing on blur will be read before those of the next input`, async () => {
         const el = await listFixture(html`
             <${listTag} .fileList="${[fileFail]}"></${listTag}>
           `);
         const fileFeedback = el?.shadowRoot?.querySelectorAll('[id^="file-feedback"]')[0];
-        const removeButton =
-          /** @type {HTMLButtonElement} */
-          el.shadowRoot?.querySelector('.selected__list__item__remove-button');
+        const removeButton = /** @type {HTMLButtonElement} */ (
+          el.shadowRoot?.querySelector('.selected__list__item__remove-button')
+        );
         // @ts-ignore
         expect(fileFeedback.getAttribute('aria-live')).to.equal('assertive');
+
         removeButton?.focus();
         // @ts-ignore
         expect(fileFeedback.getAttribute('aria-live')).to.equal('polite');
+
         removeButton?.blur();
         // @ts-ignore
         expect(fileFeedback.getAttribute('aria-live')).to.equal('assertive');

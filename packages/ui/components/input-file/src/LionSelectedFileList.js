@@ -21,22 +21,19 @@ export class LionSelectedFileList extends LocalizeMixin(ScopedElementsMixin(LitE
       'lion-validation-feedback': LionValidationFeedback,
     };
   }
+
   static get properties() {
     return {
-      fileList: {
-        type: Array,
-      },
-      multiple: {
-        type: Boolean,
-      },
+      fileList: { type: Array },
+      multiple: { type: Boolean },
     };
   }
+
   static localizeNamespaces = [
-    {
-      'lion-input-file': localizeNamespaceLoader,
-    },
+    { 'lion-input-file': localizeNamespaceLoader },
     ...super.localizeNamespaces,
   ];
+
   constructor() {
     super();
     /**
@@ -55,11 +52,12 @@ export class LionSelectedFileList extends LocalizeMixin(ScopedElementsMixin(LitE
       this._enhanceLightDomA11y();
     }
   }
+
   _enhanceLightDomA11y() {
     const fileFeedbackElementList = this.shadowRoot?.querySelectorAll('[id^="file-feedback"]');
     // TODO: this will break as soon as a Subclasser changes the template ...
     const inputFileNode = this.parentNode?.parentNode;
-    fileFeedbackElementList?.forEach((feedbackEl) => {
+    fileFeedbackElementList?.forEach(feedbackEl => {
       // Generic focus/blur handling that works for both Fields/FormGroups
       inputFileNode?.addEventListener('focusin', () => {
         feedbackEl.setAttribute('aria-live', 'polite');
@@ -156,52 +154,52 @@ export class LionSelectedFileList extends LocalizeMixin(ScopedElementsMixin(LitE
           ${this._listItemBeforeTemplate(file)}
           <span id="selected-list-item-label-${fileUuid}" class="selected__list__item__label__text">
             <span class="sr-only">${this.msgLit('lion-input-file:fileNameDescriptionLabel')}</span>
-            ${
-              file.downloadUrl && file.status !== 'LOADING'
-                ? html`
-                    <a
-                      class="selected__list__item__label__link"
-                      href="${file.downloadUrl}"
-                      target="${file.downloadUrl.startsWith('blob') ? '_blank' : ''}"
-                      rel="${ifDefined(file.downloadUrl.startsWith('blob') ? 'noopener noreferrer' : undefined)}"
-                      >${file.systemFile?.name}</a
-                    >
-                  `
-                : file.systemFile?.name
-            }
+            ${file.downloadUrl && file.status !== 'LOADING'
+              ? html`
+                  <a
+                    class="selected__list__item__label__link"
+                    href="${file.downloadUrl}"
+                    target="${file.downloadUrl.startsWith('blob') ? '_blank' : ''}"
+                    rel="${ifDefined(
+                      file.downloadUrl.startsWith('blob') ? 'noopener noreferrer' : undefined,
+                    )}"
+                    >${file.systemFile?.name}</a
+                  >
+                `
+              : file.systemFile?.name}
           </span>
           ${this._listItemAfterTemplate(file, fileUuid)}
         </div>
-        ${
-          file.status === 'FAIL' && file.validationFeedback
-            ? html`
-                ${repeat(
-                  file.validationFeedback,
-                  (validationFeedback) => html`
-                    ${this._validationFeedbackTemplate([validationFeedback], fileUuid)}
-                  `,
-                )}
-              `
-            : nothing
-        }
+        ${file.status === 'FAIL' && file.validationFeedback
+          ? html`
+              ${repeat(
+                file.validationFeedback,
+                validationFeedback => html`
+                  ${this._validationFeedbackTemplate([validationFeedback], fileUuid)}
+                `,
+              )}
+            `
+          : nothing}
       </div>
     `;
   }
+
   render() {
     return this.fileList?.length
       ? html`
-          ${
-            this.multiple
-              ? html`
-                  <ul class="selected__list">
-                    ${this.fileList.map((file) => html` <li>${this._selectedListItemTemplate(file)}</li> `)}
-                  </ul>
-                `
-              : html` ${this._selectedListItemTemplate(this.fileList[0])} `
-          }
+          ${this.multiple
+            ? html`
+                <ul class="selected__list">
+                  ${this.fileList.map(
+                    file => html` <li>${this._selectedListItemTemplate(file)}</li> `,
+                  )}
+                </ul>
+              `
+            : html` ${this._selectedListItemTemplate(this.fileList[0])} `}
         `
       : nothing;
   }
+
   static get styles() {
     return [
       css`

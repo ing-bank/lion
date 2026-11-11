@@ -19,6 +19,7 @@ export function runSelectSuite({
   tagString: legacyTagString,
 } = {}) {
   const tag = unsafeStatic(resolveSuiteTag(host, legacyTagString));
+
   describe('lion-select', () => {
     it('can preselect an option', async () => {
       const lionSelect = await fixture(html`
@@ -32,9 +33,9 @@ export function runSelectSuite({
       `);
       expect(lionSelect.querySelector('select')?.value).to.equal('nr2');
     });
+
     it('sets the values correctly based on the option value and view value', async () => {
-      const lionSelect =
-        /** @type {LionSelect} */
+      const lionSelect = /** @type {LionSelect} */ (
         await fixture(html`
           <${tag} label="Foo item" .modelValue="${'nr2'}">
             <select slot="input">
@@ -43,7 +44,8 @@ export function runSelectSuite({
               <option value="nr3"></option>
             </select>
           </${tag}>
-        `);
+        `)
+      );
       expect(lionSelect.serializedValue).to.equal('nr2');
       expect(lionSelect.formattedValue).to.equal('Item 2');
       lionSelect.modelValue = 'nr1';
@@ -55,9 +57,9 @@ export function runSelectSuite({
       expect(lionSelect.serializedValue).to.equal('nr3');
       expect(lionSelect.formattedValue).to.equal('');
     });
+
     it('updates the formattedValue correctly when the value for the selected option is updated', async () => {
-      const lionSelect =
-        /** @type {LionSelect} */
+      const lionSelect = /** @type {LionSelect} */ (
         await fixture(html`
           <${tag} label="Foo item" .modelValue="${'nr2'}">
             <select slot="input">
@@ -66,17 +68,21 @@ export function runSelectSuite({
               <option value="nr3"></option>
             </select>
           </${tag}>
-        `);
+        `)
+      );
       expect(lionSelect.serializedValue).to.equal('nr2');
       expect(lionSelect.formattedValue).to.equal('');
+
       const select = /** @type {HTMLSlotElement} */ (
-        /** @type {ShadowRoot} */ lionSelect.shadowRoot.querySelector('slot[name=input]')
+        /** @type {ShadowRoot} */ (lionSelect.shadowRoot).querySelector('slot[name=input]')
       ).assignedElements()[0];
       const options = select.querySelectorAll('option');
       options[1].textContent = 'Item 2';
+
       await aTimeout;
       expect(lionSelect.formattedValue).to.equal('Item 2');
     });
+
     it('is accessible', async () => {
       const lionSelect = await fixture(html`
         <${tag} .modelValue="${'nr2'}">

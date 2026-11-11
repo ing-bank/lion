@@ -15,6 +15,7 @@ import { parseAmount as _parseAmount } from '@lion/ui/input-amount.js';
  */
 export const parseAmount = (value, givenOptions) => {
   const parsedAmount = _parseAmount(value, givenOptions);
+
   return {
     amount: parsedAmount,
     currency: givenOptions?.currency,

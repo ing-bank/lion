@@ -13,9 +13,6 @@ export function getSelectRichMembers(el) {
   return {
     ...obj,
     // @ts-ignore [allow-protected] in test
-    ...{
-      _invokerNode: el._invokerNode,
-      _overlayCtrl: el._overlayCtrl,
-    },
+    ...{ _invokerNode: el._invokerNode, _overlayCtrl: el._overlayCtrl },
   };
 }

@@ -31,56 +31,61 @@ export function runInteractionStateMixinSuite({
         super.connectedCallback();
         this.tabIndex = 0;
       }
+
       set modelValue(v) {
         /** @type {*} */
         this._modelValue = v;
-        this.dispatchEvent(
-          new CustomEvent('model-value-changed', {
-            bubbles: true,
-          }),
-        );
+        this.dispatchEvent(new CustomEvent('model-value-changed', { bubbles: true }));
         this.requestUpdate('modelValue');
       }
+
       get modelValue() {
         return this._modelValue;
       }
     }
+
     const tagString = resolveSuiteTag(classes?.host, legacyTagString, IState);
     const tag = unsafeStatic(tagString);
+
     it('sets states to false on init', async () => {
-      const el = /** @type {IState} */ await fixture(html`<${tag}></${tag}>`);
+      const el = /** @type {IState} */ (await fixture(html`<${tag}></${tag}>`));
       expect(el.dirty).to.be.false;
       expect(el.touched).to.be.false;
       expect(el.prefilled).to.be.false;
     });
+
     it('sets dirty when value changed', async () => {
-      const el = /** @type {IState} */ await fixture(html`<${tag}></${tag}>`);
+      const el = /** @type {IState} */ (await fixture(html`<${tag}></${tag}>`));
       expect(el.dirty).to.be.false;
       el.modelValue = 'foobar';
       expect(el.dirty).to.be.true;
     });
+
     it('sets touched to true when field left after focus', async () => {
-      const el = /** @type {IState} */ await fixture(html`<${tag}></${tag}>`);
+      const el = /** @type {IState} */ (await fixture(html`<${tag}></${tag}>`));
       await triggerFocusFor(el);
       await triggerBlurFor(el);
       expect(el.touched).to.be.true;
     });
+
     it('sets an attribute "touched', async () => {
-      const el = /** @type {IState} */ await fixture(html`<${tag}></${tag}>`);
+      const el = /** @type {IState} */ (await fixture(html`<${tag}></${tag}>`));
       el.touched = true;
       await el.updateComplete;
       expect(el.hasAttribute('touched')).to.be.true;
     });
+
     it('sets an attribute "dirty', async () => {
-      const el = /** @type {IState} */ await fixture(html`<${tag}></${tag}>`);
+      const el = /** @type {IState} */ (await fixture(html`<${tag}></${tag}>`));
       el.dirty = true;
       await el.updateComplete;
       expect(el.hasAttribute('dirty')).to.be.true;
     });
+
     it('sets an attribute "filled" if the input has a non-empty modelValue', async () => {
-      const el =
-        /** @type {IState} */
-        await fixture(html`<${tag} .modelValue=${'hello'}></${tag}>`);
+      const el = /** @type {IState} */ (
+        await fixture(html`<${tag} .modelValue=${'hello'}></${tag}>`)
+      );
       expect(el.hasAttribute('filled')).to.equal(true);
       el.modelValue = '';
       await el.updateComplete;
@@ -89,58 +94,57 @@ export function runInteractionStateMixinSuite({
       await el.updateComplete;
       expect(el.hasAttribute('filled')).to.equal(true);
     });
+
     it('fires "(touched|dirty)-state-changed" event when state changes', async () => {
       const touchedSpy = sinon.spy();
       const dirtySpy = sinon.spy();
-      const el =
-        /** @type {IState} */
+      const el = /** @type {IState} */ (
         await fixture(
           html`<${tag} @touched-changed=${touchedSpy} @dirty-changed=${dirtySpy}></${tag}>`,
-        );
+        )
+      );
+
       el.touched = true;
       expect(touchedSpy.callCount).to.equal(1);
+
       el.dirty = true;
       expect(dirtySpy.callCount).to.equal(1);
     });
+
     it('sets prefilled once instantiated', async () => {
-      const el =
-        /** @type {IState} */
+      const el = /** @type {IState} */ (
         await fixture(html`
         <${tag} .modelValue=${'prefilled'}></${tag}>
-      `);
+      `)
+      );
       expect(el.prefilled).to.be.true;
-      const nonPrefilled =
-        /** @type {IState} */
+
+      const nonPrefilled = /** @type {IState} */ (
         await fixture(html`
         <${tag} .modelValue=${''}></${tag}>
-      `);
+      `)
+      );
       expect(nonPrefilled.prefilled).to.be.false;
     });
 
     // This method actually tests the implementation of the _isPrefilled method.
     it(`can determine "prefilled" based on different modelValue types
-      (${allowedModelValueTypes.map((t) => t.name).join(', ')})`, async () => {
+      (${allowedModelValueTypes.map(t => t.name).join(', ')})`, async () => {
       /** @typedef {{_inputNode: HTMLElement}} inputNodeInterface */
 
-      const el = /** @type {IState & inputNodeInterface} */ await fixture(html`<${tag}></${tag}>`);
+      const el = /** @type {IState & inputNodeInterface} */ (
+        await fixture(html`<${tag}></${tag}>`)
+      );
 
       /**
        * @param {*} modelValue
        */
-      const changeModelValueAndLeave = (modelValue) => {
+      const changeModelValueAndLeave = modelValue => {
         const targetEl = el._inputNode || el;
-        targetEl.dispatchEvent(
-          new Event('focus', {
-            bubbles: true,
-          }),
-        );
+        targetEl.dispatchEvent(new Event('focus', { bubbles: true }));
         el.modelValue = modelValue;
         // @ts-ignore [allow-protected] in test
-        targetEl.dispatchEvent(
-          new Event(el._leaveEvent, {
-            bubbles: true,
-          }),
-        );
+        targetEl.dispatchEvent(new Event(el._leaveEvent, { bubbles: true }));
       };
 
       // Prefilled
@@ -151,9 +155,7 @@ export function runInteractionStateMixinSuite({
         expect(el.prefilled, 'empty array should not be "prefilled"').to.be.false;
       }
       if (allowedModelValueTypes.includes(Object)) {
-        changeModelValueAndLeave({
-          not: 'empty',
-        });
+        changeModelValueAndLeave({ not: 'empty' });
         expect(el.prefilled, 'not empty object should be "prefilled"').to.be.true;
         changeModelValueAndLeave({});
         expect(el.prefilled, 'empty object should not be "prefilled"').to.be.false;
@@ -179,8 +181,9 @@ export function runInteractionStateMixinSuite({
       changeModelValueAndLeave(undefined);
       expect(el.prefilled, 'undefined should not be "prefilled"').to.be.false;
     });
+
     it('has a method resetInteractionState()', async () => {
-      const el = /** @type {IState} */ await fixture(html`<${tag}></${tag}>`);
+      const el = /** @type {IState} */ (await fixture(html`<${tag}></${tag}>`));
       el.dirty = true;
       el.touched = true;
       el.prefilled = true;
@@ -190,6 +193,7 @@ export function runInteractionStateMixinSuite({
       expect(el.touched).to.be.false;
       expect(el.prefilled).to.be.false;
       expect(el.submitted).to.be.false;
+
       el.dirty = true;
       el.touched = true;
       el.prefilled = false;
@@ -201,8 +205,9 @@ export function runInteractionStateMixinSuite({
       expect(el.prefilled).to.be.true;
       expect(el.submitted).to.be.false;
     });
+
     it('has a method initInteractionState()', async () => {
-      const el = /** @type {IState} */ await fixture(html`<${tag}></${tag}>`);
+      const el = /** @type {IState} */ (await fixture(html`<${tag}></${tag}>`));
       el.modelValue = 'Some value';
       expect(el.dirty).to.be.true;
       expect(el.touched).to.be.false;
@@ -212,13 +217,14 @@ export function runInteractionStateMixinSuite({
       expect(el.touched).to.be.false;
       expect(el.prefilled).to.be.true;
     });
+
     describe('Validation integration with states', () => {
       it('has .shouldShowFeedbackFor indicating for which type to show messages', async () => {
-        const el =
-          /** @type {IState} */
+        const el = /** @type {IState} */ (
           await fixture(html`
           <${tag}></${tag}>
-        `);
+        `)
+        );
         // @ts-ignore [allow-private] in test
         expect(el.shouldShowFeedbackFor).to.deep.equal([]);
         el.submitted = true;
@@ -226,13 +232,15 @@ export function runInteractionStateMixinSuite({
         // @ts-ignore [allow-private] in test
         expect(el.shouldShowFeedbackFor).to.deep.equal(['error']);
       });
+
       it('keeps the feedback component in sync', async () => {
-        const el =
-          /** @type {IState} */
+        const el = /** @type {IState} */ (
           await fixture(html`
           <${tag} .validators=${[new MinLength(3)]}></${tag}>
-        `);
+        `)
+        );
         const { _feedbackNode } = getFormControlMembers(el);
+
         await el.updateComplete;
         await el.feedbackComplete;
         expect(_feedbackNode.feedbackData).to.deep.equal([]);
@@ -242,12 +250,14 @@ export function runInteractionStateMixinSuite({
         await el.updateComplete;
         await el.feedbackComplete;
         expect(_feedbackNode.feedbackData).to.deep.equal([]);
+
         el.submitted = true;
         await el.updateComplete;
         await el.feedbackComplete;
         expect(_feedbackNode.feedbackData?.length).to.equal(1);
       });
     });
+
     describe('SubClassers', () => {
       it('can override the `_leaveEvent`', async () => {
         class IStateCustomBlur extends InteractionStateMixin(LitElement) {
@@ -258,7 +268,9 @@ export function runInteractionStateMixinSuite({
         }
         const tagLeaveString = defineCE(IStateCustomBlur);
         const tagLeave = unsafeStatic(tagLeaveString);
-        const el = /** @type {IStateCustomBlur} */ await fixture(html`<${tagLeave}></${tagLeave}>`);
+        const el = /** @type {IStateCustomBlur} */ (
+          await fixture(html`<${tagLeave}></${tagLeave}>`)
+        );
         el.dispatchEvent(new Event('custom-blur'));
         expect(el.touched).to.be.true;
       });

@@ -32,6 +32,7 @@ export class LionInput extends NativeTextFieldMixin(LionField) {
       },
     };
   }
+
   get slots() {
     return {
       ...super.slots,
@@ -52,8 +53,9 @@ export class LionInput extends NativeTextFieldMixin(LionField) {
    * @protected
    */
   get _inputNode() {
-    return /** @type {HTMLInputElement} */ super._inputNode; // casts type
+    return /** @type {HTMLInputElement} */ (super._inputNode); // casts type
   }
+
   constructor() {
     super();
     this.readOnly = false;
@@ -86,20 +88,24 @@ export class LionInput extends NativeTextFieldMixin(LionField) {
     if (changedProperties.has('type')) {
       this._inputNode.type = this.type;
     }
+
     if (changedProperties.has('placeholder')) {
       this._inputNode.placeholder = this.placeholder;
     }
+
     if (changedProperties.has('disabled')) {
       this._inputNode.disabled = this.disabled;
       this.validate();
     }
+
     if (changedProperties.has('name')) {
       this._inputNode.name = this.name;
     }
+
     if (changedProperties.has('autocomplete')) {
       // the DOM lib types `autocomplete` as `AutoFill` only in newer TypeScript;
       // cast keeps this valid on both compilers without widening the public type
-      this._inputNode.autocomplete = /** @type {any} */ this.autocomplete;
+      this._inputNode.autocomplete = /** @type {any} */ (this.autocomplete);
     }
   }
 

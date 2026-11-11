@@ -51,16 +51,8 @@ export async function mimicUserTyping(el, keys) {
  * @param {string} key
  */
 export function mimicKeyPress(el, key) {
-  el.dispatchEvent(
-    new KeyboardEvent('keydown', {
-      key,
-    }),
-  );
-  el.dispatchEvent(
-    new KeyboardEvent('keyup', {
-      key,
-    }),
-  );
+  el.dispatchEvent(new KeyboardEvent('keydown', { key }));
+  el.dispatchEvent(new KeyboardEvent('keyup', { key }));
 }
 
 /**
@@ -69,18 +61,16 @@ export function mimicKeyPress(el, key) {
  */
 export async function mimicUserTypingAdvanced(el, values) {
   const { _inputNode } = getComboboxMembers(el);
-  _inputNode.dispatchEvent(
-    new Event('focusin', {
-      bubbles: true,
-    }),
-  );
+  _inputNode.dispatchEvent(new Event('focusin', { bubbles: true }));
   let cursorPosition = _inputNode.selectionStart || 0;
+
   for (const key of values) {
     // eslint-disable-next-line no-await-in-loop, no-loop-func
-    await new Promise((resolve) => {
+    await new Promise(resolve => {
       const selectionStart = _inputNode.selectionStart || 0;
       const selectionEnd = _inputNode.selectionEnd || 0;
       const hasSelection = selectionStart !== selectionEnd;
+
       if (key === 'Backspace' || key === 'Delete') {
         if (hasSelection) {
           _inputNode.value =
@@ -103,13 +93,10 @@ export async function mimicUserTypingAdvanced(el, values) {
           _inputNode.value.slice(0, cursorPosition) + key + _inputNode.value.slice(cursorPosition);
         cursorPosition += 1;
       }
+
       mimicKeyPress(_inputNode, key);
-      _inputNode.dispatchEvent(
-        new Event('input', {
-          bubbles: true,
-          composed: true,
-        }),
-      );
+      _inputNode.dispatchEvent(new Event('input', { bubbles: true, composed: true }));
+
       el.updateComplete.then(() => {
         // @ts-ignore
         resolve();
@@ -126,9 +113,9 @@ export function getFilteredOptionValues(el) {
   /**
    * @param {{ style: { display: string; }; }} option
    */
-  const filtered = options.filter((option) => option.getAttribute('aria-hidden') !== 'true');
+  const filtered = options.filter(option => option.getAttribute('aria-hidden') !== 'true');
   /**
    * @param {{ value: any; }} option
    */
-  return filtered.map((option) => option.value);
+  return filtered.map(option => option.value);
 }
