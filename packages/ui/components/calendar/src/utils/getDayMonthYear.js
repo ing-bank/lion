@@ -23,6 +23,10 @@ export function getDayMonthYear(day, weekdays, monthsLabels = defaultMonthLabels
   const monthName = monthsLabels[day.date.getMonth()];
   const year = day.date.getFullYear();
   const weekdayName = day.weekOrder ? weekdays[day.weekOrder] : weekdays[0];
-
-  return { dayNumber, monthName, year, weekdayName };
+  return {
+    dayNumber,
+    monthName,
+    year,
+    weekdayName,
+  };
 }

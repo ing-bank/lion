@@ -1,5 +1,4 @@
 export { LocalizeManager } from '../components/localize/src/LocalizeManager.js';
-
 export { formatDate } from '../components/localize/src/date/formatDate.js';
 export { getDateFormatBasedOnLocale } from '../components/localize/src/date/getDateFormatBasedOnLocale.js';
 export { getMonthNames } from '../components/localize/src/date/getMonthNames.js';
@@ -17,5 +16,4 @@ export { getSeparatorsFromNumber } from '../components/localize/src/number/getSe
 export { normalizeCurrencyLabel } from '../components/localize/src/number/normalizeCurrencyLabel.js';
 export { parseNumber } from '../components/localize/src/number/parseNumber.js';
 export { getLocale } from '../components/localize/src/utils/getLocale.js';
-
 export { localize } from '../components/localize/src/singleton.js';

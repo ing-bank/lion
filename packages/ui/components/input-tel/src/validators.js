@@ -14,11 +14,12 @@ import { PhoneUtilManager } from './PhoneUtilManager.js';
 function hasFeedback(modelValue, regionCode) {
   const AwesomePhoneNumber = PhoneUtilManager.PhoneUtil;
   let invalidCountryCode = false;
-
   if (regionCode && modelValue?.length >= 4 && modelValue?.length <= 16) {
     let pn;
     try {
-      pn = AwesomePhoneNumber.parsePhoneNumber(modelValue, { regionCode });
+      pn = AwesomePhoneNumber.parsePhoneNumber(modelValue, {
+        regionCode,
+      });
       invalidCountryCode = pn.regionCode !== regionCode;
       if (invalidCountryCode) {
         return 'invalid-country-code';
@@ -32,13 +33,10 @@ function hasFeedback(modelValue, regionCode) {
     }
     return enumValue;
   }
-
   return 'unknown';
 }
-
 export class PhoneNumber extends Validator {
   static validatorName = 'PhoneNumber';
-
   static get async() {
     // Will be run as async the first time if PhoneUtilManager hasn't loaded yet, sync afterwards
     return !PhoneUtilManager.isLoaded;
@@ -53,7 +51,7 @@ export class PhoneNumber extends Validator {
     if (!PhoneUtilManager.isLoaded) {
       // Return a Promise once not loaded yet. Since async Validators are meant for things like
       // loading server side data (in this case a lib), we continue as a sync Validator once loaded
-      return new Promise(resolve => {
+      return new Promise((resolve) => {
         PhoneUtilManager.loadComplete.then(() => {
           resolve(hasFeedback(modelValue, regionCode));
         });

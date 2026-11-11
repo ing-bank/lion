@@ -1,6 +1,5 @@
 /* eslint-disable max-classes-per-file */
 import { Unparseable, Validator } from '@lion/ui/form-core.js';
-
 export class MatchesOption extends Validator {
   static get validatorName() {
     return 'MatchesOption';

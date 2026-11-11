@@ -23,7 +23,6 @@ export class LionForm extends LionFieldset {
     /** @protected */
     this._reset = this._reset.bind(this);
   }
-
   connectedCallback() {
     super.connectedCallback();
     this.__registerEventsForLionForm();
@@ -31,21 +30,22 @@ export class LionForm extends LionFieldset {
     // @override LionFieldset: makes sure a11y is handled by ._formNode
     this.removeAttribute('role');
   }
-
   disconnectedCallback() {
     super.disconnectedCallback();
     this.__teardownEventsForLionForm();
   }
-
   get _formNode() {
-    return /** @type {HTMLFormElement} */ (this.querySelector('form'));
+    return /** @type {HTMLFormElement} */ this.querySelector('form');
   }
-
   submit() {
     if (this._formNode) {
       // Firefox requires cancelable flag, otherwise we cannot preventDefault
       // Firefox still runs default handlers for untrusted events :\
-      this._formNode.dispatchEvent(new Event('submit', { cancelable: true }));
+      this._formNode.dispatchEvent(
+        new Event('submit', {
+          cancelable: true,
+        }),
+      );
     } else {
       throwFormNodeError();
     }
@@ -59,13 +59,15 @@ export class LionForm extends LionFieldset {
     ev.preventDefault();
     ev.stopPropagation();
     this.submitGroup();
-    this.dispatchEvent(new Event('submit', { bubbles: true }));
-
+    this.dispatchEvent(
+      new Event('submit', {
+        bubbles: true,
+      }),
+    );
     if (this.hasFeedbackFor?.includes('error')) {
-      this._setFocusOnFirstErroneousFormElement(/** @type { * & FormRegistrarHost } */ (this));
+      this._setFocusOnFirstErroneousFormElement(/** @type { * & FormRegistrarHost } */ this);
     }
   }
-
   reset() {
     if (this._formNode) {
       this._formNode.reset();
@@ -82,7 +84,11 @@ export class LionForm extends LionFieldset {
     ev.preventDefault();
     ev.stopPropagation();
     this.resetGroup();
-    this.dispatchEvent(new Event('reset', { bubbles: true }));
+    this.dispatchEvent(
+      new Event('reset', {
+        bubbles: true,
+      }),
+    );
   }
 
   /**
@@ -91,9 +97,8 @@ export class LionForm extends LionFieldset {
    */
   _setFocusOnFirstErroneousFormElement(element) {
     const firstFormElWithError =
-      element.formElements.find(child => child.hasFeedbackFor.includes('error')) ||
+      element.formElements.find((child) => child.hasFeedbackFor.includes('error')) ||
       element.formElements[0];
-
     if (firstFormElWithError._focusableNode) {
       firstFormElWithError._focusableNode.focus();
     } else {

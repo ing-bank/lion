@@ -10,7 +10,6 @@ import { repeat } from 'lit/directives/repeat.js';
 import { LionOption } from '@lion/ui/listbox.js';
 import { ref } from 'lit/directives/ref.js';
 import { html } from 'lit';
-
 import { mockPhoneUtilManager, restorePhoneUtilManager } from '@lion/ui/input-tel-test-helpers.js';
 import { isActiveElement } from '../../core/test-helpers/isActiveElement.js';
 import { ScopedElementsMixin } from '../../core/src/ScopedElementsMixin.js';
@@ -33,13 +32,12 @@ class WithFormControlInputTelDropdown extends ScopedElementsMixin(LionInputTelDr
     'lion-select-rich': LionSelectRich,
     'lion-option': LionOption,
   };
-
   static templates = {
     ...(super.templates || {}),
     /**
      * @param {TemplateDataForDropdownInputTel} templateDataForDropdown
      */
-    dropdown: templateDataForDropdown => {
+    dropdown: (templateDataForDropdown) => {
       const { refs, data } = templateDataForDropdown;
       // TODO: once spread directive available, use it per ref (like ref(refs?.dropdown?.ref))
       return html`
@@ -52,8 +50,8 @@ class WithFormControlInputTelDropdown extends ScopedElementsMixin(LionInputTelDr
         >
           ${repeat(
             data.regionMetaList,
-            regionMeta => regionMeta.regionCode,
-            regionMeta => html`
+            (regionMeta) => regionMeta.regionCode,
+            (regionMeta) => html`
               <lion-option .choiceValue="${regionMeta.regionCode}"> </lion-option>
             `,
           )}
@@ -62,32 +60,32 @@ class WithFormControlInputTelDropdown extends ScopedElementsMixin(LionInputTelDr
     },
   };
 }
-
 runInputTelDropdownSuite();
 runInputTelDropdownSuite({
-  classes: { host: LionInputTelDropdown },
+  classes: {
+    host: LionInputTelDropdown,
+  },
   hasParentheses: true,
 });
 runInputTelDropdownParenthesesSuite();
-
 describe('WithFormControlInputTelDropdown', () => {
   // Runs it for LionSelectRich, which uses .modelValue/@model-value-changed instead of .value/@change
   runInputTelDropdownSuite({
-    classes: { host: WithFormControlInputTelDropdown },
+    classes: {
+      host: WithFormControlInputTelDropdown,
+    },
   });
-
   it("it doesn't set the country as modelValue, only as viewValue", async () => {
-    const el = /** @type {LionInputTelDropdown} */ (
+    const el =
+      /** @type {LionInputTelDropdown} */
       await fixture(html`
         <lion-input-tel-dropdown .allowedRegions="${['NL']}"></lion-input-tel-dropdown>
-      `)
-    );
+      `);
 
     // @ts-expect-error [allow-protected-in-tests]
     expect(el._inputNode.value).to.equal('+31');
     expect(el.modelValue).to.equal('');
   });
-
   it('focuses the textbox right after selection if selected via opened dropdown if interaction-mode is mac', async () => {
     class InputTelDropdownMac extends LionInputTelDropdown {
       static templates = {
@@ -95,7 +93,7 @@ describe('WithFormControlInputTelDropdown', () => {
         /**
          * @param {TemplateDataForDropdownInputTel} templateDataForDropdown
          */
-        dropdown: templateDataForDropdown => {
+        dropdown: (templateDataForDropdown) => {
           const { refs, data } = templateDataForDropdown;
           // TODO: once spread directive available, use it per ref (like ref(refs?.dropdown?.ref))
           return html`
@@ -109,8 +107,8 @@ describe('WithFormControlInputTelDropdown', () => {
             >
               ${repeat(
                 data.regionMetaList,
-                regionMeta => regionMeta.regionCode,
-                regionMeta => html`
+                (regionMeta) => regionMeta.regionCode,
+                (regionMeta) => html`
                   <lion-option .choiceValue="${regionMeta.regionCode}"> </lion-option>
                 `,
               )}
@@ -120,14 +118,14 @@ describe('WithFormControlInputTelDropdown', () => {
       };
     }
     customElements.define('input-tel-dropdown-mac', InputTelDropdownMac);
-    const el = /** @type {LionInputTelDropdown} */ (
+    const el =
+      /** @type {LionInputTelDropdown} */
       await fixture(html`
         <input-tel-dropdown-mac
           .allowedRegions="${['NL', 'BE']}"
           .modelValue="${'+31612345678'}"
         ></input-tel-dropdown-mac>
-      `)
-    );
+      `);
     const dropdownElement = el.refs.dropdown.value;
     // @ts-expect-error [allow-protected-in-tests]
     if (dropdownElement?._overlayCtrl) {
@@ -140,7 +138,6 @@ describe('WithFormControlInputTelDropdown', () => {
       expect(isActiveElement(el._inputNode)).to.be.true;
     }
   });
-
   it('does not focus the textbox right after selection if selected via opened dropdown if interaction-mode is windows/linux', async () => {
     class InputTelDropdownWindows extends LionInputTelDropdown {
       static templates = {
@@ -148,7 +145,7 @@ describe('WithFormControlInputTelDropdown', () => {
         /**
          * @param {TemplateDataForDropdownInputTel} templateDataForDropdown
          */
-        dropdown: templateDataForDropdown => {
+        dropdown: (templateDataForDropdown) => {
           const { refs, data } = templateDataForDropdown;
           // TODO: once spread directive available, use it per ref (like ref(refs?.dropdown?.ref))
           return html`
@@ -162,8 +159,8 @@ describe('WithFormControlInputTelDropdown', () => {
             >
               ${repeat(
                 data.regionMetaList,
-                regionMeta => regionMeta.regionCode,
-                regionMeta => html`
+                (regionMeta) => regionMeta.regionCode,
+                (regionMeta) => html`
                   <lion-option .choiceValue="${regionMeta.regionCode}"> </lion-option>
                 `,
               )}
@@ -173,14 +170,14 @@ describe('WithFormControlInputTelDropdown', () => {
       };
     }
     customElements.define('input-tel-dropdown-windows', InputTelDropdownWindows);
-    const el = /** @type {LionInputTelDropdown} */ (
+    const el =
+      /** @type {LionInputTelDropdown} */
       await fixture(html`
         <input-tel-dropdown-windows
           .allowedRegions="${['NL', 'BE']}"
           .modelValue="${'+31612345678'}"
         ></input-tel-dropdown-windows>
-      `)
-    );
+      `);
     const dropdownElement = el.refs.dropdown.value;
     // @ts-expect-error [allow-protected-in-tests]
     if (dropdownElement?._overlayCtrl) {
@@ -193,37 +190,32 @@ describe('WithFormControlInputTelDropdown', () => {
       expect(isActiveElement(el._inputNode)).to.be.false;
     }
   });
-
   describe('defaultValidators', () => {
     /** @type {(value:any) => void} */
     let resolveLoaded;
     beforeEach(() => {
       ({ resolveLoaded } = mockPhoneUtilManager());
     });
-
     afterEach(() => {
       restorePhoneUtilManager();
     });
-
     it('without interaction are not called', async () => {
-      const el = /** @type {LionInputTelDropdown} */ (
+      const el =
+        /** @type {LionInputTelDropdown} */
         await fixture(html`
           <lion-input-tel-dropdown .allowedRegions="${['NL']}"></lion-input-tel-dropdown>
-        `)
-      );
+        `);
       resolveLoaded(undefined);
       await aTimeout(0);
       expect(el.hasFeedbackFor).to.deep.equal([]);
     });
-
     it('with interaction are called', async () => {
-      const el = /** @type {LionInputTelDropdown} */ (
+      const el =
+        /** @type {LionInputTelDropdown} */
         await fixture(html`
           <lion-input-tel-dropdown .allowedRegions="${['NL']}"></lion-input-tel-dropdown>
-        `)
-      );
+        `);
       el.modelValue = '+31 6';
-
       resolveLoaded(undefined);
       await aTimeout(0);
       expect(el.hasFeedbackFor).to.deep.equal(['error']);

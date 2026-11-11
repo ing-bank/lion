@@ -29,9 +29,7 @@ export function runFormGroupMixinInputSuite({
       };
     }
   };
-
   const childTagString = resolveSuiteTag(classes?.child, legacyChildTagString, FormChild);
-
   const FormGroup = class extends FormGroupMixin(LitElement) {
     constructor() {
       super();
@@ -43,40 +41,34 @@ export function runFormGroupMixinInputSuite({
       this._repropagationRole = 'fieldset'; // configures FormControlMixin
     }
   };
-
   const tagString = resolveSuiteTag(classes?.host, legacyTagString, FormGroup);
   const tag = unsafeStatic(tagString);
   const childTag = unsafeStatic(childTagString);
-
   beforeEach(() => {
     localizeTearDown();
   });
-
   describe('FormGroupMixin with LionField', () => {
     it('serializes undefined values as "" (nb radios/checkboxes are always serialized)', async () => {
-      const fieldset = /**  @type {InstanceType<typeof FormGroup>} */ (
+      const fieldset =
+        /**  @type {InstanceType<typeof FormGroup>} */
         await fixture(html`
         <${tag}>
           <${childTag} name="custom[]"></${childTag}>
           <${childTag} name="custom[]"></${childTag}>
         </${tag}>
-      `)
-      );
+      `);
       fieldset.formElements['custom[]'][0].modelValue = 'custom 1';
       fieldset.formElements['custom[]'][1].modelValue = undefined;
-
       expect(fieldset.serializedValue).to.deep.equal({
         'custom[]': ['custom 1', ''],
       });
     });
   });
-
   describe('Screen reader relations (aria-describedby) for child inputs and fieldsets', () => {
     /** @type {Function} */
     let childAriaFixture;
     /** @type {Function} */
     let childAriaTest;
-
     before(() => {
       // Legend:
       // - l1 means level 1 (outer) fieldset
@@ -88,7 +80,8 @@ export function runFormGroupMixinInputSuite({
       childAriaFixture = async (
         msgSlotType = 'feedback', // eslint-disable-line no-shadow
       ) => {
-        const dom = /**  @type {InstanceType<typeof FormGroup>} */ (
+        const dom =
+          /**  @type {InstanceType<typeof FormGroup>} */
           await fixture(html`
         <${tag} name="l1_g">
           <${childTag} name="l1_fa">
@@ -123,51 +116,49 @@ export function runFormGroupMixinInputSuite({
           <div slot="${msgSlotType}" id="msg_l1_g"></div>
           <!-- group referred by: #msg_l1_g (local) -->
         </${tag}>
-      `)
-        );
+      `);
         return dom;
       };
-
       childAriaTest = async (
         // eslint-disable-next-line no-shadow
-        /** @type {InstanceType<typeof FormGroup>} */ childAriaFixture,
+        /** @type {InstanceType<typeof FormGroup>} */
+        childAriaFixture,
         { cleanupPhase = false } = {},
       ) => {
         /* eslint-disable camelcase */
         // Message elements: all elements pointed at by inputs
-        const msg_l1_g = /** @type {InstanceType<typeof FormGroup>} */ (
-          childAriaFixture.querySelector('#msg_l1_g')
-        );
-        const msg_l1_fa = /** @type {InstanceType<typeof FormChild>} */ (
-          childAriaFixture.querySelector('#msg_l1_fa')
-        );
-        const msg_l1_fb = /** @type {InstanceType<typeof FormChild>} */ (
-          childAriaFixture.querySelector('#msg_l1_fb')
-        );
-        const msg_l2_g = /** @type {InstanceType<typeof FormGroup>} */ (
-          childAriaFixture.querySelector('#msg_l2_g')
-        );
-        const msg_l2_fa = /** @type {InstanceType<typeof FormChild>} */ (
-          childAriaFixture.querySelector('#msg_l2_fa')
-        );
-        const msg_l2_fb = /** @type {InstanceType<typeof FormChild>} */ (
-          childAriaFixture.querySelector('#msg_l2_fb')
-        );
+        const msg_l1_g =
+          /** @type {InstanceType<typeof FormGroup>} */
+          childAriaFixture.querySelector('#msg_l1_g');
+        const msg_l1_fa =
+          /** @type {InstanceType<typeof FormChild>} */
+          childAriaFixture.querySelector('#msg_l1_fa');
+        const msg_l1_fb =
+          /** @type {InstanceType<typeof FormChild>} */
+          childAriaFixture.querySelector('#msg_l1_fb');
+        const msg_l2_g =
+          /** @type {InstanceType<typeof FormGroup>} */
+          childAriaFixture.querySelector('#msg_l2_g');
+        const msg_l2_fa =
+          /** @type {InstanceType<typeof FormChild>} */
+          childAriaFixture.querySelector('#msg_l2_fa');
+        const msg_l2_fb =
+          /** @type {InstanceType<typeof FormChild>} */
+          childAriaFixture.querySelector('#msg_l2_fb');
 
         // Field elements: all inputs pointing to message elements
-        const input_l1_fa = /** @type {HTMLInputElement} */ (
-          childAriaFixture.querySelector('input[name=l1_fa]')
-        );
-        const input_l1_fb = /** @type {HTMLInputElement} */ (
-          childAriaFixture.querySelector('input[name=l1_fb]')
-        );
-        const input_l2_fa = /** @type {HTMLInputElement} */ (
-          childAriaFixture.querySelector('input[name=l2_fa]')
-        );
-        const input_l2_fb = /** @type {HTMLInputElement} */ (
-          childAriaFixture.querySelector('input[name=l2_fb]')
-        );
-
+        const input_l1_fa =
+          /** @type {HTMLInputElement} */
+          childAriaFixture.querySelector('input[name=l1_fa]');
+        const input_l1_fb =
+          /** @type {HTMLInputElement} */
+          childAriaFixture.querySelector('input[name=l1_fb]');
+        const input_l2_fa =
+          /** @type {HTMLInputElement} */
+          childAriaFixture.querySelector('input[name=l2_fa]');
+        const input_l2_fb =
+          /** @type {HTMLInputElement} */
+          childAriaFixture.querySelector('input[name=l2_fb]');
         if (!cleanupPhase) {
           // 'L1' fields (inside lion-fieldset[name="l1_g"]) should point to l1(group) msg
           expect(input_l1_fa.getAttribute('aria-describedby')).to.contain(
@@ -202,7 +193,7 @@ export function runFormGroupMixinInputSuite({
 
           // Check order: the nearest ('dom wise': so 1. local, 2. parent, 3. grandparent) message
           // should be read first by screen reader
-          const dA = /** @type {string} */ (input_l2_fa.getAttribute('aria-describedby'));
+          const dA = /** @type {string} */ input_l2_fa.getAttribute('aria-describedby');
           expect(
             // @ts-expect-error
             dA.indexOf(msg_l2_fa.id) < dA.indexOf(msg_l2_g.id) < dA.indexOf(msg_l1_g.id),
@@ -214,18 +205,18 @@ export function runFormGroupMixinInputSuite({
           ).to.equal(true, 'order of ids');
         } else {
           // cleanupPhase
-          const control_l1_fa = /** @type {LionField} */ (
-            childAriaFixture.querySelector('[name=l1_fa]')
-          );
-          const control_l1_fb = /** @type {LionField} */ (
-            childAriaFixture.querySelector('[name=l1_fb]')
-          );
-          const control_l2_fa = /** @type {LionField} */ (
-            childAriaFixture.querySelector('[name=l2_fa]')
-          );
-          const control_l2_fb = /** @type {LionField} */ (
-            childAriaFixture.querySelector('[name=l2_fb]')
-          );
+          const control_l1_fa =
+            /** @type {LionField} */
+            childAriaFixture.querySelector('[name=l1_fa]');
+          const control_l1_fb =
+            /** @type {LionField} */
+            childAriaFixture.querySelector('[name=l1_fb]');
+          const control_l2_fa =
+            /** @type {LionField} */
+            childAriaFixture.querySelector('[name=l2_fa]');
+          const control_l2_fb =
+            /** @type {LionField} */
+            childAriaFixture.querySelector('[name=l2_fb]');
 
           // @ts-expect-error removeChild should always be inherited via LitElement?
           control_l1_fa._parentFormGroup.removeChild(control_l1_fa);
@@ -272,9 +263,9 @@ export function runFormGroupMixinInputSuite({
           );
 
           // Check cleanup of FormGroup on disconnect
-          const l2_g = /** @type {InstanceType<typeof FormGroup>} */ (
-            childAriaFixture.querySelector('[name=l2_g]')
-          );
+          const l2_g =
+            /** @type {InstanceType<typeof FormGroup>} */
+            childAriaFixture.querySelector('[name=l2_g]');
           // @ts-ignore [allow-private] in test
           expect(l2_g.__descriptionElementsInParentChain.size).to.not.equal(0);
           // @ts-expect-error removeChild should always be inherited via LitElement?
@@ -286,7 +277,6 @@ export function runFormGroupMixinInputSuite({
         /* eslint-enable camelcase */
       };
     });
-
     it(`reads feedback message belonging to fieldset when child input is focused
         (via aria-describedby)`, async () => {
       await childAriaTest(await childAriaFixture('feedback'));
@@ -295,7 +285,9 @@ export function runFormGroupMixinInputSuite({
     // TODO: wait for updated on disconnected to be fixed: https://github.com/lit/lit/issues/1901
     it.skip(`cleans up feedback message belonging to fieldset on disconnect`, async () => {
       const el = await childAriaFixture('feedback');
-      await childAriaTest(el, { cleanupPhase: true });
+      await childAriaTest(el, {
+        cleanupPhase: true,
+      });
     });
   });
 }

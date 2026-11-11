@@ -27,7 +27,14 @@ const resolveLionImport = moduleResolvedPath => {
     return `/${NODE_MODULES_LION_DOCS}${moduleResolvedPath.split(LION_DOCS_DIR)[1]}`;
   }
 
-  return moduleResolvedPath.split(NODE_MODULES_PATH)[1];
+  // The *last* `node_modules` segment, not the first: pnpm keeps a second level
+  // (`<root>/node_modules/.pnpm/<name>@<version>/node_modules/<name>/...`), so splitting on the first one
+  // emitted `/node_modules/.pnpm/@mdjs+mdjs-preview@0.6.0_patch_hash=...`, which resolves nowhere and failed
+  // the portal build ("Rollup failed to resolve import \"/node_modules/.pnpm/@mdjs+mdjs-preview@..."). npm's
+  // flat tree resolves to the same result as before.
+  return moduleResolvedPath.slice(
+    moduleResolvedPath.lastIndexOf(NODE_MODULES_PATH) + NODE_MODULES_PATH.length,
+  );
 };
 
 const getLog = input =>

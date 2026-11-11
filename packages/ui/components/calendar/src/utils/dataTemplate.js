@@ -12,7 +12,7 @@ export function dataTemplate(
   return html`
     <div id="js-content-wrapper">
       ${data.months.map(
-        month => html`
+        (month) => html`
           <table
             role="grid"
             data-wrap-cols
@@ -38,10 +38,14 @@ export function dataTemplate(
             </thead>
             <tbody>
               ${month.weeks.map(
-                week => html`
+                (week) => html`
                   <tr role="row">
-                    ${week.days.map(day =>
-                      dayTemplate(day, { weekdaysShort, weekdays, monthsLabels }),
+                    ${week.days.map((day) =>
+                      dayTemplate(day, {
+                        weekdaysShort,
+                        weekdays,
+                        monthsLabels,
+                      }),
                     )}
                   </tr>
                 `,

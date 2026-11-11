@@ -15,23 +15,20 @@ import { OverlayMixin } from './OverlayMixin.js';
  * @param {import('@open-wc/dedupe-mixin').Constructor<import('lit').LitElement>} superclass
  */
 // prettier-ignore
-export const ArrowMixinImplementation = /** @type {ArrowMixin} */ (superclass =>
-  class ArrowMixin extends OverlayMixin(superclass) {
-    static get properties() {
-      return {
-        hasArrow: {
-          type: Boolean,
-          reflect: true,
-          attribute: 'has-arrow',
-        },
-      };
-    }
-
-    static get styles() {
-      return [
-        // @ts-ignore [ts7-2855] TS7 rejects field access via super (the parent declares this as a field). Dot form kept deliberately: bracket access is exempt from property mangling (terser keep_quoted), which could split this property into two names. Upstream fix: declare an accessor in the parent type
-        .../** @type {CSSResultArray} */ (super.styles || []),
-        css`
+export const ArrowMixinImplementation = /** @type {ArrowMixin} */superclass => class ArrowMixin extends OverlayMixin(superclass) {
+  static get properties() {
+    return {
+      hasArrow: {
+        type: Boolean,
+        reflect: true,
+        attribute: 'has-arrow'
+      }
+    };
+  }
+  static get styles() {
+    return [
+    // @ts-ignore [ts7-2855] TS7 rejects field access via super (the parent declares this as a field). Dot form kept deliberately: bracket access is exempt from property mangling (terser keep_quoted), which could split this property into two names. Upstream fix: declare an accessor in the parent type
+    ...(/** @type {CSSResultArray} */super.styles || []), css`
           :host {
             --tooltip-arrow-width: 12px;
             --tooltip-arrow-height: 8px;
@@ -94,132 +91,119 @@ export const ArrowMixinImplementation = /** @type {ArrowMixin} */ (superclass =>
           :host(:not([has-arrow])) .arrow {
             display: none;
           }
-        `,
-      ];
-    }
-
-    constructor() {
-      super();
-      this.hasArrow = true;
-      /** @private */
-      this.__setupRepositionCompletePromise();
-    }
-
-    render() {
-      return html`
+        `];
+  }
+  constructor() {
+    super();
+    this.hasArrow = true;
+    /** @private */
+    this.__setupRepositionCompletePromise();
+  }
+  render() {
+    return html`
         <slot name="invoker"></slot>
         <div id="overlay-content-node-wrapper">
           <slot name="content"></slot>
           ${this._arrowNodeTemplate()}
         </div>
       `;
-    }
+  }
 
-    /** @protected */
-    _arrowNodeTemplate() {
-      return html`
+  /** @protected */
+  _arrowNodeTemplate() {
+    return html`
         <div class="arrow" aria-hidden="true" data-popper-arrow>${this._arrowTemplate()}</div>
       `;
-    }
+  }
 
-    /** @protected */
-    // eslint-disable-next-line class-methods-use-this
-    _arrowTemplate() {
-      return html`
+  /** @protected */
+  // eslint-disable-next-line class-methods-use-this
+  _arrowTemplate() {
+    return html`
         <svg viewBox="0 0 12 8" class="arrow__graphic">
           <path d="M 0,0 h 12 L 6,8 z"></path>
         </svg>
       `;
-    }
+  }
 
-    /**
-     * Overrides arrow and keepTogether modifier to be enabled,
-     * and adds onCreate and onUpdate hooks to sync from popper state
-     * @configure OverlayMixin
-     * @returns {OverlayConfig}
-     * @protected
-     */
-    // eslint-disable-next-line
-    _defineOverlayConfig() {
-      const superConfig = super._defineOverlayConfig() || {};
-      if (!this.hasArrow) {
-        return superConfig;
+  /**
+   * Overrides arrow and keepTogether modifier to be enabled,
+   * and adds onCreate and onUpdate hooks to sync from popper state
+   * @configure OverlayMixin
+   * @returns {OverlayConfig}
+   * @protected
+   */
+  // eslint-disable-next-line
+  _defineOverlayConfig() {
+    const superConfig = super._defineOverlayConfig() || {};
+    if (!this.hasArrow) {
+      return superConfig;
+    }
+    return {
+      ...superConfig,
+      popperConfig: {
+        ...this._getPopperArrowConfig(/** @type {Partial<PopperOptions>} */superConfig.popperConfig)
       }
-      return {
-        ...superConfig,
-        popperConfig: {
-          ...this._getPopperArrowConfig(
-            /** @type {Partial<PopperOptions>} */ (superConfig.popperConfig),
-          ),
-        },
-      };
-    }
+    };
+  }
 
-    /**
-     * @param {Partial<PopperOptions>} popperConfigToExtendFrom
-     * @returns {Partial<PopperOptions>}
-     * @protected
-     */
-    _getPopperArrowConfig(popperConfigToExtendFrom) {
-      /** @type {Partial<PopperOptions> & { afterWrite: (arg0: Partial<import('@popperjs/core/lib/popper.js').State>) => void }} */
-      const popperCfg = {
-        ...(popperConfigToExtendFrom || {}),
-        placement: /** @type {Placement} */ ('top'),
-        modifiers: [
-          {
-            name: 'arrow',
-            enabled: true,
-            options: {
-              padding: 8, // 8px from the edges of the popper
-            },
-          },
-          {
-            name: 'offset',
-            enabled: true,
-            options: { offset: [0, 8] },
-          },
-          ...((popperConfigToExtendFrom && popperConfigToExtendFrom.modifiers) || []),
-        ],
-        /** @param {Partial<import('@popperjs/core/lib/popper.js').State>} data */
-        onFirstUpdate: data => {
-          this.__syncFromPopperState(data);
-        },
-        /** @param {Partial<import('@popperjs/core/lib/popper.js').State>} data */
-        afterWrite: data => {
-          this.__syncFromPopperState(data);
-        },
-      };
-
-      return popperCfg;
-    }
-
-    /** @private */
-    __setupRepositionCompletePromise() {
-      this.repositionComplete = new Promise(resolve => {
-        this.__repositionCompleteResolver = resolve;
-      });
-    }
-
-    get _arrowNode() {
-      return /** @type {ShadowRoot} */ (this.shadowRoot).querySelector('[data-popper-arrow]');
-    }
-
-    /**
-     * @param {Partial<import('@popperjs/core/lib/popper.js').State>} data
-     * @private
-     */
-    __syncFromPopperState(data) {
-      if (!data) {
-        return;
+  /**
+   * @param {Partial<PopperOptions>} popperConfigToExtendFrom
+   * @returns {Partial<PopperOptions>}
+   * @protected
+   */
+  _getPopperArrowConfig(popperConfigToExtendFrom) {
+    /** @type {Partial<PopperOptions> & { afterWrite: (arg0: Partial<import('@popperjs/core/lib/popper.js').State>) => void }} */
+    const popperCfg = {
+      ...(popperConfigToExtendFrom || {}),
+      placement: (/** @type {Placement} */'top'),
+      modifiers: [{
+        name: 'arrow',
+        enabled: true,
+        options: {
+          padding: 8 // 8px from the edges of the popper
+        }
+      }, {
+        name: 'offset',
+        enabled: true,
+        options: {
+          offset: [0, 8]
+        }
+      }, ...(popperConfigToExtendFrom && popperConfigToExtendFrom.modifiers || [])],
+      /** @param {Partial<import('@popperjs/core/lib/popper.js').State>} data */
+      onFirstUpdate: data => {
+        this.__syncFromPopperState(data);
+      },
+      /** @param {Partial<import('@popperjs/core/lib/popper.js').State>} data */
+      afterWrite: data => {
+        this.__syncFromPopperState(data);
       }
-      if (
-        this._arrowNode &&
-        data.placement !== /** @type {Element & {placement:string}} */ (this._arrowNode).placement
-      ) {
-        /** @type {function} */ (this.__repositionCompleteResolver)(data.placement);
-        this.__setupRepositionCompletePromise();
-      }
-    }
-  });
+    };
+    return popperCfg;
+  }
 
+  /** @private */
+  __setupRepositionCompletePromise() {
+    this.repositionComplete = new Promise(resolve => {
+      this.__repositionCompleteResolver = resolve;
+    });
+  }
+  get _arrowNode() {
+    return /** @type {ShadowRoot} */this.shadowRoot.querySelector('[data-popper-arrow]');
+  }
+
+  /**
+   * @param {Partial<import('@popperjs/core/lib/popper.js').State>} data
+   * @private
+   */
+  __syncFromPopperState(data) {
+    if (!data) {
+      return;
+    }
+    if (this._arrowNode && data.placement !== /** @type {Element & {placement:string}} */this._arrowNode.placement) {
+      /** @type {function} */this.__repositionCompleteResolver(data.placement);
+      this.__setupRepositionCompletePromise();
+    }
+  }
+};
 export const ArrowMixin = dedupeMixin(ArrowMixinImplementation);

@@ -27,7 +27,6 @@ export function getDateFormatBasedOnLocale(locale) {
       const key = dateParts[index];
       return template[key];
     }
-
     return [1, 3, 5].map(getPartByIndex);
   }
 
@@ -36,13 +35,16 @@ export function getDateFormatBasedOnLocale(locale) {
   date.setDate(20);
   date.setMonth(11);
   date.setFullYear(2012);
-  const options = locale ? { locale } : {};
+  const options = locale
+    ? {
+        locale,
+      }
+    : {};
   // Strange characters added by IE11 need to be taken into account here
   const formattedDate = sanitizedDateTimeFormat(date, options);
 
   // For Dutch locale, dateParts would match: [ 1:'20', 2:'-', 3:'12', 4:'-', 5:'2012' ]
   const dateParts = splitDate(formattedDate);
-
   const dateFormat = {};
   if (dateParts) {
     dateFormat.positions = computePositions(dateParts);

@@ -32,7 +32,6 @@ export class LionButtonReset extends LionButton {
     /** @type {EventListener} */
     this.__preventEventLeakage = this.__preventEventLeakage.bind(this);
   }
-
   connectedCallback() {
     super.connectedCallback();
     // Old browsers (IE11, Old Edge, Firefox ESR 60) don't have the `.form`
@@ -41,7 +40,6 @@ export class LionButtonReset extends LionButton {
       this._setupSubmitAndResetHelperOnConnected();
     });
   }
-
   disconnectedCallback() {
     super.disconnectedCallback();
     this._teardownSubmitAndResetHelperOnDisconnected();
@@ -67,7 +65,6 @@ export class LionButtonReset extends LionButton {
     /** @type {HTMLFormElement|null} */
     this._form = this.__submitAndResetHelperButton.form;
     this.removeChild(this.__submitAndResetHelperButton);
-
     if (this._form) {
       this._form.addEventListener('click', this.__preventEventLeakage);
     }
@@ -96,7 +93,6 @@ export class LionButtonReset extends LionButton {
     if (!this._form) {
       await this.updateComplete;
     }
-
     if ((this.type === 'submit' || this.type === 'reset') && ev.target === this && this._form) {
       /**
        * Here, we make sure our button is compatible with a native form, by firing a click
@@ -107,7 +103,6 @@ export class LionButtonReset extends LionButton {
        * absolute minimum.
        */
       this.__submitAndResetHelperButton.type = this.type;
-
       this._form.appendChild(this.__submitAndResetHelperButton);
       // Form submission or reset will happen
       this.__submitAndResetHelperButton.click();

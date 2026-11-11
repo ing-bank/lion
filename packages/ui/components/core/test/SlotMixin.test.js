@@ -3,7 +3,6 @@ import { SlotMixin } from '@lion/ui/core.js';
 import { LitElement } from 'lit';
 import sinon from 'sinon';
 import { moveUserProvidedDefaultSlottablesToTarget } from '../src/SlotMixin.js';
-
 import { ScopedElementsMixin, supportsScopedRegistry } from '../src/ScopedElementsMixin.js';
 import { isActiveElement } from '../test-helpers/isActiveElement.js';
 
@@ -15,13 +14,14 @@ describe('SlotMixin', () => {
   it('preserves a subclass constructor when the mixin is reapplied', () => {
     class SlottedElement extends SlotMixin(LitElement) {
       get slots() {
-        return { ...super.slots, content: () => document.createElement('span') };
+        return {
+          ...super.slots,
+          content: () => document.createElement('span'),
+        };
       }
     }
-
     expect(SlotMixin(SlottedElement)).to.equal(SlottedElement);
   });
-
   it('inserts provided element into light dom and sets slot', async () => {
     const tag = defineCE(
       class extends SlotMixin(LitElement) {
@@ -36,7 +36,6 @@ describe('SlotMixin', () => {
     const el = await fixture(`<${tag}></${tag}>`);
     expect(el.children[0].slot).to.equal('feedback');
   });
-
   it("supports default slot with ''", async () => {
     const tag = defineCE(
       class extends SlotMixin(LitElement) {
@@ -52,7 +51,6 @@ describe('SlotMixin', () => {
     expect(el.children[0].slot).to.equal('');
     expect(el.children[0]).dom.to.equal('<div></div>');
   });
-
   it('supports default slot in conjunction with named slots', async () => {
     const tag = defineCE(
       class extends SlotMixin(LitElement) {
@@ -71,7 +69,6 @@ describe('SlotMixin', () => {
     expect(el.children[0]).dom.to.equal('<a slot="foo"></a>');
     expect(el.children[1]).dom.to.equal('<div></div>');
   });
-
   it('does not override user provided slots', async () => {
     const shouldReturn = false;
     const tag = defineCE(
@@ -93,12 +90,10 @@ describe('SlotMixin', () => {
     );
     const el = await fixture(`<${tag}><p slot="feedback">user-content</p></${tag}>`);
     expect(el.children[0].tagName).to.equal('P');
-    expect(/** @type HTMLParagraphElement */ (el.children[0]).innerText).to.equal('user-content');
-
+    expect(/** @type HTMLParagraphElement */ el.children[0].innerText).to.equal('user-content');
     expect(el.children[1].tagName).to.equal('DIV');
-    expect(/** @type HTMLParagraphElement */ (el.children[1]).slot).to.equal('even-more-feedback');
+    expect(/** @type HTMLParagraphElement */ el.children[1].slot).to.equal('even-more-feedback');
   });
-
   it('does add when user provided slots are not direct children', async () => {
     const tag = defineCE(
       class extends SlotMixin(LitElement) {
@@ -111,13 +106,12 @@ describe('SlotMixin', () => {
       },
     );
     const el = await fixture(`<${tag}><p><span slot="content">user-content</span></p></${tag}>`);
-    const slot = /** @type HTMLDivElement */ (
-      Array.from(el.children).find(elm => elm.slot === 'content')
-    );
+    const slot =
+      /** @type HTMLDivElement */
+      Array.from(el.children).find((elm) => elm.slot === 'content');
     expect(slot.tagName).to.equal('DIV');
     expect(slot.innerText).to.equal('');
   });
-
   it("allows to check which slots have been created via this._isPrivateSlot('slotname')", async () => {
     let renderSlot = true;
     class SlotPrivateText extends SlotMixin(LitElement) {
@@ -127,24 +121,21 @@ describe('SlotMixin', () => {
           conditional: () => (renderSlot ? document.createElement('div') : undefined),
         };
       }
-
       didCreateConditionalSlot() {
         return this._isPrivateSlot('conditional');
       }
     }
-
     const tag = defineCE(SlotPrivateText);
-    const el = /** @type {SlotPrivateText} */ (await fixture(`<${tag}><${tag}>`));
+    const el = /** @type {SlotPrivateText} */ await fixture(`<${tag}><${tag}>`);
     expect(el.didCreateConditionalSlot()).to.be.true;
-    const elUserSlot = /** @type {SlotPrivateText} */ (
-      await fixture(`<${tag}><p slot="conditional">foo</p><${tag}>`)
-    );
+    const elUserSlot =
+      /** @type {SlotPrivateText} */
+      await fixture(`<${tag}><p slot="conditional">foo</p><${tag}>`);
     expect(elUserSlot.didCreateConditionalSlot()).to.be.false;
     renderSlot = false;
-    const elNoSlot = /** @type {SlotPrivateText} */ (await fixture(`<${tag}><${tag}>`));
+    const elNoSlot = /** @type {SlotPrivateText} */ await fixture(`<${tag}><${tag}>`);
     expect(elNoSlot.didCreateConditionalSlot()).to.be.false;
   });
-
   it('should move default slots to target', async () => {
     const target = document.createElement('div');
     const source = document.createElement('div');
@@ -218,7 +209,6 @@ describe('SlotMixin', () => {
       <div class="test3"></div>
       ${namedSlottable}
     `;
-
     moveUserProvidedDefaultSlottablesToTarget(source, target);
     expect(target.children.length).to.equal(3);
     const test1Element = target.querySelector('.test1');
@@ -228,60 +218,55 @@ describe('SlotMixin', () => {
     expect(test2Element?.parentElement === target).to.equal(true);
     expect(test3Element?.parentElement === target).to.equal(true);
   });
-
   describe('Rerender', () => {
     it('supports rerender when SlotRerenderObject provided', async () => {
       const tag = defineCE(
         // @ts-expect-error
         class extends SlotMixin(LitElement) {
-          static properties = { currentValue: Number };
-
+          static properties = {
+            currentValue: Number,
+          };
           constructor() {
             super();
             this.currentValue = 0;
           }
-
           get slots() {
             return {
               ...super.slots,
-              template: () => ({ template: html`<span>${this.currentValue}</span> ` }),
+              template: () => ({
+                template: html`<span>${this.currentValue}</span> `,
+              }),
             };
           }
-
           render() {
             return html`<slot name="template"></slot>`;
           }
-
           get _templateNode() {
-            return /** @type HTMLSpanElement */ (
-              Array.from(this.children).find(elm => elm.slot === 'template')
+            return /** @type HTMLSpanElement */ Array.from(this.children).find(
+              (elm) => elm.slot === 'template',
             );
           }
         },
       );
-      const el = /** @type {* & SlotHost} */ (await fixture(`<${tag}></${tag}>`));
+      const el = /** @type {* & SlotHost} */ await fixture(`<${tag}></${tag}>`);
       await el.updateComplete;
-
       expect(el._templateNode.slot).to.equal('template');
       expect(el._templateNode.textContent?.trim()).to.equal('0');
-
       el.currentValue = 1;
       await el.updateComplete;
-
       expect(el._templateNode.textContent?.trim()).to.equal('1');
     });
-
     it('keeps focus after rerender', async () => {
       const tag = defineCE(
         // @ts-expect-error
         class extends SlotMixin(LitElement) {
-          static properties = { currentValue: Number };
-
+          static properties = {
+            currentValue: Number,
+          };
           constructor() {
             super();
             this.currentValue = 0;
           }
-
           get slots() {
             return {
               ...super.slots,
@@ -291,29 +276,23 @@ describe('SlotMixin', () => {
               }),
             };
           }
-
           render() {
             return html`<slot name="focusable-node"></slot>`;
           }
-
           get _focusableNode() {
-            return /** @type HTMLSpanElement */ (
-              Array.from(this.children).find(elm => elm.slot === 'focusable-node')
-                ?.firstElementChild
-            );
+            return /** @type HTMLSpanElement */ Array.from(this.children).find(
+              (elm) => elm.slot === 'focusable-node',
+            )?.firstElementChild;
           }
         },
       );
-      const el = /** @type {* & SlotHost} */ (await fixture(`<${tag}></${tag}>`));
+      const el = /** @type {* & SlotHost} */ await fixture(`<${tag}></${tag}>`);
       el._focusableNode.focus();
       expect(isActiveElement(el._focusableNode)).to.be.true;
-
       el.currentValue = 1;
       await el.updateComplete;
-
       expect(isActiveElement(el._focusableNode)).to.be.true;
     });
-
     it('keeps focus after rerendering complex shadow root into slot', async () => {
       const complexSlotTagName = defineCE(
         class extends LitElement {
@@ -323,26 +302,23 @@ describe('SlotMixin', () => {
               <button>I will be focused</button>
             `;
           }
-
           get _buttonNode() {
             // @ts-expect-error
             return this.shadowRoot.querySelector('button');
           }
         },
       );
-
       const complexSlotTag = unsafeStatic(complexSlotTagName);
-
       const tagName = defineCE(
         // @ts-expect-error
         class extends SlotMixin(LitElement) {
-          static properties = { currentValue: Number };
-
+          static properties = {
+            currentValue: Number,
+          };
           constructor() {
             super();
             this.currentValue = 0;
           }
-
           get slots() {
             return {
               ...super.slots,
@@ -351,32 +327,32 @@ describe('SlotMixin', () => {
               }),
             };
           }
-
           render() {
             return html`<slot name="focusable-node"></slot>`;
           }
-
           get _focusableNode() {
-            return /** @type HTMLSpanElement */ (
-              Array.from(this.children).find(elm => elm.slot === 'focusable-node')
-                ?.firstElementChild
-            );
+            return /** @type HTMLSpanElement */ Array.from(this.children).find(
+              (elm) => elm.slot === 'focusable-node',
+            )?.firstElementChild;
           }
         },
       );
-      const el = /** @type {* & SlotHost} */ (await fixture(`<${tagName}></${tagName}>`));
-
+      const el = /** @type {* & SlotHost} */ await fixture(`<${tagName}></${tagName}>`);
       el._focusableNode._buttonNode.focus();
-
-      expect(isActiveElement(el._focusableNode._buttonNode, { deep: true })).to.be.true;
-
+      expect(
+        isActiveElement(el._focusableNode._buttonNode, {
+          deep: true,
+        }),
+      ).to.be.true;
       el.currentValue = 1;
       await el.updateComplete;
-
       expect(isActiveElement(el._focusableNode)).to.be.true;
-      expect(isActiveElement(el._focusableNode._buttonNode, { deep: true })).to.be.true;
+      expect(
+        isActiveElement(el._focusableNode._buttonNode, {
+          deep: true,
+        }),
+      ).to.be.true;
     });
-
     it('allows for rerendering complex shadow root into slot as a direct child', async () => {
       const complexSlotTagName = defineCE(
         class extends LitElement {
@@ -386,26 +362,23 @@ describe('SlotMixin', () => {
               <button>I will be focused</button>
             `;
           }
-
           get _buttonNode() {
             // @ts-expect-error
             return this.shadowRoot.querySelector('button');
           }
         },
       );
-
       const complexSlotTag = unsafeStatic(complexSlotTagName);
-
       const tagName = defineCE(
         // @ts-expect-error
         class extends SlotMixin(LitElement) {
-          static properties = { currentValue: Number };
-
+          static properties = {
+            currentValue: Number,
+          };
           constructor() {
             super();
             this.currentValue = 0;
           }
-
           get slots() {
             return {
               ...super.slots,
@@ -415,42 +388,43 @@ describe('SlotMixin', () => {
               }),
             };
           }
-
           render() {
             return html`<slot name="focusable-node"></slot>`;
           }
-
           get _focusableNode() {
-            return /** @type HTMLSpanElement */ (
-              Array.from(this.children).find(elm => elm.slot === 'focusable-node')
+            return /** @type HTMLSpanElement */ Array.from(this.children).find(
+              (elm) => elm.slot === 'focusable-node',
             );
           }
         },
       );
-      const el = /** @type {* & SlotHost} */ (await fixture(`<${tagName}></${tagName}>`));
-
+      const el = /** @type {* & SlotHost} */ await fixture(`<${tagName}></${tagName}>`);
       el._focusableNode._buttonNode.focus();
-
-      expect(isActiveElement(el._focusableNode._buttonNode, { deep: true })).to.be.true;
-
+      expect(
+        isActiveElement(el._focusableNode._buttonNode, {
+          deep: true,
+        }),
+      ).to.be.true;
       el.currentValue = 1;
       await el.updateComplete;
-
       expect(isActiveElement(el._focusableNode)).to.be.true;
-      expect(isActiveElement(el._focusableNode._buttonNode, { deep: true })).to.be.true;
+      expect(
+        isActiveElement(el._focusableNode._buttonNode, {
+          deep: true,
+        }),
+      ).to.be.true;
     });
-
     it('allows for switching template root in slot as a direct child', async () => {
       const tagName = defineCE(
         // @ts-expect-error
         class extends SlotMixin(LitElement) {
-          static properties = { isSwitched: Boolean };
-
+          static properties = {
+            isSwitched: Boolean,
+          };
           constructor() {
             super();
             this.isSwitched = false;
           }
-
           get slots() {
             return {
               ...super.slots,
@@ -462,47 +436,41 @@ describe('SlotMixin', () => {
               }),
             };
           }
-
           render() {
             return html`<slot name="my-root-switcher-node"></slot>`;
           }
-
           get _myRootSwitcherNode() {
-            return /** @type HTMLSpanElement */ (
-              Array.from(this.children).find(elm => elm.slot === 'my-root-switcher-node')
+            return /** @type HTMLSpanElement */ Array.from(this.children).find(
+              (elm) => elm.slot === 'my-root-switcher-node',
             );
           }
         },
       );
-      const el = /** @type {* & SlotHost} */ (await fixture(`<${tagName}></${tagName}>`));
-
+      const el = /** @type {* & SlotHost} */ await fixture(`<${tagName}></${tagName}>`);
       expect(el._myRootSwitcherNode.id).to.equal('is-not-switched');
       expect(el.innerHTML).to.equal(
         `<!--_start_slot_my-root-switcher-node_--><!----><span id="is-not-switched" slot="my-root-switcher-node"> </span> <!--_end_slot_my-root-switcher-node_-->`,
       );
-
       el.isSwitched = true;
       await el.updateComplete;
-
       expect(el._myRootSwitcherNode.id).to.equal('is-switched');
       expect(el.innerHTML).to.equal(
         `<!--_start_slot_my-root-switcher-node_--><!----><div id="is-switched" slot="my-root-switcher-node"></div><!--_end_slot_my-root-switcher-node_-->`,
       );
     });
-
     describe('firstRenderOnConnected (for backwards compatibility)', () => {
       it('does render on connected when firstRenderOnConnected:true', async () => {
         // Start with elem that does not render on connectedCallback
         const tag = defineCE(
           // @ts-expect-error
           class extends SlotMixin(LitElement) {
-            static properties = { currentValue: Number };
-
+            static properties = {
+              currentValue: Number,
+            };
             constructor() {
               super();
               this.currentValue = 0;
             }
-
             get slots() {
               return {
                 ...super.slots,
@@ -512,54 +480,51 @@ describe('SlotMixin', () => {
                 }),
               };
             }
-
             render() {
               return html`<slot name="template"></slot>`;
             }
-
             get _templateNode() {
-              return /** @type HTMLSpanElement */ (
-                Array.from(this.children).find(elm => elm.slot === 'template')
+              return /** @type HTMLSpanElement */ Array.from(this.children).find(
+                (elm) => elm.slot === 'template',
               );
             }
           },
         );
-        const el = /** @type {* & SlotHost} */ (fixtureSync(`<${tag}></${tag}>`));
+        const el = /** @type {* & SlotHost} */ fixtureSync(`<${tag}></${tag}>`);
         expect(el._templateNode.slot).to.equal('template');
         expect(el._templateNode.textContent?.trim()).to.equal('0');
       });
-
       it('does not render on connected when firstRenderOnConnected:false', async () => {
         // Start with elem that does not render on connectedCallback
         const tag = defineCE(
           // @ts-expect-error
           class extends SlotMixin(LitElement) {
-            static properties = { currentValue: Number };
-
+            static properties = {
+              currentValue: Number,
+            };
             constructor() {
               super();
               this.currentValue = 0;
             }
-
             get slots() {
               return {
                 ...super.slots,
-                template: () => ({ template: html`<span>${this.currentValue}</span> ` }),
+                template: () => ({
+                  template: html`<span>${this.currentValue}</span> `,
+                }),
               };
             }
-
             render() {
               return html`<slot name="template"></slot>`;
             }
-
             get _templateNode() {
-              return /** @type HTMLSpanElement */ (
-                Array.from(this.children).find(elm => elm.slot === 'template')
+              return /** @type HTMLSpanElement */ Array.from(this.children).find(
+                (elm) => elm.slot === 'template',
               );
             }
           },
         );
-        const el = /** @type {* & SlotHost} */ (fixtureSync(`<${tag}></${tag}>`));
+        const el = /** @type {* & SlotHost} */ fixtureSync(`<${tag}></${tag}>`);
         expect(el._templateNode).to.be.undefined;
         await el.updateComplete;
         expect(el._templateNode.slot).to.equal('template');
@@ -567,7 +532,6 @@ describe('SlotMixin', () => {
       });
     });
   });
-
   describe('SlotFunctionResult types', () => {
     it('supports complex dom trees as element (type "Element")', async () => {
       const tag = defineCE(
@@ -576,7 +540,6 @@ describe('SlotMixin', () => {
             super();
             this.foo = 'bar';
           }
-
           get slots() {
             return {
               ...super.slots,
@@ -595,11 +558,10 @@ describe('SlotMixin', () => {
       const el = await fixture(`<${tag}></${tag}>`);
       expect(el.children[0].slot).to.equal('feedback');
       expect(el.children[0].getAttribute('foo')).to.equal('bar');
-      expect(/** @type HTMLParagraphElement */ (el.children[0].children[0]).innerText).to.equal(
+      expect(/** @type HTMLParagraphElement */ el.children[0].children[0].innerText).to.equal(
         'cat',
       );
     });
-
     it('supports conditional slots (type "undefined")', async () => {
       let renderSlot = true;
       const tag = defineCE(
@@ -625,7 +587,6 @@ describe('SlotMixin', () => {
       const elNoSlot = await fixture(`<${tag}><${tag}>`);
       expect(elNoSlot.querySelector('#someSlot')).to.not.exist;
     });
-
     it('supports templates (type "TemplateResult")', async () => {
       const tag = defineCE(
         class extends SlotMixin(LitElement) {
@@ -635,33 +596,30 @@ describe('SlotMixin', () => {
               template: () => html`<span>text</span>`,
             };
           }
-
           render() {
             return html`<slot name="template"></slot>`;
           }
         },
       );
       const el = await fixture(`<${tag}></${tag}>`);
-      const slot = /** @type HTMLSpanElement */ (
-        Array.from(el.children).find(elm => elm.slot === 'template')
-      );
+      const slot =
+        /** @type HTMLSpanElement */
+        Array.from(el.children).find((elm) => elm.slot === 'template');
       expect(slot.slot).to.equal('template');
       expect(slot.tagName).to.equal('SPAN');
     });
-
     it('supports (deprecated) afterRender logic (type "{ template:TemplateResults; afterRender: Function}" )', async () => {
       let varThatProvesAfterRenderIsCalled = 'not called';
-
       const tag = defineCE(
         // @ts-expect-error
         class extends SlotMixin(LitElement) {
-          static properties = { currentValue: Number };
-
+          static properties = {
+            currentValue: Number,
+          };
           constructor() {
             super();
             this.currentValue = 0;
           }
-
           get slots() {
             return {
               ...super.slots,
@@ -673,38 +631,31 @@ describe('SlotMixin', () => {
               }),
             };
           }
-
           render() {
             return html`<slot name="template"></slot>`;
           }
-
           get _templateNode() {
-            return /** @type HTMLSpanElement */ (
-              Array.from(this.children).find(elm => elm.slot === 'template')?.firstElementChild
-            );
+            return /** @type HTMLSpanElement */ Array.from(this.children).find(
+              (elm) => elm.slot === 'template',
+            )?.firstElementChild;
           }
         },
       );
-      const el = /** @type {* & SlotHost} */ (await fixture(`<${tag}></${tag}>`));
+      const el = /** @type {* & SlotHost} */ await fixture(`<${tag}></${tag}>`);
       expect(el._templateNode.textContent).to.equal('0');
-
       el.currentValue = 1;
       await el.updateComplete;
-
       expect(varThatProvesAfterRenderIsCalled).to.equal('called');
       expect(el._templateNode.textContent).to.equal('1');
     });
   });
-
   describe('Scoped Registries', () => {
     it('supports scoped elements when scoped registries supported (or polyfill loaded)', async () => {
       if (!supportsScopedRegistry()) return;
 
       // @ts-expect-error
       const createElSpy = sinon.spy(ShadowRoot.prototype, 'createElement');
-
       class ScopedEl extends LitElement {}
-
       const tagName = defineCE(
         // @ts-ignore
         class extends ScopedElementsMixin(SlotMixin(LitElement)) {
@@ -715,33 +666,25 @@ describe('SlotMixin', () => {
               'scoped-elm': ScopedEl,
             };
           }
-
           get slots() {
             return {
               ...super.slots,
               template: () => html`<scoped-elm></scoped-elm>`,
             };
           }
-
           render() {
             return html`<slot name="template"></slot>`;
           }
         },
       );
-
       const tag = unsafeStatic(tagName);
       await fixture(html`<${tag}></${tag}>`);
-
       expect(createElSpy.callCount).to.equal(1);
-
       createElSpy.restore();
     });
-
     it('does not scope elements when scoped registries not supported (or polyfill not loaded)', async () => {
       if (supportsScopedRegistry()) return;
-
       class ScopedEl extends LitElement {}
-
       const tagName = defineCE(
         class extends ScopedElementsMixin(SlotMixin(LitElement)) {
           static get scopedElements() {
@@ -751,20 +694,17 @@ describe('SlotMixin', () => {
               'scoped-el': ScopedEl,
             };
           }
-
           get slots() {
             return {
               ...super.slots,
               template: () => html`<scoped-el></scoped-el>`,
             };
           }
-
           render() {
             return html`<slot name="template"></slot>`;
           }
         },
       );
-
       const renderTarget = document.createElement('div');
       const el = document.createElement(tagName);
 
@@ -772,9 +712,7 @@ describe('SlotMixin', () => {
       const docSpy = sinon.spy(document, 'createElement');
       document.body.appendChild(renderTarget);
       renderTarget.appendChild(el);
-
       expect(docSpy.callCount).to.equal(2);
-
       document.body.removeChild(renderTarget);
       docSpy.restore();
     });

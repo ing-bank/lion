@@ -22,7 +22,6 @@ export function runTabsSuite({
   tagString: legacyTagString,
 } = {}) {
   const tag = unsafeStatic(resolveSuiteTag(host, legacyTagString));
-
   const basicTabs = html`
     <${tag}>
       <button slot="tab">tab 1</button>
@@ -35,16 +34,15 @@ export function runTabsSuite({
       <div slot="panel">panel 4</div>
     </${tag}>
   `;
-
   describe('<lion-tabs>', () => {
     describe('Tabs', () => {
       it('sets selectedIndex to 0 by default', async () => {
-        const el = /** @type {LionTabs} */ (await fixture(basicTabs));
+        const el = /** @type {LionTabs} */ await fixture(basicTabs);
         expect(el.selectedIndex).to.equal(0);
       });
-
       it('can programmatically set selectedIndex', async () => {
-        const el = /** @type {LionTabs} */ (
+        const el =
+          /** @type {LionTabs} */
           await fixture(html`
             <${tag} .selectedIndex=${1}>
               <div slot="tab">tab 1</div>
@@ -52,53 +50,46 @@ export function runTabsSuite({
               <div slot="tab">tab 2</div>
               <div slot="panel">panel 2</div>
             </${tag}>
-          `)
-        );
+          `);
         expect(el.selectedIndex).to.equal(1);
-        let selectedTab = /** @type {Element} */ (
+        let selectedTab =
+          /** @type {Element} */
           Array.from(el.children).find(
-            child => child.slot === 'tab' && child.hasAttribute('selected'),
-          )
-        );
+            (child) => child.slot === 'tab' && child.hasAttribute('selected'),
+          );
         expect(selectedTab.textContent).to.equal('tab 2');
-
         el.selectedIndex = 0;
-        selectedTab = /** @type {Element} */ (
+        selectedTab =
+          /** @type {Element} */
           Array.from(el.children).find(
-            child => child.slot === 'tab' && child.hasAttribute('selected'),
-          )
-        );
+            (child) => child.slot === 'tab' && child.hasAttribute('selected'),
+          );
         expect(selectedTab.textContent).to.equal('tab 1');
       });
-
       it('has [selected] on current selected tab which serves as styling hook', async () => {
-        const el = /** @type {LionTabs} */ (await fixture(basicTabs));
+        const el = /** @type {LionTabs} */ await fixture(basicTabs);
         const tabs = el.querySelectorAll('[slot=tab]');
         el.selectedIndex = 0;
         expect(tabs[0]).to.have.attribute('selected');
         expect(tabs[1]).to.not.have.attribute('selected');
-
         el.selectedIndex = 1;
         expect(tabs[0]).to.not.have.attribute('selected');
         expect(tabs[1]).to.have.attribute('selected');
       });
-
       it('sends event "selected-changed" for every selected state change', async () => {
-        const el = /** @type {LionTabs} */ (await fixture(basicTabs));
+        const el = /** @type {LionTabs} */ await fixture(basicTabs);
         const spy = sinon.spy();
         el.addEventListener('selected-changed', spy);
         el.selectedIndex = 1;
         expect(spy).to.have.been.calledOnce;
       });
-
       it('does not send event "selected-changed" after selecting currently selected tab', async () => {
-        const el = /** @type {LionTabs} */ (await fixture(basicTabs));
+        const el = /** @type {LionTabs} */ await fixture(basicTabs);
         const spy = sinon.spy();
         el.addEventListener('selected-changed', spy);
         el.selectedIndex = 0;
         expect(spy).not.to.have.been.called;
       });
-
       it('logs warning if unequal amount of tabs and panels', async () => {
         const stub = sinon.stub(console, 'warn');
         await fixture(html`
@@ -113,9 +104,9 @@ export function runTabsSuite({
         );
         stub.restore();
       });
-
       it('only takes direct children into account', async () => {
-        const el = /** @type {LionTabs} */ (
+        const el =
+          /** @type {LionTabs} */
           await fixture(html`
             <${tag}>
               <button slot="tab">tab 1</button>
@@ -126,34 +117,31 @@ export function runTabsSuite({
               <button slot="tab">tab 2</button>
               <div slot="panel">panel 2</div>
             </${tag}>
-          `)
-        );
+          `);
         el.selectedIndex = 1;
-        const selectedTab = /** @type {Element} */ (
+        const selectedTab =
+          /** @type {Element} */
           Array.from(el.children).find(
-            child => child.slot === 'tab' && child.hasAttribute('selected'),
-          )
-        );
+            (child) => child.slot === 'tab' && child.hasAttribute('selected'),
+          );
         expect(selectedTab.textContent).to.equal('tab 2');
       });
-
       it('can initially be instantiated without children', async () => {
-        const el = /** @type {LionTabs} */ (await fixture(html` <${tag}> </${tag}> `));
+        const el = /** @type {LionTabs} */ await fixture(html` <${tag}> </${tag}> `);
         expect(el.tabs).to.eql([]);
       });
     });
-
     describe('Tabs ([slot=tab])', () => {
       it('adds role=tab', async () => {
-        const el = /** @type {LionTabs} */ (
+        const el =
+          /** @type {LionTabs} */
           await fixture(html`
             <${tag}>
               <button slot="tab">tab</button>
               <div slot="panel">panel</div>
             </${tag}>
-          `)
-        );
-        expect(Array.from(el.children).find(child => child.slot === 'tab')).to.have.attribute(
+          `);
+        expect(Array.from(el.children).find((child) => child.slot === 'tab')).to.have.attribute(
           'role',
           'tab',
         );
@@ -164,20 +152,17 @@ export function runTabsSuite({
        * - has flexible html that allows animations like the material design underline
        */
     });
-
     describe('Tab Panels (slot=panel)', () => {
       it('are visible when corresponding tab is selected ', async () => {
-        const el = /** @type {LionTabs} */ (await fixture(basicTabs));
+        const el = /** @type {LionTabs} */ await fixture(basicTabs);
         const panels = el.querySelectorAll('[slot=panel]');
         el.selectedIndex = 0;
         expect(panels[0]).to.be.visible;
         expect(panels[1]).to.be.not.visible;
-
         el.selectedIndex = 1;
         expect(panels[0]).to.be.not.visible;
         expect(panels[1]).to.be.visible;
       });
-
       it.skip('have a DOM structure that allows them to be animated ', async () => {});
     });
 
@@ -191,23 +176,30 @@ export function runTabsSuite({
      */
     describe('User interaction', () => {
       it('selects a tab on click', async () => {
-        const el = /** @type {LionTabs} */ (await fixture(basicTabs));
+        const el = /** @type {LionTabs} */ await fixture(basicTabs);
         const tabs = el.querySelectorAll('[slot=tab]');
         tabs[1].dispatchEvent(new Event('click'));
         expect(el.selectedIndex).to.equal(1);
       });
-
       it('selects next tab on [arrow-right] and [arrow-down]', async () => {
-        const el = /** @type {LionTabs} */ (await fixture(basicTabs));
+        const el = /** @type {LionTabs} */ await fixture(basicTabs);
         const tabs = el.querySelectorAll('[slot=tab]');
-        tabs[0].dispatchEvent(new KeyboardEvent('keyup', { key: 'ArrowRight' }));
+        tabs[0].dispatchEvent(
+          new KeyboardEvent('keyup', {
+            key: 'ArrowRight',
+          }),
+        );
         expect(el.selectedIndex).to.equal(1);
-        tabs[1].dispatchEvent(new KeyboardEvent('keyup', { key: 'ArrowDown' }));
+        tabs[1].dispatchEvent(
+          new KeyboardEvent('keyup', {
+            key: 'ArrowDown',
+          }),
+        );
         expect(el.selectedIndex).to.equal(2);
       });
-
       it('selects previous tab on [arrow-left] and [arrow-up]', async () => {
-        const el = /** @type {LionTabs} */ (
+        const el =
+          /** @type {LionTabs} */
           await fixture(html`
             <${tag} .selectedIndex=${1}>
               <button slot="tab">tab 1</button>
@@ -217,18 +209,25 @@ export function runTabsSuite({
               <button slot="tab">tab 3</button>
               <div slot="panel">panel 3</div>
             </${tag}>
-          `)
-        );
+          `);
         const tabs = el.querySelectorAll('[slot=tab]');
         el.selectedIndex = 2;
-        tabs[2].dispatchEvent(new KeyboardEvent('keyup', { key: 'ArrowLeft' }));
+        tabs[2].dispatchEvent(
+          new KeyboardEvent('keyup', {
+            key: 'ArrowLeft',
+          }),
+        );
         expect(el.selectedIndex).to.equal(1);
-        tabs[1].dispatchEvent(new KeyboardEvent('keyup', { key: 'ArrowUp' }));
+        tabs[1].dispatchEvent(
+          new KeyboardEvent('keyup', {
+            key: 'ArrowUp',
+          }),
+        );
         expect(el.selectedIndex).to.equal(0);
       });
-
       it('selects first tab on [home]', async () => {
-        const el = /** @type {LionTabs} */ (
+        const el =
+          /** @type {LionTabs} */
           await fixture(html`
             <${tag} .selectedIndex=${1}>
               <button slot="tab">tab 1</button>
@@ -236,22 +235,28 @@ export function runTabsSuite({
               <button slot="tab">tab 2</button>
               <div slot="panel">panel 2</div>
             </${tag}>
-          `)
-        );
+          `);
         const tabs = el.querySelectorAll('[slot=tab]');
-        tabs[1].dispatchEvent(new KeyboardEvent('keyup', { key: 'Home' }));
+        tabs[1].dispatchEvent(
+          new KeyboardEvent('keyup', {
+            key: 'Home',
+          }),
+        );
         expect(el.selectedIndex).to.equal(0);
       });
-
       it('selects last tab on [end]', async () => {
-        const el = /** @type {LionTabs} */ (await fixture(basicTabs));
+        const el = /** @type {LionTabs} */ await fixture(basicTabs);
         const tabs = el.querySelectorAll('[slot=tab]');
-        tabs[0].dispatchEvent(new KeyboardEvent('keyup', { key: 'End' }));
+        tabs[0].dispatchEvent(
+          new KeyboardEvent('keyup', {
+            key: 'End',
+          }),
+        );
         expect(el.selectedIndex).to.equal(3);
       });
-
       it('selects first tab on [arrow-right] if on last tab', async () => {
-        const el = /** @type {LionTabs} */ (
+        const el =
+          /** @type {LionTabs} */
           await fixture(html`
             <${tag} .selectedIndex=${2}>
               <button slot="tab">tab 1</button>
@@ -261,15 +266,18 @@ export function runTabsSuite({
               <button slot="tab">tab 3</button>
               <div slot="panel">panel 3</div>
             </${tag}>
-          `)
-        );
+          `);
         const tabs = el.querySelectorAll('[slot=tab]');
-        tabs[2].dispatchEvent(new KeyboardEvent('keyup', { key: 'ArrowRight' }));
+        tabs[2].dispatchEvent(
+          new KeyboardEvent('keyup', {
+            key: 'ArrowRight',
+          }),
+        );
         expect(el.selectedIndex).to.equal(0);
       });
-
       it('selects last tab on [arrow-left] if on first tab', async () => {
-        const el = /** @type {LionTabs} */ (
+        const el =
+          /** @type {LionTabs} */
           await fixture(html`
             <${tag}>
               <button slot="tab">tab 1</button>
@@ -279,15 +287,18 @@ export function runTabsSuite({
               <button slot="tab">tab 3</button>
               <div slot="panel">panel 3</div>
             </${tag}>
-          `)
-        );
+          `);
         const tabs = el.querySelectorAll('[slot=tab]');
-        tabs[0].dispatchEvent(new KeyboardEvent('keyup', { key: 'ArrowLeft' }));
+        tabs[0].dispatchEvent(
+          new KeyboardEvent('keyup', {
+            key: 'ArrowLeft',
+          }),
+        );
         expect(el.selectedIndex).to.equal(2);
       });
-
       it('selects next available not disabled tab if first tab is disabled', async () => {
-        const el = /** @type {LionTabs} */ (
+        const el =
+          /** @type {LionTabs} */
           await fixture(html`
             <${tag}>
               <button slot="tab" disabled>tab 1</button>
@@ -297,13 +308,12 @@ export function runTabsSuite({
               <button slot="tab">tab 3</button>
               <div slot="panel">panel 3</div>
             </${tag}>
-          `)
-        );
+          `);
         expect(el.selectedIndex).to.equal(1);
       });
-
       it('selects next available not disabled tab on [arrow-right] and [arrow-down]', async () => {
-        const el = /** @type {LionTabs} */ (
+        const el =
+          /** @type {LionTabs} */
           await fixture(html`
             <${tag}>
               <button slot="tab">tab 1</button>
@@ -315,15 +325,18 @@ export function runTabsSuite({
               <button slot="tab" disabled>tab 3</button>
               <div slot="panel">panel 3</div>
             </${tag}>
-          `)
-        );
+          `);
         const tabs = el.querySelectorAll('[slot=tab]');
-        tabs[0].dispatchEvent(new KeyboardEvent('keyup', { key: 'ArrowRight' }));
+        tabs[0].dispatchEvent(
+          new KeyboardEvent('keyup', {
+            key: 'ArrowRight',
+          }),
+        );
         expect(el.selectedIndex).to.equal(2);
       });
-
       it('selects next available not disabled tab on [arrow-left] and [arrow-up]', async () => {
-        const el = /** @type {LionTabs} */ (
+        const el =
+          /** @type {LionTabs} */
           await fixture(html`
             <${tag}>
               <button slot="tab">tab 1</button>
@@ -335,16 +348,19 @@ export function runTabsSuite({
               <button slot="tab" disabled>tab 3</button>
               <div slot="panel">panel 3</div>
             </${tag}>
-          `)
-        );
+          `);
         el.selectedIndex = 2;
         const tabs = el.querySelectorAll('[slot=tab]');
-        tabs[2].dispatchEvent(new KeyboardEvent('keyup', { key: 'ArrowLeft' }));
+        tabs[2].dispatchEvent(
+          new KeyboardEvent('keyup', {
+            key: 'ArrowLeft',
+          }),
+        );
         expect(el.selectedIndex).to.equal(0);
       });
-
       it('cycles through tabs even if the last or first tabs are disabled', async () => {
-        const el = /** @type {LionTabs} */ (
+        const el =
+          /** @type {LionTabs} */
           await fixture(html`
             <${tag}>
               <button slot="tab" disabled>tab 0</button>
@@ -356,24 +372,30 @@ export function runTabsSuite({
               <button slot="tab" disabled>tab 3</button>
               <div slot="panel">panel 3</div>
             </${tag}>
-          `)
-        );
+          `);
         const tabs = el.querySelectorAll('[slot=tab]');
         el.selectedIndex = 1;
 
         // 0 is disabled, same for 3, so should go to 2
-        tabs[1].dispatchEvent(new KeyboardEvent('keyup', { key: 'ArrowLeft' }));
+        tabs[1].dispatchEvent(
+          new KeyboardEvent('keyup', {
+            key: 'ArrowLeft',
+          }),
+        );
         expect(el.selectedIndex).to.equal(2);
 
         // 3 is disabled, same for 0, so should go to 1
-        tabs[2].dispatchEvent(new KeyboardEvent('keyup', { key: 'ArrowRight' }));
+        tabs[2].dispatchEvent(
+          new KeyboardEvent('keyup', {
+            key: 'ArrowRight',
+          }),
+        );
         expect(el.selectedIndex).to.equal(1);
       });
     });
-
     describe('Content distribution', () => {
       it('should work with append children', async () => {
-        const el = /** @type {LionTabs} */ (await fixture(basicTabs));
+        const el = /** @type {LionTabs} */ await fixture(basicTabs);
         const c = 2;
         const n = el.children.length / 2;
         for (let i = n + 1; i < n + c + 1; i += 1) {
@@ -389,20 +411,19 @@ export function runTabsSuite({
         el.selectedIndex = el.children.length / 2 - 1;
         await el.updateComplete;
         const selectedTab = Array.from(el.children).find(
-          child => child.slot === 'tab' && child.hasAttribute('selected'),
+          (child) => child.slot === 'tab' && child.hasAttribute('selected'),
         );
         expect(selectedTab && selectedTab.textContent).to.equal('tab 6');
-
         const selectedPanel = Array.from(el.children).find(
-          child => child.slot === 'panel' && child.hasAttribute('selected'),
+          (child) => child.slot === 'panel' && child.hasAttribute('selected'),
         );
         expect(selectedPanel && selectedPanel.textContent).to.equal('panel 6');
       });
     });
-
     describe('Initializing without Focus', () => {
       it('does not focus a tab when setting selectedIndex property', async () => {
-        const el = /** @type {LionTabs} */ (
+        const el =
+          /** @type {LionTabs} */
           await fixture(html`
             <${tag}>
               <button slot="tab">tab 1</button>
@@ -410,18 +431,16 @@ export function runTabsSuite({
               <button slot="tab">tab 2</button>
               <div slot="panel">panel 2</div>
             </${tag}>
-          `)
-        );
-
-        const secondTab = /** @type {HTMLElement} */ (
-          el.querySelector('[slot="tab"]:nth-of-type(2)')
-        );
+          `);
+        const secondTab =
+          /** @type {HTMLElement} */
+          el.querySelector('[slot="tab"]:nth-of-type(2)');
         el.selectedIndex = 1;
         expect(isActiveElement(secondTab)).to.be.false;
       });
-
       it('does not focus a tab on firstUpdate', async () => {
-        const el = /** @type {LionTabs} */ (
+        const el =
+          /** @type {LionTabs} */
           await fixture(html`
             <${tag}>
               <button slot="tab">tab 1</button>
@@ -429,14 +448,13 @@ export function runTabsSuite({
               <button slot="tab">tab 2</button>
               <div slot="panel">panel 2</div>
             </${tag}>
-          `)
-        );
-        const tabs = Array.from(el.children).filter(child => child.slot === 'tab');
-        expect(tabs.some(tab => isActiveElement(tab))).to.be.false;
+          `);
+        const tabs = Array.from(el.children).filter((child) => child.slot === 'tab');
+        expect(tabs.some((tab) => isActiveElement(tab))).to.be.false;
       });
-
       it('focuses on a tab when setting with _setSelectedIndexWithFocus method', async () => {
-        const el = /** @type {LionTabs} */ (
+        const el =
+          /** @type {LionTabs} */
           await fixture(html`
             <${tag}>
               <button slot="tab">tab 1</button>
@@ -444,20 +462,18 @@ export function runTabsSuite({
               <button slot="tab">tab 2</button>
               <div slot="panel">panel 2</div>
             </${tag}>
-          `)
-        );
-
-        const secondTab = /** @type {HTMLElement} */ (
-          el.querySelector('[slot="tab"]:nth-of-type(2)')
-        );
+          `);
+        const secondTab =
+          /** @type {HTMLElement} */
+          el.querySelector('[slot="tab"]:nth-of-type(2)');
         // @ts-ignore : this el is LionTabs
         el._setSelectedIndexWithFocus(1);
         expect(isActiveElement(secondTab)).to.be.true;
       });
     });
-
     it('focuses on a tab when the selected tab is changed by user interaction', async () => {
-      const el = /** @type {LionTabs} */ (
+      const el =
+        /** @type {LionTabs} */
         await fixture(html`
           <${tag}>
             <button slot="tab">tab 1</button>
@@ -465,17 +481,16 @@ export function runTabsSuite({
             <button slot="tab">tab 2</button>
             <div slot="panel">panel 2</div>
           </${tag}>
-        `)
-      );
-      const secondTab = /** @type {Element} */ (el.querySelector('[slot="tab"]:nth-of-type(2)'));
+        `);
+      const secondTab = /** @type {Element} */ el.querySelector('[slot="tab"]:nth-of-type(2)');
       secondTab.dispatchEvent(new MouseEvent('click'));
       expect(isActiveElement(secondTab)).to.be.true;
     });
-
     describe('Accessibility', () => {
       describe('Tabs', () => {
         it('makes selected tab focusable (other tabs are unfocusable)', async () => {
-          const el = /** @type {LionTabs} */ (
+          const el =
+            /** @type {LionTabs} */
             await fixture(html`
               <${tag}>
                 <button slot="tab">tab 1</button>
@@ -485,16 +500,15 @@ export function runTabsSuite({
                 <button slot="tab">tab 3</button>
                 <div slot="panel">panel 3</div>
               </${tag}>
-            `)
-          );
+            `);
           const tabs = el.querySelectorAll('[slot=tab]');
           expect(tabs[0]).to.have.attribute('tabindex', '0');
           expect(tabs[1]).to.have.attribute('tabindex', '-1');
           expect(tabs[2]).to.have.attribute('tabindex', '-1');
         });
-
         it('links ids of content items to tab via [aria-controls]', async () => {
-          const el = /** @type {LionTabs} */ (
+          const el =
+            /** @type {LionTabs} */
             await fixture(html`
               <${tag}>
                 <button id="t1" slot="tab">tab 1</button>
@@ -502,16 +516,15 @@ export function runTabsSuite({
                 <button id="t2" slot="tab">tab 2</button>
                 <div id="p2" slot="panel">panel 2</div>
               </${tag}>
-            `)
-          );
+            `);
           const tabs = el.querySelectorAll('[slot=tab]');
           const panels = el.querySelectorAll('[slot=panel]');
           expect(tabs[0].getAttribute('aria-controls')).to.equal(panels[0].id);
           expect(tabs[1].getAttribute('aria-controls')).to.equal(panels[1].id);
         });
-
         it('adds aria-selected=“true” to selected tab', async () => {
-          const el = /** @type {LionTabs} */ (
+          const el =
+            /** @type {LionTabs} */
             await fixture(html`
               <${tag}>
                 <button id="t1" slot="tab">tab 1</button>
@@ -521,19 +534,17 @@ export function runTabsSuite({
                 <button id="t3" slot="tab">tab 3</button>
                 <div id="p3" slot="panel">panel 3</div>
               </${tag}>
-            `)
-          );
-
+            `);
           const tabs = el.querySelectorAll('[slot=tab]');
           expect(tabs[0].getAttribute('aria-selected')).to.equal('true');
           expect(tabs[1].getAttribute('aria-selected')).to.equal('false');
           expect(tabs[2].getAttribute('aria-selected')).to.equal('false');
         });
       });
-
       describe('panels', () => {
         it('adds role="tabpanel" to panels', async () => {
-          const el = /** @type {LionTabs} */ (
+          const el =
+            /** @type {LionTabs} */
             await fixture(html`
               <${tag}>
                 <button slot="tab">tab 1</button>
@@ -541,15 +552,14 @@ export function runTabsSuite({
                 <button slot="tab">tab 2</button>
                 <div slot="panel">panel 2</div>
               </${tag}>
-            `)
-          );
+            `);
           const panels = el.querySelectorAll('[slot=panel]');
           expect(panels[0]).to.have.attribute('role', 'tabpanel');
           expect(panels[1]).to.have.attribute('role', 'tabpanel');
         });
-
         it('adds aria-labelledby referring to tab ids', async () => {
-          const el = /** @type {LionTabs} */ (
+          const el =
+            /** @type {LionTabs} */
             await fixture(html`
               <${tag}>
                 <button slot="tab">tab 1</button>
@@ -557,16 +567,15 @@ export function runTabsSuite({
                 <button slot="tab">tab 2</button>
                 <div slot="panel">panel 2</div>
               </${tag}>
-            `)
-          );
+            `);
           const panels = el.querySelectorAll('[slot=panel]');
           const tabs = el.querySelectorAll('[slot=tab]');
           expect(panels[0]).to.have.attribute('aria-labelledby', tabs[0].id);
           expect(panels[1]).to.have.attribute('aria-labelledby', tabs[1].id);
         });
-
         it('makes panel focusable', async () => {
-          const el = /** @type {LionTabs} */ (
+          const el =
+            /** @type {LionTabs} */
             await fixture(html`
               <${tag}>
                 <button slot="tab">tab 1</button>
@@ -574,14 +583,13 @@ export function runTabsSuite({
                 <button slot="tab">tab 2</button>
                 <div slot="panel">panel 2</div>
               </${tag}>
-            `)
-          );
+            `);
           const panels = el.querySelectorAll('[slot=panel]');
           expect(panels[0]).to.have.attribute('tabindex', '0');
         });
-
         it('does not override the tabindex already set on the panel', async () => {
-          const el = /** @type {LionTabs} */ (
+          const el =
+            /** @type {LionTabs} */
             await fixture(html`
               <${tag}>
                 <button slot="tab">tab 1</button>
@@ -589,8 +597,7 @@ export function runTabsSuite({
                 <button slot="tab">tab 2</button>
                 <div slot="panel">panel 2</div>
               </${tag}>
-            `)
-          );
+            `);
           const panels = el.querySelectorAll('[slot=panel]');
           expect(panels[0]).to.have.attribute('tabindex', '-1');
         });

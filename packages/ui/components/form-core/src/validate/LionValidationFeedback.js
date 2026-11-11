@@ -11,7 +11,7 @@ import { localizeNamespaceLoader } from '../localizeNamespaceLoader.js';
 /**
  * @param {string} string
  */
-const capitalize = string => `${string[0].toUpperCase()}${string.slice(1)}`;
+const capitalize = (string) => `${string[0].toUpperCase()}${string.slice(1)}`;
 
 /**
  * @desc Takes care of accessible rendering of error messages
@@ -20,15 +20,17 @@ const capitalize = string => `${string[0].toUpperCase()}${string.slice(1)}`;
 export class LionValidationFeedback extends LocalizeMixin(LitElement) {
   static get properties() {
     return {
-      feedbackData: { attribute: false },
+      feedbackData: {
+        attribute: false,
+      },
     };
   }
-
   static localizeNamespaces = [
-    { 'lion-form-core': localizeNamespaceLoader },
+    {
+      'lion-form-core': localizeNamespaceLoader,
+    },
     ...super.localizeNamespaces,
   ];
-
   static get styles() {
     return [
       css`
@@ -47,7 +49,6 @@ export class LionValidationFeedback extends LocalizeMixin(LitElement) {
       `,
     ];
   }
-
   constructor() {
     super();
     /**
@@ -81,20 +82,23 @@ export class LionValidationFeedback extends LocalizeMixin(LitElement) {
       this.removeAttribute('type');
     }
   }
-
   render() {
     return html`
-      ${this.feedbackData &&
-      this.feedbackData.map(
-        ({ message, type, validator }) => html`
-          <span class="validation-feedback__type">
-            ${message && type
-              ? this._localizeManager.msg(`lion-form-core:validation${capitalize(type)}`)
-              : nothing}
-          </span>
-          ${this._messageTemplate({ message, type, validator })}
-        `,
-      )}
+      ${
+        this.feedbackData &&
+        this.feedbackData.map(
+          ({ message, type, validator }) => html`
+            <span class="validation-feedback__type">
+              ${message && type ? this._localizeManager.msg(`lion-form-core:validation${capitalize(type)}`) : nothing}
+            </span>
+            ${this._messageTemplate({
+              message,
+              type,
+              validator,
+            })}
+          `,
+        )
+      }
     `;
   }
 }

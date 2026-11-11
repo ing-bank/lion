@@ -21,12 +21,10 @@ export const FILE_FAILED_PROP = {
   type: 'FILE_TYPE',
   size: 'FILE_SIZE',
 };
-
 export const UPLOAD_FILE_STATUS = {
   fail: 'FAIL',
   pass: 'SUCCESS',
 };
-
 export class FileHandle {
   /**
    * @param {SystemFile} systemFile
@@ -77,7 +75,6 @@ export class FileHandle {
         this.failedProp.push(FILE_FAILED_PROP.type);
       }
     }
-
     if (IsAcceptedFile.checkFileSize(this.systemFile.size, this._acceptCriteria.maxFileSize)) {
       if (this.status !== UPLOAD_FILE_STATUS.fail) {
         this.status = UPLOAD_FILE_STATUS.pass;

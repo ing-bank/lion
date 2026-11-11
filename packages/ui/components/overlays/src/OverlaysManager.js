@@ -14,11 +14,10 @@ import { overlayDocumentStyle } from './overlayDocumentStyle.js';
 export class OverlaysManager {
   /** @type {HTMLStyleElement | undefined} */
   static __globalStyleNode = undefined;
-
   static __createGlobalStyleNode() {
     const styleTag = document.createElement('style');
     styleTag.setAttribute('data-overlays', '');
-    styleTag.textContent = /** @type {CSSResult} */ (overlayDocumentStyle).cssText;
+    styleTag.textContent = /** @type {CSSResult} */ overlayDocumentStyle.cssText;
     document.head.appendChild(styleTag);
     return styleTag;
   }
@@ -73,7 +72,6 @@ export class OverlaysManager {
    * }}
    */
   __bodySizeVars;
-
   constructor() {
     this.__list = [];
     this.__shownList = [];
@@ -88,11 +86,9 @@ export class OverlaysManager {
       marginRight: undefined,
       marginBottom: undefined,
     };
-
     this.__forTesting = {
       bodySizeVars: this.__bodySizeVars,
     };
-
     if (!OverlaysManager.__globalStyleNode) {
       OverlaysManager.__globalStyleNode = OverlaysManager.__createGlobalStyleNode();
     }
@@ -104,7 +100,7 @@ export class OverlaysManager {
    * @returns {OverlayController} same controller after adding to the manager
    */
   add(ctrlToAdd) {
-    if (this.list.find(ctrl => ctrlToAdd === ctrl)) {
+    if (this.list.find((ctrl) => ctrlToAdd === ctrl)) {
       throw new Error('controller instance is already added');
     }
     this.list.push(ctrlToAdd);
@@ -115,18 +111,18 @@ export class OverlaysManager {
    * @param {OverlayController} ctrlToRemove
    */
   remove(ctrlToRemove) {
-    if (!this.list.find(ctrl => ctrlToRemove === ctrl)) {
+    if (!this.list.find((ctrl) => ctrlToRemove === ctrl)) {
       throw new Error('could not find controller to remove');
     }
-    this.__list = this.list.filter(ctrl => ctrl !== ctrlToRemove);
-    this.__shownList = this.shownList.filter(ctrl => ctrl !== ctrlToRemove);
+    this.__list = this.list.filter((ctrl) => ctrl !== ctrlToRemove);
+    this.__shownList = this.shownList.filter((ctrl) => ctrl !== ctrlToRemove);
   }
 
   /**
    * @param {OverlayController} ctrlToShow
    */
   show(ctrlToShow) {
-    if (this.list.find(ctrl => ctrlToShow === ctrl)) {
+    if (this.list.find((ctrl) => ctrlToShow === ctrl)) {
       this.hide(ctrlToShow);
     }
     this.__shownList.unshift(ctrlToShow);
@@ -144,17 +140,15 @@ export class OverlaysManager {
    * @param {any} ctrlToHide
    */
   hide(ctrlToHide) {
-    if (!this.list.find(ctrl => ctrlToHide === ctrl)) {
+    if (!this.list.find((ctrl) => ctrlToHide === ctrl)) {
       throw new Error('could not find controller to hide');
     }
-    this.__shownList = this.shownList.filter(ctrl => ctrl !== ctrlToHide);
+    this.__shownList = this.shownList.filter((ctrl) => ctrl !== ctrlToHide);
   }
-
   teardown() {
-    this.list.forEach(ctrl => {
+    this.list.forEach((ctrl) => {
       ctrl.teardown();
     });
-
     this.__list = [];
     this.__shownList = [];
     this._siblingsInert = false;
@@ -165,11 +159,8 @@ export class OverlaysManager {
     this.__bodySizeVars.marginBottomInline = undefined;
     this.__bodySizeVars.marginRight = undefined;
     this.__bodySizeVars.marginBottom = undefined;
-
     if (OverlaysManager.__globalStyleNode) {
-      document.head.removeChild(
-        /** @type {HTMLStyleElement} */ (OverlaysManager.__globalStyleNode),
-      );
+      document.head.removeChild(/** @type {HTMLStyleElement} */ OverlaysManager.__globalStyleNode);
       OverlaysManager.__globalStyleNode = undefined;
     }
   }
@@ -215,9 +206,9 @@ export class OverlaysManager {
             this.__bodySizeVars.marginBottom = 0;
           }
           const scrollbarWidth =
-            document.body.clientWidth - /** @type {number} */ (this.__bodySizeVars.clientWidth);
+            document.body.clientWidth - /** @type {number} */ this.__bodySizeVars.clientWidth;
           const scrollbarHeight =
-            document.body.clientHeight - /** @type {number} */ (this.__bodySizeVars.clientHeight);
+            document.body.clientHeight - /** @type {number} */ this.__bodySizeVars.clientHeight;
           const newMarginRight = this.__bodySizeVars.marginRight + scrollbarWidth;
           const newMarginBottom = this.__bodySizeVars.marginBottom + scrollbarHeight;
           // @ts-expect-error [external]: CSS not yet typed
@@ -270,16 +261,14 @@ export class OverlaysManager {
    */
   requestToEnableScroll(currentController) {
     const openedSiblings = currentController
-      ? this.shownList.filter(ctrl => ctrl !== currentController)
+      ? this.shownList.filter((ctrl) => ctrl !== currentController)
       : this.shownList;
-
     const hasOpenSiblingThatPreventsScroll = openedSiblings.some(
-      ctrl => ctrl.preventsScroll === true,
+      (ctrl) => ctrl.preventsScroll === true,
     );
     if (hasOpenSiblingThatPreventsScroll) {
       return;
     }
-
     const { isIOS, isMacSafari } = browserDetection;
     document.body.classList.remove('overlays-scroll-lock');
     if (isIOS || isMacSafari) {
@@ -301,8 +290,8 @@ export class OverlaysManager {
    * @param {OverlayController} blockingCtrl
    */
   requestToShowOnly(blockingCtrl) {
-    const controllersToHide = this.shownList.filter(ctrl => ctrl !== blockingCtrl);
-    controllersToHide.forEach(ctrl => ctrl.hide());
+    const controllersToHide = this.shownList.filter((ctrl) => ctrl !== blockingCtrl);
+    controllersToHide.forEach((ctrl) => ctrl.hide());
     this.__blockingMap.set(blockingCtrl, controllersToHide);
   }
 
@@ -311,10 +300,10 @@ export class OverlaysManager {
    */
   retractRequestToShowOnly(blockingCtrl) {
     if (this.__blockingMap.has(blockingCtrl)) {
-      const controllersWhichGotHidden = /** @type {OverlayController[]} */ (
-        this.__blockingMap.get(blockingCtrl)
-      );
-      controllersWhichGotHidden.forEach(ctrl => ctrl.show());
+      const controllersWhichGotHidden =
+        /** @type {OverlayController[]} */
+        this.__blockingMap.get(blockingCtrl);
+      controllersWhichGotHidden.forEach((ctrl) => ctrl.show());
     }
   }
 }

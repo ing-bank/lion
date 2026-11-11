@@ -5,7 +5,6 @@ import sinon from 'sinon';
 import { getDeepActiveElement } from '@lion/ui/overlays.js';
 import { InteractiveListMixin } from '../src/InteractiveListMixin.js';
 import { resolveSuiteTag } from '../../core/test-helpers/resolveSuiteTag.js';
-
 class InteractiveListClass extends InteractiveListMixin(LitElement) {}
 
 /**
@@ -18,8 +17,7 @@ class InteractiveListClass extends InteractiveListMixin(LitElement) {}
  *
  */
 
-const fixture = /** @type {(arg: TemplateResult) => Promise<LionMenu>} */ (_fixture);
-
+const fixture = /** @type {(arg: TemplateResult) => Promise<LionMenu>} */ _fixture;
 const l1Config = {
   isBar: true,
   hasFullWidthFlyout: true,
@@ -40,77 +38,77 @@ const l1Config = {
 export function runMoreButtonMenuMixinSuite({ classes = {}, tagString: legacyTagString } = {}) {
   const tagString = resolveSuiteTag(classes?.host, legacyTagString, InteractiveListClass);
   const tag = unsafeStatic(tagString);
-
   describe('MoreButtonMenuMixin', () => {
     describe('Overflow handling', () => {
       /** @type {import('sinon').SinonFakeTimers | null} */
       let clock = null;
 
       /** @param {HTMLElement} el */
-      const isMoreButtonShown = el => {
-        const wrapper = /** @type {HTMLElement | null} */ (
-          el.querySelector('[data-more-button-wrapper]')
-        );
+      const isMoreButtonShown = (el) => {
+        const wrapper =
+          /** @type {HTMLElement | null} */
+          el.querySelector('[data-more-button-wrapper]');
         return wrapper?.style.display !== 'none';
       };
 
       /** @param {HTMLElement} el */
-      const isMoreButtonMenuShown = el => {
+      const isMoreButtonMenuShown = (el) => {
         const menu = el.querySelector('[data-more-button-menu]');
         return menu ? getComputedStyle(menu).width !== '0px' : false;
       };
 
       /** @param {HTMLElement} el */
-      const getMoreButton = el =>
-        /** @type {HTMLElement | null} */ (el.querySelector('[data-more-button]'));
+      const getMoreButton = (el) =>
+        /** @type {HTMLElement | null} */ el.querySelector('[data-more-button]');
       /** @param {HTMLElement} el */
-      const getMoreButtonMenu = el => el.querySelector('[data-more-button-menu]');
+      const getMoreButtonMenu = (el) => el.querySelector('[data-more-button-menu]');
 
       /**
        * @param {HTMLElement} element
        */
       function getCoordinates(element) {
         const { x, y, height } = element.getBoundingClientRect();
-
         return {
           x: Math.floor(x + window.pageXOffset),
           y: Math.floor(y + window.pageYOffset + height / 2),
         };
       }
       /** @param {HTMLElement} el */
-      const clickOnMoreButton = async el => {
+      const clickOnMoreButton = async (el) => {
         const moreButton = getMoreButton(el);
         if (!moreButton) {
           return;
         }
         const { x, y } = getCoordinates(moreButton);
-        await sendMouse({ type: 'click', position: [x, y] });
+        await sendMouse({
+          type: 'click',
+          position: [x, y],
+        });
         clock?.tick(100);
       };
 
       /** @param {HTMLElement} el */
-      const getDirectListItemsUnderMoreButtonMenu = el => [
+      const getDirectListItemsUnderMoreButtonMenu = (el) => [
         ...Array.from(
           el.querySelectorAll('[data-more-button-menu] > [role="listitem"]'),
-          item => /** @type {HTMLElement} */ (item),
+          (item) => /** @type {HTMLElement} */ item,
         ),
       ];
 
       /** @param {HTMLElement} el */
-      const getDirectListItemsUnderMainMenu = el => [
+      const getDirectListItemsUnderMainMenu = (el) => [
         ...Array.from(
           el.querySelectorAll('[slot="list"] > [role="listitem"]'),
-          item => /** @type {HTMLElement} */ (item),
+          (item) => /** @type {HTMLElement} */ item,
         ),
       ];
 
       /** @param {HTMLElement & { updateComplete: Promise<unknown> }} el */
-      const waitResizeEventDebounce = async el => {
+      const waitResizeEventDebounce = async (el) => {
         await el.updateComplete;
         // wait for resize event debouncer
         clock?.tick(55);
       };
-
       beforeEach(() => {
         clock = sinon.useFakeTimers({
           shouldAdvanceTime: true,
@@ -120,7 +118,6 @@ export function runMoreButtonMenuMixinSuite({ classes = {}, tagString: legacyTag
         clock?.restore();
         await resetMouse();
       });
-
       it('should show no More button when all items fit', async () => {
         const el = await fixture(html`
           <${tag} name="foo" ._activeMode="${'tabbable-disclosure'}" .itemWrap="${true}" 
@@ -143,7 +140,6 @@ export function runMoreButtonMenuMixinSuite({ classes = {}, tagString: legacyTag
         // 3 items is 150px. They fit into 170px parent
         expect(isMoreButtonShown(el)).to.equal(false);
       });
-
       it('should show  More button when not all items fit', async () => {
         const el = await fixture(html`
           <${tag} 
@@ -176,12 +172,10 @@ export function runMoreButtonMenuMixinSuite({ classes = {}, tagString: legacyTag
             }
           </style>
         `);
-
         await waitResizeEventDebounce(el);
         // 4 items is 200px. They don't fit into 170px parent. So More button should be shown
         expect(isMoreButtonShown(el)).to.equal(true);
       });
-
       it('should show 2 items when clicking on `More` button', async () => {
         const el = await fixture(html`
           <${tag} 
@@ -209,17 +203,14 @@ export function runMoreButtonMenuMixinSuite({ classes = {}, tagString: legacyTag
             </div>
           </${tag}>
         `);
-
         await waitResizeEventDebounce(el);
         await clickOnMoreButton(el);
-
         expect(isMoreButtonMenuShown(el)).to.equal(true);
         const labels = getDirectListItemsUnderMoreButtonMenu(el).map(
-          item => item.textContent?.trim() ?? '',
+          (item) => item.textContent?.trim() ?? '',
         );
         expect(labels).to.deep.equal(['Item 3', 'Item 4']);
       });
-
       it('should focus more button menu container when clicking on `More` button', async () => {
         const el = await fixture(html`
           <${tag} 
@@ -247,14 +238,11 @@ export function runMoreButtonMenuMixinSuite({ classes = {}, tagString: legacyTag
             </div>
           </${tag}>
         `);
-
         await waitResizeEventDebounce(el);
         await clickOnMoreButton(el);
-
         expect(isMoreButtonMenuShown(el)).to.equal(true);
         expect(getDeepActiveElement() === getMoreButtonMenu(el)).to.equal(true);
       });
-
       it('should open and then close More button menu when clicking 2 times on the More button', async () => {
         const el = await fixture(html`
           <${tag} 
@@ -282,7 +270,6 @@ export function runMoreButtonMenuMixinSuite({ classes = {}, tagString: legacyTag
             </div>
           </${tag}>
         `);
-
         await waitResizeEventDebounce(el);
         expect(isMoreButtonMenuShown(el)).to.equal(false);
         await clickOnMoreButton(el);
@@ -290,7 +277,6 @@ export function runMoreButtonMenuMixinSuite({ classes = {}, tagString: legacyTag
         await clickOnMoreButton(el);
         expect(isMoreButtonMenuShown(el)).to.equal(false);
       });
-
       it('should remove `More` button when making font smaller', async () => {
         const el = await fixture(html`
           <${tag} name="foo" ._activeMode="${'tabbable-disclosure'}" .itemWrap="${true}" 
@@ -315,15 +301,19 @@ export function runMoreButtonMenuMixinSuite({ classes = {}, tagString: legacyTag
          * Make font smaller for first level items to force
          * the menu render all 4 items and no `More` button
          */
-        getDirectListItemsUnderMainMenu(el).forEach(item => {
+        getDirectListItemsUnderMainMenu(el).forEach((item) => {
           // eslint-disable-next-line no-param-reassign
           item.style.fontSize = '12px';
         });
-        el?.dispatchEvent(new CustomEvent('resize', { composed: true, bubbles: true }));
+        el?.dispatchEvent(
+          new CustomEvent('resize', {
+            composed: true,
+            bubbles: true,
+          }),
+        );
         await waitResizeEventDebounce(el);
         expect(isMoreButtonShown(el)).to.equal(false);
       });
-
       it('should add `More` button when making font larger', async () => {
         const el = await fixture(html`
           <${tag} 
@@ -349,17 +339,21 @@ export function runMoreButtonMenuMixinSuite({ classes = {}, tagString: legacyTag
           </${tag}>
         `);
         await waitResizeEventDebounce(el);
-
         expect(getDirectListItemsUnderMainMenu(el).length).to.equal(3);
         /**
          * Make font larger for first level items to force
          * the More button to appear
          */
-        getDirectListItemsUnderMainMenu(el).forEach(item => {
+        getDirectListItemsUnderMainMenu(el).forEach((item) => {
           // eslint-disable-next-line no-param-reassign
           item.style.fontSize = '40px';
         });
-        el?.dispatchEvent(new CustomEvent('resize', { composed: true, bubbles: true }));
+        el?.dispatchEvent(
+          new CustomEvent('resize', {
+            composed: true,
+            bubbles: true,
+          }),
+        );
         await waitResizeEventDebounce(el);
         expect(isMoreButtonShown(el)).to.equal(true);
       });

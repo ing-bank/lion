@@ -33,7 +33,6 @@ export class LionInputDatepicker extends ScopedElementsMixin(
       'lion-calendar': LionCalendar,
     };
   }
-
   static get styles() {
     return [
       ...super.styles,
@@ -87,38 +86,38 @@ export class LionInputDatepicker extends ScopedElementsMixin(
       _calendarInvokerSlot: {
         attribute: false,
       },
-
       __calendarMinDate: {
         attribute: false,
       },
-
       __calendarMaxDate: {
         attribute: false,
       },
-
       __calendarDisableDates: {
         attribute: false,
         type: Array,
       },
     };
   }
-
   get slots() {
     return {
       ...super.slots,
       [this._calendarInvokerSlot]: () => this._invokerTemplate(),
     };
   }
-
   static get localizeNamespaces() {
-    return [{ 'lion-input-datepicker': localizeNamespaceLoader }, ...super.localizeNamespaces];
+    return [
+      {
+        'lion-input-datepicker': localizeNamespaceLoader,
+      },
+      ...super.localizeNamespaces,
+    ];
   }
 
   /**
    * @protected
    */
   get _invokerNode() {
-    return /** @type {HTMLElement} */ (this.querySelector(`#${this.__invokerId}`));
+    return /** @type {HTMLElement} */ this.querySelector(`#${this.__invokerId}`);
   }
 
   /**
@@ -126,11 +125,10 @@ export class LionInputDatepicker extends ScopedElementsMixin(
    * @protected
    */
   get _calendarNode() {
-    return /** @type {LionCalendar} */ (
-      this._overlayCtrl.contentNode.querySelector('[slot="content"]')
+    return /** @type {LionCalendar} */ this._overlayCtrl.contentNode.querySelector(
+      '[slot="content"]',
     );
   }
-
   get _isEditingTextField() {
     return this.focused && this._isHandlingUserInput;
   }
@@ -149,7 +147,6 @@ export class LionInputDatepicker extends ScopedElementsMixin(
 
   /** @protected */
   _isHandlingCalendarUserInput;
-
   constructor() {
     super();
     this.__invokerId = uuid(this.localName);
@@ -176,7 +173,6 @@ export class LionInputDatepicker extends ScopedElementsMixin(
    */
   requestUpdate(name, oldValue, options) {
     super.requestUpdate(name, oldValue, options);
-
     if (name === 'disabled' || name === 'readOnly') {
       this.__toggleInvokerDisabled();
     }
@@ -185,7 +181,7 @@ export class LionInputDatepicker extends ScopedElementsMixin(
   /** @private */
   __toggleInvokerDisabled() {
     if (this._invokerNode) {
-      const invokerNode = /** @type {HTMLElement & {disabled: boolean}} */ (this._invokerNode);
+      const invokerNode = /** @type {HTMLElement & {disabled: boolean}} */ this._invokerNode;
       invokerNode.disabled = this.disabled || this.readOnly;
     }
   }
@@ -224,7 +220,6 @@ export class LionInputDatepicker extends ScopedElementsMixin(
       </div>
     `;
   }
-
   _overlayFrameTemplate() {
     return html`
       <div class="calendar__overlay-frame">
@@ -246,7 +241,6 @@ export class LionInputDatepicker extends ScopedElementsMixin(
       </div>
     `;
   }
-
   render() {
     return html`
       <div class="form-field__group-one">${this._groupOneTemplate()}</div>
@@ -265,11 +259,7 @@ export class LionInputDatepicker extends ScopedElementsMixin(
     return html`
       <lion-calendar
         slot="content"
-        .selectedDate="${
-          /** @type {typeof LionInputDatepicker} */ (this.constructor).__getSyncDownValue(
-            this.modelValue,
-          )
-        }"
+        .selectedDate="${/** @type {typeof LionInputDatepicker} */ this.constructor.__getSyncDownValue(this.modelValue)}"
         .minDate="${this.__calendarMinDate}"
         .maxDate="${this.__calendarMaxDate}"
         .disableDates="${ifDefined(this.__calendarDisableDates)}"
@@ -308,10 +298,8 @@ export class LionInputDatepicker extends ScopedElementsMixin(
   _invokerIconTemplate() {
     return html`📅`;
   }
-
   _setupOverlayCtrl() {
     super._setupOverlayCtrl();
-
     this.__datepickerBeforeShow = () => {
       this._overlayCtrl.updateConfig(this._defineOverlayConfig());
     };
@@ -341,11 +329,10 @@ export class LionInputDatepicker extends ScopedElementsMixin(
     this.hasArrow = false;
     return withBottomSheetConfig();
   }
-
   async __openCalendarOverlay() {
     await this._overlayCtrl.show();
     await Promise.all([
-      /** @type {import('lit').LitElement} */ (this._overlayCtrl.contentNode).updateComplete,
+      /** @type {import('lit').LitElement} */ this._overlayCtrl.contentNode.updateComplete,
       this._calendarNode.updateComplete,
     ]);
     this._onCalendarOverlayOpened();
@@ -373,7 +360,6 @@ export class LionInputDatepicker extends ScopedElementsMixin(
       // Synchronize new selectedDate value to input
       this._isHandlingUserInput = true;
       this._isHandlingCalendarUserInput = true;
-
       if (
         Array.isArray(this.__calendarDisableDates) &&
         this.__calendarDisableDates.includes(selectedDate)
@@ -383,7 +369,6 @@ export class LionInputDatepicker extends ScopedElementsMixin(
       } else {
         this.modelValue = selectedDate;
       }
-
       this._isHandlingUserInput = false;
       this._isHandlingCalendarUserInput = false;
     }
@@ -417,8 +402,8 @@ export class LionInputDatepicker extends ScopedElementsMixin(
   __syncDisabledDates(validators) {
     // On every validator change, synchronize disabled dates: this means
     // we need to extract minDate, maxDate, minMaxDate and disabledDates validators
-    validators.forEach(v => {
-      const vctor = /** @type {typeof import('@lion/ui/form-core.js').Validator} */ (v.constructor);
+    validators.forEach((v) => {
+      const vctor = /** @type {typeof import('@lion/ui/form-core.js').Validator} */ v.constructor;
       if (vctor.validatorName === 'MinDate' && v.type === 'error') {
         this.__calendarMinDate = v.param;
       } else if (vctor.validatorName === 'MaxDate' && v.type === 'error') {
@@ -462,10 +447,9 @@ export class LionInputDatepicker extends ScopedElementsMixin(
     if (this._cachedOverlayContentNode) {
       return this._cachedOverlayContentNode;
     }
-    this._cachedOverlayContentNode = /** @type {HTMLElement} */ (
-      /** @type {ShadowRoot} */ (this.shadowRoot).querySelector('.calendar__overlay-frame')
-    );
-
+    this._cachedOverlayContentNode =
+      /** @type {HTMLElement} */
+      /** @type {ShadowRoot} */ this.shadowRoot.querySelector('.calendar__overlay-frame');
     return this._cachedOverlayContentNode;
   }
 }

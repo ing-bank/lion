@@ -10,12 +10,15 @@ import { getFormControlMembers } from '@lion/ui/form-core-test-helpers.js';
  * @param { ListboxHost } el
  */
 export function getListboxMembers(el) {
-  const obj = getFormControlMembers(/** @type { * & FormControlHost } */ (el));
+  const obj = getFormControlMembers(/** @type { * & FormControlHost } */ el);
   // eslint-disable-next-line no-return-assign
   return {
     ...obj,
-    _inputNode: /** @type {* & LionOptions} */ (obj._inputNode),
+    _inputNode: /** @type {* & LionOptions} */ obj._inputNode,
     // @ts-ignore [allow-protected] in test
-    ...{ _listboxNode: el._listboxNode, _activeDescendantOwnerNode: el._activeDescendantOwnerNode },
+    ...{
+      _listboxNode: el._listboxNode,
+      _activeDescendantOwnerNode: el._activeDescendantOwnerNode,
+    },
   };
 }

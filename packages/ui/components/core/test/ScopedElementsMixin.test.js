@@ -6,10 +6,8 @@ import {
 } from '@lit-labs/testing/fixtures.js';
 import { LitElement, html } from 'lit';
 import sinon from 'sinon';
-
 import { ScopedElementsMixin, supportsScopedRegistry } from '../src/ScopedElementsMixin.js';
 import { browserDetection } from '../src/browserDetection.js';
-
 const hasRealScopedRegistrySupport = supportsScopedRegistry();
 const originalShadowRootProps = {
   // @ts-expect-error
@@ -25,11 +23,12 @@ function mockNoRegistrySupport() {
   if (!hasRealScopedRegistrySupport) return;
 
   // This will be enough to make the `supportsScopedRegistry()` check fail inside ScopedElementsMixin and bypass scoped registries
-  globalThis.ShadowRoot = globalThis.ShadowRoot || { prototype: {} };
+  globalThis.ShadowRoot = globalThis.ShadowRoot || {
+    prototype: {},
+  };
   // @ts-expect-error
   globalThis.ShadowRoot.prototype.createElement = null;
 }
-
 mockNoRegistrySupport.restore = () => {
   // Are we on a server or do we have no polyfill? Nothing to be done here...
   if (!hasRealScopedRegistrySupport) return;
@@ -39,22 +38,20 @@ mockNoRegistrySupport.restore = () => {
   // @ts-expect-error
   globalThis.ShadowRoot.prototype.importNode = originalShadowRootProps.importNode;
 };
-
 class ScopedElementsChild extends LitElement {
   render() {
     return html`<span>I'm a child</span>`;
   }
 }
-
 class ScopedElementsHost extends ScopedElementsMixin(LitElement) {
-  static scopedElements = { 'scoped-elements-child': ScopedElementsChild };
-
+  static scopedElements = {
+    'scoped-elements-child': ScopedElementsChild,
+  };
   render() {
     return html`<scoped-elements-child></scoped-elements-child>`;
   }
 }
 customElements.define('scoped-elements-host', ScopedElementsHost);
-
 describe('ScopedElementsMixin', () => {
   it('renders child elements correctly (that were not registered yet on global registry)', async () => {
     // customElements.define('scoped-elements-child', ScopedElementsChild);
@@ -75,36 +72,31 @@ describe('ScopedElementsMixin', () => {
       expect(el.registry.get('scoped-elements-child')).to.not.be.undefined;
     }
   });
-
   describe('When scoped registries are supported', () => {
     it('registers elements on local registry', async () => {
       if (!hasRealScopedRegistrySupport) return;
-
       const ceDefineSpy = sinon.spy(customElements, 'define');
-
-      const el = /** @type {ScopedElementsHost} */ (
-        await fixture(html`<scoped-elements-host></scoped-elements-host>`)
-      );
+      const el =
+        /** @type {ScopedElementsHost} */
+        await fixture(html`<scoped-elements-host></scoped-elements-host>`);
 
       // @ts-expect-error
       expect(el.registry.get('scoped-elements-child')).to.equal(ScopedElementsChild);
       expect(el.registry).to.not.equal(customElements);
       expect(ceDefineSpy.calledWith('scoped-elements-child')).to.be.false;
-
       ceDefineSpy.restore();
     });
   });
-
   describe('When scoped registries are not supported', () => {
     class ScopedElementsChildNoReg extends LitElement {
       render() {
         return html`<span>I'm a child</span>`;
       }
     }
-
     class ScopedElementsHostNoReg extends ScopedElementsMixin(LitElement) {
-      static scopedElements = { 'scoped-elements-child-no-reg': ScopedElementsChildNoReg };
-
+      static scopedElements = {
+        'scoped-elements-child-no-reg': ScopedElementsChildNoReg,
+      };
       render() {
         return html`<scoped-elements-child-no-reg></scoped-elements-child-no-reg>`;
       }
@@ -113,41 +105,33 @@ describe('ScopedElementsMixin', () => {
       mockNoRegistrySupport();
       customElements.define('scoped-elements-host-no-reg', ScopedElementsHostNoReg);
     });
-
     after(() => {
       mockNoRegistrySupport.restore();
     });
-
     it('registers elements', async () => {
       const ceDefineSpy = sinon.spy(customElements, 'define');
-
-      const el = /** @type {ScopedElementsHostNoReg} */ (
-        await fixture(html`<scoped-elements-host-no-reg></scoped-elements-host-no-reg>`)
-      );
-
+      const el =
+        /** @type {ScopedElementsHostNoReg} */
+        await fixture(html`<scoped-elements-host-no-reg></scoped-elements-host-no-reg>`);
       expect(el.registry).to.equal(customElements);
       expect(ceDefineSpy.calledWith('scoped-elements-child-no-reg')).to.be.true;
       ceDefineSpy.restore();
     });
-
     it('fails when different classes are registered under different name', async () => {
       class ScopedElementsHostNoReg2 extends ScopedElementsMixin(LitElement) {
-        static scopedElements = { 'scoped-elements-child-no-reg': class extends HTMLElement {} };
-
+        static scopedElements = {
+          'scoped-elements-child-no-reg': class extends HTMLElement {},
+        };
         render() {
           return html`<scoped-elements-child-no-reg></scoped-elements-child-no-reg>`;
         }
       }
       customElements.define('scoped-elements-host-no-reg-2', ScopedElementsHostNoReg2);
-
       const errorStub = sinon.stub(console, 'error');
-      /** @type {ScopedElementsHostNoReg2} */ (
-        await fixture(html`<scoped-elements-host-no-reg></scoped-elements-host-no-reg>`)
-      );
-      /** @type {ScopedElementsHostNoReg2} */ (
-        await fixture(html`<scoped-elements-host-no-reg-2></scoped-elements-host-no-reg-2>`)
-      );
-
+      /** @type {ScopedElementsHostNoReg2} */
+      await fixture(html`<scoped-elements-host-no-reg></scoped-elements-host-no-reg>`);
+      /** @type {ScopedElementsHostNoReg2} */
+      await fixture(html`<scoped-elements-host-no-reg-2></scoped-elements-host-no-reg-2>`);
       expect(errorStub.args[0][0]).to.equal(
         [
           'You are trying to re-register the "scoped-elements-child-no-reg" custom element with a different class via ScopedElementsMixin.',

@@ -55,17 +55,15 @@ export class LionStep extends LitElement {
       },
     };
   }
-
   constructor() {
     super();
     this.status = 'untouched';
     // eslint-disable-next-line no-unused-vars
-    this.condition = /** @param {Object} [data] */ data => true;
+    this.condition = /** @param {Object} [data] */ (data) => true;
     this.invertCondition = false;
     this.forwardOnly = false;
     this.initialStep = false;
   }
-
   static get styles() {
     return [
       css`
@@ -83,7 +81,6 @@ export class LionStep extends LitElement {
       `,
     ];
   }
-
   render() {
     return html`<slot></slot>`;
   }
@@ -91,22 +88,34 @@ export class LionStep extends LitElement {
   /** @param {import('lit').PropertyValues } changedProperties */
   firstUpdated(changedProperties) {
     super.firstUpdated(changedProperties);
-    this.controller = /** @type {LionSteps} */ (this.parentNode);
+    this.controller = /** @type {LionSteps} */ this.parentNode;
   }
-
   enter() {
     this.status = 'entered';
-    this.dispatchEvent(new CustomEvent('enter', { bubbles: true, composed: true }));
+    this.dispatchEvent(
+      new CustomEvent('enter', {
+        bubbles: true,
+        composed: true,
+      }),
+    );
   }
-
   leave() {
     this.status = 'left';
-    this.dispatchEvent(new CustomEvent('leave', { bubbles: true, composed: true }));
+    this.dispatchEvent(
+      new CustomEvent('leave', {
+        bubbles: true,
+        composed: true,
+      }),
+    );
   }
-
   skip() {
     this.status = 'skipped';
-    this.dispatchEvent(new CustomEvent('skip', { bubbles: true, composed: true }));
+    this.dispatchEvent(
+      new CustomEvent('skip', {
+        bubbles: true,
+        composed: true,
+      }),
+    );
   }
 
   /** @param {Object} [data] */
@@ -119,5 +128,5 @@ export class LionStep extends LitElement {
    * // TODO: check if this is a false positive or if we can improve
    * @configure ReactiveElement
    */
-  static enabledWarnings = super.enabledWarnings?.filter(w => w !== 'change-in-update') || [];
+  static enabledWarnings = super.enabledWarnings?.filter((w) => w !== 'change-in-update') || [];
 }

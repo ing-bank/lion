@@ -5,7 +5,6 @@ import { MultiLevelListMixin } from '../src/MultiLevelListMixin.js';
 import { InteractiveListMixin } from '../src/InteractiveListMixin.js';
 import { mimicKeyPress } from '../test-helpers/mimicKeyPress.js';
 import { resolveSuiteTag } from '../../core/test-helpers/resolveSuiteTag.js';
-
 class MultiLevelListClass extends MultiLevelListMixin(LitElement) {}
 class InteractiveListClass extends InteractiveListMixin(LitElement) {}
 
@@ -15,7 +14,7 @@ class InteractiveListClass extends InteractiveListMixin(LitElement) {}
  *
  */
 
-const fixture = /** @type {(arg: TemplateResult) => Promise<LionMenu>} */ (_fixture);
+const fixture = /** @type {(arg: TemplateResult) => Promise<LionMenu>} */ _fixture;
 
 /**
  * @typedef {import('@lion/ui/types/test-suites.js').SuiteElement} SuiteElement
@@ -34,7 +33,6 @@ export function runMultiLevelListMixinSuite({
   );
   const tag = unsafeStatic(tagString);
   const tagChild = unsafeStatic(tagChildString);
-
   describe('MultiLevelListMixin', () => {
     it('has sublists', async () => {
       const el = await fixture(html`
@@ -55,11 +53,10 @@ export function runMultiLevelListMixinSuite({
           </div>
         </${tag}>
       `);
-      const subList = /** @type {MultiLevelListClass} */ (el.querySelector(tagChildString));
+      const subList = /** @type {MultiLevelListClass} */ el.querySelector(tagChildString);
       expect(subList).to.exist;
       expect(subList.level).to.equal(2);
     });
-
     it('inherits checked state from children when checked via href match', async () => {
       const el = await fixture(html`
         <${tag}>
@@ -84,7 +81,6 @@ export function runMultiLevelListMixinSuite({
         expect(item0.getAttribute('aria-current')).to.equal('true');
       }
     });
-
     describe('Interactions', () => {
       describe('Keyboard navigation', () => {
         it('navigates between L1 items on [ArrowDown] [ArrowUp] keys', async () => {
@@ -115,7 +111,6 @@ export function runMultiLevelListMixinSuite({
 
           // Normalize
           el.activeIndex = 0;
-
           mimicKeyPress(_listNode, 'ArrowDown');
           expect(el.activeIndex).to.be.equal(1);
           mimicKeyPress(_listNode, 'ArrowDown');
@@ -123,7 +118,6 @@ export function runMultiLevelListMixinSuite({
           mimicKeyPress(_listNode, 'ArrowUp');
           expect(el.activeIndex).to.be.equal(1);
         });
-
         it('stops navigation by default at end of option list', async () => {
           const el = await fixture(html`
             <${tag}>
@@ -152,15 +146,12 @@ export function runMultiLevelListMixinSuite({
 
           // Normalize
           el.activeIndex = 0;
-
           mimicKeyPress(_listNode, 'ArrowUp');
           expect(el.activeIndex).to.be.equal(0);
-
           el.activeIndex = 2;
           mimicKeyPress(_listNode, 'ArrowDown');
           expect(el.activeIndex).to.be.equal(2);
         });
-
         it('opens subList on [Enter] key press', async () => {
           const el = await fixture(html`
             <${tag}>
@@ -187,11 +178,9 @@ export function runMultiLevelListMixinSuite({
           // Normalize
           el.activeIndex = 0;
           const clickSpy = sinon.spy(el.activeItem, 'click');
-
           mimicKeyPress(_listNode, 'Enter');
           expect(clickSpy).to.have.been.calledOnce;
         });
-
         it('navigates between L2 items on [ArrowDown] [ArrowUp] keys', async () => {
           const el = await fixture(html`
             <${tag} axis="inline">
@@ -214,14 +203,12 @@ export function runMultiLevelListMixinSuite({
               </div>
             </${tag}>
           `);
-
-          const subList = /** @type {MultiLevelListClass} */ (el.querySelector(tagChildString));
+          const subList = /** @type {MultiLevelListClass} */ el.querySelector(tagChildString);
           // @ts-expect-error [allow-protected-in-tests]
           const { _listNode } = subList;
 
           // Normalize
           subList.activeIndex = 0;
-
           mimicKeyPress(_listNode, 'ArrowDown');
           expect(subList.activeIndex).to.be.equal(1);
           mimicKeyPress(_listNode, 'ArrowDown');
@@ -229,7 +216,6 @@ export function runMultiLevelListMixinSuite({
           mimicKeyPress(_listNode, 'ArrowUp');
           expect(subList.activeIndex).to.be.equal(1);
         });
-
         it('close method gets called on [ArrowUp] key when in L2 and horizontal', async () => {
           const el = await fixture(html`
             <${tag}>
@@ -252,7 +238,7 @@ export function runMultiLevelListMixinSuite({
               </div>
             </${tag}>
           `);
-          const subList = /** @type {MultiLevelListClass} */ (el.querySelector(tagChildString));
+          const subList = /** @type {MultiLevelListClass} */ el.querySelector(tagChildString);
           // @ts-ignore
           if (subList?.close) {
             // @ts-ignore
@@ -263,12 +249,10 @@ export function runMultiLevelListMixinSuite({
             // Normalize
             subList.activeIndex = 0;
             subList.axis = 'inline';
-
             mimicKeyPress(_listNode, 'ArrowUp');
             expect(closeSpy).to.have.been.calledOnce;
           }
         });
-
         it('close method gets called on [ArrowLeft] key when in L2 and vertical', async () => {
           const el = await fixture(html`
             <${tag}>
@@ -291,7 +275,7 @@ export function runMultiLevelListMixinSuite({
               </div>
             </${tag}>
           `);
-          const subList = /** @type {MultiLevelListClass} */ (el.querySelector(tagChildString));
+          const subList = /** @type {MultiLevelListClass} */ el.querySelector(tagChildString);
           // @ts-ignore
           if (subList?.close) {
             // @ts-ignore
@@ -301,7 +285,6 @@ export function runMultiLevelListMixinSuite({
 
             // Normalize
             subList.activeIndex = 0;
-
             mimicKeyPress(_listNode, 'ArrowLeft');
             expect(closeSpy).to.have.been.calledOnce;
           }

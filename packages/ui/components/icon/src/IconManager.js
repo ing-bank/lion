@@ -6,7 +6,6 @@
 export class IconManager {
   /** @private */
   __iconResolvers;
-
   constructor() {
     this.__iconResolvers = new Map();
   }
@@ -61,7 +60,6 @@ export class IconManager {
     if (splitIconId.length !== 3) {
       throw new Error(`Incorrect iconId: ${iconId}. Format: <namespace>:<iconset>:<icon>`);
     }
-
     return this.resolveIcon(splitIconId[0], splitIconId[1], splitIconId[2]);
   }
 }

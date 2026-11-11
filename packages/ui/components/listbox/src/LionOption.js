@@ -68,7 +68,6 @@ export class LionOption extends DisabledMixin(
   get slots() {
     return {};
   }
-
   constructor() {
     super();
     this.active = false;
@@ -86,9 +85,12 @@ export class LionOption extends DisabledMixin(
    */
   requestUpdate(name, oldValue, options) {
     super.requestUpdate(name, oldValue, options);
-
     if (name === 'active' && this.active !== oldValue) {
-      this.dispatchEvent(new Event('active-changed', { bubbles: true }));
+      this.dispatchEvent(
+        new Event('active-changed', {
+          bubbles: true,
+        }),
+      );
     }
   }
 
@@ -100,7 +102,6 @@ export class LionOption extends DisabledMixin(
     if (changedProperties.has('checked')) {
       this.setAttribute('aria-selected', `${this.checked}`);
     }
-
     if (changedProperties.has('disabled')) {
       this.setAttribute('aria-disabled', `${this.disabled}`);
     }
@@ -117,7 +118,6 @@ export class LionOption extends DisabledMixin(
       </div>
     `;
   }
-
   connectedCallback() {
     super.connectedCallback();
     this.setAttribute('role', 'option');
@@ -138,9 +138,9 @@ export class LionOption extends DisabledMixin(
     if (this.disabled) {
       return;
     }
-    const parentForm = /** @type {unknown} */ (this._parentFormGroup);
+    const parentForm = /** @type {unknown} */ this._parentFormGroup;
     this._isHandlingUserInput = true;
-    if (parentForm && /** @type {ChoiceGroupHost} */ (parentForm).multipleChoice) {
+    if (parentForm && /** @type {ChoiceGroupHost} */ parentForm.multipleChoice) {
       // @ts-ignore [ts7-2565] TS7 checks definite assignment on this inferred field; Lit reactive property: read through a typed local instead (e.g. const next = this.x ?? DEFAULT) - a class field would shadow the accessor Lit creates from static properties
       this.checked = !this.checked;
       this.active = !this.active;

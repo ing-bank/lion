@@ -2,17 +2,17 @@
 import autosize from 'autosize';
 import { LionField, NativeTextFieldMixin } from '@lion/ui/form-core.js';
 import { css } from 'lit';
-
 class LionFieldWithTextArea extends LionField {
   /**
    * @returns {HTMLTextAreaElement}
    * @protected
    */
   get _inputNode() {
-    const inputs = Array.from(this.children).filter(el => el.slot === 'input');
+    const inputs = Array.from(this.children).filter((el) => el.slot === 'input');
     // Browser extensions (like LanguageTool) can add their own element to the input slot
-    return /** @type {HTMLTextAreaElement} */ (
-      inputs.find(el => el.localName === 'textarea') || inputs[0]
+    return (
+      /** @type {HTMLTextAreaElement} */ inputs.find((el) => el.localName === 'textarea') ||
+      inputs[0]
     );
   }
 }
@@ -45,7 +45,6 @@ export class LionTextarea extends NativeTextFieldMixin(LionFieldWithTextArea) {
       },
     };
   }
-
   get slots() {
     return {
       ...super.slots,
@@ -56,12 +55,10 @@ export class LionTextarea extends NativeTextFieldMixin(LionFieldWithTextArea) {
         if (input.style.resize !== undefined) {
           input.style.resize = 'none';
         }
-
         return input;
       },
     };
   }
-
   constructor() {
     super();
     this.rows = 2;
@@ -69,7 +66,6 @@ export class LionTextarea extends NativeTextFieldMixin(LionFieldWithTextArea) {
     this.readOnly = false;
     this.placeholder = '';
   }
-
   connectedCallback() {
     // eslint-disable-next-line wc/guard-super-call
     super.connectedCallback();
@@ -81,22 +77,18 @@ export class LionTextarea extends NativeTextFieldMixin(LionFieldWithTextArea) {
   /** @param {import('lit').PropertyValues } changedProperties */
   updated(changedProperties) {
     super.updated(changedProperties);
-
     if (changedProperties.has('name')) {
       this._inputNode.name = this.name;
     }
-
     if (changedProperties.has('autocomplete')) {
       // the DOM lib types `autocomplete` as `AutoFill` only in newer TypeScript;
       // cast keeps this valid on both compilers without widening the public type
-      this._inputNode.autocomplete = /** @type {any} */ (this.autocomplete);
+      this._inputNode.autocomplete = /** @type {any} */ this.autocomplete;
     }
-
     if (changedProperties.has('disabled')) {
       this._inputNode.disabled = this.disabled;
       this.validate();
     }
-
     if (changedProperties.has('rows')) {
       const native = this._inputNode;
       if (native) {
@@ -104,30 +96,25 @@ export class LionTextarea extends NativeTextFieldMixin(LionFieldWithTextArea) {
         native['rows'] = this.rows;
       }
     }
-
     if (changedProperties.has('readOnly')) {
       const native = this._inputNode;
       if (native) {
         native.readOnly = this.readOnly;
       }
     }
-
     if (changedProperties.has('placeholder')) {
       const native = this._inputNode;
       if (native) {
         native.placeholder = this.placeholder;
       }
     }
-
     if (changedProperties.has('modelValue')) {
       this.resizeTextarea();
     }
-
     if (changedProperties.has('maxRows') || changedProperties.has('rows')) {
       this.setTextareaMaxHeight();
     }
   }
-
   disconnectedCallback() {
     super.disconnectedCallback();
     autosize.destroy(this._inputNode);
@@ -140,19 +127,15 @@ export class LionTextarea extends NativeTextFieldMixin(LionFieldWithTextArea) {
     const { value } = this._inputNode;
     this._inputNode.value = '';
     this.resizeTextarea();
-
     const cs = window.getComputedStyle(this._inputNode, null);
     const lineHeight = parseFloat(cs.lineHeight) || parseFloat(cs.height) / this.rows;
     const paddingOffset = parseFloat(cs.paddingTop) + parseFloat(cs.paddingBottom);
     const borderOffset = parseFloat(cs.borderTopWidth) + parseFloat(cs.borderBottomWidth);
     const offset = cs.boxSizing === 'border-box' ? paddingOffset + borderOffset : 0;
-
     this._inputNode.style.maxHeight = `${lineHeight * this.maxRows + offset}px`;
-
     this._inputNode.value = value;
     this.resizeTextarea();
   }
-
   static get styles() {
     return [
       ...super.styles,
@@ -179,7 +162,6 @@ export class LionTextarea extends NativeTextFieldMixin(LionFieldWithTextArea) {
     }
     return super.updateComplete;
   }
-
   resizeTextarea() {
     autosize.update(this._inputNode);
   }
@@ -203,7 +185,7 @@ export class LionTextarea extends NativeTextFieldMixin(LionFieldWithTextArea) {
     // @ts-ignore this property is added by webcomponentsjs polyfill for old browsers
     while (count !== 0 && !this.__shady_native_contains(this._inputNode)) {
       // eslint-disable-next-line no-await-in-loop, no-promise-executor-return
-      await new Promise(resolve => setTimeout(resolve));
+      await new Promise((resolve) => setTimeout(resolve));
       count -= 1;
     }
   }

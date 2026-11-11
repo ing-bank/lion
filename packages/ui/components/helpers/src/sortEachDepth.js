@@ -39,7 +39,6 @@ export function sortEachDepth(orderPerDepth) {
     while (true) {
       nameA = storyKindA[depth] ? storyKindA[depth] : '';
       nameB = storyKindB[depth] ? storyKindB[depth] : '';
-
       if (nameA === nameB) {
         // We'll need to look at the next part of the name.
         depth += 1;
@@ -64,7 +63,6 @@ export function sortEachDepth(orderPerDepth) {
           if (ordering.indexOf('...abc') !== -1) {
             insertPosition = ordering.indexOf('...abc');
           }
-
           if (indexA === -1) {
             indexA = insertPosition;
           }

@@ -28,12 +28,11 @@ function mergeSortByTabIndex(left, right) {
   const result = [];
   while (left.length > 0 && right.length > 0) {
     if (hasLowerTabOrder(left[0], right[0])) {
-      result.push(/** @type {HTMLElement} */ (right.shift()));
+      result.push(/** @type {HTMLElement} */ right.shift());
     } else {
-      result.push(/** @type {HTMLElement} */ (left.shift()));
+      result.push(/** @type {HTMLElement} */ left.shift());
     }
   }
-
   return [...result, ...left, ...right];
 }
 
@@ -48,7 +47,6 @@ export function sortByTabIndex(elements) {
   if (len < 2) {
     return elements;
   }
-
   const pivot = Math.ceil(len / 2);
   const left = sortByTabIndex(elements.slice(0, pivot));
   const right = sortByTabIndex(elements.slice(pivot));

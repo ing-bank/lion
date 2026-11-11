@@ -1,5 +1,4 @@
 import { expect } from '@open-wc/testing';
-
 import { getLocalizeManager, LocalizeManager } from '@lion/ui/localize-no-side-effects.js';
 
 /**
@@ -14,7 +13,6 @@ function getProtectedMembers(localizeManagerEl) {
     fallbackLocale,
   };
 }
-
 describe('localize', () => {
   const localizeManager = getLocalizeManager();
   // this is an important mindset:
@@ -26,12 +24,10 @@ describe('localize', () => {
   it('is an instance of LocalizeManager', () => {
     expect(localizeManager).to.be.an.instanceOf(LocalizeManager);
   });
-
   it('is configured to automatically load namespaces if locale is changed', () => {
     const { autoLoadOnLocaleChange } = getProtectedMembers(localizeManager);
     expect(autoLoadOnLocaleChange).to.equal(true);
   });
-
   it('is configured to fallback to the locale "en-GB"', () => {
     const { fallbackLocale } = getProtectedMembers(localizeManager);
     expect(fallbackLocale).to.equal('en-GB');

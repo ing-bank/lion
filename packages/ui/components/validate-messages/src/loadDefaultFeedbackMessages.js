@@ -7,5 +7,7 @@ import { loadDefaultFeedbackMessagesNoSideEffects } from './loadDefaultFeedbackM
  */
 
 export function loadDefaultFeedbackMessages() {
-  return loadDefaultFeedbackMessagesNoSideEffects({ localize: getLocalizeManager() });
+  return loadDefaultFeedbackMessagesNoSideEffects({
+    localize: getLocalizeManager(),
+  });
 }

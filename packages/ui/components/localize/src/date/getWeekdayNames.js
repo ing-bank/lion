@@ -11,11 +11,9 @@ const weekdayNamesCache = {};
 function getCachedWeekdayNames(locale) {
   const cachedWeekdayNames = weekdayNamesCache[locale];
   let weekdays;
-
   if (cachedWeekdayNames) {
     return cachedWeekdayNames;
   }
-
   weekdayNamesCache[locale] = {
     long: [],
     short: [],
@@ -24,12 +22,11 @@ function getCachedWeekdayNames(locale) {
 
   /** @type {Array<"long" | "short" | "narrow">} style */
   const styles = ['long', 'short', 'narrow'];
-  styles.forEach(style => {
+  styles.forEach((style) => {
     weekdays = weekdayNamesCache[locale][style];
     const formatter = new Intl.DateTimeFormat(locale, {
       weekday: style,
     });
-
     const date = new Date('2019/04/07'); // start from Sunday
     for (let i = 0; i < 7; i += 1) {
       const weekday = formatter.format(date);
@@ -38,7 +35,6 @@ function getCachedWeekdayNames(locale) {
       date.setDate(date.getDate() + 1);
     }
   });
-
   return weekdayNamesCache[locale];
 }
 

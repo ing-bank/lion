@@ -1,5 +1,4 @@
 import { css } from 'lit';
-
 export const drawerStyle = css`
   :host {
     display: block;

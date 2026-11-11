@@ -47,7 +47,6 @@ export function formatNumberToParts(number, options = {}) {
     parsedNumber = roundNumber(number, options.roundMode);
   }
   let formattedParts = [];
-
   const formattedNumber = Intl.NumberFormat(computedLocale, options).format(parsedNumber);
   const { decimalSeparator, groupSeparator } = getSeparatorsFromNumber(
     parsedNumber,
@@ -71,11 +70,13 @@ export function formatNumberToParts(number, options = {}) {
 This can happen due to both props being specified as the same, or one of the props being the same as the other one from default locale.
 Please specify .groupSeparator / .decimalSeparator on the formatOptions object to be different.`);
   }
-
   for (let i = 0; i < formattedNumber.length; i += 1) {
     // detect minusSign
     if (regexMinusSign.test(formattedNumber[i])) {
-      formattedParts.push({ type: 'minusSign', value: '−' /* U+2212, 'Minus-Sign', &minus; */ });
+      formattedParts.push({
+        type: 'minusSign',
+        value: '−' /* U+2212, 'Minus-Sign', &minus; */,
+      });
     }
     // detect numbers
     if (regexNum.test(formattedNumber[i])) {
@@ -88,7 +89,10 @@ Please specify .groupSeparator / .decimalSeparator on the formatOptions object t
     }
     // push when another character then currency
     if (regexCurrency.test(formattedNumber[i]) && currency) {
-      formattedParts.push({ type: 'currency', value: currency });
+      formattedParts.push({
+        type: 'currency',
+        value: currency,
+      });
       currency = '';
     }
 
@@ -100,22 +104,31 @@ Please specify .groupSeparator / .decimalSeparator on the formatOptions object t
     ) {
       // Write number grouping
       if (numberPart) {
-        formattedParts.push({ type: 'integer', value: numberPart });
+        formattedParts.push({
+          type: 'integer',
+          value: numberPart,
+        });
         numberPart = '';
       }
-
-      formattedParts.push({ type: 'group', value: group });
+      formattedParts.push({
+        type: 'group',
+        value: group,
+      });
       isGroup = true;
     }
-
     if (formattedNumber[i] === decimalSeparator) {
       // Write number grouping
       if (numberPart) {
-        formattedParts.push({ type: 'integer', value: numberPart });
+        formattedParts.push({
+          type: 'integer',
+          value: numberPart,
+        });
         numberPart = '';
       }
-
-      formattedParts.push({ type: 'decimal', value: decimal });
+      formattedParts.push({
+        type: 'decimal',
+        value: decimal,
+      });
       fraction = true;
     }
 
@@ -124,18 +137,30 @@ Please specify .groupSeparator / .decimalSeparator on the formatOptions object t
       const hasNumberPart = !!numberPart;
       // Write number grouping
       if (numberPart && !fraction) {
-        formattedParts.push({ type: 'integer', value: numberPart });
+        formattedParts.push({
+          type: 'integer',
+          value: numberPart,
+        });
         numberPart = '';
       } else if (numberPart) {
-        formattedParts.push({ type: 'fraction', value: numberPart });
+        formattedParts.push({
+          type: 'fraction',
+          value: numberPart,
+        });
         numberPart = '';
       }
       // If space equals the group separator it gets type group
       if (normalSpaces(formattedNumber[i]) === group && hasNumberPart && !fraction) {
-        formattedParts.push({ type: 'group', value: formattedNumber[i] });
+        formattedParts.push({
+          type: 'group',
+          value: formattedNumber[i],
+        });
         // if we already pushed it as a group separator, don't add it as a literal on top..
       } else if (!isGroup) {
-        formattedParts.push({ type: 'literal', value: formattedNumber[i] });
+        formattedParts.push({
+          type: 'literal',
+          value: formattedNumber[i],
+        });
       }
     }
     isGroup = false;
@@ -144,15 +169,24 @@ Please specify .groupSeparator / .decimalSeparator on the formatOptions object t
     if (fraction === true && i === formattedNumber.length - 1) {
       // write last number part
       if (numberPart) {
-        formattedParts.push({ type: 'fraction', value: numberPart });
+        formattedParts.push({
+          type: 'fraction',
+          value: numberPart,
+        });
       }
       // If there are no fractions but we reached the end write the number part as integer
     } else if (i === formattedNumber.length - 1 && numberPart) {
-      formattedParts.push({ type: 'integer', value: numberPart });
+      formattedParts.push({
+        type: 'integer',
+        value: numberPart,
+      });
     }
     // push currency on end of loop
     if (i === formattedNumber.length - 1 && currency) {
-      formattedParts.push({ type: 'currency', value: currency });
+      formattedParts.push({
+        type: 'currency',
+        value: currency,
+      });
       currency = '';
     }
   }

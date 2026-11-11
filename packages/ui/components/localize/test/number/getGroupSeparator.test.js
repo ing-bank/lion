@@ -1,7 +1,5 @@
 import { expect } from '@open-wc/testing';
-
 import { getGroupSeparator } from '@lion/ui/localize.js';
-
 describe('getGroupSeparator', () => {
   it('returns group separator for locale', () => {
     expect(getGroupSeparator('en-GB')).to.equal(',');

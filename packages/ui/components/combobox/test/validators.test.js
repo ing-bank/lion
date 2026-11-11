@@ -11,7 +11,8 @@ import { expect, fixture, html } from '@open-wc/testing';
 describe('MatchesOption validation', () => {
   it('is enabled when an invalid value is set', async () => {
     let isEnabled;
-    const el = /** @type {LionCombobox} */ (
+    const el =
+      /** @type {LionCombobox} */
       await fixture(html`
         <lion-combobox name="foo">
           <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
@@ -19,27 +20,22 @@ describe('MatchesOption validation', () => {
           <lion-option .choiceValue="${'Chicory'}">Chicory</lion-option>
           <lion-option .choiceValue="${'Victoria Plum'}">Victoria Plum</lion-option>
         </lion-combobox>
-      `)
-    );
+      `);
     const config = {};
     config.node = el;
     const validator = new MatchesOption();
-
     await mimicUserTyping(el, 'Artichoke');
     await el.updateComplete;
-
     isEnabled = validator.execute('Artichoke', undefined, config);
     expect(isEnabled).to.be.false;
-
     await mimicUserTyping(el, 'Foo');
     await el.updateComplete;
-
     isEnabled = validator.execute('Foo', undefined, config);
     expect(isEnabled).to.be.true;
   });
-
   it('is not enabled when empty is set', async () => {
-    const el = /** @type {LionCombobox} */ (
+    const el =
+      /** @type {LionCombobox} */
       await fixture(html`
         <lion-combobox name="foo">
           <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
@@ -47,15 +43,12 @@ describe('MatchesOption validation', () => {
           <lion-option .choiceValue="${'Chicory'}">Chicory</lion-option>
           <lion-option .choiceValue="${'Victoria Plum'}">Victoria Plum</lion-option>
         </lion-combobox>
-      `)
-    );
+      `);
     const config = {};
     config.node = el;
     const validator = new MatchesOption();
-
     el.modelValue = '';
     await el.updateComplete;
-
     const isEnabled = validator.execute('', undefined, config);
     expect(isEnabled).to.be.false;
   });

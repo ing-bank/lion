@@ -10,8 +10,17 @@ import { runInputStepperIntegrationSuite } from '../components/input-stepper/tes
 export function runInputStepperSuites(customConfig = {}) {
   const config =
     typeof customConfig === 'function'
-      ? { classes: { host: customConfig } }
-      : { classes: { host: LionInputStepper, ...customConfig.classes } };
+      ? {
+          classes: {
+            host: customConfig,
+          },
+        }
+      : {
+          classes: {
+            host: LionInputStepper,
+            ...customConfig.classes,
+          },
+        };
   runInputStepperSuite(config);
   runInputStepperIntegrationSuite(config);
 }

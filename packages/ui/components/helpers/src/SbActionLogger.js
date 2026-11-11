@@ -6,12 +6,19 @@ export class SbActionLogger extends LitElement {
   static get properties() {
     return {
       // eslint-disable-next-line lit/no-native-attributes
-      title: { type: String, reflect: true },
-      simple: { type: Boolean, reflect: true },
-      __logCounter: { type: Number },
+      title: {
+        type: String,
+        reflect: true,
+      },
+      simple: {
+        type: Boolean,
+        reflect: true,
+      },
+      __logCounter: {
+        type: Number,
+      },
     };
   }
-
   static get styles() {
     return [
       css`
@@ -132,7 +139,6 @@ export class SbActionLogger extends LitElement {
       `,
     ];
   }
-
   constructor() {
     super();
     // eslint-disable-next-line wc/no-constructor-attributes
@@ -140,10 +146,9 @@ export class SbActionLogger extends LitElement {
     this.simple = false;
     this.__logCounter = 0;
   }
-
   get loggerEl() {
-    return /** @type {HTMLElement} */ (
-      /** @type {ShadowRoot} */ (this.shadowRoot).querySelector('.logger')
+    return /** @type {HTMLElement} */ /** @type {ShadowRoot} */ this.shadowRoot.querySelector(
+      '.logger',
     );
   }
 
@@ -156,11 +161,9 @@ export class SbActionLogger extends LitElement {
    */
   log(content) {
     this.__animateCue();
-
     if (this.simple) {
       this.__clearLogs();
     }
-
     if (this.__isConsecutiveDuplicateLog(content)) {
       this.__handleConsecutiveDuplicateLog();
     } else {
@@ -170,7 +173,6 @@ export class SbActionLogger extends LitElement {
         behavior: 'smooth',
       });
     }
-
     this.__logCounter += 1; // increment total log counter
   }
 
@@ -188,7 +190,6 @@ export class SbActionLogger extends LitElement {
       </div>
     `;
   }
-
   render() {
     return html`
       <div class="header">
@@ -228,7 +229,6 @@ export class SbActionLogger extends LitElement {
     }
     return false;
   }
-
   __handleConsecutiveDuplicateLog() {
     if (!this.loggerEl.lastElementChild?.querySelector('.logger__log-count')) {
       this.__prependLogCounterElement();
@@ -245,18 +245,15 @@ export class SbActionLogger extends LitElement {
       }
     }
   }
-
   __prependLogCounterElement() {
     const countEl = document.createElement('div');
     countEl.classList.add('logger__log-count');
     countEl.innerText = (1).toString();
-
     const loggerLastElementChild = this.loggerEl.lastElementChild;
     if (loggerLastElementChild) {
       loggerLastElementChild.insertBefore(countEl, loggerLastElementChild.firstElementChild);
     }
   }
-
   __animateCue() {
     const cueEl = this.shadowRoot?.querySelector('.header__log-cue-overlay');
     if (cueEl) {
@@ -269,7 +266,6 @@ export class SbActionLogger extends LitElement {
       cueEl.classList.add('header__log-cue-overlay--slide');
     }
   }
-
   __clearLogs() {
     const loggerEl = this.shadowRoot?.querySelector('.logger');
     if (loggerEl) {

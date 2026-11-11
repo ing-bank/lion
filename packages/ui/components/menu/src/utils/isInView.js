@@ -12,7 +12,6 @@ export function isInView(container, element, partial = false) {
   const eBottom = eTop + element.clientHeight;
   const isTotal = eTop >= cTop && eBottom <= cBottom;
   let isPartial;
-
   if (partial === true) {
     isPartial = (eTop < cTop && eBottom > cTop) || (eBottom > cBottom && eTop < cBottom);
   } else if (typeof partial === 'number') {

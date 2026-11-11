@@ -61,7 +61,6 @@ export class LionIcon extends LitElement {
       },
     };
   }
-
   static get styles() {
     return [
       css`
@@ -98,7 +97,6 @@ export class LionIcon extends LitElement {
    * @type {TemplateResult|typeof nothing|TagFunction}
    */
   __svg;
-
   constructor() {
     super();
     this.ariaLabel = '';
@@ -110,7 +108,7 @@ export class LionIcon extends LitElement {
    * TODO: check if this is a false positive or if we can improve
    * @configure ReactiveElement
    */
-  static enabledWarnings = super.enabledWarnings?.filter(w => w !== 'change-in-update') || [];
+  static enabledWarnings = super.enabledWarnings?.filter((w) => w !== 'change-in-update') || [];
 
   /** @param {import('lit').PropertyValues} changedProperties */
   update(changedProperties) {
@@ -118,16 +116,13 @@ export class LionIcon extends LitElement {
     if (changedProperties.has('ariaLabel')) {
       this._onLabelChanged();
     }
-
     if (changedProperties.has('iconId')) {
-      this._onIconIdChanged(/** @type {string} */ (changedProperties.get('iconId')));
+      this._onIconIdChanged(/** @type {string} */ changedProperties.get('iconId'));
     }
   }
-
   render() {
     return html`<slot></slot>`;
   }
-
   connectedCallback() {
     // ensures that aria-hidden is set if there is no aria-label attribute
     this._onLabelChanged();

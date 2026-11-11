@@ -1,9 +1,21 @@
 // @ts-check
 import fs from 'node:fs';
 import path from 'node:path';
-import { compareLocks, formatReport, missingDeclarations } from './compare.js';
+import {
+  compareLocks,
+  declaredDrift,
+  formatReport,
+  missingDeclarations,
+  npmResolutionFor,
+} from './compare.js';
 import { generateNpmLock, writeNpmLock } from './generator.js';
 import { readNpmLock } from './npm-lock.js';
+import {
+  isTrackedByGit,
+  overridesDrift,
+  readNpmOverrides,
+  readPnpmOverrides,
+} from './overrides.js';
 import { readPnpmLock } from './pnpm-lock.js';
 
 /**
@@ -11,6 +23,9 @@ import { readPnpmLock } from './pnpm-lock.js';
  * @property {string} repoRoot
  * @property {string} [pnpmLockFile]
  * @property {string} [npmLockFile]
+ * @property {'strict'|'declared'} [mode] `strict` compares full record sets (repo commits pnpm-lock.yaml),
+ *   `declared` compares what each workspace manifest declares against the npm lock (pnpm imports the npm
+ *   lock). Defaults to `strict`.
  */
 
 /**
@@ -18,6 +33,10 @@ import { readPnpmLock } from './pnpm-lock.js';
  *   missingDeclarations: string[],
  *   noNpmLock: boolean,
  *   noPnpmLock: boolean,
+ *   noPnpmWorkspace: boolean,
+ *   pnpmWorkspaceUntracked: boolean,
+ *   declared: import('./compare.js').DeclaredDriftEntry[],
+ *   overrides: import('./overrides.js').OverrideDriftEntry[],
  * }} CheckResult
  */
 
@@ -63,8 +82,12 @@ export function check(layout) {
     pnpmRecords: 0,
     npmRecords: 0,
     missingDeclarations: [],
+    declared: [],
+    overrides: [],
     noNpmLock: false,
     noPnpmLock: false,
+    noPnpmWorkspace: false,
+    pnpmWorkspaceUntracked: false,
   };
   const lockPath = path.join(layout.repoRoot, layout.pnpmLockFile ?? 'pnpm-lock.yaml');
   if (!fs.existsSync(lockPath)) return { ...empty, noPnpmLock: true };
@@ -73,11 +96,41 @@ export function check(layout) {
   const npm = readNpmLock(layout.repoRoot, layout.npmLockFile);
   if (!npm) return { ...empty, ok: false, noNpmLock: true };
 
+  // The overrides live in two committed files that cannot be one file: package.json carries npm's spelling,
+  // pnpm-workspace.yaml pnpm's. Without the workspace file pnpm resolves without the overrides the npm lock
+  // was built with, so the parity check is not optional.
+  const pnpmOverrides = readPnpmOverrides(layout.repoRoot);
+  if (!pnpmOverrides) return { ...empty, ok: false, noPnpmWorkspace: true };
+  const overrides = overridesDrift(readNpmOverrides(layout.repoRoot), pnpmOverrides);
+  const pnpmWorkspaceUntracked = !isTrackedByGit(layout.repoRoot);
+
+  const manifests = manifestsOf(layout.repoRoot, pnpm);
+  const missing = missingDeclarations(pnpm, npm, manifests);
+  if (layout.mode === 'declared') {
+    const declared = declaredDrift(pnpm, npm, manifests);
+    return {
+      ...empty,
+      ok:
+        declared.length === 0 &&
+        missing.length === 0 &&
+        overrides.length === 0 &&
+        !pnpmWorkspaceUntracked,
+      pnpmRecords: pnpm.packages.size,
+      npmRecords: npm.packages.size,
+      declared,
+      missingDeclarations: missing,
+      overrides,
+      pnpmWorkspaceUntracked,
+    };
+  }
+
   const report = compareLocks(pnpm, npm);
-  const missing = missingDeclarations(pnpm, npm, manifestsOf(layout.repoRoot, pnpm));
   return {
     ...report,
-    ok: report.ok && missing.length === 0,
+    declared: [],
+    overrides,
+    pnpmWorkspaceUntracked,
+    ok: report.ok && missing.length === 0 && overrides.length === 0 && !pnpmWorkspaceUntracked,
     missingDeclarations: missing,
     noNpmLock: false,
     noPnpmLock: false,
@@ -102,5 +155,21 @@ export function generateInMemory(options) {
   return generateNpmLock(options);
 }
 
-export { compareLocks, formatReport, missingDeclarations, readNpmLock, readPnpmLock };
+export {
+  compareLocks,
+  declaredDrift,
+  formatReport,
+  missingDeclarations,
+  readNpmLock,
+  readPnpmLock,
+};
+export {
+  flattenNpmOverrides,
+  isTrackedByGit,
+  overridesDrift,
+  readNpmOverrides,
+  readPnpmOverrides,
+  readPnpmOverridesText,
+} from './overrides.js';
+export { renderPnpmWorkspace, syncPnpmWorkspace, workspaceIsInSync } from './workspace.js';
 export { stringifyJson, toJsonLines } from './json-notation.js';

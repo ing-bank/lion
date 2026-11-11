@@ -83,8 +83,8 @@ export class LionSelectRich extends SlotMixin(ScopedElementsMixin(OverlayMixin(L
    * @type {LionSelectInvoker}
    */
   get _invokerNode() {
-    return /** @type {LionSelectInvoker} */ (
-      Array.from(this.children).find(child => child.slot === 'invoker')
+    return /** @type {LionSelectInvoker} */ Array.from(this.children).find(
+      (child) => child.slot === 'invoker',
     );
   }
 
@@ -103,9 +103,9 @@ export class LionSelectRich extends SlotMixin(ScopedElementsMixin(OverlayMixin(L
    */
   get _scrollTargetNode() {
     // TODO: should this be defined here or in extension layer?
-    return /** @type {HTMLElement} */ (
-      /** @type {HTMLElement & {_scrollTargetNode?: HTMLElement}} */ (this._overlayContentNode)
-        ._scrollTargetNode || this._overlayContentNode
+    return (
+      /** @type {HTMLElement} */ /** @type {HTMLElement & {_scrollTargetNode?: HTMLElement}} */ this
+        ._overlayContentNode._scrollTargetNode || this._overlayContentNode
     );
   }
 
@@ -123,7 +123,6 @@ export class LionSelectRich extends SlotMixin(ScopedElementsMixin(OverlayMixin(L
 
   /** @protected */
   _arrowWidth;
-
   constructor() {
     super();
 
@@ -139,7 +138,6 @@ export class LionSelectRich extends SlotMixin(ScopedElementsMixin(OverlayMixin(L
      * @type {'windows/linux'|'mac'|'auto'}
      */
     this.interactionMode = 'auto';
-
     this.singleOption = false;
     this._arrowWidth = 28;
 
@@ -158,21 +156,17 @@ export class LionSelectRich extends SlotMixin(ScopedElementsMixin(OverlayMixin(L
     /** @protected */
     this._listboxOnClick = this._listboxOnClick.bind(this);
   }
-
   connectedCallback() {
     super.connectedCallback();
     this.registrationComplete.then(() => {
       this._invokerNode.selectedElement =
-        this.formElements[/**  @type {number} */ (this.checkedIndex)];
+        this.formElements[/**  @type {number} */ this.checkedIndex];
     });
-
     this._invokerNode.hostElement = this;
-
     this.__setupInvokerNode();
     this.__toggleInvokerDisabled();
     this.addEventListener('keyup', this.__onKeyUp);
   }
-
   disconnectedCallback() {
     super.disconnectedCallback();
     this.__teardownInvokerNode();
@@ -195,7 +189,6 @@ export class LionSelectRich extends SlotMixin(ScopedElementsMixin(OverlayMixin(L
         this.navigateWithinInvoker = Boolean(this.interactionMode === 'windows/linux');
       }
     }
-
     if (name === 'disabled' || name === 'readOnly') {
       this.__toggleInvokerDisabled();
     }
@@ -206,7 +199,6 @@ export class LionSelectRich extends SlotMixin(ScopedElementsMixin(OverlayMixin(L
    */
   updated(changedProperties) {
     super.updated(changedProperties);
-
     if (changedProperties.has('disabled')) {
       if (this.disabled) {
         this._invokerNode.makeRequestToBeDisabled();
@@ -214,7 +206,6 @@ export class LionSelectRich extends SlotMixin(ScopedElementsMixin(OverlayMixin(L
         this._invokerNode.retractRequestToBeDisabled();
       }
     }
-
     if (changedProperties.has('singleOption')) {
       if (this.singleOption) {
         this._invokerNode.removeAttribute('role');
@@ -226,7 +217,6 @@ export class LionSelectRich extends SlotMixin(ScopedElementsMixin(OverlayMixin(L
         this._invokerNode.setAttribute('aria-expanded', `${this.opened}`);
       }
     }
-
     if (this._inputNode && this._invokerNode) {
       if (changedProperties.has('_ariaLabelledNodes')) {
         this._invokerNode.setAttribute(
@@ -234,20 +224,17 @@ export class LionSelectRich extends SlotMixin(ScopedElementsMixin(OverlayMixin(L
           `${this._inputNode.getAttribute('aria-labelledby')} ${this._invokerNode.id}`,
         );
       }
-
       if (changedProperties.has('_ariaDescribedNodes')) {
         this._invokerNode.setAttribute(
           'aria-describedby',
-          /** @type {string} */ (this._inputNode.getAttribute('aria-describedby')),
+          /** @type {string} */ this._inputNode.getAttribute('aria-describedby'),
         );
       }
-
       if (changedProperties.has('showsFeedbackFor')) {
         // The ValidateMixin sets aria-invalid on the inputNode, but in this component we also need it on the invoker
         this._invokerNode.setAttribute('aria-invalid', `${this._hasFeedbackVisibleFor('error')}`);
       }
     }
-
     if (changedProperties.has('modelValue')) {
       this.__syncInvokerElement();
     }
@@ -273,7 +260,6 @@ export class LionSelectRich extends SlotMixin(ScopedElementsMixin(OverlayMixin(L
       this.__hasInitialSelectedFormElement = true;
     }
     this._alignInvokerWidth();
-
     this._onFormElementsChanged();
   }
 
@@ -294,7 +280,7 @@ export class LionSelectRich extends SlotMixin(ScopedElementsMixin(OverlayMixin(L
    * @protected
    */
   _getCheckedElements() {
-    return this.formElements.filter(el => el.checked);
+    return this.formElements.filter((el) => el.checked);
   }
 
   /** @protected */
@@ -322,7 +308,7 @@ export class LionSelectRich extends SlotMixin(ScopedElementsMixin(OverlayMixin(L
     // sync to invoker
     if (this._invokerNode) {
       this._invokerNode.selectedElement =
-        this.formElements[/**  @type {number} */ (this.checkedIndex)];
+        this.formElements[/**  @type {number} */ this.checkedIndex];
       /**
        * Manually update this, as the node reference may be the same, but the modelValue might not.
        * This would mean that it won't pass the LitElement dirty check.
@@ -337,7 +323,6 @@ export class LionSelectRich extends SlotMixin(ScopedElementsMixin(OverlayMixin(L
   __setupInvokerNode() {
     this._invokerNode.id = `invoker-${this._inputId}`;
     this._invokerNode.setAttribute('aria-haspopup', 'listbox');
-
     this.__setupInvokerNodeEventListener();
   }
 
@@ -356,7 +341,6 @@ export class LionSelectRich extends SlotMixin(ScopedElementsMixin(OverlayMixin(L
   /** @private */
   __setupInvokerNodeEventListener() {
     this._invokerNode.addEventListener('click', this.__invokerOnClick);
-
     this._invokerNode.addEventListener('blur', this.__invokerOnBlur);
   }
 
@@ -388,7 +372,9 @@ export class LionSelectRich extends SlotMixin(ScopedElementsMixin(OverlayMixin(L
    */
   _noDefaultSelectedInheritsWidth() {
     if (this.checkedIndex === -1) {
-      this._overlayCtrl.updateConfig({ inheritsReferenceWidth: 'min' });
+      this._overlayCtrl.updateConfig({
+        inheritsReferenceWidth: 'min',
+      });
     } else {
       this._overlayCtrl.updateConfig({
         inheritsReferenceWidth: this._initialInheritsReferenceWidth,
@@ -411,7 +397,7 @@ export class LionSelectRich extends SlotMixin(ScopedElementsMixin(OverlayMixin(L
   /** @private */
   __overlayOnShow() {
     if (this.checkedIndex != null) {
-      this.activeIndex = /**  @type {number} */ (this.checkedIndex);
+      this.activeIndex = /**  @type {number} */ this.checkedIndex;
     }
     this._listboxNode.focus();
   }
@@ -430,10 +416,8 @@ export class LionSelectRich extends SlotMixin(ScopedElementsMixin(OverlayMixin(L
     super._setupOverlayCtrl();
     this._initialInheritsReferenceWidth = this._overlayCtrl.inheritsReferenceWidth;
     this._alignInvokerWidth();
-
     this._overlayCtrl.addEventListener('before-show', this.__overlayBeforeShow);
     this._overlayCtrl.addEventListener('show', this.__overlayOnShow);
-
     this._overlayCtrl.addEventListener('hide', this.__overlayOnHide);
   }
 
@@ -443,11 +427,9 @@ export class LionSelectRich extends SlotMixin(ScopedElementsMixin(OverlayMixin(L
    */
   _teardownOverlayCtrl() {
     super._teardownOverlayCtrl();
-
     if (!this._overlayCtrl) {
       return;
     }
-
     this._overlayCtrl.removeEventListener('show', this.__overlayOnShow);
     this._overlayCtrl.removeEventListener('before-show', this.__overlayBeforeShow);
     this._overlayCtrl.removeEventListener('hide', this.__overlayOnHide);
@@ -460,11 +442,9 @@ export class LionSelectRich extends SlotMixin(ScopedElementsMixin(OverlayMixin(L
    */
   async _alignInvokerWidth() {
     await this.updateComplete;
-
     if (!this._overlayCtrl?.content) {
       return;
     }
-
     const initContentDisplay = this._overlayCtrl.content.style.display;
     const initContentMinWidth = this._overlayCtrl.contentWrapperNode.style.minWidth;
     const initContentWidth = this._overlayCtrl.contentWrapperNode.style.width;
@@ -523,22 +503,19 @@ export class LionSelectRich extends SlotMixin(ScopedElementsMixin(OverlayMixin(L
     if (this.opened) {
       return;
     }
-
     this._isHandlingUserInput = true;
     setTimeout(() => {
       // Since we can't control when subclasses are done handling keyboard input, we
       // schedule a timeout to reset _isHandlingUserInput
       this._isHandlingUserInput = false;
     });
-
     const { key } = ev;
     switch (key) {
       case 'ArrowUp':
         ev.preventDefault();
-
         if (this.navigateWithinInvoker) {
           this.setCheckedIndex(
-            this._getPreviousEnabledOption(/**  @type {number} */ (this.checkedIndex)),
+            this._getPreviousEnabledOption(/**  @type {number} */ this.checkedIndex),
           );
         } else {
           this.opened = true;
@@ -548,7 +525,7 @@ export class LionSelectRich extends SlotMixin(ScopedElementsMixin(OverlayMixin(L
         ev.preventDefault();
         if (this.navigateWithinInvoker) {
           this.setCheckedIndex(
-            this._getNextEnabledOption(/**  @type {number} */ (this.checkedIndex)),
+            this._getNextEnabledOption(/**  @type {number} */ this.checkedIndex),
           );
         } else {
           this.opened = true;
@@ -558,7 +535,7 @@ export class LionSelectRich extends SlotMixin(ScopedElementsMixin(OverlayMixin(L
         ev.preventDefault();
         if (this.navigateWithinInvoker) {
           this.setCheckedIndex(
-            this._getPreviousEnabledOption(/**  @type {number} */ (this.checkedIndex)),
+            this._getPreviousEnabledOption(/**  @type {number} */ this.checkedIndex),
           );
         }
         break;
@@ -566,13 +543,15 @@ export class LionSelectRich extends SlotMixin(ScopedElementsMixin(OverlayMixin(L
         ev.preventDefault();
         if (this.navigateWithinInvoker) {
           this.setCheckedIndex(
-            this._getNextEnabledOption(/**  @type {number} */ (this.checkedIndex)),
+            this._getNextEnabledOption(/**  @type {number} */ this.checkedIndex),
           );
         }
         break;
       default:
         if (!this._noTypeAhead) {
-          this._handleTypeAhead(ev, { setAsChecked: true });
+          this._handleTypeAhead(ev, {
+            setAsChecked: true,
+          });
         }
     }
   }
@@ -587,12 +566,10 @@ export class LionSelectRich extends SlotMixin(ScopedElementsMixin(OverlayMixin(L
    */
   _listboxOnKeyDown(ev) {
     super._listboxOnKeyDown(ev);
-
     if (this.disabled) {
       return;
     }
     const { key } = ev;
-
     switch (key) {
       case 'Tab':
         // Tab can only be caught in keydown

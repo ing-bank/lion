@@ -8,7 +8,7 @@ import { resolveSuiteTag } from '../../core/test-helpers/resolveSuiteTag.js';
  * @typedef {import('@lion/ui/types/test-suites.js').SuiteElement} SuiteElement
  * @typedef {import('lit').TemplateResult} TemplateResult
  */
-const fixture = /** @type {(arg: TemplateResult|string) => Promise<LionInputIban>} */ (_fixture);
+const fixture = /** @type {(arg: TemplateResult|string) => Promise<LionInputIban>} */ _fixture;
 
 /**
  * Runs the `lion-input-iban` behavioural suite, moved out of `test/lion-input-iban.test.js` so a Subclasser can run
@@ -24,24 +24,20 @@ export function runInputIbanSuite({
 } = {}) {
   const tagString = resolveSuiteTag(host, legacyTagString);
   const tag = unsafeStatic(tagString);
-
   describe('<lion-input-iban>', () => {
     it('uses formatIBAN for formatting', async () => {
       const el = await fixture(`<${tagString}></${tagString}>`);
       expect(el.formatter).to.equal(formatIBAN);
     });
-
     it('uses parseIBAN for parsing', async () => {
       const el = await fixture(`<${tagString}></${tagString}>`);
       expect(el.parser).to.equal(parseIBAN);
     });
-
     it('has a type = text', async () => {
       const el = await fixture(`<${tagString}></${tagString}>`);
       const { _inputNode } = getInputMembers(el);
       expect(_inputNode.type).to.equal('text');
     });
-
     it('has validator "IsIBAN" applied by default', async () => {
       const el = await fixture(`<${tagString}></${tagString}>`);
       el.modelValue = 'FOO';
@@ -53,7 +49,6 @@ export function runInputIbanSuite({
       expect(el.validationStates).to.have.property('error');
       expect(el.validationStates.error).not.to.have.property('IsIBAN');
     });
-
     it('can apply validator "IsCountryIBAN" to restrict countries', async () => {
       const el = await fixture(html`
         <${tag} .validators=${[new IsCountryIBAN('NL')]}> </${tag}>
@@ -72,19 +67,16 @@ export function runInputIbanSuite({
       expect(el.validationStates.error).to.have.property('IsIBAN');
       expect(el.validationStates.error).to.have.property('IsCountryIBAN');
     });
-
     it('is accessible', async () => {
       const el = await fixture(`<${tagString}><label slot="label">Label</label></${tagString}>`);
       await expect(el).to.be.accessible();
     });
-
     it('is accessible when readonly', async () => {
       const el = await fixture(
         `<${tagString} readonly><label slot="label">Label</label></${tagString}>`,
       );
       await expect(el).to.be.accessible();
     });
-
     it('is accessible when disabled', async () => {
       const el = await fixture(
         `<${tagString} disabled><label slot="label">Label</label></${tagString}>`,

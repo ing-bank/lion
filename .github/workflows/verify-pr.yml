@@ -14,24 +14,34 @@ jobs:
       - name: Sanity check
         run: node ./scripts/lock-scan.mjs
 
-      - name: Setup Node 22.x
-        uses: actions/setup-node@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: 22.x
-          cache: npm
+          cache: pnpm
+
+      # pnpm-lock.yaml is gitignored: it is derived from the committed package-lock.json, which stays the
+      # lock external tooling reads (packages-node/lockfile-interop). `pnpm import` derives it, the frozen
+      # install then proves the derived lock is complete.
+      - name: Derive the pnpm lock
+        run: pnpm import
 
       - name: Install Dependencies
-        run: npm install --ci
+        run: pnpm install --frozen-lockfile
 
-      # Fails when package-lock.json resolves different versions than pnpm-lock.yaml, so tooling that
-      # reads the npm lock cannot derive versions the install does not have. No-op while the repo has no
-      # pnpm lock; a hard gate as soon as one is committed. Runs after the install: the check needs the
-      # workspace dependencies.
+      # Fails when a workspace manifest declares a dependency that pnpm would install at a version the
+      # committed package-lock.json does not record (declared mode + --require; the gate explains itself in
+      # packages-node/lockfile-interop). Runs after the install: the check imports `yaml`.
       - name: Lockfile consistency
-        run: npm run repo:lockfile:check
+        run: pnpm run repo:lockfile:check
+
+      # pnpm-workspace.yaml is derived from package.json (members + overrides); this fails when the committed
+      # file is not what package.json implies
+      - name: pnpm-workspace.yaml is in sync
+        run: pnpm run repo:workspace:check
 
       - name: Lint
-        run: npm run lint
+        run: pnpm run lint
 
   browser-tests:
     name: Browser tests
@@ -41,20 +51,26 @@ jobs:
       - uses: google/wireit@setup-github-actions-caching/v2
       - uses: actions/checkout@v4
 
-      - name: Setup Node 24.x
-        uses: actions/setup-node@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: 24.x
-          cache: npm
+          cache: pnpm
+
+      # pnpm-lock.yaml is gitignored: it is derived from the committed package-lock.json, which stays the
+      # lock external tooling reads (packages-node/lockfile-interop). `pnpm import` derives it, the frozen
+      # install then proves the derived lock is complete.
+      - name: Derive the pnpm lock
+        run: pnpm import
 
       - name: Install Dependencies
-        run: npm install --ci
+        run: pnpm install --frozen-lockfile
 
       - name: Playwright
-        run: npx playwright install --with-deps
+        run: pnpm exec playwright install --with-deps
 
       - name: Test
-        run: npm run test:browser
+        run: pnpm run test:browser
 
   browser-tests-safari16:
     name: Browser tests (Safari 16)
@@ -78,22 +94,20 @@ jobs:
           node-version: 24.x
           cache: npm
 
-      - name: Install Dependencies
-        run: npm install --ci
-
       - name: Pin Playwright to the Safari 16 generation
-        # `--no-save --force`: the repository keeps Playwright current for the modern matrix, this job
-        # replaces it in the working tree only, so nothing else moves back to 2023. The CLI is called
-        # through its own `cli.js` because `npx playwright` can resolve a different binary.
+        # The repository keeps Playwright current for the modern matrix; this job replaces it in the working
+        # tree only (pnpm writes pnpm-lock.yaml, never the committed package-lock.json), so nothing else moves
+        # back to 2023. The CLI is called through its own `cli.js` because `pnpm exec playwright` can resolve
+        # a different binary.
         run: |
-          npm install --no-save --force --no-audit --no-fund playwright@1.35.1
+          pnpm add -w --save-dev --ignore-workspace-root-check playwright@1.35.1
           node node_modules/playwright/cli.js --version
 
       - name: Playwright (webkit 16.4)
         run: node node_modules/playwright/cli.js install --with-deps webkit
 
       - name: Test (WebKit only)
-        run: npx web-test-runner --config web-test-runner-webkit.config.mjs
+        run: pnpm exec web-test-runner --config web-test-runner-webkit.config.mjs
 
   node-tests:
     name: Node tests
@@ -107,14 +121,19 @@ jobs:
       - uses: google/wireit@setup-github-actions-caching/v2
       - uses: actions/checkout@v4
 
+      - uses: pnpm/action-setup@v4
       - name: Setup Node ${{ matrix.node-version }}
         uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
-          cache: npm
+          cache: pnpm
+
+      # pnpm-lock.yaml is derived from the committed package-lock.json (see the verify job).
+      - name: Derive the pnpm lock
+        run: pnpm import
 
       - name: Install Dependencies
-        run: npm install --ci --force
+        run: pnpm install --frozen-lockfile
 
       - name: Test
-        run: npm run test:node
+        run: pnpm run test:node

@@ -1,7 +1,6 @@
 import { fixture as _fixture, expect, unsafeStatic, waitUntil, aTimeout } from '@open-wc/testing';
 import { html } from 'lit/static-html.js';
 import sinon from 'sinon';
-
 import { LionPagination } from '@lion/ui/pagination.js';
 import { PaginationObject as DefaultPaginationObject } from '@lion/ui/pagination-test-helpers.js';
 import { resolveSuiteTag } from '../../core/test-helpers/resolveSuiteTag.js';
@@ -27,7 +26,7 @@ export function runPaginationSuite({
   tagString: legacyTagString,
 } = {}) {
   const tag = unsafeStatic(resolveSuiteTag(host, legacyTagString));
-  const fixture = /** @type {(arg: TemplateResult) => Promise<LionPagination>} */ (_fixture);
+  const fixture = /** @type {(arg: TemplateResult) => Promise<LionPagination>} */ _fixture;
 
   /**
    * @param {LionPagination} el
@@ -37,7 +36,6 @@ export function runPaginationSuite({
     await waitUntil(() => el.current === page, `Pagination did not navigate to page ${page}.`);
     await el.updateComplete;
   }
-
   describe('Pagination', () => {
     it('has states for count and current', async () => {
       const el = await fixture(html` <${tag} count="4"></${tag}> `);
@@ -49,17 +47,14 @@ export function runPaginationSuite({
       expect(el.getAttribute('count')).to.equal('8');
       expect(el.getAttribute('current')).to.equal('2');
     });
-
     it('disables the previous button if on first page', async () => {
       const el = await fixture(html` <${tag} count="4"></${tag}> `);
       expect(new PaginationObject(el).previousButtonEl).to.has.attribute('disabled');
     });
-
     it('disables the next button if on last page', async () => {
       const el = await fixture(html` <${tag} count="4" current="4"></${tag}> `);
       expect(new PaginationObject(el).nextButtonEl).to.has.attribute('disabled');
     });
-
     describe('User interaction', () => {
       it('can go to previous page with previous button', async () => {
         const el = await fixture(html` <${tag} count="6" current="2"></${tag}> `);
@@ -67,21 +62,18 @@ export function runPaginationSuite({
         await waitForPage(el, 1);
         expect(el.current).to.equal(1);
       });
-
       it('can go to next page with next button', async () => {
         const el = await fixture(html` <${tag} count="6" current="2"></${tag}> `);
         new PaginationObject(el).nextButtonEl.click();
         await waitForPage(el, 3);
         expect(el.current).to.equal(3);
       });
-
       it('goes to the page when clicking on its button', async () => {
         const el = await fixture(html` <${tag} count="6" current="2"></${tag}> `);
         new PaginationObject(el).pageButtonEls[4].click();
         await waitForPage(el, 5);
         expect(el.current).to.equal(5);
       });
-
       it('fires current-changed event when interacting with the pagination', async () => {
         const changeSpy = sinon.spy();
         const el = await fixture(html`
@@ -91,27 +83,23 @@ export function runPaginationSuite({
         paginationObject.previousButtonEl.click();
         await waitForPage(el, 1);
         expect(changeSpy.callCount, 'previous page click event count').to.equal(1);
-
         paginationObject.nextButtonEl.click();
         await waitForPage(el, 2);
         expect(changeSpy.callCount, 'next page click event count').to.equal(2);
-
         paginationObject.pageButtonEls[4].click();
         await waitForPage(el, 5);
         expect(changeSpy.callCount, 'page number click event count').to.equal(3);
-
         el.current = 3;
         await el.updateComplete;
         expect(changeSpy.callCount, 'programmatic page change event count').to.equal(4);
       });
-
       it('does NOT fire current-changed event when clicking on a current page number', async () => {
         const changeSpy = sinon.spy();
         const el = await fixture(html`
           <${tag} count="6" current="2" @current-changed=${changeSpy}></${tag}>
         `);
         const page2 = new PaginationObject(el).pageButtonEls.find(
-          button => button.getAttribute('aria-current') === 'true',
+          (button) => button.getAttribute('aria-current') === 'true',
         );
         if (!page2) {
           throw new Error('The current page button was not found.');
@@ -122,7 +110,6 @@ export function runPaginationSuite({
         expect(changeSpy.callCount, 'current page click event count').to.equal(0);
         expect(el.current).to.equal(2);
       });
-
       it('should announce next and previous page using `next()` and `previous()`', async () => {
         const el = await fixture(html` <${tag} count="6" current="2"></${tag}> `);
         const { pageButtonEls } = new PaginationObject(el);
@@ -136,7 +123,6 @@ export function runPaginationSuite({
         expect(pageButtonEls[2].getAttribute('aria-live')).to.equal('off');
         expect(pageButtonEls[1].getAttribute('aria-live')).to.equal('polite');
       });
-
       it('should goto next and previous page using `next()` and `previous()`', async () => {
         const el = await fixture(html` <${tag} count="6" current="2"></${tag}> `);
         el.next();
@@ -144,7 +130,6 @@ export function runPaginationSuite({
         el.previous();
         expect(el.current).to.equal(2);
       });
-
       it('should goto first and last page using `first()` and `last()`', async () => {
         const el = await fixture(html` <${tag} count="5" current="2"></${tag}> `);
         expect(el.current).to.equal(2);
@@ -153,7 +138,6 @@ export function runPaginationSuite({
         el.last();
         expect(el.current).to.equal(5);
       });
-
       it('should goto 7 page using `goto()`', async () => {
         const el = await fixture(html` <${tag} count="10" current="2"></${tag}> `);
         expect(el.current).to.equal(2);
@@ -161,7 +145,6 @@ export function runPaginationSuite({
         expect(el.current).to.equal(7);
       });
     });
-
     describe('Accessibility', () => {
       it('sets aria-current to the current page', async () => {
         const el = await fixture(html` <${tag} count="3"></${tag}> `);
@@ -169,7 +152,6 @@ export function runPaginationSuite({
         expect(pageButtonEls[0].getAttribute('aria-current')).to.equal('true');
         expect(pageButtonEls[1].getAttribute('aria-current')).to.equal('false');
         expect(pageButtonEls[2].getAttribute('aria-current')).to.equal('false');
-
         el.current = 2;
         await el.updateComplete;
         expect(pageButtonEls[0].getAttribute('aria-current')).to.equal('false');
@@ -177,32 +159,25 @@ export function runPaginationSuite({
         expect(pageButtonEls[2].getAttribute('aria-current')).to.equal('false');
       });
     });
-
     describe('Ellipsis display', () => {
       it('should not show ellipsis when count is visiblePages + 1 (count=6, visiblePages=5)', async () => {
         const el = await fixture(html` <${tag} count="6" current="1"></${tag}> `);
-        const navItems = Array.from(
-          /** @type {ShadowRoot} */ (el.shadowRoot).querySelectorAll('li'),
-        );
+        const navItems = Array.from(/** @type {ShadowRoot} */ el.shadowRoot.querySelectorAll('li'));
         // Check that no ellipsis is rendered (no <span> elements with '...')
         expect(new PaginationObject(el).ellipsisEls.length).to.equal(0);
 
         // There should be 8 nav items: previous button + 6 page buttons + next button
         expect(navItems.length).to.equal(8);
       });
-
       it('should not show ellipsis when count is visiblePages + 2 (count=7, visiblePages=5)', async () => {
         const el = await fixture(html` <${tag} count="7" current="1"></${tag}> `);
         // Check that no ellipsis is rendered (no <span> elements with '...')
         expect(new PaginationObject(el).ellipsisEls.length).to.equal(0);
 
         // There should be 9 nav items: previous button + 7 page buttons + next button
-        const navItems = Array.from(
-          /** @type {ShadowRoot} */ (el.shadowRoot).querySelectorAll('li'),
-        );
+        const navItems = Array.from(/** @type {ShadowRoot} */ el.shadowRoot.querySelectorAll('li'));
         expect(navItems.length).to.equal(9);
       });
-
       it('should show ellipsis when count is visiblePages + 3 (count=8, visiblePages=5)', async () => {
         const el = await fixture(html` <${tag} count="8" current="1"></${tag}> `);
         // Check that ellipsis is rendered (should have <span> elements with '...')
@@ -210,7 +185,7 @@ export function runPaginationSuite({
         expect(spans.length).to.be.greaterThan(0);
 
         // Verify the ellipsis contains '...'
-        const ellipsisText = Array.from(spans).map(span => span.textContent);
+        const ellipsisText = Array.from(spans).map((span) => span.textContent);
         expect(ellipsisText).to.include('...');
       });
     });

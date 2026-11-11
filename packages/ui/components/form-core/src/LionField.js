@@ -34,19 +34,16 @@ export class LionField extends FormControlMixin(
     /** @type {any} */
     this._initialModelValue = this.modelValue;
   }
-
   connectedCallback() {
     super.connectedCallback();
     this._onChange = this._onChange.bind(this);
     this._inputNode.addEventListener('change', this._onChange);
     this.classList.add('form-field'); // eslint-disable-line
   }
-
   disconnectedCallback() {
     super.disconnectedCallback();
     this._inputNode?.removeEventListener('change', this._onChange);
   }
-
   resetInteractionState() {
     super.resetInteractionState();
     this.submitted = false;
@@ -78,14 +75,21 @@ export class LionField extends FormControlMixin(
   // eslint-disable-next-line no-unused-vars
   _onChange(ev) {
     /** @protectedEvent user-input-changed */
-    this.dispatchEvent(new Event('user-input-changed', { bubbles: true }));
+    this.dispatchEvent(
+      new Event('user-input-changed', {
+        bubbles: true,
+      }),
+    );
   }
 
   /**
    * @configure InteractionStateMixin, ValidateMixin
    */
   get _feedbackConditionMeta() {
-    return { ...super._feedbackConditionMeta, focused: this.focused };
+    return {
+      ...super._feedbackConditionMeta,
+      focused: this.focused,
+    };
   }
 
   /**

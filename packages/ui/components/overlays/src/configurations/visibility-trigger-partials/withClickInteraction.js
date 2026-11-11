@@ -18,7 +18,6 @@ export function withClickInteraction() {
         }
         controller.toggle();
       }
-
       return {
         init: () => {
           controller.invokerNode?.addEventListener('click', handleOpenClosed);

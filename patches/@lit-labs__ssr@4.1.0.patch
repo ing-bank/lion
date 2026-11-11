@@ -1,7 +1,7 @@
-diff --git a/node_modules/@lit-labs/ssr/lib/element-renderer.js b/node_modules/@lit-labs/ssr/lib/element-renderer.js
-index f090271..b4ddae3 100644
---- a/node_modules/@lit-labs/ssr/lib/element-renderer.js
-+++ b/node_modules/@lit-labs/ssr/lib/element-renderer.js
+diff --git a/lib/element-renderer.js b/lib/element-renderer.js
+index f090271b93f10f411f88b1cf50c9705a04bf087f..b4ddae38f8e3ed859f250c6ddf80007668d88deb 100644
+--- a/lib/element-renderer.js
++++ b/lib/element-renderer.js
 @@ -171,7 +171,11 @@ export class FallbackRenderer extends ElementRenderer {
      }
      setAttribute(name, value) {
@@ -15,10 +15,10 @@ index f090271..b4ddae3 100644
      }
      renderAttributes() {
          const result = [];
-diff --git a/node_modules/@lit-labs/ssr/lib/render-value.js b/node_modules/@lit-labs/ssr/lib/render-value.js
-index 0ad6d65..3bc2fa9 100644
---- a/node_modules/@lit-labs/ssr/lib/render-value.js
-+++ b/node_modules/@lit-labs/ssr/lib/render-value.js
+diff --git a/lib/render-value.js b/lib/render-value.js
+index 0ad6d65267224d29b9fc41cce7c350f5e2888969..3bc2fa928dc165692df396ca6d04a39df38ea5ce 100644
+--- a/lib/render-value.js
++++ b/lib/render-value.js
 @@ -3,7 +3,7 @@ import { nothing, noChange } from 'lit';
  import { PartType } from 'lit/directive.js';
  import { isPrimitive, isTemplateResult, getDirectiveClass, TemplateResultType, isCompiledTemplateResult, } from 'lit/directive-helpers.js';

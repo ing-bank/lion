@@ -9,9 +9,9 @@ import { getFormControlMembers } from '@lion/ui/form-core-test-helpers.js';
  * @param { LionInput } el
  */
 export function getInputMembers(el) {
-  const obj = getFormControlMembers(/** @type { * & FormControlHost } */ (el));
+  const obj = getFormControlMembers(/** @type { * & FormControlHost } */ el);
   return {
     ...obj,
-    _inputNode: /** @type {HTMLInputElement} */ (obj._inputNode),
+    _inputNode: /** @type {HTMLInputElement} */ obj._inputNode,
   };
 }

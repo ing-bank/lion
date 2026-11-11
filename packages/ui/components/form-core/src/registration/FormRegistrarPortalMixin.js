@@ -20,45 +20,39 @@ import { dedupeMixin } from '@open-wc/dedupe-mixin';
  * @param {import('@open-wc/dedupe-mixin').Constructor<HTMLElement>} superclass
  */
 // prettier-ignore
-const FormRegistrarPortalMixinImplementation = /** @type {FormRegistrarPortalMixin} */ (superclass =>
-  // eslint-disable-next-line no-shadow, no-unused-vars
-  class extends superclass {
-    /** @param {...any} args */
-    constructor(...args) {
-      super(...args);
-
-      /**
-       * Registration target: an element, usually in the body of the dom, that captures events
-       * and redispatches them on host
-       * @type {(FormRegistrarPortalHost & HTMLElement) | undefined}
-       */
-      this.registrationTarget = undefined;
-      this.__redispatchEventForFormRegistrarPortalMixin =
-        this.__redispatchEventForFormRegistrarPortalMixin.bind(this);
-      this.addEventListener(
-        'form-element-register',
-        /** @type {EventListenerOrEventListenerObject} */ (
-          this.__redispatchEventForFormRegistrarPortalMixin
-        ),
-      );
-    }
+const FormRegistrarPortalMixinImplementation = /** @type {FormRegistrarPortalMixin} */superclass =>
+// eslint-disable-next-line no-shadow, no-unused-vars
+class extends superclass {
+  /** @param {...any} args */
+  constructor(...args) {
+    super(...args);
 
     /**
-     * @param {CustomEvent} ev
-     * @private
+     * Registration target: an element, usually in the body of the dom, that captures events
+     * and redispatches them on host
+     * @type {(FormRegistrarPortalHost & HTMLElement) | undefined}
      */
-    __redispatchEventForFormRegistrarPortalMixin(ev) {
-      ev.stopPropagation();
-      if (!this.registrationTarget) {
-        throw new Error('A FormRegistrarPortal element requires a .registrationTarget');
-      }
-      this.registrationTarget.dispatchEvent(
-        new CustomEvent('form-element-register', {
-          detail: { element: ev.detail.element },
-          bubbles: true,
-        }),
-      );
-    }
-  });
+    this.registrationTarget = undefined;
+    this.__redispatchEventForFormRegistrarPortalMixin = this.__redispatchEventForFormRegistrarPortalMixin.bind(this);
+    this.addEventListener('form-element-register', /** @type {EventListenerOrEventListenerObject} */
+    this.__redispatchEventForFormRegistrarPortalMixin);
+  }
 
+  /**
+   * @param {CustomEvent} ev
+   * @private
+   */
+  __redispatchEventForFormRegistrarPortalMixin(ev) {
+    ev.stopPropagation();
+    if (!this.registrationTarget) {
+      throw new Error('A FormRegistrarPortal element requires a .registrationTarget');
+    }
+    this.registrationTarget.dispatchEvent(new CustomEvent('form-element-register', {
+      detail: {
+        element: ev.detail.element
+      },
+      bubbles: true
+    }));
+  }
+};
 export const FormRegistrarPortalMixin = dedupeMixin(FormRegistrarPortalMixinImplementation);

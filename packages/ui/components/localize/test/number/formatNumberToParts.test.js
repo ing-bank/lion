@@ -7,31 +7,44 @@ const isSafari = (() => {
   const ua = navigator.userAgent.toLowerCase();
   return ua.indexOf('safari') !== -1 && ua.indexOf('chrome') === -1;
 })();
-
-const c = /** @param {string} v */ v => ({
+const c = /** @param {string} v */ (v) => ({
   type: 'currency',
   value: v,
 });
-const d = /** @param {string} v */ v => ({ type: 'decimal', value: v });
-const i = /** @param {string} v */ v => ({ type: 'integer', value: v });
-const f = /** @param {string} v */ v => ({ type: 'fraction', value: v });
-const g = /** @param {string} v */ v => ({ type: 'group', value: v });
-const l = /** @param {string} v */ v => ({ type: 'literal', value: v });
-const m = { type: 'minusSign', value: '−' };
-
+const d = /** @param {string} v */ (v) => ({
+  type: 'decimal',
+  value: v,
+});
+const i = /** @param {string} v */ (v) => ({
+  type: 'integer',
+  value: v,
+});
+const f = /** @param {string} v */ (v) => ({
+  type: 'fraction',
+  value: v,
+});
+const g = /** @param {string} v */ (v) => ({
+  type: 'group',
+  value: v,
+});
+const l = /** @param {string} v */ (v) => ({
+  type: 'literal',
+  value: v,
+});
+const m = {
+  type: 'minusSign',
+  value: '−',
+};
 const stringifyParts =
   /**
    * @typedef {import('../../types/LocalizeMixinTypes.js').FormatNumberPart} FormatNumberPart
    * @param {FormatNumberPart[]} parts
    * @returns {string}
    */
-  parts => parts.map(part => part.value).join('');
-
+  (parts) => parts.map((part) => part.value).join('');
 describe('formatNumberToParts', () => {
   const localizeManager = getLocalizeManager();
-
   afterEach(localizeTearDown);
-
   describe("style: 'currency symbol'", () => {
     const specs = [
       ['en-GB', 'EUR', 1234.5, [c('€'), i('1'), g(','), i('234'), d('.'), f('50')]],
@@ -45,16 +58,12 @@ describe('formatNumberToParts', () => {
       ['fr-BE', 'EUR', 1234.5, [i('1'), g(' '), i('234'), d(','), f('50'), l(' '), c('€')]],
       ['fr-BE', 'USD', 1234.5, [i('1'), g(' '), i('234'), d(','), f('50'), l(' '), c('$US')]],
     ];
-
     specs.forEach(([locale, currency, amount, expectedResult]) => {
-      it(`formats ${locale} ${currency} ${amount} as "${stringifyParts(
-        /** @type {FormatNumberPart[]} */ (expectedResult),
-      )}"`, () => {
+      it(`formats ${locale} ${currency} ${amount} as "${stringifyParts(/** @type {FormatNumberPart[]} */ expectedResult)}"`, () => {
         // TODO: This is broken only in Safari 13.1.2 Wait till ci is on 13.1.3 and remove
         if (isSafari) {
           return;
         }
-
         expect(
           formatNumberToParts(Number(amount), {
             style: 'currency',
@@ -65,7 +74,6 @@ describe('formatNumberToParts', () => {
       });
     });
   });
-
   describe("style: 'currency code'", () => {
     const specs = [
       ['en-GB', 'EUR', 1234.5, [c('EUR'), l(' '), i('1'), g(','), i('234'), d('.'), f('50')]],
@@ -79,11 +87,8 @@ describe('formatNumberToParts', () => {
       ['fr-BE', 'EUR', 1234.5, [i('1'), g(' '), i('234'), d(','), f('50'), l(' '), c('EUR')]],
       ['fr-BE', 'EUR', -1234.5, [m, i('1'), g(' '), i('234'), d(','), f('50'), l(' '), c('EUR')]],
     ];
-
     specs.forEach(([locale, currency, amount, expectedResult]) => {
-      it(`formats ${locale} ${currency} ${amount} as "${stringifyParts(
-        /** @type {FormatNumberPart[]} */ (expectedResult),
-      )}"`, () => {
+      it(`formats ${locale} ${currency} ${amount} as "${stringifyParts(/** @type {FormatNumberPart[]} */ expectedResult)}"`, () => {
         expect(
           formatNumberToParts(Number(amount), {
             style: 'currency',
@@ -95,7 +100,6 @@ describe('formatNumberToParts', () => {
       });
     });
   });
-
   describe("style: 'decimal'", () => {
     describe('no minimumFractionDigits', () => {
       /** @type {Array.<Array.<any>>} */
@@ -111,11 +115,8 @@ describe('formatNumberToParts', () => {
         ['fr-BE', 3500, [i('3'), g(' '), i('500')]],
         ['fr-BE', -3500, [m, i('3'), g(' '), i('500')]],
       ];
-
       specs.forEach(([locale, amount, expectedResult]) => {
-        it(`formats ${locale} ${amount} as "${stringifyParts(
-          /** @type {FormatNumberPart[]} */ (expectedResult),
-        )}"`, () => {
+        it(`formats ${locale} ${amount} as "${stringifyParts(/** @type {FormatNumberPart[]} */ expectedResult)}"`, () => {
           localizeManager.locale = locale;
           expect(
             formatNumberToParts(Number(amount), {
@@ -125,7 +126,6 @@ describe('formatNumberToParts', () => {
         });
       });
     });
-
     describe('minimumFractionDigits: 2', () => {
       /** @type {Array.<Array.<any>>} */
       const specs = [
@@ -140,11 +140,8 @@ describe('formatNumberToParts', () => {
         ['fr-BE', 3500, [i('3'), g(' '), i('500'), d(','), f('00')]],
         ['fr-BE', -3500, [m, i('3'), g(' '), i('500'), d(','), f('00')]],
       ];
-
       specs.forEach(([locale, amount, expectedResult]) => {
-        it(`formats ${locale} ${amount} as "${stringifyParts(
-          /** @type {FormatNumberPart[]} */ (expectedResult),
-        )}"`, () => {
+        it(`formats ${locale} ${amount} as "${stringifyParts(/** @type {FormatNumberPart[]} */ expectedResult)}"`, () => {
           localizeManager.locale = locale;
           expect(
             formatNumberToParts(Number(amount), {
@@ -156,7 +153,6 @@ describe('formatNumberToParts', () => {
       });
     });
   });
-
   describe("style: 'percent'", () => {
     const specs = [
       ['en-GB', 1234.5, [i('1'), g(','), i('234'), d('.'), f('50'), c('%')]],
@@ -170,11 +166,8 @@ describe('formatNumberToParts', () => {
       ['fr-BE', 1234.5, [i('1'), g(' '), i('234'), d(','), f('50'), l(' '), c('%')]],
       ['fr-BE', -1234.5, [m, i('1'), g(' '), i('234'), d(','), f('50'), l(' '), c('%')]],
     ];
-
     specs.forEach(([locale, amount, expectedResult]) => {
-      it(`formats ${locale} ${amount} as "${stringifyParts(
-        /** @type {FormatNumberPart[]} */ (expectedResult),
-      )}"`, () => {
+      it(`formats ${locale} ${amount} as "${stringifyParts(/** @type {FormatNumberPart[]} */ expectedResult)}"`, () => {
         expect(
           formatNumberToParts(Number(amount) / 100, {
             style: 'percent',

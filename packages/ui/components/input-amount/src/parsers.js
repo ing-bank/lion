@@ -42,9 +42,7 @@ export function parseAmount(value, givenOptions) {
   if (unmatchedInput && givenOptions?.mode !== 'pasted') {
     return undefined;
   }
-
   const number = parseNumber(trimmedValue, givenOptions);
-
   if (typeof number !== 'number' || Number.isNaN(number)) {
     return undefined;
   }
@@ -53,7 +51,6 @@ export function parseAmount(value, givenOptions) {
   const options = {
     ...givenOptions,
   };
-
   if (options.currency && typeof options.maximumFractionDigits === 'undefined') {
     options.maximumFractionDigits = getFractionDigits(options.currency);
   }

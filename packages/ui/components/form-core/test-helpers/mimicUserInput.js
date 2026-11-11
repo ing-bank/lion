@@ -13,5 +13,9 @@ export function mimicUserInput(formControl, newViewValue, { caretIndex } = {}) {
     formControl._inputNode.selectionEnd = caretIndex;
   }
   formControl._inputNode.focus();
-  formControl._inputNode.dispatchEvent(new Event('input', { bubbles: true }));
+  formControl._inputNode.dispatchEvent(
+    new Event('input', {
+      bubbles: true,
+    }),
+  );
 }

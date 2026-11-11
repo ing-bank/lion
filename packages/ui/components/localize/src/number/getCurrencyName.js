@@ -12,17 +12,17 @@ import { forceCurrencyNameForPHPEnGB } from './utils/normalize-get-currency-name
  */
 export function getCurrencyName(currencyIso, options) {
   const localizeManager = getLocalizeManager();
-  const parts = /** @type {FormatNumberPart[]} */ (
+  const parts =
+    /** @type {FormatNumberPart[]} */
     formatNumberToParts(1, {
       ...options,
       style: 'currency',
       currency: currencyIso,
       currencyDisplay: 'name',
-    })
-  );
+    });
   let currencyName = parts
-    .filter(p => p.type === 'currency')
-    .map(o => o.value)
+    .filter((p) => p.type === 'currency')
+    .map((o) => o.value)
     .join(' ');
   const locale = options?.locale || localizeManager.locale;
   if (currencyIso === 'PHP' && locale === 'en-GB') {

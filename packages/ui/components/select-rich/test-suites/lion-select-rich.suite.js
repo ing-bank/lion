@@ -28,7 +28,7 @@ import { isElementVisible } from '../../core/test-helpers/isElementVisible.js';
  * @typedef {import('lit').TemplateResult} TemplateResult
  */
 
-const fixture = /** @type {(arg: TemplateResult) => Promise<LionSelectRich>} */ (_fixture);
+const fixture = /** @type {(arg: TemplateResult) => Promise<LionSelectRich>} */ _fixture;
 
 /**
  * Runs the `lion-select-rich` behavioural suite. The caller hands the elements it should run against;
@@ -52,29 +52,23 @@ export function runSelectRichSuite({
   const tagOption = unsafeStatic(tagNameOption);
   const tagNameTabs = resolveSuiteTag(tabsEl, legacyTabsTagString);
   const tagTabs = unsafeStatic(tagNameTabs);
-
   describe('lion-select-rich', () => {
     it('clicking the label should focus the invoker', async () => {
       const el = await fixture(html` <${hostTag} label="foo"> </${hostTag}> `);
       expect(isActiveElement(document.body)).to.be.true;
-
       const { _labelNode, _invokerNode } = getSelectRichMembers(el);
       _labelNode.click();
       expect(isActiveElement(_invokerNode)).to.be.true;
     });
-
     it('has an attribute focused when focused', async () => {
       const el = await fixture(html` <${hostTag} label="foo"> </${hostTag}> `);
-
       el.focus();
       await el.updateComplete;
       expect(el.hasAttribute('focused')).to.be.true;
-
       el.blur();
       await el.updateComplete;
       expect(el.hasAttribute('focused')).to.be.false;
     });
-
     it('checks the first enabled option', async () => {
       const el = await fixture(html`
         <${hostTag}>
@@ -86,7 +80,6 @@ export function runSelectRichSuite({
       expect(el.activeIndex).to.equal(0);
       expect(el.checkedIndex).to.equal(0);
     });
-
     it('still has a checked value while disabled', async () => {
       const el = await fixture(html`
         <${hostTag} disabled>
@@ -95,10 +88,8 @@ export function runSelectRichSuite({
           <${tagOption} .choiceValue=${'Blue'}>Blue</${tagOption}>
         </${hostTag}>
       `);
-
       expect(el.modelValue).to.equal('Red');
     });
-
     it('supports having no default selection initially', async () => {
       const el = await fixture(html`
         <${hostTag} id="color" name="color" label="Favorite color" has-no-default-selected>
@@ -111,16 +102,13 @@ export function runSelectRichSuite({
       expect(_invokerNode.selectedElement).to.be.undefined;
       expect(el.modelValue).to.equal('');
     });
-
     describe('Invoker', () => {
       it('generates an lion-select-invoker if no invoker is provided', async () => {
         const el = await fixture(html` <${hostTag}> </${hostTag}> `);
         const { _invokerNode } = getSelectRichMembers(el);
-
         expect(_invokerNode).to.exist;
         expect(_invokerNode).to.be.instanceOf(LionSelectInvoker);
       });
-
       it('sets the first option as the selectedElement if no option is checked', async () => {
         const el = await fixture(html`
           <${hostTag} name="foo">
@@ -132,7 +120,6 @@ export function runSelectRichSuite({
         const options = el.formElements;
         expect(_invokerNode.selectedElement).dom.to.equal(options[0]);
       });
-
       it('syncs the selected element to the invoker', async () => {
         const el = await fixture(html`
           <${hostTag} name="foo">
@@ -143,12 +130,10 @@ export function runSelectRichSuite({
         const { _invokerNode } = getSelectRichMembers(el);
         const options = el.querySelectorAll(tagNameOption);
         expect(_invokerNode.selectedElement).dom.to.equal(options[1]);
-
         el.checkedIndex = 0;
         await el.updateComplete;
         expect(_invokerNode.selectedElement).dom.to.equal(options[0]);
       });
-
       it('delegates readonly to the invoker', async () => {
         const el = await fixture(html`
           <${hostTag} readonly>
@@ -160,7 +145,6 @@ export function runSelectRichSuite({
         expect(el.hasAttribute('readonly')).to.be.true;
         expect(_invokerNode.hasAttribute('readonly')).to.be.true;
       });
-
       it('delegates singleOption to the invoker', async () => {
         const el = await fixture(html`
           <${hostTag}>
@@ -171,7 +155,6 @@ export function runSelectRichSuite({
         expect(el.singleOption).to.be.true;
         expect(_invokerNode.hasAttribute('single-option')).to.be.true;
       });
-
       it('sets and removes the button role and aria attributes on change of singleOption', async () => {
         const el = await fixture(html`
           <${hostTag}>
@@ -180,56 +163,50 @@ export function runSelectRichSuite({
           </${hostTag}>
         `);
         const { _invokerNode } = getSelectRichMembers(el);
-
         expect(_invokerNode.hasAttribute('role')).to.be.true;
         expect(_invokerNode.hasAttribute('aria-haspopup')).to.be.true;
         expect(_invokerNode.hasAttribute('aria-expanded')).to.be.true;
-
         el.singleOption = true;
         await el.updateComplete;
         expect(_invokerNode.hasAttribute('role')).to.be.false;
         expect(_invokerNode.hasAttribute('aria-haspopup')).to.be.false;
         expect(_invokerNode.hasAttribute('aria-expanded')).to.be.false;
-
         el.singleOption = false;
         await el.updateComplete;
         expect(_invokerNode.hasAttribute('role')).to.be.true;
         expect(_invokerNode.hasAttribute('aria-haspopup')).to.be.true;
         expect(_invokerNode.hasAttribute('aria-expanded')).to.be.true;
       });
-
       it('updates the invoker when the selected element is the same but the modelValue was updated asynchronously', async () => {
         const tagString = defineCE(
           class LionCustomOption extends LionOption {
             render() {
               return html`${this.modelValue.value}`;
             }
-
             createRenderRoot() {
               return this;
             }
           },
         );
         const tag = unsafeStatic(tagString);
-        const firstOption = /** @type {LionOption} */ (
-          await _fixture(html`<${tag} checked .choiceValue=${10}></${tag}>`)
-        );
-
+        const firstOption =
+          /** @type {LionOption} */
+          await _fixture(html`<${tag} checked .choiceValue=${10}></${tag}>`);
         const el = await fixture(html`
           <${hostTag}>
             ${firstOption}
             <${tag} .choiceValue=${20}></${tag}>
           </${hostTag}>
         `);
-
         const { _invokerNode } = getSelectRichMembers(el);
-
-        const firstChild = /** @type {HTMLElement} */ (
-          /** @type {ShadowRoot} */ (_invokerNode.shadowRoot).firstElementChild
-        );
+        const firstChild =
+          /** @type {HTMLElement} */
+          /** @type {ShadowRoot} */ _invokerNode.shadowRoot.firstElementChild;
         expect(firstChild.textContent).to.equal('10');
-
-        firstOption.modelValue = { value: 30, checked: true };
+        firstOption.modelValue = {
+          value: 30,
+          checked: true,
+        };
         await el.updateComplete;
         expect(firstChild.textContent).to.equal('30');
       });
@@ -246,72 +223,57 @@ export function runSelectRichSuite({
         const options = el.formElements;
         await el.updateComplete;
         const { _invokerNode, _inputNode } = getSelectRichMembers(el);
-
         expect(_invokerNode.clientWidth).to.equal(options[1].clientWidth);
-
-        const newOption = /** @type {LionOption} */ (document.createElement(tagNameOption));
+        const newOption = /** @type {LionOption} */ document.createElement(tagNameOption);
         newOption.choiceValue = 30;
         newOption.textContent = '30 with longer label';
-
         _inputNode.appendChild(newOption);
         await el.updateComplete;
         expect(_invokerNode.clientWidth).to.equal(options[2].clientWidth);
-
         _inputNode.removeChild(newOption);
         await el.updateComplete;
         expect(_invokerNode.clientWidth).to.equal(options[1].clientWidth);
       });
     });
-
     describe('overlay', () => {
       it('should be closed by default', async () => {
         const el = await fixture(html` <${hostTag}></${hostTag}> `);
         expect(el.opened).to.be.false;
       });
-
       it('shows/hides the listbox via opened attribute', async () => {
         const el = await fixture(html` <${hostTag}></${hostTag}> `);
         const { _overlayCtrl } = getSelectRichMembers(el);
-
         el.opened = true;
         await el.updateComplete;
         expect(_overlayCtrl.isShown).to.be.true;
-
         el.opened = false;
         await el.updateComplete;
         await el.updateComplete; // safari takes a little longer
         expect(_overlayCtrl.isShown).to.be.false;
       });
-
       it('syncs opened state with overlay shown', async () => {
         const el = await fixture(html` <${hostTag} .opened=${true}></${hostTag}> `);
-        const outerEl = /** @type {HTMLButtonElement} */ (
-          await _fixture('<button>somewhere</button>')
-        );
-
+        const outerEl =
+          /** @type {HTMLButtonElement} */
+          await _fixture('<button>somewhere</button>');
         expect(el.opened).to.be.true;
-
         mimicClick(outerEl);
         await aTimeout(0);
         expect(el.opened).to.be.false;
       });
-
       it('will focus the listbox on open and invoker on close', async () => {
         const el = await fixture(html` <${hostTag}></${hostTag}> `);
         const { _overlayCtrl, _listboxNode, _invokerNode } = getSelectRichMembers(el);
-
         await _overlayCtrl.show();
         await el.updateComplete;
         expect(isActiveElement(_listboxNode)).to.be.true;
         expect(isActiveElement(_invokerNode)).to.be.false;
-
         el.opened = false;
         await el.updateComplete;
         await el.updateComplete; // safari takes a little longer
         expect(isActiveElement(_listboxNode)).to.be.false;
         expect(isActiveElement(_invokerNode)).to.be.true;
       });
-
       it('opens the listbox with checked option as active', async () => {
         const el = await fixture(html`
           <${hostTag}>
@@ -320,15 +282,12 @@ export function runSelectRichSuite({
           </${hostTag}>
         `);
         const { _overlayCtrl } = getSelectRichMembers(el);
-
         await _overlayCtrl.show();
         await el.updateComplete;
         const options = el.formElements;
-
         expect(options[1].active).to.be.true;
         expect(options[1].checked).to.be.true;
       });
-
       it('stays closed on click if it is disabled or readonly or has a single option', async () => {
         const elReadOnly = await fixture(html`
           <${hostTag} readonly>
@@ -337,7 +296,6 @@ export function runSelectRichSuite({
           </${hostTag}>
         `);
         const { _invokerNode: _invokerNodeReadOnly } = getSelectRichMembers(elReadOnly);
-
         const elDisabled = await fixture(html`
           <${hostTag} disabled>
             <${tagOption} .choiceValue=${10}>Item 1</${tagOption}>
@@ -345,27 +303,22 @@ export function runSelectRichSuite({
           </${hostTag}>
         `);
         const { _invokerNode: _invokerNodeDisabled } = getSelectRichMembers(elDisabled);
-
         const elSingleoption = await fixture(html`
           <${hostTag}>
             <${tagOption} .choiceValue=${10}>Item 1</${tagOption}>
           </${hostTag}>
         `);
         const { _invokerNode: _invokerNodeSingleOption } = getSelectRichMembers(elSingleoption);
-
         _invokerNodeReadOnly.click();
         await elReadOnly.updateComplete;
         expect(elReadOnly.opened).to.be.false;
-
         _invokerNodeDisabled.click();
         await elDisabled.updateComplete;
         expect(elDisabled.opened).to.be.false;
-
         _invokerNodeSingleOption.click();
         await elSingleoption.updateComplete;
         expect(elSingleoption.opened).to.be.false;
       });
-
       it('stays closed with [ArrowUp] or [ArrowDown] key in readonly mode or has a single option', async () => {
         const elReadOnly = await fixture(html`
           <${hostTag} readonly>
@@ -373,26 +326,36 @@ export function runSelectRichSuite({
             <${tagOption} .choiceValue=${20} checked>Item 2</${tagOption}>
           </${hostTag}>
         `);
-
         const elSingleOption = await fixture(html`
           <${hostTag}>
             <${tagOption} .choiceValue=${10}>Item 1</${tagOption}>
           </${hostTag}>
         `);
-
-        elReadOnly.dispatchEvent(new KeyboardEvent('keyup', { key: 'ArrowDown' }));
+        elReadOnly.dispatchEvent(
+          new KeyboardEvent('keyup', {
+            key: 'ArrowDown',
+          }),
+        );
         expect(elReadOnly.opened).to.be.false;
-
-        elReadOnly.dispatchEvent(new KeyboardEvent('keyup', { key: 'ArrowUp' }));
+        elReadOnly.dispatchEvent(
+          new KeyboardEvent('keyup', {
+            key: 'ArrowUp',
+          }),
+        );
         expect(elReadOnly.opened).to.be.false;
-
-        elSingleOption.dispatchEvent(new KeyboardEvent('keyup', { key: 'ArrowDown' }));
+        elSingleOption.dispatchEvent(
+          new KeyboardEvent('keyup', {
+            key: 'ArrowDown',
+          }),
+        );
         expect(elSingleOption.opened).to.be.false;
-
-        elSingleOption.dispatchEvent(new KeyboardEvent('keyup', { key: 'ArrowUp' }));
+        elSingleOption.dispatchEvent(
+          new KeyboardEvent('keyup', {
+            key: 'ArrowUp',
+          }),
+        );
         expect(elSingleOption.opened).to.be.false;
       });
-
       it('sets inheritsReferenceWidth to min by default', async () => {
         const el = await fixture(html`
           <${hostTag} name="favoriteColor" label="Favorite color">
@@ -402,14 +365,11 @@ export function runSelectRichSuite({
           </${hostTag}>
         `);
         const { _overlayCtrl } = getSelectRichMembers(el);
-
         expect(_overlayCtrl.inheritsReferenceWidth).to.equal('min');
         el.opened = true;
         await el.updateComplete;
-
         expect(_overlayCtrl.inheritsReferenceWidth).to.equal('min');
       });
-
       it('should override the inheritsWidth prop when no default selected feature is used', async () => {
         const el = await fixture(html`
           <${hostTag} name="favoriteColor" label="Favorite color" has-no-default-selected>
@@ -418,13 +378,13 @@ export function runSelectRichSuite({
             <${tagOption} .choiceValue=${'teal'}>Teal</${tagOption}>
           </${hostTag}>
         `);
-
         const { _overlayCtrl } = getSelectRichMembers(el);
 
         // The default is min, so we override that behavior here
-        _overlayCtrl.updateConfig({ inheritsReferenceWidth: 'full' });
+        _overlayCtrl.updateConfig({
+          inheritsReferenceWidth: 'full',
+        });
         el._initialInheritsReferenceWidth = 'full';
-
         expect(_overlayCtrl.inheritsReferenceWidth).to.equal('full');
         el.opened = true;
         await el.updateComplete;
@@ -444,7 +404,6 @@ export function runSelectRichSuite({
         // noDefaultSelected will now flip the override back to what was the initial reference width
         expect(_overlayCtrl.inheritsReferenceWidth).to.equal('full');
       });
-
       it('should have singleOption only if there is exactly one option', async () => {
         const el = await fixture(html`
           <${hostTag}>
@@ -452,12 +411,9 @@ export function runSelectRichSuite({
             <${tagOption} .choiceValue=${20}>Item 2</${tagOption}>
           </${hostTag}>
         `);
-
         const { _inputNode, _invokerNode } = getSelectRichMembers(el);
-
         expect(el.singleOption).to.be.false;
         expect(_invokerNode.singleOption).to.be.false;
-
         const optionElm = el.formElements[0];
         optionElm.parentNode.removeChild(optionElm);
         // @ts-ignore [test] we don't need args in this case
@@ -465,8 +421,7 @@ export function runSelectRichSuite({
         await el.updateComplete;
         expect(el.singleOption).to.be.true;
         expect(_invokerNode.singleOption).to.be.true;
-
-        const newOption = /** @type {LionOption} */ (document.createElement(tagNameOption));
+        const newOption = /** @type {LionOption} */ document.createElement(tagNameOption);
         newOption.choiceValue = 30;
         _inputNode.appendChild(newOption);
         // @ts-ignore [test] allow to not provide args for testing purposes
@@ -475,54 +430,45 @@ export function runSelectRichSuite({
         expect(el.singleOption).to.be.false;
         expect(_invokerNode.singleOption).to.be.false;
       });
-
       it('should have singleOption only if one option and no hasNoDefaultSelected', async () => {
         const el = await fixture(html`
           <${hostTag} has-no-default-selected>
             <${tagOption} .choiceValue=${10}>Item 1</${tagOption}>
           </${hostTag}>
         `);
-
         const { _invokerNode } = getSelectRichMembers(el);
-
         expect(el.singleOption).to.be.false;
         expect(_invokerNode.singleOption).to.be.false;
       });
-
       it('adds/removes the autofocus attribute to/from _listboxNode', async () => {
         const el = await fixture(html` <${hostTag}></${hostTag}> `);
         const { _listboxNode } = getSelectRichMembers(el);
-
         expect(_listboxNode.hasAttribute('autofocus')).to.be.false;
-
         el.opened = true;
         await el.updateComplete;
         expect(_listboxNode.hasAttribute('autofocus')).to.be.true;
-
         el.opened = false;
         await el.updateComplete;
         await el.updateComplete; // safari takes a little longer
         expect(_listboxNode.hasAttribute('autofocus')).to.be.false;
       });
-
       it('adds focus to element with [role=listbox] when trapsKeyboardFocus is true', async () => {
         const el = await fixture(html`
-          <${hostTag} .config=${{ trapsKeyboardFocus: true }}></${hostTag}>
+          <${hostTag} .config=${{
+            trapsKeyboardFocus: true,
+          }}></${hostTag}>
         `);
         const { _listboxNode } = getSelectRichMembers(el);
         expect(isActiveElement(_listboxNode)).to.be.false;
-
         el.opened = true;
         await el.updateComplete;
         expect(isActiveElement(_listboxNode)).to.be.true;
-
         el.opened = false;
         await el.updateComplete;
         await el.updateComplete; // safari takes a little longer
         expect(isActiveElement(_listboxNode)).to.be.false;
       });
     });
-
     describe('interaction-mode', () => {
       it('allows to specify an interaction-mode which determines other behaviors', async () => {
         const el = await fixture(html`
@@ -531,7 +477,6 @@ export function runSelectRichSuite({
         expect(el.interactionMode).to.equal('mac');
       });
     });
-
     describe('Keyboard navigation', () => {
       it('opens the listbox with [Enter] key via click handler', async () => {
         const el = await fixture(html` <${hostTag}> </${hostTag}> `);
@@ -540,7 +485,6 @@ export function runSelectRichSuite({
         await aTimeout(0);
         expect(el.opened).to.be.true;
       });
-
       it('opens the listbox with [ ](Space) key via click handler', async () => {
         const el = await fixture(html` <${hostTag}> </${hostTag}> `);
         const { _invokerNode } = getSelectRichMembers(el);
@@ -548,33 +492,43 @@ export function runSelectRichSuite({
         await aTimeout(0);
         expect(el.opened).to.be.true;
       });
-
       it('closes the listbox with [Escape] key once opened', async () => {
         const el = await fixture(html` <${hostTag} opened> </${hostTag}> `);
         const { _listboxNode } = getSelectRichMembers(el);
-        _listboxNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }));
+        _listboxNode.dispatchEvent(
+          new KeyboardEvent('keydown', {
+            key: 'Escape',
+          }),
+        );
         expect(el.opened).to.be.false;
       });
-
       it('closes the listbox with [Tab] key once opened', async () => {
         const el = await fixture(html` <${hostTag} opened> </${hostTag}> `);
         // tab can only be caught via keydown
         const { _listboxNode } = getSelectRichMembers(el);
-        _listboxNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab' }));
+        _listboxNode.dispatchEvent(
+          new KeyboardEvent('keydown', {
+            key: 'Tab',
+          }),
+        );
         expect(el.opened).to.be.false;
       });
-
       it('does not close the listbox with [Tab] key once opened when trapsKeyboardFocus is true', async () => {
         const el = await fixture(html`
-          <${hostTag} opened .config=${{ trapsKeyboardFocus: true }}> </${hostTag}>
+          <${hostTag} opened .config=${{
+            trapsKeyboardFocus: true,
+          }}> </${hostTag}>
         `);
         // tab can only be caught via keydown
         const { _listboxNode } = getSelectRichMembers(el);
-        _listboxNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab' }));
+        _listboxNode.dispatchEvent(
+          new KeyboardEvent('keydown', {
+            key: 'Tab',
+          }),
+        );
         expect(el.opened).to.be.true;
       });
     });
-
     describe('Mouse navigation', () => {
       it('opens the listbox via click on invoker', async () => {
         const el = await fixture(html` <${hostTag}> </${hostTag}> `);
@@ -584,7 +538,6 @@ export function runSelectRichSuite({
         await nextFrame(); // reflection of click takes some time
         expect(el.opened).to.be.true;
       });
-
       it('closes the listbox when an option gets clicked', async () => {
         const el = await fixture(html`
           <${hostTag} opened>
@@ -596,16 +549,18 @@ export function runSelectRichSuite({
         expect(el.opened).to.be.false;
       });
     });
-
     describe('Keyboard navigation Windows', () => {
       it('closes the listbox with [Enter] key once opened', async () => {
         const el = await fixture(html` <${hostTag} opened> </${hostTag}> `);
         const { _listboxNode } = getSelectRichMembers(el);
-        _listboxNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+        _listboxNode.dispatchEvent(
+          new KeyboardEvent('keydown', {
+            key: 'Enter',
+          }),
+        );
         expect(el.opened).to.be.false;
       });
     });
-
     describe('Keyboard navigation Mac', () => {
       it('checks active item and closes the listbox with [Enter] key via click handler once opened', async () => {
         const el = await fixture(html`
@@ -619,30 +574,39 @@ export function runSelectRichSuite({
         // changes active but not checked
         el.activeIndex = 1;
         expect(el.checkedIndex).to.equal(0);
-        _listboxNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+        _listboxNode.dispatchEvent(
+          new KeyboardEvent('keydown', {
+            key: 'Enter',
+          }),
+        );
         expect(el.opened).to.be.false;
         expect(el.checkedIndex).to.equal(1);
       });
-
       it('opens the listbox with [ArrowUp] key', async () => {
         const el = await fixture(html`
           <${hostTag} interaction-mode="mac"> </${hostTag}>
         `);
-        el.dispatchEvent(new KeyboardEvent('keyup', { key: 'ArrowUp' }));
+        el.dispatchEvent(
+          new KeyboardEvent('keyup', {
+            key: 'ArrowUp',
+          }),
+        );
         await el.updateComplete;
         expect(el.opened).to.be.true;
       });
-
       it('opens the listbox with [ArrowDown] key', async () => {
         const el = await fixture(html`
           <${hostTag} interaction-mode="mac"> </${hostTag}>
         `);
-        el.dispatchEvent(new KeyboardEvent('keyup', { key: 'ArrowDown' }));
+        el.dispatchEvent(
+          new KeyboardEvent('keyup', {
+            key: 'ArrowDown',
+          }),
+        );
         await el.updateComplete;
         expect(el.opened).to.be.true;
       });
     });
-
     describe('Accessibility', () => {
       it('has the right references to its inner elements', async () => {
         const el = await fixture(html`
@@ -652,19 +616,16 @@ export function runSelectRichSuite({
           </${hostTag}>
         `);
         const { _invokerNode, _feedbackNode, _labelNode, _helpTextNode } = getSelectRichMembers(el);
-
         expect(_invokerNode.getAttribute('aria-labelledby')).to.contain(_labelNode.id);
         expect(_invokerNode.getAttribute('aria-labelledby')).to.contain(_invokerNode.id);
         expect(_invokerNode.getAttribute('aria-describedby')).to.contain(_helpTextNode.id);
         expect(_invokerNode.getAttribute('aria-describedby')).to.contain(_feedbackNode.id);
         expect(_invokerNode.getAttribute('aria-haspopup')).to.equal('listbox');
       });
-
       it('notifies when the listbox is expanded or not', async () => {
         // smoke test for overlay functionality
         const el = await fixture(html` <${hostTag}> </${hostTag}> `);
         const { _invokerNode } = getSelectRichMembers(el);
-
         expect(_invokerNode.getAttribute('aria-expanded')).to.equal('false');
         el.opened = true;
         await el.updateComplete;
@@ -673,7 +634,6 @@ export function runSelectRichSuite({
         expect(_invokerNode.getAttribute('aria-expanded')).to.equal('true');
       });
     });
-
     describe('Use cases', () => {
       it('keeps showing the selected item after a new item has been added in the selectedIndex position', async () => {
         const mySelectContainerTagString = defineCE(
@@ -684,7 +644,6 @@ export function runSelectRichSuite({
                 colorList: Array,
               };
             }
-
             constructor() {
               super();
               this.colorList = [
@@ -705,14 +664,16 @@ export function runSelectRichSuite({
                 },
               ];
             }
-
             render() {
               return html`
                 <${hostTag} label="Favorite color" name="color">
                   ${this.colorList.map(
-                    colorObj => html`
+                    (colorObj) => html`
                       <${tagOption}
-                        .modelValue=${{ value: colorObj.value, checked: colorObj.checked }}
+                        .modelValue=${{
+                          value: colorObj.value,
+                          checked: colorObj.checked,
+                        }}
                         >${colorObj.label}</${tagOption}
                       >
                     `,
@@ -726,29 +687,26 @@ export function runSelectRichSuite({
         const el = await fixture(html`
           <${mySelectContainerTag}></${mySelectContainerTag}>
         `);
-
-        const selectRich = /** @type {LionSelectRich} */ (
-          /** @type {ShadowRoot} */ (el.shadowRoot).querySelector(hostTagString)
-        );
-
+        const selectRich =
+          /** @type {LionSelectRich} */
+          /** @type {ShadowRoot} */ el.shadowRoot.querySelector(hostTagString);
         const { _invokerNode, _listboxNode } = getSelectRichMembers(selectRich);
-
         expect(selectRich.checkedIndex).to.equal(1);
         expect(selectRich.modelValue).to.equal('hotpink');
-        expect(/** @type {LionOption} */ (_invokerNode.selectedElement).value).to.equal('hotpink');
-
-        const newOption = /** @type {LionOption} */ (document.createElement(tagNameOption));
-        newOption.modelValue = { checked: false, value: 'blue' };
+        expect(/** @type {LionOption} */ _invokerNode.selectedElement.value).to.equal('hotpink');
+        const newOption = /** @type {LionOption} */ document.createElement(tagNameOption);
+        newOption.modelValue = {
+          checked: false,
+          value: 'blue',
+        };
         newOption.textContent = 'Blue';
         const hotpinkEl = _listboxNode.children[1];
         hotpinkEl.insertAdjacentElement('beforebegin', newOption);
-
         expect(selectRich.checkedIndex).to.equal(2);
         expect(selectRich.modelValue).to.equal('hotpink');
-        expect(/** @type {LionOption} */ (_invokerNode.selectedElement).value).to.equal('hotpink');
+        expect(/** @type {LionOption} */ _invokerNode.selectedElement.value).to.equal('hotpink');
       });
     });
-
     describe('Render from `lit` `cache`', () => {
       describe('when `lion-option` is set by `.choiceValue` property with and no `checked` attribute', () => {
         it('should display the second option', async () => {
@@ -769,9 +727,10 @@ export function runSelectRichSuite({
           class Wrapper extends LitElement {
             static properties = {
               ...super.properties,
-              activeTabIndex: { type: Number },
+              activeTabIndex: {
+                type: Number,
+              },
             };
-
             constructor() {
               super();
               this.activeTabIndex = 0;
@@ -783,7 +742,6 @@ export function runSelectRichSuite({
             changeActiveTabIndex(index) {
               this.activeTabIndex = index;
             }
-
             render() {
               const changeActiveTabIndexRef = this.changeActiveTabIndex.bind(this);
               return html`
@@ -800,8 +758,7 @@ export function runSelectRichSuite({
                       this.activeTabIndex === 0
                         ? html`<${hostTag} name="favoriteColor" label="Favorite color">
                             ${colours.map(
-                              colour =>
-                                html`<${tagOption} .choiceValue="${colour.value}"
+                              (colour) => html`<${tagOption} .choiceValue="${colour.value}"
                                   >${colour.label}</${tagOption}
                                 >`,
                             )}
@@ -821,15 +778,12 @@ export function runSelectRichSuite({
               `;
             }
           }
-
-          const wrapperFixture = /** @type {(arg: TemplateResult) => Promise<Wrapper>} */ (
-            _fixture
-          );
+          const wrapperFixture = /** @type {(arg: TemplateResult) => Promise<Wrapper>} */ _fixture;
           const tagString = defineCE(Wrapper);
           const wrapperTag = unsafeStatic(tagString);
-          const wrapperElement = /** @type {Wrapper} */ (
-            await wrapperFixture(html`<${wrapperTag}></${wrapperTag}>`)
-          );
+          const wrapperElement =
+            /** @type {Wrapper} */
+            await wrapperFixture(html`<${wrapperTag}></${wrapperTag}>`);
           await wrapperElement.updateComplete;
           const wrapperElementShadowRoot = wrapperElement.shadowRoot;
           /**
@@ -865,9 +819,10 @@ export function runSelectRichSuite({
           getInvoker()?.click();
           await waitUntil(isDialogVisible);
           // @ts-ignore [dynamic-key-access-in-test]
-          const optionBlue = /** @type { HTMLElement | undefined } */ (
-            wrapperElementShadowRoot?.querySelectorAll(tagNameOption)
-          )?.[1];
+          const optionBlue =
+            /** @type { HTMLElement | undefined } */ wrapperElementShadowRoot?.querySelectorAll(
+              tagNameOption,
+            )?.[1];
           optionBlue?.click();
           await waitUntil(() => !isDialogVisible());
           const selectedColourLabelBeforeTabSwitch = getSelectedColourLabel();
@@ -901,9 +856,10 @@ export function runSelectRichSuite({
           class Wrapper extends LitElement {
             static properties = {
               ...super.properties,
-              activeTabIndex: { type: Number },
+              activeTabIndex: {
+                type: Number,
+              },
             };
-
             constructor() {
               super();
               this.activeTabIndex = 0;
@@ -915,7 +871,6 @@ export function runSelectRichSuite({
             changeActiveTabIndex(index) {
               this.activeTabIndex = index;
             }
-
             render() {
               const changeActiveTabIndexRef = this.changeActiveTabIndex.bind(this);
               return html`
@@ -932,8 +887,7 @@ export function runSelectRichSuite({
                       this.activeTabIndex === 0
                         ? html`<${hostTag} name="favoriteColor" label="Favorite color">
                             ${colours.map(
-                              colour =>
-                                html`<${tagOption}
+                              (colour) => html`<${tagOption}
                                   .choiceValue="${colour.value}"
                                   checked="${colour.checked || nothing}"
                                   >${colour.label}</${tagOption}
@@ -955,15 +909,12 @@ export function runSelectRichSuite({
               `;
             }
           }
-
-          const wrapperFixture = /** @type {(arg: TemplateResult) => Promise<Wrapper>} */ (
-            _fixture
-          );
+          const wrapperFixture = /** @type {(arg: TemplateResult) => Promise<Wrapper>} */ _fixture;
           const tagString = defineCE(Wrapper);
           const wrapperTag = unsafeStatic(tagString);
-          const wrapperElement = /** @type {Wrapper} */ (
-            await wrapperFixture(html`<${wrapperTag}></${wrapperTag}>`)
-          );
+          const wrapperElement =
+            /** @type {Wrapper} */
+            await wrapperFixture(html`<${wrapperTag}></${wrapperTag}>`);
           await wrapperElement.updateComplete;
           const wrapperElementShadowRoot = wrapperElement.shadowRoot;
           /**
@@ -999,9 +950,10 @@ export function runSelectRichSuite({
           getInvoker()?.click();
           await waitUntil(isDialogVisible);
           // @ts-ignore [dynamic-key-access-in-test]
-          const optionBlue = /** @type { HTMLElement | undefined } */ (
-            wrapperElementShadowRoot?.querySelectorAll(tagNameOption)
-          )?.[1];
+          const optionBlue =
+            /** @type { HTMLElement | undefined } */ wrapperElementShadowRoot?.querySelectorAll(
+              tagNameOption,
+            )?.[1];
           optionBlue?.click();
           await waitUntil(() => !isDialogVisible());
           const selectedColourLabelBeforeTabSwitch = getSelectedColourLabel();
@@ -1035,9 +987,10 @@ export function runSelectRichSuite({
           class Wrapper extends LitElement {
             static properties = {
               ...super.properties,
-              activeTabIndex: { type: Number },
+              activeTabIndex: {
+                type: Number,
+              },
             };
-
             constructor() {
               super();
               this.activeTabIndex = 0;
@@ -1049,7 +1002,6 @@ export function runSelectRichSuite({
             changeActiveTabIndex(index) {
               this.activeTabIndex = index;
             }
-
             render() {
               const changeActiveTabIndexRef = this.changeActiveTabIndex.bind(this);
               return html`
@@ -1066,14 +1018,16 @@ export function runSelectRichSuite({
                       this.activeTabIndex === 0
                         ? html`<${hostTag} name="favoriteColor" label="Favorite color">
                             ${colours.map(
-                              colour =>
-                                html`<${tagOption}
+                              (colour) => html`<${tagOption}
                                   @model-value-changed=${(/** @type {Event} */ ev) => {
-                                    const lionOption = /** @type {LionOption} */ (ev.target);
+                                    const lionOption = /** @type {LionOption} */ ev.target;
                                     // eslint-disable-next-line no-param-reassign
                                     colour.checked = lionOption.modelValue.checked;
                                   }}
-                                  .modelValue=${{ value: colour.value, checked: colour.checked }}
+                                  .modelValue=${{
+                                    value: colour.value,
+                                    checked: colour.checked,
+                                  }}
                                   >${colour.label}</${tagOption}
                                 >`,
                             )}
@@ -1093,15 +1047,12 @@ export function runSelectRichSuite({
               `;
             }
           }
-
-          const wrapperFixture = /** @type {(arg: TemplateResult) => Promise<Wrapper>} */ (
-            _fixture
-          );
+          const wrapperFixture = /** @type {(arg: TemplateResult) => Promise<Wrapper>} */ _fixture;
           const tagString = defineCE(Wrapper);
           const wrapperTag = unsafeStatic(tagString);
-          const wrapperElement = /** @type {Wrapper} */ (
-            await wrapperFixture(html`<${wrapperTag}></${wrapperTag}>`)
-          );
+          const wrapperElement =
+            /** @type {Wrapper} */
+            await wrapperFixture(html`<${wrapperTag}></${wrapperTag}>`);
           await wrapperElement.updateComplete;
           const wrapperElementShadowRoot = wrapperElement.shadowRoot;
           /**
@@ -1137,9 +1088,10 @@ export function runSelectRichSuite({
           getInvoker()?.click();
           await waitUntil(isDialogVisible);
           // @ts-ignore [dynamic-key-access-in-test]
-          const optionBlue = /** @type { HTMLElement | undefined } */ (
-            wrapperElementShadowRoot?.querySelectorAll(tagNameOption)
-          )?.[1];
+          const optionBlue =
+            /** @type { HTMLElement | undefined } */ wrapperElementShadowRoot?.querySelectorAll(
+              tagNameOption,
+            )?.[1];
           optionBlue?.click();
           await waitUntil(() => !isDialogVisible());
           const selectedColourLabelBeforeTabSwitch = getSelectedColourLabel();
@@ -1153,15 +1105,13 @@ export function runSelectRichSuite({
         });
       });
     });
-
     describe('Teardown', () => {
       it('does not throw when tearing down before the overlay controller is set up', () => {
-        const el = /** @type {LionSelectRich} */ (document.createElement(hostTagString));
+        const el = /** @type {LionSelectRich} */ document.createElement(hostTagString);
 
         // @ts-expect-error [allow-private] in tests
         expect(() => el._teardownOverlayCtrl()).not.to.throw();
       });
-
       it('correctly removes event listeners when disconnected from dom', async () => {
         const el = await fixture(html`
           <${hostTag} label="age">
@@ -1169,19 +1119,13 @@ export function runSelectRichSuite({
             <${tagOption} .choiceValue=${20}>Item 2</${tagOption}>
           </${hostTag}>
         `);
-
         const { _overlayCtrl } = getSelectRichMembers(el);
         const eventRemoveSpy = sinon.spy(_overlayCtrl, 'removeEventListener');
-
         el.parentNode?.removeChild(el);
-
         expect(eventRemoveSpy.callCount).to.equal(0);
-
         await el.updateComplete;
         expect(eventRemoveSpy.callCount).to.equal(0);
-
         await el.updateComplete;
-
         const hasOneInstanceFor = (
           /** @type {string} */ eventName,
           /** @type {any[][]} */ eventsToSearch,
@@ -1203,7 +1147,6 @@ export function runSelectRichSuite({
         expect(hasOneInstanceFor('hide', eventRemoveSpy.args, el.__overlayOnHide)).to.be.true;
       });
     });
-
     describe('Subclassers', () => {
       it('allows to override the type of overlay', async () => {
         const mySelectTagString = defineCE(
@@ -1217,21 +1160,24 @@ export function runSelectRichSuite({
                 invokerNode,
               });
               this.addEventListener('switch', () => {
-                ctrl.updateConfig({ placementMode: 'local' });
+                ctrl.updateConfig({
+                  placementMode: 'local',
+                });
               });
               return ctrl;
             }
           },
         );
-
         const mySelectTag = unsafeStatic(mySelectTagString);
-
         const el = await fixture(html`
           <${mySelectTag} label="Favorite color" name="color">
 
               ${Array(2).map(
                 (_, i) => html`
-                  <${tagOption} .modelValue="${{ value: i, checked: false }}"
+                  <${tagOption} .modelValue="${{
+                    value: i,
+                    checked: false,
+                  }}"
                     >value ${i}</${tagOption}
                   >
                 `,
@@ -1241,12 +1187,10 @@ export function runSelectRichSuite({
         `);
         await el.updateComplete;
         const { _overlayCtrl } = getSelectRichMembers(el);
-
         expect(_overlayCtrl.placementMode).to.equal('global');
         el.dispatchEvent(new Event('switch'));
         expect(_overlayCtrl.placementMode).to.equal('local');
       });
-
       it('supports putting a placeholder template when there is no default selection initially', async () => {
         const invokerTagName = defineCE(
           class extends LionSelectInvoker {
@@ -1268,7 +1212,6 @@ export function runSelectRichSuite({
           },
         );
         const selectTag = unsafeStatic(selectTagName);
-
         const el = await fixture(html`
           <${selectTag} id="color" name="color" label="Favorite color" has-no-default-selected>
 
@@ -1279,9 +1222,8 @@ export function runSelectRichSuite({
           </${selectTag}>
         `);
         const { _invokerNode } = getSelectRichMembers(el);
-
         expect(
-          /** @type {ShadowRoot} */ (_invokerNode.shadowRoot).getElementById('content-wrapper'),
+          /** @type {ShadowRoot} */ _invokerNode.shadowRoot.getElementById('content-wrapper'),
         ).dom.to.equal(`<div id="content-wrapper">Please select an option..</div>`);
         expect(el.modelValue).to.equal('');
       });

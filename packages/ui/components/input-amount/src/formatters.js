@@ -21,14 +21,12 @@ export function formatAmount(modelValue, givenOptions) {
     currency: 'EUR',
     ...givenOptions,
   };
-
   if (typeof options.minimumFractionDigits === 'undefined') {
     options.minimumFractionDigits = getFractionDigits(options.currency);
   }
   if (typeof options.maximumFractionDigits === 'undefined') {
     options.maximumFractionDigits = getFractionDigits(options.currency);
   }
-
   return formatNumber(modelValue, options);
 }
 
@@ -41,6 +39,5 @@ export function formatCurrencyLabel(currency, locale) {
   if (currency === '') {
     return '';
   }
-
   return normalizeCurrencyLabel(currency, locale);
 }

@@ -2,7 +2,6 @@ import { expect, fixture, html, unsafeStatic } from '@open-wc/testing';
 
 // eslint-disable-next-line import/no-extraneous-dependencies
 import sinon from 'sinon';
-
 import '@lion/ui/define/lion-input.js';
 import '@lion/ui/define/lion-input-amount.js';
 import '@lion/ui/define/lion-input-date.js';
@@ -28,7 +27,6 @@ import '@lion/ui/define/lion-fieldset.js';
 import '@lion/ui/define/lion-form.js';
 import '@lion/ui/define/lion-field.js';
 import '@lion/ui/define/lion-validation-feedback.js';
-
 import { getFormControlMembers } from '@lion/ui/form-core-test-helpers.js';
 
 /**
@@ -49,14 +47,11 @@ function getProtectedMembers(el) {
     repropagationRole: el._repropagationRole,
   };
 }
-
 const featureName = 'model value';
-
-const getFirstPaintTitle = /** @param {number} count */ count =>
+const getFirstPaintTitle = /** @param {number} count */ (count) =>
   `should dispatch ${count} time(s) on first paint`;
-const getInteractionTitle = /** @param {number} count */ count =>
+const getInteractionTitle = /** @param {number} count */ (count) =>
   `should dispatch ${count} time(s) on interaction`;
-
 const firstStampCount = 1;
 const interactionCount = 1;
 
@@ -81,7 +76,7 @@ const fieldDispatchesCountOnInteraction = (tagname, count) => {
   const tag = unsafeStatic(tagname);
   const spy = sinon.spy();
   it(getInteractionTitle(count), async () => {
-    const el = /** @type {LionField} */ (await fixture(html`<${tag}></${tag}>`));
+    const el = /** @type {LionField} */ await fixture(html`<${tag}></${tag}>`);
     el.addEventListener('model-value-changed', spy);
     // TODO: discuss if this is the "correct" way to interact with component
     el.modelValue = 'foo';
@@ -111,9 +106,9 @@ const choiceDispatchesCountOnInteraction = (tagname, count) => {
   const tag = unsafeStatic(tagname);
   const spy = sinon.spy();
   it(getInteractionTitle(count), async () => {
-    const el = /** @type {HTMLElement & {checked: boolean}} */ (
-      await fixture(html`<${tag} .choiceValue="${'option'}"></${tag}>`)
-    );
+    const el =
+      /** @type {HTMLElement & {checked: boolean}} */
+      await fixture(html`<${tag} .choiceValue="${'option'}"></${tag}>`);
     el.addEventListener('model-value-changed', spy);
     el.checked = true;
     expect(spy.callCount).to.equal(count);
@@ -137,7 +132,6 @@ const choiceGroupDispatchesCountOnFirstPaint = (groupTagname, itemTagname, count
         <${itemTag} .choiceValue="${'option3'}"></${itemTag}>
       </${groupTag}>
     `);
-
     expect(spy.callCount).to.equal(count);
   });
 };
@@ -159,24 +153,20 @@ const choiceGroupDispatchesCountOnInteraction = (groupTagname, itemTagname, coun
         <${itemTag} .choiceValue="${'option3'}"></${itemTag}>
       </${groupTag}>
     `);
-
     el.addEventListener('model-value-changed', spy);
-    const option2 = /** @type {HTMLElement & {checked: boolean}} */ (
-      el.querySelector(`${itemTagname}:nth-child(2)`)
-    );
+    const option2 =
+      /** @type {HTMLElement & {checked: boolean}} */
+      el.querySelector(`${itemTagname}:nth-child(2)`);
     option2.checked = true;
     expect(spy.callCount).to.equal(count);
-
     spy.resetHistory();
-
-    const option3 = /** @type {HTMLElement & {checked: boolean}} */ (
-      el.querySelector(`${itemTagname}:nth-child(3)`)
-    );
+    const option3 =
+      /** @type {HTMLElement & {checked: boolean}} */
+      el.querySelector(`${itemTagname}:nth-child(3)`);
     option3.checked = true;
     expect(spy.callCount).to.equal(count);
   });
 };
-
 [
   'input',
   'input-amount',
@@ -186,7 +176,7 @@ const choiceGroupDispatchesCountOnInteraction = (groupTagname, itemTagname, coun
   'input-iban',
   'input-range',
   'textarea',
-].forEach(chunk => {
+].forEach((chunk) => {
   const tagname = `lion-${chunk}`;
   describe(`${tagname}`, () => {
     describe(featureName, () => {
@@ -195,18 +185,15 @@ const choiceGroupDispatchesCountOnInteraction = (groupTagname, itemTagname, coun
     });
   });
 });
-
-['checkbox', 'radio'].forEach(chunk => {
+['checkbox', 'radio'].forEach((chunk) => {
   const groupTagname = `lion-${chunk}-group`;
   const itemTagname = `lion-${chunk}`;
-
   describe(`${itemTagname}`, () => {
     describe(featureName, () => {
       choiceDispatchesCountOnFirstPaint(itemTagname, firstStampCount);
       choiceDispatchesCountOnInteraction(itemTagname, interactionCount);
     });
   });
-
   describe(`${groupTagname}`, () => {
     describe(featureName, () => {
       choiceGroupDispatchesCountOnFirstPaint(groupTagname, itemTagname, firstStampCount);
@@ -214,13 +201,12 @@ const choiceGroupDispatchesCountOnInteraction = (groupTagname, itemTagname, coun
     });
   });
 });
-
 describe('lion-select', () => {
   describe(featureName, () => {
     it(getFirstPaintTitle(firstStampCount), async () => {
       const spy = sinon.spy();
       await fixture(html`
-        <lion-select @model-value-changed="${/** @type {function} */ (spy)}">
+        <lion-select @model-value-changed="${/** @type {function} */ spy}">
           <select slot="input">
             <option value="option1"></option>
             <option value="option2"></option>
@@ -230,10 +216,10 @@ describe('lion-select', () => {
       `);
       expect(spy.callCount).to.equal(firstStampCount);
     });
-
     it(getInteractionTitle(interactionCount), async () => {
       const spy = sinon.spy();
-      const el = /** @type {LionSelect} */ (
+      const el =
+        /** @type {LionSelect} */
         await fixture(html`
           <lion-select>
             <select slot="input">
@@ -242,32 +228,27 @@ describe('lion-select', () => {
               <option value="option3"></option>
             </select>
           </lion-select>
-        `)
-      );
+        `);
       el.addEventListener('model-value-changed', spy);
-      const option2 = /** @type {HTMLOptionElement} */ (el.querySelector('option:nth-child(2)'));
+      const option2 = /** @type {HTMLOptionElement} */ el.querySelector('option:nth-child(2)');
 
       // mimic user input
       option2.selected = true;
       el._inputNode.dispatchEvent(new CustomEvent('change'));
-
       expect(spy.callCount).to.equal(interactionCount);
-
       spy.resetHistory();
-
-      const option3 = /** @type {HTMLOptionElement} */ (el.querySelector('option:nth-child(3)'));
+      const option3 = /** @type {HTMLOptionElement} */ el.querySelector('option:nth-child(3)');
 
       // mimic user input
       option3.selected = true;
       el._inputNode.dispatchEvent(new CustomEvent('change'));
-
       expect(spy.callCount).to.equal(interactionCount);
     });
   });
 });
 
 // TODO: change back order when scoped-elements (polyfill) fixed side effects
-['select-rich', 'combobox', 'listbox'].forEach(chunk => {
+['select-rich', 'combobox', 'listbox'].forEach((chunk) => {
   const tagname = `lion-${chunk}`;
   const tag = unsafeStatic(tagname);
   describe(`${tagname}`, () => {
@@ -281,10 +262,8 @@ describe('lion-select', () => {
             <lion-option .choiceValue="${'option3'}"></lion-option>
           </${tag}>
         `);
-
         expect(spy.callCount).to.equal(firstStampCount);
       });
-
       it(getInteractionTitle(interactionCount), async () => {
         const spy = sinon.spy();
         const el = await fixture(html`
@@ -295,33 +274,28 @@ describe('lion-select', () => {
           </${tag}>
         `);
         el.addEventListener('model-value-changed', spy);
-        const option2 = /** @type {LionOption} */ (el.querySelector('lion-option:nth-child(2)'));
+        const option2 = /** @type {LionOption} */ el.querySelector('lion-option:nth-child(2)');
         option2.checked = true;
         expect(spy.callCount).to.equal(interactionCount);
-
         spy.resetHistory();
-
-        const option3 = /** @type {LionOption} */ (el.querySelector('lion-option:nth-child(3)'));
+        const option3 = /** @type {LionOption} */ el.querySelector('lion-option:nth-child(3)');
         option3.checked = true;
         expect(spy.callCount).to.equal(interactionCount);
       });
     });
   });
 });
-
 describe('lion-fieldset', () => {
   describe(featureName, () => {
     it(getFirstPaintTitle(firstStampCount), async () => {
       const spy = sinon.spy();
       await fixture(html`
-        <lion-fieldset name="parent" @model-value-changed="${/** @type {function} */ (spy)}">
+        <lion-fieldset name="parent" @model-value-changed="${/** @type {function} */ spy}">
           <lion-input name="input"></lion-input>
         </lion-fieldset>
       `);
-
       expect(spy.callCount).to.equal(firstStampCount);
     });
-
     it(getInteractionTitle(interactionCount), async () => {
       const spy = sinon.spy();
       const el = await fixture(html`
@@ -329,15 +303,13 @@ describe('lion-fieldset', () => {
           <lion-input name="input"></lion-input>
         </lion-fieldset>
       `);
-
       el.addEventListener('model-value-changed', spy);
-      const input = /** @type {LionInput} */ (el.querySelector('lion-input'));
+      const input = /** @type {LionInput} */ el.querySelector('lion-input');
       input.modelValue = 'foo';
       expect(spy.callCount).to.equal(interactionCount);
     });
   });
 });
-
 describe('detail.isTriggeredByUser', () => {
   const allFormControls = [
     // 1) Fields
@@ -398,9 +370,9 @@ describe('detail.isTriggeredByUser', () => {
    * - false: when child formElement condition for RegularField is not met
    */
 
-  const featureDetectChoiceField = /** @param {HTMLElement} el */ el =>
+  const featureDetectChoiceField = /** @param {HTMLElement} el */ (el) =>
     'checked' in el && 'choiceValue' in el;
-  const featureDetectOptionChoiceField = /** @param {HTMLElement} el */ el => 'active' in el;
+  const featureDetectOptionChoiceField = /** @param {HTMLElement} el */ (el) => 'active' in el;
 
   /**
    * @param {FormControl} el
@@ -430,7 +402,11 @@ describe('detail.isTriggeredByUser', () => {
     if (type === 'RegularField') {
       userInputEv = _inputNode.tagName === 'SELECT' ? 'change' : 'input';
       el.value = newViewValue; // eslint-disable-line no-param-reassign
-      _inputNode.dispatchEvent(new Event(userInputEv, { bubbles: true }));
+      _inputNode.dispatchEvent(
+        new Event(userInputEv, {
+          bubbles: true,
+        }),
+      );
     } else if (type === 'ChoiceField') {
       if (options?.labelInsteadOfInput) {
         _labelNode.click();
@@ -439,21 +415,43 @@ describe('detail.isTriggeredByUser', () => {
       }
     } else if (type === 'OptionChoiceField') {
       if (!options?.triggerType) {
-        el.dispatchEvent(new Event('click', { bubbles: true }));
+        el.dispatchEvent(
+          new Event('click', {
+            bubbles: true,
+          }),
+        );
       } else if (options?.triggerType === 'keypress') {
-        el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true }));
-        el.dispatchEvent(new KeyboardEvent('keyup', { key: 'ArrowDown', bubbles: true }));
-        el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
-        el.dispatchEvent(new KeyboardEvent('keyup', { key: 'Enter', bubbles: true }));
+        el.dispatchEvent(
+          new KeyboardEvent('keydown', {
+            key: 'ArrowDown',
+            bubbles: true,
+          }),
+        );
+        el.dispatchEvent(
+          new KeyboardEvent('keyup', {
+            key: 'ArrowDown',
+            bubbles: true,
+          }),
+        );
+        el.dispatchEvent(
+          new KeyboardEvent('keydown', {
+            key: 'Enter',
+            bubbles: true,
+          }),
+        );
+        el.dispatchEvent(
+          new KeyboardEvent('keyup', {
+            key: 'Enter',
+            bubbles: true,
+          }),
+        );
       }
     }
   }
-
-  allFormControls.forEach(controlName => {
+  allFormControls.forEach((controlName) => {
     it(`lion-${controlName} adds "detail.isTriggeredByUser" to model-value-changed event`, async () => {
       // TODO: add test for user input via calendar
       const spy = sinon.spy();
-
       const tagname = `lion-${controlName}`;
       const tag = unsafeStatic(tagname);
       let childrenEl;
@@ -468,14 +466,11 @@ describe('detail.isTriggeredByUser', () => {
       } else if (controlName === 'field') {
         childrenEl = await fixture(html`<input slot="input" />`);
       }
-
       const name = controlName === 'checkbox-group' ? 'test[]' : 'test';
       const el =
-        /** @type {LitElement & FormControl & {value: string} & {registrationComplete: Promise<boolean>} & {formElements: Array.<FormControl & {value: string}>}} */ (
-          await fixture(html`<${tag} name="${name}">${childrenEl}</${tag}>`)
-        );
+        /** @type {LitElement & FormControl & {value: string} & {registrationComplete: Promise<boolean>} & {formElements: Array.<FormControl & {value: string}>}} */
+        await fixture(html`<${tag} name="${name}">${childrenEl}</${tag}>`);
       await el.registrationComplete;
-
       el.addEventListener('model-value-changed', spy);
 
       /**
@@ -508,32 +503,35 @@ describe('detail.isTriggeredByUser', () => {
         { parent, testKeyboardBehavior } = {},
       ) {
         const type = detectType(formControl);
-
         await resetChoiceFieldToForceRepropagation(formControl);
         mimicUserInput(formControl, 'userValue');
-
         expect(spy.firstCall.args[0].detail.isTriggeredByUser).to.be.true;
-
         await resetChoiceFieldToForceRepropagation(formControl);
-        mimicUserInput(formControl, 'userValue', { labelInsteadOfInput: true });
+        mimicUserInput(formControl, 'userValue', {
+          labelInsteadOfInput: true,
+        });
         expect(spy.firstCall.args[0].detail.isTriggeredByUser).to.be.true;
-
         await resetChoiceFieldToForceRepropagation(formControl);
         // eslint-disable-next-line no-param-reassign
         formControl.checked = true;
         expect(spy.firstCall.args[0].detail.isTriggeredByUser).to.be.false;
 
         // eslint-disable-next-line no-param-reassign
-        formControl.modelValue = { value: 'programmaticValue', checked: false };
+        formControl.modelValue = {
+          value: 'programmaticValue',
+          checked: false,
+        };
         expect(spy.secondCall.args[0].detail.isTriggeredByUser).to.be.false;
-
         if (
           type === 'OptionChoiceField' &&
           testKeyboardBehavior &&
           parent?.constructor.name !== 'LionCombobox' // modelValue only changeable via click or textbox
         ) {
           await resetChoiceFieldToForceRepropagation(formControl);
-          mimicUserInput(formControl, 'userValue', { triggerType: 'keypress', parent });
+          mimicUserInput(formControl, 'userValue', {
+            triggerType: 'keypress',
+            parent,
+          });
           try {
             expect(spy.firstCall.args[0].detail.isTriggeredByUser).to.be.true;
           } catch (e) {

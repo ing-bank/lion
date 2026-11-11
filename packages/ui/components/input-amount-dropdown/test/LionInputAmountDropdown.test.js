@@ -8,7 +8,6 @@ import { repeat } from 'lit/directives/repeat.js';
 import { LionOption } from '@lion/ui/listbox.js';
 import { ref } from 'lit/directives/ref.js';
 import { html } from 'lit';
-
 import { ifDefined } from 'lit/directives/if-defined.js';
 import { isActiveElement } from '../../core/test-helpers/isActiveElement.js';
 import { ScopedElementsMixin } from '../../core/src/ScopedElementsMixin.js';
@@ -31,13 +30,12 @@ class WithFormControlInputAmountDropdown extends ScopedElementsMixin(LionInputAm
     'lion-select-rich': LionSelectRich,
     'lion-option': LionOption,
   };
-
   static templates = {
     ...(super.templates || {}),
     /**
      * @param {TemplateDataForDropdownInputAmount} templateDataForDropdown
      */
-    dropdown: templateDataForDropdown => {
+    dropdown: (templateDataForDropdown) => {
       const { refs, data } = templateDataForDropdown;
       // TODO: once spread directive available, use it per ref (like ref(refs?.dropdown?.ref))
       return html`
@@ -50,8 +48,8 @@ class WithFormControlInputAmountDropdown extends ScopedElementsMixin(LionInputAm
         >
           ${repeat(
             data.regionMetaList,
-            regionMeta => regionMeta.currencyCode,
-            regionMeta => html`
+            (regionMeta) => regionMeta.currencyCode,
+            (regionMeta) => html`
               <lion-option .choiceValue="${regionMeta.currencyCode}"> </lion-option>
             `,
           )}
@@ -60,15 +58,14 @@ class WithFormControlInputAmountDropdown extends ScopedElementsMixin(LionInputAm
     },
   };
 }
-
 runInputAmountDropdownSuite();
-
 describe('WithFormControlInputAmountDropdown', () => {
   // Runs it for LionSelectRich, which uses .modelValue/@model-value-changed instead of .value/@change
   runInputAmountDropdownSuite({
-    classes: { host: WithFormControlInputAmountDropdown },
+    classes: {
+      host: WithFormControlInputAmountDropdown,
+    },
   });
-
   it('focuses the textbox right after selection if selected via opened dropdown if interaction-mode is mac', async () => {
     class InputAmountDropdownMac extends LionInputAmountDropdown {
       static templates = {
@@ -76,7 +73,7 @@ describe('WithFormControlInputAmountDropdown', () => {
         /**
          * @param {TemplateDataForDropdownInputAmount} templateDataForDropdown
          */
-        dropdown: templateDataForDropdown => {
+        dropdown: (templateDataForDropdown) => {
           const { refs, data } = templateDataForDropdown;
           // TODO: once spread directive available, use it per ref (like ref(refs?.dropdown?.ref))
           return html`
@@ -90,8 +87,8 @@ describe('WithFormControlInputAmountDropdown', () => {
             >
               ${repeat(
                 data.regionMetaList,
-                regionMeta => regionMeta.currencyCode,
-                regionMeta => html`
+                (regionMeta) => regionMeta.currencyCode,
+                (regionMeta) => html`
                   <lion-option .choiceValue="${regionMeta.currencyCode}"> </lion-option>
                 `,
               )}
@@ -101,14 +98,14 @@ describe('WithFormControlInputAmountDropdown', () => {
       };
     }
     customElements.define('input-amount-dropdown-mac', InputAmountDropdownMac);
-    const el = /** @type {LionInputAmountDropdown} */ (
+    const el =
+      /** @type {LionInputAmountDropdown} */
       await fixture(html`
         <input-amount-dropdown-mac
           .allowedCurrencies="${['GBP', 'EUR']}"
           .modelValue="{ currency: 'GBP', amount: '123' }"
         ></input-amount-dropdown-mac>
-      `)
-    );
+      `);
     const dropdownElement = el.refs.dropdown.value;
     // @ts-expect-error [allow-protected-in-tests]
     if (dropdownElement?._overlayCtrl) {
@@ -121,7 +118,6 @@ describe('WithFormControlInputAmountDropdown', () => {
       expect(isActiveElement(el._inputNode)).to.be.true;
     }
   });
-
   it('does not focus the textbox right after selection if selected via opened dropdown if interaction-mode is windows/linux', async () => {
     class InputAmountDropdownWindows extends LionInputAmountDropdown {
       static templates = {
@@ -129,7 +125,7 @@ describe('WithFormControlInputAmountDropdown', () => {
         /**
          * @param {TemplateDataForDropdownInputAmount} templateDataForDropdown
          */
-        dropdown: templateDataForDropdown => {
+        dropdown: (templateDataForDropdown) => {
           const { refs, data } = templateDataForDropdown;
           // TODO: once spread directive available, use it per ref (like ref(refs?.dropdown?.ref))
           return html`
@@ -143,8 +139,8 @@ describe('WithFormControlInputAmountDropdown', () => {
             >
               ${repeat(
                 data.regionMetaList,
-                regionMeta => regionMeta.currencyCode,
-                regionMeta => html`
+                (regionMeta) => regionMeta.currencyCode,
+                (regionMeta) => html`
                   <lion-option .choiceValue="${regionMeta.currencyCode}"> </lion-option>
                 `,
               )}
@@ -154,14 +150,14 @@ describe('WithFormControlInputAmountDropdown', () => {
       };
     }
     customElements.define('input-amount-dropdown-windows', InputAmountDropdownWindows);
-    const el = /** @type {LionInputAmountDropdown} */ (
+    const el =
+      /** @type {LionInputAmountDropdown} */
       await fixture(html`
         <input-amount-dropdown-windows
           .allowedCurrencies="${['GBP', 'EUR']}"
           .modelValue="{ currency: 'GBP', amount: '123' }"
         ></input-amount-dropdown-windows>
-      `)
-    );
+      `);
     const dropdownElement = el.refs.dropdown.value;
     // @ts-expect-error [allow-protected-in-tests]
     if (dropdownElement?._overlayCtrl) {
@@ -174,42 +170,44 @@ describe('WithFormControlInputAmountDropdown', () => {
       expect(isActiveElement(el._inputNode)).to.be.false;
     }
   });
-
   describe('defaultValidators', () => {
     it('without interaction are not called', async () => {
-      const el = /** @type {LionInputAmountDropdown} */ (
+      const el =
+        /** @type {LionInputAmountDropdown} */
         await fixture(html`
           <lion-input-amount-dropdown .allowedCurrencies="${['EUR']}"></lion-input-amount-dropdown>
-        `)
-      );
+        `);
       await aTimeout(0);
       expect(el.hasFeedbackFor).to.deep.equal([]);
     });
-
     it('with interaction are called', async () => {
-      const el = /** @type {LionInputAmountDropdown} */ (
+      const el =
+        /** @type {LionInputAmountDropdown} */
         await fixture(html`
           <lion-input-amount-dropdown
             .allowedCurrencies="${['GBP', 'EUR']}"
           ></lion-input-amount-dropdown>
-        `)
-      );
-      el.modelValue = { currency: 'EUR' };
+        `);
+      el.modelValue = {
+        currency: 'EUR',
+      };
       await aTimeout(0);
-      el.modelValue = { currency: 'EUR', amount: '' };
+      el.modelValue = {
+        currency: 'EUR',
+        amount: '',
+      };
       expect(el.hasFeedbackFor).to.deep.equal([]);
     });
   });
-
   it('includes error in showsFeedbackFor when required, empty, and touched & dirty', async () => {
-    const el = /** @type {LionInputAmountDropdown} */ (
+    const el =
+      /** @type {LionInputAmountDropdown} */
       await fixture(html`
         <lion-input-amount-dropdown
           .allowedCurrencies="${['GBP', 'EUR']}"
           .validators="${[new Required()]}"
         ></lion-input-amount-dropdown>
-      `)
-    );
+      `);
     await el.updateComplete;
     el.touched = true;
     el.dirty = true;

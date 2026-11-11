@@ -216,6 +216,10 @@ function npmLockPackages({ semverLockVersion, rootDependencies }) {
  * @param {string} [options.semverLockVersion] version the npm lock carries for `semver`
  * @param {string[]} [options.npmLockDropped] lock paths to omit from the npm lock
  * @param {string[]} [options.rootDependencies] extra root dependencies declared in package.json
+ * @param {Record<string, string>} [options.npmExtraPackages] extra npm lock records: lock path -> `name@version`
+ * @param {Record<string, unknown>} [options.npmOverrides] `overrides` written into package.json (npm's syntax)
+ * @param {Record<string, string>} [options.pnpmOverrides] `overrides` written into pnpm-workspace.yaml (pnpm's)
+ * @param {boolean} [options.withPnpmWorkspace] write pnpm-workspace.yaml at all (default true)
  * @param {boolean} [options.withPnpmLock] write a pnpm lock at all
  * @returns {{ root: string, cleanup: () => void }}
  */
@@ -225,6 +229,10 @@ export function makeFixtureRepo(options = {}) {
     semverLockVersion = semverVersion,
     npmLockDropped = [],
     rootDependencies = [],
+    npmExtraPackages = {},
+    npmOverrides = {},
+    pnpmOverrides = {},
+    withPnpmWorkspace = true,
     withPnpmLock = true,
   } = options;
 
@@ -246,9 +254,16 @@ export function makeFixtureRepo(options = {}) {
       'ansi-styles': '^3.2.1',
       ...Object.fromEntries(rootDependencies.map(dep => [dep, '^1.0.0'])),
     },
+    ...(Object.keys(npmOverrides).length ? { overrides: npmOverrides } : {}),
   };
   write('package.json', rootManifest);
-  write('pnpm-workspace.yaml', 'packages:\n  - "pkgs/*"\n');
+  if (withPnpmWorkspace) {
+    const overrideLines = Object.entries(pnpmOverrides).map(([k, v]) => `  "${k}": "${v}"`);
+    write(
+      'pnpm-workspace.yaml',
+      `packages:\n  - "pkgs/*"\n${overrideLines.length ? `overrides:\n${overrideLines.join('\n')}\n` : ''}`,
+    );
+  }
   write('pkgs/lib-a/package.json', {
     name: '@fixture/lib-a',
     version: '1.0.0',
@@ -270,6 +285,16 @@ export function makeFixtureRepo(options = {}) {
 
   const packages = npmLockPackages({ semverLockVersion, rootDependencies });
   for (const dropped of npmLockDropped) delete packages[dropped];
+  for (const [lockPath, nameVersion] of Object.entries(npmExtraPackages)) {
+    const at = nameVersion.lastIndexOf('@');
+    const name = nameVersion.slice(0, at);
+    const version = nameVersion.slice(at + 1);
+    packages[lockPath] = {
+      version,
+      resolved: registryTarball(`${name}@${version}`),
+      integrity: REAL_INTEGRITIES[`${name}@${version}`],
+    };
+  }
   write('package-lock.json', {
     name: 'fixture-root',
     version: '1.0.0',

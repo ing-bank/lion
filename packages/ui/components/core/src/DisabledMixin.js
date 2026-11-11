@@ -9,78 +9,73 @@ import { dedupeMixin } from '@open-wc/dedupe-mixin';
  * @param {import('@open-wc/dedupe-mixin').Constructor<import('lit').LitElement>} superclass
  */
 // prettier-ignore
-const DisabledMixinImplementation = /** @type {DisabledMixin} */ (superclass =>
-  // eslint-disable-next-line no-shadow
-  class extends superclass {
-    static get properties() {
-      return {
-        disabled: {
-          type: Boolean,
-          reflect: true,
-        },
-      };
-    }
+const DisabledMixinImplementation = /** @type {DisabledMixin} */superclass =>
+// eslint-disable-next-line no-shadow
+class extends superclass {
+  static get properties() {
+    return {
+      disabled: {
+        type: Boolean,
+        reflect: true
+      }
+    };
+  }
 
-    /** @param {...any} args */
-    constructor(...args) {
-      super(...args);
-      /** @protected */
+  /** @param {...any} args */
+  constructor(...args) {
+    super(...args);
+    /** @protected */
+    this._requestedToBeDisabled = false;
+    /** @private */
+    this.__isUserSettingDisabled = true;
+    /** @private */
+    this.__restoreDisabledTo = false;
+    this.disabled = false;
+  }
+  makeRequestToBeDisabled() {
+    if (this._requestedToBeDisabled === false) {
+      this._requestedToBeDisabled = true;
+      this.__restoreDisabledTo = this.disabled;
+      this.__internalSetDisabled(true);
+    }
+  }
+  retractRequestToBeDisabled() {
+    if (this._requestedToBeDisabled === true) {
       this._requestedToBeDisabled = false;
-      /** @private */
-      this.__isUserSettingDisabled = true;
-      /** @private */
-      this.__restoreDisabledTo = false;
-      this.disabled = false;
+      this.__internalSetDisabled(this.__restoreDisabledTo);
     }
+  }
 
-    makeRequestToBeDisabled() {
-      if (this._requestedToBeDisabled === false) {
-        this._requestedToBeDisabled = true;
+  /**
+   * @param {boolean} value
+   * @private
+   */
+  __internalSetDisabled(value) {
+    this.__isUserSettingDisabled = false;
+    this.disabled = value;
+    this.__isUserSettingDisabled = true;
+  }
+
+  /**
+   * @param {string} [name]
+   * @param {unknown} [oldValue]
+   * @param {import('lit').PropertyDeclaration} [options]
+   * @returns {void}
+   */
+  requestUpdate(name, oldValue, options) {
+    super.requestUpdate(name, oldValue, options);
+    if (name === 'disabled') {
+      if (this.__isUserSettingDisabled) {
         this.__restoreDisabledTo = this.disabled;
+      }
+      if (this.disabled === false && this._requestedToBeDisabled === true) {
         this.__internalSetDisabled(true);
       }
     }
-
-    retractRequestToBeDisabled() {
-      if (this._requestedToBeDisabled === true) {
-        this._requestedToBeDisabled = false;
-        this.__internalSetDisabled(this.__restoreDisabledTo);
-      }
-    }
-
-    /**
-     * @param {boolean} value
-     * @private
-     */
-    __internalSetDisabled(value) {
-      this.__isUserSettingDisabled = false;
-      this.disabled = value;
-      this.__isUserSettingDisabled = true;
-    }
-
-    /**
-     * @param {string} [name]
-     * @param {unknown} [oldValue]
-     * @param {import('lit').PropertyDeclaration} [options]
-     * @returns {void}
-     */
-    requestUpdate(name, oldValue, options) {
-      super.requestUpdate(name, oldValue, options);
-      if (name === 'disabled') {
-        if (this.__isUserSettingDisabled) {
-          this.__restoreDisabledTo = this.disabled;
-        }
-        if (this.disabled === false && this._requestedToBeDisabled === true) {
-          this.__internalSetDisabled(true);
-        }
-      }
-    }
-
-    click() {
-      if (this.disabled) return;
-
-      super.click();
-    }
-  });
-
+  }
+  click() {
+    if (this.disabled) return;
+    super.click();
+  }
+};
 export const DisabledMixin = dedupeMixin(DisabledMixinImplementation);

@@ -11,13 +11,11 @@ export function createWeek(date, { firstDayOfWeek = 0 } = {}) {
     throw new Error('invalid date provided');
   }
   let weekStartDate = new Date(date);
-
   const tmpDate = new Date(date);
   while (tmpDate.getDay() !== firstDayOfWeek) {
     tmpDate.setDate(tmpDate.getDate() - 1);
     weekStartDate = new Date(tmpDate);
   }
-
   const week = {
     /** @type {import('../../types/day.js').Day[]} */
     days: [],

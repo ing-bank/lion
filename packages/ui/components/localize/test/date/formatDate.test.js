@@ -1,7 +1,6 @@
 import { expect } from '@open-wc/testing';
 import { getLocalizeManager, formatDate, parseDate } from '@lion/ui/localize-no-side-effects.js';
 import { localizeTearDown } from '@lion/ui/localize-test-helpers.js';
-
 const SUPPORTED_LOCALES = {
   'bg-BG': 'Bulgarian',
   'cs-CZ': 'Czech',
@@ -45,25 +44,18 @@ describe('formatDate', () => {
   beforeEach(() => {
     localizeTearDown();
   });
-
   it('displays the appropriate date based on locale', async () => {
     const testDate = new Date('2012/05/21');
-
     expect(formatDate(testDate)).to.equal('21/05/2012');
-
     localizeManager.locale = 'nl-NL';
     expect(formatDate(testDate)).to.equal('21-05-2012');
-
     localizeManager.locale = 'fr-FR';
     expect(formatDate(testDate)).to.equal('21/05/2012');
-
     localizeManager.locale = 'de-DE';
     expect(formatDate(testDate)).to.equal('21.05.2012');
-
     localizeManager.locale = 'en-US';
     expect(formatDate(testDate)).to.equal('05/21/2012');
   });
-
   it('displays the date based on options', async () => {
     const testDate = new Date('2012/05/21');
     /** @type {FormatDateOptions} */
@@ -73,7 +65,6 @@ describe('formatDate', () => {
       month: 'long',
       day: '2-digit',
     };
-
     expect(formatDate(testDate, options)).to.equal('Monday, 21 May 2012');
     localizeManager.locale = 'nl-NL';
     expect(formatDate(testDate, options)).to.equal('maandag 21 mei 2012');
@@ -84,7 +75,6 @@ describe('formatDate', () => {
     localizeManager.locale = 'en-US';
     expect(formatDate(testDate, options)).to.equal('Monday, May 21, 2012');
   });
-
   it('displays Hungarian dates correctly', async () => {
     /** @type {FormatDateOptions} */
     const options = {
@@ -95,13 +85,11 @@ describe('formatDate', () => {
       locale: 'en-US',
     };
     localizeManager.locale = 'hu-HU';
-    let date = /** @type {Date} */ (parseDate('2018-5-28'));
+    let date = /** @type {Date} */ parseDate('2018-5-28');
     expect(formatDate(date)).to.equal('2018. 05. 28.');
-
-    date = /** @type {Date} */ (parseDate('1970-11-3'));
+    date = /** @type {Date} */ parseDate('1970-11-3');
     expect(formatDate(date, options)).to.equal('Tuesday, November 03, 1970');
   });
-
   it('displays Bulgarian dates correctly', async () => {
     /** @type {FormatDateOptions} */
     const options = {
@@ -112,16 +100,13 @@ describe('formatDate', () => {
       locale: 'en-US',
     };
     localizeManager.locale = 'bg-BG';
-    let date = /** @type {Date} */ (parseDate('29-12-2017'));
+    let date = /** @type {Date} */ parseDate('29-12-2017');
     expect(formatDate(date)).to.equal('29.12.2017 г.');
-
-    date = /** @type {Date} */ (parseDate('13-1-1940'));
+    date = /** @type {Date} */ parseDate('13-1-1940');
     expect(formatDate(date)).to.equal('13.01.1940 г.');
-
-    date = /** @type {Date} */ (parseDate('3-11-1970'));
+    date = /** @type {Date} */ parseDate('3-11-1970');
     expect(formatDate(date, options)).to.equal('Tuesday, November 03, 1970');
   });
-
   it('displays US dates correctly', async () => {
     /** @type {FormatDateOptions} */
     const options = {
@@ -132,16 +117,13 @@ describe('formatDate', () => {
       locale: 'en-US',
     };
     localizeManager.locale = 'en-US';
-    let date = /** @type {Date} */ (parseDate('12-29-1940'));
+    let date = /** @type {Date} */ parseDate('12-29-1940');
     expect(formatDate(date)).to.equal('12/29/1940');
-
-    date = /** @type {Date} */ (parseDate('1-13-1940'));
+    date = /** @type {Date} */ parseDate('1-13-1940');
     expect(formatDate(date)).to.equal('01/13/1940');
-
-    date = /** @type {Date} */ (parseDate('11-3-1970'));
+    date = /** @type {Date} */ parseDate('11-3-1970');
     expect(formatDate(date, options)).to.equal('Tuesday, November 03, 1970');
   });
-
   it('handles locales in options', async () => {
     /** @type {FormatDateOptions} */
     let options = {
@@ -151,10 +133,9 @@ describe('formatDate', () => {
       day: '2-digit',
       locale: 'en-US',
     };
-    let parsedDate = /** @type {Date} */ (parseDate('05.11.2017'));
+    let parsedDate = /** @type {Date} */ parseDate('05.11.2017');
     expect(formatDate(parsedDate, options)).to.equal('Sunday, November 05, 2017');
-
-    parsedDate = /** @type {Date} */ (parseDate('01-01-1940'));
+    parsedDate = /** @type {Date} */ parseDate('01-01-1940');
     options = {
       weekday: 'long',
       year: 'numeric',
@@ -164,7 +145,6 @@ describe('formatDate', () => {
     };
     expect(formatDate(parsedDate, options)).to.equal('maandag 01 januari 1940');
   });
-
   describe('Date format options without "year"', () => {
     const LOCALE_FORMATTED_DATE_MAP = {
       'bg-BG': 'събота, 12 октомври',
@@ -194,13 +174,13 @@ describe('formatDate', () => {
       'zh-Hans-HK': '10月12日星期六',
       'zh-Hans-MO': '10月12日星期六',
       'zh-Hans-SG': '10月12日星期六',
-      'zh-Hant': '10月12日星期六', // '10月12日 星期六',
+      'zh-Hant': '10月12日星期六',
+      // '10月12日 星期六',
       'zh-Hant-HK': '10月12日星期六',
       'zh-Hant-MO': '10月12日星期六',
       'zh-Hant-TW': '10月12日星期六', // '10月12日 星期六',
     };
-
-    Object.keys(SUPPORTED_LOCALES).forEach(locale => {
+    Object.keys(SUPPORTED_LOCALES).forEach((locale) => {
       it(`handles options without year for locale: ${locale}`, async () => {
         /** @type {FormatDateOptions} */
         const options = {
@@ -209,13 +189,12 @@ describe('formatDate', () => {
           day: '2-digit',
           locale,
         };
-        const parsedDate = /** @type {Date} */ (parseDate('12.10.2019'));
+        const parsedDate = /** @type {Date} */ parseDate('12.10.2019');
         // @ts-ignore [dynamic-key-access-in-test]
         expect(formatDate(parsedDate, options)).to.equal(LOCALE_FORMATTED_DATE_MAP[locale]);
       });
     });
   });
-
   it('handles options without month', async () => {
     /** @type {FormatDateOptions} */
     const options = {
@@ -223,10 +202,9 @@ describe('formatDate', () => {
       year: 'numeric',
       day: '2-digit',
     };
-    const parsedDate = /** @type {Date} */ (parseDate('12.10.2019'));
+    const parsedDate = /** @type {Date} */ parseDate('12.10.2019');
     expect(formatDate(parsedDate, options)).to.equal('Saturday 12 2019');
   });
-
   it('handles options without day', async () => {
     /** @type {FormatDateOptions} */
     const options = {
@@ -234,16 +212,14 @@ describe('formatDate', () => {
       year: 'numeric',
       month: 'long',
     };
-    const parsedDate = /** @type {Date} */ (parseDate('12.10.2019'));
+    const parsedDate = /** @type {Date} */ parseDate('12.10.2019');
     expect(formatDate(parsedDate, options)).to.equal('October 2019 Saturday');
   });
-
   it('returns empty string when input is not a Date object', async () => {
     const date = '1-1-2016';
     // @ts-ignore tests what happens if you use a wrong type
     expect(formatDate(date)).to.equal('');
   });
-
   describe('Date post processors', () => {
     /**
      * Uppercase processor
@@ -251,7 +227,7 @@ describe('formatDate', () => {
      * @param {string} str
      * @returns {string}
      */
-    const upperCaseProcessor = str => str.toUpperCase();
+    const upperCaseProcessor = (str) => str.toUpperCase();
 
     /**
      * Lowercase processor
@@ -259,8 +235,7 @@ describe('formatDate', () => {
      * @param {string} str
      * @returns {string}
      */
-    const lowerCaseProcessor = str => str.toLocaleLowerCase();
-
+    const lowerCaseProcessor = (str) => str.toLocaleLowerCase();
     it('displays the appropriate date after post processor set in options', async () => {
       const testDate = new Date('2012/05/21');
       const postProcessors = new Map();
@@ -285,7 +260,6 @@ describe('formatDate', () => {
       localizeManager.locale = 'en-US';
       expect(formatDate(testDate, options)).to.equal('Monday, May 21, 2012');
     });
-
     it('displays the appropriate date after post processor set in localize', async () => {
       const testDate = new Date('2012/05/21');
       /** @type {FormatDateOptions} */
@@ -303,7 +277,6 @@ describe('formatDate', () => {
         locale: 'de-DE',
         postProcessor: upperCaseProcessor,
       });
-
       expect(formatDate(testDate, options)).to.equal('Monday, 21 May 2012');
       localizeManager.locale = 'nl-NL';
       expect(formatDate(testDate, options)).to.equal('MAANDAG 21 MEI 2012');
@@ -312,7 +285,6 @@ describe('formatDate', () => {
       localizeManager.locale = 'en-US';
       expect(formatDate(testDate, options)).to.equal('Monday, May 21, 2012');
     });
-
     it('displays the appropriate date after post processors set in options and localize', async () => {
       const testDate = new Date('2012/05/21');
       const postProcessors = new Map();
@@ -327,12 +299,10 @@ describe('formatDate', () => {
         day: '2-digit',
         postProcessors,
       };
-
       localizeManager.setDatePostProcessorForLocale({
         locale: 'de-DE',
         postProcessor: lowerCaseProcessor,
       });
-
       expect(formatDate(testDate, options)).to.equal('Monday, 21 May 2012');
       localizeManager.locale = 'nl-NL';
       expect(formatDate(testDate, options)).to.equal('MAANDAG 21 MEI 2012');

@@ -4,7 +4,6 @@ import { html } from 'lit/static-html.js';
 import { PhoneUtilManager } from '@lion/ui/input-tel.js';
 import { getAllTagNames } from './helpers/helpers.js';
 import './helpers/umbrella-form.js';
-
 import '@lion/ui/define/lion-input-tel-dropdown.js';
 import '@lion/ui/define/lion-option.js';
 import '@lion/ui/define/lion-checkbox.js';
@@ -21,15 +20,16 @@ describe('Form Integrations', () => {
     // Wait till PhoneUtilManager has been loaded
     await PhoneUtilManager.loadComplete;
   });
-
   it('".serializedValue" returns all non disabled fields based on form structure', async () => {
-    const el = /** @type {UmbrellaForm} */ (await fixture(html`<umbrella-form></umbrella-form>`));
+    const el = /** @type {UmbrellaForm} */ await fixture(html`<umbrella-form></umbrella-form>`);
     await el.updateComplete;
     await el.waitForAllChildrenUpdates();
     const formEl = el._lionFormNode;
-
     expect(formEl.serializedValue).to.eql({
-      fullName: { firstName: '', lastName: '' },
+      fullName: {
+        firstName: '',
+        lastName: '',
+      },
       date: '2000-12-12',
       datepicker: '2020-12-12',
       bio: '',
@@ -45,25 +45,29 @@ describe('Form Integrations', () => {
       lyrics: '1',
       range: 2.3,
       terms: [],
-      notifications: { value: '', checked: false },
+      notifications: {
+        value: '',
+        checked: false,
+      },
       rsvp: '',
       tel: '',
       'tel-dropdown': '',
       comments: '',
     });
   });
-
   it('".formattedValue" returns all non disabled fields based on form structure', async () => {
-    const el = /** @type {UmbrellaForm} */ (await fixture(html`<umbrella-form></umbrella-form>`));
+    const el = /** @type {UmbrellaForm} */ await fixture(html`<umbrella-form></umbrella-form>`);
     await el.updateComplete;
     const formEl = el._lionFormNode;
-    const inputTelDropdownEl = /** @type {LionInputTelDropdown} */ (
-      formEl.querySelector('lion-input-tel-dropdown')
-    );
+    const inputTelDropdownEl =
+      /** @type {LionInputTelDropdown} */
+      formEl.querySelector('lion-input-tel-dropdown');
     await inputTelDropdownEl?.updateComplete;
-
     expect(formEl.formattedValue).to.eql({
-      fullName: { firstName: '', lastName: '' },
+      fullName: {
+        firstName: '',
+        lastName: '',
+      },
       date: '12/12/2000',
       datepicker: '12/12/2020',
       bio: '',
@@ -86,14 +90,17 @@ describe('Form Integrations', () => {
       comments: '',
     });
   });
-
   describe('Form Integrations', () => {
     it('does not become dirty when elements are prefilled', async () => {
-      const el = /** @type {UmbrellaForm} */ (
+      const el =
+        /** @type {UmbrellaForm} */
         await fixture(
           html`<umbrella-form
             .serializedValue="${{
-              fullName: { firstName: '', lastName: '' },
+              fullName: {
+                firstName: '',
+                lastName: '',
+              },
               date: '2000-12-12',
               datepicker: '2020-12-12',
               bio: '',
@@ -112,15 +119,12 @@ describe('Form Integrations', () => {
               comments: '',
             }}"
           ></umbrella-form>`,
-        )
-      );
+        );
       await el.waitForAllChildrenUpdates();
-
       await el._lionFormNode.initComplete;
       expect(el._lionFormNode.dirty).to.be.false;
     });
   });
-
   describe('Registering', () => {
     const registerTagsResult = [
       'lion-fieldset',
@@ -166,27 +170,22 @@ describe('Form Integrations', () => {
       'lion-input-stepper',
       'lion-textarea',
     ];
-
     it('successfully registers all form components', async () => {
-      const el = /** @type {UmbrellaForm} */ (await fixture(html`<umbrella-form></umbrella-form>`));
+      const el = /** @type {UmbrellaForm} */ await fixture(html`<umbrella-form></umbrella-form>`);
       await el.waitForAllChildrenUpdates();
-
       const formEl = el._lionFormNode;
       await formEl.registrationComplete;
       const registeredEls = getAllTagNames(formEl);
-
       expect(registeredEls).to.eql(registerTagsResult);
     });
-
     it('successfully unregisters all form components', async () => {
-      const el = /** @type {UmbrellaForm} */ (await fixture(html`<umbrella-form></umbrella-form>`));
+      const el = /** @type {UmbrellaForm} */ await fixture(html`<umbrella-form></umbrella-form>`);
       const offlineContainer = document.createElement('div');
       await el.waitForAllChildrenUpdates();
 
       // @ts-ignore
-      const formEl = /** @type {LionForm} */ (el._lionFormNode);
+      const formEl = /** @type {LionForm} */ el._lionFormNode;
       await formEl.registrationComplete;
-
       for (const child of formEl.formElements) {
         const spy = sinon.spy(child, '__unregisterFormElement');
         offlineContainer.appendChild(child);

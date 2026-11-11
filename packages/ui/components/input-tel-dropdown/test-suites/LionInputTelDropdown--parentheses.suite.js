@@ -14,17 +14,20 @@ import { isElementVisible } from '../../core/test-helpers/isElementVisible.js';
  * @typedef {import('./types.js').TelDropdownConfig} TelDropdownConfig
  */
 
-const fixture = /** @type {(arg: string | TemplateResult) => Promise<LionInputTelDropdown>} */ (
-  _fixture
-);
+const fixture =
+  /** @type {(arg: string | TemplateResult) => Promise<LionInputTelDropdown>} */
+  _fixture;
 
 /**
  * @type {TelDropdownConfig}
  */
 const telDropdownConfig = {
-  getTelDropdownInvokerEl: el => el.querySelector('select'),
+  getTelDropdownInvokerEl: (el) => el.querySelector('select'),
   selectNlOption: async () => {
-    await selectOption({ selector: 'select', value: 'NL' });
+    await selectOption({
+      selector: 'select',
+      value: 'NL',
+    });
   },
 };
 
@@ -44,7 +47,6 @@ export function runInputTelDropdownParenthesesSuite(
   // @ts-ignore
   const tagName = resolveSuiteTag(classes.host, tagString, klass);
   const tag = unsafeStatic(tagName);
-
   describe('LionInputTelDropdown suite with `parentheses`', () => {
     /**
      * @type {LionInputTelDropdown}
@@ -56,7 +58,6 @@ export function runInputTelDropdownParenthesesSuite(
       el = await fixture(html` <${tag} format-country-code-style="parentheses"></${tag}> `);
       await el.updateComplete;
     });
-
     describe('Dropdown value is in sync with text input', () => {
       it('should set correct active region when selecting a country from dropdown ', async () => {
         const dropdownInvoker = config.getTelDropdownInvokerEl(el);
@@ -65,7 +66,6 @@ export function runInputTelDropdownParenthesesSuite(
         await config.selectNlOption(el);
         expect(el.activeRegion).to.equal('NL');
       });
-
       it('updates dropdown value', async () => {
         const dropdown = config.getTelDropdownInvokerEl(el);
         // @ts-ignore
@@ -80,7 +80,9 @@ export function runInputTelDropdownParenthesesSuite(
         await sendKeys({
           type: '(+91) 99',
         });
-        await sendKeys({ press: 'Backspace' });
+        await sendKeys({
+          press: 'Backspace',
+        });
         // @ts-ignore
         expect(input.value).to.equal('(+91) 9');
         expect(el.activeRegion).to.equal('IN');

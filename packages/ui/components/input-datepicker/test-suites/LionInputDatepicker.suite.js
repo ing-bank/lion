@@ -61,7 +61,6 @@ export function runDatepickerSuite({
       null
     );
   }
-
   it('should not reopen the datepicker popup when the date is selected by keyboard', async () => {
     /** @type {LionInputDatepicker} */
     const el = await fixture(html`<${tag} .modelValue="${new Date('2018/05/30')}"></${tag}>`);
@@ -76,9 +75,12 @@ export function runDatepickerSuite({
     // Opening through the invoker leaves the focus on the calendar, which is what the arrow key needs:
     // measured on Firefox, a day button focused by hand does not receive it, the selection stays put,
     // `Enter` reaches the invoker and the popup reopens.
-    await sendKeys({ press: 'ArrowLeft' });
-    await sendKeys({ press: 'Enter' });
-
+    await sendKeys({
+      press: 'ArrowLeft',
+    });
+    await sendKeys({
+      press: 'Enter',
+    });
     expect(el.opened).to.be.false;
   });
   /**
@@ -106,31 +108,26 @@ export function runDatepickerSuite({
       dateSelectedByUser: (...args) => calendarEl.__dateSelectedByUser(...args),
     };
   }
-
-  const fixtureForSuite = /** @type {(arg: TemplateResult) => Promise<LionInputDatepicker>} */ (
-    _fixture
-  );
-
+  const fixtureForSuite =
+    /** @type {(arg: TemplateResult) => Promise<LionInputDatepicker>} */
+    _fixture;
   describe('<lion-input-datepicker>', () => {
     describe('Calendar Overlay', () => {
       it('implements calendar-overlay Style component', async () => {
         const el = await fixtureForSuite(html`<${tag}></${tag}>`);
         const elObj = new InputObject(el);
         await elObj.openCalendar();
-
         expect(elObj.overlayRootEl).not.to.equal(null);
         expect(elObj.overlayHeaderEl).not.to.equal(null);
         expect(elObj.overlayHeadingEl).not.to.equal(null);
         expect(elObj.overlayCloseButtonContainerEl).not.to.equal(null);
       });
-
       it('has a close button, with a tooltip "Close"', async () => {
         const el = await fixtureForSuite(html`<${tag}></${tag}>`);
         const elObj = new InputObject(el);
         await elObj.openCalendar();
         expect(accessibleName(elObj.overlayCloseButtonEl)).to.equal('Close');
       });
-
       it('has a default title based on input label', async () => {
         const el = await fixtureForSuite(html`
           <${tag}
@@ -142,7 +139,6 @@ export function runDatepickerSuite({
         await elObj.openCalendar();
         expect(elObj.overlayHeadingEl.innerText.trim()).to.equal('Pick your date');
       });
-
       it('can have a custom heading', async () => {
         const el = await fixtureForSuite(html`
           <${tag}
@@ -154,37 +150,33 @@ export function runDatepickerSuite({
         await elObj.openCalendar();
         expect(elObj.overlayHeadingEl.innerText).to.equal('foo');
       });
-
       it('closes the calendar on [esc] key', async () => {
         const el = await fixtureForSuite(html`<${tag}></${tag}>`);
         const elObj = new InputObject(el);
         await elObj.openCalendar();
         expect(elObj.overlayController.isShown).to.equal(true);
-
         elObj.overlayController.contentNode.dispatchEvent(
-          new KeyboardEvent('keyup', { key: 'Escape' }),
+          new KeyboardEvent('keyup', {
+            key: 'Escape',
+          }),
         );
         await nextFrame();
         expect(elObj.overlayController.isShown).to.equal(false);
       });
-
       it('closes the calendar via close button', async () => {
         const el = await fixtureForSuite(html`<${tag}></${tag}>`);
         const elObj = new InputObject(el);
         await elObj.openCalendar();
         expect(elObj.overlayController.isShown).to.equal(true);
-
         elObj.overlayCloseButtonEl.click();
         await nextFrame();
         expect(elObj.overlayController.isShown).to.equal(false);
       });
-
       it('closes the calendar via outside click event', async () => {
         const el = await fixtureForSuite(html`<${tag}></${tag}>`);
         const elObj = new InputObject(el);
         await elObj.openCalendar();
         expect(elObj.overlayController.isShown).to.equal(true);
-
         mimicClick(document.body);
         await aTimeout(0);
         expect(elObj.overlayController.isShown).to.be.false;
@@ -195,7 +187,6 @@ export function runDatepickerSuite({
        * - centralDate can be overridden
        */
     });
-
     describe('Calendar Invoker', () => {
       it('adds invoker button that toggles the overlay on click in suffix slot ', async () => {
         const el = await fixtureForSuite(html`<${tag}></${tag}>`);
@@ -205,30 +196,35 @@ export function runDatepickerSuite({
         await elObj.openCalendar();
         expect(elObj.overlayController.isShown).to.equal(true);
       });
-
       it('delegates disabled state of host input', async () => {
         const el = await fixtureForSuite(html`<${tag} disabled></${tag}>`);
         const elObj = new InputObject(el);
         expect(elObj.overlayController.isShown).to.equal(false);
-        await elObj.openCalendar({ click: true });
+        await elObj.openCalendar({
+          click: true,
+        });
         expect(elObj.overlayController.isShown).to.equal(false);
         el.disabled = false;
-        await elObj.openCalendar({ click: true });
+        await elObj.openCalendar({
+          click: true,
+        });
         expect(elObj.overlayController.isShown).to.equal(true);
       });
-
       it('disables invoker when host input is readonly', async () => {
         const el = await fixtureForSuite(html`<${tag} readonly></${tag}>`);
         const elObj = new InputObject(el);
         expect(elObj.overlayController.isShown).to.equal(false);
-        await elObj.openCalendar({ click: true });
+        await elObj.openCalendar({
+          click: true,
+        });
         expect(elObj.overlayController.isShown).to.equal(false);
         el.readOnly = false;
-        await elObj.openCalendar({ click: true });
+        await elObj.openCalendar({
+          click: true,
+        });
         expect(elObj.overlayController.isShown).to.equal(true);
       });
     });
-
     describe('Input - calendar synchronization', () => {
       it('syncs modelValue with lion-calendar', async () => {
         const myDate = new Date('2019/06/15');
@@ -240,28 +236,23 @@ export function runDatepickerSuite({
         await elObj.openCalendar();
         expect(elObj.calendarEl.selectedDate).to.equal(myDate);
         await elObj.selectMonthDay(myOtherDate.getDate());
-        expect(isSameDate(/** @type {Date} */ (el.modelValue), myOtherDate)).to.be.true;
+        expect(isSameDate(/** @type {Date} */ el.modelValue, myOtherDate)).to.be.true;
       });
-
       it('restores centralDate when modelValue is cleared', async () => {
         const myDate = new Date('2019/06/15');
         const el = await fixtureForSuite(html` <${tag}></${tag}> `);
         const elObj = new InputObject(el);
         const initialCentralDate = elObj.calendarEl.centralDate;
         el.modelValue = myDate;
-
         await elObj.openCalendar();
         expect(elObj.calendarEl.selectedDate).to.equal(myDate);
         expect(elObj.calendarEl.centralDate).to.equal(myDate);
-
         el.modelValue = undefined;
         expect(elObj.calendarEl.centralDate).to.equal(myDate);
         await elObj.closeCalendar();
         await elObj.openCalendar();
-
         expect(elObj.calendarEl.centralDate).to.equal(initialCentralDate);
       });
-
       it('closes the calendar overlay on "user-selected-date-changed"', async () => {
         const el = await fixtureForSuite(html`<${tag}></${tag}>`);
         const elObj = new InputObject(el);
@@ -273,7 +264,6 @@ export function runDatepickerSuite({
         await el.updateComplete; // safari take a little longer
         expect(elObj.overlayController.isShown).to.equal(false);
       });
-
       it('focuses selected date on opening of calendar', async () => {
         const el = await fixtureForSuite(html`
           <${tag} .modelValue="${new Date()}"></${tag}>
@@ -283,12 +273,11 @@ export function runDatepickerSuite({
         await aTimeout(0);
         expect(
           isSameDate(
-            /** @type {Date} */ (elObj.calendarEl.focusedDate),
-            /** @type {Date} */ (elObj.calendarEl.selectedDate),
+            /** @type {Date} */ elObj.calendarEl.focusedDate,
+            /** @type {Date} */ elObj.calendarEl.selectedDate,
           ),
         ).to.be.true;
       });
-
       it('focuses central date on opening of calendar if no date selected', async () => {
         const el = await fixtureForSuite(html`<${tag}></${tag}>`);
         const elObj = new InputObject(el);
@@ -296,12 +285,11 @@ export function runDatepickerSuite({
         await aTimeout(0);
         expect(
           isSameDate(
-            /** @type {Date} */ (elObj.calendarEl.focusedDate),
+            /** @type {Date} */ elObj.calendarEl.focusedDate,
             elObj.calendarEl.centralDate,
           ),
         ).to.be.true;
       });
-
       it('fires model-value-changed with isTriggeredByUser on click', async () => {
         let isTriggeredByUser;
         const myDate = new Date('2019/12/15');
@@ -315,7 +303,6 @@ export function runDatepickerSuite({
           >
           </${tag}>
         `);
-
         const elObj = new InputObject(el);
         // Make sure the calendar overlay is opened
         await elObj.openCalendar();
@@ -326,34 +313,26 @@ export function runDatepickerSuite({
         expect(isTriggeredByUser).to.be.true;
         expect(el.value).to.equal('18/12/2019');
       });
-
       describe('localization', () => {
         /** @type {import('@lion/ui/localize.js').LocalizeManager} */ let localizeManager;
-
         before(async () => {
           const { getLocalizeManager } = await import('@lion/ui/localize-no-side-effects.js');
           localizeManager = getLocalizeManager();
         });
-
         it('should update formatted value and value in accordance of localization upon model value update', async () => {
           localizeManager.locale = 'nl-NL';
-
           const el = await fixtureForSuite(html`
             <${tag} .modelValue="${new Date('2022/12/30')}"></${tag}>
           `);
-
           await el.updateComplete;
-
           expect(el.formattedValue).to.equal('30-12-2022');
           expect(el.value).to.equal('30-12-2022');
         });
-
         after(() => {
           // @ts-ignore - using protected method to undo setting explict locale
           localizeManager.locale = localizeManager._fallbackLocale;
         });
       });
-
       describe('Validators', () => {
         /**
          * Validators are the Application Developer facing API in <${tag}>:
@@ -362,31 +341,25 @@ export function runDatepickerSuite({
          *   lion-calendar
          */
         it('converts IsDateDisabled validator to "disableDates" property', async () => {
-          const no15th = /** @param {Date} d */ d => d.getDate() !== 15;
-          const no16th = /** @param {Date} d */ d => d.getDate() !== 16;
-          const no15thOr16th = /** @param {Date} d */ d => no15th(d) && no16th(d);
+          const no15th = /** @param {Date} d */ (d) => d.getDate() !== 15;
+          const no16th = /** @param {Date} d */ (d) => d.getDate() !== 16;
+          const no15thOr16th = /** @param {Date} d */ (d) => no15th(d) && no16th(d);
           const el = await fixtureForSuite(html`
             <${tag} .validators="${[new IsDateDisabled(no15thOr16th)]}">
             </${tag}>
           `);
           const elObj = new InputObject(el);
           await elObj.openCalendar();
-
           expect(elObj.calendarEl.disableDates).to.equal(no15thOr16th);
         });
-
         it('converts MinDate validator to "minDate" property', async () => {
           const myMinDate = new Date('2019/06/15');
-          const el = await fixtureForSuite(
-            html` <${tag} .validators="${[new MinDate(myMinDate)]}">
-            </${tag}>`,
-          );
+          const el = await fixtureForSuite(html` <${tag} .validators="${[new MinDate(myMinDate)]}">
+            </${tag}>`);
           const elObj = new InputObject(el);
           await elObj.openCalendar();
-
           expect(elObj.calendarEl.minDate).to.equal(myMinDate);
         });
-
         it('converts MaxDate validator to "maxDate" property', async () => {
           const myMaxDate = new Date('2030/06/15');
           const el = await fixtureForSuite(html`
@@ -394,26 +367,27 @@ export function runDatepickerSuite({
           `);
           const elObj = new InputObject(el);
           await elObj.openCalendar();
-
           expect(elObj.calendarEl.maxDate).to.equal(myMaxDate);
         });
-
         it('converts MinMaxDate validator to "minDate" and "maxDate" property', async () => {
           const myMinDate = new Date('2019/06/15');
           const myMaxDate = new Date('2030/06/15');
           const el = await fixtureForSuite(html`
             <${tag}
-              .validators=${[new MinMaxDate({ min: myMinDate, max: myMaxDate })]}
+              .validators=${[
+                new MinMaxDate({
+                  min: myMinDate,
+                  max: myMaxDate,
+                }),
+              ]}
             >
             </${tag}>
           `);
           const elObj = new InputObject(el);
           await elObj.openCalendar();
-
           expect(elObj.calendarEl.minDate).to.equal(myMinDate);
           expect(elObj.calendarEl.maxDate).to.equal(myMaxDate);
         });
-
         it('does not converts MaxDate validator to "maxDate" property if validator type other then "error"', async () => {
           const myMaxDate = new Date('2030/06/15');
           const customTag = unsafeStatic(
@@ -427,75 +401,68 @@ export function runDatepickerSuite({
             ),
           );
           const el = await fixtureForSuite(html`
-            <${customTag} .validators=${[new MaxDate(myMaxDate, { type: 'warning' })]}>
+            <${customTag} .validators=${[
+              new MaxDate(myMaxDate, {
+                type: 'warning',
+              }),
+            ]}>
             </${customTag}>
           `);
           const elObj = new InputObject(el);
           await elObj.openCalendar();
-
           expect(elObj.calendarEl.maxDate).to.be.undefined;
         });
-
         it('should sync MinDate validator param with Calendar MinDate', async () => {
           const myMinDateValidator = new MinDate(new Date('2020/02/02'));
           const el = await fixtureForSuite(html`
             <${tag} .validators="${[myMinDateValidator]}"> </${tag}>
           `);
           myMinDateValidator.param = new Date('2020/01/01');
-
           expect(el.__calendarMinDate.toString()).to.equal(new Date('2020/01/01').toString());
         });
-
         it('should sync MaxDate validator param with Calendar MaxDate', async () => {
           const myMaxDateValidator = new MaxDate(new Date('2020/02/02'));
           const el = await fixtureForSuite(html`
             <${tag} .validators="${[myMaxDateValidator]}"> </${tag}>
           `);
           myMaxDateValidator.param = new Date('2020/03/03');
-
           expect(el.__calendarMaxDate.toString()).to.equal(new Date('2020/03/03').toString());
         });
-
         it('should sync MinMaxDate validator param with Calendar Min And Max Date', async () => {
           const myMinDate = new Date('2019/06/15');
           const myMaxDate = new Date('2030/06/15');
-          const myMinMaxDateValidator = new MinMaxDate({ min: myMinDate, max: myMaxDate });
+          const myMinMaxDateValidator = new MinMaxDate({
+            min: myMinDate,
+            max: myMaxDate,
+          });
           const el = await fixtureForSuite(html`
             <${tag} .validators=${[myMinMaxDateValidator]}> </${tag}>
           `);
-
           myMinMaxDateValidator.param = {
             min: new Date('2019/05/15'),
             max: new Date('2019/07/15'),
           };
-
           expect(el.__calendarMinDate.toString()).to.equal(new Date('2019/05/15').toString());
           expect(el.__calendarMaxDate.toString()).to.equal(new Date('2019/07/15').toString());
         });
-
         it('should update the central date of Calendar if updated validator made the current central date disabled', async () => {
           const initialValidators = [new MaxDate(new Date('2000/01/01'))];
           const updatedValidators = [new MaxDate(new Date('2020/01/01'))];
-
           const el = await fixtureForSuite(html`
             <${tag} .validators="${initialValidators}"></${tag}>
           `);
           const obj = new InputObject(el);
           await obj.openCalendar();
-
           expect(getProtectedMembersDatepicker(el).calendarNode.centralDate.toString()).to.equal(
             new Date('2000/01/01').toString(),
           );
-
           await obj.closeCalendar();
           el.validators = updatedValidators;
           await obj.openCalendar();
-
           expect(getProtectedMembersDatepicker(el).calendarNode.centralDate.toString()).to.equal(
             new Date('2020/01/01').toString(),
           );
         });
-
         it('should show error on invalid date passed to modelValue', async () => {
           const myDate = new Date('foo');
           const el = await fixtureForSuite(html`
@@ -505,7 +472,6 @@ export function runDatepickerSuite({
           expect(el.validationStates).to.have.property('error');
           expect(el.validationStates.error).to.have.property('IsDate');
         });
-
         it('should show error on date with invalid format passed to modelValue', async () => {
           const myDate = new Date('30/01/2022');
           const el = await fixtureForSuite(html`
@@ -515,12 +481,10 @@ export function runDatepickerSuite({
           expect(el.validationStates).to.have.property('error');
           expect(el.validationStates.error).to.have.property('IsDate');
         });
-
         it('syncs view value from calendar if custom validator is in error state', async () => {
           const el = await fixtureForSuite(html`
             <${tag} .validators=${[new AlwaysInvalid()]}></${tag}>
           `);
-
           const elObj = new InputObject(el);
           await elObj.openCalendar();
           await elObj.selectMonthDay(12);
@@ -531,19 +495,19 @@ export function runDatepickerSuite({
           expect(el.validationStates.error).to.have.property('AlwaysInvalid');
           expect(
             isSameDate(
-              /** @type {Date} */ (parseDate(el.value)),
-              /** @type {Date} */ (elObj.calendarEl.selectedDate),
+              /** @type {Date} */ parseDate(el.value),
+              /** @type {Date} */ elObj.calendarEl.selectedDate,
             ),
           ).to.be.true;
           expect(
             isSameDate(
               // @ts-ignore [allow-protected] in test
-              /** @type {Date} */ (parseDate(el._inputNode.value)),
-              /** @type {Date} */ (elObj.calendarEl.selectedDate),
+              /** @type {Date} */
+              parseDate(el._inputNode.value),
+              /** @type {Date} */ elObj.calendarEl.selectedDate,
             ),
           ).to.be.true;
         });
-
         it('syncs view value from calendar if custom validator is in error state, when there was a previous modelValue', async () => {
           const modelValue = new Date('2022/12/30');
           const el = await fixtureForSuite(html`
@@ -552,8 +516,7 @@ export function runDatepickerSuite({
               .validators=${[new AlwaysInvalid()]}
             ></${tag}>
           `);
-          expect(isSameDate(/** @type {Date} */ (parseDate(el.value)), modelValue)).to.be.true;
-
+          expect(isSameDate(/** @type {Date} */ parseDate(el.value), modelValue)).to.be.true;
           const elObj = new InputObject(el);
           await elObj.openCalendar();
           await elObj.selectMonthDay(12);
@@ -564,15 +527,16 @@ export function runDatepickerSuite({
           expect(el.validationStates.error).to.have.property('AlwaysInvalid');
           expect(
             isSameDate(
-              /** @type {Date} */ (parseDate(el.value)),
-              /** @type {Date} */ (elObj.calendarEl.selectedDate),
+              /** @type {Date} */ parseDate(el.value),
+              /** @type {Date} */ elObj.calendarEl.selectedDate,
             ),
           ).to.be.true;
           expect(
             isSameDate(
               // @ts-ignore [allow-protected] in test
-              /** @type {Date} */ (parseDate(el._inputNode.value)),
-              /** @type {Date} */ (elObj.calendarEl.selectedDate),
+              /** @type {Date} */
+              parseDate(el._inputNode.value),
+              /** @type {Date} */ elObj.calendarEl.selectedDate,
             ),
           ).to.be.true;
         });
@@ -583,25 +547,22 @@ export function runDatepickerSuite({
          */
       });
     });
-
     describe('Calendar smoke tests', () => {
       it('responds properly to keyboard events', async () => {
         const el = await fixtureForSuite(html`
           <${tag} calendar-heading="foo"></${tag}>
         `);
-        const calendarEl = /** @type {LionCalendar} */ (
-          new InputObject(el).calendarEl ?? el.shadowRoot?.querySelector(calendarTag)
-        );
+        const calendarEl =
+          /** @type {LionCalendar} */
+          new InputObject(el).calendarEl ?? el.shadowRoot?.querySelector(calendarTag);
         const { dateSelectedByUser } = getProtectedMembersCalendar(calendarEl);
         // First set a fixed date as if selected by a user
         dateSelectedByUser(new Date('December 17, 2020 03:24:00 GMT+0000'));
-
         await el.updateComplete;
         const elObj = new InputObject(el);
 
         // Open the calendar
         await elObj.openCalendar();
-
         const selectedDateEl = calendarEl?.shadowRoot?.querySelector(
           '.calendar__day-button[selected]',
         );
@@ -609,20 +570,20 @@ export function runDatepickerSuite({
         selectedDateEl?.focus();
 
         // Move focus to 18th of December
-        await sendKeys({ press: 'ArrowRight' });
-
-        expect(/** @type {Date} */ (calendarEl.focusedDate).getTime()).to.equal(
+        await sendKeys({
+          press: 'ArrowRight',
+        });
+        expect(/** @type {Date} */ calendarEl.focusedDate.getTime()).to.equal(
           new Date('December 18, 2020 03:24:00 GMT+0000').getTime(),
         );
       });
-
       it('responds properly to click events', async () => {
         const el = await fixtureForSuite(html`
           <${tag} calendar-heading="foo"></${tag}>
         `);
-        const calendarEl = /** @type {LionCalendar} */ (
-          new InputObject(el).calendarEl ?? el.shadowRoot?.querySelector(calendarTag)
-        );
+        const calendarEl =
+          /** @type {LionCalendar} */
+          new InputObject(el).calendarEl ?? el.shadowRoot?.querySelector(calendarTag);
         const { dateSelectedByUser } = getProtectedMembersCalendar(calendarEl);
 
         // First set a fixed date as if selected by a user
@@ -636,26 +597,24 @@ export function runDatepickerSuite({
         // Pin the week start on the rendered grid: the first cell holds the previous month's last
         // day only for a Sunday-first week. This assertion is about the click handler, not about the
         // locale default a design system chose (my-ui starts the week on Monday).
-        const openedCalendarEl = /** @type {LionCalendar} */ (
-          new InputObject(el).calendarEl ?? el.shadowRoot?.querySelector(calendarTag)
-        );
+        const openedCalendarEl =
+          /** @type {LionCalendar} */
+          new InputObject(el).calendarEl ?? el.shadowRoot?.querySelector(calendarTag);
         if (openedCalendarEl) {
           openedCalendarEl.firstDayOfWeek = 0;
           await openedCalendarEl.updateComplete;
         }
 
         // Select the first date button, which is 29th of previous month (November)
-        const firstDateBtn = /** @type {HTMLButtonElement} */ (
-          openedCalendarEl?.shadowRoot?.querySelector('.calendar__day-button')
-        );
+        const firstDateBtn =
+          /** @type {HTMLButtonElement} */
+          openedCalendarEl?.shadowRoot?.querySelector('.calendar__day-button');
         firstDateBtn.click();
-
-        expect(/** @type {Date} */ (el.modelValue).getTime()).to.equal(
+        expect(/** @type {Date} */ el.modelValue.getTime()).to.equal(
           new Date('November 29, 2020 03:24:00 GMT+0000').getTime(),
         );
       });
     });
-
     describe('Accessibility', () => {
       it('has a heading of level 1', async () => {
         const el = await fixtureForSuite(html`
@@ -663,87 +622,70 @@ export function runDatepickerSuite({
         `);
         const elObj = new InputObject(el);
         await elObj.openCalendar();
-
         const hNode = elObj.overlayHeadingEl;
         const headingIsLevel1 =
           hNode.tagName === 'H1' ||
           (hNode.getAttribute('role') === 'heading' && hNode.getAttribute('aria-level') === '1');
         expect(headingIsLevel1).to.be.true;
       });
-
       it('adds accessible label to invoker button', async () => {
         // The fixture labels the field, because the point of the assertion is that the invoker's
         // accessible name *names the field*: an unnamed field would test the fallback, not the label.
         const el = await fixtureForSuite(html`<${tag} label="date"></${tag}>`);
         const elObj = new InputObject(el);
         await elObj.openCalendar();
-
         expect(accessibleName(elObj.invokerEl)).to.equal('Open "date" picker');
       });
-
       it('adds [aria-expanded] to invoker button', async () => {
         const el = await fixtureForSuite(html`<${tag}></${tag}>`);
         const elObj = new InputObject(el);
-
         expect(elObj.invokerEl.getAttribute('aria-expanded')).to.equal(null);
         await elObj.openCalendar();
         expect(elObj.invokerEl.getAttribute('aria-expanded')).to.equal(null);
         await elObj.closeCalendar();
         expect(elObj.invokerEl.getAttribute('aria-expanded')).to.equal(null);
       });
-
       it('is accessible when closed', async () => {
         const el = await fixtureForSuite(html`<${tag}></${tag}>`);
         const elObj = new InputObject(el);
-
         await expect(elObj.invokerEl).to.be.accessible();
         await expect(elObj.calendarEl).to.be.accessible();
       });
-
       it('is accessible when open', async () => {
         const el = await fixtureForSuite(html`<${tag}></${tag}>`);
         const elObj = new InputObject(el);
         await elObj.openCalendar();
-
         await expect(elObj.calendarEl).to.be.accessible();
         elObj.overlayCloseButtonEl.click();
       });
-
       it('has accessible invoker when open', async () => {
         const el = await fixtureForSuite(html`<${tag}></${tag}>`);
         const elObj = new InputObject(el);
         await elObj.openCalendar();
-
         await expect(elObj.invokerEl).to.be.accessible();
         elObj.overlayCloseButtonEl.click();
       });
-
       it('is accessible with a disabled date', async () => {
-        const no15th = /** @param {Date} d */ d => d.getDate() !== 15;
+        const no15th = /** @param {Date} d */ (d) => d.getDate() !== 15;
         const el = await fixtureForSuite(html`
           <${tag} .validators=${[new IsDateDisabled(no15th)]}> </${tag}>
         `);
         const elObj = new InputObject(el);
         await elObj.openCalendar();
-
         await expect(elObj.calendarEl).to.be.accessible();
         elObj.overlayCloseButtonEl.click();
       });
-
       it('have different aria-label when multiple invoker', async () => {
         const el = await fixtureForSuite(html`
           <${tag} label="Start date" name="startDate"></${tag}>
           <${tag} label="End date" name="endDate"></${tag}>
         `);
-
-        const elements = /** @type {any} */ (el.parentElement).children;
+        const elements = /** @type {any} */ el.parentElement.children;
         const startLabel = accessibleName(new InputObject(elements.startDate).invokerEl);
         const endLabel = accessibleName(new InputObject(elements.endDate).invokerEl);
-
         expect(startLabel).to.not.equal(endLabel);
       });
     });
-
     describe.skip('Subclassers', () => {
       describe('Providing a custom invoker', () => {
         it('can override the invoker template', async () => {
@@ -755,7 +697,6 @@ export function runDatepickerSuite({
               }
             },
           );
-
           const myEl = await fixtureForSuite(html`<${myTag}></${myTag}>`);
           const myElObj = new InputObject(myEl);
           const { invokerId } = getProtectedMembersDatepicker(myEl);
@@ -771,7 +712,6 @@ export function runDatepickerSuite({
           await myElObj.openCalendar();
           expect(myElObj.overlayController.isShown).to.equal(true);
         });
-
         it('can allocate the picker in a different slot supported by LionField', async () => {
           /**
            * It's important that this api is used instead of Subclassers providing a slot.
@@ -786,13 +726,11 @@ export function runDatepickerSuite({
               }
             },
           );
-
           const myEl = await fixtureForSuite(html`<${myTag}></${myTag}>`);
           const myElObj = new InputObject(myEl);
           expect(myElObj.invokerEl.getAttribute('slot')).to.equal('prefix');
         });
       });
-
       describe('Providing a custom calendar', () => {
         it('can override the calendar template', async () => {
           class CustomCalendar extends LionCalendar {
@@ -803,19 +741,19 @@ export function runDatepickerSuite({
               this.weekdayHeaderNotation = 'narrow'; // 'T' instead of 'Thu'
             }
           }
-
           const myTag = defineCE(
             class extends LionInputDatepicker {
               static get scopedElements() {
-                return { ...LionInputDatepicker.scopedElements, 'my-calendar': CustomCalendar };
+                return {
+                  ...LionInputDatepicker.scopedElements,
+                  'my-calendar': CustomCalendar,
+                };
               }
-
               _calendarTemplate() {
                 return htmlNonStatic`<my-calendar id="calendar"></my-calendar>`;
               }
             },
           );
-
           const myEl = await fixtureForSuite(html`<${myTag}></${myTag}>`);
           const myElObj = new InputObject(myEl);
 
@@ -824,7 +762,6 @@ export function runDatepickerSuite({
           expect(myElObj.calendarEl.tagName.toLowerCase()).to.equal('my-calendar');
         });
       });
-
       describe('Providing a custom overlay', () => {
         it('can override the overlay template', async () => {
           // Keep in mind there is no logic inside this overlay frame; it only handles visuals.
@@ -847,10 +784,8 @@ export function runDatepickerSuite({
               }
             },
           );
-
           let myOverlayOpenedCbHandled = false;
           let myUserSelectedChangedCbHandled = false;
-
           const myTag = defineCE(
             class extends LionInputDatepicker {
               // TODO: this method doesn't exist on LionInputDatepicker, so if we re-enable these tests, they should be redone
@@ -874,12 +809,15 @@ export function runDatepickerSuite({
                * @param {{ target: { selectedDate: Date }}} opts
                */
               _onCalendarUserSelectedChanged({ target: { selectedDate } }) {
-                super._onCalendarUserSelectedChanged({ target: { selectedDate } });
+                super._onCalendarUserSelectedChanged({
+                  target: {
+                    selectedDate,
+                  },
+                });
                 myUserSelectedChangedCbHandled = true;
               }
             },
           );
-
           const myEl = await fixtureForSuite(html`<${myTag}></${myTag}>`);
           const myElObj = new InputObject(myEl);
 
@@ -890,11 +828,9 @@ export function runDatepickerSuite({
           await myElObj.selectMonthDay(1);
           expect(myUserSelectedChangedCbHandled).to.be.true;
         });
-
         it.skip('can configure the overlay presentation based on media query switch', async () => {});
       });
     });
-
     describe('regression tests', async () => {
       it('does not submit a form when datepicker is opened', async () => {
         const submitSpy = sinon.spy();
@@ -903,7 +839,7 @@ export function runDatepickerSuite({
             <${tag}></${tag}>
           </form>
         `);
-        const el = /** @type {LionInputDatepicker} */ (form.children[0]);
+        const el = /** @type {LionInputDatepicker} */ form.children[0];
         await el.updateComplete;
         const elObj = new InputObject(el);
         await elObj.openCalendar();
@@ -913,7 +849,6 @@ export function runDatepickerSuite({
       // TODO: remove: became irrelevant after we don't need dialog-frame
       it.skip('is hidden when attribute hidden is true', async () => {
         const el = await fixtureForSuite(html`<${tag}></${tag}>`);
-
         await el.updateComplete;
         const myElObj = new InputObject(el);
         await myElObj.openCalendar();
@@ -922,10 +857,12 @@ export function runDatepickerSuite({
         expect(getComputedStyle(myElObj.overlayEl).display).to.equal('none', 'Display is not none');
       });
     });
-
     describe('responsive', async () => {
       it('opens as bottom sheet on mobile', async () => {
-        await setViewport({ width: 360, height: 640 });
+        await setViewport({
+          width: 360,
+          height: 640,
+        });
         const el = await fixtureForSuite(html`<${tag}></${tag}>`);
         const myElObj = new InputObject(el);
         await myElObj.openCalendar();
@@ -937,9 +874,11 @@ export function runDatepickerSuite({
           'Datepicker does not get rendered as bottom sheet',
         ).to.be.false;
       });
-
       it('opens as popover on desktop', async () => {
-        await setViewport({ width: 1200, height: 640 });
+        await setViewport({
+          width: 1200,
+          height: 640,
+        });
         const el = await fixtureForSuite(html`<${tag}></${tag}>`);
         const myElObj = new InputObject(el);
         await myElObj.openCalendar();
@@ -955,16 +894,20 @@ export function runDatepickerSuite({
         const el = await fixtureForSuite(html`<${tag}></${tag}>`);
         await el.updateComplete;
         const myElObj = new InputObject(el);
-
-        await setViewport({ width: 360, height: 640 });
+        await setViewport({
+          width: 360,
+          height: 640,
+        });
         await myElObj.openCalendar();
         expect(
           el?.shadowRoot?.contains(myElObj.overlayController.contentNode),
           'Datepicker does not get rendered as bottom sheet',
         ).to.be.false;
-
         await myElObj.closeCalendar();
-        await setViewport({ width: 1200, height: 640 });
+        await setViewport({
+          width: 1200,
+          height: 640,
+        });
         await myElObj.openCalendar();
         expect(
           el?.shadowRoot?.contains(myElObj.overlayController.contentNode),

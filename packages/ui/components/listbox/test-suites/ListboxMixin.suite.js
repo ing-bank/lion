@@ -23,7 +23,7 @@ import { resolveSuiteTag } from '../../core/test-helpers/resolveSuiteTag.js';
  * @typedef {import('lit').TemplateResult} TemplateResult
  */
 
-const fixture = /** @type {(arg: TemplateResult) => Promise<LionListbox>} */ (_fixture);
+const fixture = /** @type {(arg: TemplateResult) => Promise<LionListbox>} */ _fixture;
 
 /**
  * @param {HTMLElement} el
@@ -31,8 +31,18 @@ const fixture = /** @type {(arg: TemplateResult) => Promise<LionListbox>} */ (_f
  * @param {string} code
  */
 function mimicKeyPress(el, key, code = '') {
-  el.dispatchEvent(new KeyboardEvent('keydown', { key, code }));
-  el.dispatchEvent(new KeyboardEvent('keyup', { key, code }));
+  el.dispatchEvent(
+    new KeyboardEvent('keydown', {
+      key,
+      code,
+    }),
+  );
+  el.dispatchEvent(
+    new KeyboardEvent('keyup', {
+      key,
+      code,
+    }),
+  );
 }
 
 /**
@@ -51,7 +61,6 @@ export function runListboxMixinSuite({
     option: unsafeStatic(optionTagString),
     options: unsafeStatic(optionsTagString),
   };
-
   describe('ListboxMixin', () => {
     it('updates grouped option positions and navigation after one microtask', async () => {
       const el = await fixture(html`
@@ -67,9 +76,8 @@ export function runListboxMixinSuite({
       const groups = [..._listboxNode.children];
       const target = document.createElement('div');
       _listboxNode.appendChild(target);
-      groups.forEach(group => target.appendChild(group));
+      groups.forEach((group) => target.appendChild(group));
       await Promise.resolve();
-
       const options = [...target.querySelectorAll(optionTagString)];
       expect([...el.formElements]).to.deep.equal(options);
       options.forEach((option, index) => {
@@ -80,7 +88,6 @@ export function runListboxMixinSuite({
       mimicKeyPress(_activeDescendantOwnerNode, 'ArrowDown');
       expect(el.formElements[1]).to.equal(options[1]);
       expect(el.formElements[1].active).to.be.true;
-
       options[1].remove();
       await Promise.resolve();
       expect(options[2].getAttribute('aria-posinset')).to.equal('2');
@@ -98,7 +105,6 @@ export function runListboxMixinSuite({
       `);
         expect(el.modelValue).to.equal('10');
       });
-
       it('should dispatch model-value-changed 1 time on first paint', async () => {
         const spy = sinon.spy();
         await fixture(html`
@@ -110,7 +116,6 @@ export function runListboxMixinSuite({
         `);
         expect(spy.callCount).to.equal(1);
       });
-
       it('should dispatch model-value-changed 1 time on interaction', async () => {
         const spy = sinon.spy();
         const el = await fixture(html`
@@ -120,17 +125,13 @@ export function runListboxMixinSuite({
             <${tags.option} .choiceValue="${'30'}">Item 3</${tags.option}>
           </${tags.host}>
         `);
-
         el.addEventListener('model-value-changed', spy);
         el.formElements[1].checked = true;
         expect(spy.callCount).to.equal(1);
-
         spy.resetHistory();
-
         el.formElements[2].checked = true;
         expect(spy.callCount).to.equal(1);
       });
-
       it('should not dispatch model-value-changed on reappend checked child', async () => {
         const spy = sinon.spy();
         const el = await fixture(html`
@@ -140,15 +141,12 @@ export function runListboxMixinSuite({
             <${tags.option} .choiceValue="${'30'}">Item 3</${tags.option}>
           </${tags.host}>
         `);
-
         el.addEventListener('model-value-changed', spy);
         el.formElements[1].checked = true;
         expect(spy.callCount).to.equal(1);
-
         el.appendChild(el.formElements[1]);
         expect(spy.callCount).to.equal(1);
       });
-
       it('automatically sets the name attribute of child checkboxes to its own name', async () => {
         const el = await fixture(html`
         <${tags.host} name="foo">
@@ -156,18 +154,14 @@ export function runListboxMixinSuite({
           <${tags.option} .choiceValue=${20}>Item 2</${tags.option}>
         </${tags.host}>
       `);
-
         expect(el.formElements[0].name).to.equal('foo');
         expect(el.formElements[1].name).to.equal('foo');
-
         const validChild = await fixture(
           html` <${tags.option} .choiceValue=${30}>Item 3</${tags.option}> `,
         );
         el.appendChild(validChild);
-
         expect(el.formElements[2].name).to.equal('foo');
       });
-
       it('throws if a child element without a modelValue like { value: "foo", checked: false } tries to register', async () => {
         const el = await fixture(html`
         <${tags.host} name="foo">
@@ -178,14 +172,12 @@ export function runListboxMixinSuite({
         const invalidChild = await fixture(
           html` <${tags.option} .modelValue=${'Lara'}></${tags.option}> `,
         );
-
         expect(() => {
           el.addFormElement(invalidChild);
         }).to.throw(
           `The ${hostTagString} name="foo" does not allow to register ${optionTagString} with .modelValue="Lara" - The modelValue should represent an Object { value: "foo", checked: false }`,
         );
       });
-
       it('can set initial modelValue on creation', async () => {
         const el = await fixture(html`
         <${tags.host} name="gender" .modelValue=${'other'}>
@@ -194,11 +186,9 @@ export function runListboxMixinSuite({
           <${tags.option} .choiceValue=${'other'}></${tags.option}>
         </${tags.host}>
       `);
-
         expect(el.modelValue).to.equal('other');
         expect(el.formElements[2].checked).to.be.true;
       });
-
       it('requests update for modelValue when checkedIndex changes', async () => {
         const el = /** @type {LionListbox} */ await fixture(html`
           <${tags.host} name="gender" .modelValue=${'other'}>
@@ -217,7 +207,6 @@ export function runListboxMixinSuite({
           sinon.match.map.contains(new Map([['modelValue', 'other']])),
         );
       });
-
       it('requests update for modelValue after click', async () => {
         const el = await fixture(html`
           <${tags.host} name="gender" .modelValue=${'other'}>
@@ -236,7 +225,6 @@ export function runListboxMixinSuite({
           sinon.match.map.contains(new Map([['modelValue', 'other']])),
         );
       });
-
       it('requests update for modelValue when checkedIndex changes for multiple choice', async () => {
         const el = await fixture(html`
           <${tags.host} name="gender" multiple-choice .modelValue=${['other']}>
@@ -258,7 +246,6 @@ export function runListboxMixinSuite({
         // reference values vs real values suck :( had to do it like this, sinon matchers did not match because 'other' is inside an array so it's not a "real" match
         expect([...updatedSpy.args[0][0].entries()]).to.deep.include(['modelValue', ['other']]);
       });
-
       it('requests update for modelValue after click for multiple choice', async () => {
         const el = await fixture(html`
           <${tags.host} name="gender" multiple-choice .modelValue=${['other']}>
@@ -280,14 +267,12 @@ export function runListboxMixinSuite({
         // reference values vs real values suck :( had to do it like this, sinon matchers did not match because 'other' is inside an array so it's not a "real" match
         expect([...updatedSpy.args[0][0].entries()]).to.deep.include(['modelValue', ['other']]);
       });
-
       it(`has a fieldName based on the label`, async () => {
         const el1 = await fixture(html`
         <${tags.host} label="foo"></${tags.host}>
       `);
         const { _labelNode: _labelNode1 } = getListboxMembers(el1);
         expect(el1.fieldName).to.equal(_labelNode1.textContent);
-
         const el2 = await fixture(html`
         <${tags.host}>
           <label slot="label">bar</label>
@@ -296,14 +281,12 @@ export function runListboxMixinSuite({
         const { _labelNode: _labelNode2 } = getListboxMembers(el2);
         expect(el2.fieldName).to.equal(_labelNode2.textContent);
       });
-
       it(`has a fieldName based on the name if no label exists`, async () => {
         const el = await fixture(html`
         <${tags.host} name="foo"></${tags.host}>
       `);
         expect(el.fieldName).to.equal(el.name);
       });
-
       it(`can override fieldName`, async () => {
         const el = await fixture(html`
         <${tags.host} label="foo" .fieldName="${'bar'}"></${tags.host}>
@@ -311,7 +294,6 @@ export function runListboxMixinSuite({
         // @ts-ignore [allow-protected] in test
         expect(el.__fieldName).to.equal(el.fieldName);
       });
-
       it('supports validation', async () => {
         const el = await fixture(html`
         <${tags.host}
@@ -326,7 +308,6 @@ export function runListboxMixinSuite({
           <${tags.option} .choiceValue=${'teal'}>Teal</${tags.option}>
         </${tags.host}>
       `);
-
         expect(el.hasFeedbackFor.includes('error')).to.be.true;
         expect(el.showsFeedbackFor.includes('error')).to.be.false;
 
@@ -334,19 +315,16 @@ export function runListboxMixinSuite({
         el.submitted = true;
         await el.updateComplete;
         expect(el.showsFeedbackFor.includes('error')).to.be.true;
-
         el.formElements[1].checked = true;
         await el.updateComplete;
         expect(el.hasFeedbackFor.includes('error')).to.be.false;
         expect(el.showsFeedbackFor.includes('error')).to.be.false;
-
         el.formElements[0].checked = true;
         await el.updateComplete;
         expect(el.hasFeedbackFor.includes('error')).to.be.true;
         expect(el.showsFeedbackFor.includes('error')).to.be.true;
       });
     });
-
     describe('Selection', () => {
       it('supports changing the selection through serializedValue setter', async () => {
         const el = await fixture(html`
@@ -356,16 +334,12 @@ export function runListboxMixinSuite({
           <${tags.option} .choiceValue=${'teal'}>Teal</${tags.option}>
         </${tags.host}>
       `);
-
         expect(el.checkedIndex).to.equal(-1);
         expect(el.serializedValue).to.equal('');
-
         el.serializedValue = 'hotpink';
-
         expect(el.checkedIndex).to.equal(1);
         expect(el.serializedValue).to.equal('hotpink');
       });
-
       it('scrolls active element into view when necessary, takes into account sticky/fixed elements', async () => {
         const el = await fixture(html`
           <div id="scrolling-element" style="position: relative;  overflow-y: scroll; height: 570px;">
@@ -387,7 +361,7 @@ export function runListboxMixinSuite({
             </div>
           </div>
         `);
-        const listboxEl = /** @type {LionListbox} */ (el.querySelector('#color'));
+        const listboxEl = /** @type {LionListbox} */ el.querySelector('#color');
 
         // Skip test if listbox cannot receive focus, e.g. in combobox
         // Skip test if the listbox is controlled by overlay system,
@@ -397,22 +371,19 @@ export function runListboxMixinSuite({
         if (listboxEl._listboxReceivesNoFocus || listboxEl._overlayCtrl) {
           return;
         }
-
         Object.defineProperty(listboxEl, '_scrollTargetNode', {
           get: () => el,
         });
-
-        const thirdOption = /** @type {LionOption} */ (listboxEl.formElements[2]);
-        const lastOption = /** @type {LionOption} */ (
-          listboxEl.formElements[listboxEl.formElements.length - 1]
-        );
+        const thirdOption = /** @type {LionOption} */ listboxEl.formElements[2];
+        const lastOption =
+          /** @type {LionOption} */
+          listboxEl.formElements[listboxEl.formElements.length - 1];
         await listboxEl.updateComplete;
         await nextFrame();
 
         // Scroll to last option and wait for browser scroll animation (works)
         lastOption.active = true;
         await aTimeout(1000);
-
         thirdOption.active = true;
         await aTimeout(1000);
 
@@ -420,7 +391,6 @@ export function runListboxMixinSuite({
         expect(el.scrollTop).to.equal(116);
       });
     });
-
     describe('Accessibility', () => {
       it('[axe]: is accessible when opened', async () => {
         const el = await fixture(html`
@@ -432,7 +402,9 @@ export function runListboxMixinSuite({
         await el.updateComplete;
         await el.updateComplete; // need 2 awaits as overlay.show is an async function
         // for more info about why we need the ignoreRules, see: https://lion.js.org/fundamentals/systems/overlays/rationale/#considerations
-        await expect(el).to.be.accessible({ ignoredRules: ['aria-allowed-role'] });
+        await expect(el).to.be.accessible({
+          ignoredRules: ['aria-allowed-role'],
+        });
       });
 
       // NB: regular listbox is always 'opened', but needed for combobox and select-rich
@@ -444,14 +416,14 @@ export function runListboxMixinSuite({
           </${tags.host}>
         `);
         // for more info about why we need the ignoreRules, see: https://lion.js.org/fundamentals/systems/overlays/rationale/#considerations
-        await expect(el).to.be.accessible({ ignoredRules: ['aria-allowed-role'] });
+        await expect(el).to.be.accessible({
+          ignoredRules: ['aria-allowed-role'],
+        });
       });
-
       it('does not have a tabindex', async () => {
         const el = await fixture(html`<${tags.host}></${tags.host}>`);
         expect(el.hasAttribute('tabindex')).to.be.false;
       });
-
       it('creates unique ids for all children', async () => {
         const el = await fixture(html`
           <${tags.host}>
@@ -464,7 +436,6 @@ export function runListboxMixinSuite({
         expect(el.querySelectorAll(optionTagString)[1].id).to.exist;
         expect(el.querySelectorAll(optionTagString)[2].id).to.equal('predefined');
       });
-
       it('has a reference to the active option', async () => {
         const el = await fixture(html`
           <${tags.host} opened has-no-default-selected autocomplete="none" show-all-on-empty>
@@ -473,7 +444,6 @@ export function runListboxMixinSuite({
           </${tags.host}>
         `);
         const { _activeDescendantOwnerNode } = getListboxMembers(el);
-
         expect(_activeDescendantOwnerNode.getAttribute('aria-activedescendant')).to.be.null;
         await el.updateComplete;
 
@@ -485,22 +455,20 @@ export function runListboxMixinSuite({
         await el.updateComplete;
         expect(_activeDescendantOwnerNode.getAttribute('aria-activedescendant')).to.equal('second');
       });
-
       it('puts "aria-setsize" on all options to indicate the total amount of options', async () => {
-        const el = /** @type {LionListbox} */ (
+        const el =
+          /** @type {LionListbox} */
           await fixture(html`
           <${tags.host} autocomplete="none" show-all-on-empty>
             <${tags.option} .choiceValue=${10}>Item 1</${tags.option}>
             <${tags.option} .choiceValue=${20}>Item 2</${tags.option}>
             <${tags.option} .choiceValue=${30}>Item 3</${tags.option}>
           </${tags.host}>
-        `)
-        );
-        el.formElements.forEach(optionEl => {
+        `);
+        el.formElements.forEach((optionEl) => {
           expect(optionEl.getAttribute('aria-setsize')).to.equal('3');
         });
       });
-
       it('puts "aria-posinset" on all options to indicate their position in the listbox', async () => {
         const el = await fixture(html`
           <${tags.host} autocomplete="none" show-all-on-empty>
@@ -514,7 +482,6 @@ export function runListboxMixinSuite({
         });
       });
     });
-
     describe('Values', () => {
       // TODO: ChoiceGroup suite?
       it('registers options', async () => {
@@ -530,7 +497,6 @@ export function runListboxMixinSuite({
           el.querySelectorAll(optionTagString)[1],
         ]);
       });
-
       it('allows null choiceValue', async () => {
         const el = await fixture(html`
           <${tags.host}>
@@ -548,7 +514,6 @@ export function runListboxMixinSuite({
         }
         expect(el.modelValue).to.be.null;
       });
-
       it('should reset selected value to initial value', async () => {
         const el = await fixture(html`
           <${tags.host}>
@@ -562,7 +527,6 @@ export function runListboxMixinSuite({
         el.reset();
         expect(el.modelValue).to.equal('20');
       });
-
       it('should reset selected value to "Please select account" with has-no-default-selected attribute', async () => {
         const el = await fixture(html`
           <${tags.host} has-no-default-selected>
@@ -575,7 +539,6 @@ export function runListboxMixinSuite({
         el.reset();
         expect(el.modelValue).to.equal('');
       });
-
       it('should reset selected value to initial values when multiple-choice', async () => {
         const el = await fixture(html`
           <${tags.host} multiple-choice has-no-default-selected>
@@ -589,7 +552,6 @@ export function runListboxMixinSuite({
         el.reset();
         expect(el.modelValue).to.deep.equal(['20', '30']);
       });
-
       it('has an activeIndex', async () => {
         const el = await fixture(html`
           <${tags.host} has-no-default-selected autocomplete="list">
@@ -598,13 +560,11 @@ export function runListboxMixinSuite({
           </${tags.host}>
         `);
         const options = el.formElements;
-
         expect(el.activeIndex).to.equal(-1);
         options[1].active = true;
         expect(options[0].active).to.be.false;
         expect(el.activeIndex).to.equal(1);
       });
-
       it('should reset activeIndex value', async () => {
         const el = await fixture(html`
           <${tags.host} has-no-default-selected>
@@ -613,14 +573,12 @@ export function runListboxMixinSuite({
           </${tags.host}>
         `);
         const options = el.formElements;
-
         expect(el.activeIndex).to.equal(-1);
         options[1].active = true;
         expect(el.activeIndex).to.equal(1);
         el.reset();
         expect(el.activeIndex).to.equal(-1);
       });
-
       it('clears modelValue on clear()', async () => {
         const el = await fixture(html`
           <${tags.host} has-no-default-selected>
@@ -628,16 +586,13 @@ export function runListboxMixinSuite({
             <${tags.option} .choiceValue=${'20'}>Item 2</${tags.option}>
           </${tags.host}>
         `);
-
         el.setCheckedIndex(0);
         await el.updateComplete;
         expect(el.modelValue).to.deep.equal('10');
-
         el.clear();
         await el.updateComplete;
         expect(el.modelValue).to.equal('');
       });
-
       it('clears modelValue on clear() when multiple-choice', async () => {
         const el = await fixture(html`
           <${tags.host} has-no-default-selected multiple-choice>
@@ -648,11 +603,9 @@ export function runListboxMixinSuite({
         el.setCheckedIndex(0);
         await el.updateComplete;
         expect(el.modelValue).to.eql(['10']);
-
         el.clear();
         expect(el.modelValue).to.eql([]);
       });
-
       it('keeps interaction states on clear()', async () => {
         const el = await fixture(html`
           <${tags.host} has-no-default-selected>
@@ -660,62 +613,59 @@ export function runListboxMixinSuite({
             <${tags.option} .choiceValue=${'20'}>Item 2</${tags.option}>
           </${tags.host}>
         `);
-
         el.setCheckedIndex(0);
         await el.updateComplete;
         expect(el.dirty).to.equal(true);
-
         el.clear();
         await el.updateComplete;
         expect(el.dirty).to.equal(true);
       });
     });
-
     describe('Interactions', () => {
       describe('Keyboard navigation', () => {
         describe('Rotate Keyboard Navigation', () => {
           it('stops navigation by default at end of option list', async () => {
-            const el = /** @type {LionListbox} */ (
+            const el =
+              /** @type {LionListbox} */
               await fixture(html`
                 <${tags.host} opened name="foo" .rotateKeyboardNavigation="${false}">
                   <${tags.option} .choiceValue="${'Artichoke'}">Artichoke</${tags.option}>
                   <${tags.option} .choiceValue="${'Bla'}">Bla</${tags.option}>
                   <${tags.option} .choiceValue="${'Chard'}">Chard</${tags.option}>
                 </${tags.host}>
-              `)
-            );
+              `);
             const { _listboxNode } = getListboxMembers(el);
 
             // Normalize
             el.activeIndex = 0;
             const options = el.formElements;
-
             mimicKeyPress(_listboxNode, 'ArrowUp');
-
             expect(options[0].active).to.be.true;
             expect(options[1].active).to.be.false;
             expect(options[2].active).to.be.false;
             el.activeIndex = 2;
             mimicKeyPress(_listboxNode, 'ArrowDown');
-
             expect(options[0].active).to.be.false;
             expect(options[1].active).to.be.false;
             expect(options[2].active).to.be.true;
           });
-
           it('when "rotate-navigation" provided, selects first option after navigated to next from last and vice versa', async () => {
-            const el = /** @type {LionListbox} */ (
+            const el =
+              /** @type {LionListbox} */
               await fixture(html`
                 <${tags.host} opened name="foo" rotate-keyboard-navigation autocomplete="inline">
                   <${tags.option} checked .choiceValue="${'Artichoke'}">Artichoke</${tags.option}>
                   <${tags.option} .choiceValue="${'Bla'}">Bla</${tags.option}>
                   <${tags.option} .choiceValue="${'Chard'}">Chard</${tags.option}>
                 </${tags.host}>
-              `)
-            );
+              `);
             const { _inputNode } = getListboxMembers(el);
-
-            _inputNode.dispatchEvent(new Event('focusin', { bubbles: true, composed: true }));
+            _inputNode.dispatchEvent(
+              new Event('focusin', {
+                bubbles: true,
+                composed: true,
+              }),
+            );
             await el.updateComplete;
             // Normalize
             el.activeIndex = 0;
@@ -723,33 +673,29 @@ export function runListboxMixinSuite({
 
             // el._inputNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowUp' }));
             mimicKeyPress(_inputNode, 'ArrowUp');
-
             await el.updateComplete;
             expect(el.activeIndex).to.equal(2);
 
             // el._inputNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
             mimicKeyPress(_inputNode, 'ArrowDown');
-
             expect(el.activeIndex).to.equal(0);
             // Extra check: regular navigation
             // el._inputNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
             mimicKeyPress(_inputNode, 'ArrowDown');
-
             expect(el.activeIndex).to.equal(1);
           });
         });
-
         describe('Enter', () => {
           it('[Enter] selects active option', async () => {
-            const el = /** @type {LionListbox} */ (
+            const el =
+              /** @type {LionListbox} */
               await fixture(html`
               <${tags.host} opened name="foo" autocomplete="none" show-all-on-empty>
                 <${tags.option} .choiceValue="${'Artichoke'}">Artichoke</${tags.option}>
                 <${tags.option} .choiceValue="${'Bla'}">Bla</${tags.option}>
                 <${tags.option} .choiceValue="${'Chard'}">Chard</${tags.option}>
               </${tags.host}>
-            `)
-            );
+            `);
             const { _listboxNode } = getListboxMembers(el);
 
             // Normalize suite
@@ -760,10 +706,10 @@ export function runListboxMixinSuite({
             mimicKeyPress(_listboxNode, 'Enter');
             expect(options[1].checked).to.be.true;
           });
-
           it('submits form on [Enter] when inputNode is an instance of HTMLInputNode', async () => {
-            const submitSpy = sinon.spy(e => e.preventDefault());
-            const el = /** @type {HTMLFormElement}  */ (
+            const submitSpy = sinon.spy((e) => e.preventDefault());
+            const el =
+              /** @type {HTMLFormElement}  */
               await _fixture(html`
               <form @submit=${submitSpy}>
                 <${tags.host} name="foo">
@@ -773,9 +719,8 @@ export function runListboxMixinSuite({
                 </${tags.host}>
                 <button type="submit">submit</button>
               </form>
-            `)
-            );
-            const listbox = /** @type {LionListbox} */ (el.querySelector('[name="foo"]'));
+            `);
+            const listbox = /** @type {LionListbox} */ el.querySelector('[name="foo"]');
             const { _inputNode } = getListboxMembers(listbox);
             if (!(_inputNode instanceof HTMLInputElement)) {
               return;
@@ -790,20 +735,19 @@ export function runListboxMixinSuite({
             expect(submitSpy.callCount).to.equal(1);
           });
         });
-
         describe('Space', () => {
           it('selects active option when "_listboxReceivesNoFocus" is true', async () => {
             // When listbox is not focusable (in case of a combobox), the user should be allowed
             // to enter a space in the focusable element (textbox)
-            const el = /** @type {LionListbox} */ (
+            const el =
+              /** @type {LionListbox} */
               await fixture(html`
                 <${tags.host} opened name="foo" ._listboxReceivesNoFocus="${false}" autocomplete="none" show-all-on-empty>
                   <${tags.option} .choiceValue="${'Artichoke'}">Artichoke</${tags.option}>
                   <${tags.option} .choiceValue="${'Bla'}">Bla</${tags.option}>
                   <${tags.option} .choiceValue="${'Chard'}">Chard</${tags.option}>
                 </${tags.host}>
-              `)
-            );
+              `);
             const { _listboxNode } = getListboxMembers(el);
 
             // Normalize suite
@@ -812,14 +756,12 @@ export function runListboxMixinSuite({
             el.checkedIndex = 0;
             mimicKeyPress(_listboxNode, 'ArrowDown');
             mimicKeyPress(_listboxNode, ' ');
-
             expect(options[1].checked).to.be.true;
             el.checkedIndex = 0;
             // @ts-ignore allow protected member access in test
             el._listboxReceivesNoFocus = true;
             mimicKeyPress(_listboxNode, 'ArrowDown');
             mimicKeyPress(_listboxNode, ' ');
-
             expect(options[1].checked).to.be.false;
           });
         });
@@ -838,17 +780,14 @@ export function runListboxMixinSuite({
             if (el._noTypeAhead) {
               return;
             }
-
             const { _listboxNode } = getListboxMembers(el);
 
             // Normalize start values between listbox, select and combobox and test interaction below
             el.activeIndex = 0;
-
             mimicKeyPress(_listboxNode, 't', 'KeyT');
             // await aTimeout(0);
             expect(el.activeIndex).to.equal(1);
           });
-
           it('activates a value with multiple [character] keys', async () => {
             const el = await fixture(html`
             <${tags.host} opened id="color" name="color" label="Favorite color">
@@ -861,19 +800,15 @@ export function runListboxMixinSuite({
             if (el._noTypeAhead) {
               return;
             }
-
             const { _listboxNode } = getListboxMembers(el);
 
             // Normalize start values between listbox, select and combobox and test interaction below
             el.activeIndex = 0;
-
             mimicKeyPress(_listboxNode, 't', 'KeyT');
             expect(el.activeIndex).to.equal(1);
-
             mimicKeyPress(_listboxNode, 'u', 'KeyU');
             expect(el.activeIndex).to.equal(2);
           });
-
           it('selects a value with [character] keys and selectionFollowsFocus', async () => {
             const el = await fixture(html`
             <${tags.host} opened id="color" name="color" label="Favorite color" selection-follows-focus>
@@ -886,19 +821,15 @@ export function runListboxMixinSuite({
             if (el._noTypeAhead) {
               return;
             }
-
             const { _listboxNode } = getListboxMembers(el);
 
             // Normalize start values between listbox, select and combobox and test interaction below
             el.checkedIndex = 0;
-
             mimicKeyPress(_listboxNode, 't', 'KeyT');
             expect(el.checkedIndex).to.equal(1);
-
             mimicKeyPress(_listboxNode, 'u', 'KeyU');
             expect(el.checkedIndex).to.equal(2);
           });
-
           it('clears typedChars after _typeAheadTimeout', async () => {
             const el = await fixture(html`
             <${tags.host} opened id="color" name="color" label="Favorite color">
@@ -911,25 +842,19 @@ export function runListboxMixinSuite({
             if (el._noTypeAhead) {
               return;
             }
-
             const clock = sinon.useFakeTimers();
             const { _listboxNode } = getListboxMembers(el);
-
             mimicKeyPress(_listboxNode, 't', 'KeyT');
             // @ts-ignore [allow-private] in test
             expect(el.__typedChars).to.deep.equal(['t']);
-
             mimicKeyPress(_listboxNode, 'u', 'KeyU');
             // @ts-ignore [allow-private] in test
             expect(el.__typedChars).to.deep.equal(['t', 'u']);
-
             clock.tick(1000);
             // @ts-ignore [allow-private] in test
             expect(el.__typedChars).to.deep.equal([]);
-
             clock.restore();
           });
-
           it('clears scheduled timeouts', async () => {
             const el = await fixture(html`
             <${tags.host} opened id="color" name="color" label="Favorite color">
@@ -942,7 +867,6 @@ export function runListboxMixinSuite({
             if (el._noTypeAhead) {
               return;
             }
-
             const { _listboxNode } = getListboxMembers(el);
 
             // Normalize start values between listbox, select and combobox and test interaction below
@@ -955,7 +879,6 @@ export function runListboxMixinSuite({
             expect(clearTimeoutSpy.args[0][0]).to.equal(pendingClear);
           });
         });
-
         it('navigates to first and last option with [Home] and [End] keys', async () => {
           const el = await fixture(html`
               <${tags.host} opened>
@@ -971,24 +894,22 @@ export function runListboxMixinSuite({
           if (el._listboxReceivesNoFocus) {
             return;
           }
-
           el.activeIndex = 2;
           mimicKeyPress(_listboxNode, 'Home');
           expect(el.activeIndex).to.equal(0);
           mimicKeyPress(_listboxNode, 'End');
           expect(el.activeIndex).to.equal(3);
         });
-
         it('navigates through open lists with [ArrowDown] [ArrowUp] keys activates the option', async () => {
-          const el = /** @type {LionListbox} */ (
+          const el =
+            /** @type {LionListbox} */
             await fixture(html`
               <${tags.host} opened has-no-default-selected autocomplete="none" show-all-on-empty>
                 <${tags.option} .choiceValue=${'Item 1'}>Item 1</${tags.option}>
                 <${tags.option} .choiceValue=${'Item 2'}>Item 2</${tags.option}>
                 <${tags.option} .choiceValue=${'Item 3'}>Item 3</${tags.option}>
               </${tags.host}>
-            `)
-          );
+            `);
           const { _listboxNode } = getListboxMembers(el);
 
           // Normalize across listbox/select-rich/combobox
@@ -1002,82 +923,67 @@ export function runListboxMixinSuite({
           expect(el.activeIndex).to.equal(1);
           expect(el.checkedIndex).to.equal(-1);
           mimicKeyPress(_listboxNode, 'ArrowUp');
-
           expect(el.activeIndex).to.equal(0);
           expect(el.checkedIndex).to.equal(-1);
         });
       });
-
       describe('Orientation', () => {
         it('has a default value of "vertical"', async () => {
-          const el = /** @type {LionListbox} */ (
+          const el =
+            /** @type {LionListbox} */
             await fixture(html`
             <${tags.host} opened name="foo" autocomplete="none" show-all-on-empty>
               <${tags.option} .choiceValue="${'Artichoke'}">Artichoke</${tags.option}>
               <${tags.option} .choiceValue="${'Chard'}">Chard</${tags.option}>
             </${tags.host}>
-          `)
-          );
+          `);
           const { _listboxNode } = getListboxMembers(el);
-
           expect(el.orientation).to.equal('vertical');
           const options = el.formElements;
           // Normalize for suite tests
           el.activeIndex = 0;
-
           await el.updateComplete;
           expect(options[0].active).to.be.true;
           expect(options[1].active).to.be.false;
-
           mimicKeyPress(_listboxNode, 'ArrowDown');
           expect(options[0].active).to.be.false;
           expect(options[1].active).to.be.true;
-
           mimicKeyPress(_listboxNode, 'ArrowUp');
-
           expect(options[0].active).to.be.true;
           expect(options[1].active).to.be.false;
 
           // No response to horizontal arrows...
           mimicKeyPress(_listboxNode, 'ArrowRight');
-
           expect(options[0].active).to.be.true;
           expect(options[1].active).to.be.false;
-
           el.activeIndex = 1;
           mimicKeyPress(_listboxNode, 'ArrowLeft');
-
           expect(options[0].active).to.be.false;
           expect(options[1].active).to.be.true;
         });
-
         it('uses [ArrowLeft] and [ArrowRight] keys when "horizontal"', async () => {
-          const el = /** @type {LionListbox} */ (
+          const el =
+            /** @type {LionListbox} */
             await fixture(html`
             <${tags.host} ._listboxReceivesNoFocus="${false}" opened name="foo" orientation="horizontal" autocomplete="none" show-all-on-empty>
               <${tags.option} .choiceValue="${'Artichoke'}">Artichoke</${tags.option}>
               <${tags.option} .choiceValue="${'Chard'}">Chard</${tags.option}>
             </${tags.host}>
-          `)
-          );
+          `);
           const { _listboxNode } = getListboxMembers(el);
-
           expect(el.orientation).to.equal('horizontal');
 
           // Normalize for suite tests
           el.activeIndex = 0;
           await el.updateComplete;
-
           mimicKeyPress(_listboxNode, 'ArrowRight');
           expect(el.activeIndex).to.equal(1);
-
           mimicKeyPress(_listboxNode, 'ArrowLeft');
           expect(el.activeIndex).to.equal(0);
 
           // No response to vertical arrows...
           mimicKeyPress(_listboxNode, 'ArrowDown');
           expect(el.activeIndex).to.equal(0);
-
           el.activeIndex = 1;
           mimicKeyPress(_listboxNode, 'ArrowUp');
           expect(el.activeIndex).to.equal(1);
@@ -1086,11 +992,9 @@ export function runListboxMixinSuite({
           el._listboxReceivesNoFocus = true;
           mimicKeyPress(_listboxNode, 'ArrowLeft');
           expect(el.activeIndex).to.equal(1);
-
           mimicKeyPress(_listboxNode, 'ArrowRight');
           expect(el.activeIndex).to.equal(1);
         });
-
         describe('Accessibility', () => {
           it('adds aria-orientation attribute to listbox node', async () => {
             const el = await fixture(html`
@@ -1104,7 +1008,6 @@ export function runListboxMixinSuite({
           });
         });
       });
-
       describe('Multiple Choice', () => {
         it('does not uncheck siblings', async () => {
           const el = await fixture(html`
@@ -1121,7 +1024,6 @@ export function runListboxMixinSuite({
           expect(options[0].checked).to.equal(true);
           expect(el.modelValue).to.eql(['Artichoke', 'Chard']);
         });
-
         it('works via different interaction mechanisms (click, enter, spaces)', async () => {
           const el = await fixture(html`
             <${tags.host} name="foo" multiple-choice>
@@ -1179,19 +1081,15 @@ export function runListboxMixinSuite({
           // Space
           el.activeIndex = 0;
           mimicKeyPress(_listboxNode, ' ');
-
           el.activeIndex = 1;
           mimicKeyPress(_listboxNode, ' ');
-
           expect(options[0].checked).to.equal(true);
           expect(el.modelValue).to.eql(['Artichoke', 'Chard']);
           // also deselect
           mimicKeyPress(_listboxNode, ' ');
-
           expect(options[0].checked).to.equal(true);
           expect(el.modelValue).to.eql(['Artichoke']);
         });
-
         describe('Accessibility', () => {
           it('adds aria-multiselectable="true" to listbox node', async () => {
             const el = await fixture(html`
@@ -1203,7 +1101,6 @@ export function runListboxMixinSuite({
             const { _listboxNode } = getListboxMembers(el);
             expect(_listboxNode.getAttribute('aria-multiselectable')).to.equal('true');
           });
-
           it('does not allow "selectionFollowsFocus"', async () => {
             const el = await fixture(html`
               <${tags.host} name="foo" multiple-choice>
@@ -1212,14 +1109,16 @@ export function runListboxMixinSuite({
               </${tags.host}>
             `);
             const { _listboxNode, _inputNode } = getListboxMembers(el);
-
             _inputNode.focus();
-            _listboxNode.dispatchEvent(new KeyboardEvent('keyup', { key: 'ArrowDown' }));
+            _listboxNode.dispatchEvent(
+              new KeyboardEvent('keyup', {
+                key: 'ArrowDown',
+              }),
+            );
             expect(_listboxNode.getAttribute('aria-multiselectable')).to.equal('true');
           });
         });
       });
-
       describe('Selection Follows Focus', () => {
         it('navigates through list with [ArrowDown] [ArrowUp] keys: activates and checks the option', async () => {
           /**
@@ -1235,16 +1134,15 @@ export function runListboxMixinSuite({
               }
             });
           }
-          const el = /** @type {LionListbox} */ (
+          const el =
+            /** @type {LionListbox} */
             await fixture(html`
               <${tags.host} opened selection-follows-focus autocomplete="none" show-all-on-empty>
                   <${tags.option} .choiceValue=${10}>Item 1</${tags.option}>
                   <${tags.option} .choiceValue=${20}>Item 2</${tags.option}>
                   <${tags.option} .choiceValue=${30}>Item 3</${tags.option}>
               </${tags.host}>
-            `)
-          );
-
+            `);
           const { _listboxNode } = getListboxMembers(el);
           const options = el.formElements;
           // Normalize start values between listbox, select and combobox and test interaction below
@@ -1258,12 +1156,10 @@ export function runListboxMixinSuite({
           expect(el.checkedIndex).to.equal(1);
           expectOnlyGivenOneOptionToBeChecked(options, 1);
           mimicKeyPress(_listboxNode, 'ArrowUp');
-
           expect(el.activeIndex).to.equal(0);
           expect(el.checkedIndex).to.equal(0);
           expectOnlyGivenOneOptionToBeChecked(options, 0);
         });
-
         it('navigates through list with [ArrowLeft] [ArrowRight] keys when horizontal: activates and checks the option', async () => {
           /**
            * @param {LionOption[]} options
@@ -1278,16 +1174,15 @@ export function runListboxMixinSuite({
               }
             });
           }
-          const el = /** @type {LionListbox} */ (
+          const el =
+            /** @type {LionListbox} */
             await fixture(html`
               <${tags.host} ._listboxReceivesNoFocus="${false}" opened selection-follows-focus orientation="horizontal" autocomplete="none" show-all-on-empty>
                   <${tags.option} .choiceValue=${10}>Item 1</${tags.option}>
                   <${tags.option} .choiceValue=${20}>Item 2</${tags.option}>
                   <${tags.option} .choiceValue=${30}>Item 3</${tags.option}>
               </${tags.host}>
-            `)
-          );
-
+            `);
           const { _listboxNode } = getListboxMembers(el);
           const options = el.formElements;
           // Normalize start values between listbox, slect and combobox and test interaction below
@@ -1297,12 +1192,10 @@ export function runListboxMixinSuite({
           expect(el.checkedIndex).to.equal(0);
           expectOnlyGivenOneOptionToBeChecked(options, 0);
           mimicKeyPress(_listboxNode, 'ArrowRight');
-
           expect(el.activeIndex).to.equal(1);
           expect(el.checkedIndex).to.equal(1);
           expectOnlyGivenOneOptionToBeChecked(options, 1);
           mimicKeyPress(_listboxNode, 'ArrowLeft');
-
           expect(el.activeIndex).to.equal(0);
           expect(el.checkedIndex).to.equal(0);
           expectOnlyGivenOneOptionToBeChecked(options, 0);
@@ -1322,7 +1215,6 @@ export function runListboxMixinSuite({
           if (el._listboxReceivesNoFocus) {
             return;
           }
-
           expect(el.modelValue).to.equal('30');
           mimicKeyPress(_listboxNode, 'Home');
           expect(el.modelValue).to.equal('10');
@@ -1330,7 +1222,6 @@ export function runListboxMixinSuite({
           expect(el.modelValue).to.equal('40');
         });
       });
-
       describe('Disabled Host', () => {
         it('cannot be navigated with keyboard if disabled', async () => {
           const el = await fixture(html`
@@ -1340,13 +1231,11 @@ export function runListboxMixinSuite({
             </${tags.host}>
           `);
           const { _listboxNode } = getListboxMembers(el);
-
           await el.updateComplete;
           const { checkedIndex } = el;
           mimicKeyPress(_listboxNode, 'ArrowDown');
           expect(el.checkedIndex).to.equal(checkedIndex);
         });
-
         it('sync its disabled state to all options', async () => {
           const el = await fixture(html`
             <${tags.host} opened>
@@ -1359,13 +1248,11 @@ export function runListboxMixinSuite({
           await el.updateComplete;
           expect(options[0].disabled).to.be.true;
           expect(options[1].disabled).to.be.true;
-
           el.disabled = false;
           await el.updateComplete;
           expect(options[0].disabled).to.be.true;
           expect(options[1].disabled).to.be.false;
         });
-
         it('can be enabled (incl. its options) even if it starts as disabled', async () => {
           const el = await fixture(html`
             <${tags.host} disabled>
@@ -1376,14 +1263,12 @@ export function runListboxMixinSuite({
           const options = el.formElements;
           expect(options[0].disabled).to.be.true;
           expect(options[1].disabled).to.be.true;
-
           el.disabled = false;
           await el.updateComplete;
           expect(options[0].disabled).to.be.true;
           expect(options[1].disabled).to.be.false;
         });
       });
-
       describe('Disabled Options', () => {
         it('does not skip disabled options but prevents checking them', async () => {
           const el = await fixture(html`
@@ -1393,15 +1278,12 @@ export function runListboxMixinSuite({
               <${tags.option} .choiceValue=${'Item 3'}>Item 3</${tags.option}>
             </${tags.host}>
           `);
-
           const { _listboxNode } = getListboxMembers(el);
 
           // Normalize activeIndex across multiple implementers of ListboxMixinSuite
           el.activeIndex = 0;
-
           mimicKeyPress(_listboxNode, 'ArrowDown');
           expect(el.activeIndex).to.equal(1);
-
           expect(el.checkedIndex).to.equal(0);
           mimicKeyPress(_listboxNode, 'Enter');
           // Checked index stays where it was
@@ -1415,22 +1297,18 @@ export function runListboxMixinSuite({
               <${tags.option} .choiceValue=${'Item 3'}>Item 3</${tags.option}>
             </${tags.host}>
           `);
-
           const { _listboxNode } = getListboxMembers(el);
 
           // Normalize activeIndex across multiple implementers of ListboxMixinSuite
           el.activeIndex = 0;
-
           mimicKeyPress(_listboxNode, 'ArrowDown');
           expect(el.activeIndex).to.equal(1);
           expect(el.checkedIndex).to.equal(-1);
-
           mimicKeyPress(_listboxNode, 'ArrowDown');
           expect(el.activeIndex).to.equal(2);
           expect(el.checkedIndex).to.equal(2);
         });
       });
-
       describe('Programmatic interaction', () => {
         it('can set active state', async () => {
           const el = await fixture(html`
@@ -1440,12 +1318,10 @@ export function runListboxMixinSuite({
             </${tags.host}>
           `);
           const { _activeDescendantOwnerNode } = getListboxMembers(el);
-
           const opt = el.formElements[1];
           opt.active = true;
           expect(_activeDescendantOwnerNode.getAttribute('aria-activedescendant')).to.equal('myId');
         });
-
         it('can set checked state', async () => {
           const el = await fixture(html`
             <${tags.host}>
@@ -1457,7 +1333,6 @@ export function runListboxMixinSuite({
           option.checked = true;
           expect(el.modelValue).to.equal(20);
         });
-
         it('does not allow to set checkedIndex or activeIndex to be out of bound', async () => {
           const el = await fixture(html`
             <${tags.host} has-no-default-selected autocomplete="list">
@@ -1473,7 +1348,6 @@ export function runListboxMixinSuite({
           expect(el.checkedIndex).to.equal(-1);
           expect(el.activeIndex).to.equal(-1);
         });
-
         it('unsets checked on other options when option becomes checked', async () => {
           const el = await fixture(html`
             <${tags.host}>
@@ -1489,7 +1363,6 @@ export function runListboxMixinSuite({
           expect(options[0].checked).to.be.false;
           expect(options[1].checked).to.be.true;
         });
-
         it('unsets active on other options when option becomes active', async () => {
           const el = await fixture(html`
             <${tags.host}>
@@ -1513,12 +1386,10 @@ export function runListboxMixinSuite({
               <${tags.option} .choiceValue=${20}>Item 2</${tags.option}>
             </${tags.host}>
           `);
-
           expect(el.dirty).to.be.false;
           el.modelValue = 20;
           expect(el.dirty).to.be.true;
         });
-
         it('is prefilled if there is a value on init', async () => {
           const el = await fixture(html`
             <${tags.host}>
@@ -1526,7 +1397,6 @@ export function runListboxMixinSuite({
             </${tags.host}>
           `);
           expect(el.prefilled).to.be.true;
-
           const elEmpty = await fixture(html`
             <${tags.host}>
               <${tags.option} .choiceValue=${null}>Please select a value</${tags.option}>
@@ -1546,11 +1416,9 @@ export function runListboxMixinSuite({
               <${tags.option} .choiceValue=${20}>Item 2</${tags.option}>
             </${tags.host}>
           `);
-
           expect(el.hasFeedbackFor).to.include('error');
           expect(el.validationStates).to.have.a.property('error');
           expect(el.validationStates.error).to.have.a.property('Required');
-
           el.modelValue = 20;
           expect(el.hasFeedbackFor).not.to.include('error');
           expect(el.validationStates).to.have.a.property('error');
@@ -1558,18 +1426,30 @@ export function runListboxMixinSuite({
         });
       });
     });
-
     describe('Complex Data', () => {
       it('works for complex array data', async () => {
         const objs = [
-          { type: 'mastercard', label: 'Master Card', amount: 12000, active: true },
-          { type: 'visacard', label: 'Visa Card', amount: 0, active: false },
+          {
+            type: 'mastercard',
+            label: 'Master Card',
+            amount: 12000,
+            active: true,
+          },
+          {
+            type: 'visacard',
+            label: 'Visa Card',
+            amount: 0,
+            active: false,
+          },
         ];
         const el = await fixture(html`
           <${tags.host} label="Favorite color" name="color">
             ${objs.map(
-              obj => html`
-                <${tags.option} .modelValue=${{ value: obj, checked: false }}
+              (obj) => html`
+                <${tags.option} .modelValue=${{
+                  value: obj,
+                  checked: false,
+                }}
                   >${obj.label}</${tags.option}
                 >
               `,
@@ -1583,7 +1463,6 @@ export function runListboxMixinSuite({
           amount: 12000,
           active: true,
         });
-
         el.setCheckedIndex(1);
         expect(el.modelValue).to.deep.equal({
           type: 'visacard',
@@ -1593,11 +1472,9 @@ export function runListboxMixinSuite({
         });
       });
     });
-
     describe('Instantiation methods', () => {
       it('can be instantiated via "document.createElement"', async () => {
         let properlyInstantiated = false;
-
         try {
           const el = document.createElement(hostTagString);
           const optionsEl = document.createElement(optionsTagString);
@@ -1607,12 +1484,10 @@ export function runListboxMixinSuite({
           el.appendChild(optionsEl);
           properlyInstantiated = true;
         } catch (e) {
-          throw Error(/** @type {Error} */ (e).message);
+          throw Error(/** @type {Error} */ e.message);
         }
-
         expect(properlyInstantiated).to.be.true;
       });
-
       it('can be instantiated without options', async () => {
         const el = await fixture(html`
           <${tags.host} name="foo">
@@ -1621,21 +1496,18 @@ export function runListboxMixinSuite({
           </${tags.host}>
         `);
         const { _listboxNode } = getListboxMembers(el);
-
         expect(_listboxNode).to.exist;
         expect(_listboxNode).to.be.instanceOf(LionOptions);
         expect(el.querySelector('[role=listbox]')).to.equal(_listboxNode);
-
         expect(el.formElements.length).to.equal(2);
         // When we use ScopedStylesController, lisboxNode can have style tag along with options
         const childrenOtherThanStyle = Array.from(_listboxNode.children).filter(
-          child => child.nodeName !== 'STYLE',
+          (child) => child.nodeName !== 'STYLE',
         );
         expect(childrenOtherThanStyle.length).to.equal(2);
         expect(childrenOtherThanStyle[0].tagName).to.equal(optionTagString.toUpperCase());
       });
     });
-
     describe('Href Options', () => {
       it('allows anchors to be clicked when a [href] attribute is present', async () => {
         const el = await fixture(html`
@@ -1644,19 +1516,15 @@ export function runListboxMixinSuite({
             <${tags.option} .href=${'https://duckduckgo.com'}>DuckDuck Go</${tags.option}>
           </${tags.host}>
         `);
-
         const { _listboxNode } = getListboxMembers(el);
-
         el.activeIndex = 1;
 
         // Allow options that behave like anchors (think of Google Search) to trigger the anchor behavior
         const activeOption = el.formElements[1];
         const clickSpy = sinon.spy(activeOption, 'click');
         mimicKeyPress(_listboxNode, 'Enter');
-
         expect(clickSpy).to.have.been.calledOnce;
       });
-
       it('does not allow anchors to be clicked when a [href] attribute is not present', async () => {
         const el = await fixture(html`
           <${tags.host}>
@@ -1664,20 +1532,14 @@ export function runListboxMixinSuite({
             <${tags.option} .href=${'https://duckduckgo.com'}>DuckDuck Go</${tags.option}>
           </${tags.host}>
         `);
-
         const { _listboxNode } = getListboxMembers(el);
-
         el.activeIndex = 0;
-
         const activeOption = el.formElements[0];
         const clickSpy = sinon.spy(activeOption, 'click');
-
         mimicKeyPress(_listboxNode, 'Enter');
-
         expect(clickSpy).to.not.have.been.called;
       });
     });
-
     describe('Dynamically adding options', () => {
       class MyEl extends LitElement {
         constructor() {
@@ -1685,40 +1547,31 @@ export function runListboxMixinSuite({
           /** @type {string[]} */
           this.options = ['option 1', 'option 2'];
         }
-
         clearOptions() {
           /** @type {string[]} */
           this.options = [];
           this.requestUpdate();
         }
-
         addOption() {
           this.options.push(`option ${this.options.length + 1}`);
           this.requestUpdate();
         }
-
         get withMap() {
-          return /** @type {LionListbox} */ (this.shadowRoot?.querySelector('#withMap'));
+          return /** @type {LionListbox} */ this.shadowRoot?.querySelector('#withMap');
         }
-
         get withRepeat() {
-          return /** @type {LionListbox} */ (this.shadowRoot?.querySelector('#withRepeat'));
+          return /** @type {LionListbox} */ this.shadowRoot?.querySelector('#withRepeat');
         }
-
         get registrationComplete() {
           return Promise.all([
             this.withMap.registrationComplete,
             this.withRepeat.registrationComplete,
           ]);
         }
-
         render() {
           return html`
             <${tags.host} id="withMap">
-              ${this.options.map(
-                option =>
-                  html` <${tags.option} .choiceValue="${option}">${option}</${tags.option}> `,
-              )}
+              ${this.options.map((option) => html` <${tags.option} .choiceValue="${option}">${option}</${tags.option}> `)}
             </${tags.host}>
             <${tags.host} id="withRepeat">
               ${repeat(
@@ -1734,24 +1587,20 @@ export function runListboxMixinSuite({
       }
       const tagName = defineCE(MyEl);
       const wrappingTag = unsafeStatic(tagName);
-
       it('works with array map and repeat directive', async () => {
         const choiceVals = (/** @type {LionListbox} */ elm) =>
-          elm.formElements.map(fel => fel.choiceValue);
+          elm.formElements.map((fel) => fel.choiceValue);
         const insideListboxNode = (/** @type {LionListbox} */ elm) =>
           // @ts-ignore [allow-protected] in test
-          elm.formElements.filter(fel => elm._listboxNode.contains(fel)).length ===
+          elm.formElements.filter((fel) => elm._listboxNode.contains(fel)).length ===
           elm.formElements.length;
-
-        const el = /** @type {MyEl} */ (await _fixture(html`<${wrappingTag}></${wrappingTag}>`));
-
+        const el = /** @type {MyEl} */ await _fixture(html`<${wrappingTag}></${wrappingTag}>`);
         expect(choiceVals(el.withMap)).to.eql(el.options);
         expect(el.withMap.formElements.length).to.equal(2);
         expect(insideListboxNode(el.withMap)).to.be.true;
         expect(choiceVals(el.withRepeat)).to.eql(el.options);
         expect(el.withRepeat.formElements.length).to.equal(2);
         expect(insideListboxNode(el.withRepeat)).to.be.true;
-
         el.addOption();
         await el.updateComplete;
         expect(choiceVals(el.withMap)).to.eql(el.options);
@@ -1760,7 +1609,6 @@ export function runListboxMixinSuite({
         expect(choiceVals(el.withRepeat)).to.eql(el.options);
         expect(el.withRepeat.formElements.length).to.equal(3);
         expect(insideListboxNode(el.withRepeat)).to.be.true;
-
         el.clearOptions();
         await el.updateComplete;
         expect(choiceVals(el.withMap)).to.eql(el.options);
@@ -1771,7 +1619,6 @@ export function runListboxMixinSuite({
         expect(insideListboxNode(el.withRepeat)).to.be.true;
       });
     });
-
     describe('Subclassers', () => {
       class MyEl extends LitElement {
         constructor() {
@@ -1779,38 +1626,30 @@ export function runListboxMixinSuite({
           /** @type {string[]} */
           this.options = ['option 1', 'option 2'];
         }
-
         clearOptions() {
           /** @type {string[]} */
           this.options = [];
           this.requestUpdate();
         }
-
         addOption() {
           this.options.push(`option ${this.options.length + 1}`);
           this.requestUpdate();
         }
-
         get listbox() {
-          return /** @type {LionListbox} */ (this.shadowRoot?.querySelector('#listbox'));
+          return /** @type {LionListbox} */ this.shadowRoot?.querySelector('#listbox');
         }
-
         render() {
           return html`
             <${tags.host} id="listbox">
-              ${this.options.map(
-                option =>
-                  html` <${tags.option} .choiceValue="${option}">${option}</${tags.option}> `,
-              )}
+              ${this.options.map((option) => html` <${tags.option} .choiceValue="${option}">${option}</${tags.option}> `)}
             </${tags.host}>
           `;
         }
       }
       const tagName = defineCE(MyEl);
       const wrappingTag = unsafeStatic(tagName);
-
       it('calls "_onListboxContentChanged" after externally changing options', async () => {
-        const el = /** @type {MyEl} */ (await _fixture(html`<${wrappingTag}></${wrappingTag}>`));
+        const el = /** @type {MyEl} */ await _fixture(html`<${wrappingTag}></${wrappingTag}>`);
         await el.listbox.registrationComplete;
         // @ts-ignore [allow-protected] in test
         const spy = sinon.spy(el.listbox, '_onListboxContentChanged');
@@ -1821,18 +1660,16 @@ export function runListboxMixinSuite({
         await el.updateComplete;
         expect(spy).to.have.been.calledTwice;
       });
-
       it('does not calls "_onListboxContentChanged" during connect and disconnected', async () => {
-        const renderEl = /** @param {import('lit/directives/ref.js').Ref<any>} refObj */ refObj =>
+        const renderEl = /** @param {import('lit/directives/ref.js').Ref<any>} refObj */ (refObj) =>
           html`<${wrappingTag} ${ref(refObj)}></${wrappingTag}>`;
         const { el, show, hide } = await getCachedFixture(renderEl);
-        const typedEl = /** @type {MyEl} */ (el);
+        const typedEl = /** @type {MyEl} */ el;
         await typedEl?.listbox.registrationComplete;
         // @ts-ignore [allow-protected] in test
         const spy = sinon.spy(typedEl.listbox, '_onListboxContentChanged');
         await hide();
         await show();
-
         expect(spy).not.to.have.been.called;
       });
     });

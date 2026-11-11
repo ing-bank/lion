@@ -1,7 +1,6 @@
 /* eslint-disable class-methods-use-this */
 
 import { dedupeMixin } from '@open-wc/dedupe-mixin';
-
 import { FormControlMixin } from './FormControlMixin.js';
 import { Unparseable } from './validate/Unparseable.js';
 import { ValidateMixin } from './validate/ValidateMixin.js';
@@ -59,594 +58,595 @@ import { ValidateMixin } from './validate/ValidateMixin.js';
  * @param {import('@open-wc/dedupe-mixin').Constructor<import('lit').LitElement>} superclass
  */
 // prettier-ignore
-const FormatMixinImplementation = /** @type {FormatMixin} */ (superclass =>
-  class FormatMixin extends ValidateMixin(FormControlMixin(superclass)) {
-    /** @type {any} */
-    static get properties() {
-      return {
-        formattedValue: { attribute: false },
-        serializedValue: { attribute: false },
-        formatOptions: { attribute: false },
-      };
-    }
-
-    /**
-     * During format/parse, we sometimes need to know how the current viewValue the user
-     * interacts with "came to be". Was it already formatted before for instance?
-     * If so, in case of an amount input, we might want to stick to the current interpretation of separators.
-     */
-    #viewValueState = {
-      didFormatterOutputSyncToView: false,
-      didFormatterRun: false,
+const FormatMixinImplementation = /** @type {FormatMixin} */superclass => class FormatMixin extends ValidateMixin(FormControlMixin(superclass)) {
+  /** @type {any} */
+  static get properties() {
+    return {
+      formattedValue: {
+        attribute: false
+      },
+      serializedValue: {
+        attribute: false
+      },
+      formatOptions: {
+        attribute: false
+      }
     };
+  }
 
-    /**
-     * @param {string} [name]
-     * @param {unknown} [oldValue]
-     * @param {import('lit').PropertyDeclaration} [options]
-     * @returns {void}
-     */
-    requestUpdate(name, oldValue, options) {
-      super.requestUpdate(name, oldValue, options);
+  /**
+   * During format/parse, we sometimes need to know how the current viewValue the user
+   * interacts with "came to be". Was it already formatted before for instance?
+   * If so, in case of an amount input, we might want to stick to the current interpretation of separators.
+   */
+  #viewValueState = {
+    didFormatterOutputSyncToView: false,
+    didFormatterRun: false
+  };
 
-      const didModelValueChange = () =>
-        options?.hasChanged
-          ? options.hasChanged(this.modelValue, oldValue)
-          : this.modelValue !== oldValue;
+  /**
+   * @param {string} [name]
+   * @param {unknown} [oldValue]
+   * @param {import('lit').PropertyDeclaration} [options]
+   * @returns {void}
+   */
+  requestUpdate(name, oldValue, options) {
+    super.requestUpdate(name, oldValue, options);
+    const didModelValueChange = () => options?.hasChanged ? options.hasChanged(this.modelValue, oldValue) : this.modelValue !== oldValue;
+    if (name === 'modelValue' && didModelValueChange()) {
+      this._onModelValueChanged({
+        modelValue: this.modelValue
+      }, {
+        modelValue: oldValue
+      });
+    }
+    if (name === 'serializedValue' && this.serializedValue !== oldValue) {
+      this._calculateValues({
+        source: 'serialized'
+      });
+    }
+    if (name === 'formattedValue' && this.formattedValue !== oldValue) {
+      this._calculateValues({
+        source: 'formatted'
+      });
+    }
+  }
 
-      if (name === 'modelValue' && didModelValueChange()) {
-        this._onModelValueChanged({ modelValue: this.modelValue }, { modelValue: oldValue });
-      }
-      if (name === 'serializedValue' && this.serializedValue !== oldValue) {
-        this._calculateValues({ source: 'serialized' });
-      }
-      if (name === 'formattedValue' && this.formattedValue !== oldValue) {
-        this._calculateValues({ source: 'formatted' });
+  /**
+   * The view value. Will be delegated to `._inputNode.value`
+   */
+  get value() {
+    return this._inputNode?.value || this.__value || '';
+  }
+
+  /** @param {string} value */
+  set value(value) {
+    // if not yet connected to dom can't change the value
+    if (this._inputNode) {
+      this._inputNode.value = value;
+      /** @type {string | undefined} */
+      this.__value = undefined;
+    } else {
+      this.__value = value;
+    }
+  }
+  get _isEditingTextField() {
+    // For backward compatibility. Ideally we check whether the input is focused,
+    // like we do in "hybrid" (picker + textbox) components like datepicker
+    return this._isHandlingUserInput;
+  }
+
+  /**
+   * Preprocessors could be considered 'live formatters'. Their result is shown to the user
+   * on keyup instead of after blurring the field. The biggest difference between preprocessors
+   * and formatters is their moment of execution: preprocessors are run before modelValue is
+   * computed (and work based on view value), whereas formatters are run after the parser (and
+   * are based on modelValue)
+   * Automatically formats code while typing. It depends on a preprocessor that smartly
+   * updates the viewValue and caret position for best UX.
+   * @example
+   * ```js
+   * preprocessor(viewValue) {
+   *   // only use digits
+   *   return viewValue.replace(/\D/g, '');
+   * }
+   * ```
+   * @param {string} v - the raw value from the <input> after keyUp/Down event
+   * @param {FormatOptions & { prevViewValue: string; currentCaretIndex: number }} opts - the raw value from the <input> after keyUp/Down event
+   * @returns {{ viewValue:string; caretIndex:number; }|string|undefined} preprocessedValue: the result of preprocessing for invalid input
+   */
+  preprocessor(v, opts) {
+    // eslint-disable-line no-unused-vars
+    return undefined;
+  }
+
+  /**
+   * Converts viewValue to modelValue
+   * For instance, a localized date to a Date Object
+   * @param {string} v - viewValue: the formatted value inside <input>
+   * @param {FormatOptions} opts
+   * @returns {*} modelValue
+   */
+  // eslint-disable-next-line no-unused-vars
+  parser(v, opts) {
+    return v;
+  }
+
+  /**
+   * Converts modelValue to formattedValue (formattedValue will be synced with
+   * `._inputNode.value`)
+   * For instance, a Date object to a localized date.
+   * @param {*} v - modelValue: can be an Object, Number, String depending on the
+   * input type(date, number, email etc)
+   * @param {FormatOptions} opts
+   * @returns {string} formattedValue
+   */
+  // eslint-disable-next-line no-unused-vars
+  formatter(v, opts) {
+    return v;
+  }
+
+  /**
+   * Converts `.modelValue` to `.serializedValue`
+   * For instance, a Date object to an iso formatted date string
+   * @param {any} v - modelValue: can be an Object, Number, String depending on the
+   * input type(date, number, email etc)
+   * @returns {string} serializedValue
+   */
+  serializer(v) {
+    return v !== undefined ? v : '';
+  }
+
+  /**
+   * Converts `.serializedValue` to `.modelValue`
+   * For instance, an iso formatted date string to a Date object
+   * @param {any} v - modelValue: can be an Object, Number, String depending on the
+   * input type(date, number, email etc)
+   * @returns {any} modelValue
+   */
+  deserializer(v) {
+    return v === undefined ? '' : v;
+  }
+
+  /**
+   * Responsible for storing all representations(modelValue, serializedValue, formattedValue
+   * and value) of the input value. Prevents infinite loops, so all value observers can be
+   * treated like they will only be called once, without indirectly calling other observers.
+   * (in fact, some are called twice, but the __preventRecursiveTrigger lock prevents the
+   * second call from having effect).
+   *
+   * @param {{source:'model'|'serialized'|'formatted'|null}} config - the type of value that triggered this method. It should not be
+   * set again, so that its observer won't be triggered. Can be:
+   * 'model'|'formatted'|'serialized'.
+   * @protected
+   */
+  _calculateValues({
+    source
+  } = {
+    source: null
+  }) {
+    // @ts-ignore [ts7-2565] TS7 checks definite assignment on this inferred field; private field: hoist to a class field with an initializer (the fix proven on LionAccordion)
+    if (this.__preventRecursiveTrigger) return; // prevent infinite loops
+
+    /** @type {boolean} */
+    this.__preventRecursiveTrigger = true;
+    if (source !== 'model') {
+      if (source === 'serialized') {
+        /** @type {any} */
+        this.modelValue = this.deserializer(this.serializedValue);
+      } else if (source === 'formatted') {
+        this.modelValue = this._callParser();
       }
     }
+    if (source !== 'formatted') {
+      this.formattedValue = this._callFormatter();
+    }
+    if (source !== 'serialized') {
+      this.serializedValue = this.serializer(this.modelValue);
+    }
+    this._reflectBackFormattedValueToUser();
+    this.__preventRecursiveTrigger = false;
+    this.__prevViewValue = this.value;
+  }
 
-    /**
-     * The view value. Will be delegated to `._inputNode.value`
-     */
-    get value() {
-      return this._inputNode?.value || this.__value || '';
+  /**
+   * @param {string|undefined} value
+   * @return {any}
+   * @private
+   */
+  _callParser(value = this.formattedValue) {
+    // A) check if we need to parse at all
+
+    // A.1) The end user had no intention to parse
+    if (value === '') {
+      // Ideally, modelValue should be undefined for empty strings.
+      // For backwards compatibility we return an empty string:
+      // - it can be expected by 3rd parties (for instance unit tests)
+      // TODO(@tlouisse): In a breaking refactor of the Validation System, this behavior can be corrected.
+      return '';
     }
 
-    /** @param {string} value */
-    set value(value) {
-      // if not yet connected to dom can't change the value
-      if (this._inputNode) {
-        this._inputNode.value = value;
-        /** @type {string | undefined} */
-        this.__value = undefined;
-      } else {
-        this.__value = value;
-      }
-    }
-
-    get _isEditingTextField() {
-      // For backward compatibility. Ideally we check whether the input is focused,
-      // like we do in "hybrid" (picker + textbox) components like datepicker
-      return this._isHandlingUserInput;
-    }
-
-    /**
-     * Preprocessors could be considered 'live formatters'. Their result is shown to the user
-     * on keyup instead of after blurring the field. The biggest difference between preprocessors
-     * and formatters is their moment of execution: preprocessors are run before modelValue is
-     * computed (and work based on view value), whereas formatters are run after the parser (and
-     * are based on modelValue)
-     * Automatically formats code while typing. It depends on a preprocessor that smartly
-     * updates the viewValue and caret position for best UX.
-     * @example
-     * ```js
-     * preprocessor(viewValue) {
-     *   // only use digits
-     *   return viewValue.replace(/\D/g, '');
-     * }
-     * ```
-     * @param {string} v - the raw value from the <input> after keyUp/Down event
-     * @param {FormatOptions & { prevViewValue: string; currentCaretIndex: number }} opts - the raw value from the <input> after keyUp/Down event
-     * @returns {{ viewValue:string; caretIndex:number; }|string|undefined} preprocessedValue: the result of preprocessing for invalid input
-     */
-    preprocessor(v, opts) { // eslint-disable-line no-unused-vars
+    // A.2) Handle edge cases. We might have no view value yet, for instance because
+    // _inputNode.value was not available yet
+    if (typeof value !== 'string') {
+      // This means there is nothing to find inside the view that can be of
+      // interest to the Application Developer or needed to store for future
+      // form state retrieval.
       return undefined;
     }
 
-    /**
-     * Converts viewValue to modelValue
-     * For instance, a localized date to a Date Object
-     * @param {string} v - viewValue: the formatted value inside <input>
-     * @param {FormatOptions} opts
-     * @returns {*} modelValue
-     */
-    // eslint-disable-next-line no-unused-vars
-    parser(v, opts) {
-      return v;
+    // B) parse the view value
+
+    // - if result:
+    // return the successfully parsed viewValue
+    // - if no result:
+    // Apparently, the parser was not able to produce a satisfactory output for the desired
+    // modelValue type, based on the current viewValue. Unparseable allows to restore all
+    // states (for instance from a lost user session), since it saves the current viewValue.
+    const result = this.parser(value, {
+      ...this.formatOptions,
+      mode: this.#getFormatOptionsMode(),
+      viewValueStates: this.#getFormatOptionsViewValueStates()
+    });
+    return result !== undefined ? result : new Unparseable(value);
+  }
+
+  /**
+   * @returns {string|undefined}
+   * @private
+   */
+  _callFormatter() {
+    this.#viewValueState.didFormatterRun = false;
+
+    // - Why check for this.hasError?
+    // We only want to format values that are considered valid. For best UX,
+    // we only 'reward' valid inputs.
+    // - Why check for _isEditingTextField?
+    // Downwards sync is prevented whenever we are in an `@user-input-changed` flow, [2].
+    // If we are in a 'imperatively set `.modelValue`' flow, [1], we want to reflect back
+    // the value, no matter what.
+    // This means, whenever we are in hasError and modelValue is set
+    // imperatively, we DO want to format a value (it is the only way to get meaningful
+    // input into `._inputNode` with modelValue as input)
+    if (this._isEditingTextField && this.hasFeedbackFor?.includes('error') && this._inputNode) {
+      return this.value;
     }
-
-    /**
-     * Converts modelValue to formattedValue (formattedValue will be synced with
-     * `._inputNode.value`)
-     * For instance, a Date object to a localized date.
-     * @param {*} v - modelValue: can be an Object, Number, String depending on the
-     * input type(date, number, email etc)
-     * @param {FormatOptions} opts
-     * @returns {string} formattedValue
-     */
-    // eslint-disable-next-line no-unused-vars
-    formatter(v, opts) {
-      return v;
+    if (this.modelValue instanceof Unparseable) {
+      // When the modelValue currently is unparseable, we need to sync back the supplied
+      // viewValue. In flow [2], this should not be needed.
+      // In flow [1] (we restore a previously stored modelValue) we should sync down, however.
+      return this.modelValue.viewValue;
     }
+    this.#viewValueState.didFormatterRun = true;
+    return this.formatter(this.modelValue, {
+      ...this.formatOptions,
+      mode: this.#getFormatOptionsMode(),
+      viewValueStates: this.#getFormatOptionsViewValueStates()
+    });
+  }
 
-    /**
-     * Converts `.modelValue` to `.serializedValue`
-     * For instance, a Date object to an iso formatted date string
-     * @param {any} v - modelValue: can be an Object, Number, String depending on the
-     * input type(date, number, email etc)
-     * @returns {string} serializedValue
-     */
-    serializer(v) {
-      return v !== undefined ? v : '';
+  /**
+   * Responds to modelValue changes in the synchronous cycle (most subclassers should listen to
+   * the asynchronous cycle ('modelValue' in the .updated lifecycle))
+   * @param {{ modelValue: unknown; }[]} args
+   * @protected
+   */
+  _onModelValueChanged(...args) {
+    this._calculateValues({
+      source: 'model'
+    });
+    this._dispatchModelValueChangedEvent(...args);
+  }
+
+  /**
+   * This is wrapped in a distinct method, so that parents can control when the changed event
+   * is fired. For objects, a deep comparison might be needed.
+   * @param {{ modelValue: unknown; }[]} args
+   * @protected
+   */
+  // eslint-disable-next-line no-unused-vars
+  _dispatchModelValueChangedEvent(...args) {
+    /** @event model-value-changed */
+    this.dispatchEvent(/** @privateEvent model-value-changed: FormControl redispatches it as public event */
+    new CustomEvent('model-value-changed', {
+      bubbles: true,
+      detail: (/** @type { ModelValueEventDetails } */
+      /** @type {unknown} */{
+        formPath: [this],
+        isTriggeredByUser: Boolean(this._isHandlingUserInput)
+      })
+    }));
+  }
+
+  /**
+   * Synchronization from `._inputNode.value` to `LionField` (flow [2])
+   * Downwards syncing should only happen for `LionField`.value changes from 'above'.
+   * This triggers _onModelValueChanged and connects user input
+   * to the parsing/formatting/serializing loop.
+   * @protected
+   */
+  _syncValueUpwards() {
+    if (!this.__isHandlingComposition) {
+      this.__handlePreprocessor();
     }
+    const prevFormatted = this.formattedValue;
+    this.modelValue = this._callParser(this.value);
 
-    /**
-     * Converts `.serializedValue` to `.modelValue`
-     * For instance, an iso formatted date string to a Date object
-     * @param {any} v - modelValue: can be an Object, Number, String depending on the
-     * input type(date, number, email etc)
-     * @returns {any} modelValue
-     */
-    deserializer(v) {
-      return v === undefined ? '' : v;
+    // Sometimes, the formattedValue didn't change, but the viewValue did...
+    // We need this check to support pasting values that need to be formatted right on paste
+    if (prevFormatted === this.formattedValue && this.__prevViewValue !== this.value) {
+      this._calculateValues();
     }
+  }
 
-    /**
-     * Responsible for storing all representations(modelValue, serializedValue, formattedValue
-     * and value) of the input value. Prevents infinite loops, so all value observers can be
-     * treated like they will only be called once, without indirectly calling other observers.
-     * (in fact, some are called twice, but the __preventRecursiveTrigger lock prevents the
-     * second call from having effect).
-     *
-     * @param {{source:'model'|'serialized'|'formatted'|null}} config - the type of value that triggered this method. It should not be
-     * set again, so that its observer won't be triggered. Can be:
-     * 'model'|'formatted'|'serialized'.
-     * @protected
-     */
-    _calculateValues({ source } = { source: null }) {
-      // @ts-ignore [ts7-2565] TS7 checks definite assignment on this inferred field; private field: hoist to a class field with an initializer (the fix proven on LionAccordion)
-      if (this.__preventRecursiveTrigger) return; // prevent infinite loops
-
-      /** @type {boolean} */
-      this.__preventRecursiveTrigger = true;
-      if (source !== 'model') {
-        if (source === 'serialized') {
-          /** @type {any} */
-          this.modelValue = this.deserializer(this.serializedValue);
-        } else if (source === 'formatted') {
-          this.modelValue = this._callParser();
-        }
-      }
-      if (source !== 'formatted') {
-        this.formattedValue = this._callFormatter();
-      }
-      if (source !== 'serialized') {
-        this.serializedValue = this.serializer(this.modelValue);
-      }
-      this._reflectBackFormattedValueToUser();
-      this.__preventRecursiveTrigger = false;
-      this.__prevViewValue = this.value;
+  /**
+   * Handle view value and caretIndex, depending on return type of .preprocessor.
+   * @private
+   */
+  __handlePreprocessor() {
+    let currentCaretIndex = this.value.length;
+    // Be gentle with Safari
+    if (this._inputNode && 'selectionStart' in this._inputNode && /** @type {HTMLInputElement} */this._inputNode?.type !== 'range') {
+      currentCaretIndex = /** @type {number} */this._inputNode.selectionStart;
     }
-
-    /**
-     * @param {string|undefined} value
-     * @return {any}
-     * @private
-     */
-    _callParser(value = this.formattedValue) {
-      // A) check if we need to parse at all
-
-      // A.1) The end user had no intention to parse
-      if (value === '') {
-        // Ideally, modelValue should be undefined for empty strings.
-        // For backwards compatibility we return an empty string:
-        // - it can be expected by 3rd parties (for instance unit tests)
-        // TODO(@tlouisse): In a breaking refactor of the Validation System, this behavior can be corrected.
-        return '';
-      }
-
-      // A.2) Handle edge cases. We might have no view value yet, for instance because
-      // _inputNode.value was not available yet
-      if (typeof value !== 'string') {
-        // This means there is nothing to find inside the view that can be of
-        // interest to the Application Developer or needed to store for future
-        // form state retrieval.
-        return undefined;
-      }
-
-      // B) parse the view value
-
-      // - if result:
-      // return the successfully parsed viewValue
-      // - if no result:
-      // Apparently, the parser was not able to produce a satisfactory output for the desired
-      // modelValue type, based on the current viewValue. Unparseable allows to restore all
-      // states (for instance from a lost user session), since it saves the current viewValue.
-      const result = this.parser(value, {
-        ...this.formatOptions,
-        mode: this.#getFormatOptionsMode(),
-        viewValueStates: this.#getFormatOptionsViewValueStates(),
-      });
-      return result !== undefined ? result : new Unparseable(value);
+    const preprocessedValue = this.preprocessor(this.value, {
+      ...this.formatOptions,
+      currentCaretIndex,
+      prevViewValue: this.__prevViewValue
+    });
+    if (preprocessedValue === undefined) {
+      // Make sure we do no set back original value, so we preserve
+      // caret index (== selectionStart/selectionEnd)
+      return;
     }
-
-    /**
-     * @returns {string|undefined}
-     * @private
-     */
-    _callFormatter() {
-      this.#viewValueState.didFormatterRun = false;
-
-      // - Why check for this.hasError?
-      // We only want to format values that are considered valid. For best UX,
-      // we only 'reward' valid inputs.
-      // - Why check for _isEditingTextField?
-      // Downwards sync is prevented whenever we are in an `@user-input-changed` flow, [2].
-      // If we are in a 'imperatively set `.modelValue`' flow, [1], we want to reflect back
-      // the value, no matter what.
-      // This means, whenever we are in hasError and modelValue is set
-      // imperatively, we DO want to format a value (it is the only way to get meaningful
-      // input into `._inputNode` with modelValue as input)
-      if (this._isEditingTextField && this.hasFeedbackFor?.includes('error') && this._inputNode) {
-        return this.value;
-      }
-
-      if (this.modelValue instanceof Unparseable) {
-        // When the modelValue currently is unparseable, we need to sync back the supplied
-        // viewValue. In flow [2], this should not be needed.
-        // In flow [1] (we restore a previously stored modelValue) we should sync down, however.
-        return this.modelValue.viewValue;
-      }
-
-      this.#viewValueState.didFormatterRun = true;
-
-      return this.formatter(this.modelValue, {
-        ...this.formatOptions,
-        mode: this.#getFormatOptionsMode(),
-        viewValueStates: this.#getFormatOptionsViewValueStates(),
-      });
-    }
-
-    /**
-     * Responds to modelValue changes in the synchronous cycle (most subclassers should listen to
-     * the asynchronous cycle ('modelValue' in the .updated lifecycle))
-     * @param {{ modelValue: unknown; }[]} args
-     * @protected
-     */
-    _onModelValueChanged(...args) {
-      this._calculateValues({ source: 'model' });
-      this._dispatchModelValueChangedEvent(...args);
-    }
-
-    /**
-     * This is wrapped in a distinct method, so that parents can control when the changed event
-     * is fired. For objects, a deep comparison might be needed.
-     * @param {{ modelValue: unknown; }[]} args
-     * @protected
-     */
-    // eslint-disable-next-line no-unused-vars
-    _dispatchModelValueChangedEvent(...args) {
-      /** @event model-value-changed */
-      this.dispatchEvent(
-        /** @privateEvent model-value-changed: FormControl redispatches it as public event */
-        new CustomEvent('model-value-changed', {
-          bubbles: true,
-          detail: /** @type { ModelValueEventDetails } */ (
-            /** @type {unknown} */ ({
-              formPath: [this],
-              isTriggeredByUser: Boolean(this._isHandlingUserInput),
-            })
-          ),
-        }),
-      );
-    }
-
-    /**
-     * Synchronization from `._inputNode.value` to `LionField` (flow [2])
-     * Downwards syncing should only happen for `LionField`.value changes from 'above'.
-     * This triggers _onModelValueChanged and connects user input
-     * to the parsing/formatting/serializing loop.
-     * @protected
-     */
-    _syncValueUpwards() {
-      if (!this.__isHandlingComposition) {
-        this.__handlePreprocessor();
-      }
-      const prevFormatted = this.formattedValue;
-      this.modelValue = this._callParser(this.value);
-
-      // Sometimes, the formattedValue didn't change, but the viewValue did...
-      // We need this check to support pasting values that need to be formatted right on paste
-      if (prevFormatted === this.formattedValue && this.__prevViewValue !== this.value) {
-        this._calculateValues();
+    if (typeof preprocessedValue === 'string') {
+      this.value = preprocessedValue;
+    } else if (typeof preprocessedValue === 'object') {
+      const {
+        viewValue,
+        caretIndex
+      } = preprocessedValue;
+      this.value = viewValue;
+      if (caretIndex && this._inputNode && 'selectionStart' in this._inputNode) {
+        this._inputNode.selectionStart = caretIndex;
+        this._inputNode.selectionEnd = caretIndex;
       }
     }
+  }
 
-    /**
-     * Handle view value and caretIndex, depending on return type of .preprocessor.
-     * @private
-     */
-    __handlePreprocessor() {
-      let currentCaretIndex = this.value.length;
-      // Be gentle with Safari
-      if (
-        this._inputNode &&
-        'selectionStart' in this._inputNode &&
-        /** @type {HTMLInputElement} */ (this._inputNode)?.type !== 'range'
-      ) {
-        currentCaretIndex = /** @type {number} */ (this._inputNode.selectionStart);
-      }
-      const preprocessedValue = this.preprocessor(this.value, {
-        ...this.formatOptions,
-        currentCaretIndex,
-        prevViewValue: this.__prevViewValue,
-      });
-
-      if (preprocessedValue === undefined) {
-        // Make sure we do no set back original value, so we preserve
-        // caret index (== selectionStart/selectionEnd)
-        return;
-      }
-      if (typeof preprocessedValue === 'string') {
-        this.value = preprocessedValue;
-      } else if (typeof preprocessedValue === 'object') {
-        const { viewValue, caretIndex } = preprocessedValue;
-        this.value = viewValue;
-        if (caretIndex && this._inputNode && 'selectionStart' in this._inputNode) {
-          this._inputNode.selectionStart = caretIndex;
-          this._inputNode.selectionEnd = caretIndex;
-        }
-      }
+  /**
+   * Synchronization from `LionField.value` to `._inputNode.value`
+   * - flow [1] will always be reflected back
+   * - flow [2] will not be reflected back when this flow was triggered via
+   *   `@user-input-changed` (this will happen later, when `formatOn` condition is met)
+   * @protected
+   */
+  _reflectBackFormattedValueToUser() {
+    if (this._reflectBackOn()) {
+      // Text 'undefined' should not end up in <input>
+      this.value = typeof this.formattedValue !== 'undefined' ? this.formattedValue : '';
+      this.#viewValueState.didFormatterOutputSyncToView = Boolean(this.formattedValue) && this.#viewValueState.didFormatterRun;
     }
+  }
 
-    /**
-     * Synchronization from `LionField.value` to `._inputNode.value`
-     * - flow [1] will always be reflected back
-     * - flow [2] will not be reflected back when this flow was triggered via
-     *   `@user-input-changed` (this will happen later, when `formatOn` condition is met)
-     * @protected
-     */
-    _reflectBackFormattedValueToUser() {
-      if (this._reflectBackOn()) {
-        // Text 'undefined' should not end up in <input>
-        this.value = typeof this.formattedValue !== 'undefined' ? this.formattedValue : '';
-        this.#viewValueState.didFormatterOutputSyncToView =
-          Boolean(this.formattedValue) && this.#viewValueState.didFormatterRun;
-      }
-    }
+  /**
+   * Every time .formattedValue is attempted to sync to the view value (on change/blur and on
+   * modelValue change), this condition is checked. When enhancing it, it's recommended to
+   * call via `return this._myExtraCondition && super._reflectBackOn()`
+   * @overridable
+   * @return {boolean}
+   * @protected
+   */
+  _reflectBackOn() {
+    return !this._isHandlingUserInput;
+  }
 
-    /**
-     * Every time .formattedValue is attempted to sync to the view value (on change/blur and on
-     * modelValue change), this condition is checked. When enhancing it, it's recommended to
-     * call via `return this._myExtraCondition && super._reflectBackOn()`
-     * @overridable
-     * @return {boolean}
-     * @protected
-     */
-    _reflectBackOn() {
-      return !this._isHandlingUserInput;
-    }
+  /**
+   * This can be called whenever the view value should be updated. Dependent on component type
+   * ("input" for <input> or "change" for <select>(mainly for IE)) a different event should be
+   * used  as source for the "user-input-changed" event (which can be seen as an abstraction
+   * layer on top of other events (input, change, whatever))
+   * @protected
+   */
+  _proxyInputEvent() {
+    // TODO: [v1] remove composed (and bubbles as well if possible)
+    /** @protectedEvent user-input-changed meant for usage by Subclassers only */
+    this.dispatchEvent(new Event('user-input-changed', {
+      bubbles: true
+    }));
+  }
 
-    /**
-     * This can be called whenever the view value should be updated. Dependent on component type
-     * ("input" for <input> or "change" for <select>(mainly for IE)) a different event should be
-     * used  as source for the "user-input-changed" event (which can be seen as an abstraction
-     * layer on top of other events (input, change, whatever))
-     * @protected
-     */
-    _proxyInputEvent() {
-      // TODO: [v1] remove composed (and bubbles as well if possible)
-      /** @protectedEvent user-input-changed meant for usage by Subclassers only */
-      this.dispatchEvent(new Event('user-input-changed', { bubbles: true }));
-    }
+  /** @protected */
+  _onUserInputChanged() {
+    // Upwards syncing. Most properties are delegated right away, value is synced to
+    // `LionField`, to be able to act on (imperatively set) value changes
+    this._isHandlingUserInput = true;
+    this._syncValueUpwards();
+    this._isHandlingUserInput = false;
+  }
 
-    /** @protected */
-    _onUserInputChanged() {
-      // Upwards syncing. Most properties are delegated right away, value is synced to
-      // `LionField`, to be able to act on (imperatively set) value changes
-      this._isHandlingUserInput = true;
+  /**
+   * @param {Event} event
+   */
+  __onCompositionEvent({
+    type
+  }) {
+    if (type === 'compositionstart') {
+      this.__isHandlingComposition = true;
+    } else if (type === 'compositionend') {
+      this.__isHandlingComposition = false;
+      // in all other cases this would be triggered via user-input-changed
       this._syncValueUpwards();
-      this._isHandlingUserInput = false;
     }
+  }
+  constructor() {
+    super();
+
+    // TODO: [v1] delete; use 'change' event directly within this file
+    /**
+     * Event that will trigger formatting (more precise, visual update of the view, so the
+     * user sees the formatted value)
+     * Default: 'change'
+     * @deprecated use _reflectBackOn()
+     * @protected
+     */
+    this.formatOn = 'change';
 
     /**
-     * @param {Event} event
+     * Configuration object that will be available inside the formatter function
      */
-    __onCompositionEvent({ type }) {
-      if (type === 'compositionstart') {
-        this.__isHandlingComposition = true;
-      } else if (type === 'compositionend') {
-        this.__isHandlingComposition = false;
-        // in all other cases this would be triggered via user-input-changed
-        this._syncValueUpwards();
-      }
-    }
+    this.formatOptions = /** @type {FormatOptions} */{
+      mode: 'auto'
+    };
 
-    constructor() {
-      super();
+    /**
+     * The view value is the result of the formatter function (when available).
+     * The result will be stored in the native _inputNode (usually an input[type=text]).
+     *
+     * Examples:
+     * - For a date input, this would be '20/01/1999' (dependent on locale).
+     * - For a number input, this could be '1,234.56' (a String representation of modelValue
+     * 1234.56)
+     * @type {string|undefined}
+     * @readOnly
+     */
+    this.formattedValue = undefined;
 
-      // TODO: [v1] delete; use 'change' event directly within this file
-      /**
-       * Event that will trigger formatting (more precise, visual update of the view, so the
-       * user sees the formatted value)
-       * Default: 'change'
-       * @deprecated use _reflectBackOn()
-       * @protected
-       */
-      this.formatOn = 'change';
+    /**
+     * The serialized version of the model value.
+     * This value exists for maximal compatibility with the platform API.
+     * The serialized value can be an interface in context where data binding is not
+     * supported and a serialized string needs to be set.
+     *
+     * Examples:
+     * - For a date input, this would be the iso format of a date, e.g. '1999-01-20'.
+     * - For a number input this would be the String representation of a float ('1234.56'
+     *   instead of 1234.56)
+     *
+     * When no parser is available, the value is usually the same as the formattedValue
+     * (being _inputNode.value)
+     * @type {string|undefined}
+     */
+    this.serializedValue = undefined;
 
-      /**
-       * Configuration object that will be available inside the formatter function
-       */
-      this.formatOptions = /** @type {FormatOptions} */ ({ mode: 'auto' });
+    /**
+     * Whether the user is pasting content. Allows Subclassers to do this in their subclass:
+     * @example
+     * ```js
+     * _reflectBackOn() {
+     *   return super._reflectBackOn() || this._isPasting;
+     * }
+     * ```
+     * @protected
+     * @type {boolean}
+     */
+    this._isPasting = false;
 
-      /**
-       * The view value is the result of the formatter function (when available).
-       * The result will be stored in the native _inputNode (usually an input[type=text]).
-       *
-       * Examples:
-       * - For a date input, this would be '20/01/1999' (dependent on locale).
-       * - For a number input, this could be '1,234.56' (a String representation of modelValue
-       * 1234.56)
-       * @type {string|undefined}
-       * @readOnly
-       */
-      this.formattedValue = undefined;
+    /**
+     * Flag that will be set when user interaction takes place (for instance after an 'input'
+     * event). Will be added as meta info to the `model-value-changed` event. Depending on
+     * whether a user is interacting, formatting logic will be handled differently.
+     * @protected
+     * @type {boolean}
+     */
+    this._isHandlingUserInput = false;
+    /**
+     * @private
+     * @type {string}
+     */
+    this.__prevViewValue = '';
+    this.__onCompositionEvent = this.__onCompositionEvent.bind(this);
+    // This computes formattedValue
+    this.addEventListener('user-input-changed', this._onUserInputChanged);
+    // This sets the formatted viewValue after paste
+    this.addEventListener('paste', this.__onPaste);
 
-      /**
-       * The serialized version of the model value.
-       * This value exists for maximal compatibility with the platform API.
-       * The serialized value can be an interface in context where data binding is not
-       * supported and a serialized string needs to be set.
-       *
-       * Examples:
-       * - For a date input, this would be the iso format of a date, e.g. '1999-01-20'.
-       * - For a number input this would be the String representation of a float ('1234.56'
-       *   instead of 1234.56)
-       *
-       * When no parser is available, the value is usually the same as the formattedValue
-       * (being _inputNode.value)
-       * @type {string|undefined}
-       */
-      this.serializedValue = undefined;
-
-      /**
-       * Whether the user is pasting content. Allows Subclassers to do this in their subclass:
-       * @example
-       * ```js
-       * _reflectBackOn() {
-       *   return super._reflectBackOn() || this._isPasting;
-       * }
-       * ```
-       * @protected
-       * @type {boolean}
-       */
-      this._isPasting = false;
-
-      /**
-       * Flag that will be set when user interaction takes place (for instance after an 'input'
-       * event). Will be added as meta info to the `model-value-changed` event. Depending on
-       * whether a user is interacting, formatting logic will be handled differently.
-       * @protected
-       * @type {boolean}
-       */
-      this._isHandlingUserInput = false;
-      /**
-       * @private
-       * @type {string}
-       */
-      this.__prevViewValue = '';
-      this.__onCompositionEvent = this.__onCompositionEvent.bind(this);
-      // This computes formattedValue
-      this.addEventListener('user-input-changed', this._onUserInputChanged);
-      // This sets the formatted viewValue after paste
-      this.addEventListener('paste', this.__onPaste);
-
-      /**
-       * @protected
-       */
-      this._reflectBackFormattedValueToUser = this._reflectBackFormattedValueToUser.bind(this);
-
-      /**
-       * @private
-       */
-      this._reflectBackFormattedValueDebounced = () => {
-        // Make sure this is fired after the change event of _inputNode, so that formattedValue
-        // is guaranteed to be calculated
-        setTimeout(this._reflectBackFormattedValueToUser);
-      };
-    }
+    /**
+     * @protected
+     */
+    this._reflectBackFormattedValueToUser = this._reflectBackFormattedValueToUser.bind(this);
 
     /**
      * @private
      */
-    __onPaste() {
-      this._isPasting = true;
-      setTimeout(() => {
-        this._isPasting = false;
-      });
+    this._reflectBackFormattedValueDebounced = () => {
+      // Make sure this is fired after the change event of _inputNode, so that formattedValue
+      // is guaranteed to be calculated
+      setTimeout(this._reflectBackFormattedValueToUser);
+    };
+  }
+
+  /**
+   * @private
+   */
+  __onPaste() {
+    this._isPasting = true;
+    setTimeout(() => {
+      this._isPasting = false;
+    });
+  }
+  connectedCallback() {
+    super.connectedCallback();
+
+    // Connect the value found in <input> to the formatting/parsing/serializing loop as a
+    // fallback mechanism. Assume the user uses the value property of the
+    // `LionField`(recommended api) as the api (this is a downwards sync).
+    // However, when no value is specified on `LionField`, have support for sync of the real
+    // input to the `LionField` (upwards sync).
+    if (typeof this.modelValue === 'undefined') {
+      this._syncValueUpwards();
     }
-
-    connectedCallback() {
-      super.connectedCallback();
-
-      // Connect the value found in <input> to the formatting/parsing/serializing loop as a
-      // fallback mechanism. Assume the user uses the value property of the
-      // `LionField`(recommended api) as the api (this is a downwards sync).
-      // However, when no value is specified on `LionField`, have support for sync of the real
-      // input to the `LionField` (upwards sync).
-      if (typeof this.modelValue === 'undefined') {
-        this._syncValueUpwards();
-      }
-      /** @type {string} */
-      this.__prevViewValue = this.value;
-
-      this._reflectBackFormattedValueToUser();
-
-      if (this._inputNode) {
-        this._inputNode.addEventListener(this.formatOn, this._reflectBackFormattedValueDebounced);
-        this._inputNode.addEventListener('input', this._proxyInputEvent);
-        this._inputNode.addEventListener('compositionstart', this.__onCompositionEvent);
-        this._inputNode.addEventListener('compositionend', this.__onCompositionEvent);
-      }
+    /** @type {string} */
+    this.__prevViewValue = this.value;
+    this._reflectBackFormattedValueToUser();
+    if (this._inputNode) {
+      this._inputNode.addEventListener(this.formatOn, this._reflectBackFormattedValueDebounced);
+      this._inputNode.addEventListener('input', this._proxyInputEvent);
+      this._inputNode.addEventListener('compositionstart', this.__onCompositionEvent);
+      this._inputNode.addEventListener('compositionend', this.__onCompositionEvent);
     }
-
-    disconnectedCallback() {
-      super.disconnectedCallback();
-      if (this._inputNode) {
-        this._inputNode.removeEventListener('input', this._proxyInputEvent);
-        this._inputNode.removeEventListener(
-          this.formatOn,
-          /** @type {EventListenerOrEventListenerObject} */ (
-            this._reflectBackFormattedValueDebounced
-          ),
-        );
-        this._inputNode.removeEventListener('compositionstart', this.__onCompositionEvent);
-        this._inputNode.removeEventListener('compositionend', this.__onCompositionEvent);
-      }
+  }
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    if (this._inputNode) {
+      this._inputNode.removeEventListener('input', this._proxyInputEvent);
+      this._inputNode.removeEventListener(this.formatOn, /** @type {EventListenerOrEventListenerObject} */
+      this._reflectBackFormattedValueDebounced);
+      this._inputNode.removeEventListener('compositionstart', this.__onCompositionEvent);
+      this._inputNode.removeEventListener('compositionend', this.__onCompositionEvent);
     }
+  }
 
-    /**
-     * This method will be called right before a parser or formatter gets called and computes
-     * the formatOptions.mode. In short, it gives meta info about how the user interacted with
-     * the form control, as these user interactions can influence the formatting/parsing behavior.
-     *
-     * It's important that the behavior of these can be different during a paste or user edit,
-     * but not during programmatic setting of values (like setting modelValue).
-     * @returns {'auto'|'pasted'|'user-edited'}
-     */
-    #getFormatOptionsMode() {
-      if (this._isPasting) {
-        return 'pasted';
-      }
-      const isUserEditing = this._isHandlingUserInput && this.__prevViewValue;
-      if (isUserEditing) {
-        return 'user-edited';
-      }
-      return 'auto';
+  /**
+   * This method will be called right before a parser or formatter gets called and computes
+   * the formatOptions.mode. In short, it gives meta info about how the user interacted with
+   * the form control, as these user interactions can influence the formatting/parsing behavior.
+   *
+   * It's important that the behavior of these can be different during a paste or user edit,
+   * but not during programmatic setting of values (like setting modelValue).
+   * @returns {'auto'|'pasted'|'user-edited'}
+   */
+  #getFormatOptionsMode() {
+    if (this._isPasting) {
+      return 'pasted';
     }
-
-    /**
-     * @returns {FormatOptions['viewValueStates']}
-     */
-    #getFormatOptionsViewValueStates() {
-      /** @type {FormatOptions['viewValueStates']}} */
-      const states = [];
-      if (this.#viewValueState.didFormatterOutputSyncToView) {
-        states.push('formatted');
-      }
-      return states;
+    const isUserEditing = this._isHandlingUserInput && this.__prevViewValue;
+    if (isUserEditing) {
+      return 'user-edited';
     }
-  });
+    return 'auto';
+  }
 
+  /**
+   * @returns {FormatOptions['viewValueStates']}
+   */
+  #getFormatOptionsViewValueStates() {
+    /** @type {FormatOptions['viewValueStates']}} */
+    const states = [];
+    if (this.#viewValueState.didFormatterOutputSyncToView) {
+      states.push('formatted');
+    }
+    return states;
+  }
+};
 export const FormatMixin = dedupeMixin(FormatMixinImplementation);

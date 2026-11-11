@@ -11,7 +11,6 @@ describe('getLocalizeManager', () => {
     // @ts-ignore
     singletonManager._map.clear();
   });
-
   it('gets a default instance when nothing registered on singletonManager with "@lion/ui::localize::0.x"', () => {
     expect(singletonManager.get('@lion/ui::localize::0.x')).to.be.undefined;
     const /** @type {LocalizeManagerForTesting} */ localizeManager = getLocalizeManager();
@@ -19,7 +18,6 @@ describe('getLocalizeManager', () => {
       singletonManager.get('@lion/ui::localize::0.x'),
     );
   });
-
   it('gets the same instance when called multiple times', () => {
     const /** @type {LocalizeManagerForTesting} */ localizeManager = getLocalizeManager();
     const /** @type {LocalizeManagerForTesting} */ localizeManagerSecondCall = getLocalizeManager();
@@ -28,7 +26,6 @@ describe('getLocalizeManager', () => {
       localizeManagerSecondCall.__instance_for_testing,
     );
   });
-
   it('gets the instance that was registered on singletonManager with "@lion/ui::localize::0.x"', () => {
     // Set your own for custom behavior or for deduping purposes
     class MyLocalizeManager extends LocalizeManager {}

@@ -289,9 +289,9 @@ const countryToCurrencyList = {
  * Map containing all countries and its corresponding currency, following the i18n standard.
  * @type {import("../types/index.js").RegionToCurrencyMap}
  */
-const countryToCurrencyMap = /** @type {import("../types/index.js").RegionToCurrencyMap} */ (
-  new Map(Object.entries(countryToCurrencyList))
-);
+const countryToCurrencyMap =
+  /** @type {import("../types/index.js").RegionToCurrencyMap} */
+  new Map(Object.entries(countryToCurrencyList));
 
 /**
  * Set with all possible currencies derived from the i18n standard.
@@ -309,14 +309,15 @@ const getCurrencySymbol = (currency, locale) => {
   if (!locale || !currency) {
     return '';
   }
-
   return (
-    new Intl.NumberFormat(locale, { style: 'currency', currency })
+    new Intl.NumberFormat(locale, {
+      style: 'currency',
+      currency,
+    })
       .formatToParts(1)
-      .find(x => x.type === 'currency')?.value || ''
+      .find((x) => x.type === 'currency')?.value || ''
   );
 };
-
 export const currencyUtil = {
   countryToCurrencyMap,
   allCurrencies,

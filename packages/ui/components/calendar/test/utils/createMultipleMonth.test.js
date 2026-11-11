@@ -18,7 +18,6 @@ function compareMultipleMonth(obj) {
   });
   return obj;
 }
-
 describe('createMultipleMonth', () => {
   it('creates 1 month by default', () => {
     expect(compareMultipleMonth(createMultipleMonth(new Date('2018/12/01')))).to.deep.equal(
@@ -27,10 +26,13 @@ describe('createMultipleMonth', () => {
       }),
     );
   });
-
   it('can create extra months in the past', () => {
     expect(
-      compareMultipleMonth(createMultipleMonth(new Date('2018/12/01'), { pastMonths: 2 })),
+      compareMultipleMonth(
+        createMultipleMonth(new Date('2018/12/01'), {
+          pastMonths: 2,
+        }),
+      ),
     ).to.deep.equal(
       compareMultipleMonth({
         months: [
@@ -41,10 +43,13 @@ describe('createMultipleMonth', () => {
       }),
     );
   });
-
   it('can create extra months in the future', () => {
     expect(
-      compareMultipleMonth(createMultipleMonth(new Date('2018/12/01'), { futureMonths: 2 })),
+      compareMultipleMonth(
+        createMultipleMonth(new Date('2018/12/01'), {
+          futureMonths: 2,
+        }),
+      ),
     ).to.deep.equal(
       compareMultipleMonth({
         months: [
@@ -55,11 +60,13 @@ describe('createMultipleMonth', () => {
       }),
     );
   });
-
   it('can create extra months in the past and future', () => {
     expect(
       compareMultipleMonth(
-        createMultipleMonth(new Date('2018/12/01'), { pastMonths: 1, futureMonths: 1 }),
+        createMultipleMonth(new Date('2018/12/01'), {
+          pastMonths: 1,
+          futureMonths: 1,
+        }),
       ),
     ).to.deep.equal(
       compareMultipleMonth({

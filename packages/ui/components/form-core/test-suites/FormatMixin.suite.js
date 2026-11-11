@@ -5,7 +5,6 @@ import { aTimeout, defineCE, expect, fixture, html, unsafeStatic } from '@open-w
 import { LitElement } from 'lit';
 import sinon from 'sinon';
 import { resolveSuiteTag } from '../../core/test-helpers/resolveSuiteTag.js';
-
 const isLionInputStepper = (/** @type {FormatClass} */ el) => 'valueTextMapping' in el;
 
 /**
@@ -15,19 +14,16 @@ const isLionInputStepper = (/** @type {FormatClass} */ el) => 'valueTextMapping'
 
 class FormatClass extends FormatMixin(LitElement) {
   get _inputNode() {
-    return /** @type {HTMLInputElement} */ (super._inputNode); // casts type
+    return /** @type {HTMLInputElement} */ super._inputNode; // casts type
   }
-
   render() {
     return html`<slot name="input"></slot>`;
   }
-
   set value(newValue) {
     if (this._inputNode) {
       this._inputNode.value = newValue;
     }
   }
-
   get value() {
     if (this._inputNode) {
       return this._inputNode.value;
@@ -72,7 +68,13 @@ function createDefaultValueToggler(modelValueType) {
       if (viewValue) {
         return !toggleValue ? '{"value": 1}' : '{"value": 2}';
       }
-      return !toggleValue ? { value: 1 } : { value: 2 };
+      return !toggleValue
+        ? {
+            value: 1,
+          }
+        : {
+            value: 2,
+          };
     };
   }
   if (modelValueType === Boolean) {
@@ -178,7 +180,6 @@ export function runFormatMixinSuite({
         'Provide the model value type for this component (e.g., String, Number, Date, Object, Boolean, Array, "iban", "email").',
     );
   }
-
   const valueToggler = customValueToggler || createDefaultValueToggler(modelValueType);
   const getExpectedInitialModelValue =
     customGetExpectedInitialModelValue || createDefaultGetExpectedInitialModelValue(modelValueType);
@@ -256,43 +257,38 @@ export function runFormatMixinSuite({
     }
     expect(actual).to.equal(expected, message);
   }
-
   describe('FormatMixin', async () => {
     /** @type {{_$litStatic$: any}} */
     let tag;
     /** @type {FormatClass} */
     let fooFormat;
-
     before(async () => {
       tag = unsafeStatic(resolveSuiteTag(classes?.host, legacyTagString, FormatClass));
-
       fooFormat = await fixture(html`
         <${tag}
-          .formatter="${/** @param {string} value */ value => `foo: ${value}`}"
+          .formatter="${/** @param {string} value */ (value) => `foo: ${value}`}"
           .parser="${parser}"
-          .serializer="${/** @param {string} value */ value => `[foo] ${value}`}"
-          .deserializer="${/** @param {string} value */ value => value.replace('[foo] ', '')}"
+          .serializer="${/** @param {string} value */ (value) => `[foo] ${value}`}"
+          .deserializer="${/** @param {string} value */ (value) => value.replace('[foo] ', '')}"
         >
           <input slot="input">
         </${tag}>
       `);
     });
-
     it('has modelValue, formattedValue and serializedValue which are computed synchronously', async () => {
-      const nonFormat = /** @type {FormatClass} */ (
+      const nonFormat =
+        /** @type {FormatClass} */
         await fixture(html`
           <${tag}
-            .formatter="${/** @param {any} v */ v => v}"
-            .parser="${/** @param {string} v */ v => v}"
-            .serializer="${/** @param {any} v */ v => v}"
-            .deserializer="${/** @param {string} v */ v => v}"
+            .formatter="${/** @param {any} v */ (v) => v}"
+            .parser="${/** @param {string} v */ (v) => v}"
+            .serializer="${/** @param {any} v */ (v) => v}"
+            .deserializer="${/** @param {string} v */ (v) => v}"
           >
             <input slot="input">
           </${tag}>
-        `)
-      );
+        `);
       await nonFormat.updateComplete;
-
       expectValue(
         nonFormat.modelValue,
         generateExpectedInitialModelValue(nonFormat),
@@ -308,7 +304,6 @@ export function runFormatMixinSuite({
         generateExpectedInitialSerializedValue(nonFormat),
         'serializedValue initially',
       );
-
       const generatedValue = generateValueBasedOnType();
       nonFormat.modelValue = generatedValue;
       expectValue(nonFormat.modelValue, generatedValue, 'modelValue as provided');
@@ -322,20 +317,19 @@ export function runFormatMixinSuite({
      */
     describe('ModelValue', () => {
       it('fires `model-value-changed` for every programmatic modelValue change', async () => {
-        const el = /** @type {FormatClass} */ (
-          await fixture(html`<${tag}><input slot="input"></${tag}>`)
-        );
+        const el =
+          /** @type {FormatClass} */
+          await fixture(html`<${tag}><input slot="input"></${tag}>`);
         let counter = 0;
         let isTriggeredByUser = false;
-
-        el.addEventListener('model-value-changed', event => {
+        el.addEventListener('model-value-changed', (event) => {
           counter += 1;
-          isTriggeredByUser = /** @type {CustomEvent} */ (event).detail.isTriggeredByUser;
+          isTriggeredByUser = /** @type {CustomEvent} */ event.detail.isTriggeredByUser;
         });
-
         const valueOne = generateValueBasedOnType();
-        const valueTwo = generateValueBasedOnType({ toggleValue: true });
-
+        const valueTwo = generateValueBasedOnType({
+          toggleValue: true,
+        });
         el.modelValue = valueOne;
         expect(counter).to.equal(1);
         expect(isTriggeredByUser).to.be.false;
@@ -343,124 +337,119 @@ export function runFormatMixinSuite({
         // no change means no event
         el.modelValue = valueOne;
         expect(counter).to.equal(1);
-
         el.modelValue = valueTwo;
         expect(counter).to.equal(2);
       });
-
       it('fires `model-value-changed` for every user input, adding `isTriggeredByUser` in event detail', async () => {
-        const formatEl = /** @type {FormatClass} */ (
-          await fixture(html`<${tag}><input slot="input"></${tag}>`)
-        );
-
+        const formatEl =
+          /** @type {FormatClass} */
+          await fixture(html`<${tag}><input slot="input"></${tag}>`);
         let counter = 0;
         let isTriggeredByUser = false;
         formatEl.addEventListener(
           'model-value-changed',
           (/** @param {CustomEvent} event */ event) => {
             counter += 1;
-            isTriggeredByUser = /** @type {CustomEvent} */ (event).detail.isTriggeredByUser;
+            isTriggeredByUser = /** @type {CustomEvent} */ event.detail.isTriggeredByUser;
           },
         );
-
-        mimicUserInput(formatEl, generateValueBasedOnType({ viewValue: true }));
+        mimicUserInput(
+          formatEl,
+          generateValueBasedOnType({
+            viewValue: true,
+          }),
+        );
         expect(counter).to.equal(1);
         expect(isTriggeredByUser).to.be.true;
 
         // All value comparison logic is the responsibility of consuming components
         const counterOffset = valueChangeCounterOffset;
-
-        mimicUserInput(formatEl, generateValueBasedOnType({ viewValue: true }));
+        mimicUserInput(
+          formatEl,
+          generateValueBasedOnType({
+            viewValue: true,
+          }),
+        );
         expect(counter).to.equal(1 + counterOffset);
-
-        mimicUserInput(formatEl, generateValueBasedOnType({ toggleValue: true }));
+        mimicUserInput(
+          formatEl,
+          generateValueBasedOnType({
+            toggleValue: true,
+          }),
+        );
         expect(counter).to.equal(2 + counterOffset);
       });
-
       it('synchronizes _inputNode.value as a fallback mechanism on init (when no modelValue provided)', async () => {
         // Note that in lion-field, the attribute would be put on <lion-field>, not on <input>
-        const formatElem = /** @type {FormatClass} */ (
+        const formatElem =
+          /** @type {FormatClass} */
           await fixture(html`
           <${tag}
             value="string"
-            .formatter=${/** @param {string} value */ value => `foo: ${value}`}
+            .formatter=${/** @param {string} value */ (value) => `foo: ${value}`}
             .parser=${parser}
-            .serializer=${/** @param {string} value */ value => `[foo] ${value}`}
-            .deserializer=${/** @param {string} value */ value => value.replace('[foo] ', '')}
+            .serializer=${/** @param {string} value */ (value) => `[foo] ${value}`}
+            .deserializer=${/** @param {string} value */ (value) => value.replace('[foo] ', '')}
           >
             <input slot="input" value="string" />
           </${tag}>
-        `)
-        );
+        `);
         // Now check if the format/parse/serialize loop has been triggered
         await formatElem.updateComplete;
         const expectedFormattedValue = `foo: ${formatElem.modelValue}`;
         const expectedSerializedValue = `[foo] ${formatElem.modelValue}`;
-
         expect(formatElem.formattedValue).to.equal(expectedFormattedValue);
-
         expect(formatElem._inputNode.value).to.equal(expectedFormattedValue);
-
         expect(formatElem.serializedValue).to.equal(expectedSerializedValue);
       });
-
       describe('Unparseable values', () => {
         it('converts to Unparseable when wrong value inputted by user', async () => {
-          const el = /** @type {FormatClass} */ (
+          const el =
+            /** @type {FormatClass} */
             await fixture(html`
-            <${tag} .parser=${
-              /** @param {string} viewValue */ viewValue => Number(viewValue) || undefined
-            }
+            <${tag} .parser=${/** @param {string} viewValue */ (viewValue) => Number(viewValue) || undefined}
               >
               <input slot="input">
             </${tag}>
-          `)
-          );
+          `);
           mimicUserInput(el, 'test');
           expect(el.modelValue).to.be.an.instanceof(Unparseable);
         });
-
         it('preserves the viewValue when unparseable', async () => {
-          const el = /** @type {FormatClass} */ (
+          const el =
+            /** @type {FormatClass} */
             await fixture(html`
             <${tag}
-              .parser=${
-                /** @param {string} viewValue */ viewValue => Number(viewValue) || undefined
-              }
+              .parser=${/** @param {string} viewValue */ (viewValue) => Number(viewValue) || undefined}
             >
               <input slot="input">
             </${tag}>
-          `)
-          );
+          `);
           mimicUserInput(el, 'test');
           expect(el.formattedValue).to.equal('test');
           expect(el.value).to.equal('test');
         });
-
         it('displays the viewValue when modelValue is of type Unparseable', async () => {
-          const el = /** @type {FormatClass} */ (
+          const el =
+            /** @type {FormatClass} */
             await fixture(html`
             <${tag}
-              .parser=${
-                /** @param {string} viewValue */ viewValue => Number(viewValue) || undefined
-              }
+              .parser=${/** @param {string} viewValue */ (viewValue) => Number(viewValue) || undefined}
             >
               <input slot="input">
             </${tag}>
-          `)
-          );
+          `);
           el.modelValue = new Unparseable('foo');
           expect(el.value).to.equal('foo');
         });
-
         it('empty strings are not Unparseable', async () => {
-          const el = /** @type {FormatClass} */ (
+          const el =
+            /** @type {FormatClass} */
             await fixture(html`
             <${tag}>
               <input slot="input" value="string">
             </${tag}>
-          `)
-          );
+          `);
           // This could happen when the user erases the input value
           mimicUserInput(el, '');
           expectValue(
@@ -471,7 +460,6 @@ export function runFormatMixinSuite({
         });
       });
     });
-
     describe('View value', () => {
       it('has an input node (like <input>/<textarea>) which holds the formatted (view) value', async () => {
         const { _inputNode } = getFormControlMembers(fooFormat);
@@ -480,46 +468,47 @@ export function runFormatMixinSuite({
         expect(fooFormat.value).to.equal('foo: string');
         expect(_inputNode.value).to.equal('foo: string');
       });
-
       it('works if there is no underlying _inputNode', async () => {
         const tagNoInputString = defineCE(class extends FormatMixin(LitElement) {});
         const tagNoInput = unsafeStatic(tagNoInputString);
         expect(async () => {
-          /** @type {FormatClass} */ (await fixture(html`<${tagNoInput}></${tagNoInput}>`));
+          /** @type {FormatClass} */ await fixture(html`<${tagNoInput}></${tagNoInput}>`);
         }).to.not.throw();
       });
-
       describe('Presenting value to end user', () => {
         it('reflects back formatted value to user on leave', async () => {
-          const formatEl = /** @type {FormatClass} */ (
+          const formatEl =
+            /** @type {FormatClass} */
             await fixture(html`
-            <${tag} .formatter="${/** @param {string} value */ value => `foo: ${value}`}">
+            <${tag} .formatter="${/** @param {string} value */ (value) => `foo: ${value}`}">
               <input slot="input" />
             </${tag}>
-          `)
-          );
+          `);
           const { _inputNode } = getFormControlMembers(formatEl);
-
-          const generatedViewValue = generateValueBasedOnType({ viewValue: true });
+          const generatedViewValue = generateValueBasedOnType({
+            viewValue: true,
+          });
           const generatedModelValue = generateValueBasedOnType();
           mimicUserInput(formatEl, generatedViewValue);
           expect(_inputNode.value).to.not.equal(`foo: ${generatedModelValue}`);
 
           // user leaves field
-          _inputNode.dispatchEvent(new CustomEvent(formatEl.formatOn, { bubbles: true }));
+          _inputNode.dispatchEvent(
+            new CustomEvent(formatEl.formatOn, {
+              bubbles: true,
+            }),
+          );
           await aTimeout(0);
           expect(_inputNode.value).to.equal(`foo: ${generatedModelValue}`);
         });
-
         it('reflects back .formattedValue immediately when .modelValue changed imperatively', async () => {
-          const el = /** @type {FormatClass} */ (
+          const el =
+            /** @type {FormatClass} */
             await fixture(html`
-            <${tag} .formatter="${/** @param {string} value */ value => `foo: ${value}`}">
+            <${tag} .formatter="${/** @param {string} value */ (value) => `foo: ${value}`}">
               <input slot="input" />
             </${tag}>
-          `)
-          );
-
+          `);
           const { _inputNode } = getFormControlMembers(el);
 
           // The FormatMixin can be used in conjunction with the ValidateMixin, in which case
@@ -536,14 +525,14 @@ export function runFormatMixinSuite({
         });
       });
     });
-
     describe('Parser / formatter / serializer / preprocessor', () => {
       it('calls the parser|formatter|serializer|preprocessor provided by user', async () => {
-        const formatterSpy = sinon.spy(value => `foo: ${value}`);
-        const parserSpy = sinon.spy(value => value.replace('foo: ', ''));
-        const serializerSpy = sinon.spy(value => `[foo] ${value}`);
-        const preprocessorSpy = sinon.spy(value => value.replace('bar', ''));
-        const el = /** @type {FormatClass} */ (
+        const formatterSpy = sinon.spy((value) => `foo: ${value}`);
+        const parserSpy = sinon.spy((value) => value.replace('foo: ', ''));
+        const serializerSpy = sinon.spy((value) => `[foo] ${value}`);
+        const preprocessorSpy = sinon.spy((value) => value.replace('bar', ''));
+        const el =
+          /** @type {FormatClass} */
           await fixture(html`
           <${tag}
             .formatter=${formatterSpy}
@@ -554,66 +543,57 @@ export function runFormatMixinSuite({
           >
             <input slot="input">
           </${tag}>
-        `)
-        );
+        `);
         expect(formatterSpy.called).to.be.true;
         expect(serializerSpy.called).to.be.true;
-
         el.formattedValue = 'raw';
         expect(parserSpy.called).to.be.true;
         el.dispatchEvent(new CustomEvent('user-input-changed'));
         expect(preprocessorSpy.called).to.be.true;
       });
-
       describe('Value conversions', () => {
         it('converts modelValue => formattedValue (via this.formatter)', async () => {
           fooFormat.modelValue = 'string';
           expect(fooFormat.formattedValue).to.equal('foo: string');
           expect(fooFormat.serializedValue).to.equal('[foo] string');
         });
-
         it('converts modelValue => serializedValue (via this.serializer)', async () => {
           fooFormat.modelValue = 'string';
           expect(fooFormat.serializedValue).to.equal('[foo] string');
         });
-
         it('converts formattedValue => modelValue (via this.parser)', async () => {
           fooFormat.formattedValue = 'foo: string';
           expect(fooFormat.modelValue).to.equal('string');
         });
-
         it('converts serializedValue => modelValue (via this.deserializer)', async () => {
           fooFormat.serializedValue = '[foo] string';
           expect(fooFormat.modelValue).to.equal('string');
         });
       });
-
       describe('Formatter', () => {
         it('only calls the formatter for valid values on `user-input-changed` ', async () => {
           if (modelValueType === Object) {
             return;
           }
-
-          const formatterSpy = sinon.spy(value => `foo: ${value}`);
-
+          const formatterSpy = sinon.spy((value) => `foo: ${value}`);
           const generatedModelValue = generateValueBasedOnType();
           /** @type {any} */
-          const generatedViewValue = generateValueBasedOnType({ viewValue: true });
+          const generatedViewValue = generateValueBasedOnType({
+            viewValue: true,
+          });
           /** @type {any} */
           const generatedViewValueAlt = generateValueBasedOnType({
             viewValue: true,
             toggleValue: true,
           });
-
-          const el = /** @type {FormatClass} */ (
+          const el =
+            /** @type {FormatClass} */
             await fixture(html`
             <${tag} .formatter=${formatterSpy}>
               <input slot="input" .value="${generatedViewValue}">
             </${tag}>
-          `)
-          );
+          `);
           expect(formatterSpy.callCount).to.equal(1);
-
           el.hasFeedbackFor.push('error');
           // Ensure hasError is always true by putting a validator on it that always returns false.
           // Setting hasError = true is not enough if the element has errorValidators (uses ValidateMixin)
@@ -623,37 +603,34 @@ export function runFormatMixinSuite({
             static get validatorName() {
               return 'AlwaysInvalid';
             }
-
             execute() {
               return true;
             }
           };
-
           el.validators = [new AlwaysInvalid()];
           mimicUserInput(el, generatedViewValueAlt);
-
           expect(formatterSpy.callCount).to.equal(1);
           // Due to hasError, the formatter should not have ran.
           expect(el.formattedValue).to.equal(generatedViewValueAlt);
-
-          el.hasFeedbackFor.filter(/** @param {string} type */ type => type !== 'error');
+          el.hasFeedbackFor.filter(/** @param {string} type */ (type) => type !== 'error');
           el.validators = [];
           mimicUserInput(el, generatedViewValue);
           expect(formatterSpy.callCount).to.equal(2);
-
           expect(el.formattedValue).to.equal(`foo: ${generatedModelValue}`);
         });
-
         it('has formatOptions available in formatter', async () => {
-          const formatterSpy = sinon.spy(value => `foo: ${value}`);
-          const generatedViewValue = /** @type {string} */ (
+          const formatterSpy = sinon.spy((value) => `foo: ${value}`);
+          const generatedViewValue =
+            /** @type {string} */
             generateValueBasedOnType({
               viewValue: true,
-            })
-          );
+            });
           await fixture(html`
             <${tag} value="${generatedViewValue}" .formatter="${formatterSpy}"
-              .formatOptions="${{ locale: 'en-GB', decimalSeparator: '-' }}">
+              .formatOptions="${{
+                locale: 'en-GB',
+                decimalSeparator: '-',
+              }}">
               <input slot="input" .value="${generatedViewValue}">
             </${tag}>
           `);
@@ -664,7 +641,6 @@ export function runFormatMixinSuite({
           expect(spyArg.locale).to.equal('en-GB');
           expect(spyArg.decimalSeparator).to.equal('-');
         });
-
         describe('On paste', () => {
           class ReflectOnPaste extends FormatClass {
             _reflectBackOn() {
@@ -680,36 +656,42 @@ export function runFormatMixinSuite({
           function mimicPaste(el, val = 'lorem') {
             const { _inputNode } = getFormControlMembers(el);
             _inputNode.value = val;
-            _inputNode.dispatchEvent(new ClipboardEvent('paste', { bubbles: true }));
-            _inputNode.dispatchEvent(new Event('input', { bubbles: true }));
+            _inputNode.dispatchEvent(
+              new ClipboardEvent('paste', {
+                bubbles: true,
+              }),
+            );
+            _inputNode.dispatchEvent(
+              new Event('input', {
+                bubbles: true,
+              }),
+            );
           }
-
           it('sets formatOptions.mode to "pasted" (and restores to "auto")', async () => {
-            const el = /** @type {FormatClass} */ (
+            const el =
+              /** @type {FormatClass} */
               await fixture(html`
             <${reflectingTag}><input slot="input"></${reflectingTag}>
-          `)
-            );
+          `);
             const formatterSpy = sinon.spy(el, 'formatter');
             mimicPaste(el);
             expect(formatterSpy).to.be.called;
-            expect(/** @type {{mode: string}} */ (formatterSpy.lastCall.args[1]).mode).to.equal(
+            expect(/** @type {{mode: string}} */ formatterSpy.lastCall.args[1].mode).to.equal(
               'pasted',
             );
             // give microtask of _isPasting chance to reset
             await aTimeout(0);
             el.modelValue = 'foo';
-            expect(/** @type {{mode: string}} */ (formatterSpy.lastCall.args[1]).mode).to.equal(
+            expect(/** @type {{mode: string}} */ formatterSpy.lastCall.args[1].mode).to.equal(
               'auto',
             );
           });
-
           it('sets protected value "_isPasting" for Subclassers', async () => {
-            const el = /** @type {FormatClass} */ (
+            const el =
+              /** @type {FormatClass} */
               await fixture(html`
             <${reflectingTag}><input slot="input"></${reflectingTag}>
-          `)
-            );
+          `);
             const formatterSpy = sinon.spy(el, 'formatter');
             mimicPaste(el);
             expect(formatterSpy).to.have.been.called;
@@ -719,57 +701,49 @@ export function runFormatMixinSuite({
             // @ts-ignore [allow-protected] in test
             expect(el._isPasting).to.be.false;
           });
-
           it('calls formatter and "_reflectBackOn()"', async () => {
-            const el = /** @type {FormatClass} */ (
+            const el =
+              /** @type {FormatClass} */
               await fixture(html`
             <${tag}><input slot="input"></${tag}>
-          `)
-            );
+          `);
             // @ts-ignore [allow-protected] in test
             const reflectBackSpy = sinon.spy(el, '_reflectBackOn');
             mimicPaste(el);
             expect(reflectBackSpy).to.have.been.called;
           });
-
           it(`updates viewValue when "_reflectBackOn()" configured to reflect`, async () => {
-            const el = /** @type {FormatClass} */ (
+            const el =
+              /** @type {FormatClass} */
               await fixture(html`
             <${reflectingTag}><input slot="input"></${reflectingTag}>
-          `)
-            );
+          `);
             // @ts-ignore [allow-protected] in test
             const reflectBackSpy = sinon.spy(el, '_reflectBackOn');
             mimicPaste(el);
             expect(reflectBackSpy).to.have.been.called;
           });
         });
-
         describe('On user input', () => {
           it('adjusts formatOptions.mode to "user-edited" for parser when user changes value', async () => {
-            const el = /** @type {FormatClass} */ (
-              await fixture(html`<${tag}><input slot="input"></${tag}>`)
-            );
-
+            const el =
+              /** @type {FormatClass} */
+              await fixture(html`<${tag}><input slot="input"></${tag}>`);
             const parserSpy = sinon.spy(el, 'parser');
 
             // Here we get auto as we start from '' (so there was no value to edit)
             mimicUserInput(el, 'some val');
-            expect(/** @type {{mode: string}} */ (parserSpy.lastCall.args[1]).mode).to.equal(
-              'auto',
-            );
+            expect(/** @type {{mode: string}} */ parserSpy.lastCall.args[1].mode).to.equal('auto');
             await el.updateComplete;
-
             mimicUserInput(el, 'some other val');
-            expect(/** @type {{mode: string}} */ (parserSpy.lastCall.args[1]).mode).to.equal(
+            expect(/** @type {{mode: string}} */ parserSpy.lastCall.args[1].mode).to.equal(
               'user-edited',
             );
           });
-
           it('adjusts formatOptions.viewValueStates when user already formatted value', async () => {
-            const el = /** @type {FormatClass} */ (
-              await fixture(html`<${tag}><input slot="input"></${tag}>`)
-            );
+            const el =
+              /** @type {FormatClass} */
+              await fixture(html`<${tag}><input slot="input"></${tag}>`);
 
             // Neutralize config, so that we know for sure that the user has formatted the value
             // when this suite is run on extended classes
@@ -780,19 +754,16 @@ export function runFormatMixinSuite({
             // avoid non-formatted values due to validators in extended classes
             el.defaultValidators = [];
             // avoid Unparseable due to parsers in extended classes
-            el.parser = v => v;
+            el.parser = (v) => v;
             // @ts-expect-error
-            el.formatter = v => v;
-
+            el.formatter = (v) => v;
             const parserSpy = sinon.spy(el, 'parser');
             const formatterSpy = sinon.spy(el, 'formatter');
-
             mimicUserInput(el, 'some val');
             expect(parserSpy.lastCall.args[1].viewValueStates).to.not.include('formatted');
             // @ts-expect-error
             expect(formatterSpy.lastCall.args[1].viewValueStates).to.not.include('formatted');
             await el.updateComplete;
-
             mimicUserInput(el, 'some other val');
             expect(parserSpy.lastCall.args[1].viewValueStates).to.include('formatted');
             // @ts-expect-error
@@ -800,20 +771,18 @@ export function runFormatMixinSuite({
           });
         });
       });
-
       describe('Parser', () => {
         it('only calls the parser for defined values', async () => {
           /** @type {any} */
           const generatedValue = generateValueBasedOnType();
           const parserSpy = sinon.spy();
-          const el = /** @type {FormatClass} */ (
+          const el =
+            /** @type {FormatClass} */
             await fixture(html`
           <${tag} .parser="${parserSpy}">
             <input slot="input" .value="${generatedValue}">
           </${tag}>
-        `)
-          );
-
+        `);
           const initialParserCallCount = parserSpy.callCount;
           // This could happen for instance in a reset
           el.modelValue = undefined;
@@ -823,51 +792,47 @@ export function runFormatMixinSuite({
           expect(parserSpy.callCount).to.equal(initialParserCallCount);
         });
       });
-
       describe('Preprocessor', () => {
         it('changes `.value` on keyup, before passing on to parser', async () => {
-          const val = generateValueBasedOnType({ viewValue: true }) || 'init-value';
+          const val =
+            generateValueBasedOnType({
+              viewValue: true,
+            }) || 'init-value';
           if (typeof val !== 'string') {
             return;
           }
-
           const toBeCorrectedVal = `${val}$`;
-          const preprocessorSpy = sinon.spy(v => v.replace(/\$$/g, ''));
-
-          const el = /** @type {FormatClass} */ (
+          const preprocessorSpy = sinon.spy((v) => v.replace(/\$$/g, ''));
+          const el =
+            /** @type {FormatClass} */
             await fixture(html`
           <${tag} .preprocessor=${preprocessorSpy}>
             <input slot="input">
           </${tag}>
-        `)
-          );
-
+        `);
           const { _inputNode } = getFormControlMembers(el);
-
           const initialPreprocessorCallCount = preprocessorSpy.callCount;
-
           const parserSpy = sinon.spy(el, 'parser');
           mimicUserInput(el, toBeCorrectedVal);
-
           expect(preprocessorSpy.callCount).to.equal(initialPreprocessorCallCount + 1);
           expect(parserSpy.lastCall.args[0]).to.equal(val);
           expect(_inputNode.value).to.equal(val);
         });
-
         it('does only calculate derived values as consequence of user input when preprocessed value is different from previous view value', async () => {
           if (modelValueType === Object) return;
-
-          const val = generateValueBasedOnType({ viewValue: true }) || 'init-value';
+          const val =
+            generateValueBasedOnType({
+              viewValue: true,
+            }) || 'init-value';
           if (typeof val !== 'string') return;
-
-          const preprocessorSpy = sinon.spy(v => v.replace(/\$$/g, ''));
-          const el = /** @type {FormatClass} */ (
+          const preprocessorSpy = sinon.spy((v) => v.replace(/\$$/g, ''));
+          const el =
+            /** @type {FormatClass} */
             await fixture(html`
           <${tag} .preprocessor=${preprocessorSpy}>
             <input slot="input" .value="${val}">
           </${tag}>
-        `)
-          );
+        `);
 
           // TODO: find out why we need to skip this for lion-input-stepper
           if (isLionInputStepper(el)) return;
@@ -877,8 +842,7 @@ export function runFormatMixinSuite({
            * @param {sinon.SinonSpyCall} call
            * @returns {boolean}
            */
-          const isCalculateCallAfterUserInput = call => call.args[0]?.length === 0;
-
+          const isCalculateCallAfterUserInput = (call) => call.args[0]?.length === 0;
           const didRecalculateAfterUserInput = (/** @type {sinon.SinonSpy<any[], any>} */ spy) =>
             spy.callCount > 1 && !spy.getCalls().find(isCalculateCallAfterUserInput);
 
@@ -892,74 +856,84 @@ export function runFormatMixinSuite({
           mimicUserInput(el, `${val}ue$`);
           expect(didRecalculateAfterUserInput(calcValuesSpy)).to.be.true;
         });
-
         it('does not preprocess during composition', async () => {
-          const el = /** @type {FormatClass} */ (
+          const el =
+            /** @type {FormatClass} */
             await fixture(html`
             <${tag} .preprocessor=${(/** @type {string} */ v) => v.replace(/\$$/g, '')}>
               <input slot="input">
             </${tag}>
-          `)
-          );
-
+          `);
           const { _inputNode } = getFormControlMembers(el);
-
           const preprocessorSpy = sinon.spy(el, 'preprocessor');
-          _inputNode.dispatchEvent(new Event('compositionstart', { bubbles: true }));
+          _inputNode.dispatchEvent(
+            new Event('compositionstart', {
+              bubbles: true,
+            }),
+          );
           mimicUserInput(el, '`');
           expect(preprocessorSpy.callCount).to.equal(0);
           // "à" would be sent by the browser after pressing "option + `", followed by "a"
           mimicUserInput(el, 'à');
-          _inputNode.dispatchEvent(new Event('compositionend', { bubbles: true }));
+          _inputNode.dispatchEvent(
+            new Event('compositionend', {
+              bubbles: true,
+            }),
+          );
           expect(preprocessorSpy.callCount).to.equal(1);
         });
-
         describe('Live Formatters', () => {
           it('receives meta object with { prevViewValue: string; currentCaretIndex: number; }', async () => {
             const spy = sinon.spy();
-
             const valInitial = generateValueBasedOnType();
-            const el = /** @type {FormatClass} */ (
+            const el =
+              /** @type {FormatClass} */
               await fixture(
                 html`<${tag} .modelValue="${valInitial}"  .preprocessor=${spy}><input slot="input"></${tag}>`,
-              )
-            );
+              );
             const viewValInitial = el.value;
-            const valToggled = generateValueBasedOnType({ toggleValue: true });
-
-            mimicUserInput(el, valToggled, { caretIndex: 1 });
+            const valToggled = generateValueBasedOnType({
+              toggleValue: true,
+            });
+            mimicUserInput(el, valToggled, {
+              caretIndex: 1,
+            });
             expect(spy.args[0][0]).to.equal(el.value);
             const formatOptions = spy.args[0][1];
             expect(formatOptions.prevViewValue).to.equal(viewValInitial);
             expect(formatOptions.currentCaretIndex).to.equal(1);
           });
-
           it('updates return viewValue and caretIndex', async () => {
             /**
              * @param {string} viewValue
              * @param {{ classes?: Record<string, CustomElementConstructor>, prevViewValue: string; currentCaretIndex: number; }} meta
              */
             function myPreprocessor(viewValue, { currentCaretIndex }) {
-              return { viewValue: `${viewValue}q`, caretIndex: currentCaretIndex + 1 };
+              return {
+                viewValue: `${viewValue}q`,
+                caretIndex: currentCaretIndex + 1,
+              };
             }
-            const el = /** @type {FormatClass} */ (
+            const el =
+              /** @type {FormatClass} */
               await fixture(
                 html`<${tag} .modelValue="${'xyz'}" .preprocessor=${myPreprocessor}><input slot="input"></${tag}>`,
-              )
-            );
-            mimicUserInput(el, 'wxyz', { caretIndex: 1 });
+              );
+            mimicUserInput(el, 'wxyz', {
+              caretIndex: 1,
+            });
             expect(el._inputNode.value).to.equal('wxyzq');
             expect(el._inputNode.selectionStart).to.equal(2);
           });
-
           it('does not update when undefined is returned', async () => {
-            const el = /** @type {FormatClass} */ (
+            const el =
+              /** @type {FormatClass} */
               await fixture(
-                html`<${tag} .modelValue="${'xyz'}" live-format .liveFormatter=${() =>
-                  undefined}><input slot="input"></${tag}>`,
-              )
-            );
-            mimicUserInput(el, 'wxyz', { caretIndex: 1 });
+                html`<${tag} .modelValue="${'xyz'}" live-format .liveFormatter=${() => undefined}><input slot="input"></${tag}>`,
+              );
+            mimicUserInput(el, 'wxyz', {
+              caretIndex: 1,
+            });
             expect(el._inputNode.value).to.equal('wxyz');
             // Make sure we do not put our already existing value back, because caret index would be lost
             expect(el._inputNode.selectionStart).to.equal(1);

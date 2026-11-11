@@ -27,130 +27,124 @@ export function runInputAmountSuite({
 } = {}) {
   const tagString = resolveSuiteTag(host, legacyTagString);
   const tag = unsafeStatic(tagString);
-
   describe('<lion-input-amount>', () => {
     const localize = getLocalizeManager();
-
     beforeEach(() => {
       localizeTearDown();
     });
-
     it('uses formatAmount for formatting', async () => {
-      const el = /** @type {LionInputAmount} */ (await fixture(`<${tagString}></${tagString}>`));
+      const el = /** @type {LionInputAmount} */ await fixture(`<${tagString}></${tagString}>`);
       expect(el.formatter).to.equal(formatAmount);
     });
-
     it('formatAmount uses currency provided on webcomponent', async () => {
       // JOD displays 3 fraction digits by default
       localize.locale = 'fr-FR';
-      const el = /** @type {LionInputAmount} */ (
-        await fixture(html`<${tag} currency="JOD" .modelValue="${123}"></${tag}>`)
-      );
+      const el =
+        /** @type {LionInputAmount} */
+        await fixture(html`<${tag} currency="JOD" .modelValue="${123}"></${tag}>`);
       expect(el.formattedValue).to.equal('123,000');
     });
-
     it('formatAmount uses locale provided in formatOptions', async () => {
-      let el = /** @type {LionInputAmount} */ (
+      let el =
+        /** @type {LionInputAmount} */
         await fixture(html`
           <${tag}
-            .formatOptions="${{ locale: 'en-GB' }}"
+            .formatOptions="${{
+              locale: 'en-GB',
+            }}"
             .modelValue="${123}"
           ></${tag}>
-        `)
-      );
+        `);
       expect(el.formattedValue).to.equal('123.00');
       el = await fixture(html`
         <${tag}
-          .formatOptions="${{ locale: 'nl-NL' }}"
+          .formatOptions="${{
+            locale: 'nl-NL',
+          }}"
           .modelValue="${123}"
         ></${tag}>
       `);
       expect(el.formattedValue).to.equal('123,00');
     });
-
     it('supports overriding decimalSeparator in formatOptions', async () => {
-      const el = /** @type {LionInputAmount} */ (
-        await fixture(
-          html`<${tag}
-            .formatOptions="${{ locale: 'nl-NL', decimalSeparator: '.' }}"
+      const el =
+        /** @type {LionInputAmount} */
+        await fixture(html`<${tag}
+            .formatOptions="${{
+              locale: 'nl-NL',
+              decimalSeparator: '.',
+            }}"
             .modelValue="${99}"
-          ></${tag}>`,
-        )
-      );
+          ></${tag}>`);
       expect(el.formattedValue).to.equal('99.00');
     });
-
     it('supports overriding groupSeparator in formatOptions', async () => {
-      const el = /** @type {LionInputAmount} */ (
-        await fixture(
-          html`<${tag}
-            .formatOptions="${{ locale: 'nl-NL', groupSeparator: ',', decimalSeparator: '.' }}"
+      const el =
+        /** @type {LionInputAmount} */
+        await fixture(html`<${tag}
+            .formatOptions="${{
+              locale: 'nl-NL',
+              groupSeparator: ',',
+              decimalSeparator: '.',
+            }}"
             .modelValue="${9999}"
-          ></${tag}>`,
-        )
-      );
+          ></${tag}>`);
       expect(el.formattedValue).to.equal('9,999.00');
     });
-
     it('ignores global locale change if property is provided', async () => {
-      const el = /** @type {LionInputAmount} */ (
+      const el =
+        /** @type {LionInputAmount} */
         await fixture(html`
           <${tag} .modelValue=${123456.78} .locale="${'en-GB'}"></${tag}>
-        `)
-      );
+        `);
       expect(el.formattedValue).to.equal('123,456.78'); // British
       localize.locale = 'nl-NL';
       await aTimeout(0);
       expect(el.formattedValue).to.equal('123,456.78'); // should stay British
     });
-
     it('reformats the formattedValue when locale property changes', async () => {
-      const el = /** @type {LionInputAmount} */ (
+      const el =
+        /** @type {LionInputAmount} */
         await fixture(html`
           <${tag} .modelValue=${123456.78} .locale="${'en-GB'}"></${tag}>
-        `)
-      );
+        `);
       expect(el.formattedValue).to.equal('123,456.78');
       el.locale = 'nl-NL';
       await el.updateComplete;
       expect(el.formattedValue).to.equal('123.456,78');
     });
-
     it('reformats the formattedValue with global locale if locale property is unset', async () => {
-      const el = /** @type {LionInputAmount} */ (
+      const el =
+        /** @type {LionInputAmount} */
         await fixture(html`
           <${tag} .modelValue=${123456.78} .locale="${'nl-NL'}"></${tag}>
-        `)
-      );
+        `);
       expect(el.formattedValue).to.equal('123.456,78');
       el.locale = '';
       await el.updateComplete;
       expect(el.formattedValue).to.equal('123,456.78');
     });
-
     it('uses parseAmount for parsing', async () => {
-      const el = /** @type {LionInputAmount} */ (await fixture(`<${tagString}></${tagString}>`));
+      const el = /** @type {LionInputAmount} */ await fixture(`<${tagString}></${tagString}>`);
       expect(el.parser).to.equal(parseAmount);
     });
-
     it('sets correct amount of decimals', async () => {
-      const el = /** @type {LionInputAmount} */ (
-        await fixture(html`<${tag} .modelValue=${100.123}></${tag}>`)
-      );
-      const { _inputNode } = getInputMembers(/** @type {* & LionInput} */ (el));
+      const el =
+        /** @type {LionInputAmount} */
+        await fixture(html`<${tag} .modelValue=${100.123}></${tag}>`);
+      const { _inputNode } = getInputMembers(/** @type {* & LionInput} */ el);
       expect(_inputNode.value).to.equal('100.12');
     });
-
     it('formats with locale when formatOptions.mode is "user-edited" and value has three decimal places', async () => {
-      const el = /** @type {LionInputAmount} */ (
-        await fixture(
-          html`<${tag}
+      const el =
+        /** @type {LionInputAmount} */
+        await fixture(html`<${tag}
             .modelValue=${123456.78}
             currency="EUR"
-            .formatOptions="${{ locale: 'nl-NL' }}"
-          ></${tag}>`,
-        )
-      );
+            .formatOptions="${{
+              locale: 'nl-NL',
+            }}"
+          ></${tag}>`);
       const parserSpy = sinon.spy(el, 'parser');
       const formatterSpy = sinon.spy(el, 'formatter');
 
@@ -179,20 +173,18 @@ export function runInputAmountSuite({
       expect(el.formattedValue).to.equal('1.234,00');
       expect(formatterSpy.lastCall.args[1]?.mode).to.equal('auto');
     });
-
     it('formats with heuristic when formatOptions.mode is "user-edited" and value has two decimal places', async () => {
-      const el = /** @type {LionInputAmount} */ (
-        await fixture(
-          html`<${tag}
+      const el =
+        /** @type {LionInputAmount} */
+        await fixture(html`<${tag}
             .modelValue=${64}
             currency="EUR"
-            .formatOptions="${{ locale: 'en-GB' }}"
-          ></${tag}>`,
-        )
-      );
+            .formatOptions="${{
+              locale: 'en-GB',
+            }}"
+          ></${tag}>`);
       const parserSpy = sinon.spy(el, 'parser');
       const formatterSpy = sinon.spy(el, 'formatter');
-
       expect(el.formattedValue).to.equal('64.00');
       // @ts-expect-error [allow-protected] in test
       expect(el._inputNode.value).to.equal('64.00');
@@ -204,7 +196,6 @@ export function runInputAmountSuite({
       expect(formatterSpy.lastCall.args[1]?.mode).to.equal('user-edited');
       expect(el.modelValue).to.equal(64);
       expect(el.formattedValue).to.equal('64.00');
-
       mimicUserInput(el, '64,0');
       expect(parserSpy.lastCall.args[1]?.mode).to.equal('user-edited');
       expect(formatterSpy.lastCall.args[1]?.mode).to.equal('user-edited');
@@ -218,83 +209,73 @@ export function runInputAmountSuite({
       expect(el.formattedValue).to.equal('1,234.00');
       expect(formatterSpy.lastCall.args[1]?.mode).to.equal('auto');
     });
-
     it('sets inputmode attribute to decimal', async () => {
-      const el = /** @type {LionInputAmount} */ (await fixture(`<${tagString}></${tagString}>`));
-      const { _inputNode } = getInputMembers(/** @type {* & LionInput} */ (el));
+      const el = /** @type {LionInputAmount} */ await fixture(`<${tagString}></${tagString}>`);
+      const { _inputNode } = getInputMembers(/** @type {* & LionInput} */ el);
       expect(_inputNode.getAttribute('inputmode')).to.equal('decimal');
     });
-
     it('has type="text" to activate default keyboard on mobile with all necessary symbols', async () => {
-      const el = /** @type {LionInputAmount} */ (await fixture(`<${tagString}></${tagString}>`));
-      const { _inputNode } = getInputMembers(/** @type {* & LionInput} */ (el));
+      const el = /** @type {LionInputAmount} */ await fixture(`<${tagString}></${tagString}>`);
+      const { _inputNode } = getInputMembers(/** @type {* & LionInput} */ el);
       expect(_inputNode.type).to.equal('text');
     });
-
     describe('currencyLabel', async () => {
       it('shows no currency by default', async () => {
         const el = await fixture(`<${tagString}></${tagString}>`);
-        expect(Array.from(el.children).find(child => child.slot === 'after')).to.be.undefined;
+        expect(Array.from(el.children).find((child) => child.slot === 'after')).to.be.undefined;
       });
-
       it('displays currency if provided', async () => {
-        const el = /** @type {LionInputAmount} */ (
-          await fixture(`<${tagString} currency="EUR"></${tagString}>`)
-        );
+        const el =
+          /** @type {LionInputAmount} */
+          await fixture(`<${tagString} currency="EUR"></${tagString}>`);
         expect(
-          /** @type {HTMLElement[]} */ (Array.from(el.children)).find(
-            child => child.slot === 'after',
+          /** @type {HTMLElement[]} */ Array.from(el.children).find(
+            (child) => child.slot === 'after',
           )?.innerText,
         ).to.equal('EUR');
       });
-
       it('displays correct currency for TRY if locale is tr-TR', async () => {
         localize.locale = 'tr-TR';
-        const el = /** @type {LionInputAmount} */ (
-          await fixture(`<${tagString} currency="TRY"></${tagString}>`)
-        );
+        const el =
+          /** @type {LionInputAmount} */
+          await fixture(`<${tagString} currency="TRY"></${tagString}>`);
         expect(
-          /** @type {HTMLElement[]} */ (Array.from(el.children)).find(
-            child => child.slot === 'after',
+          /** @type {HTMLElement[]} */ Array.from(el.children).find(
+            (child) => child.slot === 'after',
           )?.innerText,
         ).to.equal('TL');
       });
-
       it('displays currency symbol if provided via formatOptions', async () => {
-        const el = /** @type {LionInputAmount} */ (
-          await fixture(html`<${tag} currency="EUR" currency-label="€"></${tag}>`)
-        );
-        const currLabel = /** @type {HTMLElement[]} */ (Array.from(el.children)).find(
-          child => child.slot === 'after',
+        const el =
+          /** @type {LionInputAmount} */
+          await fixture(html`<${tag} currency="EUR" currency-label="€"></${tag}>`);
+        const currLabel = /** @type {HTMLElement[]} */ Array.from(el.children).find(
+          (child) => child.slot === 'after',
         );
         expect(currLabel?.innerText).to.equal('€');
         expect(currLabel?.getAttribute('aria-label')).to.equal('€ (euros)');
       });
-
       it('can update currency', async () => {
-        const el = /** @type {LionInputAmount} */ (
-          await fixture(`<${tagString} currency="EUR"></${tagString}>`)
-        );
+        const el =
+          /** @type {LionInputAmount} */
+          await fixture(`<${tagString} currency="EUR"></${tagString}>`);
         el.currency = 'USD';
         await el.updateComplete;
         expect(
-          /** @type {HTMLElement[]} */ (Array.from(el.children)).find(
-            child => child.slot === 'after',
+          /** @type {HTMLElement[]} */ Array.from(el.children).find(
+            (child) => child.slot === 'after',
           )?.innerText,
         ).to.equal('USD');
       });
     });
-
     it('reformats on locale changes', async () => {
-      const el = /** @type {LionInputAmount} */ (
-        await fixture(
-          html`<${tag}
+      const el =
+        /** @type {LionInputAmount} */
+        await fixture(html`<${tag}
             label="Price"
             currency="EUR"
             .modelValue=${123.45}
-          ></${tag}>`,
-        )
-      );
+          ></${tag}>`);
       expect(el.formattedValue).to.equal('123.45');
       localize.locale = 'nl-NL';
       await el.updateComplete;
@@ -303,63 +284,57 @@ export function runInputAmountSuite({
       await el._feedbackNode.localizeNamespacesLoaded;
       expect(el.formattedValue).to.equal('123,45');
     });
-
     it('removes the currency label when currency switches from EUR to undefined', async () => {
-      const el = /** @type {LionInputAmount} */ (
-        await fixture(`<${tagString} currency="EUR"></${tagString}>`)
-      );
+      const el =
+        /** @type {LionInputAmount} */
+        await fixture(`<${tagString} currency="EUR"></${tagString}>`);
       expect(
-        /** @type {HTMLElement[]} */ (Array.from(el.children)).find(child => child.slot === 'after')
+        /** @type {HTMLElement[]} */ Array.from(el.children).find((child) => child.slot === 'after')
           ?.innerText,
       ).to.equal('EUR');
       el.currency = undefined;
       await el.updateComplete;
       expect(
-        /** @type {HTMLElement[]} */ (Array.from(el.children)).find(
-          child => child.slot === 'after',
+        /** @type {HTMLElement[]} */ Array.from(el.children).find(
+          (child) => child.slot === 'after',
         ),
       ).to.be.undefined;
     });
-
     it('adds the currency label when currency switches from undefined to EUR', async () => {
-      const el = /** @type {LionInputAmount} */ (await fixture(`<${tagString}></${tagString}>`));
+      const el = /** @type {LionInputAmount} */ await fixture(`<${tagString}></${tagString}>`);
       expect(
-        /** @type {HTMLElement[]} */ (Array.from(el.children)).find(
-          child => child.slot === 'after',
+        /** @type {HTMLElement[]} */ Array.from(el.children).find(
+          (child) => child.slot === 'after',
         ),
       ).to.be.undefined;
-
       el.currency = 'EUR';
       await el.updateComplete;
-      const currLabel = /** @type {HTMLElement[]} */ (Array.from(el.children)).find(
-        child => child.slot === 'after',
+      const currLabel = /** @type {HTMLElement[]} */ Array.from(el.children).find(
+        (child) => child.slot === 'after',
       );
       expect(currLabel?.innerText).to.equal('EUR');
       expect(currLabel?.getAttribute('aria-label')).to.equal('EUR (euros)');
     });
-
     it('sets currency label on the after element', async () => {
-      const el = /** @type {LionInputAmount} */ (
+      const el =
+        /** @type {LionInputAmount} */
         await fixture(`
           <${tagString}>
             <span slot="after" id="123">Currency, please</span>
-          </${tagString}>`)
-      );
-      const mySlotLabel = /** @type {HTMLElement[]} */ (Array.from(el.children)).find(
-        child => child.slot === 'after',
+          </${tagString}>`);
+      const mySlotLabel = /** @type {HTMLElement[]} */ Array.from(el.children).find(
+        (child) => child.slot === 'after',
       );
       expect(mySlotLabel?.id).to.equal('123');
-
       el.currency = 'EUR';
       await el.updateComplete;
-      const currLabel = /** @type {HTMLElement[]} */ (Array.from(el.children)).find(
-        child => child.slot === 'after',
+      const currLabel = /** @type {HTMLElement[]} */ Array.from(el.children).find(
+        (child) => child.slot === 'after',
       );
       expect(currLabel).to.equal(mySlotLabel);
       expect(currLabel?.id).to.equal('123');
       expect(currLabel?.innerText).to.equal('EUR');
     });
-
     it('can override the currency label slot', async () => {
       const customTag = unsafeStatic(
         resolveSuiteTag(
@@ -374,69 +349,59 @@ export function runInputAmountSuite({
       );
       const el = await fixture(html`<${customTag} currency="EUR"></${customTag}>`);
       expect(
-        /** @type {HTMLElement[]} */ (Array.from(el.children)).find(
-          child => child.slot === 'suffix',
+        /** @type {HTMLElement[]} */ Array.from(el.children).find(
+          (child) => child.slot === 'suffix',
         )?.innerText,
       ).to.equal('EUR');
     });
-
     describe('Accessibility', () => {
       it('is accessible', async () => {
         const el = await fixture(`<${tagString}><label slot="label">Label</label></${tagString}>`);
         await expect(el).to.be.accessible();
       });
-
       it('is accessible when readonly', async () => {
         const el = await fixture(
           `<${tagString} readonly .modelValue=${'123'}><label slot="label">Label</label></${tagString}>`,
         );
         await expect(el).to.be.accessible();
       });
-
       it('is accessible when disabled', async () => {
         const el = await fixture(
           `<${tagString} disabled><label slot="label">Label</label></${tagString}>`,
         );
         await expect(el).to.be.accessible();
       });
-
       it('adds currency id to aria-labelledby of input', async () => {
-        const el = /** @type {LionInputAmount} */ (
-          await fixture(`<${tagString} currency="EUR"></${tagString}>`)
-        );
-        const label = /** @type {HTMLElement[]} */ (Array.from(el.children)).find(
-          child => child.slot === 'after',
+        const el =
+          /** @type {LionInputAmount} */
+          await fixture(`<${tagString} currency="EUR"></${tagString}>`);
+        const label = /** @type {HTMLElement[]} */ Array.from(el.children).find(
+          (child) => child.slot === 'after',
         );
         expect(label?.getAttribute('data-label')).to.be.not.null;
-        const { _inputNode } = getInputMembers(/** @type {* & LionInput} */ (el));
+        const { _inputNode } = getInputMembers(/** @type {* & LionInput} */ el);
         expect(_inputNode.getAttribute('aria-labelledby')).to.contain(label?.id);
       });
-
       it('adds currency id to aria-labelledby of input when currency switches from undefined', async () => {
-        const el = /** @type {LionInputAmount} */ (await fixture(`<${tagString}></${tagString}>`));
-
+        const el = /** @type {LionInputAmount} */ await fixture(`<${tagString}></${tagString}>`);
         el.currency = 'EUR';
-
         let resolved = await el.updateComplete;
         while (!resolved) {
           resolved = await el.updateComplete;
         }
-
-        const label = /** @type {HTMLElement[]} */ (Array.from(el.children)).find(
-          child => child.slot === 'after',
+        const label = /** @type {HTMLElement[]} */ Array.from(el.children).find(
+          (child) => child.slot === 'after',
         );
-        const { _inputNode } = getInputMembers(/** @type {* & LionInput} */ (el));
-
+        const { _inputNode } = getInputMembers(/** @type {* & LionInput} */ el);
         expect(label?.id).not.equal('');
         expect(_inputNode.getAttribute('aria-labelledby')).to.contain(label?.id);
       });
-
       it('adds an aria-label to currency slot', async () => {
-        const el = /** @type {LionInputAmount} */ (
-          await fixture(`<${tagString} currency="EUR"></${tagString}>`)
-        );
-        const label = /** @type {HTMLElement[]} */ (Array.from(el.children)).find(
-          child => child.slot === 'after',
+        const el =
+          /** @type {LionInputAmount} */
+          await fixture(`<${tagString} currency="EUR"></${tagString}>`);
+        const label = /** @type {HTMLElement[]} */ Array.from(el.children).find(
+          (child) => child.slot === 'after',
         );
         expect(label?.getAttribute('aria-label')).to.equal('EUR (euros)');
         el.currency = 'USD';

@@ -1,7 +1,6 @@
 import { html } from 'lit';
 import { ifDefined } from 'lit/directives/if-defined.js';
 import { defaultMonthLabels, getDayMonthYear } from './getDayMonthYear.js';
-
 const firstWeekDays = [1, 2, 3, 4, 5, 6, 7];
 const lastDaysOfYear = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
 
@@ -12,19 +11,15 @@ const lastDaysOfYear = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
  */
 export function dayTemplate(day, { weekdays, monthsLabels = defaultMonthLabels }) {
   const { dayNumber, monthName, year, weekdayName } = getDayMonthYear(day, weekdays, monthsLabels);
-
   function __getFullDate() {
     return `${monthName} ${year} ${weekdayName}`;
   }
-
   function __getAccessibleMessage() {
     return `${day.disabledInfo}`;
   }
-
   const firstDay = dayNumber === 1;
   const endOfFirstWeek = day.weekOrder === 6 && firstWeekDays.includes(dayNumber);
   const startOfFirstFullWeek = day.startOfWeek && firstWeekDays.includes(dayNumber);
-
   if (year % 4 === 0 && (year % 100 !== 0 || year % 400 === 0)) {
     lastDaysOfYear[1] = 29;
   }
@@ -36,7 +31,6 @@ export function dayTemplate(day, { weekdays, monthsLabels = defaultMonthLabels }
   const endOfLastFullWeek = day.weekOrder === 6 && lastWeekDays.includes(dayNumber);
   const startOfLastWeek = day.startOfWeek && lastWeekDays.includes(dayNumber);
   const lastDay = lastDayNumber === dayNumber;
-
   return html`
     <td
       role="gridcell"

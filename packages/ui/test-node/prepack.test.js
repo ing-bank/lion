@@ -6,7 +6,6 @@ import path from 'node:path';
 import test from 'node:test';
 import url from 'node:url';
 import util from 'node:util';
-
 const execFile = util.promisify(childProcess.execFile);
 const script = url.fileURLToPath(new URL('../scripts/prepare-phone-build.js', import.meta.url));
 for (const [command, expectedTask] of [

@@ -39,24 +39,28 @@ one at acceptable cost — `pnpm import` only converts _into_ pnpm, the publishe
 Without that last piece the hybrid is a silent trap: a lock one dependency behind looks fine in review and
 only shows up as a wrong version decision downstream.
 
-## The hybrid workflow
+## The workflow this repository runs
 
-1. **Develop with pnpm.** `pnpm add` and `pnpm update` write `package.json` and `pnpm-lock.yaml`; pnpm
-   stays the installer (see `pnpm-workspace.yaml` and the two `.npmrc` settings in the PR description).
-2. **Regenerate the npm artifact.** `npm install --package-lock-only --ignore-scripts` needs no
-   `node_modules` and costs about a second. It only re-resolves pins that no longer satisfy the ranges, so
-   after a dependency refresh the drifted packages need `npm update --package-lock-only <pkg>`.
-3. **Let the gate decide.** `npm run repo:lockfile:check` exits 1 with every package whose versions differ,
-   plus any dependency a manifest declares that the lock never resolved.
-4. **On failure**: regenerate the drifted packages with npm, or pin them in `package.json` when the two
-   managers genuinely disagree (peer-heavy packages are the usual case), and commit both locks in the same
-   PR. A repo without `pnpm-lock.yaml` skips the gate, so this lands before the switch.
+1. **pnpm installs, from the committed npm lock.** `pnpm import` derives `pnpm-lock.yaml` from
+   `package-lock.json`, then `pnpm install --frozen-lockfile` installs exactly that — `pnpm run
+   repo:pnpm:install` does both for the root workspace. `pnpm-lock.yaml` is gitignored: the lock tooling
+   reads stays the committed `package-lock.json`, and no install can clobber it.
+2. **Develop with pnpm.** `pnpm add` and `pnpm update` change what pnpm would install; nothing
+   regenerates the npm lock for you.
+3. **Let the gate decide.** `pnpm run repo:lockfile:check` (husky `pre-push`, and CI on every PR) exits 1
+   with every _declared_ dependency pnpm would install at a version the npm lock does not record.
+4. **Mirror the lock.** `npm install --package-lock-only --ignore-scripts`, commit `package.json` +
+   `package-lock.json`, then `pnpm import && pnpm install --frozen-lockfile`. `pnpm run
+   repo:lockfile:generate` writes the npm lock straight from the pnpm lock (no npm resolve) when the two
+   managers genuinely disagree — peer-heavy packages are the usual case.
 
 ## Commands
 
 ```bash
-npm run repo:lockfile:check      # exit 1 on any divergence between the two locks
-npm run repo:lockfile:generate   # write package-lock.json from pnpm-lock.yaml (no npm resolve)
+pnpm run repo:lockfile:check      # exit 1 on drift (declared mode + --require: this repo's wiring)
+pnpm run repo:lockfile:generate   # write package-lock.json from pnpm-lock.yaml (no npm resolve)
+pnpm run repo:workspace:sync      # derive pnpm-workspace.yaml (members + overrides) from package.json
+pnpm run repo:workspace:check     # exit 1 when the committed file is not what package.json implies
 ```
 
 The binary is `lockfile-interop` (`src/cli.js`), so the same gate runs in another repo without copying
@@ -180,14 +184,25 @@ produced by removing or re-versioning a real record instead of inventing one.
 
 ## What `check` compares
 
-| Comparison                                        | Why it matters                                                                                 |
-| ------------------------------------------------- | ---------------------------------------------------------------------------------------------- |
-| `name@version` records in both locks              | a version the pnpm lock resolves but the npm lock lacks is read by tooling and never installed |
-| versions per package name                         | catches a package that exists in both but at different versions                                |
-| manifest declarations (all importers) vs the lock | catches "dependency added to package.json, lock not regenerated"                               |
+`check` has two modes, and which one applies is a property of the repo, not a preference:
+
+- `--declared` (**this repo**): every dependency of every workspace manifest, against the version the npm
+  lock installs for that same edge. pnpm installs _from_ the npm lock, so npm keeps duplicate versions its
+  tree placement needs while pnpm dedupes them - measured here: 50 npm-only records and 54 version-set
+  differences, none of them a declared dependency.
+- `--strict` (the default): the full `name@version` record set in both directions, plus versions per package
+  name. For a repo that commits `pnpm-lock.yaml` and generates the npm lock from it, where the two sets are
+  equal by construction.
+- Both modes compare the manifest declarations (all importers) against the lock, which catches
+  "dependency added to package.json, lock not regenerated".
 
 Local `link:` edges are resolved as links, never as versions — pnpm stores them as the literal string
 `link:../dir`, which npm rejects (`Invalid Version: link:../dir`).
+
+The repo root is the **enclosing git work tree** (an explicit `--root` wins), because `pnpm run` and
+`npm run` execute a workspace script with the _package's_ directory as cwd. With a cwd default the gate
+reported "no pnpm-lock.yaml in this repo — nothing to guard" and exit 0 on every run while it was wired as
+`npm run lockfile:check --workspace @lion/lockfile-interop` — a gate that silently compares nothing.
 
 ## `generate`
 

@@ -21,13 +21,13 @@ export function parsePhoneNumber(viewValue, { regionCode }) {
   const strippedViewValue = viewValue.match(regex)?.join('');
   let pn;
   try {
-    pn = AwesomePhoneNumber.parsePhoneNumber(strippedViewValue, { regionCode });
+    pn = AwesomePhoneNumber.parsePhoneNumber(strippedViewValue, {
+      regionCode,
+    });
     // eslint-disable-next-line no-empty
   } catch (_) {}
-
   if (pn?.number) {
     return pn.number.e164;
   }
-
   return viewValue;
 }

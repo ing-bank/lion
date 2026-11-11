@@ -20,7 +20,6 @@ export function runRadioSuite({
   tagString: legacyTagString,
 } = {}) {
   const tag = unsafeStatic(resolveSuiteTag(host, legacyTagString));
-
   describe('<lion-radio>', () => {
     it('should have type = radio', async () => {
       const el = await fixture(html`
@@ -28,29 +27,43 @@ export function runRadioSuite({
       `);
       expect(el.getAttribute('type')).to.equal('radio');
     });
-
     it('can be reset when unchecked by default', async () => {
-      const el = /**  @type {LionRadio} */ (
-        await fixture(html` <${tag} name="radio" .choiceValue=${'male'}></${tag}> `)
-      );
-      expect(el._initialModelValue).to.deep.equal({ value: 'male', checked: false });
+      const el =
+        /**  @type {LionRadio} */
+        await fixture(html` <${tag} name="radio" .choiceValue=${'male'}></${tag}> `);
+      expect(el._initialModelValue).to.deep.equal({
+        value: 'male',
+        checked: false,
+      });
       el.checked = true;
-      expect(el.modelValue).to.deep.equal({ value: 'male', checked: true });
-
+      expect(el.modelValue).to.deep.equal({
+        value: 'male',
+        checked: true,
+      });
       el.reset();
-      expect(el.modelValue).to.deep.equal({ value: 'male', checked: false });
+      expect(el.modelValue).to.deep.equal({
+        value: 'male',
+        checked: false,
+      });
     });
-
     it('can be reset when checked by default', async () => {
-      const el = /**  @type {LionRadio} */ (
-        await fixture(html` <${tag} name="radio" .choiceValue=${'male'} checked></${tag}> `)
-      );
-      expect(el._initialModelValue).to.deep.equal({ value: 'male', checked: true });
+      const el =
+        /**  @type {LionRadio} */
+        await fixture(html` <${tag} name="radio" .choiceValue=${'male'} checked></${tag}> `);
+      expect(el._initialModelValue).to.deep.equal({
+        value: 'male',
+        checked: true,
+      });
       el.checked = false;
-      expect(el.modelValue).to.deep.equal({ value: 'male', checked: false });
-
+      expect(el.modelValue).to.deep.equal({
+        value: 'male',
+        checked: false,
+      });
       el.reset();
-      expect(el.modelValue).to.deep.equal({ value: 'male', checked: true });
+      expect(el.modelValue).to.deep.equal({
+        value: 'male',
+        checked: true,
+      });
     });
   });
 }

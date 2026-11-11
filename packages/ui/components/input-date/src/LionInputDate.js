@@ -15,13 +15,12 @@ export class LionInputDate extends LocalizeMixin(LionInput) {
       modelValue: Date,
     };
   }
-
   constructor() {
     super();
     /**
      * @param {string} value
      */
-    this.parser = value => (value === '' ? undefined : parseDate(value, this.formatOptions));
+    this.parser = (value) => (value === '' ? undefined : parseDate(value, this.formatOptions));
     this.formatter = formatDate;
     this.defaultValidators.push(new IsDate());
     // Just explicitly make clear we shouldn't use type 'date'
@@ -32,7 +31,9 @@ export class LionInputDate extends LocalizeMixin(LionInput) {
   updated(changedProperties) {
     super.updated(changedProperties);
     if (changedProperties.has('locale')) {
-      this._calculateValues({ source: null });
+      this._calculateValues({
+        source: null,
+      });
     }
   }
 

@@ -8,10 +8,12 @@ export class LionDialog extends OverlayMixin(LitElement) {
   /** @type {any} */
   static get properties() {
     return {
-      isAlertDialog: { type: Boolean, attribute: 'is-alert-dialog' },
+      isAlertDialog: {
+        type: Boolean,
+        attribute: 'is-alert-dialog',
+      },
     };
   }
-
   constructor() {
     super();
     this.isAlertDialog = false;
@@ -27,7 +29,6 @@ export class LionDialog extends OverlayMixin(LitElement) {
       isAlertDialog: this.isAlertDialog,
     };
   }
-
   render() {
     return html`
       <slot name="invoker"></slot>

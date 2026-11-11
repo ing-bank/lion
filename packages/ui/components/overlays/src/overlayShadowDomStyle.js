@@ -1,5 +1,4 @@
 import { css } from 'lit';
-
 export const overlayShadowDomStyle = css`
   .overlays {
     position: fixed;

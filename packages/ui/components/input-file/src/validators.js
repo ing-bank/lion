@@ -36,7 +36,7 @@ export class IsAcceptedFile extends Validator {
    */
   static isExtensionAllowed(extension, allowedFileExtensions) {
     return allowedFileExtensions?.find(
-      allowedExtension => allowedExtension.toUpperCase() === extension.toUpperCase(),
+      (allowedExtension) => allowedExtension.toUpperCase() === extension.toUpperCase(),
     );
   }
 
@@ -45,7 +45,9 @@ export class IsAcceptedFile extends Validator {
    * @param {string[]} allowedFileTypes
    */
   static isFileTypeAllowed(type, allowedFileTypes) {
-    return allowedFileTypes?.find(allowedType => allowedType.toUpperCase() === type.toUpperCase());
+    return allowedFileTypes?.find(
+      (allowedType) => allowedType.toUpperCase() === type.toUpperCase(),
+    );
   }
 
   /**
@@ -56,21 +58,22 @@ export class IsAcceptedFile extends Validator {
   execute(modelValue, params = this.param) {
     let isInvalidType;
     let isInvalidFileExt;
-
-    const ctor = /** @type {typeof IsAcceptedFile} */ (this.constructor);
+    const ctor = /** @type {typeof IsAcceptedFile} */ this.constructor;
     const { allowedFileTypes, allowedFileExtensions, maxFileSize } = params;
     if (allowedFileTypes?.length) {
-      isInvalidType = modelValue.some(file => !ctor.isFileTypeAllowed(file.type, allowedFileTypes));
+      isInvalidType = modelValue.some(
+        (file) => !ctor.isFileTypeAllowed(file.type, allowedFileTypes),
+      );
       return isInvalidType;
     }
     if (allowedFileExtensions?.length) {
       isInvalidFileExt = modelValue.some(
-        file => !ctor.isExtensionAllowed(ctor.getExtension(file.name), allowedFileExtensions),
+        (file) => !ctor.isExtensionAllowed(ctor.getExtension(file.name), allowedFileExtensions),
       );
       return isInvalidFileExt;
     }
     const invalidFileSize = modelValue.findIndex(
-      file => !ctor.checkFileSize(file.size, maxFileSize),
+      (file) => !ctor.checkFileSize(file.size, maxFileSize),
     );
     return invalidFileSize > -1;
   }
@@ -81,7 +84,6 @@ export class IsAcceptedFile extends Validator {
     return '';
   }
 }
-
 export class DuplicateFileNames extends Validator {
   static validatorName = 'DuplicateFileNames';
 
@@ -113,7 +115,6 @@ export class DuplicateFileNames extends Validator {
     return localizeManager.msg('lion-input-file:uploadTextDuplicateFileName');
   }
 }
-
 export class MaxFileCount extends Validator {
   static get validatorName() {
     return 'MaxFileCount';

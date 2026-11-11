@@ -1,6 +1,5 @@
 import { LocalizeMixin } from '@lion/ui/localize-no-side-effects.js';
 import { LionInput } from '@lion/ui/input.js';
-
 import { PhoneUtilManager } from './PhoneUtilManager.js';
 import { liveFormatPhoneNumber } from './preprocessors.js';
 import { formatPhoneNumber } from './formatters.js';
@@ -25,16 +24,32 @@ export class LionInputTel extends LocalizeMixin(LionInput) {
    * @configure LitElement
    */
   static properties = {
-    allowedRegions: { type: Array },
-    formatStrategy: { type: String, attribute: 'format-strategy' },
-    formatCountryCodeStyle: { type: String, attribute: 'format-country-code-style' },
-    activeRegion: { type: String },
-    preferredRegions: { type: Array },
-    _phoneUtil: { type: Object, state: true },
+    allowedRegions: {
+      type: Array,
+    },
+    formatStrategy: {
+      type: String,
+      attribute: 'format-strategy',
+    },
+    formatCountryCodeStyle: {
+      type: String,
+      attribute: 'format-country-code-style',
+    },
+    activeRegion: {
+      type: String,
+    },
+    preferredRegions: {
+      type: Array,
+    },
+    _phoneUtil: {
+      type: Object,
+      state: true,
+    },
   };
-
   static localizeNamespaces = [
-    { 'lion-input-tel': localizeNamespaceLoader },
+    {
+      'lion-input-tel': localizeNamespaceLoader,
+    },
     ...super.localizeNamespaces,
   ];
 
@@ -74,7 +89,9 @@ export class LionInputTel extends LocalizeMixin(LionInput) {
     try {
       pn =
         this._phoneUtil &&
-        this._phoneUtil.parsePhoneNumber(this.modelValue, { regionCode: this.activeRegion });
+        this._phoneUtil.parsePhoneNumber(this.modelValue, {
+          regionCode: this.activeRegion,
+        });
       // eslint-disable-next-line no-empty
     } catch (_) {}
     return pn?.type || 'unknown';
@@ -171,7 +188,6 @@ export class LionInputTel extends LocalizeMixin(LionInput) {
      * @type {RegionCode[]}
      */
     this.preferredRegions = [];
-
     this.__isPhoneNumberValidatorInstance = new PhoneNumber();
     /**  @configures ValidateMixin */
     this.defaultValidators.push(this.__isPhoneNumberValidatorInstance);
@@ -182,9 +198,8 @@ export class LionInputTel extends LocalizeMixin(LionInput) {
      * @type {AwesomePhoneNumber|null}
      */
     this._phoneUtil = PhoneUtilManager.isLoaded
-      ? /** @type {AwesomePhoneNumber} */ (PhoneUtilManager.PhoneUtil)
+      ? /** @type {AwesomePhoneNumber} */ PhoneUtilManager.PhoneUtil
       : null;
-
     if (!PhoneUtilManager.isLoaded) {
       PhoneUtilManager.loadComplete.then(() => {
         this._onPhoneNumberUtilReady();
@@ -206,30 +221,31 @@ export class LionInputTel extends LocalizeMixin(LionInput) {
    */
   updated(changedProperties) {
     super.updated(changedProperties);
-
     if (changedProperties.has('activeRegion')) {
       // Make sure new modelValue is computed, but prevent formattedValue from being set when focused
       this.__isUpdatingRegionWhileFocused = this.focused;
-      this._calculateValues({ source: null });
+      this._calculateValues({
+        source: null,
+      });
       this.__isUpdatingRegionWhileFocused = false;
-
       this.__isPhoneNumberValidatorInstance.param = this.activeRegion;
       /** @type {FormatOptionsTel} */
-      (this.formatOptions).regionCode = /** @type {RegionCode} */ (this.activeRegion);
+      this.formatOptions.regionCode = /** @type {RegionCode} */ this.activeRegion;
     }
-
     if (changedProperties.has('formatStrategy')) {
-      this._calculateValues({ source: null });
+      this._calculateValues({
+        source: null,
+      });
       /** @type {FormatOptionsTel} */
-      (this.formatOptions).formatStrategy = this.formatStrategy;
+      this.formatOptions.formatStrategy = this.formatStrategy;
     }
-
     if (changedProperties.has('formatCountryCodeStyle')) {
-      this._calculateValues({ source: null });
+      this._calculateValues({
+        source: null,
+      });
       /** @type {FormatOptionsTel} */
-      (this.formatOptions).formatCountryCodeStyle = this.formatCountryCodeStyle;
+      this.formatOptions.formatCountryCodeStyle = this.formatCountryCodeStyle;
     }
-
     if (changedProperties.has('modelValue') || changedProperties.has('allowedRegions')) {
       this.__calculateActiveRegion();
     }
@@ -240,15 +256,14 @@ export class LionInputTel extends LocalizeMixin(LionInput) {
    */
   onLocaleUpdated() {
     super.onLocaleUpdated();
-
     const localeSplitted = this._localizeManager.locale.split('-');
     /**
      * @protected
      * @type {RegionCode}
      */
-    this._langIso = /** @type {RegionCode} */ (
-      localeSplitted[localeSplitted.length - 1].toUpperCase()
-    );
+    this._langIso =
+      /** @type {RegionCode} */
+      localeSplitted[localeSplitted.length - 1].toUpperCase();
     this.__calculateActiveRegion();
   }
 
@@ -259,7 +274,7 @@ export class LionInputTel extends LocalizeMixin(LionInput) {
    */
   formatter(modelValue) {
     return formatPhoneNumber(modelValue, {
-      regionCode: /** @type {RegionCode} */ (this.activeRegion),
+      regionCode: /** @type {RegionCode} */ this.activeRegion,
       formatStrategy: this.formatStrategy,
       formatCountryCodeStyle: this.formatCountryCodeStyle,
     });
@@ -272,7 +287,7 @@ export class LionInputTel extends LocalizeMixin(LionInput) {
    */
   parser(viewValue) {
     return parsePhoneNumber(viewValue, {
-      regionCode: /** @type {RegionCode} */ (this.activeRegion),
+      regionCode: /** @type {RegionCode} */ this.activeRegion,
     });
   }
 
@@ -286,7 +301,7 @@ export class LionInputTel extends LocalizeMixin(LionInput) {
    */
   preprocessor(viewValue, { currentCaretIndex, prevViewValue }) {
     return liveFormatPhoneNumber(viewValue, {
-      regionCode: /** @type {RegionCode} */ (this.activeRegion),
+      regionCode: /** @type {RegionCode} */ this.activeRegion,
       formatStrategy: this.formatStrategy,
       formatCountryCodeStyle: this.formatCountryCodeStyle,
       currentCaretIndex,
@@ -310,10 +325,12 @@ export class LionInputTel extends LocalizeMixin(LionInput) {
    */
   _onPhoneNumberUtilReady() {
     // This should trigger a rerender in shadow dom
-    this._phoneUtil = /** @type {AwesomePhoneNumber} */ (PhoneUtilManager.PhoneUtil);
+    this._phoneUtil = /** @type {AwesomePhoneNumber} */ PhoneUtilManager.PhoneUtil;
     // This should trigger a rerender in light dom
     // Format when libPhoneNumber is loaded
-    this._calculateValues({ source: null });
+    this._calculateValues({
+      source: null,
+    });
     this.__calculateActiveRegion();
   }
 
@@ -332,7 +349,6 @@ export class LionInputTel extends LocalizeMixin(LionInput) {
     const value = this.value.match(regex)?.join('');
     const regionDerivedFromValue =
       value && this._phoneUtil && this._phoneUtil.parsePhoneNumber(value).regionCode;
-
     if (regionDerivedFromValue && this._allowedOrAllRegions.includes(regionDerivedFromValue)) {
       this._setActiveRegion(regionDerivedFromValue);
       return;

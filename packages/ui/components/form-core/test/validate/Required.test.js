@@ -22,21 +22,14 @@ class RequiredElement extends LionField {
     return inputNodeTag || super._inputNode;
   }
 }
-
 const tagString = defineCE(RequiredElement);
 const tag = unsafeStatic(tagString);
-
 describe('Required validation', async () => {
   const validator = new Required();
-
   it('get aria-required attribute if element is part of the right tag names', async () => {
-    const el = /** @type {FormControlHost & HTMLElement} */ (
-      await fixture(html`<${tag}></${tag}>`)
-    );
-
-    Required._compatibleTags.forEach(tagName => {
-      inputNodeTag = /** @type {HTMLElementWithValue} */ (document.createElement(tagName));
-
+    const el = /** @type {FormControlHost & HTMLElement} */ await fixture(html`<${tag}></${tag}>`);
+    Required._compatibleTags.forEach((tagName) => {
+      inputNodeTag = /** @type {HTMLElementWithValue} */ document.createElement(tagName);
       validator.onFormControlConnect(el);
       const { _inputNode } = getFormControlMembers(el);
       expect(_inputNode).to.have.attribute('aria-required', 'true');
@@ -45,22 +38,17 @@ describe('Required validation', async () => {
     // When incompatible tags are used, aria-required will not be added
 
     // @ts-ignore
-    inputNodeTag = /** @type {HTMLDivElementWithValue} */ (document.createElement('div'));
-
+    inputNodeTag = /** @type {HTMLDivElementWithValue} */ document.createElement('div');
     validator.onFormControlConnect(el);
     const { _inputNode } = getFormControlMembers(el);
     expect(_inputNode).to.not.have.attribute('aria-required');
   });
   it('get aria-required attribute if element is part of the right roles', async () => {
-    const el = /** @type {FormControlHost & HTMLElement} */ (
-      await fixture(html`<${tag}></${tag}>`)
-    );
-
-    Required._compatibleRoles.forEach(role => {
+    const el = /** @type {FormControlHost & HTMLElement} */ await fixture(html`<${tag}></${tag}>`);
+    Required._compatibleRoles.forEach((role) => {
       // @ts-ignore
-      inputNodeTag = /** @type {HTMLElementWithValue} */ (document.createElement('div'));
+      inputNodeTag = /** @type {HTMLElementWithValue} */ document.createElement('div');
       inputNodeTag.setAttribute('role', role);
-
       validator.onFormControlConnect(el);
       const { _inputNode } = getFormControlMembers(el);
       expect(_inputNode).to.have.attribute('aria-required', 'true');
@@ -69,9 +57,8 @@ describe('Required validation', async () => {
     // When incompatible roles are used, aria-required will not be added
 
     // @ts-ignore
-    inputNodeTag = /** @type {HTMLElementWithValue} */ (document.createElement('div'));
+    inputNodeTag = /** @type {HTMLElementWithValue} */ document.createElement('div');
     inputNodeTag.setAttribute('role', 'group');
-
     validator.onFormControlConnect(el);
     const { _inputNode } = getFormControlMembers(el);
     expect(_inputNode).to.not.have.attribute('aria-required');

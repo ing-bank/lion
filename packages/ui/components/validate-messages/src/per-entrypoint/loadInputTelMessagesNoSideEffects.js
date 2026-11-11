@@ -17,8 +17,10 @@ export function loadInputTelMessagesNoSideEffects({ localize }) {
 
   /** @param {FeedbackMessageData} data */
   // @ts-ignore
-  PhoneNumber.getMessage = async data => {
-    await loadValidateNamespace({ localize });
+  PhoneNumber.getMessage = async (data) => {
+    await loadValidateNamespace({
+      localize,
+    });
     const { type, outcome } = data;
     if (outcome === 'too-long') {
       // TODO: get max-length of country and use MaxLength validator
@@ -34,6 +36,5 @@ export function loadInputTelMessagesNoSideEffects({ localize }) {
     }
     return localize.msg(`lion-validate:${type}.Pattern`, data);
   };
-
   isLoaded = true;
 }

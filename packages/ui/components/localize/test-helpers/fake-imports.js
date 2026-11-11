@@ -8,8 +8,12 @@ let fakeImports = {};
  * @param {Object} data
  */
 export function setupFakeImport(path, data) {
-  const fakeExports = { ...data };
-  Object.defineProperty(fakeExports, '__esModule', { value: true });
+  const fakeExports = {
+    ...data,
+  };
+  Object.defineProperty(fakeExports, '__esModule', {
+    value: true,
+  });
   fakeImports[path] = fakeExports;
 }
 
@@ -18,15 +22,16 @@ export function setupFakeImport(path, data) {
  * @param {string[]} locales
  */
 export function setupEmptyFakeImportsFor(namespaces, locales) {
-  namespaces.forEach(namespace => {
-    locales.forEach(locale => {
+  namespaces.forEach((namespace) => {
+    locales.forEach((locale) => {
       setupFakeImport(`./${namespace}/${locale}.js`, {
-        default: { foo: `bar-${locale}` },
+        default: {
+          foo: `bar-${locale}`,
+        },
       });
     });
   });
 }
-
 export function resetFakeImport() {
   fakeImports = {};
 }

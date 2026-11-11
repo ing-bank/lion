@@ -4,8 +4,7 @@ import { Validator } from '../Validator.js';
 /**
  * @param {any} value
  */
-const isString = value => typeof value === 'string';
-
+const isString = (value) => typeof value === 'string';
 export class IsString extends Validator {
   static get validatorName() {
     return 'IsString';
@@ -23,7 +22,6 @@ export class IsString extends Validator {
     return hasError;
   }
 }
-
 export class EqualsLength extends Validator {
   static get validatorName() {
     return 'EqualsLength';
@@ -40,7 +38,6 @@ export class EqualsLength extends Validator {
     return hasError;
   }
 }
-
 export class MinLength extends Validator {
   static get validatorName() {
     return 'MinLength';
@@ -57,7 +54,6 @@ export class MinLength extends Validator {
     return hasError;
   }
 }
-
 export class MaxLength extends Validator {
   static get validatorName() {
     return 'MaxLength';
@@ -74,7 +70,6 @@ export class MaxLength extends Validator {
     return hasError;
   }
 }
-
 export class MinMaxLength extends Validator {
   static get validatorName() {
     return 'MinMaxLength';
@@ -91,7 +86,6 @@ export class MinMaxLength extends Validator {
     return hasError;
   }
 }
-
 const isEmailRegex =
   /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 export class IsEmail extends Validator {
@@ -136,7 +130,6 @@ export class Pattern extends Validator {
     if (!isString(value) || !hasPattern(value, pattern)) {
       hasError = true;
     }
-
     return hasError;
   }
 }

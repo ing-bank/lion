@@ -13,8 +13,10 @@ let resolveLoaded;
  */
 export class PhoneUtilManager {
   static async loadLibPhoneNumber() {
-    const PhoneUtil = /** @type {AwesomePhoneNumber} */ (await import('#awesome-phonenumber'));
-    this.PhoneUtil = { ...PhoneUtil };
+    const PhoneUtil = /** @type {AwesomePhoneNumber} */ await import('#awesome-phonenumber');
+    this.PhoneUtil = {
+      ...PhoneUtil,
+    };
     resolveLoaded(undefined);
     return PhoneUtil;
   }
@@ -34,7 +36,7 @@ export class PhoneUtilManager {
  * await PhoneUtilManager.loadComplete;
  * ```
  */
-PhoneUtilManager.loadComplete = new Promise(resolve => {
+PhoneUtilManager.loadComplete = new Promise((resolve) => {
   resolveLoaded = resolve;
 });
 

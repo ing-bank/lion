@@ -93,5 +93,5 @@ export function resolveSuiteTag(customKlassOrTag, deprecatedTagString, lionDefau
   }
   return typeof lionDefault === 'string'
     ? lionDefault
-    : defineUniqueTag(/** @type {CustomElementConstructor} */ (lionDefault));
+    : defineUniqueTag(/** @type {CustomElementConstructor} */ lionDefault);
 }

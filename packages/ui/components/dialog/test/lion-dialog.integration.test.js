@@ -1,14 +1,12 @@
 /* eslint-disable lit-a11y/no-autofocus */
 import { expect, fixture as _fixture, html, waitUntil } from '@open-wc/testing';
 import { sendKeys } from '@web/test-runner-commands';
-
 import '@lion/ui/define/lion-button.js';
 import '@lion/ui/define/lion-combobox.js';
 import '@lion/ui/define/lion-select-rich.js';
 import '@lion/ui/define/lion-option.js';
 import '@lion/ui/define/lion-dialog.js';
 import '@lion/ui/define/lion-tooltip.js';
-
 import { mimicUserTyping } from '@lion/ui/combobox-test-helpers.js';
 import sinon from 'sinon';
 import { isElementVisible } from '../../core/test-helpers/isElementVisible.js';
@@ -17,10 +15,8 @@ import { isElementVisible } from '../../core/test-helpers/isElementVisible.js';
  * @typedef {import('../src/LionDialog.js').LionDialog} LionDialog
  * @typedef {import('lit').TemplateResult} TemplateResult
  */
-const fixture = /** @type {(arg: TemplateResult) => Promise<LionDialog>} */ (_fixture);
-
+const fixture = /** @type {(arg: TemplateResult) => Promise<LionDialog>} */ _fixture;
 const dropDownEntries = ['Apple', 'Banana'];
-
 describe('lion-dialog', () => {
   describe('lion-combobox integration', () => {
     it('should close lion-combobox dropdown on Escape and should not close the parent lion-dialog', async () => {
@@ -30,24 +26,21 @@ describe('lion-dialog', () => {
           <div slot="header">Combobox example</div>
           <div slot="content">
             <lion-combobox name="combo" label="Select a fruit">
-              ${dropDownEntries.map(
-                (/** @type { string } */ entry) =>
-                  html` <lion-option .choiceValue="${entry}">${entry}</lion-option>`,
-              )}
+              ${dropDownEntries.map((/** @type { string } */ entry) => html` <lion-option .choiceValue="${entry}">${entry}</lion-option>`)}
             </lion-combobox>
           </div>
         </lion-dialog>
       `);
-      const dialogInvoker = /** @type {HTMLElement} */ (el.querySelector('[slot="invoker"]'));
+      const dialogInvoker = /** @type {HTMLElement} */ el.querySelector('[slot="invoker"]');
       dialogInvoker.click();
       const combobox = /** @type {HTMLElement} */ el.querySelector('lion-combobox');
       const isComboboxRendered = () => !!combobox?.shadowRoot?.childNodes.length;
       await waitUntil(isComboboxRendered);
       // @ts-ignore
       await mimicUserTyping(combobox, 'a');
-      const firstOption = /** @type { HTMLElement | undefined } */ (
-        el.querySelectorAll('lion-option')?.[0]
-      );
+      const firstOption =
+        /** @type { HTMLElement | undefined } */
+        el.querySelectorAll('lion-option')?.[0];
       // @ts-ignore
       const isComboboxFirstOptionInDropdownVisible = () => isElementVisible(firstOption);
       await waitUntil(isComboboxFirstOptionInDropdownVisible);
@@ -69,7 +62,6 @@ describe('lion-dialog', () => {
       expect(isDialogVisible()).to.equal(true);
     });
   });
-
   describe('lion-select-rich integration', () => {
     it('should close lion-select-rich dropdown on Escape and should not close the parent lion-dialog', async () => {
       const el = await fixture(html`
@@ -78,19 +70,14 @@ describe('lion-dialog', () => {
           <div slot="header">Select rich example</div>
           <div slot="content">
             <lion-select-rich label="Select a fruit">
-              ${dropDownEntries.map(
-                (/** @type { string } */ entry) =>
-                  html` <lion-option .choiceValue="${entry}">${entry}</lion-option>`,
-              )}
+              ${dropDownEntries.map((/** @type { string } */ entry) => html` <lion-option .choiceValue="${entry}">${entry}</lion-option>`)}
             </lion-select-rich>
           </div>
         </lion-dialog>
       `);
-      const dialogInvoker = /** @type {HTMLElement} */ (el.querySelector('[slot="invoker"]'));
+      const dialogInvoker = /** @type {HTMLElement} */ el.querySelector('[slot="invoker"]');
       dialogInvoker.click();
-      const selectRichInvoker = /** @type {HTMLElement} */ (
-        el.querySelector('lion-select-invoker')
-      );
+      const selectRichInvoker = /** @type {HTMLElement} */ el.querySelector('lion-select-invoker');
       const isSelectRichInvokerRendered = () => !!selectRichInvoker?.shadowRoot?.childNodes.length;
       await waitUntil(isSelectRichInvokerRendered);
       const selectRich = el?.querySelector('lion-select-rich');
@@ -98,7 +85,6 @@ describe('lion-dialog', () => {
       // Note, do not remove `console.log` down below. There is a bug in test engine.
       // Referring dialog.close from the test environement fixes the bug
       console.log(selectRichDialog?.close);
-
       selectRichInvoker?.click();
       const dropdownDialog = el
         ?.querySelector('lion-select-rich')
@@ -110,7 +96,7 @@ describe('lion-dialog', () => {
           el?.querySelector('lion-select-rich')?.shadowRoot?.querySelector('dialog'),
         );
       await waitUntil(isDropdownVisible);
-      const lionOptions = /** @type {HTMLElement} */ (el.querySelector('lion-options'));
+      const lionOptions = /** @type {HTMLElement} */ el.querySelector('lion-options');
       lionOptions?.focus();
       await sendKeys({
         press: 'Escape',
@@ -121,7 +107,6 @@ describe('lion-dialog', () => {
       expect(isDialogVisible()).to.equal(true);
     });
   });
-
   describe('lion-tooltip integration', () => {
     it('should close lion-tooltip on first Escape and should close the parent lion-dialog on the second Escape', async () => {
       const el = await fixture(html`
@@ -136,14 +121,13 @@ describe('lion-dialog', () => {
           </div>
         </lion-dialog>
       `);
-
       await el.updateComplete;
-      const dialogInvoker = /** @type {HTMLElement} */ (el.querySelector('.dialog-invoker'));
+      const dialogInvoker = /** @type {HTMLElement} */ el.querySelector('.dialog-invoker');
       dialogInvoker.click();
       const tooltip = /** @type {HTMLElement} */ el.querySelector('lion-tooltip');
       const isTooltipRendered = () => !!tooltip?.shadowRoot?.childNodes.length;
       await waitUntil(isTooltipRendered);
-      const tooltipButton = /** @type {HTMLElement} */ (el.querySelector('.demo-tooltip-invoker'));
+      const tooltipButton = /** @type {HTMLElement} */ el.querySelector('.demo-tooltip-invoker');
       tooltipButton?.focus();
       const getTooltipContent = () =>
         el

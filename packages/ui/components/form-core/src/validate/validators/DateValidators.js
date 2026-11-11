@@ -11,7 +11,6 @@ function isDate(value) {
     Object.prototype.toString.call(value) === '[object Date]' && !Number.isNaN(value.getTime())
   );
 }
-
 export class IsDate extends Validator {
   static get validatorName() {
     return 'IsDate';
@@ -29,7 +28,6 @@ export class IsDate extends Validator {
     return hasError;
   }
 }
-
 export class MinDate extends Validator {
   static get validatorName() {
     return 'MinDate';
@@ -46,7 +44,6 @@ export class MinDate extends Validator {
     return hasError;
   }
 }
-
 export class MaxDate extends Validator {
   static get validatorName() {
     return 'MaxDate';
@@ -63,7 +60,6 @@ export class MaxDate extends Validator {
     return hasError;
   }
 }
-
 export class MinMaxDate extends Validator {
   static get validatorName() {
     return 'MinMaxDate';
@@ -84,7 +80,6 @@ export class MinMaxDate extends Validator {
     return hasError;
   }
 }
-
 export class IsDateDisabled extends Validator {
   static get validatorName() {
     return 'IsDateDisabled';

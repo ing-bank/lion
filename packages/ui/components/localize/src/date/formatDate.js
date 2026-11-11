@@ -16,9 +16,8 @@ export function formatDate(date, options) {
   if (!(date instanceof Date)) {
     return '';
   }
-
   const formatOptions =
-    options || /** @type {import('../../types/LocalizeMixinTypes.js').FormatDateOptions} */ ({});
+    options || /** @type {import('../../types/LocalizeMixinTypes.js').FormatDateOptions} */ {};
   /**
    * Set smart defaults if:
    * 1) no options object is passed
@@ -36,7 +35,6 @@ export function formatDate(date, options) {
   } catch (e) {
     formattedDate = '';
   }
-
   if (localizeManager.formatDateOptions.postProcessors.size > 0) {
     Array.from(localizeManager.formatDateOptions.postProcessors).forEach(([locale, fn]) => {
       if (locale === computedLocale) {
@@ -44,7 +42,6 @@ export function formatDate(date, options) {
       }
     });
   }
-
   if (formatOptions.postProcessors && formatOptions.postProcessors.size > 0) {
     Array.from(formatOptions.postProcessors).forEach(([locale, fn]) => {
       if (locale === computedLocale) {
@@ -52,6 +49,5 @@ export function formatDate(date, options) {
       }
     });
   }
-
   return normalizeIntlDate(formattedDate, computedLocale, formatOptions);
 }

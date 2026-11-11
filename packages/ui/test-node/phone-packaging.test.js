@@ -8,13 +8,11 @@ import test from 'node:test';
 import url from 'node:url';
 import util from 'node:util';
 import { expandClosureInputs } from '@lion/awesome-phonenumber/scripts/closure-inputs.js';
-
 const execFile = util.promisify(childProcess.execFile);
 const packageRoot = url.fileURLToPath(new URL('../', import.meta.url));
 const repoRoot = path.resolve(packageRoot, '../..');
 const sourceRoot = path.join(repoRoot, 'packages-node/awesome-phonenumber');
 const version = '7.9.0-tlouisse.libphonenumber-9.0.41';
-
 test('Closure receives explicit production inputs with identical Windows and POSIX exclusions', async () => {
   const directory = path.join(sourceRoot, 'upstream/libphonenumber/javascript/i18n/phonenumbers');
   const prefix = 'build/libphonenumber/javascript/i18n/phonenumbers';
@@ -55,13 +53,13 @@ test('Closure receives explicit production inputs with identical Windows and POS
       'phonenumberutil.js',
       'shortnumberinfo.js',
       'shortnumbermetadata.js',
-    ].map(file => `--js=${prefix}/${file}`),
+    ].map((file) => `--js=${prefix}/${file}`),
     '--js=src/index.js',
   ];
   assert.deepEqual(await expandClosureInputs(flags, sourceRoot, readDirectory), expected);
   assert.deepEqual(
     await expandClosureInputs(
-      flags.map(flag => flag.replaceAll('/', '\\')),
+      flags.map((flag) => flag.replaceAll('/', '\\')),
       sourceRoot,
       readDirectory,
     ),
@@ -71,21 +69,24 @@ test('Closure receives explicit production inputs with identical Windows and POS
 const legacyTsc = module
   .createRequire(path.join(repoRoot, 'test/typescript-legacy/package.json'))
   .resolve('typescript/bin/tsc');
-
 async function runNpm(args, cwd, env = {}) {
   const npmCli = process.env.npm_execpath;
   assert(npmCli, 'Run these packaging tests through npm so npm_execpath is available.');
   const { stdout } = await execFile(process.execPath, [npmCli, ...args], {
     cwd,
     maxBuffer: 10 * 1024 * 1024,
-    env: { ...process.env, ...env },
+    env: {
+      ...process.env,
+      ...env,
+    },
   });
   return stdout;
 }
-
 test(
   'npm pack rebuilds and ships a package-private phone library with no phone dependency',
-  { timeout: 600000 },
+  {
+    timeout: 600000,
+  },
   async () => {
     const fixture = await fs.mkdtemp(path.resolve(repoRoot, '../lion-phone-packaging-'));
     try {
@@ -102,17 +103,19 @@ test(
           // prepack leaves the generated phone library out and `npm run types` fails on
           // `#awesome-phonenumber` (seen on the Windows runner, not on Linux). Force the rebuild the
           // prepack promises instead of trusting the cache.
-          { WIREIT_CACHE: 'none' },
+          {
+            WIREIT_CACHE: 'none',
+          },
         ),
       );
       assert.deepEqual(packed.bundled, []);
-      const files = new Set(packed.files.map(file => file.path));
+      const files = new Set(packed.files.map((file) => file.path));
       assert(
-        ![...files].some(file => file.includes('restorePhoneUtilManagerLive')),
+        ![...files].some((file) => file.includes('restorePhoneUtilManagerLive')),
         'Live-state cleanup must remain test-only, including generated declarations',
       );
       assert(
-        ![...files].some(file => /(^|\/)scripts\//.test(file)),
+        ![...files].some((file) => /(^|\/)scripts\//.test(file)),
         'Build-only scripts must not be published',
       );
       const shipped = [
@@ -132,13 +135,16 @@ test(
       }
       assert(
         ![...files].some(
-          file =>
+          (file) =>
             file.startsWith('node_modules/') || file.startsWith('vendor/') || file.endsWith('.tgz'),
         ),
       );
       await fs.writeFile(
         path.join(fixture, 'package.json'),
-        JSON.stringify({ private: true, type: 'module' }),
+        JSON.stringify({
+          private: true,
+          type: 'module',
+        }),
       );
       await runNpm(
         ['install', '--no-audit', '--no-fund', path.join(fixture, packed.filename)],
@@ -213,7 +219,7 @@ test(
       assert.equal(provenance.sourceCommit, 'b4b6439136053624351f1c0fd8eb200ee867f37f');
       assert.equal(provenance.libphonenumberVersion, 'v9.0.41');
       const lock = JSON.parse(await fs.readFile(path.join(fixture, 'package-lock.json'), 'utf8'));
-      assert(!Object.keys(lock.packages).some(file => file.endsWith('/awesome-phonenumber')));
+      assert(!Object.keys(lock.packages).some((file) => file.endsWith('/awesome-phonenumber')));
       for (const file of [
         'phone-consumer.mjs',
         'phone-consumer.mts',
@@ -236,9 +242,13 @@ test(
           path.join(installedRoot, 'phone-browser.mjs'),
           browserBundle,
         ],
-        { cwd: fixture },
+        {
+          cwd: fixture,
+        },
       );
-      await execFile(process.execPath, [path.join(browserBundle, 'entry.mjs')], { cwd: fixture });
+      await execFile(process.execPath, [path.join(browserBundle, 'entry.mjs')], {
+        cwd: fixture,
+      });
       await fs.writeFile(
         path.join(fixture, 'tsconfig.json'),
         JSON.stringify({
@@ -258,40 +268,54 @@ test(
         }),
       );
       for (const tsc of [path.join(repoRoot, 'node_modules/typescript/bin/tsc'), legacyTsc]) {
-        await execFile(process.execPath, [tsc, '-p', fixture], { cwd: fixture });
+        await execFile(process.execPath, [tsc, '-p', fixture], {
+          cwd: fixture,
+        });
       }
     } finally {
-      await fs.rm(fixture, { recursive: true, force: true });
+      await fs.rm(fixture, {
+        recursive: true,
+        force: true,
+      });
     }
   },
 );
-
-test('source-only rebuild is deterministic', { timeout: 180000 }, async () => {
-  const build = path.join(sourceRoot, 'scripts/build.js');
-  const results = [];
-  for (let attempt = 0; attempt < 2; attempt += 1) {
-    // The build removes its staging directory and never reads a committed distribution.
-    await execFile(process.execPath, [build], { cwd: sourceRoot, maxBuffer: 10 * 1024 * 1024 });
-    const checksums = JSON.parse(
-      await fs.readFile(path.join(sourceRoot, 'dist/checksums.json'), 'utf8'),
-    );
-    for (const [file, expected] of Object.entries(checksums)) {
-      assert.equal(
-        crypto
-          .createHash('sha256')
-          .update(await fs.readFile(path.join(sourceRoot, 'dist', file)))
-          .digest('hex'),
-        expected,
+test(
+  'source-only rebuild is deterministic',
+  {
+    timeout: 180000,
+  },
+  async () => {
+    const build = path.join(sourceRoot, 'scripts/build.js');
+    const results = [];
+    for (let attempt = 0; attempt < 2; attempt += 1) {
+      // The build removes its staging directory and never reads a committed distribution.
+      await execFile(process.execPath, [build], {
+        cwd: sourceRoot,
+        maxBuffer: 10 * 1024 * 1024,
+      });
+      const checksums = JSON.parse(
+        await fs.readFile(path.join(sourceRoot, 'dist/checksums.json'), 'utf8'),
       );
+      for (const [file, expected] of Object.entries(checksums)) {
+        assert.equal(
+          crypto
+            .createHash('sha256')
+            .update(await fs.readFile(path.join(sourceRoot, 'dist', file)))
+            .digest('hex'),
+          expected,
+        );
+      }
+      results.push(checksums);
     }
-    results.push(checksums);
-  }
-  assert.deepEqual(results[0], results[1]);
-});
-
+    assert.deepEqual(results[0], results[1]);
+  },
+);
 test('source build rejects modified upstream inputs before compiling', async () => {
   const scratchRoot = path.join(repoRoot, '.tmp');
-  await fs.mkdir(scratchRoot, { recursive: true });
+  await fs.mkdir(scratchRoot, {
+    recursive: true,
+  });
   const fixture = await fs.mkdtemp(path.join(scratchRoot, 'phone-source-checksum-'));
   try {
     for (const file of [
@@ -301,7 +325,9 @@ test('source build rejects modified upstream inputs before compiling', async () 
       'provenance.json',
       'package.json',
     ]) {
-      await fs.cp(path.join(sourceRoot, file), path.join(fixture, file), { recursive: true });
+      await fs.cp(path.join(sourceRoot, file), path.join(fixture, file), {
+        recursive: true,
+      });
     }
     await fs.appendFile(
       path.join(fixture, 'upstream/awesome-phonenumber/src/index.js'),
@@ -311,8 +337,13 @@ test('source build rejects modified upstream inputs before compiling', async () 
       execFile(process.execPath, [path.join(fixture, 'scripts/build.js')]),
       /Source checksum mismatch: awesome-phonenumber\/src\/index.js/,
     );
-    await assert.rejects(fs.stat(path.join(fixture, 'dist')), { code: 'ENOENT' });
+    await assert.rejects(fs.stat(path.join(fixture, 'dist')), {
+      code: 'ENOENT',
+    });
   } finally {
-    await fs.rm(fixture, { recursive: true, force: true });
+    await fs.rm(fixture, {
+      recursive: true,
+      force: true,
+    });
   }
 });

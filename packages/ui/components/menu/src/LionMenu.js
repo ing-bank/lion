@@ -160,7 +160,9 @@ class LionMenuCore extends MultiLevelListMixin(LitElement) {
       /**
        * Enable bar to use [role="menubar"] and horizontal navigation
        */
-      bar: { type: Boolean },
+      bar: {
+        type: Boolean,
+      },
     };
   }
 
@@ -175,7 +177,7 @@ class LionMenuCore extends MultiLevelListMixin(LitElement) {
     if (!item) return;
 
     // @ts-ignore - InteractiveListItemRole type
-    const role = /** @type {InteractiveListItemRole} */ (item.getAttribute('role'));
+    const role = /** @type {InteractiveListItemRole} */ item.getAttribute('role');
     let listItemsWithinGroup = this.listItems;
     let { multiple } = this;
     if (role === 'menuitemradio' || role === 'menuitemcheckbox') {
@@ -195,13 +197,12 @@ class LionMenuCore extends MultiLevelListMixin(LitElement) {
        */
       const closestGroup = item.closest('[role="group"]');
       const group = closestGroup && this.contains(closestGroup) ? closestGroup : this;
-      listItemsWithinGroup = this.listItems.filter(listItem => group.contains(listItem));
+      listItemsWithinGroup = this.listItems.filter((listItem) => group.contains(listItem));
       multiple = role === 'menuitemcheckbox';
     }
-
     if (!multiple) {
       // Uncheck all within group
-      listItemsWithinGroup.forEach(listItem => {
+      listItemsWithinGroup.forEach((listItem) => {
         setChecked(listItem, true);
       });
       setChecked(this.listItems[index]);
@@ -209,10 +210,8 @@ class LionMenuCore extends MultiLevelListMixin(LitElement) {
       toggleChecked(this.listItems[index]);
     }
   }
-
   constructor() {
     super();
-
     this.bar = false;
     /** @configure MultiLevelListMixin */
     this.behaveAsAccordion = true;
@@ -229,11 +228,9 @@ class LionMenuCore extends MultiLevelListMixin(LitElement) {
    */
   firstUpdated(changedProperties) {
     super.firstUpdated(changedProperties);
-
     if (this._activeMode === 'tabbable-disclosure') {
       this._listRole = 'list';
     }
-
     this._listNode.setAttribute('role', this._listRole);
 
     // Allow generic attr for functional styling
@@ -245,7 +242,6 @@ class LionMenuCore extends MultiLevelListMixin(LitElement) {
    */
   updated(changedProperties) {
     super.updated(changedProperties);
-
     if (changedProperties.has('bar')) {
       if (this.bar) {
         this.axis = 'inline';
@@ -276,52 +272,47 @@ class LionMenuCore extends MultiLevelListMixin(LitElement) {
  * @param {import('@open-wc/dedupe-mixin').Constructor<import('lit').LitElement>} superclass
  */
 // prettier-ignore
-const OverlayWithListInvokerMixinImplementation = /** @type {OverlayWithListInvokerMixinType} */ (superclass =>
-  class OverlayWithListInvokerMixin extends OverlayMixin(InteractiveListMixin(superclass)) {
-    _onOverlayShow = () => {
-      if (this.checkedIndex != null) {
-        // @ts-ignore - activeIndex can be number or array
-        this.activeIndex = this.checkedIndex;
-      }
-    };
-
-    /**
-     * @enhance OverlayMixin
-     */
-    _setupOverlayCtrl() {
-      super._setupOverlayCtrl();
-
-      if (!this._overlayCtrl) return;
-
-      this._overlayCtrl.addEventListener('show', this._onOverlayShow);
+const OverlayWithListInvokerMixinImplementation = /** @type {OverlayWithListInvokerMixinType} */superclass => class OverlayWithListInvokerMixin extends OverlayMixin(InteractiveListMixin(superclass)) {
+  _onOverlayShow = () => {
+    if (this.checkedIndex != null) {
+      // @ts-ignore - activeIndex can be number or array
+      this.activeIndex = this.checkedIndex;
     }
+  };
 
-    /**
-     * @enhance OverlayMixin
-     */
-    _teardownOverlayCtrl() {
-      super._teardownOverlayCtrl();
+  /**
+   * @enhance OverlayMixin
+   */
+  _setupOverlayCtrl() {
+    super._setupOverlayCtrl();
+    if (!this._overlayCtrl) return;
+    this._overlayCtrl.addEventListener('show', this._onOverlayShow);
+  }
 
-      if (!this._overlayCtrl) return;
+  /**
+   * @enhance OverlayMixin
+   */
+  _teardownOverlayCtrl() {
+    super._teardownOverlayCtrl();
+    if (!this._overlayCtrl) return;
+    this._overlayCtrl.removeEventListener('show', this._onOverlayShow);
+  }
 
-      this._overlayCtrl.removeEventListener('show', this._onOverlayShow);
-    }
+  /**
+   * make sure OverlayMixin gets the contentNode defined by DisclosureMixin
+   */
+  get _overlayContentNode() {
+    // @ts-ignore - _contentNode property
+    return this._contentNode;
+  }
 
-    /**
-     * make sure OverlayMixin gets the contentNode defined by DisclosureMixin
-     */
-    get _overlayContentNode() {
-      // @ts-ignore - _contentNode property
-      return this._contentNode;
-    }
-
-    /**
-     * make sure OverlayMixin gets the invokerNode defined by DisclosureMixin
-     */
-    get _overlayInvokerNode() {
-      return /** @type {HTMLElement} */ (this._invokerNode);
-    }
-  });
+  /**
+   * make sure OverlayMixin gets the invokerNode defined by DisclosureMixin
+   */
+  get _overlayInvokerNode() {
+    return /** @type {HTMLElement} */this._invokerNode;
+  }
+};
 export const OverlayWithListInvokerMixin = dedupeMixin(OverlayWithListInvokerMixinImplementation);
 
 /**
@@ -335,10 +326,12 @@ export class LionMenu extends OverlayWithListInvokerMixin(LionMenuCore) {
   /** @returns {import('lit').PropertyDeclarations} */
   static get properties() {
     return {
-      openableMode: { type: String, attribute: 'openable-mode' },
+      openableMode: {
+        type: String,
+        attribute: 'openable-mode',
+      },
     };
   }
-
   constructor() {
     super();
 
@@ -350,7 +343,6 @@ export class LionMenu extends OverlayWithListInvokerMixin(LionMenuCore) {
      * @type {'disclosure'|'overlay'}
      */
     this.openableMode = 'disclosure';
-
     this._shouldSetupOverlay = false;
   }
 
@@ -359,7 +351,6 @@ export class LionMenu extends OverlayWithListInvokerMixin(LionMenuCore) {
    */
   updated(changedProperties) {
     super.updated(changedProperties);
-
     if (changedProperties.has('openableMode')) {
       if (this.openableMode === 'overlay') {
         this._shouldSetupOverlay = true;
@@ -393,9 +384,7 @@ export class LionMenu extends OverlayWithListInvokerMixin(LionMenuCore) {
     if (parentList?.axis !== 'inline') {
       placement = 'right-start';
     }
-
     const dropdownCfg = withDropdownConfig();
-
     return {
       ...dropdownCfg,
       hidesOnEsc: true,
@@ -422,9 +411,7 @@ export class LionMenu extends OverlayWithListInvokerMixin(LionMenuCore) {
    */
   _onListKeyUp(ev) {
     super._onListKeyUp(ev);
-
     const { key } = ev;
-
     switch (key) {
       case 'Escape':
         // We need to stop here, or else we affect parent menu (handled by OverlayController)

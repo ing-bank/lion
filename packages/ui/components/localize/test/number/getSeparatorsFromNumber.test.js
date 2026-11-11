@@ -1,7 +1,5 @@
 import { expect } from '@open-wc/testing';
-
 import { getSeparatorsFromNumber } from '@lion/ui/localize.js';
-
 describe('getSeparatorsFromNumber', () => {
   it('returns group separator for locale', () => {
     expect(getSeparatorsFromNumber(99, '99.00')).to.eql({
@@ -40,7 +38,11 @@ describe('getSeparatorsFromNumber', () => {
       groupSeparator: ',',
       decimalSeparator: null,
     });
-    expect(getSeparatorsFromNumber(123, '0,123', { minimumIntegerDigits: 4 })).to.eql({
+    expect(
+      getSeparatorsFromNumber(123, '0,123', {
+        minimumIntegerDigits: 4,
+      }),
+    ).to.eql({
       groupSeparator: ',',
       decimalSeparator: null,
     });

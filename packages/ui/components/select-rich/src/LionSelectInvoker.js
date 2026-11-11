@@ -35,13 +35,24 @@ export class LionSelectInvoker extends SlotMixin(LionButton) {
   /** @type {any} */
   static get properties() {
     return {
-      selectedElement: { type: Object },
-      hostElement: { type: Object },
-      readOnly: { type: Boolean, reflect: true, attribute: 'readonly' },
-      singleOption: { type: Boolean, reflect: true, attribute: 'single-option' },
+      selectedElement: {
+        type: Object,
+      },
+      hostElement: {
+        type: Object,
+      },
+      readOnly: {
+        type: Boolean,
+        reflect: true,
+        attribute: 'readonly',
+      },
+      singleOption: {
+        type: Boolean,
+        reflect: true,
+        attribute: 'single-option',
+      },
     };
   }
-
   get slots() {
     return {
       ...super.slots,
@@ -59,9 +70,8 @@ export class LionSelectInvoker extends SlotMixin(LionButton) {
    * @configure OverlayMixin
    */
   get _contentWrapperNode() {
-    return /** @type {ShadowRoot} */ (this.shadowRoot).getElementById('content-wrapper');
+    return /** @type {ShadowRoot} */ this.shadowRoot.getElementById('content-wrapper');
   }
-
   constructor() {
     super();
 
@@ -100,12 +110,10 @@ export class LionSelectInvoker extends SlotMixin(LionButton) {
       /* no default */
     }
   }
-
   connectedCallback() {
     super.connectedCallback();
     this.addEventListener('keydown', this.__handleKeydown);
   }
-
   disconnectedCallback() {
     super.disconnectedCallback();
     this.removeEventListener('keydown', this.__handleKeydown);
@@ -119,13 +127,12 @@ export class LionSelectInvoker extends SlotMixin(LionButton) {
     if (this.selectedElement) {
       const labelNodes = Array.from(this.selectedElement.childNodes);
       if (labelNodes.length > 0) {
-        return labelNodes.map(node => node.cloneNode(true));
+        return labelNodes.map((node) => node.cloneNode(true));
       }
       return this.selectedElement.textContent;
     }
     return this._noSelectionTemplate();
   }
-
   render() {
     return html` ${this._beforeTemplate()} ${super.render()} ${this._afterTemplate()} `;
   }

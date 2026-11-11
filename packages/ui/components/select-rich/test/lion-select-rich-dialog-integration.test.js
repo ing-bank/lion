@@ -1,7 +1,6 @@
 import { LitElement } from 'lit';
 import { OverlayMixin } from '@lion/ui/overlays.js';
 import { defineCE, expect, fixture, html, unsafeStatic } from '@open-wc/testing';
-
 import '@lion/ui/define/lion-listbox.js';
 import '@lion/ui/define/lion-select-rich.js';
 
@@ -22,13 +21,12 @@ const tagString = defineCE(
   },
 );
 const tag = unsafeStatic(tagString);
-
 describe('Select Rich Integration tests', () => {
   it('works inside a dialog', async () => {
     let properlyInstantiated = false;
-
     try {
-      const nestedEl = /** @type {LionSelectRich} */ (
+      const nestedEl =
+        /** @type {LionSelectRich} */
         await fixture(html`
           <lion-select-rich>
             <lion-options slot="input">
@@ -36,10 +34,8 @@ describe('Select Rich Integration tests', () => {
               <lion-option .choiceValue=${20}>Item 2</lion-option>
             </lion-options>
           </lion-select-rich>
-        `)
-      );
+        `);
       await nestedEl.registrationComplete;
-
       await fixture(html`
         <${tag} id="main">
           <div slot="content" id="mainContent">
@@ -51,9 +47,8 @@ describe('Select Rich Integration tests', () => {
       `);
       properlyInstantiated = true;
     } catch (e) {
-      throw new Error(/** @type {Error} */ (e).message);
+      throw new Error(/** @type {Error} */ e.message);
     }
-
     expect(properlyInstantiated).to.be.true;
   });
 });

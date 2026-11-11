@@ -1,7 +1,6 @@
 import { css, html } from 'lit';
 import { ifDefined } from 'lit/directives/if-defined.js';
 import { createRef, ref } from 'lit/directives/ref.js';
-
 import { LionInputAmount } from '@lion/ui/input-amount.js';
 import { currencyUtil } from './currencyUtil.js';
 import { formatAmount } from './formatters.js';
@@ -19,11 +18,9 @@ const hasChangedAmountDropdownModelValue = (newValue, oldValue) => {
   if (newValue === oldValue) {
     return false;
   }
-
   if (!newValue || !oldValue || typeof newValue !== 'object' || typeof oldValue !== 'object') {
     return newValue !== oldValue;
   }
-
   return newValue.currency !== oldValue.currency || !Object.is(newValue.amount, oldValue.amount);
 };
 
@@ -80,9 +77,15 @@ export class LionInputAmountDropdown extends LionInputAmount {
         attribute: false,
         hasChanged: hasChangedAmountDropdownModelValue,
       },
-      preferredCurrencies: { type: Array },
-      allowedCurrencies: { type: Array },
-      __dropdownSlot: { type: String },
+      preferredCurrencies: {
+        type: Array,
+      },
+      allowedCurrencies: {
+        type: Array,
+      },
+      __dropdownSlot: {
+        type: String,
+      },
     };
   }
 
@@ -103,27 +106,27 @@ export class LionInputAmountDropdown extends LionInputAmount {
   // @ts-expect-error - modelValue is overridden as an accessor but is defined as a property in parent class
   set modelValue(value) {
     if (value) {
-      this.__modelValue = /** @type {import('../types/index.js').AmountDropdownModelValue} */ (
-        value
-      );
+      this.__modelValue = /** @type {import('../types/index.js').AmountDropdownModelValue} */ value;
       // Below is needed because A1 and A2 in _callParser (FormatMixin) return values that are the wrong type.
     } else {
-      this.__modelValue = { currency: this.currency, amount: '' };
+      this.__modelValue = {
+        currency: this.currency,
+        amount: '',
+      };
     }
   }
-
   get modelValue() {
-    return /** @type {import('../types/index.js').AmountDropdownModelValue} */ (this.__modelValue);
+    return /** @type {import('../types/index.js').AmountDropdownModelValue} */ this.__modelValue;
   }
-
   static localizeNamespaces = [
-    { 'lion-input-amount-dropdown': localizeNamespaceLoader },
+    {
+      'lion-input-amount-dropdown': localizeNamespaceLoader,
+    },
     ...super.localizeNamespaces,
   ];
-
   refs = {
     /** @type {DropdownRef} */
-    dropdown: /** @type {DropdownRef} */ (createRef()),
+    dropdown: /** @type {DropdownRef} */ createRef(),
   };
 
   /**
@@ -171,7 +174,6 @@ export class LionInputAmountDropdown extends LionInputAmount {
       },
       input: this._inputNode,
     };
-
     return {
       refs,
       data: {
@@ -189,15 +191,12 @@ export class LionInputAmountDropdown extends LionInputAmount {
   get _dropdownSlot() {
     return /** @type {string} */ this.__dropdownSlot;
   }
-
   set _dropdownSlot(position) {
     if (position !== 'suffix' && position !== 'prefix') {
       throw new Error('Only the suffix and prefix slots are valid positions for the dropdown.');
     }
-
     this.__dropdownSlot = position;
   }
-
   static templates = {
     dropdown: (/** @type {TemplateDataForDropdownInputAmount} */ templateDataForDropdown) => {
       const { refs, data } = templateDataForDropdown;
@@ -212,16 +211,18 @@ export class LionInputAmountDropdown extends LionInputAmount {
           @change="${refs?.dropdown?.listeners?.change}"
           style="${ifDefined(refs?.dropdown?.props?.style)}"
         >
-          ${data?.regionMetaListPreferred?.length
-            ? html`
-                <optgroup label="${refs?.dropdown?.labels?.preferredCurrencies}">
-                  ${data.regionMetaListPreferred.map(renderOption)}
-                </optgroup>
-                <optgroup label="${refs?.dropdown?.labels?.allCurrencies}">
-                  ${data?.regionMetaList?.map(renderOption)}
-                </optgroup>
-              `
-            : html` ${data?.regionMetaList?.map(renderOption)}`}
+          ${
+            data?.regionMetaListPreferred?.length
+              ? html`
+                  <optgroup label="${refs?.dropdown?.labels?.preferredCurrencies}">
+                    ${data.regionMetaListPreferred.map(renderOption)}
+                  </optgroup>
+                  <optgroup label="${refs?.dropdown?.labels?.allCurrencies}">
+                    ${data?.regionMetaList?.map(renderOption)}
+                  </optgroup>
+                `
+              : html` ${data?.regionMetaList?.map(renderOption)}`
+          }
         </select>
       `;
     },
@@ -236,9 +237,7 @@ export class LionInputAmountDropdown extends LionInputAmount {
     ) => html`
       <option
         value="${currencyCode}"
-        aria-label="${ifDefined(
-          nameForLocale && currencySymbol ? `${nameForLocale}, ${currencySymbol}` : '',
-        )}"
+        aria-label="${ifDefined(nameForLocale && currencySymbol ? `${nameForLocale}, ${currencySymbol}` : '')}"
       >
         ${currencyCode} (${currencySymbol})&nbsp;
       </option>
@@ -286,9 +285,8 @@ export class LionInputAmountDropdown extends LionInputAmount {
     return {
       ...super.slots,
       [this._dropdownSlot]: () => {
-        const ctor = /** @type {typeof LionInputAmountDropdown} */ (this.constructor);
+        const ctor = /** @type {typeof LionInputAmountDropdown} */ this.constructor;
         const { templates } = ctor;
-
         return {
           template: templates.dropdown(this._templateDataDropdown),
           renderAsDirectHostChild: true,
@@ -302,20 +300,17 @@ export class LionInputAmountDropdown extends LionInputAmount {
    */
   onLocaleUpdated() {
     super.onLocaleUpdated();
-
     const localeSplitted = this._localizeManager.locale.split('-');
     /**
      * @protected
      * @type {RegionCode}
      */
-    this._langIso = /** @type {RegionCode} */ (
-      localeSplitted[localeSplitted.length - 1].toUpperCase()
-    );
-
+    this._langIso =
+      /** @type {RegionCode} */
+      localeSplitted[localeSplitted.length - 1].toUpperCase();
     this.__namesForLocale = new Intl.DisplayNames([this._langIso], {
       type: 'currency',
     });
-
     this.__calculateActiveCurrency();
     this.__createCurrencyMeta();
   }
@@ -358,11 +353,13 @@ export class LionInputAmountDropdown extends LionInputAmount {
    */
   constructor() {
     super();
-
     this.parser = parseAmount;
 
     /** @type {import('../types/index.js').AmountDropdownModelValue} */
-    this.__modelValue = { currency: this.currency, amount: '' };
+    this.__modelValue = {
+      currency: this.currency,
+      amount: '',
+    };
 
     /**
      * @param {import("../types/index.js").AmountDropdownModelValue} modelValue
@@ -371,7 +368,6 @@ export class LionInputAmountDropdown extends LionInputAmount {
     this.formatter = (modelValue, givenOptions) => formatAmount(modelValue, givenOptions, this);
     this.serializer = serializer;
     this.deserializer = deserializer;
-
     this.defaultValidators = [new CurrencyAndAmount()];
 
     /**
@@ -391,12 +387,9 @@ export class LionInputAmountDropdown extends LionInputAmount {
      * @type {CurrencyCode[]}
      */
     this.allowedCurrencies = [];
-
     this._allCurrenciesLabel = '';
     this._preferredCurrenciesLabel = '';
-
     this.__regionMetaList = [];
-
     this.__regionMetaListPreferred = [];
 
     /**
@@ -409,7 +402,6 @@ export class LionInputAmountDropdown extends LionInputAmount {
      * @type {EventListener}
      */
     this.__syncCurrencyWithDropdown = this.__syncCurrencyWithDropdown.bind(this);
-
     this._currencyUtil = currencyUtil;
   }
 
@@ -419,7 +411,6 @@ export class LionInputAmountDropdown extends LionInputAmount {
    */
   willUpdate(changedProperties) {
     super.willUpdate(changedProperties);
-
     if (changedProperties.has('allowedCurrencies')) {
       this.__createCurrencyMeta();
     }
@@ -430,9 +421,7 @@ export class LionInputAmountDropdown extends LionInputAmount {
    */
   updated(changedProperties) {
     super.updated(changedProperties);
-
     this.__syncCurrencyWithDropdown();
-
     if (changedProperties.has('disabled') || changedProperties.has('readOnly')) {
       if (this.disabled || this.readOnly) {
         this.refs.dropdown?.value?.setAttribute('disabled', '');
@@ -440,7 +429,6 @@ export class LionInputAmountDropdown extends LionInputAmount {
         this.refs.dropdown?.value?.removeAttribute('disabled');
       }
     }
-
     if (changedProperties.has('allowedCurrencies') && this.allowedCurrencies.length > 0) {
       this.__calculateActiveCurrency();
     }
@@ -462,7 +450,10 @@ export class LionInputAmountDropdown extends LionInputAmount {
     const { currency, amount } = this._initialModelValue || {};
     if (!currency && !this.dirty) {
       this.__initializedCurrencyCode = this.currency;
-      this._initialModelValue = { currency: this.currency, amount };
+      this._initialModelValue = {
+        currency: this.currency,
+        amount,
+      };
       this.modelValue = this._initialModelValue;
       this.initInteractionState();
     }
@@ -489,9 +480,9 @@ export class LionInputAmountDropdown extends LionInputAmount {
   _onDropdownValueChange(event) {
     const isInitializing = event.detail?.initialize;
     const dropdownElement = event.target;
-    const dropdownValue = /** @type {RegionCode} */ (
-      dropdownElement.modelValue || dropdownElement.value
-    );
+    const dropdownValue =
+      /** @type {RegionCode} */
+      dropdownElement.modelValue || dropdownElement.value;
     // @ts-ignore [ts7-2565] TS7 checks definite assignment on this inferred field; declared `string` but legitimately reset to undefined: widen the type in the types file (API change) or guard the read with a local
     if (isInitializing || this.currency === dropdownValue) {
       return;
@@ -502,13 +493,15 @@ export class LionInputAmountDropdown extends LionInputAmount {
 
     /** @type {RegionCode | string} */
     this.currency = dropdownValue;
-
     if (prevCurrency !== this.currency && !this.focused) {
       if (!this.value) {
-        this.modelValue = { currency: this.currency, amount: this.value };
+        this.modelValue = {
+          currency: this.currency,
+          amount: this.value,
+        };
       } else {
         /** @type {AmountFormatOptions} */
-        (this.formatOptions).currency = this.currency;
+        this.formatOptions.currency = this.currency;
         this.modelValue = this._callParser(this.value);
       }
     }
@@ -522,19 +515,20 @@ export class LionInputAmountDropdown extends LionInputAmount {
     if (!dropdownElement || !currencyCode) {
       return;
     }
-
     if ('modelValue' in dropdownElement) {
       const dropdownCurrencyCode = dropdownElement.modelValue;
       if (dropdownCurrencyCode === currencyCode) {
         return;
       }
-      /** @type {* & FormatHost} */ (dropdownElement).modelValue = currencyCode;
+      /** @type {* & FormatHost} */
+      dropdownElement.modelValue = currencyCode;
     } else {
       const dropdownCurrencyCode = dropdownElement.value;
       if (dropdownCurrencyCode === currencyCode) {
         return;
       }
-      /** @type {HTMLSelectElement} */ (dropdownElement).value = currencyCode;
+      /** @type {HTMLSelectElement} */
+      dropdownElement.value = currencyCode;
     }
   }
 
@@ -550,15 +544,12 @@ export class LionInputAmountDropdown extends LionInputAmount {
     if (!this._allowedOrAllCurrencies?.length || !this.__namesForLocale) {
       return;
     }
-
     this.__regionMetaList = [];
     this.__regionMetaListPreferred = [];
-
-    this._allowedOrAllCurrencies.forEach(currencyCode => {
+    this._allowedOrAllCurrencies.forEach((currencyCode) => {
       const destinationList = this.preferredCurrencies.includes(currencyCode)
         ? this.__regionMetaListPreferred
         : this.__regionMetaList;
-
       destinationList.push({
         currencyCode,
         nameForLocale: this.__namesForLocale?.of(currencyCode),
@@ -580,7 +571,6 @@ export class LionInputAmountDropdown extends LionInputAmount {
   _repropagationCondition() {
     return false;
   }
-
   __calculateActiveCurrency() {
     // 1. Get the currency from pre-configured allowed currencies (if one entry)
     if (this.allowedCurrencies?.length === 1) {
@@ -591,7 +581,7 @@ export class LionInputAmountDropdown extends LionInputAmount {
     // 2. Try to get the currency from user input
     if (
       this.modelValue?.currency &&
-      this.allowedCurrencies?.includes(/** @type {CurrencyCode} */ (this.modelValue?.currency))
+      this.allowedCurrencies?.includes(/** @type {CurrencyCode} */ this.modelValue?.currency)
     ) {
       this.currency = this.modelValue.currency;
       return;
@@ -612,14 +602,14 @@ export class LionInputAmountDropdown extends LionInputAmount {
         this._currencyUtil?.countryToCurrencyMap.get(this._langIso),
       )
     ) {
-      this.currency = /** @type {any} */ (
-        this._currencyUtil?.countryToCurrencyMap.get(this._langIso)
-      );
+      this.currency =
+        /** @type {any} */
+        this._currencyUtil?.countryToCurrencyMap.get(this._langIso);
       return;
     }
 
     // 5. Not derivable
-    this.currency = /** @type {any} */ (undefined);
+    this.currency = /** @type {any} */ undefined;
   }
 
   /**

@@ -13,7 +13,7 @@ import { formatNumberToParts } from './formatNumberToParts.js';
  * @param {FormatOptions} [options] Intl options are available extended by roundMode and returnIfNaN
  * @returns {string}
  */
-export function formatNumber(number, options = /** @type {FormatOptions} */ ({})) {
+export function formatNumber(number, options = /** @type {FormatOptions} */ {}) {
   const localizeManager = getLocalizeManager();
   if (number === undefined || number === null) return '';
   const formattedToParts = formatNumberToParts(number, options);
@@ -22,18 +22,16 @@ export function formatNumber(number, options = /** @type {FormatOptions} */ ({})
     formattedToParts === options.returnIfNaN ||
     formattedToParts === localizeManager.formatNumberOptions.returnIfNaN
   ) {
-    return /** @type {string} */ (formattedToParts);
+    return /** @type {string} */ formattedToParts;
   }
   let printNumberOfParts = '';
   // update numberOfParts because there may be some parts added
   const numberOfParts = formattedToParts ? formattedToParts.length : 0;
   for (let i = 0; i < numberOfParts; i += 1) {
-    const part = /** @type {FormatNumberPart} */ (formattedToParts[i]);
+    const part = /** @type {FormatNumberPart} */ formattedToParts[i];
     printNumberOfParts += part.value;
   }
-
   const computedLocale = getLocale(options && options.locale);
-
   if (localizeManager.formatNumberOptions.postProcessors.size > 0) {
     Array.from(localizeManager.formatNumberOptions.postProcessors).forEach(([locale, fn]) => {
       if (locale === computedLocale) {
@@ -41,7 +39,6 @@ export function formatNumber(number, options = /** @type {FormatOptions} */ ({})
       }
     });
   }
-
   if (options.postProcessors && options.postProcessors.size > 0) {
     Array.from(options.postProcessors).forEach(([locale, fn]) => {
       if (locale === computedLocale) {
@@ -49,6 +46,5 @@ export function formatNumber(number, options = /** @type {FormatOptions} */ ({})
       }
     });
   }
-
   return printNumberOfParts;
 }

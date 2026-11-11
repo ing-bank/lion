@@ -6,7 +6,6 @@ import {
   LocalizeMixin,
   normalizeDateTime,
 } from '@lion/ui/localize-no-side-effects.js';
-
 import { calendarStyle } from './calendarStyle.js';
 import { createDay } from './utils/createDay.js';
 import { createMultipleMonth } from './utils/createMultipleMonth.js';
@@ -23,7 +22,7 @@ import { getDayMonthYear } from './utils/getDayMonthYear.js';
  * @typedef {import('../types/day.js').Month} Month
  */
 
-const isDayButton = /** @param {HTMLElement} el */ el =>
+const isDayButton = /** @param {HTMLElement} el */ (el) =>
   el.classList.contains('calendar__day-button');
 
 /**
@@ -41,7 +40,7 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
   static get localizeNamespaces() {
     return [
       {
-        'lion-calendar': /** @param {string} locale */ locale => {
+        'lion-calendar': /** @param {string} locale */ (locale) => {
           switch (locale) {
             case 'bg-BG':
             case 'bg':
@@ -105,44 +104,49 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
       ...super.localizeNamespaces,
     ];
   }
-
   static get properties() {
     return {
       /**
        * Minimum date. All dates before will be disabled
        */
-      minDate: { attribute: false },
-
+      minDate: {
+        attribute: false,
+      },
       /**
        * Maximum date. All dates after will be disabled
        */
-      maxDate: { attribute: false },
-
+      maxDate: {
+        attribute: false,
+      },
       /**
        * Disable certain dates
        */
-      disableDates: { attribute: false },
-
+      disableDates: {
+        attribute: false,
+      },
       /**
        * The selected date, usually synchronized with datepicker-input
        * Not to be confused with the focused date (therefore not necessarily in active month view)
        */
-      selectedDate: { attribute: false },
-
+      selectedDate: {
+        attribute: false,
+      },
       /**
        * The date that
        * 1. determines the currently visible month
        * 2. will be focused when the month grid gets focused by the keyboard
        */
-      centralDate: { attribute: false },
-
+      centralDate: {
+        attribute: false,
+      },
       /**
        * Weekday that will be displayed in first column of month grid.
        * 0: sunday, 1: monday, 2: tuesday, 3: wednesday , 4: thursday, 5: friday, 6: saturday
        * Default is 0
        */
-      firstDayOfWeek: { attribute: false },
-
+      firstDayOfWeek: {
+        attribute: false,
+      },
       /**
        * Weekday header notation, based on Intl DatetimeFormat:
        * - 'long' (e.g., Thursday)
@@ -150,22 +154,27 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
        * - 'narrow' (e.g., T).
        * Default is 'short'
        */
-      weekdayHeaderNotation: { attribute: false },
-
+      weekdayHeaderNotation: {
+        attribute: false,
+      },
       /**
        * Different locale for this component scope
        */
-      locale: { attribute: false },
-
+      locale: {
+        attribute: false,
+      },
       /**
        * The currently focused date (if any)
        */
-      __focusedDate: { attribute: false },
-
+      __focusedDate: {
+        attribute: false,
+      },
       /**
        * Data to render current month grid
        */
-      __data: { attribute: false },
+      __data: {
+        attribute: false,
+      },
     };
   }
 
@@ -189,23 +198,23 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
 
   /** @private */
   __boundBlurDateDelegation;
-
   constructor() {
     super();
     /** @type {{months: Month[]}}
      * @private
      */
-    this.__data = { months: [] };
+    this.__data = {
+      months: [],
+    };
     this.minDate = new Date(0);
     // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date
     this.maxDate = new Date(8640000000000000);
     /** @param {Day} day */
-    this.dayPreprocessor = day => day;
+    this.dayPreprocessor = (day) => day;
 
     /** @param {Date} day */
     // eslint-disable-next-line no-unused-vars
-    this.disableDates = day => false;
-
+    this.disableDates = (day) => false;
     this.firstDayOfWeek = 0;
     this.weekdayHeaderNotation = 'short';
     this.__today = normalizeDateTime(new Date());
@@ -224,11 +233,9 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
     this.__boundFocusDateDelegation = this.__focusDateDelegation.bind(this);
     this.__boundBlurDateDelegation = this.__focusDateDelegation.bind(this);
   }
-
   static get styles() {
     return [calendarStyle];
   }
-
   render() {
     return html`
       <div class="calendar" role="application">
@@ -236,25 +243,32 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
       </div>
     `;
   }
-
   get focusedDate() {
     return this.__focusedDate;
   }
-
   goToNextMonth() {
-    this.__modifyDate(1, { dateType: 'centralDate', type: 'Month' });
+    this.__modifyDate(1, {
+      dateType: 'centralDate',
+      type: 'Month',
+    });
   }
-
   goToPreviousMonth() {
-    this.__modifyDate(-1, { dateType: 'centralDate', type: 'Month' });
+    this.__modifyDate(-1, {
+      dateType: 'centralDate',
+      type: 'Month',
+    });
   }
-
   goToNextYear() {
-    this.__modifyDate(1, { dateType: 'centralDate', type: 'FullYear' });
+    this.__modifyDate(1, {
+      dateType: 'centralDate',
+      type: 'FullYear',
+    });
   }
-
   goToPreviousYear() {
-    this.__modifyDate(-1, { dateType: 'centralDate', type: 'FullYear' });
+    this.__modifyDate(-1, {
+      dateType: 'centralDate',
+      type: 'FullYear',
+    });
   }
 
   /**
@@ -265,26 +279,22 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
     await this.updateComplete;
     this.focusCentralDate();
   }
-
   focusCentralDate() {
-    const datesTable = /** @type {HTMLElement} */ (
-      this.shadowRoot?.querySelector('#js-content-wrapper')
-    );
-    const button = /** @type {HTMLElement} */ (datesTable.querySelector('[tabindex="0"]'));
+    const datesTable =
+      /** @type {HTMLElement} */
+      this.shadowRoot?.querySelector('#js-content-wrapper');
+    const button = /** @type {HTMLElement} */ datesTable.querySelector('[tabindex="0"]');
     button?.focus();
     this.__focusedDate = this.centralDate;
   }
-
   async focusSelectedDate() {
     if (this.selectedDate) {
       await this.focusDate(this.selectedDate);
     }
   }
-
   async connectedCallback() {
     // eslint-disable-next-line wc/guard-super-call
     super.connectedCallback();
-
     this.__connectedCallbackDone = true;
 
     /**
@@ -306,9 +316,9 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
      * we can guard against adding events twice
      */
     if (!this.__eventsAdded) {
-      this.__contentWrapperElement = /** @type {HTMLButtonElement} */ (
-        this.shadowRoot?.getElementById('js-content-wrapper')
-      );
+      this.__contentWrapperElement =
+        /** @type {HTMLButtonElement} */
+        this.shadowRoot?.getElementById('js-content-wrapper');
       this.__contentWrapperElement.addEventListener('click', this.__boundClickDateDelegation);
       this.__contentWrapperElement.addEventListener('focus', this.__boundFocusDateDelegation);
       this.__contentWrapperElement.addEventListener('blur', this.__boundBlurDateDelegation);
@@ -325,7 +335,6 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
     // setup data for initial render
     this.__data = this.__createData();
   }
-
   disconnectedCallback() {
     super.disconnectedCallback();
     if (this.__contentWrapperElement) {
@@ -336,7 +345,6 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
         'keydown',
         this.__boundKeyboardNavigationEvent,
       );
-
       this.__eventsAdded = false;
     }
   }
@@ -357,17 +365,13 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
    */
   requestUpdate(name, oldValue, options) {
     super.requestUpdate(name, oldValue, options);
-
     if (name === undefined) {
       return;
     }
-
     if (name === '__focusedDate') {
       this.__focusedDateChanged();
     }
-
     const updateDataOn = ['centralDate', 'minDate', 'maxDate', 'selectedDate', 'disableDates'];
-
     if (updateDataOn.includes(name) && this.__connectedCallbackDone) {
       this.__data = this.__createData();
     }
@@ -381,10 +385,10 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
     if (this.selectedDate) {
       this.focusSelectedDate();
     } else {
-      if (!this.__isEnabledDate(/** @type {Date} */ (this.__initialCentralDate))) {
+      if (!this.__isEnabledDate(/** @type {Date} */ this.__initialCentralDate)) {
         this.centralDate = this.findNearestEnabledDate(this.__initialCentralDate);
       } else {
-        this.centralDate = /** @type {Date} */ (this.__initialCentralDate);
+        this.centralDate = /** @type {Date} */ this.__initialCentralDate;
       }
       this.focusCentralDate();
     }
@@ -394,7 +398,7 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
    * // TODO: check if this is a false positive or if we can improve
    * @configure ReactiveElement
    */
-  static enabledWarnings = super.enabledWarnings?.filter(w => w !== 'change-in-update') || [];
+  static enabledWarnings = super.enabledWarnings?.filter((w) => w !== 'change-in-update') || [];
 
   /**
    * @private
@@ -418,12 +422,20 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
   __renderMonthNavigation(month, year) {
     const nextMonth =
       this.centralDate.getMonth() === 11
-        ? getMonthNames({ locale: this.__getLocale() })[0]
-        : getMonthNames({ locale: this.__getLocale() })[this.centralDate.getMonth() + 1];
+        ? getMonthNames({
+            locale: this.__getLocale(),
+          })[0]
+        : getMonthNames({
+            locale: this.__getLocale(),
+          })[this.centralDate.getMonth() + 1];
     const previousMonth =
       this.centralDate.getMonth() === 0
-        ? getMonthNames({ locale: this.__getLocale() })[11]
-        : getMonthNames({ locale: this.__getLocale() })[this.centralDate.getMonth() - 1];
+        ? getMonthNames({
+            locale: this.__getLocale(),
+          })[11]
+        : getMonthNames({
+            locale: this.__getLocale(),
+          })[this.centralDate.getMonth() - 1];
     const nextYear = this.centralDate.getMonth() === 11 ? year + 1 : year;
     const previousYear = this.centralDate.getMonth() === 0 ? year - 1 : year;
     return html`
@@ -443,7 +455,6 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
   __renderYearNavigation(month, year) {
     const nextYear = year + 1;
     const previousYear = year - 1;
-
     return html`
       <div class="calendar__navigation__year">
         ${this.__renderPreviousButton('FullYear', month, previousYear)}
@@ -457,7 +468,9 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
    * @private
    */
   __renderNavigation() {
-    const month = getMonthNames({ locale: this.__getLocale() })[this.centralDate.getMonth()];
+    const month = getMonthNames({
+      locale: this.__getLocale(),
+    })[this.centralDate.getMonth()];
     const year = this.centralDate.getFullYear();
     return html`
       <div class="calendar__navigation">
@@ -471,7 +484,9 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
    */
   __renderData() {
     return dataTemplate(this.__data, {
-      monthsLabels: getMonthNames({ locale: this.__getLocale() }),
+      monthsLabels: getMonthNames({
+        locale: this.__getLocale(),
+      }),
       weekdaysShort: getWeekdayNames({
         locale: this.__getLocale(),
         style: this.weekdayHeaderNotation,
@@ -504,11 +519,16 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
       // change the month to the first available month
       if (previousYear === this.minDate.getFullYear()) {
         if (this.centralDate.getMonth() < this.minDate.getMonth()) {
-          month = getMonthNames({ locale: this.__getLocale() })[this.minDate.getMonth()];
+          month = getMonthNames({
+            locale: this.__getLocale(),
+          })[this.minDate.getMonth()];
         }
       }
     }
-    return { disabled, month };
+    return {
+      disabled,
+      month,
+    };
   }
 
   /**
@@ -529,11 +549,16 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
       // change the month to the first available month
       if (nextYear === this.maxDate.getFullYear()) {
         if (this.centralDate.getMonth() >= this.maxDate.getMonth()) {
-          month = getMonthNames({ locale: this.__getLocale() })[this.maxDate.getMonth()];
+          month = getMonthNames({
+            locale: this.__getLocale(),
+          })[this.maxDate.getMonth()];
         }
       }
     }
-    return { disabled, month };
+    return {
+      disabled,
+      month,
+    };
   }
 
   /**
@@ -553,7 +578,6 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
         this.goToPreviousMonth();
       }
     };
-
     return html`
       <button
         class="calendar__previous-button"
@@ -589,7 +613,6 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
         this.goToNextMonth();
       }
     };
-
     return html`
       <button
         class="calendar__next-button"
@@ -627,7 +650,6 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
   __getSelectableDateRange() {
     const newMinDate = createDay(new Date(this.minDate));
     const newMaxDate = createDay(new Date(this.maxDate));
-
     const getSelectableDate = (/** @type {import("../types/day.js").Day} */ date) => {
       const { dayNumber, monthName, year } = getDayMonthYear(
         date,
@@ -639,10 +661,8 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
       );
       return `${dayNumber} ${monthName} ${year}`;
     };
-
     const earliestSelectableDate = getSelectableDate(newMinDate);
     const latestSelectableDate = getSelectableDate(newMaxDate);
-
     return {
       earliestSelectableDate,
       latestSelectableDate,
@@ -674,19 +694,21 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
     day.ariaPressed = day.selected ? 'true' : 'false';
     day.ariaCurrent = day.today ? 'date' : undefined;
     day.disabledInfo = '';
-
     if (day.disabled) {
       day.disabledInfo = `${this.msgLit(`lion-calendar:defaultDisabledDate`)}`;
     }
     if (this.minDate && normalizeDateTime(day.date) < normalizeDateTime(this.minDate)) {
       day.disabled = true;
-      day.disabledInfo = `${this.msgLit(`lion-calendar:beforeDisabledDate`, { params: this.__getSelectableDateRange().earliestSelectableDate })}`;
+      day.disabledInfo = `${this.msgLit(`lion-calendar:beforeDisabledDate`, {
+        params: this.__getSelectableDateRange().earliestSelectableDate,
+      })}`;
     }
     if (this.maxDate && normalizeDateTime(day.date) > normalizeDateTime(this.maxDate)) {
       day.disabled = true;
-      day.disabledInfo = `${this.msgLit(`lion-calendar:afterDisabledDate`, { params: this.__getSelectableDateRange().latestSelectableDate })}`;
+      day.disabledInfo = `${this.msgLit(`lion-calendar:afterDisabledDate`, {
+        params: this.__getSelectableDateRange().latestSelectableDate,
+      })}`;
     }
-
     return this.dayPreprocessor(day);
   }
 
@@ -745,7 +767,9 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
    */
   findNextEnabledDate(date) {
     const _date = date || this.centralDate;
-    return this.__findBestEnabledDateFor(_date, { mode: 'future' });
+    return this.__findBestEnabledDateFor(_date, {
+      mode: 'future',
+    });
   }
 
   /**
@@ -754,7 +778,9 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
    */
   findPreviousEnabledDate(date) {
     const _date = date || this.centralDate;
-    return this.__findBestEnabledDateFor(_date, { mode: 'past' });
+    return this.__findBestEnabledDateFor(_date, {
+      mode: 'past',
+    });
   }
 
   /**
@@ -763,7 +789,9 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
    */
   findNearestEnabledDate(date) {
     const _date = date || this.centralDate;
-    return this.__findBestEnabledDateFor(_date, { mode: 'both' });
+    return this.__findBestEnabledDateFor(_date, {
+      mode: 'both',
+    });
   }
 
   /**
@@ -771,7 +799,9 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
    * @private
    */
   __isEnabledDate(date) {
-    const processedDay = this.__coreDayPreprocessor({ date });
+    const processedDay = this.__coreDayPreprocessor({
+      date,
+    });
     return !processedDay.disabled;
   }
 
@@ -785,14 +815,12 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
     const futureDate =
       this.minDate && this.minDate > date ? new Date(this.minDate) : new Date(date);
     const pastDate = this.maxDate && this.maxDate < date ? new Date(this.maxDate) : new Date(date);
-
     if (this.minDate && this.minDate > date) {
       futureDate.setDate(futureDate.getDate() - 1);
     }
     if (this.maxDate && this.maxDate < date) {
       pastDate.setDate(pastDate.getDate() + 1);
     }
-
     let i = 0;
     do {
       i += 1;
@@ -823,7 +851,7 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
    * @private
    */
   __clickDateDelegation(ev) {
-    const el = /** @type {HTMLElement & { date: Date }} */ (ev.composedPath()[0]);
+    const el = /** @type {HTMLElement & { date: Date }} */ ev.composedPath()[0];
     if (isDayButton(el) && !isDisabledDayButton(el)) {
       this.__dateSelectedByUser(el.date);
     }
@@ -835,11 +863,10 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
   __focusDateDelegation() {
     if (
       !this.__focusedDate &&
-      isDayButton(/** @type {HTMLElement} el */ (this.shadowRoot?.activeElement))
+      isDayButton(/** @type {HTMLElement} el */ this.shadowRoot?.activeElement)
     ) {
-      this.__focusedDate = /** @type {HTMLButtonElement & { date: Date }} */ (
-        this.shadowRoot?.activeElement
-      )?.date;
+      this.__focusedDate =
+        /** @type {HTMLButtonElement & { date: Date }} */ this.shadowRoot?.activeElement?.date;
     }
   }
 
@@ -850,7 +877,7 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
     setTimeout(() => {
       if (
         this.shadowRoot?.activeElement &&
-        !isDayButton(/** @type {HTMLElement} el */ (this.shadowRoot?.activeElement))
+        !isDayButton(/** @type {HTMLElement} el */ this.shadowRoot?.activeElement)
       ) {
         this.__focusedDate = null;
       }
@@ -882,42 +909,62 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
       ' ',
       'Enter',
     ];
-
     if (preventedKeys.includes(ev.key)) {
       ev.preventDefault();
     }
-
     switch (ev.key) {
       case ' ':
       case 'Enter':
-        this.__dayButtonSelection(
-          /** @type {HTMLElement & { date: Date }} */ (ev.composedPath()[0]),
-        );
+        this.__dayButtonSelection(/** @type {HTMLElement & { date: Date }} */ ev.composedPath()[0]);
         break;
       case 'ArrowUp':
-        this.__modifyDate(-7, { dateType: '__focusedDate', type: 'Date' });
+        this.__modifyDate(-7, {
+          dateType: '__focusedDate',
+          type: 'Date',
+        });
         break;
       case 'ArrowDown':
-        this.__modifyDate(7, { dateType: '__focusedDate', type: 'Date' });
+        this.__modifyDate(7, {
+          dateType: '__focusedDate',
+          type: 'Date',
+        });
         break;
       case 'ArrowLeft':
-        this.__modifyDate(-1, { dateType: '__focusedDate', type: 'Date' });
+        this.__modifyDate(-1, {
+          dateType: '__focusedDate',
+          type: 'Date',
+        });
         break;
       case 'ArrowRight':
-        this.__modifyDate(1, { dateType: '__focusedDate', type: 'Date' });
+        this.__modifyDate(1, {
+          dateType: '__focusedDate',
+          type: 'Date',
+        });
         break;
       case 'PageDown':
         if (ev.altKey === true) {
-          this.__modifyDate(1, { dateType: '__focusedDate', type: 'FullYear' });
+          this.__modifyDate(1, {
+            dateType: '__focusedDate',
+            type: 'FullYear',
+          });
         } else {
-          this.__modifyDate(1, { dateType: '__focusedDate', type: 'Month' });
+          this.__modifyDate(1, {
+            dateType: '__focusedDate',
+            type: 'Month',
+          });
         }
         break;
       case 'PageUp':
         if (ev.altKey === true) {
-          this.__modifyDate(-1, { dateType: '__focusedDate', type: 'FullYear' });
+          this.__modifyDate(-1, {
+            dateType: '__focusedDate',
+            type: 'FullYear',
+          });
         } else {
-          this.__modifyDate(-1, { dateType: '__focusedDate', type: 'Month' });
+          this.__modifyDate(-1, {
+            dateType: '__focusedDate',
+            type: 'Month',
+          });
         }
         break;
       case 'Tab':

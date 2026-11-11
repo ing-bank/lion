@@ -28,8 +28,10 @@ export class Unparseable {
      */
     this.viewValue = value;
   }
-
   toString() {
-    return JSON.stringify({ type: this.type, viewValue: this.viewValue });
+    return JSON.stringify({
+      type: this.type,
+      viewValue: this.viewValue,
+    });
   }
 }

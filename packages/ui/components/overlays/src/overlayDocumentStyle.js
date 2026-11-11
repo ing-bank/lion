@@ -1,5 +1,4 @@
 import { css } from 'lit';
-
 export const overlayDocumentStyle = css`
   body > *[inert] {
     -webkit-user-select: none;

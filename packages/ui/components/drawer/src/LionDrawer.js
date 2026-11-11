@@ -1,7 +1,6 @@
 import { html } from 'lit';
 import { LionCollapsible } from '@lion/ui/collapsible.js';
 import { drawerStyle } from './drawerStyle.js';
-
 const EVENT = {
   TRANSITION_END: 'transitionend',
   TRANSITION_START: 'transitionstart',
@@ -36,27 +35,21 @@ export class LionDrawer extends LionCollapsible {
 
   /** @private */
   __toggle;
-
   constructor() {
     super();
-
     this.__toggle = () => {
       // @ts-ignore [ts7-2565] TS7 checks definite assignment on this inferred field; Lit reactive property: read through a typed local instead (e.g. const next = this.x ?? DEFAULT) - a class field would shadow the accessor Lit creates from static properties
       this.opened = !this.opened;
     };
   }
-
   connectedCallback() {
     super.connectedCallback();
-
     if (!this.hasAttribute('position')) {
       this.position = 'left';
     }
-
     if (this._contentNode) {
       this._contentNode.style.setProperty('display', '');
     }
-
     this.__setBoundaries();
   }
 
@@ -70,14 +63,11 @@ export class LionDrawer extends LionCollapsible {
       this._openedChanged();
     }
   }
-
   static get styles() {
     return [drawerStyle];
   }
-
   __setBoundaries() {
     const host = this.shadowRoot?.host;
-
     if (this.position === 'top') {
       this.minHeight = host ? getComputedStyle(host).getPropertyValue('--min-height') : '0px';
       this.maxHeight = host ? getComputedStyle(host).getPropertyValue('--max-height') : '0px';
@@ -89,10 +79,8 @@ export class LionDrawer extends LionCollapsible {
       this.minHeight = 'auto';
       this.maxHeight = 'fit-content';
     }
-
     setTimeout(() => {
       const prop = this.position === 'top' ? 'width' : 'height';
-
       if (this.__contentNode) {
         this.__contentNode.style.setProperty(prop, '');
       }
@@ -107,11 +95,9 @@ export class LionDrawer extends LionCollapsible {
     const stale = this.position;
     this._position = position;
     this.setAttribute('position', position);
-
     this.__setBoundaries();
     this.requestUpdate('position', stale);
   }
-
   get position() {
     return this._position ?? 'left';
   }
@@ -126,12 +112,13 @@ export class LionDrawer extends LionCollapsible {
     const min = this.position === 'top' ? this.minHeight : this.minWidth;
     const max = this.position === 'top' ? this.maxHeight : this.maxWidth;
     const prop = this.position === 'top' ? 'height' : 'width';
-
-    contentNode.style.setProperty(prop, /** @type {string} */ (min));
+    contentNode.style.setProperty(prop, /** @type {string} */ min);
     // eslint-disable-next-line no-promise-executor-return
-    await new Promise(resolve => requestAnimationFrame(() => resolve(true)));
-    contentNode.style.setProperty(prop, /** @type {string} */ (max));
-    await this._waitForTransition({ contentNode });
+    await new Promise((resolve) => requestAnimationFrame(() => resolve(true)));
+    contentNode.style.setProperty(prop, /** @type {string} */ max);
+    await this._waitForTransition({
+      contentNode,
+    });
   }
 
   /**
@@ -148,12 +135,12 @@ export class LionDrawer extends LionCollapsible {
     ) {
       return;
     }
-
     const min = this.position === 'top' ? this.minHeight : this.minWidth;
     const prop = this.position === 'top' ? 'height' : 'width';
-
-    contentNode.style.setProperty(prop, /** @type {string} */ (min));
-    await this._waitForTransition({ contentNode });
+    contentNode.style.setProperty(prop, /** @type {string} */ min);
+    await this._waitForTransition({
+      contentNode,
+    });
   }
 
   /**
@@ -163,13 +150,12 @@ export class LionDrawer extends LionCollapsible {
    * @returns {Promise<void>} transition event
    */
   _waitForTransition({ contentNode }) {
-    return new Promise(resolve => {
+    return new Promise((resolve) => {
       const transitionStarted = () => {
         contentNode.removeEventListener(EVENT.TRANSITION_START, transitionStarted);
         this.transitioning = true;
       };
       contentNode.addEventListener(EVENT.TRANSITION_START, transitionStarted);
-
       const transitionEnded = () => {
         contentNode.removeEventListener(EVENT.TRANSITION_END, transitionEnded);
         this.transitioning = false;
@@ -183,38 +169,36 @@ export class LionDrawer extends LionCollapsible {
    * @protected
    */
   get __contentNode() {
-    return /** @type {HTMLElement} */ (this.shadowRoot?.querySelector('.container'));
+    return /** @type {HTMLElement} */ this.shadowRoot?.querySelector('.container');
   }
-
   get _contentWidth() {
     const size = this.__contentNode?.getBoundingClientRect().width || 0;
     return `${size}px`;
   }
-
   get _contentHeight() {
     const size = this.__contentNode?.getBoundingClientRect().height || 0;
     return `${size}px`;
   }
-
   _openedChanged() {
     this._updateContentSize();
     if (this._invokerNode) {
       this._invokerNode.setAttribute('aria-expanded', `${this.opened}`);
     }
-
     this.dispatchEvent(new CustomEvent('opened-changed'));
   }
-
   async _updateContentSize() {
     if (this.__contentNode) {
       if (this.opened) {
-        await this._showAnimation({ contentNode: this.__contentNode });
+        await this._showAnimation({
+          contentNode: this.__contentNode,
+        });
       } else {
-        await this._hideAnimation({ contentNode: this.__contentNode });
+        await this._hideAnimation({
+          contentNode: this.__contentNode,
+        });
       }
     }
   }
-
   render() {
     return html`
       <div class="container">

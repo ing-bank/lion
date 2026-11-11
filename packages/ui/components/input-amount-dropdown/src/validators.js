@@ -16,7 +16,6 @@ export class CurrencyAndAmount extends Validator {
     // @ts-expect-error - cannot cast string to CurrencyCode outside a TS file
     const validCurrencyCode = currencyUtil.allCurrencies.has(modelValue?.currency);
     const isNumber = new IsNumber().execute(modelValue.amount);
-
     return validCurrencyCode && isNumber;
   }
 }

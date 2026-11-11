@@ -13,13 +13,13 @@ export function createMonth(date, { firstDayOfWeek = 0 } = {}) {
   }
   const firstDayOfMonth = new Date(date);
   firstDayOfMonth.setDate(1);
-  const weekOptions = { firstDayOfWeek };
-
+  const weekOptions = {
+    firstDayOfWeek,
+  };
   const month = {
     /** @type {{days: import('../../types/day.js').Day[]}[]} */
     weeks: [],
   };
-
   let nextWeek = createWeek(firstDayOfMonth, weekOptions);
   do {
     month.weeks.push(nextWeek);
@@ -27,6 +27,5 @@ export function createMonth(date, { firstDayOfWeek = 0 } = {}) {
     firstDayOfNextWeek.setDate(firstDayOfNextWeek.getDate() + 1); // make it first day of next week
     nextWeek = createWeek(firstDayOfNextWeek, weekOptions);
   } while (month.weeks.length !== 6);
-
   return month;
 }

@@ -11,9 +11,12 @@ import { LionField } from '@lion/ui/form-core.js';
 class LionFieldWithSelect extends LionField {
   /** @type {any} */
   static get properties() {
-    return { autocomplete: { type: String } };
+    return {
+      autocomplete: {
+        type: String,
+      },
+    };
   }
-
   constructor() {
     super();
 
@@ -28,8 +31,8 @@ class LionFieldWithSelect extends LionField {
    * @returns {HTMLSelectElement}
    */
   get _inputNode() {
-    return /** @type {HTMLSelectElement} */ (
-      Array.from(this.children).find(el => el.slot === 'input')
+    return /** @type {HTMLSelectElement} */ Array.from(this.children).find(
+      (el) => el.slot === 'input',
     );
   }
 }
@@ -65,19 +68,18 @@ export class LionSelect extends LionFieldWithSelect {
   get operationMode() {
     return 'select';
   }
-
   connectedCallback() {
     super.connectedCallback();
     this._inputNode.addEventListener('change', this._proxyChangeEvent);
-
     this.__selectObserver = new MutationObserver(() => {
       this._syncValueUpwards();
       // We need to force computation of other values in case model didn't change
       // This can happen when options are loaded asynchronously so the modelValue doesn't change
       // The MutationObserver detects this and makes sure the modelValue is updated
-      this._calculateValues({ source: 'model' });
+      this._calculateValues({
+        source: 'model',
+      });
     });
-
     this.__selectObserver.observe(this._inputNode, {
       attributes: true,
       childList: true,
@@ -92,18 +94,15 @@ export class LionSelect extends LionFieldWithSelect {
       this._inputNode.disabled = this.disabled;
       this.validate();
     }
-
     if (changedProperties.has('name')) {
       this._inputNode.name = this.name;
     }
-
     if (changedProperties.has('autocomplete')) {
       // the DOM lib types `autocomplete` as `AutoFill` only in newer TypeScript;
       // cast keeps this valid on both compilers without widening the public type
-      this._inputNode.autocomplete = /** @type {any} */ (this.autocomplete);
+      this._inputNode.autocomplete = /** @type {any} */ this.autocomplete;
     }
   }
-
   disconnectedCallback() {
     super.disconnectedCallback();
     this._inputNode.removeEventListener('change', this._proxyChangeEvent);
@@ -118,7 +117,7 @@ export class LionSelect extends LionFieldWithSelect {
    */
   formatter(v) {
     // The selectedIndex is not yet updated
-    const found = Array.from(this._inputNode.options).find(option => option.value === v);
+    const found = Array.from(this._inputNode.options).find((option) => option.value === v);
     return found ? found.text : '';
   }
 

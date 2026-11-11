@@ -58,9 +58,10 @@ export class LionInputStepper extends LocalizeMixin(LionInput) {
       },
     };
   }
-
   static localizeNamespaces = [
-    { 'lion-input-stepper': localizeNamespaceLoader },
+    {
+      'lion-input-stepper': localizeNamespaceLoader,
+    },
     ...super.localizeNamespaces,
   ];
 
@@ -70,9 +71,8 @@ export class LionInputStepper extends LocalizeMixin(LionInput) {
   get currentValue() {
     return this.modelValue || 0;
   }
-
   get _inputNode() {
-    return /** @type {HTMLInputElement} */ (super._inputNode);
+    return /** @type {HTMLInputElement} */ super._inputNode;
   }
 
   /**
@@ -83,7 +83,6 @@ export class LionInputStepper extends LocalizeMixin(LionInput) {
    * @type {ReturnType<typeof setTimeout> | undefined}
    */
   timer = undefined;
-
   constructor() {
     super();
     /** @param {string} modelValue */
@@ -102,11 +101,9 @@ export class LionInputStepper extends LocalizeMixin(LionInput) {
       min: this.min,
       step: this.step,
     };
-
     this._increment = this._increment.bind(this);
     this._decrement = this._decrement.bind(this);
   }
-
   connectedCallback() {
     super.connectedCallback();
     this.values = {
@@ -123,7 +120,6 @@ export class LionInputStepper extends LocalizeMixin(LionInput) {
     this.__setDefaultValidators();
     this.__toggleSpinnerButtonsState();
   }
-
   disconnectedCallback() {
     super.disconnectedCallback();
     this.removeEventListener('keydown', this.__keyDownHandler);
@@ -132,11 +128,9 @@ export class LionInputStepper extends LocalizeMixin(LionInput) {
   /** @param {import('lit').PropertyValues } changedProperties */
   updated(changedProperties) {
     super.updated(changedProperties);
-
     if (changedProperties.has('modelValue')) {
       this.__toggleSpinnerButtonsState();
     }
-
     if (changedProperties.has('min')) {
       this._inputNode.min = `${this.min}`;
       this.values.min = this.min;
@@ -147,7 +141,6 @@ export class LionInputStepper extends LocalizeMixin(LionInput) {
       }
       this.__toggleSpinnerButtonsState();
     }
-
     if (changedProperties.has('max')) {
       this._inputNode.max = `${this.max}`;
       this.values.max = this.max;
@@ -158,17 +151,14 @@ export class LionInputStepper extends LocalizeMixin(LionInput) {
       }
       this.__toggleSpinnerButtonsState();
     }
-
     if (changedProperties.has('valueTextMapping')) {
       this._updateAriaAttributes();
     }
-
     if (changedProperties.has('step')) {
       this._inputNode.step = `${this.step}`;
       this.values.step = this.step;
     }
   }
-
   get slots() {
     return {
       ...super.slots,
@@ -182,13 +172,13 @@ export class LionInputStepper extends LocalizeMixin(LionInput) {
    * @private
    */
   __setDefaultValidators() {
-    const validators = /** @type {(IsNumber| MaxNumber | MinNumber)[]} */ (
+    const validators =
+      /** @type {(IsNumber| MaxNumber | MinNumber)[]} */
       [
         new IsNumber(),
         this.min !== Infinity ? new MinNumber(this.min) : null,
         this.max !== Infinity ? new MaxNumber(this.max) : null,
-      ].filter(validator => validator !== null)
-    );
+      ].filter((validator) => validator !== null);
     this.defaultValidators.push(...validators);
   }
 
@@ -201,7 +191,6 @@ export class LionInputStepper extends LocalizeMixin(LionInput) {
     if (ev.key === 'ArrowUp') {
       this._increment();
     }
-
     if (ev.key === 'ArrowDown') {
       this._decrement();
     }
@@ -213,8 +202,8 @@ export class LionInputStepper extends LocalizeMixin(LionInput) {
    */
   __toggleSpinnerButtonsState() {
     const { min, max } = this.values;
-    const decrementButton = /** @type {HTMLButtonElement} */ (this.__getSlot('prefix'));
-    const incrementButton = /** @type {HTMLButtonElement} */ (this.__getSlot('suffix'));
+    const decrementButton = /** @type {HTMLButtonElement} */ this.__getSlot('prefix');
+    const incrementButton = /** @type {HTMLButtonElement} */ this.__getSlot('suffix');
     const disableIncrementor = this.currentValue >= max && max !== Infinity;
     const disableDecrementor = this.currentValue <= min && min !== Infinity;
     if (
@@ -237,7 +226,7 @@ export class LionInputStepper extends LocalizeMixin(LionInput) {
       this._inputNode.setAttribute('aria-valuenow', `${displayValue}`);
       if (
         Object.keys(this.valueTextMapping).length !== 0 &&
-        Object.keys(this.valueTextMapping).find(key => Number(key) === this.currentValue)
+        Object.keys(this.valueTextMapping).find((key) => Number(key) === this.currentValue)
       ) {
         this.__valueText = this.valueTextMapping[this.currentValue];
       } else {
@@ -253,12 +242,10 @@ export class LionInputStepper extends LocalizeMixin(LionInput) {
     }
     this._destroyOutputContent();
   }
-
   _destroyOutputContent() {
-    const outputElement = /** @type {HTMLElement} */ (
-      this.shadowRoot?.querySelector('.input-stepper__value')
-    );
-
+    const outputElement =
+      /** @type {HTMLElement} */
+      this.shadowRoot?.querySelector('.input-stepper__value');
     const timeoutValue = outputElement?.dataset?.selfDestruct
       ? Number(outputElement.dataset.selfDestruct)
       : 2000;
@@ -281,8 +268,8 @@ export class LionInputStepper extends LocalizeMixin(LionInput) {
    */
   __getSlot(slotName) {
     return (
-      /** @type {HTMLElement[]} */ (Array.from(this.children)).find(
-        child => child.slot === slotName,
+      /** @type {HTMLElement[]} */ Array.from(this.children).find(
+        (child) => child.slot === slotName,
       ) || {}
     );
   }
@@ -302,10 +289,8 @@ export class LionInputStepper extends LocalizeMixin(LionInput) {
     const epsilon = 1e-10; // Tolerance for floating-point comparison
 
     let newValue;
-
     const remainder = (this.currentValue - stepMin) % step;
     const isAligned = Math.abs(remainder) < epsilon || Math.abs(remainder - step) < epsilon;
-
     if (!isAligned) {
       // If the value is not aligned to step, align it to the next valid step
       newValue = Math.ceil((this.currentValue - stepMin) / step) * step + stepMin;
@@ -313,7 +298,6 @@ export class LionInputStepper extends LocalizeMixin(LionInput) {
       // If the value is aligned, just add the step
       newValue = this.currentValue + step;
     }
-
     if (newValue <= max || max === Infinity) {
       this.modelValue = newValue < min && min !== Infinity ? `${min}` : `${newValue}`;
       this.__toggleSpinnerButtonsState();
@@ -336,10 +320,8 @@ export class LionInputStepper extends LocalizeMixin(LionInput) {
     const epsilon = 1e-10; // Tolerance for floating-point comparison
 
     let newValue;
-
     const remainder = (this.currentValue - stepMin) % step;
     const isAligned = Math.abs(remainder) < epsilon || Math.abs(remainder - step) < epsilon;
-
     if (!isAligned) {
       // If the value is not aligned to step, align it to the previous valid step
       newValue = Math.floor((this.currentValue - stepMin) / step) * step + stepMin;
@@ -347,7 +329,6 @@ export class LionInputStepper extends LocalizeMixin(LionInput) {
       // If the value is aligned, just subtract the step
       newValue = this.currentValue - step;
     }
-
     if (newValue >= min || min === Infinity) {
       this.modelValue = newValue > max && max !== Infinity ? `${max}` : `${newValue}`;
       this.__toggleSpinnerButtonsState();
@@ -365,10 +346,10 @@ export class LionInputStepper extends LocalizeMixin(LionInput) {
     render(
       this._incrementorTemplate(),
       renderParent,
-      /** @type {RenderOptions} */ ({
+      /** @type {RenderOptions} */ {
         scopeName: this.localName,
         eventContext: this,
-      }),
+      },
     );
     return renderParent.firstElementChild;
   }
@@ -383,10 +364,10 @@ export class LionInputStepper extends LocalizeMixin(LionInput) {
     render(
       this._decrementorTemplate(),
       renderParent,
-      /** @type {RenderOptions} */ ({
+      /** @type {RenderOptions} */ {
         scopeName: this.localName,
         eventContext: this,
-      }),
+      },
     );
     return renderParent.firstElementChild;
   }

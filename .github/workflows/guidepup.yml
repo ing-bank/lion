@@ -10,9 +10,13 @@ on:
   workflow_dispatch:
 
 jobs:
-  # The change graph answers which screen reader tests this branch can affect. The reader jobs only
-  # start when there is something to run, so a change that cannot touch a component test does not
-  # cost a macOS or Windows runner at all.
+
+# The change graph answers which screen reader tests this branch can affect. The reader jobs only
+
+# start when there is something to run, so a change that cannot touch a component test does not
+
+# cost a macOS or Windows runner at all
+
   select:
     name: Which screen reader tests are affected
     runs-on: ubuntu-latest
@@ -23,13 +27,18 @@ jobs:
         with:
           fetch-depth: 0
 
+      - uses: pnpm/action-setup@v4
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: 22.x
+          cache: pnpm
+
+      - name: Derive the pnpm lock
+        run: pnpm import
 
       - name: Install dependencies
-        run: npm ci
+        run: pnpm install --frozen-lockfile
 
       - name: Select the affected screen reader tests
         id: affected
@@ -54,26 +63,34 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - uses: pnpm/action-setup@v4
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: 22.x
+          cache: pnpm
 
       # guidepup/setup-action is no longer supported ("use the @guidepup/setup
       # CLI directly"). `setup` configures the machine, `install` adds the screen
       # reader assets that belong to this project's guidepup version - both are
       # needed, and the assets step has to run after the project is installed.
+      # A one-off fetch of the screen-reader driver, not an install of this repo: kept on npx because its
+      # flags (`--min-release-age=0 --ignore-scripts=false`) are npx's, and the driver's own installer has to
+      # run. Everything this repository installs goes through pnpm (see the Derive/Install steps above).
       - name: Setup screen reader environment
         run: npx -y --min-release-age=0 --ignore-scripts=false @guidepup/setup@0.29.2 setup --ci
 
+      - name: Derive the pnpm lock
+        run: pnpm import
+
       - name: Install dependencies
-        run: npm ci
+        run: pnpm install --frozen-lockfile
 
       - name: Install screen reader assets
         run: npx -y --min-release-age=0 --ignore-scripts=false @guidepup/setup@0.29.2 install
 
       - name: Playwright
-        run: npx playwright install --with-deps
+        run: pnpm exec playwright install --with-deps
 
       - name: Run screen reader tests
         shell: bash
@@ -88,7 +105,7 @@ jobs:
           for file in $(echo "${{ needs.select.outputs.files }}" | tr ' ' '\n' | grep -v '^--files$' | grep -v '^$'); do
             status="pass"
             for attempt in 1 2; do
-              if npm run test:sr -- --voiceover --files "$file" >"$log" 2>&1; then
+              if pnpm run test:sr -- --voiceover --files "$file" >"$log" 2>&1; then
                 break
               fi
               if [ "$attempt" = 2 ] || ! grep -qE "cannot be started|Unable to activate|is not running|did not answer after starting|\[sr-recover\]" "$log"; then
@@ -116,22 +133,30 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - uses: pnpm/action-setup@v4
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: 22.x
+          cache: pnpm
 
+      # A one-off fetch of the screen-reader driver, not an install of this repo: kept on npx because its
+      # flags (`--min-release-age=0 --ignore-scripts=false`) are npx's, and the driver's own installer has to
+      # run. Everything this repository installs goes through pnpm (see the Derive/Install steps above).
       - name: Setup screen reader environment
         run: npx -y --min-release-age=0 --ignore-scripts=false @guidepup/setup@0.29.2 setup --ci
 
+      - name: Derive the pnpm lock
+        run: pnpm import
+
       - name: Install dependencies
-        run: npm ci
+        run: pnpm install --frozen-lockfile
 
       - name: Install screen reader assets
         run: npx -y --min-release-age=0 --ignore-scripts=false @guidepup/setup@0.29.2 install
 
       - name: Playwright
-        run: npx playwright install --with-deps
+        run: pnpm exec playwright install --with-deps
 
       - name: Run screen reader tests
         shell: bash
@@ -146,7 +171,7 @@ jobs:
           for file in $(echo "${{ needs.select.outputs.files }}" | tr ' ' '\n' | grep -v '^--files$' | grep -v '^$'); do
             status="pass"
             for attempt in 1 2; do
-              if npm run test:sr -- --nvda --files "$file" >"$log" 2>&1; then
+              if pnpm run test:sr -- --nvda --files "$file" >"$log" 2>&1; then
                 break
               fi
               if [ "$attempt" = 2 ] || ! grep -qE "cannot be started|Unable to activate|is not running|did not answer after starting|\[sr-recover\]" "$log"; then
