@@ -173,6 +173,34 @@ describe('FocusMixin', () => {
     expect(focusoutEv.composed).to.be.true;
   });
 
+  it('keeps syncing focus state and redispatching events after being moved in the DOM', async () => {
+    const el = /** @type {Focusable} */ (
+      await fixture(html`
+      <${tag}><input slot="input"></${tag}>
+    `)
+    );
+    const parent = /** @type {HTMLElement} */ (el.parentElement);
+    // move twice, to make sure listeners do not pile up
+    parent.removeChild(el);
+    parent.appendChild(el);
+    parent.removeChild(el);
+    parent.appendChild(el);
+    // @ts-ignore [allow-protected] in test
+    const { _focusableNode } = el;
+    const focusSpy = sinon.spy();
+    const blurSpy = sinon.spy();
+    el.addEventListener('focus', focusSpy);
+    el.addEventListener('blur', blurSpy);
+
+    _focusableNode.focus();
+    expect(el.focused).to.be.true;
+    expect(focusSpy.callCount).to.equal(1);
+
+    _focusableNode.blur();
+    expect(el.focused).to.be.false;
+    expect(blurSpy.callCount).to.equal(1);
+  });
+
   describe('Having :focus-visible within', () => {
     it('sets focusedVisible to true when focusable element matches :focus-visible', async () => {
       const el = /** @type {Focusable} */ (

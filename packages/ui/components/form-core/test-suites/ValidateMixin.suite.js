@@ -354,6 +354,41 @@ export function runValidateMixinSuite({
         expect(metaArg2).to.eql({ validator });
       });
 
+      it('stops revalidating on "param-changed" of a Validator that was removed', async () => {
+        const validator = new MinLength(3);
+        const el = /** @type {ValidateElement} */ (
+          await fixture(html`
+          <${tag}
+            .validators=${[validator]}
+            .modelValue=${'myValue'}
+          >${lightDom}</${tag}>
+        `)
+        );
+        el.validators = [];
+
+        const validateSpy = sinon.spy(el, 'validate');
+        validator.param = 4;
+        expect(validateSpy.callCount).to.equal(0);
+      });
+
+      it('revalidates once per "param-changed" when the same Validator is assigned again', async () => {
+        const validator = new MinLength(3);
+        const el = /** @type {ValidateElement} */ (
+          await fixture(html`
+          <${tag}
+            .validators=${[validator]}
+            .modelValue=${'myValue'}
+          >${lightDom}</${tag}>
+        `)
+        );
+        el.validators = [validator];
+        el.validators = [validator];
+
+        const validateSpy = sinon.spy(el, 'validate');
+        validator.param = 4;
+        expect(validateSpy.callCount).to.equal(1);
+      });
+
       it('clears current results when ".modelValue" changes', async () => {
         const el = /** @type {ValidateElement} */ (
           await fixture(html`
@@ -505,6 +540,56 @@ export function runValidateMixinSuite({
           const validateResolveSpy = sinon.spy(el, '__validateCompleteResolve');
           await el.validateComplete;
           expect(validateResolveSpy.callCount).to.equal(1);
+        });
+
+        /**
+         * @param {Promise<unknown>} promise
+         * @returns {Promise<boolean>} whether the promise settled within a short timeframe
+         */
+        const settlesSoon = promise =>
+          Promise.race([promise.then(() => true), aTimeout(50).then(() => false)]);
+
+        it('resolves ".validateComplete" when validation is skipped for readOnly and disabled', async () => {
+          const el = /** @type {ValidateElement} */ (
+            await fixture(html`
+            <${tag} .validators=${[new AlwaysInvalid()]} .modelValue=${'nonEmpty'}>
+              ${lightDom}
+            </${tag}>
+          `)
+          );
+          el.readOnly = true;
+          el.validate();
+          expect(await settlesSoon(el.validateComplete)).to.be.true;
+
+          el.readOnly = false;
+          el.disabled = true;
+          el.validate();
+          expect(await settlesSoon(el.validateComplete)).to.be.true;
+        });
+
+        it('resolves ".validateComplete" when the value is empty and there is no Required', async () => {
+          const el = /** @type {ValidateElement} */ (
+            await fixture(html`
+            <${tag} .validators=${[new AlwaysInvalid()]}>${lightDom}</${tag}>
+          `)
+          );
+          el.validate();
+          expect(await settlesSoon(el.validateComplete)).to.be.true;
+        });
+
+        it('resolves a superseded ".validateComplete" once the latest validation completes', async () => {
+          const el = /** @type {ValidateElement} */ (
+            await fixture(html`
+            <${tag} .validators=${[new AsyncAlwaysInvalid()]} .modelValue=${'a'}>
+              ${lightDom}
+            </${tag}>
+          `)
+          );
+          el.modelValue = 'b';
+          const supersededValidateComplete = el.validateComplete;
+          el.modelValue = 'c';
+          expect(await settlesSoon(supersededValidateComplete)).to.be.true;
+          expect(await settlesSoon(el.validateComplete)).to.be.true;
         });
       });
     });
@@ -718,6 +803,98 @@ export function runValidateMixinSuite({
         await aTimeout(0);
         expect(el.isPending).to.be.false;
         expect(el.hasAttribute('is-pending')).to.be.false;
+      });
+
+      describe('Overlapping async validation runs', () => {
+        /**
+         * Resolves the pending `execute` call for a given modelValue
+         * @type {Map<string, function>}
+         */
+        let resolveExecutionFor;
+
+        beforeEach(() => {
+          resolveExecutionFor = new Map();
+        });
+
+        class IsSlowCat extends Validator {
+          static get validatorName() {
+            return 'slow-cat';
+          }
+
+          static get async() {
+            return true;
+          }
+
+          /**
+           * Resolves only when the test resolves the execution for this modelValue
+           * @param {string} modelValue
+           */
+          execute(modelValue) {
+            return new Promise(resolve => {
+              resolveExecutionFor.set(modelValue, () => resolve(modelValue !== 'cat'));
+            });
+          }
+        }
+
+        it('lets the result for the latest ".modelValue" win over an older run resolving later', async () => {
+          const el = /** @type {ValidateElement} */ (
+            await fixture(html`
+            <${tag} .validators=${[new IsSlowCat()]} .modelValue=${'dog'}>${lightDom}</${tag}>
+          `)
+          );
+          el.modelValue = 'cat';
+
+          // The latest run resolves first...
+          /** @type {function} */ (resolveExecutionFor.get('cat'))();
+          await el.validateComplete;
+          expect(el.validationStates.error['slow-cat']).to.be.undefined;
+
+          // ...and the stale run for 'dog' must not overwrite its result
+          /** @type {function} */ (resolveExecutionFor.get('dog'))();
+          await aTimeout(0);
+          expect(el.validationStates.error['slow-cat']).to.be.undefined;
+          expect(el.hasFeedbackFor).to.deep.equal([]);
+          expect(el.isPending).to.be.false;
+        });
+
+        it('stays ".isPending" while the latest run is pending and an older run resolves', async () => {
+          const el = /** @type {ValidateElement} */ (
+            await fixture(html`
+            <${tag} .validators=${[new IsSlowCat()]} .modelValue=${'dog'}>${lightDom}</${tag}>
+          `)
+          );
+          el.modelValue = 'cat';
+
+          /** @type {function} */ (resolveExecutionFor.get('dog'))();
+          await aTimeout(0);
+          expect(el.isPending).to.be.true;
+          expect(el.validationStates.error['slow-cat']).to.be.undefined;
+
+          /** @type {function} */ (resolveExecutionFor.get('cat'))();
+          await el.validateComplete;
+          expect(el.isPending).to.be.false;
+          expect(el.validationStates.error['slow-cat']).to.be.undefined;
+        });
+
+        it('calls "abortExecution" on async Validators of a superseded run', async () => {
+          const validator = new IsSlowCat();
+          const abortSpy = sinon.spy(validator, 'abortExecution');
+          const el = /** @type {ValidateElement} */ (
+            await fixture(html`
+            <${tag} .validators=${[validator]} .modelValue=${'dog'}>${lightDom}</${tag}>
+          `)
+          );
+          expect(abortSpy.callCount).to.equal(0);
+
+          el.modelValue = 'cat';
+          expect(abortSpy.callCount).to.equal(1);
+
+          /** @type {function} */ (resolveExecutionFor.get('cat'))();
+          await el.validateComplete;
+          // nothing is pending anymore, so nothing to abort
+          el.modelValue = 'dog';
+          expect(abortSpy.callCount).to.equal(1);
+        });
       });
 
       // TODO: 'mock' these methods without actually waiting for debounce?
