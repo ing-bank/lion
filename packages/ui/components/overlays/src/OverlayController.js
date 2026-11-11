@@ -188,12 +188,6 @@ export class OverlayController extends EventTarget {
   __escKeyHandlerCalled;
 
   /**
-   * @type {OverlayConfig | undefined}
-   * @private
-   */
-  __prevConfig = undefined;
-
-  /**
    * @type {HTMLElement | undefined}
    * @private
    */
@@ -293,8 +287,6 @@ export class OverlayController extends EventTarget {
     this.__escKeyHandler = this.__escKeyHandler.bind(this);
     this.updateConfig(config);
     this.__hasActiveBackdrop = true;
-    /** @private */
-    this.__cancelHandler = this.__cancelHandler.bind(this);
     this.__escKeyHandlerCalled = false;
   }
 
@@ -536,7 +528,9 @@ export class OverlayController extends EventTarget {
    * @type {number}
    */
   get elevation() {
-    return Number(this.contentWrapperNode?.style.zIndex);
+    // The setter puts the elevation on top of config.zIndex of the wrapping dialog: read it back from there
+    // @ts-expect-error find out why config would/could be undfined
+    return Number(this.__wrappingDialogNode?.style.zIndex) - this.config.zIndex;
   }
 
   /**
@@ -726,11 +720,6 @@ export class OverlayController extends EventTarget {
       // parent stacking context
       // padding reset so we don't get a weird dialog visual square showing up
       wrappingDialogElement.style.cssText = `display:none; z-index: ${this.config.zIndex}; padding: 0;`;
-      // @ts-ignore - 'custom' is a valid extension of placementMode
-      if (this.config.placementMode === 'custom') {
-        // The user should have full freedom to control the content node, so its wrapper nodes should remain neutral.
-        wrappingDialogElement.style.cssText += `position: static;`;
-      }
       this.__wrappingDialogNode = wrappingDialogElement;
 
       /**
@@ -748,7 +737,6 @@ export class OverlayController extends EventTarget {
         wrappingDialogNodeL1: wrappingDialogElement,
         contentWrapperNodeL2: this.contentWrapperNode,
         contentNodeL3: this.contentNode,
-        // requireConnectedNodes: Boolean(this.config.requireConnectedNodes),
       });
       wrappingDialogElement.open = true;
 
@@ -913,6 +901,8 @@ export class OverlayController extends EventTarget {
    * @param {HTMLElement} elementToFocusAfterHide
    */
   async show(elementToFocusAfterHide = this.elementToFocusAfterHide) {
+    // Like hide(), a no-op while the overlay functionality is not activated
+    if (!this.config?.isActivated) return;
     // Subsequent shows could happen, make sure we await it first.
     // Otherwise it gets replaced before getting resolved, and places awaiting it will time out.
     if (this._showComplete) {
@@ -961,8 +951,10 @@ export class OverlayController extends EventTarget {
     this.__wrappingDialogNode.style.display = '';
     this._keepBodySize({ phase: 'before-show' });
     await this._handleFeatures({ phase: 'show' });
+    if (this.#isTornDownWhileShowing()) return;
     this._keepBodySize({ phase: 'show' });
     await this._handlePosition({ phase: 'show' });
+    if (this.#isTornDownWhileShowing()) return;
     this.__elementToFocusAfterHide = elementToFocusAfterHide;
     this.dispatchEvent(new Event('show'));
     await this._transitionShow({
@@ -979,6 +971,17 @@ export class OverlayController extends EventTarget {
 
     /** @type {function} */
     (this._showResolve)();
+  }
+
+  /**
+   * teardown() can run while show() awaits (for instance when the host gets disconnected).
+   * In that case show() must stop: the dom structure and popper instance it works on are gone.
+   * @returns {boolean}
+   */
+  #isTornDownWhileShowing() {
+    if (this.__hasSetup) return false;
+    /** @type {function} */ (this._showResolve)();
+    return true;
   }
 
   /**
@@ -1007,7 +1010,8 @@ export class OverlayController extends EventTarget {
        * This is however necessary for initial placement.
        */
       await this.__createPopperInstance();
-      /** @type {import('@popperjs/core').Instance} */ (this._popper).forceUpdate();
+      // teardown() may have destroyed the instance while we awaited its creation
+      this._popper?.forceUpdate();
     }
     // N.B. leave it up to the user if placementMode === 'custom'
   }
@@ -1413,17 +1417,6 @@ export class OverlayController extends EventTarget {
       this.#stopHandlingShiftKeyPress();
       this.__wrappingDialogNode?.removeEventListener('focus', this.#onWrappingDialogFocus);
     }
-  }
-
-  /**
-   * When the overlay is a modal dialog hidesOnEsc works out of the box, so we prevent that.
-   *
-   * There is currently a bug in chrome that makes the dialog close when pressing Esc the second time
-   * @private
-   */
-  // eslint-disable-next-line class-methods-use-this
-  __cancelHandler(/** @type {Event} */ ev) {
-    ev.preventDefault();
   }
 
   /**
