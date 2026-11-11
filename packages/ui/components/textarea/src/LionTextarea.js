@@ -131,6 +131,7 @@ export class LionTextarea extends NativeTextFieldMixin(LionFieldWithTextArea) {
   disconnectedCallback() {
     super.disconnectedCallback();
     autosize.destroy(this._inputNode);
+    this.__intersectionObserver?.disconnect();
   }
 
   /**
