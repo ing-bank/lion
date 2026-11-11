@@ -12,7 +12,7 @@
  * Usage: node scripts/apply-patches.mjs [--dir portal]
  */
 import { execFileSync } from 'node:child_process';
-import { existsSync, readFileSync } from 'node:fs';
+import { existsSync, realpathSync, readFileSync } from 'node:fs';
 import path from 'node:path';
 
 /* eslint-disable no-console */
@@ -86,7 +86,12 @@ for (const [nameVersion, patchFile] of Object.entries(readPatchedDependencies())
   for (const copy of copies) {
     // an optional/platform package can be in the lock without being on disk
     const onDisk = existsSync(path.join(projectDir, copy));
-    const directory = path.relative(gitRoot, path.join(projectDir, copy));
+    // realpath: a pnpm-linked copy is a symlink and git apply refuses paths beyond one;
+    // forward slashes: git apply reads --directory with '/' on every platform
+    const directory = path
+      .relative(realpathSync(gitRoot), realpathSync(path.join(projectDir, copy)))
+      .split(path.sep)
+      .join('/');
     if (!onDisk) {
       console.log(`apply-patches: ${nameVersion} not on disk at ${copy}, skipped`);
     } else if (gitApply(['--check', '--reverse', patch], directory)) {
