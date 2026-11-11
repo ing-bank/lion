@@ -25,7 +25,6 @@ jobs:
         with:
           node-version: 22.x
           registry-url: 'https://registry.npmjs.org'
-          cache: pnpm
 
       # pnpm-lock.yaml is derived from the committed package-lock.json (see the verify job in verify-pr.yml).
       - name: Derive the pnpm lock

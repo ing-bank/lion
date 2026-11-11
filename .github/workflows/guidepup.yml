@@ -32,7 +32,6 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 22.x
-          cache: pnpm
 
       - name: Derive the pnpm lock
         run: pnpm import
@@ -68,7 +67,6 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 22.x
-          cache: pnpm
 
       # guidepup/setup-action is no longer supported ("use the @guidepup/setup
       # CLI directly"). `setup` configures the machine, `install` adds the screen
@@ -138,7 +136,6 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 22.x
-          cache: pnpm
 
       # A one-off fetch of the screen-reader driver, not an install of this repo: kept on npx because its
       # flags (`--min-release-age=0 --ignore-scripts=false`) are npx's, and the driver's own installer has to

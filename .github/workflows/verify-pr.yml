@@ -18,7 +18,6 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22.x
-          cache: pnpm
 
       # pnpm-lock.yaml is gitignored: it is derived from the committed package-lock.json, which stays the
       # lock external tooling reads (packages-node/lockfile-interop). `pnpm import` derives it, the frozen
@@ -39,7 +38,9 @@ jobs:
       # file is not what package.json implies
       - name: pnpm-workspace.yaml is in sync
         run: pnpm run repo:workspace:check
-          npm run lint:workspace-lists
+
+      - name: Workspace lists are in sync
+        run: npm run lint:workspace-lists
 
       - name: Lint
         run: pnpm run lint
@@ -56,7 +57,6 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 24.x
-          cache: pnpm
 
       # pnpm-lock.yaml is gitignored: it is derived from the committed package-lock.json, which stays the
       # lock external tooling reads (packages-node/lockfile-interop). `pnpm import` derives it, the frozen
@@ -88,6 +88,8 @@ jobs:
     steps:
       - uses: google/wireit@setup-github-actions-caching/v2
       - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
 
       - name: Setup Node 24.x
         uses: actions/setup-node@v4
@@ -127,7 +129,6 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
-          cache: pnpm
 
       # pnpm-lock.yaml is derived from the committed package-lock.json (see the verify job).
       - name: Derive the pnpm lock
