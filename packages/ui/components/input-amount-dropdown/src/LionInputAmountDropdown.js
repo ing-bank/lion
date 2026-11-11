@@ -212,16 +212,18 @@ export class LionInputAmountDropdown extends LionInputAmount {
           @change="${refs?.dropdown?.listeners?.change}"
           style="${ifDefined(refs?.dropdown?.props?.style)}"
         >
-          ${data?.regionMetaListPreferred?.length
-            ? html`
-                <optgroup label="${refs?.dropdown?.labels?.preferredCurrencies}">
-                  ${data.regionMetaListPreferred.map(renderOption)}
-                </optgroup>
-                <optgroup label="${refs?.dropdown?.labels?.allCurrencies}">
-                  ${data?.regionMetaList?.map(renderOption)}
-                </optgroup>
-              `
-            : html` ${data?.regionMetaList?.map(renderOption)}`}
+          ${
+            data?.regionMetaListPreferred?.length
+              ? html`
+                  <optgroup label="${refs?.dropdown?.labels?.preferredCurrencies}">
+                    ${data.regionMetaListPreferred.map(renderOption)}
+                  </optgroup>
+                  <optgroup label="${refs?.dropdown?.labels?.allCurrencies}">
+                    ${data?.regionMetaList?.map(renderOption)}
+                  </optgroup>
+                `
+              : html` ${data?.regionMetaList?.map(renderOption)}`
+          }
         </select>
       `;
     },
@@ -305,6 +307,7 @@ export class LionInputAmountDropdown extends LionInputAmount {
 
     const { locale } = this._localizeManager;
     /**
+     * The region of the locale, used to derive its currency (e.g. 'BE' for 'fr-BE').
      * @protected
      * @type {RegionCode | undefined}
      */
