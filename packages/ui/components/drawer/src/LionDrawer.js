@@ -201,8 +201,7 @@ export class LionDrawer extends LionCollapsible {
     if (this._invokerNode) {
       this._invokerNode.setAttribute('aria-expanded', `${this.opened}`);
     }
-
-    this.dispatchEvent(new CustomEvent('opened-changed'));
+    // No 'opened-changed' dispatch here: LionCollapsible.updated() already fires it once per change
   }
 
   async _updateContentSize() {
