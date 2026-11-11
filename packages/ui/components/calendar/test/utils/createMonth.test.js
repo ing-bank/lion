@@ -61,4 +61,9 @@ describe('createMonth', () => {
       }),
     );
   });
+
+  it('throws for a value that is not a Date', () => {
+    // @ts-expect-error [testing-invalid-input]
+    expect(() => createMonth('2018/12/01')).to.throw('invalid date provided');
+  });
 });

@@ -246,6 +246,30 @@ describe('Ajax', () => {
       expect(response.body).to.eql({ a: 1, b: 2 });
     });
 
+    it('throws on 5xx responses with an undefined body when the JSON body cannot be parsed', async () => {
+      fetchStub.returns(
+        Promise.resolve(
+          new Response('{invalid', {
+            status: 500,
+            headers: { 'content-type': 'application/json' },
+          }),
+        ),
+      );
+
+      let thrown = false;
+      try {
+        await ajax.fetchJson('/foo');
+      } catch (e) {
+        // https://github.com/microsoft/TypeScript/issues/20024 open issue, can't type catch clause in param
+        const _e = /** @type {AjaxFetchError} */ (e);
+        expect(_e).to.be.an.instanceOf(AjaxFetchError);
+        expect(_e.response.status).to.equal(500);
+        expect(_e.body).to.be.undefined;
+        thrown = true;
+      }
+      expect(thrown).to.be.true;
+    });
+
     it('throws on 4xx responses, but still attempts parsing response body when using fetchJson', async () => {
       ajax.addRequestInterceptor(async () => new Response('my response', { status: 400 }));
 

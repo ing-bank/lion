@@ -1,8 +1,8 @@
 import { html } from 'lit/static-html.js';
-import { nothing } from 'lit';
 import { until } from 'lit/directives/until.js';
 import { unsafeStatic, aTimeout, expect, fixture as _fixture, fixtureSync } from '@open-wc/testing';
 import { LionIcon, icons } from '@lion/ui/icon.js';
+import sinon from 'sinon';
 import hammerSvg from '../test/hammer.svg.js';
 import heartSvg from '../test/heart.svg.js';
 import { resolveSuiteTag } from '../../core/test-helpers/resolveSuiteTag.js';
@@ -158,7 +158,8 @@ export function runIconSuite({
     it('does not render "undefined" if changed from valid input to undefined', async () => {
       const el = await fixture(html`<${tag} .svg=${heartSvg}></${tag}>`);
       await el.updateComplete;
-      el.svg = nothing;
+      // @ts-expect-error [testing-invalid-svg-value]
+      el.svg = undefined;
       await el.updateComplete;
       expect(el.innerHTML).to.equal('<!---->'); // don't use lightDom.to.equal(''), it gives false positives
     });
@@ -166,7 +167,8 @@ export function runIconSuite({
     it('does not render "null" if changed from valid input to null', async () => {
       const el = await fixture(html`<${tag} .svg=${heartSvg}></${tag}>`);
       await el.updateComplete;
-      el.svg = nothing;
+      // @ts-expect-error [testing-invalid-svg-value]
+      el.svg = null;
       await el.updateComplete;
       expect(el.innerHTML).to.equal('<!---->'); // don't use lightDom.to.equal(''), it gives false positives
     });
@@ -191,6 +193,24 @@ export function runIconSuite({
         await el.updateComplete;
         expect(el.children.length).to.equal(0);
       } finally {
+        icons.removeIconResolver('foo');
+      }
+    });
+
+    it('logs and renders nothing when resolving the icon id fails', async () => {
+      const error = new Error('icon not found');
+      const consoleErrorStub = sinon.stub(console, 'error');
+      try {
+        icons.addIconResolver(
+          'foo',
+          () => /** @type {Promise<TemplateResult>} */ (Promise.reject(error)),
+        );
+        const el = await fixture(html`<${tag} icon-id="foo:lorem:ipsum"></${tag}>`);
+        await aTimeout(0);
+        expect(consoleErrorStub.args.map(args => args[0])).to.include(error);
+        expect(el.children.length).to.equal(0);
+      } finally {
+        consoleErrorStub.restore();
         icons.removeIconResolver('foo');
       }
     });
