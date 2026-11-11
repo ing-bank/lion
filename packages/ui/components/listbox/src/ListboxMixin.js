@@ -376,7 +376,7 @@ const ListboxMixinImplementation = /** @type {ListboxMixin} */ (superclass =>
      */
     setCheckedIndex(index) {
       if (this.multipleChoice && Array.isArray(index)) {
-        this._uncheckChildren(this.formElements.filter(i => i === index));
+        this._uncheckChildren();
         index.forEach(i => {
           if (this.formElements[i]) {
             this.formElements[i].checked = !this.formElements[i].checked;
@@ -681,12 +681,6 @@ const ListboxMixinImplementation = /** @type {ListboxMixin} */ (superclass =>
       again and disable click handling inside LionOption (since there would be no use case for
       'orphan' options)
        */
-      // const option = /** @type {HTMLElement} */ (ev.target).closest('[role=option]');
-      // const foundIndex = this.formElements.indexOf(option);
-      // if (foundIndex > -1) {
-      //   this.activeIndex = foundIndex;
-      //   this.setCheckedIndex(foundIndex, 'toggle', );
-      // }
     }
 
     /**

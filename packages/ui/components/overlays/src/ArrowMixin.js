@@ -212,10 +212,7 @@ export const ArrowMixinImplementation = /** @type {ArrowMixin} */ (superclass =>
       if (!data) {
         return;
       }
-      if (
-        this._arrowNode &&
-        data.placement !== /** @type {Element & {placement:string}} */ (this._arrowNode).placement
-      ) {
+      if (this._arrowNode && data.placement !== undefined) {
         /** @type {function} */ (this.__repositionCompleteResolver)(data.placement);
         this.__setupRepositionCompletePromise();
       }

@@ -17,26 +17,6 @@ export function isDisabled(item) {
 /**
  * @param {HTMLElement} item
  */
-export function setDisabled(item, unset = false) {
-  if (unset) {
-    item.removeAttribute('disabled');
-    item.setAttribute('aria-disabled', 'false');
-  } else {
-    item.setAttribute('disabled', '');
-    item.setAttribute('aria-disabled', 'true');
-  }
-}
-
-/**
- * @param {HTMLElement} item
- */
-export function toggleDisabled(item) {
-  setDisabled(item, isDisabled(item));
-}
-
-/**
- * @param {HTMLElement} item
- */
 export function isChecked(item) {
   return item.hasAttribute('checked');
 }
