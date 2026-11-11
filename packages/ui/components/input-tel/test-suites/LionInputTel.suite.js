@@ -221,6 +221,24 @@ export function runInputTelSuite({
           expect(el.activePhoneNumberType).to.equal(type);
         });
       }
+
+      it('ignores assignments to the readonly accessors', async () => {
+        const el = await fixture(html` <${tag} .allowedRegions="${['NL']}"></${tag}> `);
+        mimicUserInput(el, '06 12345678');
+        await aTimeout(0);
+        // @ts-ignore readonly in types
+        el.activeRegion = 'DE';
+        // @ts-ignore readonly in types
+        el.activePhoneNumberType = 'fixed-line';
+        expect(el.activeRegion).to.equal('NL');
+        expect(el.activePhoneNumberType).to.equal('mobile');
+      });
+
+      it('exposes the loading of the phone util via protected `_phoneUtilLoadComplete`', async () => {
+        const el = await fixture(html` <${tag}></${tag}> `);
+        // @ts-ignore [allow-protected] in test
+        expect(el._phoneUtilLoadComplete).to.equal(PhoneUtilManager.loadComplete);
+      });
     });
 
     describe('User interaction', () => {

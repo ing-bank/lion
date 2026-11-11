@@ -502,5 +502,41 @@ export function runInputAmountDropdownSuite(
       await el.updateComplete;
       expect(el.modelValue).to.eql({ currency: el.currency, amount: '' });
     });
+
+    it('deserializes a currency without amount to an empty amount in that currency', async () => {
+      const el = await fixture(html` <${tag} .allowedCurrencies="${['EUR', 'USD']}"></${tag}> `);
+      el.serializedValue = 'USD';
+      await el.updateComplete;
+      expect(el.modelValue).to.eql({ currency: 'USD', amount: '' });
+    });
+  });
+
+  describe('misc', () => {
+    it('only accepts the prefix and suffix slots for the dropdown', async () => {
+      const el = await fixture(html` <${tag} .allowedCurrencies="${['GBP']}"></${tag}> `);
+      expect(() => {
+        // @ts-ignore [allow-protected] in test
+        el._dropdownSlot = 'label';
+      }).to.throw('Only the suffix and prefix slots are valid positions for the dropdown.');
+      // @ts-ignore [allow-protected] in test
+      expect(el._dropdownSlot).to.equal('prefix');
+    });
+
+    it('has no currency when it can not be derived from allowed, preferred or locale', async () => {
+      // locale en-GB derives GBP, which is not allowed
+      const el = await fixture(html` <${tag} .allowedCurrencies="${['EUR', 'USD']}"></${tag}> `);
+      expect(el.currency).to.equal(undefined);
+      expect(el.modelValue).to.eql({ currency: undefined, amount: '' });
+    });
+
+    it('returns an empty currency symbol without currency or locale', async () => {
+      const el = await fixture(html` <${tag}></${tag}> `);
+      // @ts-ignore [allow-protected] in test
+      const { getCurrencySymbol } = el._currencyUtil;
+      expect(getCurrencySymbol('EUR', 'en-GB')).to.equal('€');
+      expect(getCurrencySymbol('EUR', '')).to.equal('');
+      // @ts-ignore [allow-private] in test
+      expect(getCurrencySymbol(undefined, 'en-GB')).to.equal('');
+    });
   });
 }
