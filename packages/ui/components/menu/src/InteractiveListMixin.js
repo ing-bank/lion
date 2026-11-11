@@ -547,16 +547,6 @@ const InteractiveListMixinImplementation = /** @type {InteractiveListMixinType} 
     }
 
     _setupList() {
-      // /**
-      //  * @param {HTMLElement} node
-      //  */
-      // const shouldAddItem = node => {
-      //   const role = /** @type {InteractiveListItemRole|'group'} */ (node.getAttribute('role'));
-      //   return (
-      //     (role && this._interactiveChildrenRoles.includes(role)) || node.hasAttribute('data-item')
-      //   );
-      // };
-
       this._listItemsSlot.addEventListener('slotchange', () => {
         // N.B. we do not use `this._listItemsSlot.assignedNodes()`, as it omits comment nodes.
         // Comment nodes are really important for lit-html)
@@ -727,24 +717,6 @@ const InteractiveListMixinImplementation = /** @type {InteractiveListMixinType} 
     }
 
     /**
-     * @param {KeyboardEvent} ev
-     */
-    __preventScrollingWithArrowKeys(ev) {
-      if (this.disabled) {
-        return;
-      }
-      const { key } = ev;
-      switch (key) {
-        case 'ArrowUp':
-        case 'ArrowDown':
-        case 'Home':
-        case 'End':
-          ev.preventDefault();
-        /* no default */
-      }
-    }
-
-    /**
      * @overridable
      * @param {FocusEvent} ev
      */
@@ -752,7 +724,6 @@ const InteractiveListMixinImplementation = /** @type {InteractiveListMixinType} 
       /** @type {HTMLElement} */
       // @ts-ignore - target is EventTarget
       const { target } = ev;
-      // const item = /** @type {HTMLElement} */ (target.closest('[role]'));
       // @ts-ignore - target is HTMLElement
       const foundIndex = this.listItems.indexOf(target);
       if (foundIndex > -1 && foundIndex !== this.activeIndex) {
