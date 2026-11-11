@@ -12,7 +12,7 @@
  *     ]),
  * });
  *
- * @param {Array.<[]>} orderPerDepth array of arrays giving the order of each level
+ * @param {string[][]} orderPerDepth array of arrays giving the order of each level
  */
 export function sortEachDepth(orderPerDepth) {
   return (/** @type {Array.<any>} */ a, /** @type {Array.<any>} */ b) => {
@@ -23,6 +23,7 @@ export function sortEachDepth(orderPerDepth) {
     }
     const storyKindA = a[1].kind.split('/');
     const storyKindB = b[1].kind.split('/');
+    const maxDepth = Math.max(storyKindA.length, storyKindB.length);
     let depth = 0;
     let nameA;
     let nameB;
@@ -35,8 +36,8 @@ export function sortEachDepth(orderPerDepth) {
         `Found ${ordering.join(',')} You need to use either "..." or "...abc" for each level.`,
       );
     }
-    // eslint-disable-next-line no-constant-condition
-    while (true) {
+    // Bounded by the deepest kind: kinds like 'A/B' and 'A/B/' have equal names on every depth.
+    while (depth < maxDepth) {
       nameA = storyKindA[depth] ? storyKindA[depth] : '';
       nameB = storyKindB[depth] ? storyKindB[depth] : '';
 
@@ -80,5 +81,7 @@ export function sortEachDepth(orderPerDepth) {
       // Otherwise, use source code order.
       return 0;
     }
+    // All names are equal (e.g. kinds only differ by a trailing slash): use source code order.
+    return 0;
   };
 }
