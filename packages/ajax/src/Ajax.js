@@ -192,17 +192,14 @@ export class Ajax {
    * @returns {Promise<{ response: Response, body: string | T }>}
    */
   async fetchJson(info, init) {
-    const lionInit = {
-      ...init,
-      headers: /** @type {Record<string, string>} */ ({
-        ...init?.headers,
-        accept: 'application/json',
-      }),
-    };
+    // Normalise every HeadersInit form (record, Headers instance, [name, value] tuples), so custom
+    // headers survive. Spreading only works for records.
+    const headers = new Headers(init?.headers);
+    headers.set('accept', 'application/json');
+    const lionInit = { ...init, headers };
 
     if (lionInit?.body) {
-      // eslint-disable-next-line no-param-reassign
-      lionInit.headers['content-type'] = 'application/json';
+      headers.set('content-type', 'application/json');
       lionInit.body = JSON.stringify(lionInit.body);
     }
 
