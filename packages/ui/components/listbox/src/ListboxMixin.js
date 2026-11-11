@@ -459,10 +459,16 @@ const ListboxMixinImplementation = /** @type {ListboxMixin} */ (superclass =>
       if (code.startsWith('Key') || code.startsWith('Digit') || code.startsWith('Numpad')) {
         ev.preventDefault();
         this.__typedChars.push(key);
-        const chars = this.__typedChars.join('');
+        // Typeahead is case-insensitive, like in a native select
+        const chars = this.__typedChars.join('').toLowerCase();
         const matchedItemIndex =
           // TODO: consider making this condition overridable for Subclassers by extracting it into protected method
-          this.formElements.findIndex(el => el.modelValue.value.toLowerCase().startsWith(chars));
+          this.formElements.findIndex(el => {
+            const { value } = el.modelValue;
+            // A non-string value (like a number or object) can't be typed, so match its text instead
+            const text = typeof value === 'string' ? value : el.textContent || '';
+            return text.trim().toLowerCase().startsWith(chars);
+          });
         if (matchedItemIndex >= 0) {
           if (setAsChecked) {
             this.setCheckedIndex(matchedItemIndex);
@@ -635,14 +641,16 @@ const ListboxMixinImplementation = /** @type {ListboxMixin} */ (superclass =>
             return;
           }
           ev.preventDefault();
-          this.activeIndex = this._getNextEnabledOption(0, 0);
+          // Search from just before the first option, so the first option itself is a candidate
+          this.activeIndex = this._getNextEnabledOption(-1);
           break;
         case 'End':
           if (this._listboxReceivesNoFocus) {
             return;
           }
           ev.preventDefault();
-          this.activeIndex = this._getPreviousEnabledOption(this.formElements.length - 1, 0);
+          // Search from just after the last option, so the last option itself is a candidate
+          this.activeIndex = this._getPreviousEnabledOption(this.formElements.length);
           break;
         default:
           if (!this._noTypeAhead) {
@@ -848,13 +856,16 @@ const ListboxMixinImplementation = /** @type {ListboxMixin} */ (superclass =>
      * @private
      */
     __getEnabledOption(currentIndex, offset) {
+      // Only the direction of the offset matters: stepping by anything else than one option
+      // (an offset of 0 in particular) would skip options or never end
+      const step = offset < 0 ? -1 : 1;
       /**
        * @param {number} i
        */
-      const until = i => (offset === 1 ? i < this.formElements.length : i >= 0);
+      const until = i => (step === 1 ? i < this.formElements.length : i >= 0);
 
       // Try to find the next / previous option
-      for (let i = currentIndex + offset; until(i); i += offset) {
+      for (let i = currentIndex + step; until(i); i += step) {
         if (this.formElements[i] && !this.formElements[i].hasAttribute('aria-hidden')) {
           return i;
         }
@@ -863,8 +874,8 @@ const ListboxMixinImplementation = /** @type {ListboxMixin} */ (superclass =>
       // If above was unsuccessful, try to find the next/previous either
       // from end --> start or start --> end
       if (this.rotateKeyboardNavigation) {
-        const startIndex = offset === -1 ? this.formElements.length - 1 : 0;
-        for (let i = startIndex; until(i); i += offset) {
+        const startIndex = step === -1 ? this.formElements.length - 1 : 0;
+        for (let i = startIndex; until(i); i += step) {
           if (this.formElements[i] && !this.formElements[i].hasAttribute('aria-hidden')) {
             return i;
           }
