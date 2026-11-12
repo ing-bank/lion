@@ -8,8 +8,8 @@ A web component that can be used to break a single goal down into dependable sub
 
 ```js script
 import { html } from 'lit';
-import '@lion/ui/define/lion-steps.js';
-import '@lion/ui/define/lion-step.js';
+import { LionSteps } from '@lion/ui/steps.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
+// <lion-step> is not a module of its own - look its entrypoint up in references/entrypoints.md.// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
 ```
 
 ```js preview-story
@@ -64,8 +64,8 @@ npm i --save @lion/ui
 ```js
 import { LionSteps, LionStep } from '@lion/ui/steps.js';
 // or
-import '@lion/ui/define/lion-steps.js';
-import '@lion/ui/define/lion-step.js';
+import { LionSteps } from '@lion/ui/steps.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
+// <lion-step> is not a module of its own - look its entrypoint up in references/entrypoints.md.// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
 ```
 
 ---
@@ -74,8 +74,8 @@ import '@lion/ui/define/lion-step.js';
 
 ```js script
 import { html } from 'lit';
-import '@lion/ui/define/lion-steps.js';
-import '@lion/ui/define/lion-step.js';
+import { LionSteps } from '@lion/ui/steps.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
+// <lion-step> is not a module of its own - look its entrypoint up in references/entrypoints.md.// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
 ```
 
 ```js preview-story

@@ -14,7 +14,7 @@ import { manualScenarios } from './manual.ts';
 import { runScenarios } from './runs.ts';
 import type { TestScenario } from './types.ts';
 
-export { NON_VISUAL_COMPONENT_DIRS, SYSTEM_NAMES, defineEntrypointFor } from './lionUi.ts';
+export { NON_VISUAL_COMPONENT_DIRS, SYSTEM_NAMES } from './lionUi.ts';
 export type { LionUiScenarioContext } from './lionUi.ts';
 export { manualScenarios } from './manual.ts';
 export { runScenarios } from './runs.ts';
@@ -80,20 +80,6 @@ export function discoverTagClasses(repoRoot: string): Record<string, string> {
   return map;
 }
 
-/**
- * Names that ship a side-effect `define` entrypoint (`@lion/ui/define/lion-<name>.js`), which the
- * `lion-ui` skill tells you to prefer when you only need the custom element registered.
- */
-export function discoverDefineEntrypoints(repoRoot: string): string[] {
-  const defineDir = path.join(repoRoot, 'packages/ui/exports/define');
-  if (!fs.existsSync(defineDir)) return [];
-  return fs
-    .readdirSync(defineDir)
-    .filter(entry => entry.startsWith('lion-') && entry.endsWith('.js'))
-    .map(entry => entry.slice('lion-'.length, -'.js'.length))
-    .sort();
-}
-
 export function loadLionUiScenarios({
   repoRoot,
   components = discoverComponentNames(repoRoot),
@@ -109,7 +95,6 @@ export function loadLionUiScenarios({
     components,
     systems,
     knownTags: discoverKnownTags(repoRoot),
-    defineEntrypoints: discoverDefineEntrypoints(repoRoot),
     tagClasses: discoverTagClasses(repoRoot),
   });
   return includeManual ? [...generated, ...manualScenarios, ...runScenarios] : generated;

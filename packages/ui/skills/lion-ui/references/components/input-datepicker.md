@@ -14,7 +14,7 @@ We encourage using our standard [input-date](../input-date/overview.md) for this
 
 ```js script
 import { html } from 'lit';
-import '@lion/ui/define/lion-input-datepicker.js';
+import { LionInputDatepicker } from '@lion/ui/input-datepicker.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
 ```
 
 ```js preview-story
@@ -46,7 +46,7 @@ npm i --save @lion/ui
 ```js
 import { LionInputDatepicker } from '@lion/ui/input-datepicker.js';
 // or
-import '@lion/ui/define/lion-input-datepicker.js';
+import { LionInputDatepicker } from '@lion/ui/input-datepicker.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
 ```
 
 ---
@@ -58,7 +58,7 @@ import { html } from 'lit';
 import { MinMaxDate, IsDateDisabled } from '@lion/ui/form-core.js';
 import { loadDefaultFeedbackMessages } from '@lion/ui/validate-messages.js';
 import { formatDate } from '@lion/ui/localize.js';
-import '@lion/ui/define/lion-input-datepicker.js';
+import { LionInputDatepicker } from '@lion/ui/input-datepicker.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
 loadDefaultFeedbackMessages();
 ```
 

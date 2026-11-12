@@ -15,7 +15,7 @@ import { html } from 'lit';
 import { ref, createRef } from 'lit/directives/ref.js';
 
 import { PhoneUtilManager } from '@lion/ui/input-tel.js';
-import '@lion/ui/define/lion-input-tel.js';
+import { LionInputTel } from '@lion/ui/input-tel.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
 import { loadDefaultFeedbackMessages } from '@lion/ui/validate-messages.js';
 import '../../../docs/fundamentals/systems/form/assets/h-output.js';
 ```
@@ -66,7 +66,7 @@ npm i --save @lion/ui
 ```js
 import { LionInputTel } from '@lion/ui/input-tel.js';
 // or
-import '@lion/ui/define/lion-input-tel.js';
+import { LionInputTel } from '@lion/ui/input-tel.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
 ```
 
 ---
@@ -80,7 +80,7 @@ import { Unparseable } from '@lion/ui/form-core.js';
 import { localize } from '@lion/ui/localize.js';
 import { loadDefaultFeedbackMessages } from '@lion/ui/validate-messages.js';
 import { PhoneUtilManager } from '@lion/ui/input-tel.js';
-import '@lion/ui/define/lion-input-tel.js';
+import { LionInputTel } from '@lion/ui/input-tel.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
 
 import '../../../docs/fundamentals/systems/form/assets/h-output.js';
 

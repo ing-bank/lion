@@ -15,7 +15,7 @@ Sets of options where each option name starts with the same word or phrase can a
 
 ```js script
 import { html } from 'lit';
-import '@lion/ui/define/lion-select.js';
+import { LionSelect } from '@lion/ui/select.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
 ```
 
 ```js preview-story
@@ -48,7 +48,7 @@ npm i --save @lion/ui
 ```js
 import { LionSelect } from '@lion/ui/select.js';
 // or
-import '@lion/ui/define/lion-select.js';
+import { LionSelect } from '@lion/ui/select.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
 ```
 
 ---
@@ -59,7 +59,7 @@ import '@lion/ui/define/lion-select.js';
 import { html } from 'lit';
 import { Required } from '@lion/ui/form-core.js';
 import { loadDefaultFeedbackMessages } from '@lion/ui/validate-messages.js';
-import '@lion/ui/define/lion-select.js';
+import { LionSelect } from '@lion/ui/select.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
 loadDefaultFeedbackMessages();
 ```
 

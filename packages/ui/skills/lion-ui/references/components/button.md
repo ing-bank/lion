@@ -12,7 +12,7 @@ A button web component that is easily stylable and accessible.
 
 ```js script
 import { html } from 'lit';
-import '@lion/ui/define/lion-button.js';
+import { LionButton } from '@lion/ui/button.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
 ```
 
 ```js preview-story
@@ -34,7 +34,7 @@ npm i --save @lion/ui
 ```js
 import { LionButton, LionButtonReset, LionButtonSubmit } from '@lion/ui/button.js';
 // or
-import '@lion/ui/define/lion-button.js';
+import { LionButton } from '@lion/ui/button.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
 ```
 
 ---
@@ -43,9 +43,9 @@ import '@lion/ui/define/lion-button.js';
 
 ```js script
 import { html } from 'lit';
-import '@lion/ui/define/lion-button.js';
-import '@lion/ui/define/lion-button-reset.js';
-import '@lion/ui/define/lion-button-submit.js';
+import { LionButton } from '@lion/ui/button.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
+// <lion-button-reset> is not a module of its own - look its entrypoint up in references/entrypoints.md.// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
+// <lion-button-submit> is not a module of its own - look its entrypoint up in references/entrypoints.md.// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
 ```
 
 ### With click handler
@@ -155,7 +155,7 @@ whose `type` property is synchronized with the type of the `<lion-button-submit>
 
 ```js script
 import { html } from 'lit';
-import '@lion/ui/define/lion-button.js';
+import { LionButton } from '@lion/ui/button.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
 
 ```
 

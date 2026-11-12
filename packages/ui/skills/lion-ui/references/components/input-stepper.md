@@ -13,7 +13,7 @@ A web component that enables the user to increase and decrease a numeric value b
 ```js script
 import { html } from 'lit';
 import { loadDefaultFeedbackMessages } from '@lion/ui/validate-messages.js';
-import '@lion/ui/define/lion-input-stepper.js';
+import { LionInputStepper } from '@lion/ui/input-stepper.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
 loadDefaultFeedbackMessages();
 ```
 
@@ -40,7 +40,7 @@ npm i --save @lion/ui
 ```js
 import { LionInputStepper } from '@lion/ui/input-stepper.js';
 // or
-import '@lion/ui/define/lion-input-stepper.js';
+import { LionInputStepper } from '@lion/ui/input-stepper.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
 ```
 
 ---
@@ -50,7 +50,7 @@ import '@lion/ui/define/lion-input-stepper.js';
 ```js script
 import { html } from 'lit';
 import { loadDefaultFeedbackMessages } from '@lion/ui/validate-messages.js';
-import '@lion/ui/define/lion-input-stepper.js';
+import { LionInputStepper } from '@lion/ui/input-stepper.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
 loadDefaultFeedbackMessages();
 ```
 

@@ -12,7 +12,7 @@ Extension of Input Tel that prefixes a dropdown list that shows all possible reg
 
 ```js script
 import { html } from 'lit';
-import '@lion/ui/define/lion-input-tel-dropdown.js';
+import { LionInputTelDropdown } from '@lion/ui/input-tel-dropdown.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
 import { loadDefaultFeedbackMessages } from '@lion/ui/validate-messages.js';
 ```
 
@@ -42,7 +42,7 @@ npm i --save @lion/ui
 ```js
 import { LionInputTelDropdown } from '@lion/ui/input-tel-dropdown.js';
 // or
-import '@lion/ui/define/lion-input-tel-dropdown.js';
+import { LionInputTelDropdown } from '@lion/ui/input-tel-dropdown.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
 ```
 
 ---
@@ -54,7 +54,7 @@ import { html } from 'lit';
 import { ref, createRef } from 'lit/directives/ref.js';
 import { loadDefaultFeedbackMessages } from '@lion/ui/validate-messages.js';
 import { PhoneUtilManager } from '@lion/ui/input-tel.js';
-import '@lion/ui/define/lion-input-tel-dropdown.js';
+import { LionInputTelDropdown } from '@lion/ui/input-tel-dropdown.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
 import '../../../docs/fundamentals/systems/form/assets/h-output.js';
 
 // TODO: make each example load/use the dependencies by default

@@ -12,7 +12,7 @@ A web component based on the generic text input field. Its purpose is to provide
 
 ```js script
 import { html } from 'lit';
-import '@lion/ui/define/lion-input-email.js';
+import { LionInputEmail } from '@lion/ui/input-email.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
 ```
 
 ```js preview-story
@@ -36,7 +36,7 @@ npm i --save @lion/ui
 ```js
 import { LionInputEmail } from '@lion/ui/input-email.js';
 // or
-import '@lion/ui/define/lion-input-email.js';
+import { LionInputEmail } from '@lion/ui/input-email.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
 ```
 
 ---
@@ -46,7 +46,7 @@ import '@lion/ui/define/lion-input-email.js';
 ```js script
 import { html } from 'lit';
 import { Validator } from '@lion/ui/form-core.js';
-import '@lion/ui/define/lion-input-email.js';
+import { LionInputEmail } from '@lion/ui/input-email.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
 ```
 
 ### Faulty Prefilled

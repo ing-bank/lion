@@ -23,8 +23,8 @@ availability of the pop-up.
 ```js script
 import { html } from 'lit';
 
-import '@lion/ui/define/lion-combobox.js';
-import '@lion/ui/define/lion-option.js';
+import { LionCombobox } from '@lion/ui/combobox.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
+// <lion-option> is not a module of its own - look its entrypoint up in references/entrypoints.md.// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
 
 ```
 
@@ -65,8 +65,8 @@ npm i --save @lion/ui
 ```
 
 ```js
-import '@lion/ui/define/lion-combobox.js';
-import '@lion/ui/define/lion-option.js';
+import { LionCombobox } from '@lion/ui/combobox.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
+// <lion-option> is not a module of its own - look its entrypoint up in references/entrypoints.md.// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
 ```
 
 ---
@@ -90,9 +90,9 @@ import { LitElement, html } from 'lit';
 
 import { LionCombobox } from '@lion/ui/combobox.js';
 import { Required } from '@lion/ui/form-core.js';
-import '@lion/ui/define/lion-button.js';
-import '@lion/ui/define/lion-combobox.js';
-import '@lion/ui/define/lion-option.js';
+import { LionButton } from '@lion/ui/button.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
+import { LionCombobox } from '@lion/ui/combobox.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
+// <lion-option> is not a module of its own - look its entrypoint up in references/entrypoints.md.// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
 
 import { loadDefaultFeedbackMessages } from '@lion/ui/validate-messages.js';
 loadDefaultFeedbackMessages();

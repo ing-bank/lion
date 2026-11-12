@@ -75,7 +75,8 @@ export function slotEntries(body) {
         description = `${description} ${trimmed.replace(/^\*\s?/, '')}`.trim();
       } else if (trimmed.length > 0) {
         const key = trimmed.match(/^(?:'([^']+)'|"([^"]+)"|([A-Za-z_$][\w$-]*))\s*:/);
-        if (key && !trimmed.startsWith('...')) slots.push({ name: key[1] ?? key[2] ?? key[3], description });
+        if (key && !trimmed.startsWith('...'))
+          slots.push({ name: key[1] ?? key[2] ?? key[3], description });
         description = '';
       }
     }

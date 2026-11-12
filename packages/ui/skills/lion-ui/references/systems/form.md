@@ -138,7 +138,7 @@ Both methods do so by calling `reset|resetGroup` or `clear|clearGroup` on each `
 
 ```js script
 import { html } from 'lit';
-import '@lion/ui/define/lion-input.js';
+import { LionInput } from '@lion/ui/input.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
 import { Unparseable } from '@lion/ui/form-core.js';
 import { liveFormatPhoneNumber } from '@lion/ui/input-tel.js';
 import './assets/h-output.js';
@@ -387,8 +387,8 @@ Where the developer sets the modelValue of the input programmatically:
 ```js script
 import { html, render } from 'lit';
 import { renderLitAsNode } from '@lion/ui/helpers.js';
-import '@lion/ui/define/lion-input.js';
-import '@lion/ui/define/lion-input-date.js';
+import { LionInput } from '@lion/ui/input.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
+import { LionInputDate } from '@lion/ui/input-date.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
 import { Validator, Unparseable, MinDate, Required } from '@lion/ui/form-core.js';
 import './assets/h-output.js';
 ```
@@ -572,28 +572,28 @@ In those cases, using the `resetInteractionState` on a field or a form resets it
 ```js script
 import { html } from 'lit';
 import { LionInput } from '@lion/ui/input.js';
-import '@lion/ui/define/lion-checkbox-group.js';
-import '@lion/ui/define/lion-checkbox.js';
-import '@lion/ui/define/lion-combobox.js';
-import '@lion/ui/define/lion-fieldset.js';
-import '@lion/ui/define/lion-form.js';
-import '@lion/ui/define/lion-input-amount.js';
-import '@lion/ui/define/lion-input-date.js';
-import '@lion/ui/define/lion-input-datepicker.js';
-import '@lion/ui/define/lion-input-email.js';
-import '@lion/ui/define/lion-input-iban.js';
-import '@lion/ui/define/lion-input-range.js';
-import '@lion/ui/define/lion-input-stepper.js';
-import '@lion/ui/define/lion-input.js';
-import '@lion/ui/define/lion-listbox.js';
-import '@lion/ui/define/lion-listbox.js';
-import '@lion/ui/define/lion-option.js';
-import '@lion/ui/define/lion-options.js';
-import '@lion/ui/define/lion-radio-group.js';
-import '@lion/ui/define/lion-radio.js';
-import '@lion/ui/define/lion-select.js';
-import '@lion/ui/define/lion-select-rich.js';
-import '@lion/ui/define/lion-textarea.js';
+import { LionCheckboxGroup } from '@lion/ui/checkbox-group.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
+// <lion-checkbox> is not a module of its own - look its entrypoint up in references/entrypoints.md.// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
+import { LionCombobox } from '@lion/ui/combobox.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
+import { LionFieldset } from '@lion/ui/fieldset.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
+import { LionForm } from '@lion/ui/form.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
+import { LionInputAmount } from '@lion/ui/input-amount.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
+import { LionInputDate } from '@lion/ui/input-date.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
+import { LionInputDatepicker } from '@lion/ui/input-datepicker.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
+import { LionInputEmail } from '@lion/ui/input-email.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
+import { LionInputIban } from '@lion/ui/input-iban.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
+import { LionInputRange } from '@lion/ui/input-range.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
+import { LionInputStepper } from '@lion/ui/input-stepper.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
+import { LionInput } from '@lion/ui/input.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
+import { LionListbox } from '@lion/ui/listbox.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
+import { LionListbox } from '@lion/ui/listbox.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
+// <lion-option> is not a module of its own - look its entrypoint up in references/entrypoints.md.// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
+// <lion-options> is not a module of its own - look its entrypoint up in references/entrypoints.md.// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
+import { LionRadioGroup } from '@lion/ui/radio-group.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
+// <lion-radio> is not a module of its own - look its entrypoint up in references/entrypoints.md.// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
+import { LionSelect } from '@lion/ui/select.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
+import { LionSelectRich } from '@lion/ui/select-rich.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
+import { LionTextarea } from '@lion/ui/textarea.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
 import {
   DefaultSuccess,
   EqualsLength,
@@ -743,7 +743,7 @@ npm i --save @lion/ui
 ```
 
 ```js
-import '@lion/ui/define/lion-input.js';
+import { LionInput } from '@lion/ui/input.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
 import { %ValidatorName% } from '@lion/ui/form-core.js';
 ```
 
@@ -1546,8 +1546,8 @@ export const multipleFieldValidation = () =>
 
 ```js script
 import { html } from 'lit';
-import '@lion/ui/define/lion-input.js';
-import '@lion/ui/define/lion-button.js';
+import { LionInput } from '@lion/ui/input.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
+import { LionButton } from '@lion/ui/button.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
 ```
 
 ### Label
@@ -1631,33 +1631,33 @@ For usage and installation please see the appropriate packages.
 
 ```js script
 import { html } from 'lit';
-import '@lion/ui/define/lion-button.js';
-import '@lion/ui/define/lion-checkbox-group.js';
-import '@lion/ui/define/lion-checkbox.js';
-import '@lion/ui/define/lion-combobox.js';
-import '@lion/ui/define/lion-option.js';
-import '@lion/ui/define/lion-fieldset.js';
-import '@lion/ui/define/lion-form.js';
-import '@lion/ui/define/lion-input-amount.js';
-import '@lion/ui/define/lion-input-date.js';
-import '@lion/ui/define/lion-input-datepicker.js';
-import '@lion/ui/define/lion-input-email.js';
-import '@lion/ui/define/lion-input-file.js';
-import '@lion/ui/define/lion-input-tel.js';
-import '@lion/ui/define/lion-input-tel-dropdown.js';
-import '@lion/ui/define/lion-input-iban.js';
-import '@lion/ui/define/lion-input-range.js';
-import '@lion/ui/define/lion-input-stepper.js';
-import '@lion/ui/define/lion-input.js';
-import '@lion/ui/define/lion-listbox.js';
-import '@lion/ui/define/lion-radio-group.js';
-import '@lion/ui/define/lion-radio.js';
-import '@lion/ui/define/lion-select.js';
-import '@lion/ui/define/lion-select-rich.js';
-import '@lion/ui/define/lion-switch.js';
-import '@lion/ui/define/lion-textarea.js';
-import '@lion/ui/define/lion-button-submit.js';
-import '@lion/ui/define/lion-button-reset.js';
+import { LionButton } from '@lion/ui/button.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
+import { LionCheckboxGroup } from '@lion/ui/checkbox-group.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
+// <lion-checkbox> is not a module of its own - look its entrypoint up in references/entrypoints.md.// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
+import { LionCombobox } from '@lion/ui/combobox.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
+// <lion-option> is not a module of its own - look its entrypoint up in references/entrypoints.md.// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
+import { LionFieldset } from '@lion/ui/fieldset.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
+import { LionForm } from '@lion/ui/form.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
+import { LionInputAmount } from '@lion/ui/input-amount.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
+import { LionInputDate } from '@lion/ui/input-date.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
+import { LionInputDatepicker } from '@lion/ui/input-datepicker.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
+import { LionInputEmail } from '@lion/ui/input-email.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
+import { LionInputFile } from '@lion/ui/input-file.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
+import { LionInputTel } from '@lion/ui/input-tel.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
+import { LionInputTelDropdown } from '@lion/ui/input-tel-dropdown.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
+import { LionInputIban } from '@lion/ui/input-iban.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
+import { LionInputRange } from '@lion/ui/input-range.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
+import { LionInputStepper } from '@lion/ui/input-stepper.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
+import { LionInput } from '@lion/ui/input.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
+import { LionListbox } from '@lion/ui/listbox.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
+import { LionRadioGroup } from '@lion/ui/radio-group.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
+// <lion-radio> is not a module of its own - look its entrypoint up in references/entrypoints.md.// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
+import { LionSelect } from '@lion/ui/select.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
+import { LionSelectRich } from '@lion/ui/select-rich.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
+import { LionSwitch } from '@lion/ui/switch.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
+import { LionTextarea } from '@lion/ui/textarea.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
+// <lion-button-submit> is not a module of its own - look its entrypoint up in references/entrypoints.md.// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
+// <lion-button-reset> is not a module of its own - look its entrypoint up in references/entrypoints.md.// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
 import { MinLength, Required } from '@lion/ui/form-core.js';
 import { loadDefaultFeedbackMessages } from '@lion/ui/validate-messages.js';
 ```

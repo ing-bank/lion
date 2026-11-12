@@ -46,14 +46,15 @@ integration, not visual styling. Consumers are expected to extend/style lion com
 ### Basic usage
 
 ```js
-import '@lion/ui/define/lion-button.js';
+import { LionButton } from '@lion/ui/button.js';
+// Rendered through the host's scoped registry (ScopedElementsMixin) - never '@lion/ui/define/*'.
 ```
 
 ```html
 <lion-button>Click me</lion-button>
 ```
 
-Prefer the `define/*` entrypoints (`@lion/ui/define/lion-x.js`) when you just need the custom
+Prefer the `define/*` entrypoints (`<lion-x>`) when you just need the custom
 element registered; import the class directly (e.g. `@lion/ui/button.js`) only when you need to
 extend or reference the class itself. **Copy the exact import path from the component's reference
 doc — never infer it from the tag name.**
@@ -142,18 +143,19 @@ Task-oriented how-to guides, generated from lion's own documentation:
 
 - Import only from `@lion/ui/*`. Never deep-import from `@lion/ui/components/<x>/src/*` — that is
   internal package structure and can change without notice.
-- Use `@lion/ui/define/lion-x.js` to register a custom element; import the class (e.g.
+- Use `<lion-x>` to register a custom element; import the class (e.g.
   `LionInput` from `@lion/ui/input.js`) only when you need to reference/extend it.
 
 #### Common import patterns
 
 ```js
 // Register the custom element only
-import '@lion/ui/define/lion-input.js';
+import { LionInput } from '@lion/ui/input.js';
+// Rendered through the host's scoped registry (ScopedElementsMixin) - never '@lion/ui/define/*'.
 
 // Import the class (e.g. to extend it, or use validators)
 import { LionInput } from '@lion/ui/input.js';
-import { Required, MinLength } from '@lion/ui/validate.js';
+import { Required, MinLength } from '<lion-validate>';
 ```
 
 ### Forms
@@ -225,7 +227,7 @@ control; see `references/systems/form.md` (`model-value`) for details and edge c
 #### Validation: use validator classes, not hand-rolled checks
 
 ```js
-import { Required, MinLength } from '@lion/ui/validate.js';
+import { Required, MinLength } from '<lion-validate>';
 
 html`
   <lion-input
@@ -246,7 +248,7 @@ html`
 - **Import from the module an API is documented under — never from a name you infer.** `@lion/ui/`
   ships a fixed set of entrypoints, so a specifier you reason your way to from an element or a
   concept is a guess that fails at load: `<lion-checkbox>` comes from `@lion/ui/checkbox-group.js`
-  and `@lion/ui/checkbox.js` does not exist; `LionOption` comes from the listbox module, not
+  and `<lion-checkbox>` does not exist; `LionOption` comes from the listbox module, not
   `option.js`; the validators come from the form module that documents them, not `validate.js`. See
   `references/systems/core.md`.
 - **Assume a scoped-elements host.** Usage examples are rendered inside a host `LitElement` that
@@ -264,10 +266,13 @@ html`
 
 ```js
 import { html } from 'lit';
-import '@lion/ui/define/lion-form.js';
-import '@lion/ui/define/lion-fieldset.js';
-import '@lion/ui/define/lion-input.js';
-import { Required, MinLength, IsEmail } from '@lion/ui/validate.js';
+import { LionForm } from '@lion/ui/form.js';
+// Rendered through the host's scoped registry (ScopedElementsMixin) - never '@lion/ui/define/*'.
+import { LionFieldset } from '@lion/ui/fieldset.js';
+// Rendered through the host's scoped registry (ScopedElementsMixin) - never '@lion/ui/define/*'.
+import { LionInput } from '@lion/ui/input.js';
+// Rendered through the host's scoped registry (ScopedElementsMixin) - never '@lion/ui/define/*'.
+import { Required, MinLength, IsEmail } from '<lion-validate>';
 
 html`
   <lion-form>
@@ -300,5 +305,5 @@ React/Vue/Angular wrappers or SSR considerations, see `references/systems/core.m
 - [ ] Read the reference doc for every `@lion/ui` component/system you use
 - [ ] Imports copied verbatim from the reference doc (no deep imports)
 - [ ] Form controls use `.modelValue`, not native `.value`
-- [ ] Validation uses `Validator` classes from `@lion/ui/validate.js`
+- [ ] Validation uses `Validator` classes from `<lion-validate>`
 - [ ] Checked `references/systems/localize.md` if the UI needs translations

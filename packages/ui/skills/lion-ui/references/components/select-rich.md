@@ -16,8 +16,8 @@ Its implementation is based on the following Design pattern:
 
 ```js script
 import { LitElement, html } from 'lit';
-import '@lion/ui/define/lion-select-rich.js';
-import '@lion/ui/define/lion-option.js';
+import { LionSelectRich } from '@lion/ui/select-rich.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
+// <lion-option> is not a module of its own - look its entrypoint up in references/entrypoints.md.// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
 ```
 
 ```html preview-story
@@ -46,8 +46,8 @@ npm i --save @lion/ui
 import { LionSelectRich } from '@lion/ui/select-rich.js';
 import { LionOptions, LionOption } from '@lion/ui/listbox.js';
 // or
-import '@lion/ui/define/lion-select-rich.js';
-import '@lion/ui/define/lion-option.js';
+import { LionSelectRich } from '@lion/ui/select-rich.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
+// <lion-option> is not a module of its own - look its entrypoint up in references/entrypoints.md.// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
 ```
 
 ---
@@ -56,8 +56,8 @@ import '@lion/ui/define/lion-option.js';
 
 ```js script
 import { LitElement, html } from 'lit';
-import '@lion/ui/define/lion-select-rich.js';
-import '@lion/ui/define/lion-option.js';
+import { LionSelectRich } from '@lion/ui/select-rich.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
+// <lion-option> is not a module of its own - look its entrypoint up in references/entrypoints.md.// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
 ```
 
 ### Model value
@@ -435,7 +435,7 @@ class IntlSelectInvoker extends LionSelectInvoker {
 ```js script
 import { html } from 'lit';
 import { repeat } from 'lit/directives/repeat.js';
-import '@lion/ui/define/lion-select-rich.js';
+import { LionSelectRich } from '@lion/ui/select-rich.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
 
 ```
 

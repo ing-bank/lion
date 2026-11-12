@@ -8,7 +8,7 @@
 import { html } from 'lit';
 import { loadDefaultFeedbackMessages } from '@lion/ui/validate-messages.js';
 import { LionInputAmountDropdown } from '@lion/ui/input-amount-dropdown.js';
-import '@lion/ui/define/lion-input-amount-dropdown.js';
+import { LionInputAmountDropdown } from '@lion/ui/input-amount-dropdown.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
 ```
 
 ### Input Amount Dropdown

@@ -7,8 +7,8 @@
 ```js script
 import { html, css, LitElement } from 'lit';
 import { LionField } from '@lion/ui/form-core.js';
-import '@lion/ui/define/lion-field.js';
-import '@lion/ui/define/lion-validation-feedback.js';
+// <lion-field> is not a module of its own - look its entrypoint up in references/entrypoints.md.// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
+// <lion-validation-feedback> is not a module of its own - look its entrypoint up in references/entrypoints.md.// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
 
 import '../../fundamentals/systems/form/assets/h-output.js';
 

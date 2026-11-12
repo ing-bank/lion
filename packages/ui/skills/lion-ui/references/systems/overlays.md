@@ -175,7 +175,7 @@ npm i --save @lion/ui
 #### Example
 
 ```js
-import '@lion/ui/define/lion-dialog.js';
+import { LionDialog } from '@lion/ui/dialog.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
 
 html`
   <lion-dialog .config=${{

@@ -9,7 +9,7 @@ A web component for displaying icons.
 ```js script
 import { html } from 'lit';
 import { icons } from '@lion/ui/icon.js';
-import '@lion/ui/define/lion-icon.js';
+import { LionIcon } from '@lion/ui/icon.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
 
 icons.addIconResolver('lion', (iconset, name) => {
   switch (iconset) {
@@ -40,7 +40,7 @@ npm i --save @lion/ui
 ```js
 import { LionIcon } from '@lion/ui/icon.js';
 // or
-import '@lion/ui/define/lion-icon.js';
+import { LionIcon } from '@lion/ui/icon.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
 ```
 
 ---
@@ -54,7 +54,7 @@ import './assets/iconset-bugs.js';
 import './assets/iconset-misc.js';
 import * as spaceSet from './assets/iconset-space.js';
 
-import '@lion/ui/define/lion-icon.js';
+import { LionIcon } from '@lion/ui/icon.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
 ```
 
 ### Icon sets

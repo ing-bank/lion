@@ -8,7 +8,7 @@ A combination of a button (the invoker) and a chunk of 'extra content'. This web
 
 ```js script
 import { html } from 'lit';
-import '@lion/ui/define/lion-collapsible.js';
+import { LionCollapsible } from '@lion/ui/collapsible.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
 ```
 
 ```js preview-story
@@ -39,7 +39,7 @@ npm i --save @lion/ui
 ```js
 import { LionCollapsible } from '@lion/ui/collapsible.js';
 // or
-import '@lion/ui/define/lion-collapsible.js';
+import { LionCollapsible } from '@lion/ui/collapsible.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
 ```
 
 ---
@@ -48,7 +48,7 @@ import '@lion/ui/define/lion-collapsible.js';
 
 ```js script
 import { html } from 'lit';
-import '@lion/ui/define/lion-collapsible.js';
+import { LionCollapsible } from '@lion/ui/collapsible.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
 ```
 
 ### Default open
@@ -130,8 +130,8 @@ export const events = ({ shadowRoot }) => html`
 
 ```js script
 import { html } from 'lit';
-import '@lion/ui/define/lion-collapsible.js';
-import '@lion/ui/define/lion-button.js';
+import { LionCollapsible } from '@lion/ui/collapsible.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
+import { LionButton } from '@lion/ui/button.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
 import './assets/CustomCollapsible.js';
 import './assets/applyDemoCollapsibleStyles.js';
 ```

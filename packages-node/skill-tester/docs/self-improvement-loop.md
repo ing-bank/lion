@@ -78,6 +78,14 @@ The follow-up that would retire the class of failure rather than discourage it: 
 real entrypoints into the skill. Sixty-seven specifiers exist under `packages/ui/exports/`, the
 generator already reads that directory, and a model given the list cannot guess.
 
+**That follow-up was built, and it did not retire the failure.** `references/entrypoints.md` now lists
+every real specifier (101 consumer/type/define forms at the last count) and is regenerated every run - and
+`component/checkbox-group` still scored **0% on `anthropic-claude-haiku-4-5`**, guessing
+`@lion/ui/checkbox.js` exactly as before (with `@lion/ui/menuitem.js` and `@lion/ui/validate.js` as two
+more instances in the same round). So a list is not a fix: the mapping has to sit where a model reads
+first, per component, and every correction owes a re-run at n>=3 on the model that failed. The loop's
+skill states this as three mandatory steps - see `packages/ui/skills/recursive-skill-improver`.
+
 ## Counter-example: a failure that was _not_ attributed
 
 Two scenarios failed and got no documentation edit at all:

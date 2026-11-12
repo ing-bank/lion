@@ -2,8 +2,12 @@ import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import matter from 'gray-matter';
-import { COMPONENT_SYNONYMS, SYSTEM_SYNONYMS } from '../../../../scripts/lib/component-synonyms.mjs';
+import {
+  COMPONENT_SYNONYMS,
+  SYSTEM_SYNONYMS,
+} from '../../../../scripts/lib/component-synonyms.mjs';
 import { stripDocNoise } from '../../../../scripts/lib/strip-doc-noise.mjs';
+import { rewriteDefineImports, repairUnshippedSpecifiers } from '../lib/consumer-imports.mjs';
 import {
   computeApiTablesByDocGroup,
   findClassDeclaration,
@@ -111,7 +115,7 @@ function mergeDocPages(dirPath) {
     const raw = fs.readFileSync(path.join(dirPath, file), 'utf8');
     const parsed = matter(raw);
     const order = parsed.data?.eleventyNavigation?.order ?? 999;
-    return { order, content: stripDocNoise(parsed.content).trim() };
+    return { order, content: rewriteDefineImports(stripDocNoise(parsed.content).trim()) };
   });
 
   pages.sort((a, b) => a.order - b.order);
@@ -172,7 +176,7 @@ function writeSinglePageReferenceFile({ name, sourceFilePath }) {
   const relativeSource = path.relative(repoRoot, sourceFilePath);
   const parsed = matter(fs.readFileSync(sourceFilePath, 'utf8'));
   // The page's own `# Title` becomes `## Title` so the file keeps a single top-level heading.
-  const body = shiftHeadings(stripDocNoise(parsed.content).trim(), 1);
+  const body = shiftHeadings(rewriteDefineImports(stripDocNoise(parsed.content).trim()), 1);
 
   const fileContent = [
     `# ${toTitleCase(name)}`,
@@ -213,7 +217,7 @@ function updateSkillMdIndex(markerName, entries) {
     .map(
       e =>
         `- [\`${toTitleCase(e.name)}\`](${e.refPath})` +
-          (e.synonyms?.length ? ` — ${e.synonyms.join(', ')}` : ''),
+        (e.synonyms?.length ? ` — ${e.synonyms.join(', ')}` : ''),
     )
     .join('\n');
 
@@ -331,7 +335,6 @@ function linkFormControlsToFormGuide() {
   }
   return linked;
 }
-
 
 /**
  * Writes a per-component subclasser companion: the protected and private members (the subclasser
@@ -474,6 +477,30 @@ function main() {
   writeEntrypointReference();
   const formControlsLinked = linkFormControlsToFormGuide();
   const subclasserCompanions = writeSubclasserCompanions(uiComponentsDir, customElementsJson);
+
+  // Nothing leaves this generator teaching a global `@lion/ui/define/*` entrypoint: the harness fails any
+  // produced file that uses one, because it opts out of the scoped element registry the skill exists to
+  // teach. The writers above are individually easy to miss (the entrypoint table, the subclasser companions,
+  // SKILL.md), so the rewrite runs once over the whole output instead - nothing can bypass it.
+  const rewrittenFiles = [];
+  const walk = dir =>
+    fs.readdirSync(dir, { withFileTypes: true }).flatMap(entry => {
+      const full = path.join(dir, entry.name);
+      return entry.isDirectory() ? walk(full) : full.endsWith('.md') ? [full] : [];
+    });
+  for (const file of walk(skillDir)) {
+    const original = fs.readFileSync(file, 'utf-8');
+    const updated = repairUnshippedSpecifiers(rewriteDefineImports(original));
+    if (updated !== original) {
+      fs.writeFileSync(file, updated);
+      rewrittenFiles.push(path.relative(repoRoot, file));
+    }
+  }
+  if (rewrittenFiles.length > 0) {
+    console.log(
+      `Rewrote ${rewrittenFiles.length} generated file(s) to the consumer import form (no global define).`,
+    );
+  }
 
   console.log(
     `Generated ${componentEntries.length} component reference(s) (${formControlsLinked} form control(s) linked to the form guide), ${systemEntries.length} ` +

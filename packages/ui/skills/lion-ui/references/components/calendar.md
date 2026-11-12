@@ -6,7 +6,7 @@
 
 ```js script
 import { html, css } from 'lit';
-import '@lion/ui/define/lion-calendar.js';
+import { LionCalendar } from '@lion/ui/calendar.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
 ```
 
 ### Selected date
@@ -242,7 +242,7 @@ A reusable and accessible calendar view web component.
 
 ```js script
 import { html, css } from 'lit';
-import '@lion/ui/define/lion-calendar.js';
+import { LionCalendar } from '@lion/ui/calendar.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
 ```
 
 ```js preview-story
@@ -283,7 +283,7 @@ npm i --save @lion/ui
 ```
 
 ```js
-import '@lion/ui/define/lion-calendar.js';
+import { LionCalendar } from '@lion/ui/calendar.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
 ```
 
 ## API Reference

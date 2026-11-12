@@ -12,7 +12,7 @@ A web component based on the file input field.
 
 ```js script
 import { html } from 'lit';
-import '@lion/ui/define/lion-input-file.js';
+import { LionInputFile } from '@lion/ui/input-file.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
 ```
 
 ```js preview-story
@@ -36,7 +36,7 @@ npm i --save @lion/ui
 ```js
 import { LionInputFile } from '@lion/ui/input-file.js';
 // or
-import '@lion/ui/define/lion-input-file.js';
+import { LionInputFile } from '@lion/ui/input-file.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
 ```
 
 ---
@@ -49,7 +49,7 @@ import { loadDefaultFeedbackMessages } from '@lion/ui/validate-messages.js';
 import { html } from 'lit';
 import { ScopedElementsMixin } from '@open-wc/scoped-elements/lit-element.js';
 import { LitElement } from 'lit';
-import '@lion/ui/define/lion-input-file.js';
+import { LionInputFile } from '@lion/ui/input-file.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
 loadDefaultFeedbackMessages();
 ```
 

@@ -17,9 +17,9 @@
  *
  * `entrypointChecks` asserts the import rules the `lion-ui` skill exists to teach:
  *
- *   - import through a real `@lion/ui` entrypoint — either the class entrypoint
- *     (`@lion/ui/<name>.js`) or the side-effect `define/*` entrypoint
- *     (`@lion/ui/define/lion-<name>.js`);
+ *   - import through the class entrypoint (`@lion/ui/<name>.js`) and register the element through the
+ *     host's scoped registry — NEVER through a global `@lion/ui/define/*` entrypoint, which opts out of
+ *     the scoped registry the skill exists to teach;
  *   - never import a component from `@lion/*` directly;
  *   - never deep-import into `@lion/ui` internals (`@lion/ui/components/**`, `@lion/ui/src/**`),
  *     which is the import rule the skill actually states. Bare `lit` is NOT a violation:
@@ -247,36 +247,24 @@ export function entrypointFor(name: string): string {
   return `@lion/ui/${name}.js`;
 }
 
-/** The side-effect `define` entrypoint, e.g. `button` -> `@lion/ui/define/lion-button.js`. */
-export function defineEntrypointFor(name: string): string {
-  return `@lion/ui/define/lion-${name}.js`;
-}
-
 /**
  * The import-policy checks, which every scenario shares. The caller adds `exists` and
  * `noExtraFiles` around them, plus whatever else its own contract demands.
  *
- * Accept both ways the skill documents: importing the class (`from '@lion/ui/x.js'`) and
- * registering the element (`import '@lion/ui/define/lion-x.js'`).
+ * One way only: importing the class from `@lion/ui/x.js`. A global
+ * `@lion/ui/define/lion-x.js` entrypoint is never accepted - it opts out of the host's scoped registry,
+ * which is the exact rule this skill teaches (and which the check below fails on).
  */
-function entrypointChecks(
-  file: string,
-  name: string,
-  defineEntrypoints: string[] = [],
-): ScenarioCheck[] {
+function entrypointChecks(file: string, name: string): ScenarioCheck[] {
   const escaped = escapeRegExp(name);
   const classImport = `from\\s+['"]@lion/ui/${escaped}\\.js['"]`;
-  const defineSupported = defineEntrypoints.includes(name);
-  const defineImport = `['"]@lion/ui/define/lion-${escaped}\\.js['"]`;
 
   return [
     {
       type: 'matches',
       file,
-      pattern: defineSupported ? `${classImport}|${defineImport}` : classImport,
-      description: defineSupported
-        ? `imports '${entrypointFor(name)}' or '${defineEntrypointFor(name)}'`
-        : `imports '${entrypointFor(name)}'`,
+      pattern: classImport,
+      description: `imports '${entrypointFor(name)}' and never a global define entrypoint`,
     },
     {
       type: 'notMatches',
@@ -389,7 +377,7 @@ export function createComponentScenario(
       pattern: `export class ${producedClass}`,
       description: `exports the class \`${producedClass}\``,
     },
-    ...entrypointChecks(targetFile, componentName, defineEntrypoints),
+    ...entrypointChecks(targetFile, componentName),
   ];
 
   const tagConfirmed = knownTags.includes(tagName);
@@ -476,7 +464,7 @@ export function createSystemScenario(
     },
     checks: [
       exists,
-      ...entrypointChecks(SYSTEM_TARGET_FILE, systemName, context.defineEntrypoints ?? []),
+      ...entrypointChecks(SYSTEM_TARGET_FILE, systemName),
       {
         type: 'noUnusedImports',
         file: SYSTEM_TARGET_FILE,

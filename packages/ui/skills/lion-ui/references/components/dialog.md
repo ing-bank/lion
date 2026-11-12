@@ -9,7 +9,7 @@ Its purpose is to make it easy to use our Overlay System declaratively.
 
 ```js script
 import { html } from 'lit';
-import '@lion/ui/define/lion-dialog.js';
+import { LionDialog } from '@lion/ui/dialog.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
 
 ```
 
@@ -48,7 +48,7 @@ npm i --save @lion/ui
 ```js
 import { LionDialog } from '@lion/ui/dialog.js';
 // or
-import '@lion/ui/define/lion-dialog.js';
+import { LionDialog } from '@lion/ui/dialog.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
 ```
 
 - To close the overlay from within the content node, you need to dispatch a `close-overlay` event that bubbles.
@@ -70,7 +70,7 @@ Its purpose is to make it easy to use our Overlay System declaratively.
 
 ```js script
 import { html } from 'lit';
-import '@lion/ui/define/lion-dialog.js';
+import { LionDialog } from '@lion/ui/dialog.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
 
 ```
 

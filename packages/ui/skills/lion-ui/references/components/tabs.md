@@ -8,7 +8,7 @@ A web component that allows users to quickly move between a small number of equa
 
 ```js script
 import { LitElement, html } from 'lit';
-import '@lion/ui/define/lion-tabs.js';
+import { LionTabs } from '@lion/ui/tabs.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
 ```
 
 ```js preview-story
@@ -31,7 +31,7 @@ npm i --save @lion/ui
 ```js
 import { LionTabs } from '@lion/ui/tabs.js';
 // or
-import '@lion/ui/define/lion-tabs.js';
+import { LionTabs } from '@lion/ui/tabs.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
 ```
 
 ### Rationale
@@ -58,7 +58,7 @@ If there is a button or a form inside the tab panel then these elements get focu
 ```js script
 import { LitElement, html } from 'lit';
 
-import '@lion/ui/define/lion-tabs.js';
+import { LionTabs } from '@lion/ui/tabs.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
 ```
 
 ### Selected Index

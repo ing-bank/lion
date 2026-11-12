@@ -160,6 +160,46 @@ For each valid run:
 When one root cause requires tightly coupled edits in two references, keep
 them in the same lesson and commit. Do not bundle unrelated findings.
 
+## A correction owes a regeneration and a re-run
+
+When a run fails because the produced code imported an entrypoint that does not exist
+(`... no such '@lion/ui' entrypoint (it does not exist under packages/ui/exports)`), that is a
+**documentation defect**, not a model weakness, and the correction has three mandatory steps in this order:
+
+1. **Correct the docs at the source** — name the entrypoint in the component's own reference, and put the
+   element-to-module mapping where a model reads first (`SKILL.md`'s Rules and the component doc). Never edit
+   `packages/ui/skills/lion-ui/**` by hand: it is generated, and the drift gate reverts or fails it.
+2. **Regenerate and gate** — `npm run skills:generate`, then `npm run skills:check` (regenerate +
+   `git diff --exit-code` + `cem:check` + the skill-tester checks).
+3. **Re-run the affected use cases at n>=3**, on the model that failed, so the new result replaces the old
+   cell. Name the affected scenarios in the commit. "The docs are fixed" is not an outcome.
+
+Skipping step 3 is how a fixed cell stays red: `component/checkbox-group` scored **0% on
+`deepseek-v4-flash`**, the rule went into the docs and the skill was regenerated — and the same cell still
+scored **0% on `anthropic-claude-haiku-4-5`**, guessing `@lion/ui/checkbox.js` again (with
+`@lion/ui/menuitem.js` and `@lion/ui/validate.js` as two more instances in that same round). Generating the
+real entrypoint list (`references/entrypoints.md`, from `packages/ui/exports`) did not retire it either: the
+list exists, and a model that does not look it up still guesses. A correction without a re-run is an
+assumption, not a measurement. Treat a repeat finding as a stronger signal than a new one — the same cell
+failing on a second model means the earlier fix measured nothing.
+
+### The coupling is declared, not remembered
+
+A docs change MUST re-run the use cases that derive from that doc, and that must not depend on anyone
+remembering it. Declare the coupling as an edge so the tooling derives it:
+
+- each scenario carries an **optional dependency on the doc file(s) it derives from** (`optionalDep`-style: a
+  soft edge, not a build requirement);
+- `change-graph` treats `.md` files as graph nodes - hashed like any other file, with no import parsing - and
+  follows the declared edges, so a docs diff marks the coupled scenarios *affected* exactly as an import diff
+  marks the importing unit affected;
+- a scenario that reads several docs is affected by a change to any of them, because those reads are already
+  covered by the existing import graph.
+
+Until that edge exists in `change-graph`, the coupling is manual and mandatory in the same change as the docs
+edit: after `npm run skills:generate`, re-run the affected scenarios at n>=3 on the model that failed. A
+regenerated skill with un-re-run use cases is an unfinished correction, not a fix.
+
 ## Recurse
 
 Start the next valid run from another fresh benchmark checkout with the newly

@@ -8,7 +8,7 @@ A web component that implements accessibility requirements for progress indicato
 
 ```js script
 import { html } from 'lit';
-import '@lion/ui/define/lion-progress-indicator.js';
+import { LionProgressIndicator } from '@lion/ui/progress-indicator.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
 ```
 
 ```html
@@ -38,7 +38,7 @@ npm i --save @lion/ui
 ```js
 import { LionProgressIndicator } from '@lion/ui/progress-indicator.js';
 // or
-import '@lion/ui/define/lion-progress-indicator.js';
+import { LionProgressIndicator } from '@lion/ui/progress-indicator.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
 ```
 
 ---
@@ -47,7 +47,7 @@ import '@lion/ui/define/lion-progress-indicator.js';
 
 ```js script
 import { html } from 'lit';
-import '@lion/ui/define/lion-progress-indicator.js';
+import { LionProgressIndicator } from '@lion/ui/progress-indicator.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
 import './assets/my-indeterminate-progress-spinner.js';
 import './assets/my-determinate-progress-bar.js';
 

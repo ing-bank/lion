@@ -116,7 +116,7 @@ class MyComponent extends ScopedElementsMixin(LitElement) {
 
 ```html
 <script type="module">
-  import '@lion/ui/define/lion-accordion.js';
+  import { LionAccordion } from '@lion/ui/accordion.js';  // Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
 </script>
 
 <lion-accordion>
@@ -139,7 +139,7 @@ class MyComponent extends ScopedElementsMixin(LitElement) {
 ```js script
 import { html as previewHtml } from 'lit';
 
-import '@lion/ui/define/lion-accordion.js';
+import { LionAccordion } from '@lion/ui/accordion.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
 ```
 
 ### Default Accordion collapsed

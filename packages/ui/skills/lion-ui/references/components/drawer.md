@@ -14,8 +14,8 @@ Through the `position` property, the drawer can be placed on the `top`, `left` o
 
 ```js script
 import { html } from 'lit';
-import '@lion/ui/define/lion-drawer.js';
-import '@lion/ui/define/lion-icon.js';
+import { LionDrawer } from '@lion/ui/drawer.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
+import { LionIcon } from '@lion/ui/icon.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
 import { icons } from '@lion/ui/icon.js';
 
 icons.addIconResolver('lion', (iconset, name) => {
@@ -67,7 +67,7 @@ npm i --save @lion/ui
 ```js
 import { LionDrawer } from '@lion/ui/drawer.js';
 // or
-import '@lion/ui/define/lion-drawer.js';
+import { LionDrawer } from '@lion/ui/drawer.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
 ```
 
 ---
@@ -77,8 +77,8 @@ import '@lion/ui/define/lion-drawer.js';
 ```js script
 import { html } from 'lit';
 import { icons } from '@lion/ui/icon.js';
-import '@lion/ui/define/lion-drawer.js';
-import '@lion/ui/define/lion-icon.js';
+import { LionDrawer } from '@lion/ui/drawer.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
+import { LionIcon } from '@lion/ui/icon.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
 
 icons.addIconResolver('lion', (iconset, name) => {
   switch (iconset) {

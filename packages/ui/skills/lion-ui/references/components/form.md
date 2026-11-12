@@ -11,8 +11,8 @@
 ```js script
 import { html } from 'lit';
 
-import '@lion/ui/define/lion-input.js';
-import '@lion/ui/define/lion-form.js';
+import { LionInput } from '@lion/ui/input.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
+import { LionForm } from '@lion/ui/form.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
 ```
 
 A web component that enhances the functionality of the native `form` component.
@@ -58,7 +58,7 @@ npm i --save @lion/ui
 ```
 
 ```js
-import '@lion/ui/define/lion-form.js';
+import { LionForm } from '@lion/ui/form.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
 ```
 
 ---
@@ -69,9 +69,9 @@ import '@lion/ui/define/lion-form.js';
 import { html as previewHtml } from 'lit';
 import { Required } from '@lion/ui/form-core.js';
 import { loadDefaultFeedbackMessages } from '@lion/ui/validate-messages.js';
-import '@lion/ui/define/lion-fieldset.js';
-import '@lion/ui/define/lion-input.js';
-import '@lion/ui/define/lion-form.js';
+import { LionFieldset } from '@lion/ui/fieldset.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
+import { LionInput } from '@lion/ui/input.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
+import { LionForm } from '@lion/ui/form.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
 ```
 
 ### Submit & Reset

@@ -6,7 +6,6 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import {
   discoverComponentNames,
-  discoverDefineEntrypoints,
   discoverKnownTags,
   discoverSystemNames,
   loadLionUiScenarios,
@@ -15,7 +14,6 @@ import {
   createComponentScenario,
   createSystemScenario,
   entrypointFor,
-  defineEntrypointFor,
 } from '../src/scenarios/lionUi.ts';
 import { scoreScenario } from '../src/scoring/qualityScore.ts';
 
@@ -133,14 +131,9 @@ test('the define entrypoint is rejected: global registration is not the skill pa
   // The skill now says never to use a @lion/ui/define entrypoint: it registers a tag globally, opting
   // out of the host's scoped registry. A viaDefine answer must therefore fail even though the define
   // entrypoint exists on disk and the import check still accepts it as an alternative.
-  const defineEntrypoints = discoverDefineEntrypoints(repoRoot);
-  assert.ok(defineEntrypoints.includes('button'), 'button should ship a define entrypoint');
-  assert.ok(defineEntrypoints.includes('form'), 'form should ship a define entrypoint');
-  assert.equal(defineEntrypointFor('button'), '@lion/ui/define/lion-button.js');
 
   const scenario = createComponentScenario('button', {
     knownTags: ['lion-button'],
-    defineEntrypoints,
   });
   const viaDefine = [
     "import '@lion/ui/define/lion-button.js';",
@@ -170,15 +163,12 @@ test('the define entrypoint is rejected: global registration is not the skill pa
 test('a direct @lion/<name> import is still rejected', () => {
   const scenario = createComponentScenario('button', {
     knownTags: [],
-    defineEntrypoints: discoverDefineEntrypoints(repoRoot),
   });
   assert.ok(scoreExample("import { LionButton } from '@lion/button';\n", scenario).score < 1);
 });
 
 test('a system without a define entrypoint only accepts its class entrypoint', () => {
-  const scenario = createSystemScenario('core', {
-    defineEntrypoints: discoverDefineEntrypoints(repoRoot),
-  });
+  const scenario = createSystemScenario('core', {});
   const entrypointCheck = scenario.checks?.find(check => check.type === 'matches');
   assert.ok(entrypointCheck?.pattern, 'expected an entrypoint check');
   assert.ok(

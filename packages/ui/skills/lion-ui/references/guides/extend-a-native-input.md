@@ -9,7 +9,7 @@ import { html } from 'lit';
 import { LionInput } from '@lion/ui/input.js';
 import { LionInputDate } from '@lion/ui/input-date.js';
 import { loadDefaultFeedbackMessages } from '@lion/ui/validate-messages.js';
-import '@lion/ui/define/lion-input.js';
+import { LionInput } from '@lion/ui/input.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
 import '../../fundamentals/systems/form/assets/h-output.js';
 
 loadDefaultFeedbackMessages();

@@ -19,7 +19,7 @@ If there are no valid characters in the input whatsoever, it will provide an err
 
 ```js script
 import { html } from 'lit';
-import '@lion/ui/define/lion-input-amount.js';
+import { LionInputAmount } from '@lion/ui/input-amount.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
 ```
 
 ```js preview-story
@@ -53,7 +53,7 @@ npm i --save @lion/ui
 ```js
 import { LionInputAmount } from '@lion/ui/input-amount.js';
 // or
-import '@lion/ui/define/lion-input-amount.js';
+import { LionInputAmount } from '@lion/ui/input-amount.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
 ```
 
 ---
@@ -67,7 +67,7 @@ import { loadDefaultFeedbackMessages } from '@lion/ui/validate-messages.js';
 
 import { localize } from '@lion/ui/localize.js';
 
-import '@lion/ui/define/lion-input-amount.js';
+import { LionInputAmount } from '@lion/ui/input-amount.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
 ```
 
 ### Negative Number

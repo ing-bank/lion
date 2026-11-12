@@ -12,7 +12,7 @@ A web component based on the native range input. Its purpose is to provide a way
 
 ```js script
 import { html } from 'lit';
-import '@lion/ui/define/lion-input-range.js';
+import { LionInputRange } from '@lion/ui/input-range.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
 ```
 
 ```html preview-story
@@ -36,7 +36,7 @@ npm i --save @lion/ui
 ```js
 import { LionInputRange } from '@lion/ui/input-range.js';
 // or
-import '@lion/ui/define/lion-input-range.js';
+import { LionInputRange } from '@lion/ui/input-range.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
 ```
 
 ---
@@ -45,7 +45,7 @@ import '@lion/ui/define/lion-input-range.js';
 
 ```js script
 import { html } from 'lit';
-import '@lion/ui/define/lion-input-range.js';
+import { LionInputRange } from '@lion/ui/input-range.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
 ```
 
 ### Units

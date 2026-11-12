@@ -7,3 +7,4 @@ export * from './cache.js';
 export * from './git.js';
 export * from './lockfile.js';
 export * from './select.js';
+export * from './docs-coupling.js';

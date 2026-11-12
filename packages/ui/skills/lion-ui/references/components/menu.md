@@ -14,9 +14,9 @@ A common convention for indicating that a menu item launches a dialog box is to 
 
 ```js script
 import { html } from 'lit';
-import '@lion/ui/define/lion-item.js';
-import '@lion/ui/define/lion-menu.js';
-import '@lion/ui/define/lion-menuitem.js';
+// <lion-item> is not a module of its own - look its entrypoint up in references/entrypoints.md.// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
+import { LionMenu } from '@lion/ui/menu.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
+// <lion-menuitem> is not a module of its own - look its entrypoint up in references/entrypoints.md.// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
 
 import { applyMenuDemoStyles } from './applyMenuDemoStyles.js';
 
@@ -443,8 +443,8 @@ here: the role and active mode stay the component's own configuration (`_listRol
 
 ```js script
 import { html } from 'lit';
-import '@lion/ui/define/lion-item.js';
-import '@lion/ui/define/lion-menu.js';
+// <lion-item> is not a module of its own - look its entrypoint up in references/entrypoints.md.// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
+import { LionMenu } from '@lion/ui/menu.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
 import { applyMenuDemoStyles } from './applyMenuDemoStyles.js';
 
 applyMenuDemoStyles();

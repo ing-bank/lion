@@ -88,7 +88,7 @@ You can also use the lion elements directly, although this is likely not a commo
 
 ```html
 <script type="module">
-  import '@lion/ui/define/lion-input.js';
+  import { LionInput } from '@lion/ui/input.js';  // Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
 </script>
 
 <lion-input name="firstName" label="First name"></lion-input>

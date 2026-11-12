@@ -15,7 +15,7 @@ import { html } from 'lit';
 import { MinDate, MinMaxDate, MaxDate } from '@lion/ui/form-core.js';
 import { loadDefaultFeedbackMessages } from '@lion/ui/validate-messages.js';
 import { formatDate } from '@lion/ui/localize.js';
-import '@lion/ui/define/lion-input-date.js';
+import { LionInputDate } from '@lion/ui/input-date.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
 ```
 
 ```html preview-story
@@ -43,7 +43,7 @@ npm i --save @lion/ui
 ```js
 import { LionInputDate } from '@lion/ui/input-date.js';
 // or
-import '@lion/ui/define/lion-input-date.js';
+import { LionInputDate } from '@lion/ui/input-date.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
 ```
 
 ---
@@ -55,7 +55,7 @@ import { html } from 'lit';
 import { MinDate, MinMaxDate, MaxDate } from '@lion/ui/form-core.js';
 import { loadDefaultFeedbackMessages } from '@lion/ui/validate-messages.js';
 import { formatDate } from '@lion/ui/localize.js';
-import '@lion/ui/define/lion-input-date.js';
+import { LionInputDate } from '@lion/ui/input-date.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
 ```
 
 ### Is a date

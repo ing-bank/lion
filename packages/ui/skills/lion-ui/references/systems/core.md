@@ -284,7 +284,7 @@ class MyForm extends ScopedElementsMixin(LitElement) {
   any `@lion/ui` entrypoint, and the bare package root (`@open-wc/scoped-elements`) and its other
   subpaths do not provide it — importing from those fails at load.
 - Import the component **class** from its `@lion/ui/<name>.js` entrypoint. `scopedElements` maps a
-  tag to a class; the side-effect `@lion/ui/define/lion-<name>.js` entrypoints register globally
+  tag to a class; the side-effect `<lion-name>` entrypoints register globally
   and give you no class to scope.
 - **The entrypoint is the module an API is documented under — not a name you infer from it.** A tag
   or a concept does not name a module. `@lion/ui/` ships a fixed set of entrypoints, so a specifier

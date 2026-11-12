@@ -11,8 +11,8 @@
 ```js script
 import { html } from 'lit';
 
-import '@lion/ui/define/lion-input.js';
-import '@lion/ui/define/lion-fieldset.js';
+import { LionInput } from '@lion/ui/input.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
+import { LionFieldset } from '@lion/ui/fieldset.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
 ```
 
 A web component that can be used to group multiple input fields or other fieldsets together.
@@ -53,7 +53,7 @@ npm i --save @lion/ui
 ```js
 import { LionFieldset } from '@lion/ui/fieldset.js';
 // or
-import '@lion/ui/define/lion-fieldset.js';
+import { LionFieldset } from '@lion/ui/fieldset.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
 ```
 
 ---
@@ -65,8 +65,8 @@ import { html } from 'lit';
 import { localize } from '@lion/ui/localize.js';
 import { MinLength, Validator, Required } from '@lion/ui/form-core.js';
 
-import '@lion/ui/define/lion-input.js';
-import '@lion/ui/define/lion-fieldset.js';
+import { LionInput } from '@lion/ui/input.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
+import { LionFieldset } from '@lion/ui/fieldset.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
 ```
 
 ### With Data

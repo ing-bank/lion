@@ -10,7 +10,7 @@
 
 ```js script
 import { html } from 'lit';
-import '@lion/ui/define/lion-input.js';
+import { LionInput } from '@lion/ui/input.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
 ```
 
 A web component that enhances the functionality of the native `<input>` element.
@@ -40,7 +40,7 @@ npm i --save @lion/ui
 ```
 
 ```js
-import '@lion/ui/define/lion-input.js';
+import { LionInput } from '@lion/ui/input.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
 ```
 
 ---
@@ -49,7 +49,7 @@ import '@lion/ui/define/lion-input.js';
 
 ```js script
 import { html } from 'lit';
-import '@lion/ui/define/lion-input.js';
+import { LionInput } from '@lion/ui/input.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
 ```
 
 ### Label

@@ -13,7 +13,7 @@ Its purpose is to provide a way for users to fill in an IBAN (International Bank
 
 ```js script
 import { html } from 'lit';
-import '@lion/ui/define/lion-input-iban.js';
+import { LionInputIban } from '@lion/ui/input-iban.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
 ```
 
 ```js preview-story
@@ -41,7 +41,7 @@ npm i --save @lion/ui
 ```js
 import { LionInputIban } from '@lion/ui/input-iban.js';
 // or
-import '@lion/ui/define/lion-input-amount.js';
+import { LionInputAmount } from '@lion/ui/input-amount.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
 ```
 
 ---
@@ -52,7 +52,7 @@ import '@lion/ui/define/lion-input-amount.js';
 import { html } from 'lit';
 import { loadDefaultFeedbackMessages } from '@lion/ui/validate-messages.js';
 import { IsCountryIBAN, IsNotCountryIBAN } from '@lion/ui/input-iban.js';
-import '@lion/ui/define/lion-input-iban.js';
+import { LionInputIban } from '@lion/ui/input-iban.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
 ```
 
 ### Prefilled

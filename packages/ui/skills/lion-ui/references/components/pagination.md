@@ -8,7 +8,7 @@ A web component that handles pagination.
 
 ```js script
 import { html } from 'lit';
-import '@lion/ui/define/lion-pagination.js';
+import { LionPagination } from '@lion/ui/pagination.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
 ```
 
 ```js preview-story
@@ -29,7 +29,7 @@ npm i --save @lion/ui
 ```js
 import { LionPagination } from '@lion/ui/pagination.js';
 // or
-import '@lion/ui/define/lion-pagination.js';
+import { LionPagination } from '@lion/ui/pagination.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
 ```
 
 ---
@@ -38,7 +38,7 @@ import '@lion/ui/define/lion-pagination.js';
 
 ```js script
 import { html } from 'lit';
-import '@lion/ui/define/lion-pagination.js';
+import { LionPagination } from '@lion/ui/pagination.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
 ```
 
 ### Without current defined

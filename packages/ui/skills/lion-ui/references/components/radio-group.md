@@ -14,8 +14,8 @@ You should use our `radio` inside this element.
 
 ```js script
 import { html } from 'lit';
-import '@lion/ui/define/lion-radio-group.js';
-import '@lion/ui/define/lion-radio.js';
+import { LionRadioGroup } from '@lion/ui/radio-group.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
+// <lion-radio> is not a module of its own - look its entrypoint up in references/entrypoints.md.// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
 ```
 
 ```js preview-story
@@ -49,8 +49,8 @@ npm i --save @lion/ui
 ```js
 import { LionRadioGroup, LionRadio } from '@lion/ui/radio-group.js';
 // or
-import '@lion/ui/define/lion-radio-group.js';
-import '@lion/ui/define/lion-radio.js';
+import { LionRadioGroup } from '@lion/ui/radio-group.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
+// <lion-radio> is not a module of its own - look its entrypoint up in references/entrypoints.md.// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
 ```
 
 ---
@@ -59,8 +59,8 @@ import '@lion/ui/define/lion-radio.js';
 
 ```js script
 import { html } from 'lit';
-import '@lion/ui/define/lion-radio-group.js';
-import '@lion/ui/define/lion-radio.js';
+import { LionRadioGroup } from '@lion/ui/radio-group.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
+// <lion-radio> is not a module of its own - look its entrypoint up in references/entrypoints.md.// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
 ```
 
 ### Model value

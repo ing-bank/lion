@@ -56,8 +56,12 @@ test('test suites, storybook helpers and non-API specifiers are not listed', () 
   for (const spec of specs) counts[group(spec)] += 1;
   // Non-API specifiers - the empty `form-integrations` stub and the redundant `*-no-side-effects`
   // variants - must not appear at all; the rest is pinned so the split cannot drift unnoticed.
-  assert.deepEqual(counts, { consumer: 40, helper: 0, types: 11, define: 50 });
-  assert.equal(specs.length, 101, 'non-API specifiers must not be listed');
+  // consumer 75 / define 0 since the skill may only name entrypoints that ship: the 35 define entrypoints whose
+  // class module exists are written as consumer specifiers now, and the 15 without one are named as elements.
+  assert.deepEqual(counts, { consumer: 75, helper: 0, types: 11, define: 0 });
+  // 86 since the skill may only name entrypoints that ship: the 15 define entrypoints without a class module
+  // of their own are named as elements now instead of being turned into specifiers that do not exist.
+  assert.equal(specs.length, 86, 'non-API specifiers must not be listed');
 });
 
 test('every consumer entrypoint is owned by a reference', () => {

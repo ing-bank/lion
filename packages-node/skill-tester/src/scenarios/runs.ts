@@ -196,7 +196,7 @@ export const accordionScenario: TestScenario = {
     {
       type: 'matches',
       file: 'src/my-accordion.js',
-      pattern: '@lion/ui/(define/lion-accordion|accordion)\\.js',
+      pattern: '@lion/ui/accordion\\.js',
       description: 'imports the accordion through a documented @lion/ui entrypoint',
     },
     {
