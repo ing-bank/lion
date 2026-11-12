@@ -145,6 +145,8 @@ export class LionInputStepper extends LocalizeMixin(LionInput) {
       } else {
         this._inputNode.removeAttribute('aria-valuemin');
       }
+      this.__setDefaultValidators();
+      this.validate();
       this.__toggleSpinnerButtonsState();
     }
 
@@ -156,6 +158,8 @@ export class LionInputStepper extends LocalizeMixin(LionInput) {
       } else {
         this._inputNode.removeAttribute('aria-valuemax');
       }
+      this.__setDefaultValidators();
+      this.validate();
       this.__toggleSpinnerButtonsState();
     }
 
@@ -182,6 +186,7 @@ export class LionInputStepper extends LocalizeMixin(LionInput) {
    * @private
    */
   __setDefaultValidators() {
+    this.defaultValidators = [];
     const validators = /** @type {(IsNumber| MaxNumber | MinNumber)[]} */ (
       [
         new IsNumber(),
