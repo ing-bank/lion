@@ -15,4 +15,11 @@ export class LionInputIban extends LocalizeMixin(LionInput) {
     this.parser = parseIBAN;
     this.defaultValidators.push(new IsIBAN());
   }
+
+  /**
+   * @desc Default fieldName for validation feedback messages
+   */
+  get fieldName() {
+    return 'IBAN';
+  }
 }
