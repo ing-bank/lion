@@ -1540,6 +1540,12 @@ export const multipleFieldValidation = () =>
   html`<field-with-context-validation></field-with-context-validation>`;
 ```
 
+### Entrypoints
+
+The validators live in the form module: `@lion/ui/form-core.js` ships `Validator`, `Required`, `IsString`,
+`IsNumber`, `MinLength`, `MaxLength`, `Pattern` and the rest, and `@lion/ui/validate-messages.js` ships the
+default messages. **There is no `<lion-validate>`** - importing it fails to resolve.
+
 ---
 
 ## Styling

@@ -49,6 +49,12 @@ import { LionListbox } from '@lion/ui/listbox.js';// Rendered through the host's
 // <lion-option> is not a module of its own - look its entrypoint up in references/entrypoints.md.// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
 ```
 
+### Entrypoints
+
+`@lion/ui/listbox.js` ships `LionListbox`, `LionOption` and `LionOptions` - the elements `<lion-listbox>`,
+`<lion-option>` and `<lion-options>`. Import them from that one module: **there is no `<lion-option>`
+and no `<lion-options>`**.
+
 ---
 
 ## Use Cases

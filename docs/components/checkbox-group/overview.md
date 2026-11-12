@@ -49,3 +49,9 @@ import '@lion/ui/define/lion-checkbox-group.js';
 import '@lion/ui/define/lion-checkbox-indeterminate.js';
 import '@lion/ui/define/lion-checkbox.js';
 ```
+
+## Entrypoints
+
+`@lion/ui/checkbox-group.js` ships `LionCheckboxGroup`, `LionCheckbox` and `LionCheckboxIndeterminate` - the
+elements `<lion-checkbox-group>`, `<lion-checkbox>` and `<lion-checkbox-indeterminate>`. Import all three from
+that one module: **there is no `@lion/ui/checkbox.js`**.
