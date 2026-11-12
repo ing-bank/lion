@@ -695,6 +695,70 @@ describe('LocalizeManager', () => {
     });
   });
 
+  describe('msgList()', () => {
+    it('returns an array when translation data is an array', () => {
+      manager = new LocalizeManager();
+      manager.addData('en-GB', 'my-ns', {
+        features: ['Feature 1', 'Feature 2', 'Feature 3'],
+      });
+      const result = manager.msgList('my-ns:features');
+      expect(result).to.be.an('array');
+      expect(result).to.deep.equal(['Feature 1', 'Feature 2', 'Feature 3']);
+    });
+
+    it('returns nested array from deep path', () => {
+      manager = new LocalizeManager();
+      manager.addData('en-GB', 'my-ns', {
+        keys: {
+          myArray: ['Line 1', 'Line 2', 'Line 3'],
+        },
+      });
+      const result = manager.msgList('my-ns:keys.myArray');
+      expect(result).to.be.an('array');
+      expect(result).to.deep.equal(['Line 1', 'Line 2', 'Line 3']);
+    });
+
+    it('returns an object when translation data is an object', () => {
+      manager = new LocalizeManager();
+      manager.addData('en-GB', 'my-ns', {
+        config: { theme: 'dark', lang: 'en' },
+      });
+      const result = manager.msgList('my-ns:config');
+      expect(result).to.be.an('object');
+      expect(result).to.deep.equal({ theme: 'dark', lang: 'en' });
+    });
+
+    it('returns a string when translation data is a string', () => {
+      manager = new LocalizeManager();
+      manager.addData('en-GB', 'my-ns', { greeting: 'Hello!' });
+      const result = manager.msgList('my-ns:greeting');
+      expect(result).to.equal('Hello!');
+    });
+
+    it('supports different locale via options', () => {
+      manager = new LocalizeManager();
+      manager.addData('en-GB', 'my-ns', { items: ['Item 1', 'Item 2'] });
+      manager.addData('nl-NL', 'my-ns', { items: ['Item 1 NL', 'Item 2 NL'] });
+      const result = manager.msgList('my-ns:items', { locale: 'nl-NL' });
+      expect(result).to.deep.equal(['Item 1 NL', 'Item 2 NL']);
+    });
+
+    it('supports array of keys with fallback', () => {
+      manager = new LocalizeManager();
+      const keys = ['overridden-ns:items', 'default-ns:items'];
+      manager.addData('en-GB', 'default-ns', { items: ['Default 1', 'Default 2'] });
+      manager.addData('en-GB', 'overridden-ns', { items: ['Override 1', 'Override 2'] });
+      const result = manager.msgList(keys);
+      expect(result).to.deep.equal(['Override 1', 'Override 2']);
+    });
+
+    it('returns empty string when key not found', () => {
+      manager = new LocalizeManager();
+      manager.addData('en-GB', 'my-ns', { greeting: 'Hello!' });
+      expect(manager.msgList('my-ns:unknownKey')).to.equal('');
+    });
+  });
+
   describe('show key as fallback', () => {
     it('shows the key as a fallback when a translation cannot be found', () => {
       manager = new LocalizeManager({ showKeyAsFallback: true });
