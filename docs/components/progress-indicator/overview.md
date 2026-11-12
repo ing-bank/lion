@@ -25,7 +25,7 @@ import '@lion/ui/define/lion-progress-indicator.js';
 
 ## Features
 
-The element renders the accessible progressbar on its own. It is designed to be *extended* only when you
+The element renders the accessible progressbar on its own. It is designed to be _extended_ only when you
 want to add custom visuals (see the Examples page) — the plain `<lion-progress-indicator>` is what you use
 as a consumer.
 
