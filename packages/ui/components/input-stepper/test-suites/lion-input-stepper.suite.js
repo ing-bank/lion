@@ -224,6 +224,32 @@ export function runInputStepperSuite({
         expect(el._inputNode.max).to.equal(el.max.toString());
       });
 
+      it('should update validator when min property change', async () => {
+        const el = await fixture(inputStepperWithAttrs);
+        el.submitted = true;
+        el.modelValue = 50;
+        expect(el.hasFeedbackFor).to.include('error');
+        el.min = 0;
+        await nextFrame();
+        expect(el.hasFeedbackFor).to.not.include('error');
+        el.min = 100;
+        await nextFrame();
+        expect(el.hasFeedbackFor).to.include('error');
+      });
+
+      it('should update validator when max property change', async () => {
+        const el = await fixture(inputStepperWithAttrs);
+        el.submitted = true;
+        el.modelValue = 700;
+        expect(el.hasFeedbackFor).to.include('error');
+        el.max = 1000;
+        await nextFrame();
+        expect(el.hasFeedbackFor).to.not.include('error');
+        el.max = 500;
+        await nextFrame();
+        expect(el.hasFeedbackFor).to.include('error');
+      });
+
       it('should remove the disabled attribute of the decrement button when the min property changes to below the modelvalue', async () => {
         const el = await fixture(inputStepperWithAttrs);
         const decrementButton = el.querySelector('[slot=prefix]');
