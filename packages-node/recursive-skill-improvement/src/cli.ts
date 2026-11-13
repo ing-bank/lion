@@ -11,9 +11,10 @@
  *   node src/cli.ts --list
  */
 
+import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { green, red, yellow } from 'nanocolors';
+import { gray, green, red, yellow } from 'nanocolors';
 import { runSkillTester, defaultLionUiSkillLocation, createAgentConfig } from './skillTester.ts';
 import { loadLionUiScenarios, manualScenarios } from './scenarios/index.ts';
 import type { TestScenario } from './scenarios/types.ts';
@@ -42,7 +43,21 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const repoRoot = path.resolve(__dirname, '../../..');
 
+/**
+ * The tasks this CLI exposes, chosen as the FIRST positional argument
+ * (`recursive-skill-improvement <task> [flags]`). The four names are separate things:
+ *
+ * - the SYSTEM is `recursive-skill-improvement` (this package, docs and CLI together);
+ * - the TASK `improve` is one of these — it runs the loop and reports the failing set, attributed;
+ * - the PROTOCOL is the hand-written skill `recursive-skill-improver`, which describes that loop.
+ *
+ * `retire` is deliberately NOT a task: a retired model is data (`RATES[…].retired`), not an action.
+ */
+export type TaskName = 'eval' | 'sweep' | 'improve' | 'report';
+
 type CliOptions = {
+  /** The named task to run (default `eval`, so existing invocations stay valid). */
+  task: TaskName;
   provider?: Provider;
   models: string[];
   samples: number;
@@ -66,6 +81,7 @@ type CliOptions = {
 function parseArgs(argv: string[]): CliOptions {
   const options: CliOptions = {
     // No default model: the caller must say which model to evaluate.
+    task: 'eval',
     models: (process.env.SKILL_TESTER_MODELS ?? '')
       .split(',')
       .map(m => m.trim())
@@ -80,6 +96,8 @@ function parseArgs(argv: string[]): CliOptions {
     help: false,
     filters: {},
   };
+
+  const positional: string[] = [];
 
   for (let i = 0; i < argv.length; i++) {
     const arg = argv[i];
@@ -157,16 +175,60 @@ function parseArgs(argv: string[]): CliOptions {
         if (arg.startsWith('-')) {
           console.error(`Unknown option: ${arg}`);
           options.help = true;
+        } else {
+          positional.push(arg);
         }
     }
   }
+
+  // A leading positional argument is the task: `node src/cli.ts improve --models …`. It must come
+  // before any flag, so `--models foo` is never mistaken for a task.
+  if (positional.length > 0) {
+    if (!argv[0] || argv[0].startsWith('-')) {
+      console.error(`Unknown argument: ${positional[0]} (a task must be the first argument)`);
+      options.help = true;
+    } else {
+      options.task = parseTaskName(positional[0]);
+    }
+  }
+
+  // The `sweep` task is "the full round": measuring plus publishing the ledger and results page.
+  if (options.task === 'sweep') options.docs = true;
+
   return options;
+}
+
+/** Resolve a task name, rejecting anything that is not one of the four documented tasks. */
+function parseTaskName(value: string | undefined): TaskName {
+  const tasks: TaskName[] = ['eval', 'sweep', 'improve', 'report'];
+  if (value && (tasks as string[]).includes(value)) return value as TaskName;
+  throw new Error(`Unknown task "${value}". Known tasks: ${tasks.join(', ')}.`);
 }
 
 function printHelp(): void {
   console.log(`recursive-skill-improvement — evaluate a skill/agent on isolated scenarios
 
-Usage: node src/cli.ts [options]
+Usage: node src/cli.ts [task] [options]
+
+Tasks (the FIRST positional argument; no task defaults to eval):
+  eval                    The atom: one scenario × model, scored. This is the default.
+  sweep                   The whole round: measure, then publish the ledger and the results page
+                          (equivalent to eval --docs).
+  improve                 The failing set, attributed: measure, then classify every failure and
+                          report the exact check and its file:line. It reports; it does NOT edit
+                          docs — that is human/agent work. It sets the correction up.
+  report                  Render/print the ledger as the results page; no runs, no model needed.
+
+  sweep = the whole round; improve = the failing set, attributed.
+
+  The system is \`recursive-skill-improvement\` (this package, its docs and this CLI);
+  the task \`improve\` runs the loop (measure -> attribute -> correct -> regenerate -> rerun);
+  the protocol is the skill \`recursive-skill-improver\`, which describes that loop.
+
+  \`improve\` cannot edit docs. It runs, attributes each failure to one of
+  {docs-gap | harness-defect | model-behaviour}, prints the exact check + file:line, and names the
+  coupled scenario(s) that must be re-run at n>=3. Correcting the doc, regenerating and gating
+  (\`npm run skills:generate\`, \`npm run skills:check\`) stay in the human/agent loop.
 
 Options:
   --provider <p>          "openai-compatible" (default), "copilot" or "claude-code"
@@ -215,10 +277,161 @@ function selectScenarios(options: CliOptions): TestScenario[] {
   return selected;
 }
 
+/** Which of the three buckets a failure is attributed to. */
+type Attribution = 'docs-gap' | 'harness-defect' | 'model-behaviour';
+
+/**
+ * Attribute one failure. A failure the skill should have prevented by documenting a rule (an
+ * entrypoint the model guessed, a placeholder it copied, a binding the entrypoint does not export)
+ * is a **docs gap**; a syntax error or a behaviour assertion is **model behaviour**; anything the
+ * harness cannot see a model fault in is a **harness defect**. This is a classifying default, not a
+ * verdict — `improve` reports, it does not edit.
+ */
+function attribute(kind: 'gate' | 'check' | 'behaviour' | 'similarity', name: string): Attribution {
+  if (kind === 'gate') {
+    if (name === 'import-policy') return 'docs-gap';
+    if (name === 'syntax') return 'model-behaviour';
+    return 'harness-defect';
+  }
+  if (kind === 'check') {
+    return /entrypoint|placeholder|export|import|documented/i.test(name)
+      ? 'docs-gap'
+      : 'model-behaviour';
+  }
+  return 'model-behaviour';
+}
+
+/** The docs each scenario derives from (`scenario-docs.json`), so a docs gap names its file. */
+function loadCoupledDocs(): Record<string, string[]> {
+  try {
+    const raw = fs.readFileSync(path.join(__dirname, '..', 'scenario-docs.json'), 'utf-8');
+    return (JSON.parse(raw).scenarios ?? {}) as Record<string, string[]>;
+  } catch {
+    return {};
+  }
+}
+
+/**
+ * The attribution half of the `improve` task: for every cell below the pass threshold, name each
+ * failing check and its file:line, attribute it to {docs-gap | harness-defect | model-behaviour},
+ * and name the coupled scenario(s) that must be re-run at n>=3. It reports the correction; it does
+ * not make it — editing docs, regenerating and gating stay in the human/agent loop.
+ */
+function printImprovementFindings(
+  report: Awaited<ReturnType<typeof runSkillTester>>,
+  passThreshold: number,
+): void {
+  const coupled = loadCoupledDocs();
+  const below = report.perModelScenario
+    .filter(entry => entry.stats.mean * 100 < passThreshold)
+    .sort((a, b) => a.stats.mean - b.stats.mean);
+
+  console.log(
+    yellow(`\nimprove — the failing set, attributed (${below.length} cell(s) below ${passThreshold}%)`),
+  );
+  console.log(
+    gray('  improve reports; it does not edit docs. Correct, regenerate (npm run skills:generate),\n  gate (npm run skills:check) and re-run stay in the human/agent loop.'),
+  );
+
+  if (report.redoable.length > 0) {
+    console.log(
+      `\n  harness-defect — ${report.redoable.length} run(s) the endpoint failed (re-run, not scored):`,
+    );
+    for (const run of report.redoable) {
+      console.log(red(`    ${run.model} · ${run.scenario} · sample ${run.sample} — ${run.message}`));
+    }
+  }
+
+  if (below.length === 0) {
+    console.log(green('\n  every measured cell reached the pass threshold; nothing to attribute.'));
+    return;
+  }
+
+  for (const entry of below) {
+    console.log(`\n  ${entry.model} · ${entry.scenario} → ${(entry.stats.mean * 100).toFixed(1)}%`);
+    const runs = report.runs.filter(
+      run =>
+        run.model === entry.model &&
+        run.scenario === entry.scenario &&
+        run.agentRun.attempted,
+    );
+    const seen = new Set<string>();
+    const record = (category: Attribution, line: string) => {
+      const single = line.replace(/\s+/g, ' ');
+      const key = `${category}:${single}`;
+      if (seen.has(key)) return;
+      seen.add(key);
+      console.log(`${red('    ✗')} ${yellow(`[${category}]`)} ${single}`);
+    };
+    for (const run of runs) {
+      for (const gate of run.score.gates.filter(gate => !gate.passed)) {
+        if (gate.failures.length === 0) {
+          record(attribute('gate', gate.name), `gate ${gate.name} — ${gate.summary}`);
+        }
+        for (const failure of gate.failures) {
+          const location = failure.line ? `${failure.file}:${failure.line}` : failure.file;
+          record(attribute('gate', gate.name), `gate ${gate.name} — ${location} — ${failure.message}`);
+        }
+      }
+      for (const check of run.score.checks.filter(check => !check.passed)) {
+        record(attribute('check', check.description), `check "${check.description}"`);
+      }
+      if (run.behaviour?.ran && !run.behaviour.passed) {
+        for (const failure of run.behaviour.failures) {
+          record('model-behaviour', `behaviour ${failure.test} — ${failure.message}`);
+        }
+      }
+    }
+    if (seen.size === 0) {
+      record(
+        'model-behaviour',
+        'no failing gate or check recorded — a differential (similarity) score below 100%',
+      );
+    }
+    // The coupled scenario(s) to re-run: the cell's own scenario, at n>=3, after the fix.
+    console.log(gray(`    → re-run: ${entry.scenario} at n>=3 on ${entry.model}`));
+    if (seen.size > 0 && Object.prototype.hasOwnProperty.call(coupled, entry.scenario)) {
+      const docs = coupled[entry.scenario];
+      if (docs.length > 0) {
+        console.log(gray(`    → coupled docs to correct (a docs-gap): ${docs.join(', ')}`));
+      }
+    }
+  }
+}
+
+/**
+ * The `report` task: render the committed ledger into the results page (or a `--docs-path`), and
+ * report the row count. No scenarios run, so no model is needed and no tokens are spent.
+ */
+function runReportTask(options: CliOptions): void {
+  const here = path.dirname(fileURLToPath(import.meta.url));
+  const root = path.resolve(here, '../../..');
+  const ledgerFile = options.ledgerPath
+    ? path.resolve(options.ledgerPath)
+    : path.join(here, '../results/ledger.json');
+  const pageFile = options.docsPath
+    ? path.resolve(options.docsPath)
+    : path.join(root, 'docs/fundamentals/node-tools/recursive-skill-improvement/quality.md');
+  const ledger = loadLedger(ledgerFile);
+  writeQualityPage(pageFile, ledger);
+  console.log(
+    green(
+      `Rendered ${path.relative(root, pageFile)} from ` +
+        `${path.relative(root, ledgerFile)} (${ledger.entries.length} row(s)).`,
+    ),
+  );
+}
+
 async function main(): Promise<void> {
   const options = parseArgs(process.argv.slice(2));
   if (options.help) {
     printHelp();
+    return;
+  }
+
+  // `report` renders the ledger into the results page; it runs no scenarios and needs no model.
+  if (options.task === 'report') {
+    runReportTask(options);
     return;
   }
 
@@ -358,6 +571,10 @@ async function main(): Promise<void> {
             )
           : ''),
     );
+  }
+
+  if (options.task === 'improve') {
+    printImprovementFindings(report, options.passThreshold);
   }
 
   // `--ledger <path>` must write on its own: gating the write on `--docs` silently dropped it (the
