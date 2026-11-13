@@ -188,7 +188,7 @@ import { LionInput } from '@lion/ui/input.js';
 
 // Import the class (e.g. to extend it, or use validators)
 import { LionInput } from '@lion/ui/input.js';
-import { Required, MinLength } from '<lion-validate>';
+import { Required, MinLength } from '@lion/ui/form-core.js';
 ```
 
 ### Forms
@@ -260,7 +260,7 @@ control; see `references/systems/form.md` (`model-value`) for details and edge c
 #### Validation: use validator classes, not hand-rolled checks
 
 ```js
-import { Required, MinLength } from '<lion-validate>';
+import { Required, MinLength } from '@lion/ui/form-core.js';
 
 html`
   <lion-input
@@ -305,7 +305,7 @@ import { LionFieldset } from '@lion/ui/fieldset.js';
 // Rendered through the host's scoped registry (ScopedElementsMixin) - never '@lion/ui/define/*'.
 import { LionInput } from '@lion/ui/input.js';
 // Rendered through the host's scoped registry (ScopedElementsMixin) - never '@lion/ui/define/*'.
-import { Required, MinLength, IsEmail } from '<lion-validate>';
+import { Required, MinLength, IsEmail } from '@lion/ui/form-core.js';
 
 html`
   <lion-form>
@@ -338,5 +338,5 @@ React/Vue/Angular wrappers or SSR considerations, see `references/systems/core.m
 - [ ] Read the reference doc for every `@lion/ui` component/system you use
 - [ ] Imports copied verbatim from the reference doc (no deep imports)
 - [ ] Form controls use `.modelValue`, not native `.value`
-- [ ] Validation uses `Validator` classes from `<lion-validate>`
+- [ ] Validation uses `Validator` classes from `@lion/ui/form-core.js`
 - [ ] Checked `references/systems/localize.md` if the UI needs translations

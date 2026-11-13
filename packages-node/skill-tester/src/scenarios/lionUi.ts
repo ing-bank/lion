@@ -312,6 +312,18 @@ function entrypointChecks(
       description: 'does not deep-import from @lion/ui internals',
     },
     {
+      // A placeholder specifier is a placeholder the model copied verbatim instead of resolving it
+      // to a real module. Measured: the skill's own validator example shipped
+      // `import { Required, MinLength } from '<lion-validate>';` and every model that followed it
+      // wrote the literal `<lion-validate>` into its file — which neither `namedExportsExist` nor
+      // `importsResolve` catches, because both skip bare/unknown specifiers. `from '<...>'` is never
+      // a valid specifier, so this fails the run rather than passing a file that cannot load.
+      type: 'notMatches',
+      file,
+      pattern: `from\\s+['"]<[^'"<>]+>['"]`,
+      description: 'imports nothing from a placeholder specifier',
+    },
+    {
       // Every relative import must resolve to a file this run wrote. `@lion/ui/*` and bare packages
       // are resolved against the real repo, so they are out of scope here.
       type: 'importsResolve',
