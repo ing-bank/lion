@@ -68,7 +68,7 @@ jobs:
           if [ "${{ inputs.limit }}" != "0" ]; then
             LIMIT="--limit ${{ inputs.limit }}"
           fi
-          npm run eval -w packages-node/skill-tester -- \
+          npm run eval -w packages-node/recursive-skill-improvement -- \
             --models "${{ inputs.models }}" \
             --base-url "$SKILL_TESTER_BASE_URL" \
             --samples "${{ inputs.samples }}" \
@@ -94,5 +94,5 @@ jobs:
           delete-branch: true
           add-paths: |
             packages/ui/skills/lion-ui/**
-            packages-node/skill-tester/results/**
-            docs/fundamentals/node-tools/skill-tester/**
+            packages-node/recursive-skill-improvement/results/**
+            docs/fundamentals/node-tools/recursive-skill-improvement/**

@@ -7,13 +7,13 @@ import { findAffectedUnits } from './reachability.js';
  *
  * A scenario derives from the documentation it was written against, and a change to that documentation must
  * make the scenario *affected* - otherwise a docs fix ships without its use cases ever being re-run. The
- * coupling is declared, not remembered: `packages-node/skill-tester/scenario-docs.json` lists, per unit, the
+ * coupling is declared, not remembered: `packages-node/recursive-skill-improvement/scenario-docs.json` lists, per unit, the
  * doc files it derives from, and this module turns that declaration into the same kind of edge the import
  * graph already produces. No import parsing is involved: a `.md` file is coupled by declaration only, which
  * is what makes the edge optional rather than a build requirement.
  */
 
-export const DEFAULT_DECLARATION = 'packages-node/skill-tester/scenario-docs.json';
+export const DEFAULT_DECLARATION = 'packages-node/recursive-skill-improvement/scenario-docs.json';
 
 /**
  * @param {string} cwd

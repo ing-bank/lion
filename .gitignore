@@ -83,5 +83,5 @@ docs/_merged_includes/
 docs/**/api-table.md
 
 .github/skills
-# WTR coverage output written by the skill-tester behaviour tier
+# WTR coverage output written by the recursive-skill-improvement behaviour tier
 .wtr-coverage/

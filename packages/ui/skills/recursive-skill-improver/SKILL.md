@@ -15,7 +15,7 @@ turning evidence into a correctly-placed skill edit (see
 [references/improvement-process.md](references/improvement-process.md) for the
 detailed edit workflow).
 
-> **In this repository:** `packages-node/skill-tester` is a ready-made harness for that loop. It
+> **In this repository:** `packages-node/recursive-skill-improvement` is a ready-made harness for that loop. It
 > runs a skill against small, isolated scenarios on any OpenAI-compatible model, scores each run,
 > and writes a run record in the shape of [references/run-record.md](references/run-record.md)
 > (including the failing checks as evidence) — use it so the reader does not have to assemble the
@@ -170,7 +170,7 @@ When a run fails because the produced code imported an entrypoint that does not 
    element-to-module mapping where a model reads first (`SKILL.md`'s Rules and the component doc). Never edit
    `packages/ui/skills/lion-ui/**` by hand: it is generated, and the drift gate reverts or fails it.
 2. **Regenerate and gate** — `npm run skills:generate`, then `npm run skills:check` (regenerate +
-   `git diff --exit-code` + `cem:check` + the skill-tester checks).
+   `git diff --exit-code` + `cem:check` + the recursive-skill-improvement checks).
 3. **Re-run the affected use cases at n>=3**, on the model that failed, so the new result replaces the old
    cell. Name the affected scenarios in the commit. "The docs are fixed" is not an outcome.
 

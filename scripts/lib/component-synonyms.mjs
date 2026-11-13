@@ -5,7 +5,7 @@
  *  - the skill generator: the synonyms end up in the skill's component index, so a model can route a
  *    prompt that uses any of these words to the right component reference (measured: models guessed
  *    entrypoints; the routing in the index is what prevents that);
- *  - skill-tester's generated prompts: the goal is the user-facing DESCRIPTION only - the synonym list
+ *  - recursive-skill-improvement's generated prompts: the goal is the user-facing DESCRIPTION only - the synonym list
  *    is routing data, not prompt content.
  */
 export const COMPONENT_SYNONYMS = {

@@ -36,7 +36,7 @@
     "screenshots-comparison:update-baseline": "node ./scripts/screenshots-comparison/update-baseline.js --target-branch master",
     "cem:check": "node ./scripts/check-cem.mjs",
     "skills:generate": "npm run skills:generate -w packages/ui",
-    "skills:check": "npm run skills:generate && git diff --exit-code -- packages/ui/skills && npm run cem:check && npm run test:skills-check -w packages-node/skill-tester",
+    "skills:check": "npm run skills:generate && git diff --exit-code -- packages/ui/skills && npm run cem:check && npm run test:skills-check -w packages-node/recursive-skill-improvement",
     "skills:link": "npm run skills:link -w packages/ui",
     "start": "rocket start",
     "start:astro": "astro dev",

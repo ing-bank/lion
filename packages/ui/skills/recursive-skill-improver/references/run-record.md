@@ -3,8 +3,8 @@
 Complete this record from the run's transcript and captured artifacts. Use
 `n/a` when a milestone was never reached; do not infer missing values.
 
-> **In this repository:** `packages-node/skill-tester` emits this record for a whole sweep — one file
-> per invocation, under its `.tmp/skill-tester/reports/`. Sections marked as emitted are produced by
+> **In this repository:** `packages-node/recursive-skill-improvement` emits this record for a whole sweep — one file
+> per invocation, under its `.tmp/recursive-skill-improvement/reports/`. Sections marked as emitted are produced by
 > the harness; prefer its values over hand-read ones. A sweep that was not run with an axis enabled
 > simply omits that section.
 
