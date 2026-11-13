@@ -482,6 +482,14 @@ function main() {
   // produced file that uses one, because it opts out of the scoped element registry the skill exists to
   // teach. The writers above are individually easy to miss (the entrypoint table, the subclasser companions,
   // SKILL.md), so the rewrite runs once over the whole output instead - nothing can bypass it.
+  //
+  // `references/entrypoints.md` is the ONE exception, and deliberately: its job is to name the global
+  // `define` entrypoints as forbidden ("## Do not use these: global `define` entrypoints"). Rewriting it
+  // would turn that list into the very consumer specifiers the same page recommends under
+  // "## Importing a class" - measured: the same 35 specifiers appeared in both sections, the forbidden
+  // section naming exactly what the recommended section advises. So it is generated with its forbidden
+  // section intact and skipped here; every OTHER generated file stays define-free (a test pins both).
+  const entrypointReference = path.join(referencesDir, 'entrypoints.md');
   const rewrittenFiles = [];
   const walk = dir =>
     fs.readdirSync(dir, { withFileTypes: true }).flatMap(entry => {
@@ -489,6 +497,7 @@ function main() {
       return entry.isDirectory() ? walk(full) : full.endsWith('.md') ? [full] : [];
     });
   for (const file of walk(skillDir)) {
+    if (file === entrypointReference) continue;
     const original = fs.readFileSync(file, 'utf-8');
     const updated = repairUnshippedSpecifiers(rewriteDefineImports(original));
     if (updated !== original) {

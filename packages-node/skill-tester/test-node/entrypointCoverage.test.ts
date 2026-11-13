@@ -56,12 +56,18 @@ test('test suites, storybook helpers and non-API specifiers are not listed', () 
   for (const spec of specs) counts[group(spec)] += 1;
   // Non-API specifiers - the empty `form-integrations` stub and the redundant `*-no-side-effects`
   // variants - must not appear at all; the rest is pinned so the split cannot drift unnoticed.
-  // consumer 75 / define 0 since the skill may only name entrypoints that ship: the 35 define entrypoints whose
-  // class module exists are written as consumer specifiers now, and the 15 without one are named as elements.
-  assert.deepEqual(counts, { consumer: 75, helper: 0, types: 11, define: 0 });
-  // 86 since the skill may only name entrypoints that ship: the 15 define entrypoints without a class module
-  // of their own are named as elements now instead of being turned into specifiers that do not exist.
-  assert.equal(specs.length, 86, 'non-API specifiers must not be listed');
+  //
+  // `define: 50` is deliberate, not a leak: `references/entrypoints.md` is excluded from the
+  // consumer-import rewrite (generate-skills.mjs) because its whole job is to name the global
+  // `define` entrypoints UNDER "## Do not use these: global `define` entrypoints" - naming them is how
+  // the page forbids them. Before that exclusion the rewrite ran over the page too and turned those 50
+  // specifiers into consumer ones, so the forbidden section listed exactly what "## Importing a class"
+  // advises (consumer 75, define 0); now the page keeps both honest lists apart (consumer 40, define 50).
+  assert.deepEqual(counts, { consumer: 40, helper: 0, types: 11, define: 50 });
+  // 101 = 40 consumer + 11 types + 50 define. The 15 define entrypoints with no class module of their
+  // own stay off the consumer list (they are named as elements elsewhere), and the 50 define specifiers
+  // are listed once, in the forbidden section.
+  assert.equal(specs.length, 101, 'non-API specifiers must not be listed');
 });
 
 test('every consumer entrypoint is owned by a reference', () => {
