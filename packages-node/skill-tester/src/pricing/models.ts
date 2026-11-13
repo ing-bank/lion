@@ -33,6 +33,13 @@ export type TokenRate = {
   retrievedAt: string;
   /** Anything a reader needs to interpret the number correctly. */
   note?: string;
+  /**
+   * The provider has withdrawn this model id: it is no longer served, and its results are history.
+   * Marking it here is the single source of truth for the ledger and the results page, which exclude
+   * a retired model's cells from the live picture instead of counting them beside current
+   * measurements. See the `deepseek-v4-flash` entry for the measured evidence.
+   */
+  retired?: boolean;
 };
 
 export const RATES: Record<string, TokenRate> = {
@@ -77,6 +84,7 @@ export const RATES: Record<string, TokenRate> = {
     confidence: 'aggregator',
     retrievedAt: '2026-10-12',
     note: 'runware publishes no schema for this slug; deepseek retire this id and serve it at the V4.1 Flash price',
+    retired: true,
   },
 };
 
@@ -89,6 +97,15 @@ export function costOf(
   const rate = RATES[model];
   if (!rate) return undefined;
   return (promptTokens / 1_000_000) * rate.input + (completionTokens / 1_000_000) * rate.output;
+}
+
+/**
+ * True when the provider has withdrawn the model id, so its cells are history rather than current
+ * measurements. The flag lives on the rate (`RATES`), which is the one place a model's status is
+ * already described.
+ */
+export function isRetiredModel(model: string): boolean {
+  return RATES[model]?.retired === true;
 }
 
 /** Two decimals reads better than six for per-run amounts; more precision is noise at this size. */

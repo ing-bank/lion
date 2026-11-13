@@ -59,6 +59,54 @@ function costCell(entry: LedgerEntry): string {
   return 'n/a — recorded before the token split';
 }
 
+/**
+ * The cells the live picture is made of: the newest *measured* row (n>0) per (model, scenario,
+ * provider). Rows with no comparable run are skipped, so a placeholder a later run wrote for another
+ * model cannot shadow a real measurement, and re-running a scenario replaces its earlier rows.
+ */
+function liveCells(entries: LedgerEntry[]): LedgerEntry[] {
+  const newest = new Map<string, LedgerEntry>();
+  for (const entry of entries) {
+    if (entry.samples === 0) continue;
+    const key = `${entry.provider ?? 'openai-compatible'}|${entry.model}|${entry.scenario}`;
+    const current = newest.get(key);
+    if (!current || (entry.ranAt ?? '') > (current.ranAt ?? '')) newest.set(key, entry);
+  }
+  return [...newest.values()];
+}
+
+/** True when the provider has withdrawn the model, so this cell is history. */
+function isRetired(entry: LedgerEntry): boolean {
+  return entry.retired === true;
+}
+
+/**
+ * The headline the ledger page exists to support: how many *live* cells sit at 100%.
+ *
+ * Retired models are deliberately excluded here, not silently dropped from the tables: a cell row for
+ * a withdrawn model id is history, so counting it beside a current measurement would inflate the "all
+ * at 100%" picture. The number reported is exact and reproducible from this function.
+ */
+function liveSummary(entries: LedgerEntry[]): string {
+  const live = liveCells(entries);
+  const retired = live.filter(isRetired);
+  const active = live.filter(entry => !isRetired(entry));
+  const at100 = active.filter(entry => entry.mean === 1);
+  const below = active.filter(entry => entry.mean < 1);
+  const retiredModels = [...new Set(retired.map(entry => entry.model))].sort();
+  return [
+    `${active.length} live cell(s) — newest measured (n>0) row per model × scenario × provider, retired models excluded:`,
+    `**${at100.length} at 100%**, ${below.length} below 100%.`,
+    retired.length > 0
+      ? `${retired.length} further cell(s) belong to a withdrawn model (${retiredModels
+          .map(model => `\`${model}\``)
+          .join(', ')}) and are marked † as history below; they do not count in the headline.`
+      : '',
+  ]
+    .filter(Boolean)
+    .join(' ');
+}
+
 export function renderQualityPage(ledger: Ledger): string {
   const lines: string[] = [];
   const scenarios = [...new Set(ledger.entries.map(entry => entry.scenario))].sort();
@@ -99,6 +147,10 @@ export function renderQualityPage(ledger: Ledger): string {
   lines.push('');
   lines.push(`Ledger updated: ${ledger.updatedAt || 'n/a'}`);
   lines.push('');
+  lines.push('## Live picture');
+  lines.push('');
+  lines.push(liveSummary(ledger.entries));
+  lines.push('');
 
   for (const scenario of scenarios) {
     const rows = ledger.entries
@@ -112,8 +164,10 @@ export function renderQualityPage(ledger: Ledger): string {
     );
     lines.push('| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |');
     for (const entry of rows) {
+      // A retired model's row is history: mark it so it is never read as a current measurement.
+      const model = isRetired(entry) ? `\`${entry.model}\` †` : `\`${entry.model}\``;
       lines.push(
-        `| \`${entry.model}\` ` +
+        `| ${model} ` +
           `| ${meanCell(entry)} ` +
           `| ${cell(entry, e => percent(e.min))} ` +
           `| ${cell(entry, e => percent(e.max))} ` +
@@ -152,6 +206,14 @@ export function renderQualityPage(ledger: Ledger): string {
       'anything is recorded as *not attempted* rather than as a wrong answer.',
   );
   lines.push('');
+  if (ledger.entries.some(isRetired)) {
+    lines.push(
+      '† a withdrawn model id (`retired` on its rate): its rows are history and are excluded from the ' +
+        '"Live picture" above, so a retired model can never be counted beside a current measurement. The ' +
+        'rows stay listed so a past measurement is not lost.',
+    );
+    lines.push('');
+  }
   lines.push('## Rates used for the cost column');
   lines.push('');
   lines.push('USD per 1M tokens, as read from the sources below. Input and output are priced');
@@ -165,7 +227,7 @@ export function renderQualityPage(ledger: Ledger): string {
     const rate = RATES[model];
     lines.push(
       rate
-        ? `| \`${model}\` | $${rate.input} | $${rate.output} | <${rate.source}> | ${rate.confidence} | ${rate.retrievedAt} |`
+        ? `| \`${model}\`${rate.retired ? ' †' : ''} | $${rate.input} | $${rate.output} | <${rate.source}> | ${rate.confidence} | ${rate.retrievedAt} |`
         : `| \`${model}\` | — | — | no published rate found | — | — |`,
     );
   }

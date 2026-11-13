@@ -14,7 +14,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import type { SkillTesterReport } from '../skillTester.ts';
 import type { TestScenario } from '../scenarios/types.ts';
-import { costOf } from '../pricing/models.ts';
+import { costOf, isRetiredModel } from '../pricing/models.ts';
 
 export type LedgerEntry = {
   skillRevision: string;
@@ -50,6 +50,14 @@ export type LedgerEntry = {
    * system prompt and plan. The reporting rule is that the two are never averaged together.
    */
   subject?: 'model' | 'agent';
+  /**
+   * The model id was withdrawn by its provider, so this cell is history. Stamped from `RATES` (the
+   * single source of truth) on both read and write, so it cannot drift from the rate sheet, and the
+   * results page excludes retired cells from the live picture instead of counting them beside current
+   * measurements. `deepseek-v4-flash` is the measured case: deepseek retired the id and serve it at the
+   * V4.1 Flash price.
+   */
+  retired?: boolean;
   ranAt: string;
 };
 
@@ -76,11 +84,26 @@ export function loadLedger(file: string): Ledger {
   if (!fs.existsSync(file)) return empty;
   try {
     const parsed = JSON.parse(fs.readFileSync(file, 'utf-8')) as Partial<Ledger>;
-    return { version: 1, updatedAt: parsed.updatedAt ?? '', entries: parsed.entries ?? [] };
+    return {
+      version: 1,
+      updatedAt: parsed.updatedAt ?? '',
+      // Retirement is stamped on read too: rows written before the flag existed (and any row a
+      // caller persisted by hand) still count as history, because the model's status, not the row,
+      // decides it. The next write persists the stamp.
+      entries: (parsed.entries ?? []).map(withRetirement),
+    };
   } catch {
     // A corrupt ledger must not take a sweep down; the next write repairs it.
     return empty;
   }
+}
+
+/**
+ * Stamp the retirement flag from the single source of truth (`RATES`), so it never drifts from the
+ * rate sheet. A non-retired entry is returned untouched (no `retired: false` noise).
+ */
+function withRetirement<T extends { model: string }>(entry: T): T & { retired?: boolean } {
+  return isRetiredModel(entry.model) ? { ...entry, retired: true } : entry;
 }
 
 export function writeLedger(file: string, ledger: Ledger): void {
@@ -200,7 +223,9 @@ export function updateLedger(
   return {
     version: 1,
     updatedAt: new Date().toISOString(),
-    entries: [...byKey.values()].sort(
+    // Retirement is derived, never stored by the caller: stamp it here so a freshly written ledger
+    // already carries the history flag the results page keys on.
+    entries: [...byKey.values()].map(withRetirement).sort(
       (a, b) => a.scenario.localeCompare(b.scenario) || a.model.localeCompare(b.model),
     ),
   };
