@@ -20,7 +20,7 @@ It exists because Lion is a living product: components gain APIs, docs gain page
 last quarter quietly stops matching the library. Improvement here means the skill is regenerated from
 its source docs and re-measured against the library, not patched by hand and hoped over.
 
-![recursive skill improvement - the recursive ring, with the ledger as its backbone](./assets/recursive-skill-improvement.png 'recursive skill improvement: five stations in a ring - measure, attribute, correct, regenerate, rerun - joined by one band that is the ledger, each station carrying a revision stamp; the machinery is ink, the paper is the plate, and the caption is set as type by us')
+![a man holding a clamshell phone to his ear, printed as a high-contrast black-and-white cut-out on a technical plate](./assets/recursive-skill-improvement-hero.png 'the plate the product is named for: a figure mid-threat on a flip phone - the particular set of skills the film calls out by name - photographed low-key with the light on his left, printed at high contrast and keyed onto the plate, with the machinery drawn as blueprint line art; the type is set by us in the wordmark’s own face - recursive skill improvement, a particular set of skills, 909 ledger rows · 47 scenarios · newest skill revision b9cf47ea')
 
 ## The system, the task and the protocol
 
@@ -81,6 +81,8 @@ an artefact to average away.
 | regenerate | the skill is rebuilt from those sources | `npm run skills:generate` |
 | gate | the generated skill is diff-checked and the skill tests pass | `npm run skills:check` |
 | rerun | the coupled use cases are re-measured at n>=3, serially | the scenarios the docs are coupled to |
+
+![recursive skill improvement - the recursive ring, with the ledger as its backbone](./assets/recursive-skill-improvement.png 'the loop itself, drawn: five stations in a ring - measure, attribute, correct, regenerate, rerun - joined by one band that is the ledger, each station carrying a revision stamp; the machinery is ink, the paper is the plate, and the caption is set as type by us')
 
 A correction is only finished after **regenerate + gate + rerun on n>=3**; an edit without a re-run is a
 proposal, not a fix. The worked example — a guessed entrypoint that zeroed seven runs — is written up in
