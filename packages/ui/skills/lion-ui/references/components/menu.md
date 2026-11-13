@@ -439,8 +439,11 @@ here: the role and active mode stay the component's own configuration (`_listRol
 
 ### Entrypoints
 
-`@lion/ui/menu.js` ships `LionMenu` and `LionMenuItem` - the elements `<lion-menu>` and `<lion-menuitem>`.
-Import both from that one module: **there is no `<lion-menuitem>`**.
+`@lion/ui/menu.js` ships `LionMenu`, `LionItem` and `LionMenuitem` - the elements `<lion-menu>` and
+`<lion-menuitem>`. Import them from that one module: **there is no `<lion-menuitem>`**.
+
+The class name is `LionMenuitem` (lower-case `i`), not `LionMenuItem` - importing a name the module does not
+export is a `SyntaxError` at load, and the entrypoint's export list is authoritative.
 
 ---
 

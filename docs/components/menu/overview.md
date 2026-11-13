@@ -446,3 +446,12 @@ vocabulary, so an implementation that follows the platform proposal finds the sa
 
 The focusgroup behavior token (`menu`, `menubar`, `toolbar`, `listbox`, `tablist`, ...) is not an api
 here: the role and active mode stay the component's own configuration (`_listRole`/`_activeMode`).
+
+## Entrypoints
+
+`@lion/ui/menu.js` ships `LionMenu`, `LionItem` and `LionMenuitem` - the elements `<lion-menu>` and
+`<lion-menuitem>`. Import them from that one module: **there is no `@lion/ui/menuitem.js`**.
+
+The class name is `LionMenuitem` (lower-case `i`), not `LionMenuItem` - importing a name the module does not
+export is a `SyntaxError` at load, and the entrypoint's export list is authoritative.
+
