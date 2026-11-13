@@ -406,6 +406,7 @@ export async function runSkillTester(config: SkillTesterConfig): Promise<SkillTe
             expectedTransformedFiles: scenario.expectedTransformedFiles,
             checks: scenario.checks,
             declaredFiles: Object.keys(scenario.files),
+            repoRoot,
           }),
           gates,
         );

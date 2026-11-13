@@ -243,6 +243,110 @@ export function unresolvedRelativeImports(
   return relativeImports(source).filter(spec => !resolves(spec.value));
 }
 
+/**
+ * The named exports an `@lion/ui` entrypoint declares, read from its own source under
+ * `packages/ui/exports` — the tree that ships in git and is exactly what the browser resolves.
+ *
+ * Returns `undefined` when the entrypoint is unknown (no such file) or re-exports with a
+ * `export *` star (names cannot be enumerated statically). Both mean "not this check's business":
+ * a wrongly-flagged correct answer is the defect class this harness removes, so the check errs
+ * toward passing.
+ */
+export function lionUiEntrypointExports(repoRoot: string, specifier: string): string[] | undefined {
+  if (!specifier.startsWith('@lion/ui/')) return undefined;
+  const file = path.join(repoRoot, 'packages/ui/exports', specifier.slice('@lion/ui/'.length));
+  if (!fs.existsSync(file)) return undefined;
+  const source = fs.readFileSync(file, 'utf-8');
+  if (/export\s*\*/.test(source)) return undefined;
+
+  const names = new Set<string>();
+  const pattern = /export\s*\{([^}]*)\}(\s*from\s*['"][^'"]*['"])?/g;
+  let match: RegExpExecArray | null;
+  while ((match = pattern.exec(source)) !== null) {
+    for (const part of match[1].split(',')) {
+      const name = part.trim();
+      if (!name) continue;
+      // `export { X as Y }` exposes Y; anything else exposes the name itself.
+      const alias = name.match(/\bas\s+([A-Za-z_$][\w$]*)$/);
+      names.add(alias ? alias[1] : name);
+    }
+  }
+  return [...names];
+}
+
+/** A named binding a file imports from `@lion/ui/*` that its entrypoint does not export. */
+export type MissingNamedImport = {
+  specifier: string;
+  imported: string;
+  line: number;
+  column: number;
+  /** Names the entrypoint does export, so the failure can point at a real alternative. */
+  available: string[];
+};
+
+type OxcImportEntry = {
+  importName?: { kind?: string; name?: string | null; start?: number };
+  localName?: { value?: string };
+};
+
+type OxcStaticImport = { moduleRequest?: unknown; entries?: OxcImportEntry[] };
+
+/**
+ * Named bindings a file imports from an `@lion/ui/*` entrypoint that the entrypoint does not export.
+ *
+ * Measured: a run imported `LionMenuItem` from `@lion/ui/menu.js`; the entrypoint exports
+ * `LionMenu`, `LionItem` and `LionMenuitem` (small `i`). The browser refuses the module —
+ * "does not provide an export named 'LionMenuItem'" — and the behaviour tier surfaced it only as
+ * the opaque "Could not import your test module". This names the file, the line, the binding and
+ * what the entrypoint does export.
+ *
+ * Scope: only named imports from `@lion/ui/*`. Relative imports are `importsResolve`'s business;
+ * bare packages (`lit`) are the import-policy gate's. Default and namespace imports are a
+ * different class and are left alone. An unknown entrypoint or a `export *` re-export is skipped.
+ */
+export function missingNamedLionUiImports(source: string, repoRoot: string): MissingNamedImport[] {
+  const result = parseSync('named-lion-imports.js', source) as {
+    module?: { staticImports?: OxcStaticImport[] };
+  };
+  const missing: MissingNamedImport[] = [];
+
+  for (const statement of result.module?.staticImports ?? []) {
+    const specifier = specifierOf(statement.moduleRequest, source);
+    if (!specifier || !specifier.startsWith('@lion/ui/')) continue;
+    const available = lionUiEntrypointExports(repoRoot, specifier);
+    if (available === undefined) continue; // unknown entrypoint: not this check's business
+    const exported = new Set(available);
+
+    for (const entry of statement.entries ?? []) {
+      // Only named bindings; default/namespace imports cannot be verified from a name list.
+      if (entry.importName?.kind !== 'Name') continue;
+      const imported = entry.importName.name;
+      if (!imported || exported.has(imported)) continue;
+      missing.push({
+        specifier,
+        imported,
+        ...offsetToLineColumn(source, entry.importName.start ?? 0),
+        available,
+      });
+    }
+  }
+  return missing;
+}
+
+/**
+ * Walk up from a directory to the repository root, identified by the presence of the
+ * `@lion/ui` exports tree. Returns `undefined` when no ancestor has it.
+ */
+export function findRepoRoot(startDir: string): string | undefined {
+  let dir = path.resolve(startDir);
+  for (;;) {
+    if (fs.existsSync(path.join(dir, 'packages/ui/exports'))) return dir;
+    const parent = path.dirname(dir);
+    if (parent === dir) return undefined;
+    dir = parent;
+  }
+}
+
 function syntaxGateFor(files: ParsedFile[]): GateResult {
   const failures: GateFailure[] = [];
   for (const file of files) {

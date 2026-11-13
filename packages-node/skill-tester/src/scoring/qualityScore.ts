@@ -31,7 +31,7 @@ import path from 'node:path';
 import { diffLines } from 'diff';
 import type { ScenarioCheck } from '../scenarios/types.ts';
 import type { GateResult } from './gates.ts';
-import { unusedImportNames, unresolvedRelativeImports } from './gates.ts';
+import { unusedImportNames, unresolvedRelativeImports, missingNamedLionUiImports, findRepoRoot } from './gates.ts';
 
 export type FileScore = {
   path: string;
@@ -181,12 +181,15 @@ const CHECK_DESCRIPTIONS: Record<ScenarioCheck['type'], (check: ScenarioCheck) =
   noExtraFiles: check => `no files beyond "${check.file}" were created`,
   noUnusedImports: check => `${check.file} imports nothing it does not use`,
   importsResolve: check => `${check.file} imports only modules that exist in the run`,
+  namedExportsExist: check =>
+    `${check.file} imports only '@lion/ui' bindings the entrypoint exports`,
 };
 
 export function evaluateCheck(
   sandboxRoot: string,
   check: ScenarioCheck,
   declaredFiles: string[] = [],
+  options: { repoRoot?: string } = {},
 ): CheckOutcome {
   const weight = check.weight ?? 1;
 
@@ -251,6 +254,38 @@ export function evaluateCheck(
       passed = true;
       break;
     }
+    case 'namedExportsExist': {
+      // A named `@lion/ui/*` import the entrypoint does not export: the browser refuses the module
+      // ("does not provide an export named 'X'") and the behaviour tier only says "Could not import
+      // your test module". This names the binding and what the entrypoint does export.
+      //
+      // The entrypoint tree lives in the repository, not the sandbox, so the check needs repoRoot.
+      // When it cannot be found (a foreign sandbox) the check cannot judge and stays silent rather
+      // than crashing.
+      const repoRoot = options.repoRoot ?? findRepoRoot(sandboxRoot);
+      if (!repoRoot) {
+        passed = true;
+        break;
+      }
+      const missing = missingNamedLionUiImports(content, repoRoot);
+      if (missing.length > 0) {
+        return {
+          description: missing
+            .map(
+              entry =>
+                `${check.file}:${entry.line} imports '${entry.imported}' from '${entry.specifier}' but that entrypoint does not export it` +
+                (entry.available.length > 0
+                  ? ` (it exports: ${entry.available.join(', ')})`
+                  : ' (it exports no named bindings)'),
+            )
+            .join('; '),
+          passed: false,
+          weight,
+        };
+      }
+      passed = true;
+      break;
+    }
   }
 
   return { description, passed, weight };
@@ -261,17 +296,22 @@ export function scoreScenario({
   expectedTransformedFiles = {},
   checks = [],
   declaredFiles = [],
+  repoRoot,
 }: {
   sandboxRoot: string;
   expectedTransformedFiles?: Record<string, string>;
   checks?: ScenarioCheck[];
   /** Files the scenario shipped in the sandbox, so the extra-file check can tell them apart. */
   declaredFiles?: string[];
+  /** Repository root, so `@lion/ui`-entrypoint checks can read `packages/ui/exports`. */
+  repoRoot?: string;
 }): ScenarioScore {
   const files = Object.entries(expectedTransformedFiles).map(([relativePath, expectedContent]) =>
     scoreFile({ sandboxRoot, relativePath, expectedContent }),
   );
-  const checkOutcomes = checks.map(check => evaluateCheck(sandboxRoot, check, declaredFiles));
+  const checkOutcomes = checks.map(check =>
+    evaluateCheck(sandboxRoot, check, declaredFiles, { repoRoot }),
+  );
 
   // The golden files stay in the breakdown and are the scenario's solvability proof, but they no
   // longer score: textual similarity to one reference implementation penalises correct alternatives

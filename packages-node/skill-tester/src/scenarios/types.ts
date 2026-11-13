@@ -28,7 +28,15 @@ export type ScenarioCheck = {
      * specifier class the entrypoint checks cannot see; without it a missing relative import dies
      * opaquely in the browser as "Could not import your test module".
      */
-    | 'importsResolve';
+    | 'importsResolve'
+    /**
+     * Every named binding imported from an `@lion/ui/*` entrypoint is actually exported by it. The
+     * browser refuses a module importing a name that does not exist ("does not provide an export
+     * named 'X'"), which the behaviour tier surfaces only as "Could not import your test module".
+     * Only named imports from `@lion/ui/*`: relative imports are `importsResolve`, bare packages the
+     * import-policy gate.
+     */
+    | 'namedExportsExist';
   /** File the check applies to, relative to the project root. */
   file: string;
   /** Needle for `contains` / `notContains`. */

@@ -17,12 +17,16 @@ Scores are the skill-tester convention checks plus behaviour in a real browser, 
 
 `Rev` is the skill revision the row was measured against — the git tree hash of the skill directory, so it changes when the skill does and not when an unrelated commit lands. A scenario can hold rows from more than one revision; they are listed newest first, and only rows on the same revision are comparable.
 
-Ledger updated: 2026-11-12T01:15:19.570Z
+Ledger updated: 2026-11-13T05:37:13.715Z
 
 ## component/accordion (component)
 
 | Model | Mean | Min | Max | sd | n | Behaviour | Attempts | Redo | Tokens/run | Cost | Rev |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `ca785a4` |
+| `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `709dd6c` |
+| `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `578381a` |
+| `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `e4bdf4f` |
 | `anthropic-claude-haiku-4-5` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | no published rate | `d17f055` |
 | `claude-haiku-4-5` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | no published rate | `7f45d90` |
 | `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `7f45d90` |
@@ -38,6 +42,10 @@ Ledger updated: 2026-11-12T01:15:19.570Z
 
 | Model | Mean | Min | Max | sd | n | Behaviour | Attempts | Redo | Tokens/run | Cost | Rev |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `ca785a4` |
+| `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `709dd6c` |
+| `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `578381a` |
+| `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `e4bdf4f` |
 | `anthropic-claude-haiku-4-5` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | no published rate | `d17f055` |
 | `claude-haiku-4-5` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | no published rate | `7f45d90` |
 | `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `7f45d90` |
@@ -53,6 +61,10 @@ Ledger updated: 2026-11-12T01:15:19.570Z
 
 | Model | Mean | Min | Max | sd | n | Behaviour | Attempts | Redo | Tokens/run | Cost | Rev |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `ca785a4` |
+| `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `709dd6c` |
+| `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `578381a` |
+| `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `e4bdf4f` |
 | `anthropic-claude-haiku-4-5` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | no published rate | `d17f055` |
 | `claude-haiku-4-5` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | no published rate | `7f45d90` |
 | `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `7f45d90` |
@@ -68,6 +80,10 @@ Ledger updated: 2026-11-12T01:15:19.570Z
 
 | Model | Mean | Min | Max | sd | n | Behaviour | Attempts | Redo | Tokens/run | Cost | Rev |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `ca785a4` |
+| `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `709dd6c` |
+| `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `578381a` |
+| `deepseek-v4-1-flash` | **100.0%** | 100.0% | 100.0% | 0.0 | 3 | 3/3 | 3/3 | 0 | 119,557 | $0.06 | `e4bdf4f` |
 | `anthropic-claude-haiku-4-5` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | no published rate | `d17f055` |
 | `claude-haiku-4-5` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | no published rate | `7f45d90` |
 | `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `7f45d90` |
@@ -83,6 +99,10 @@ Ledger updated: 2026-11-12T01:15:19.570Z
 
 | Model | Mean | Min | Max | sd | n | Behaviour | Attempts | Redo | Tokens/run | Cost | Rev |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `ca785a4` |
+| `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `709dd6c` |
+| `deepseek-v4-1-flash` | **100.0%** | 100.0% | 100.0% | 0.0 | 3 | 3/3 | 3/3 | 0 | 116,263 | $0.06 | `578381a` |
+| `deepseek-v4-1-flash` | **100.0%** | 100.0% | 100.0% | 0.0 | 3 | 2/3 | 3/3 | 0 | 107,996 | $0.06 | `e4bdf4f` |
 | `anthropic-claude-haiku-4-5` | **100.0%** | 100.0% | 100.0% | 0.0 | 3 | 1/3 | 3/3 | 0 | 57,884 | no published rate | `d17f055` |
 | `deepseek-v4-1-flash` | **100.0%** | 100.0% | 100.0% | 0.0 | 1¹ | 1/1 | 1/1 | 0 | 63,657 | $0.01 | `7f45d90` |
 | `claude-haiku-4-5` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | no published rate | `7f45d90` |
@@ -99,6 +119,10 @@ Ledger updated: 2026-11-12T01:15:19.570Z
 
 | Model | Mean | Min | Max | sd | n | Behaviour | Attempts | Redo | Tokens/run | Cost | Rev |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `ca785a4` |
+| `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `709dd6c` |
+| `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `578381a` |
+| `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `e4bdf4f` |
 | `anthropic-claude-haiku-4-5` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | no published rate | `d17f055` |
 | `claude-haiku-4-5` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | no published rate | `7f45d90` |
 | `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `7f45d90` |
@@ -114,6 +138,10 @@ Ledger updated: 2026-11-12T01:15:19.570Z
 
 | Model | Mean | Min | Max | sd | n | Behaviour | Attempts | Redo | Tokens/run | Cost | Rev |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `ca785a4` |
+| `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `709dd6c` |
+| `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `578381a` |
+| `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `e4bdf4f` |
 | `anthropic-claude-haiku-4-5` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | no published rate | `d17f055` |
 | `claude-haiku-4-5` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | no published rate | `7f45d90` |
 | `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `7f45d90` |
@@ -129,6 +157,10 @@ Ledger updated: 2026-11-12T01:15:19.570Z
 
 | Model | Mean | Min | Max | sd | n | Behaviour | Attempts | Redo | Tokens/run | Cost | Rev |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `ca785a4` |
+| `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `709dd6c` |
+| `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `578381a` |
+| `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `e4bdf4f` |
 | `anthropic-claude-haiku-4-5` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | no published rate | `d17f055` |
 | `claude-haiku-4-5` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | no published rate | `7f45d90` |
 | `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `7f45d90` |
@@ -144,6 +176,10 @@ Ledger updated: 2026-11-12T01:15:19.570Z
 
 | Model | Mean | Min | Max | sd | n | Behaviour | Attempts | Redo | Tokens/run | Cost | Rev |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `ca785a4` |
+| `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `709dd6c` |
+| `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `578381a` |
+| `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `e4bdf4f` |
 | `anthropic-claude-haiku-4-5` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | no published rate | `d17f055` |
 | `claude-haiku-4-5` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | no published rate | `7f45d90` |
 | `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `7f45d90` |
@@ -159,6 +195,10 @@ Ledger updated: 2026-11-12T01:15:19.570Z
 
 | Model | Mean | Min | Max | sd | n | Behaviour | Attempts | Redo | Tokens/run | Cost | Rev |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `ca785a4` |
+| `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `709dd6c` |
+| `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `578381a` |
+| `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `e4bdf4f` |
 | `anthropic-claude-haiku-4-5` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | no published rate | `d17f055` |
 | `claude-haiku-4-5` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | no published rate | `7f45d90` |
 | `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `7f45d90` |
@@ -174,6 +214,10 @@ Ledger updated: 2026-11-12T01:15:19.570Z
 
 | Model | Mean | Min | Max | sd | n | Behaviour | Attempts | Redo | Tokens/run | Cost | Rev |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `ca785a4` |
+| `deepseek-v4-1-flash` | **96.7%** | 90.0% | 100.0% | 0.0 | 3 | 3/3 | 3/3 | 0 | 280,659 | $0.13 | `709dd6c` |
+| `deepseek-v4-1-flash` | **100.0%** | 100.0% | 100.0% | 0.0 | 3 | 2/3 | 3/3 | 0 | 292,299 | $0.15 | `578381a` |
+| `deepseek-v4-1-flash` | **96.7%** | 90.0% | 100.0% | 0.0 | 3 | 2/3 | 3/3 | 0 | 208,605 | $0.10 | `e4bdf4f` |
 | `anthropic-claude-haiku-4-5` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | no published rate | `d17f055` |
 | `claude-haiku-4-5` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | no published rate | `7f45d90` |
 | `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `7f45d90` |
@@ -190,6 +234,10 @@ Ledger updated: 2026-11-12T01:15:19.570Z
 
 | Model | Mean | Min | Max | sd | n | Behaviour | Attempts | Redo | Tokens/run | Cost | Rev |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `ca785a4` |
+| `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `709dd6c` |
+| `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `578381a` |
+| `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `e4bdf4f` |
 | `anthropic-claude-haiku-4-5` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | no published rate | `d17f055` |
 | `claude-haiku-4-5` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | no published rate | `7f45d90` |
 | `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `7f45d90` |
@@ -205,6 +253,10 @@ Ledger updated: 2026-11-12T01:15:19.570Z
 
 | Model | Mean | Min | Max | sd | n | Behaviour | Attempts | Redo | Tokens/run | Cost | Rev |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `ca785a4` |
+| `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `709dd6c` |
+| `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `578381a` |
+| `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `e4bdf4f` |
 | `anthropic-claude-haiku-4-5` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | no published rate | `d17f055` |
 | `claude-haiku-4-5` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | no published rate | `7f45d90` |
 | `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `7f45d90` |
@@ -220,6 +272,10 @@ Ledger updated: 2026-11-12T01:15:19.570Z
 
 | Model | Mean | Min | Max | sd | n | Behaviour | Attempts | Redo | Tokens/run | Cost | Rev |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `ca785a4` |
+| `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `709dd6c` |
+| `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `578381a` |
+| `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `e4bdf4f` |
 | `anthropic-claude-haiku-4-5` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | no published rate | `d17f055` |
 | `claude-haiku-4-5` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | no published rate | `7f45d90` |
 | `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `7f45d90` |
@@ -235,6 +291,10 @@ Ledger updated: 2026-11-12T01:15:19.570Z
 
 | Model | Mean | Min | Max | sd | n | Behaviour | Attempts | Redo | Tokens/run | Cost | Rev |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `ca785a4` |
+| `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `709dd6c` |
+| `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `578381a` |
+| `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `e4bdf4f` |
 | `anthropic-claude-haiku-4-5` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | no published rate | `d17f055` |
 | `claude-haiku-4-5` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | no published rate | `7f45d90` |
 | `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `7f45d90` |
@@ -250,6 +310,10 @@ Ledger updated: 2026-11-12T01:15:19.570Z
 
 | Model | Mean | Min | Max | sd | n | Behaviour | Attempts | Redo | Tokens/run | Cost | Rev |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `ca785a4` |
+| `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `709dd6c` |
+| `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `578381a` |
+| `deepseek-v4-1-flash` | **100.0%** | 100.0% | 100.0% | 0.0 | 3 | 2/3 | 3/3 | 0 | 209,890 | $0.10 | `e4bdf4f` |
 | `anthropic-claude-haiku-4-5` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | no published rate | `d17f055` |
 | `claude-haiku-4-5` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | no published rate | `7f45d90` |
 | `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `7f45d90` |
@@ -265,6 +329,10 @@ Ledger updated: 2026-11-12T01:15:19.570Z
 
 | Model | Mean | Min | Max | sd | n | Behaviour | Attempts | Redo | Tokens/run | Cost | Rev |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `ca785a4` |
+| `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `709dd6c` |
+| `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `578381a` |
+| `deepseek-v4-1-flash` | **100.0%** | 100.0% | 100.0% | 0.0 | 3 | 3/3 | 3/3 | 0 | 164,748 | $0.08 | `e4bdf4f` |
 | `anthropic-claude-haiku-4-5` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | no published rate | `d17f055` |
 | `claude-haiku-4-5` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | no published rate | `7f45d90` |
 | `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `7f45d90` |
@@ -280,6 +348,10 @@ Ledger updated: 2026-11-12T01:15:19.570Z
 
 | Model | Mean | Min | Max | sd | n | Behaviour | Attempts | Redo | Tokens/run | Cost | Rev |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `ca785a4` |
+| `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `709dd6c` |
+| `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `578381a` |
+| `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `e4bdf4f` |
 | `anthropic-claude-haiku-4-5` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | no published rate | `d17f055` |
 | `claude-haiku-4-5` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | no published rate | `7f45d90` |
 | `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `7f45d90` |
@@ -295,6 +367,10 @@ Ledger updated: 2026-11-12T01:15:19.570Z
 
 | Model | Mean | Min | Max | sd | n | Behaviour | Attempts | Redo | Tokens/run | Cost | Rev |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `ca785a4` |
+| `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `709dd6c` |
+| `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `578381a` |
+| `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `e4bdf4f` |
 | `anthropic-claude-haiku-4-5` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | no published rate | `d17f055` |
 | `claude-haiku-4-5` | **80.0%** | 80.0% | 80.0% | 0.0 | 3 | 0/3 | 3/3 | 0 | 222,247 | no published rate | `7f45d90` |
 | `claude-haiku-4-5` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | no published rate | `7f45d90` |
@@ -311,6 +387,10 @@ Ledger updated: 2026-11-12T01:15:19.570Z
 
 | Model | Mean | Min | Max | sd | n | Behaviour | Attempts | Redo | Tokens/run | Cost | Rev |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `ca785a4` |
+| `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `709dd6c` |
+| `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `578381a` |
+| `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `e4bdf4f` |
 | `anthropic-claude-haiku-4-5` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | no published rate | `d17f055` |
 | `claude-haiku-4-5` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | no published rate | `7f45d90` |
 | `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `7f45d90` |
@@ -326,6 +406,10 @@ Ledger updated: 2026-11-12T01:15:19.570Z
 
 | Model | Mean | Min | Max | sd | n | Behaviour | Attempts | Redo | Tokens/run | Cost | Rev |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `ca785a4` |
+| `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `709dd6c` |
+| `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `578381a` |
+| `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `e4bdf4f` |
 | `anthropic-claude-haiku-4-5` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | no published rate | `d17f055` |
 | `claude-haiku-4-5` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | no published rate | `7f45d90` |
 | `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `7f45d90` |
@@ -341,6 +425,10 @@ Ledger updated: 2026-11-12T01:15:19.570Z
 
 | Model | Mean | Min | Max | sd | n | Behaviour | Attempts | Redo | Tokens/run | Cost | Rev |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `ca785a4` |
+| `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `709dd6c` |
+| `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `578381a` |
+| `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `e4bdf4f` |
 | `anthropic-claude-haiku-4-5` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | no published rate | `d17f055` |
 | `claude-haiku-4-5` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | no published rate | `7f45d90` |
 | `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `7f45d90` |
@@ -356,6 +444,10 @@ Ledger updated: 2026-11-12T01:15:19.570Z
 
 | Model | Mean | Min | Max | sd | n | Behaviour | Attempts | Redo | Tokens/run | Cost | Rev |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `ca785a4` |
+| `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `709dd6c` |
+| `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `578381a` |
+| `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `e4bdf4f` |
 | `anthropic-claude-haiku-4-5` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | no published rate | `d17f055` |
 | `claude-haiku-4-5` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | no published rate | `7f45d90` |
 | `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `7f45d90` |
@@ -371,6 +463,10 @@ Ledger updated: 2026-11-12T01:15:19.570Z
 
 | Model | Mean | Min | Max | sd | n | Behaviour | Attempts | Redo | Tokens/run | Cost | Rev |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `ca785a4` |
+| `deepseek-v4-1-flash` | **100.0%** | 100.0% | 100.0% | 0.0 | 3 | 3/3 | 3/3 | 0 | 74,913 | $0.04 | `709dd6c` |
+| `deepseek-v4-1-flash` | **96.7%** | 90.0% | 100.0% | 0.0 | 3 | 2/3 | 3/3 | 0 | 134,574 | $0.07 | `578381a` |
+| `deepseek-v4-1-flash` | **96.7%** | 90.0% | 100.0% | 0.0 | 3 | 3/3 | 3/3 | 0 | 63,098 | $0.03 | `e4bdf4f` |
 | `anthropic-claude-haiku-4-5` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | no published rate | `d17f055` |
 | `claude-haiku-4-5` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | no published rate | `7f45d90` |
 | `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `7f45d90` |
@@ -387,6 +483,10 @@ Ledger updated: 2026-11-12T01:15:19.570Z
 
 | Model | Mean | Min | Max | sd | n | Behaviour | Attempts | Redo | Tokens/run | Cost | Rev |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| `deepseek-v4-1-flash` | **100.0%** | 100.0% | 100.0% | 0.0 | 3 | 3/3 | 3/3 | 0 | 90,418 | $0.04 | `ca785a4` |
+| `deepseek-v4-1-flash` | **66.7%** | 0.0% | 100.0% | 0.5 | 3 | 0/3 | 3/3 | 0 | 93,050 | $0.05 | `709dd6c` |
+| `deepseek-v4-1-flash` | **100.0%** | 100.0% | 100.0% | 0.0 | 3 | 0/3 | 3/3 | 0 | 157,390 | $0.08 | `578381a` |
+| `deepseek-v4-1-flash` | **100.0%** | 100.0% | 100.0% | 0.0 | 3 | 2/3 | 3/3 | 0 | 261,082 | $0.13 | `e4bdf4f` |
 | `anthropic-claude-haiku-4-5` | **96.7%** | 90.0% | 100.0% | 0.0 | 3 | 3/3 | 3/3 | 0 | 90,002 | no published rate | `d17f055` |
 | `deepseek-v4-1-flash` | **100.0%** | 100.0% | 100.0% | 0.0 | 1¹ | 1/1 | 1/1 | 0 | 144,862 | $0.02 | `7f45d90` |
 | `claude-haiku-4-5` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | no published rate | `7f45d90` |
@@ -402,6 +502,10 @@ Ledger updated: 2026-11-12T01:15:19.570Z
 
 | Model | Mean | Min | Max | sd | n | Behaviour | Attempts | Redo | Tokens/run | Cost | Rev |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `ca785a4` |
+| `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `709dd6c` |
+| `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `578381a` |
+| `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `e4bdf4f` |
 | `anthropic-claude-haiku-4-5` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | no published rate | `d17f055` |
 | `claude-haiku-4-5` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | no published rate | `7f45d90` |
 | `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `7f45d90` |
@@ -417,6 +521,10 @@ Ledger updated: 2026-11-12T01:15:19.570Z
 
 | Model | Mean | Min | Max | sd | n | Behaviour | Attempts | Redo | Tokens/run | Cost | Rev |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `ca785a4` |
+| `deepseek-v4-1-flash` | **100.0%** | 100.0% | 100.0% | 0.0 | 3 | 3/3 | 3/3 | 0 | 83,547 | $0.04 | `709dd6c` |
+| `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `578381a` |
+| `deepseek-v4-1-flash` | **100.0%** | 100.0% | 100.0% | 0.0 | 3 | 2/3 | 3/3 | 0 | 88,966 | $0.05 | `e4bdf4f` |
 | `anthropic-claude-haiku-4-5` | **93.3%** | 80.0% | 100.0% | 0.1 | 3 | 0/3 | 3/3 | 0 | 21,369 | no published rate | `d17f055` |
 | `deepseek-v4-1-flash` | **80.0%** | 80.0% | 80.0% | 0.0 | 1¹ | 0/1 | 1/1 | 0 | 53,748 | $0.0090 | `7f45d90` |
 | `claude-haiku-4-5` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | no published rate | `7f45d90` |
@@ -432,6 +540,10 @@ Ledger updated: 2026-11-12T01:15:19.570Z
 
 | Model | Mean | Min | Max | sd | n | Behaviour | Attempts | Redo | Tokens/run | Cost | Rev |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `ca785a4` |
+| `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `709dd6c` |
+| `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `578381a` |
+| `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `e4bdf4f` |
 | `anthropic-claude-haiku-4-5` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | no published rate | `d17f055` |
 | `claude-haiku-4-5` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | no published rate | `7f45d90` |
 | `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `7f45d90` |
@@ -447,6 +559,10 @@ Ledger updated: 2026-11-12T01:15:19.570Z
 
 | Model | Mean | Min | Max | sd | n | Behaviour | Attempts | Redo | Tokens/run | Cost | Rev |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `ca785a4` |
+| `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `709dd6c` |
+| `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `578381a` |
+| `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `e4bdf4f` |
 | `anthropic-claude-haiku-4-5` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | no published rate | `d17f055` |
 | `claude-haiku-4-5` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | no published rate | `7f45d90` |
 | `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `7f45d90` |
@@ -462,6 +578,10 @@ Ledger updated: 2026-11-12T01:15:19.570Z
 
 | Model | Mean | Min | Max | sd | n | Behaviour | Attempts | Redo | Tokens/run | Cost | Rev |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `ca785a4` |
+| `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `709dd6c` |
+| `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `578381a` |
+| `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `e4bdf4f` |
 | `anthropic-claude-haiku-4-5` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | no published rate | `d17f055` |
 | `claude-haiku-4-5` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | no published rate | `7f45d90` |
 | `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `7f45d90` |
@@ -477,6 +597,10 @@ Ledger updated: 2026-11-12T01:15:19.570Z
 
 | Model | Mean | Min | Max | sd | n | Behaviour | Attempts | Redo | Tokens/run | Cost | Rev |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `ca785a4` |
+| `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `709dd6c` |
+| `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `578381a` |
+| `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `e4bdf4f` |
 | `anthropic-claude-haiku-4-5` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | no published rate | `d17f055` |
 | `claude-haiku-4-5` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | no published rate | `7f45d90` |
 | `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `7f45d90` |
@@ -492,6 +616,10 @@ Ledger updated: 2026-11-12T01:15:19.570Z
 
 | Model | Mean | Min | Max | sd | n | Behaviour | Attempts | Redo | Tokens/run | Cost | Rev |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `ca785a4` |
+| `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `709dd6c` |
+| `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `578381a` |
+| `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `e4bdf4f` |
 | `anthropic-claude-haiku-4-5` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | no published rate | `d17f055` |
 | `claude-haiku-4-5` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | no published rate | `7f45d90` |
 | `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `7f45d90` |
@@ -507,6 +635,10 @@ Ledger updated: 2026-11-12T01:15:19.570Z
 
 | Model | Mean | Min | Max | sd | n | Behaviour | Attempts | Redo | Tokens/run | Cost | Rev |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `ca785a4` |
+| `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `709dd6c` |
+| `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `578381a` |
+| `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `e4bdf4f` |
 | `anthropic-claude-haiku-4-5` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | no published rate | `d17f055` |
 | `claude-haiku-4-5` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | no published rate | `7f45d90` |
 | `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `7f45d90` |
@@ -522,6 +654,10 @@ Ledger updated: 2026-11-12T01:15:19.570Z
 
 | Model | Mean | Min | Max | sd | n | Behaviour | Attempts | Redo | Tokens/run | Cost | Rev |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `ca785a4` |
+| `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `709dd6c` |
+| `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `578381a` |
+| `deepseek-v4-1-flash` | **100.0%** | 100.0% | 100.0% | 0.0 | 3 | 3/3 | 3/3 | 0 | 87,945 | $0.05 | `e4bdf4f` |
 | `anthropic-claude-haiku-4-5` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | no published rate | `d17f055` |
 | `claude-haiku-4-5` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | no published rate | `7f45d90` |
 | `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `7f45d90` |
@@ -537,6 +673,10 @@ Ledger updated: 2026-11-12T01:15:19.570Z
 
 | Model | Mean | Min | Max | sd | n | Behaviour | Attempts | Redo | Tokens/run | Cost | Rev |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `ca785a4` |
+| `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `709dd6c` |
+| `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `578381a` |
+| `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `e4bdf4f` |
 | `anthropic-claude-haiku-4-5` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | no published rate | `d17f055` |
 | `claude-haiku-4-5` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | no published rate | `7f45d90` |
 | `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `7f45d90` |
@@ -558,6 +698,10 @@ Ledger updated: 2026-11-12T01:15:19.570Z
 
 | Model | Mean | Min | Max | sd | n | Behaviour | Attempts | Redo | Tokens/run | Cost | Rev |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `ca785a4` |
+| `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `709dd6c` |
+| `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `578381a` |
+| `deepseek-v4-1-flash` | **100.0%** | 100.0% | 100.0% | 0.0 | 3 | 3/3 | 3/3 | 0 | 126,820 | $0.06 | `e4bdf4f` |
 | `anthropic-claude-haiku-4-5` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | no published rate | `d17f055` |
 | `claude-haiku-4-5` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | no published rate | `7f45d90` |
 | `deepseek-v4-1-flash` | **97.0%** | 90.9% | 100.0% | 0.0 | 3 | 3/3 | 3/3 | 0 | 100,501 | $0.05 | `7f45d90` |
@@ -574,6 +718,10 @@ Ledger updated: 2026-11-12T01:15:19.570Z
 
 | Model | Mean | Min | Max | sd | n | Behaviour | Attempts | Redo | Tokens/run | Cost | Rev |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `ca785a4` |
+| `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `709dd6c` |
+| `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `578381a` |
+| `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `e4bdf4f` |
 | `anthropic-claude-haiku-4-5` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | no published rate | `d17f055` |
 | `claude-haiku-4-5` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | no published rate | `7f45d90` |
 | `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `7f45d90` |
@@ -583,6 +731,10 @@ Ledger updated: 2026-11-12T01:15:19.570Z
 
 | Model | Mean | Min | Max | sd | n | Behaviour | Attempts | Redo | Tokens/run | Cost | Rev |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `ca785a4` |
+| `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `709dd6c` |
+| `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `578381a` |
+| `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `e4bdf4f` |
 | `anthropic-claude-haiku-4-5` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | no published rate | `d17f055` |
 | `claude-haiku-4-5` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | no published rate | `7f45d90` |
 | `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `7f45d90` |
@@ -598,6 +750,10 @@ Ledger updated: 2026-11-12T01:15:19.570Z
 
 | Model | Mean | Min | Max | sd | n | Behaviour | Attempts | Redo | Tokens/run | Cost | Rev |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `ca785a4` |
+| `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `709dd6c` |
+| `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `578381a` |
+| `deepseek-v4-1-flash` | **96.7%** | 90.0% | 100.0% | 0.0 | 3 | 3/3 | 3/3 | 0 | 136,114 | $0.07 | `e4bdf4f` |
 | `anthropic-claude-haiku-4-5` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | no published rate | `d17f055` |
 | `claude-haiku-4-5` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | no published rate | `7f45d90` |
 | `deepseek-v4-1-flash` | **100.0%** | 100.0% | 100.0% | 0.0 | 3 | 3/3 | 3/3 | 0 | 118,948 | $0.06 | `7f45d90` |
@@ -613,6 +769,10 @@ Ledger updated: 2026-11-12T01:15:19.570Z
 
 | Model | Mean | Min | Max | sd | n | Behaviour | Attempts | Redo | Tokens/run | Cost | Rev |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `ca785a4` |
+| `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `709dd6c` |
+| `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `578381a` |
+| `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `e4bdf4f` |
 | `anthropic-claude-haiku-4-5` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | no published rate | `d17f055` |
 | `claude-haiku-4-5` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | no published rate | `7f45d90` |
 | `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `7f45d90` |
@@ -628,6 +788,10 @@ Ledger updated: 2026-11-12T01:15:19.570Z
 
 | Model | Mean | Min | Max | sd | n | Behaviour | Attempts | Redo | Tokens/run | Cost | Rev |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `ca785a4` |
+| `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `709dd6c` |
+| `deepseek-v4-1-flash` | **66.7%** | 0.0% | 100.0% | 0.5 | 3 | — | 3/3 | 0 | 141,856 | $0.07 | `578381a` |
+| `deepseek-v4-1-flash` | **95.2%** | 85.7% | 100.0% | 0.1 | 3 | — | 3/3 | 0 | 162,371 | $0.08 | `e4bdf4f` |
 | `anthropic-claude-haiku-4-5` | **95.2%** | 85.7% | 100.0% | 0.1 | 3 | — | 3/3 | 0 | 63,562 | no published rate | `d17f055` |
 | `deepseek-v4-1-flash` | **100.0%** | 100.0% | 100.0% | 0.0 | 1¹ | — | 1/1 | 0 | 234,631 | $0.04 | `7f45d90` |
 | `claude-haiku-4-5` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | no published rate | `7f45d90` |
@@ -644,6 +808,10 @@ Ledger updated: 2026-11-12T01:15:19.570Z
 
 | Model | Mean | Min | Max | sd | n | Behaviour | Attempts | Redo | Tokens/run | Cost | Rev |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `ca785a4` |
+| `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `709dd6c` |
+| `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `578381a` |
+| `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `e4bdf4f` |
 | `anthropic-claude-haiku-4-5` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | no published rate | `d17f055` |
 | `claude-haiku-4-5` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | no published rate | `7f45d90` |
 | `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `7f45d90` |
@@ -659,6 +827,10 @@ Ledger updated: 2026-11-12T01:15:19.570Z
 
 | Model | Mean | Min | Max | sd | n | Behaviour | Attempts | Redo | Tokens/run | Cost | Rev |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `ca785a4` |
+| `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `709dd6c` |
+| `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `578381a` |
+| `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `e4bdf4f` |
 | `anthropic-claude-haiku-4-5` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | no published rate | `d17f055` |
 | `claude-haiku-4-5` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | no published rate | `7f45d90` |
 | `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `7f45d90` |
@@ -674,6 +846,10 @@ Ledger updated: 2026-11-12T01:15:19.570Z
 
 | Model | Mean | Min | Max | sd | n | Behaviour | Attempts | Redo | Tokens/run | Cost | Rev |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `ca785a4` |
+| `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `709dd6c` |
+| `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `578381a` |
+| `deepseek-v4-1-flash` | **85.7%** | 85.7% | 85.7% | 0.0 | 3 | — | 3/3 | 0 | 107,752 | $0.05 | `e4bdf4f` |
 | `anthropic-claude-haiku-4-5` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | no published rate | `d17f055` |
 | `claude-haiku-4-5` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | no published rate | `7f45d90` |
 | `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `7f45d90` |
@@ -689,6 +865,10 @@ Ledger updated: 2026-11-12T01:15:19.570Z
 
 | Model | Mean | Min | Max | sd | n | Behaviour | Attempts | Redo | Tokens/run | Cost | Rev |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `ca785a4` |
+| `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `709dd6c` |
+| `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `578381a` |
+| `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `e4bdf4f` |
 | `anthropic-claude-haiku-4-5` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | no published rate | `d17f055` |
 | `claude-haiku-4-5` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | no published rate | `7f45d90` |
 | `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `7f45d90` |
@@ -698,6 +878,10 @@ Ledger updated: 2026-11-12T01:15:19.570Z
 
 | Model | Mean | Min | Max | sd | n | Behaviour | Attempts | Redo | Tokens/run | Cost | Rev |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `ca785a4` |
+| `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `709dd6c` |
+| `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `578381a` |
+| `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `e4bdf4f` |
 | `anthropic-claude-haiku-4-5` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | no published rate | `d17f055` |
 | `claude-haiku-4-5` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | no published rate | `7f45d90` |
 | `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `7f45d90` |

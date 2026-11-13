@@ -285,6 +285,15 @@ function entrypointChecks(file: string, name: string): ScenarioCheck[] {
       file,
       description: 'imports only relative modules that exist in the run',
     },
+    {
+      // Every named binding imported from `@lion/ui/*` must be one the entrypoint actually exports.
+      // Measured: `LionMenuItem` from `@lion/ui/menu.js` — the class is `LionMenuitem`, small `i` —
+      // is refused by the browser ("does not provide an export named 'LionMenuItem'") and the
+      // behaviour tier surfaces it only as "Could not import your test module".
+      type: 'namedExportsExist',
+      file,
+      description: "imports only '@lion/ui' bindings the entrypoint exports",
+    },
   ];
 }
 
