@@ -31,7 +31,7 @@ import path from 'node:path';
 import { diffLines } from 'diff';
 import type { ScenarioCheck } from '../scenarios/types.ts';
 import type { GateResult } from './gates.ts';
-import { unusedImportNames, unresolvedRelativeImports, missingNamedLionUiImports, findRepoRoot } from './gates.ts';
+import { unusedImportNames, unresolvedRelativeImports, missingNamedLionUiImports, findRepoRoot, stripComments } from './gates.ts';
 
 export type FileScore = {
   path: string;
@@ -206,13 +206,19 @@ export function evaluateCheck(
     };
   }
 
-  const content = readSandboxFile(sandboxRoot, check.file);
+  const rawContent = readSandboxFile(sandboxRoot, check.file);
+  // A comment that *names* a forbidden construct is documentation, not usage: the regex checks run over
+  // the comment-stripped source so a run that documents the rule is not read as breaking it (measured —
+  // a correct run quoting `@lion/ui/define/*` in a doc comment was zeroed). `exists` and the unused-import
+  // count keep the raw source: a file whose only content is a comment still exists, and a mention anywhere
+  // — comment included — still counts as a use.
+  const content = stripComments(rawContent);
   const description = check.description ?? CHECK_DESCRIPTIONS[check.type](check);
   let passed = false;
 
   switch (check.type) {
     case 'exists':
-      passed = content.length > 0;
+      passed = rawContent.length > 0;
       break;
     case 'contains':
       passed = content.includes(check.value ?? '');
@@ -227,7 +233,7 @@ export function evaluateCheck(
       passed = !new RegExp(check.pattern ?? '', check.flags).test(content);
       break;
     case 'noUnusedImports': {
-      const unused = unusedImportNames(content);
+      const unused = unusedImportNames(rawContent);
       if (unused.length > 0) {
         return {
           description: `${check.file} imports ${unused.join(', ')} without using it`,

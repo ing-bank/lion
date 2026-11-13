@@ -114,6 +114,45 @@ test('evaluateCheck supports contains / notContains / matches / notMatches / exi
   );
 });
 
+test('a comment that names a forbidden specifier is documentation, not a violation', () => {
+  // Measured: a correct run (imports LionForm from '@lion/ui/form.js', passes every gate) was zeroed
+  // because its doc comment quoted the forbidden specifier — the exact phrasing the skill's own
+  // examples use. The regex checks must read code, not prose.
+  const documented = tempSandbox({
+    'src/a.js':
+      "// Register the classes on the host's scoped registry (never '@lion/ui/define/*').\n" +
+      "import { LionForm } from '@lion/ui/form.js';\n",
+  });
+  assert.equal(
+    evaluateCheck(documented, {
+      type: 'notMatches',
+      file: 'src/a.js',
+      pattern: '@lion/ui/define/',
+    }).passed,
+    true,
+  );
+
+  // The same string as executable code is still a violation: stripping must not weaken the check.
+  const used = tempSandbox({
+    'src/a.js': "import '@lion/ui/define/lion-form.js';\n",
+  });
+  assert.equal(
+    evaluateCheck(used, { type: 'notMatches', file: 'src/a.js', pattern: '@lion/ui/define/' }).passed,
+    false,
+  );
+
+  // A `//` inside a string or template literal is not a comment: a naive strip would mangle it and
+  // make a `contains` check fail on correct code.
+  const url = tempSandbox({
+    'src/a.js': "export const docs = 'https://example.com/@lion/ui/button.js';\n",
+  });
+  assert.equal(
+    evaluateCheck(url, { type: 'contains', file: 'src/a.js', value: 'https://example.com/@lion/ui/button.js' })
+      .passed,
+    true,
+  );
+});
+
 test('scoreScenario scores the checks and keeps the golden as a diagnostic', () => {
   const root = tempSandbox({ 'src/a.js': 'const a = 1;\n' });
   const result = scoreScenario({

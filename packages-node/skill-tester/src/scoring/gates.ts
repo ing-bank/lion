@@ -191,6 +191,32 @@ export function isRelativeSpecifier(value: string): boolean {
 }
 
 /**
+ * The source with its comment spans blanked out (replaced by spaces, newlines preserved).
+ *
+ * The convention checks are regex assertions over the produced file, and a comment is not code: a run
+ * that merely *documents* a rule — "never a global `@lion/ui/define/*` entrypoint", the exact phrasing
+ * the skill's own examples carry — must not be read as violating it. Measured: a correct run that
+ * imported `LionForm` from `@lion/ui/form.js` and passed every gate was zeroed because a doc comment
+ * quoted the forbidden specifier. Spans come from the same oxc parse the other checks use, so a `//`
+ * inside a string or a template literal is left untouched (a naive strip would mangle `https://…`).
+ */
+export function stripComments(source: string): string {
+  const result = parseSync('strip-comments.js', source) as {
+    comments?: { start?: number; end?: number }[];
+  };
+  const comments = result.comments ?? [];
+  if (comments.length === 0) return source;
+  const chars = source.split('');
+  for (const comment of comments) {
+    const end = Math.min(comment.end ?? 0, chars.length);
+    for (let index = comment.start ?? 0; index < end; index++) {
+      if (chars[index] !== '\n') chars[index] = ' ';
+    }
+  }
+  return chars.join('');
+}
+
+/**
  * Relative module specifiers of a file, each with the line/column of its import statement.
  *
  * Reuses the same oxc parse as `unusedImportNames` — no second parser. Only relative specifiers are
