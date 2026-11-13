@@ -1,5 +1,13 @@
 # @lion/ui
 
+## 0.27.1
+
+### Patch Changes
+
+- a71e908: Close the input datepicker calendar when the field becomes disabled or read-only.
+- 65adb4d: [pagination] allow locale to consist only out of country part
+- d6a3ef2: [input-stepper] reset default validators after min or max change
+
 ## 0.27.0
 
 ### Minor Changes
