@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-11-13T06:12:54.231Z",
+  "updatedAt": "2026-11-13T08:24:35.092Z",
   "entries": [
     {
       "skillRevision": "d17f0554cc1c27346f6120e54960d969c3aa65f7",
@@ -213,6 +213,27 @@
       "ranAt": "2026-11-13T05:53:17.298Z"
     },
     {
+      "skillRevision": "ea05f86b252a1f645d1abca898c4f3282811db25",
+      "model": "deepseek-v4-1-flash",
+      "scenario": "component/accordion",
+      "kind": "component",
+      "samples": 0,
+      "mean": 0,
+      "min": 0,
+      "max": 0,
+      "stdDev": 0,
+      "behaviourPassed": 0,
+      "behaviourTotal": 0,
+      "attempts": 0,
+      "dependencyFilesRead": 0,
+      "dependencyBytesRead": 0,
+      "redoable": 0,
+      "tokens": 0,
+      "promptTokens": 0,
+      "completionTokens": 0,
+      "ranAt": "2026-11-13T08:14:16.654Z"
+    },
+    {
       "skillRevision": "3df6d8308bc811f1d379851d3cadecf5a32434e6",
       "model": "deepseek-v4-flash",
       "scenario": "component/accordion",
@@ -230,7 +251,8 @@
       "promptTokens": 136538,
       "completionTokens": 4171,
       "cost": 0.011015051,
-      "ranAt": "2026-10-14T00:50:17.844Z"
+      "ranAt": "2026-10-14T00:50:17.844Z",
+      "retired": true
     },
     {
       "skillRevision": "3f8ac1e89e3258ca014bd312c471a4689fb8fa06",
@@ -250,7 +272,8 @@
       "promptTokens": 190371,
       "completionTokens": 3787,
       "cost": 0.015047607000000001,
-      "ranAt": "2026-10-15T21:37:04.852Z"
+      "ranAt": "2026-10-15T21:37:04.852Z",
+      "retired": true
     },
     {
       "skillRevision": "3a543648cbb2353adc8965d62c8f370e3aa07772",
@@ -269,7 +292,8 @@
       "tokens": 0,
       "promptTokens": 0,
       "completionTokens": 0,
-      "ranAt": "2026-10-17T17:26:36.159Z"
+      "ranAt": "2026-10-17T17:26:36.159Z",
+      "retired": true
     },
     {
       "skillRevision": "5e6fda934982a959c300566eea10bc7692d07e04",
@@ -288,7 +312,8 @@
       "tokens": 0,
       "promptTokens": 0,
       "completionTokens": 0,
-      "ranAt": "2026-10-18T09:59:32.838Z"
+      "ranAt": "2026-10-18T09:59:32.838Z",
+      "retired": true
     },
     {
       "skillRevision": "1b90deb5c3951288291a90687f9226a577631276",
@@ -307,7 +332,8 @@
       "tokens": 0,
       "promptTokens": 0,
       "completionTokens": 0,
-      "ranAt": "2026-10-20T09:04:06.171Z"
+      "ranAt": "2026-10-20T09:04:06.171Z",
+      "retired": true
     },
     {
       "skillRevision": "cfa84f5690a54321b9bbf0ebaa3a4551e72966d1",
@@ -327,7 +353,8 @@
       "promptTokens": 192584,
       "completionTokens": 4288,
       "cost": 0.015292448,
-      "ranAt": "2026-10-21T10:20:33.407Z"
+      "ranAt": "2026-10-21T10:20:33.407Z",
+      "retired": true
     },
     {
       "skillRevision": "d17f0554cc1c27346f6120e54960d969c3aa65f7",
@@ -538,6 +565,27 @@
       "promptTokens": 0,
       "completionTokens": 0,
       "ranAt": "2026-11-13T05:53:17.298Z"
+    },
+    {
+      "skillRevision": "ea05f86b252a1f645d1abca898c4f3282811db25",
+      "model": "deepseek-v4-1-flash",
+      "scenario": "component/accordion-run",
+      "kind": "component",
+      "samples": 0,
+      "mean": 0,
+      "min": 0,
+      "max": 0,
+      "stdDev": 0,
+      "behaviourPassed": 0,
+      "behaviourTotal": 0,
+      "attempts": 0,
+      "dependencyFilesRead": 0,
+      "dependencyBytesRead": 0,
+      "redoable": 0,
+      "tokens": 0,
+      "promptTokens": 0,
+      "completionTokens": 0,
+      "ranAt": "2026-11-13T08:14:16.654Z"
     },
     {
       "skillRevision": "3df6d8308bc811f1d379851d3cadecf5a32434e6",
@@ -557,7 +605,8 @@
       "promptTokens": 146375,
       "completionTokens": 3670,
       "cost": 0.01168601,
-      "ranAt": "2026-10-14T00:50:17.844Z"
+      "ranAt": "2026-10-14T00:50:17.844Z",
+      "retired": true
     },
     {
       "skillRevision": "3f8ac1e89e3258ca014bd312c471a4689fb8fa06",
@@ -577,7 +626,8 @@
       "promptTokens": 201841,
       "completionTokens": 3811,
       "cost": 0.015922999,
-      "ranAt": "2026-10-15T22:41:04.324Z"
+      "ranAt": "2026-10-15T22:41:04.324Z",
+      "retired": true
     },
     {
       "skillRevision": "3a543648cbb2353adc8965d62c8f370e3aa07772",
@@ -596,7 +646,8 @@
       "tokens": 0,
       "promptTokens": 0,
       "completionTokens": 0,
-      "ranAt": "2026-10-17T17:26:36.159Z"
+      "ranAt": "2026-10-17T17:26:36.159Z",
+      "retired": true
     },
     {
       "skillRevision": "5e6fda934982a959c300566eea10bc7692d07e04",
@@ -615,7 +666,8 @@
       "tokens": 0,
       "promptTokens": 0,
       "completionTokens": 0,
-      "ranAt": "2026-10-18T09:59:32.838Z"
+      "ranAt": "2026-10-18T09:59:32.838Z",
+      "retired": true
     },
     {
       "skillRevision": "1b90deb5c3951288291a90687f9226a577631276",
@@ -634,7 +686,8 @@
       "tokens": 0,
       "promptTokens": 0,
       "completionTokens": 0,
-      "ranAt": "2026-10-20T09:04:06.171Z"
+      "ranAt": "2026-10-20T09:04:06.171Z",
+      "retired": true
     },
     {
       "skillRevision": "cfa84f5690a54321b9bbf0ebaa3a4551e72966d1",
@@ -654,7 +707,8 @@
       "promptTokens": 187727,
       "completionTokens": 4198,
       "cost": 0.014909546,
-      "ranAt": "2026-10-21T10:20:33.407Z"
+      "ranAt": "2026-10-21T10:20:33.407Z",
+      "retired": true
     },
     {
       "skillRevision": "d17f0554cc1c27346f6120e54960d969c3aa65f7",
@@ -867,6 +921,27 @@
       "ranAt": "2026-11-13T05:53:17.298Z"
     },
     {
+      "skillRevision": "ea05f86b252a1f645d1abca898c4f3282811db25",
+      "model": "deepseek-v4-1-flash",
+      "scenario": "component/button",
+      "kind": "component",
+      "samples": 0,
+      "mean": 0,
+      "min": 0,
+      "max": 0,
+      "stdDev": 0,
+      "behaviourPassed": 0,
+      "behaviourTotal": 0,
+      "attempts": 0,
+      "dependencyFilesRead": 0,
+      "dependencyBytesRead": 0,
+      "redoable": 0,
+      "tokens": 0,
+      "promptTokens": 0,
+      "completionTokens": 0,
+      "ranAt": "2026-11-13T08:14:16.654Z"
+    },
+    {
       "skillRevision": "3df6d8308bc811f1d379851d3cadecf5a32434e6",
       "model": "deepseek-v4-flash",
       "scenario": "component/button",
@@ -884,7 +959,8 @@
       "promptTokens": 160802,
       "completionTokens": 5678,
       "cost": 0.013089686,
-      "ranAt": "2026-10-14T00:50:17.844Z"
+      "ranAt": "2026-10-14T00:50:17.844Z",
+      "retired": true
     },
     {
       "skillRevision": "3f8ac1e89e3258ca014bd312c471a4689fb8fa06",
@@ -904,7 +980,8 @@
       "promptTokens": 165199,
       "completionTokens": 2627,
       "cost": 0.012957055,
-      "ranAt": "2026-10-15T21:37:04.852Z"
+      "ranAt": "2026-10-15T21:37:04.852Z",
+      "retired": true
     },
     {
       "skillRevision": "3a543648cbb2353adc8965d62c8f370e3aa07772",
@@ -923,7 +1000,8 @@
       "tokens": 0,
       "promptTokens": 0,
       "completionTokens": 0,
-      "ranAt": "2026-10-17T17:26:36.159Z"
+      "ranAt": "2026-10-17T17:26:36.159Z",
+      "retired": true
     },
     {
       "skillRevision": "5e6fda934982a959c300566eea10bc7692d07e04",
@@ -942,7 +1020,8 @@
       "tokens": 0,
       "promptTokens": 0,
       "completionTokens": 0,
-      "ranAt": "2026-10-18T09:59:32.838Z"
+      "ranAt": "2026-10-18T09:59:32.838Z",
+      "retired": true
     },
     {
       "skillRevision": "1b90deb5c3951288291a90687f9226a577631276",
@@ -961,7 +1040,8 @@
       "tokens": 0,
       "promptTokens": 0,
       "completionTokens": 0,
-      "ranAt": "2026-10-20T09:04:06.171Z"
+      "ranAt": "2026-10-20T09:04:06.171Z",
+      "retired": true
     },
     {
       "skillRevision": "cfa84f5690a54321b9bbf0ebaa3a4551e72966d1",
@@ -981,7 +1061,8 @@
       "promptTokens": 240757,
       "completionTokens": 11489,
       "cost": 0.020055348999999997,
-      "ranAt": "2026-10-21T10:20:33.407Z"
+      "ranAt": "2026-10-21T10:20:33.407Z",
+      "retired": true
     },
     {
       "skillRevision": "d17f0554cc1c27346f6120e54960d969c3aa65f7",
@@ -1197,6 +1278,30 @@
       "ranAt": "2026-11-13T05:53:17.298Z"
     },
     {
+      "skillRevision": "ea05f86b252a1f645d1abca898c4f3282811db25",
+      "model": "deepseek-v4-1-flash",
+      "scenario": "component/calendar",
+      "kind": "component",
+      "provider": "openai-compatible",
+      "subject": "model",
+      "samples": 3,
+      "mean": 1,
+      "min": 1,
+      "max": 1,
+      "stdDev": 0,
+      "behaviourPassed": 2,
+      "behaviourTotal": 3,
+      "attempts": 3,
+      "redoable": 0,
+      "tokens": 202984,
+      "promptTokens": 198631,
+      "completionTokens": 4353,
+      "dependencyFilesRead": 0,
+      "dependencyBytesRead": 0,
+      "cost": 0.032406449999999996,
+      "ranAt": "2026-11-13T08:14:16.654Z"
+    },
+    {
       "skillRevision": "3df6d8308bc811f1d379851d3cadecf5a32434e6",
       "model": "deepseek-v4-flash",
       "scenario": "component/calendar",
@@ -1214,7 +1319,8 @@
       "promptTokens": 172220,
       "completionTokens": 6243,
       "cost": 0.014043899,
-      "ranAt": "2026-10-14T00:50:17.844Z"
+      "ranAt": "2026-10-14T00:50:17.844Z",
+      "retired": true
     },
     {
       "skillRevision": "3f8ac1e89e3258ca014bd312c471a4689fb8fa06",
@@ -1234,7 +1340,8 @@
       "promptTokens": 391845,
       "completionTokens": 5559,
       "cost": 0.030630747,
-      "ranAt": "2026-10-15T21:37:04.852Z"
+      "ranAt": "2026-10-15T21:37:04.852Z",
+      "retired": true
     },
     {
       "skillRevision": "3a543648cbb2353adc8965d62c8f370e3aa07772",
@@ -1253,7 +1360,8 @@
       "tokens": 0,
       "promptTokens": 0,
       "completionTokens": 0,
-      "ranAt": "2026-10-17T17:26:36.159Z"
+      "ranAt": "2026-10-17T17:26:36.159Z",
+      "retired": true
     },
     {
       "skillRevision": "5e6fda934982a959c300566eea10bc7692d07e04",
@@ -1272,7 +1380,8 @@
       "tokens": 0,
       "promptTokens": 0,
       "completionTokens": 0,
-      "ranAt": "2026-10-18T09:59:32.838Z"
+      "ranAt": "2026-10-18T09:59:32.838Z",
+      "retired": true
     },
     {
       "skillRevision": "1b90deb5c3951288291a90687f9226a577631276",
@@ -1291,7 +1400,8 @@
       "tokens": 0,
       "promptTokens": 0,
       "completionTokens": 0,
-      "ranAt": "2026-10-20T09:04:06.171Z"
+      "ranAt": "2026-10-20T09:04:06.171Z",
+      "retired": true
     },
     {
       "skillRevision": "cfa84f5690a54321b9bbf0ebaa3a4551e72966d1",
@@ -1311,7 +1421,8 @@
       "promptTokens": 407187,
       "completionTokens": 15335,
       "cost": 0.033292467,
-      "ranAt": "2026-10-21T10:20:33.407Z"
+      "ranAt": "2026-10-21T10:20:33.407Z",
+      "retired": true
     },
     {
       "skillRevision": "d17f0554cc1c27346f6120e54960d969c3aa65f7",
@@ -1535,6 +1646,30 @@
       "ranAt": "2026-11-13T05:53:17.298Z"
     },
     {
+      "skillRevision": "ea05f86b252a1f645d1abca898c4f3282811db25",
+      "model": "deepseek-v4-1-flash",
+      "scenario": "component/checkbox-group",
+      "kind": "component",
+      "provider": "openai-compatible",
+      "subject": "model",
+      "samples": 3,
+      "mean": 1,
+      "min": 1,
+      "max": 1,
+      "stdDev": 0,
+      "behaviourPassed": 3,
+      "behaviourTotal": 3,
+      "attempts": 3,
+      "redoable": 0,
+      "tokens": 255747,
+      "promptTokens": 249613,
+      "completionTokens": 6134,
+      "dependencyFilesRead": 0,
+      "dependencyBytesRead": 0,
+      "cost": 0.04112235,
+      "ranAt": "2026-11-13T08:15:05.029Z"
+    },
+    {
       "skillRevision": "3df6d8308bc811f1d379851d3cadecf5a32434e6",
       "model": "deepseek-v4-flash",
       "scenario": "component/checkbox-group",
@@ -1552,7 +1687,8 @@
       "promptTokens": 362219,
       "completionTokens": 6245,
       "cost": 0.028484129,
-      "ranAt": "2026-10-14T00:50:17.844Z"
+      "ranAt": "2026-10-14T00:50:17.844Z",
+      "retired": true
     },
     {
       "skillRevision": "166718cee0cb50634b22f3aef9194dcc91d57e50",
@@ -1572,7 +1708,8 @@
       "promptTokens": 317881,
       "completionTokens": 6165,
       "cost": 0.025102201,
-      "ranAt": "2026-10-14T23:26:48.839Z"
+      "ranAt": "2026-10-14T23:26:48.839Z",
+      "retired": true
     },
     {
       "skillRevision": "3f8ac1e89e3258ca014bd312c471a4689fb8fa06",
@@ -1592,7 +1729,8 @@
       "promptTokens": 592052,
       "completionTokens": 7286,
       "cost": 0.04611071,
-      "ranAt": "2026-10-15T21:37:04.852Z"
+      "ranAt": "2026-10-15T21:37:04.852Z",
+      "retired": true
     },
     {
       "skillRevision": "3a543648cbb2353adc8965d62c8f370e3aa07772",
@@ -1611,7 +1749,8 @@
       "tokens": 0,
       "promptTokens": 0,
       "completionTokens": 0,
-      "ranAt": "2026-10-17T17:26:36.159Z"
+      "ranAt": "2026-10-17T17:26:36.159Z",
+      "retired": true
     },
     {
       "skillRevision": "5e6fda934982a959c300566eea10bc7692d07e04",
@@ -1630,7 +1769,8 @@
       "tokens": 0,
       "promptTokens": 0,
       "completionTokens": 0,
-      "ranAt": "2026-10-18T09:59:32.838Z"
+      "ranAt": "2026-10-18T09:59:32.838Z",
+      "retired": true
     },
     {
       "skillRevision": "1b90deb5c3951288291a90687f9226a577631276",
@@ -1649,7 +1789,8 @@
       "tokens": 0,
       "promptTokens": 0,
       "completionTokens": 0,
-      "ranAt": "2026-10-20T09:04:06.171Z"
+      "ranAt": "2026-10-20T09:04:06.171Z",
+      "retired": true
     },
     {
       "skillRevision": "cfa84f5690a54321b9bbf0ebaa3a4551e72966d1",
@@ -1669,7 +1810,8 @@
       "promptTokens": 401067,
       "completionTokens": 6912,
       "cost": 0.031538628,
-      "ranAt": "2026-10-21T10:20:33.407Z"
+      "ranAt": "2026-10-21T10:20:33.407Z",
+      "retired": true
     },
     {
       "skillRevision": "d17f0554cc1c27346f6120e54960d969c3aa65f7",
@@ -1880,6 +2022,27 @@
       "promptTokens": 0,
       "completionTokens": 0,
       "ranAt": "2026-11-13T05:53:17.298Z"
+    },
+    {
+      "skillRevision": "ea05f86b252a1f645d1abca898c4f3282811db25",
+      "model": "deepseek-v4-1-flash",
+      "scenario": "component/collapsible",
+      "kind": "component",
+      "samples": 0,
+      "mean": 0,
+      "min": 0,
+      "max": 0,
+      "stdDev": 0,
+      "behaviourPassed": 0,
+      "behaviourTotal": 0,
+      "attempts": 0,
+      "dependencyFilesRead": 0,
+      "dependencyBytesRead": 0,
+      "redoable": 0,
+      "tokens": 0,
+      "promptTokens": 0,
+      "completionTokens": 0,
+      "ranAt": "2026-11-13T08:14:16.654Z"
     },
     {
       "skillRevision": "3df6d8308bc811f1d379851d3cadecf5a32434e6",
@@ -1899,7 +2062,8 @@
       "promptTokens": 94124,
       "completionTokens": 3778,
       "cost": 0.007731457999999999,
-      "ranAt": "2026-10-14T00:50:17.844Z"
+      "ranAt": "2026-10-14T00:50:17.844Z",
+      "retired": true
     },
     {
       "skillRevision": "3f8ac1e89e3258ca014bd312c471a4689fb8fa06",
@@ -1919,7 +2083,8 @@
       "promptTokens": 221246,
       "completionTokens": 3530,
       "cost": 0.017354786,
-      "ranAt": "2026-10-15T21:37:04.852Z"
+      "ranAt": "2026-10-15T21:37:04.852Z",
+      "retired": true
     },
     {
       "skillRevision": "3a543648cbb2353adc8965d62c8f370e3aa07772",
@@ -1938,7 +2103,8 @@
       "tokens": 0,
       "promptTokens": 0,
       "completionTokens": 0,
-      "ranAt": "2026-10-17T17:26:36.159Z"
+      "ranAt": "2026-10-17T17:26:36.159Z",
+      "retired": true
     },
     {
       "skillRevision": "5e6fda934982a959c300566eea10bc7692d07e04",
@@ -1957,7 +2123,8 @@
       "tokens": 0,
       "promptTokens": 0,
       "completionTokens": 0,
-      "ranAt": "2026-10-18T09:59:32.838Z"
+      "ranAt": "2026-10-18T09:59:32.838Z",
+      "retired": true
     },
     {
       "skillRevision": "1b90deb5c3951288291a90687f9226a577631276",
@@ -1976,7 +2143,8 @@
       "tokens": 0,
       "promptTokens": 0,
       "completionTokens": 0,
-      "ranAt": "2026-10-20T09:04:06.171Z"
+      "ranAt": "2026-10-20T09:04:06.171Z",
+      "retired": true
     },
     {
       "skillRevision": "cfa84f5690a54321b9bbf0ebaa3a4551e72966d1",
@@ -1996,7 +2164,8 @@
       "promptTokens": 194900,
       "completionTokens": 4462,
       "cost": 0.015495085999999998,
-      "ranAt": "2026-10-21T10:20:33.407Z"
+      "ranAt": "2026-10-21T10:20:33.407Z",
+      "retired": true
     },
     {
       "skillRevision": "d17f0554cc1c27346f6120e54960d969c3aa65f7",
@@ -2207,6 +2376,27 @@
       "promptTokens": 0,
       "completionTokens": 0,
       "ranAt": "2026-11-13T05:53:17.298Z"
+    },
+    {
+      "skillRevision": "ea05f86b252a1f645d1abca898c4f3282811db25",
+      "model": "deepseek-v4-1-flash",
+      "scenario": "component/combobox",
+      "kind": "component",
+      "samples": 0,
+      "mean": 0,
+      "min": 0,
+      "max": 0,
+      "stdDev": 0,
+      "behaviourPassed": 0,
+      "behaviourTotal": 0,
+      "attempts": 0,
+      "dependencyFilesRead": 0,
+      "dependencyBytesRead": 0,
+      "redoable": 0,
+      "tokens": 0,
+      "promptTokens": 0,
+      "completionTokens": 0,
+      "ranAt": "2026-11-13T08:14:16.654Z"
     },
     {
       "skillRevision": "3df6d8308bc811f1d379851d3cadecf5a32434e6",
@@ -2226,7 +2416,8 @@
       "promptTokens": 535677,
       "completionTokens": 7335,
       "cost": 0.041833707,
-      "ranAt": "2026-10-14T00:50:17.844Z"
+      "ranAt": "2026-10-14T00:50:17.844Z",
+      "retired": true
     },
     {
       "skillRevision": "3f8ac1e89e3258ca014bd312c471a4689fb8fa06",
@@ -2246,7 +2437,8 @@
       "promptTokens": 387196,
       "completionTokens": 4706,
       "cost": 0.030146913999999997,
-      "ranAt": "2026-10-15T21:37:04.852Z"
+      "ranAt": "2026-10-15T21:37:04.852Z",
+      "retired": true
     },
     {
       "skillRevision": "3a543648cbb2353adc8965d62c8f370e3aa07772",
@@ -2265,7 +2457,8 @@
       "tokens": 0,
       "promptTokens": 0,
       "completionTokens": 0,
-      "ranAt": "2026-10-17T17:26:36.159Z"
+      "ranAt": "2026-10-17T17:26:36.159Z",
+      "retired": true
     },
     {
       "skillRevision": "5e6fda934982a959c300566eea10bc7692d07e04",
@@ -2284,7 +2477,8 @@
       "tokens": 0,
       "promptTokens": 0,
       "completionTokens": 0,
-      "ranAt": "2026-10-18T09:59:32.838Z"
+      "ranAt": "2026-10-18T09:59:32.838Z",
+      "retired": true
     },
     {
       "skillRevision": "1b90deb5c3951288291a90687f9226a577631276",
@@ -2303,7 +2497,8 @@
       "tokens": 0,
       "promptTokens": 0,
       "completionTokens": 0,
-      "ranAt": "2026-10-20T09:04:06.171Z"
+      "ranAt": "2026-10-20T09:04:06.171Z",
+      "retired": true
     },
     {
       "skillRevision": "cfa84f5690a54321b9bbf0ebaa3a4551e72966d1",
@@ -2323,7 +2518,8 @@
       "promptTokens": 478063,
       "completionTokens": 9978,
       "cost": 0.037859422,
-      "ranAt": "2026-10-21T10:20:33.407Z"
+      "ranAt": "2026-10-21T10:20:33.407Z",
+      "retired": true
     },
     {
       "skillRevision": "d17f0554cc1c27346f6120e54960d969c3aa65f7",
@@ -2534,6 +2730,27 @@
       "promptTokens": 0,
       "completionTokens": 0,
       "ranAt": "2026-11-13T05:53:17.298Z"
+    },
+    {
+      "skillRevision": "ea05f86b252a1f645d1abca898c4f3282811db25",
+      "model": "deepseek-v4-1-flash",
+      "scenario": "component/dialog",
+      "kind": "component",
+      "samples": 0,
+      "mean": 0,
+      "min": 0,
+      "max": 0,
+      "stdDev": 0,
+      "behaviourPassed": 0,
+      "behaviourTotal": 0,
+      "attempts": 0,
+      "dependencyFilesRead": 0,
+      "dependencyBytesRead": 0,
+      "redoable": 0,
+      "tokens": 0,
+      "promptTokens": 0,
+      "completionTokens": 0,
+      "ranAt": "2026-11-13T08:14:16.654Z"
     },
     {
       "skillRevision": "3df6d8308bc811f1d379851d3cadecf5a32434e6",
@@ -2553,7 +2770,8 @@
       "promptTokens": 170346,
       "completionTokens": 3787,
       "cost": 0.013525707,
-      "ranAt": "2026-10-14T00:50:17.844Z"
+      "ranAt": "2026-10-14T00:50:17.844Z",
+      "retired": true
     },
     {
       "skillRevision": "3f8ac1e89e3258ca014bd312c471a4689fb8fa06",
@@ -2573,7 +2791,8 @@
       "promptTokens": 210492,
       "completionTokens": 3404,
       "cost": 0.016518203999999998,
-      "ranAt": "2026-10-15T21:37:04.852Z"
+      "ranAt": "2026-10-15T21:37:04.852Z",
+      "retired": true
     },
     {
       "skillRevision": "3a543648cbb2353adc8965d62c8f370e3aa07772",
@@ -2592,7 +2811,8 @@
       "tokens": 0,
       "promptTokens": 0,
       "completionTokens": 0,
-      "ranAt": "2026-10-17T17:26:36.159Z"
+      "ranAt": "2026-10-17T17:26:36.159Z",
+      "retired": true
     },
     {
       "skillRevision": "5e6fda934982a959c300566eea10bc7692d07e04",
@@ -2611,7 +2831,8 @@
       "tokens": 0,
       "promptTokens": 0,
       "completionTokens": 0,
-      "ranAt": "2026-10-18T09:59:32.838Z"
+      "ranAt": "2026-10-18T09:59:32.838Z",
+      "retired": true
     },
     {
       "skillRevision": "1b90deb5c3951288291a90687f9226a577631276",
@@ -2630,7 +2851,8 @@
       "tokens": 0,
       "promptTokens": 0,
       "completionTokens": 0,
-      "ranAt": "2026-10-20T09:04:06.171Z"
+      "ranAt": "2026-10-20T09:04:06.171Z",
+      "retired": true
     },
     {
       "skillRevision": "cfa84f5690a54321b9bbf0ebaa3a4551e72966d1",
@@ -2650,7 +2872,8 @@
       "promptTokens": 226815,
       "completionTokens": 8017,
       "cost": 0.018464541,
-      "ranAt": "2026-10-21T10:20:33.407Z"
+      "ranAt": "2026-10-21T10:20:33.407Z",
+      "retired": true
     },
     {
       "skillRevision": "d17f0554cc1c27346f6120e54960d969c3aa65f7",
@@ -2861,6 +3084,27 @@
       "promptTokens": 0,
       "completionTokens": 0,
       "ranAt": "2026-11-13T05:53:17.298Z"
+    },
+    {
+      "skillRevision": "ea05f86b252a1f645d1abca898c4f3282811db25",
+      "model": "deepseek-v4-1-flash",
+      "scenario": "component/drawer",
+      "kind": "component",
+      "samples": 0,
+      "mean": 0,
+      "min": 0,
+      "max": 0,
+      "stdDev": 0,
+      "behaviourPassed": 0,
+      "behaviourTotal": 0,
+      "attempts": 0,
+      "dependencyFilesRead": 0,
+      "dependencyBytesRead": 0,
+      "redoable": 0,
+      "tokens": 0,
+      "promptTokens": 0,
+      "completionTokens": 0,
+      "ranAt": "2026-11-13T08:14:16.654Z"
     },
     {
       "skillRevision": "3df6d8308bc811f1d379851d3cadecf5a32434e6",
@@ -2880,7 +3124,8 @@
       "promptTokens": 263636,
       "completionTokens": 4796,
       "cost": 0.020770123999999997,
-      "ranAt": "2026-10-14T00:50:17.844Z"
+      "ranAt": "2026-10-14T00:50:17.844Z",
+      "retired": true
     },
     {
       "skillRevision": "3f8ac1e89e3258ca014bd312c471a4689fb8fa06",
@@ -2900,7 +3145,8 @@
       "promptTokens": 183700,
       "completionTokens": 4921,
       "cost": 0.014714113000000001,
-      "ranAt": "2026-10-15T21:37:04.852Z"
+      "ranAt": "2026-10-15T21:37:04.852Z",
+      "retired": true
     },
     {
       "skillRevision": "3a543648cbb2353adc8965d62c8f370e3aa07772",
@@ -2919,7 +3165,8 @@
       "tokens": 0,
       "promptTokens": 0,
       "completionTokens": 0,
-      "ranAt": "2026-10-17T17:26:36.159Z"
+      "ranAt": "2026-10-17T17:26:36.159Z",
+      "retired": true
     },
     {
       "skillRevision": "5e6fda934982a959c300566eea10bc7692d07e04",
@@ -2938,7 +3185,8 @@
       "tokens": 0,
       "promptTokens": 0,
       "completionTokens": 0,
-      "ranAt": "2026-10-18T09:59:32.838Z"
+      "ranAt": "2026-10-18T09:59:32.838Z",
+      "retired": true
     },
     {
       "skillRevision": "1b90deb5c3951288291a90687f9226a577631276",
@@ -2957,7 +3205,8 @@
       "tokens": 0,
       "promptTokens": 0,
       "completionTokens": 0,
-      "ranAt": "2026-10-20T09:04:06.171Z"
+      "ranAt": "2026-10-20T09:04:06.171Z",
+      "retired": true
     },
     {
       "skillRevision": "cfa84f5690a54321b9bbf0ebaa3a4551e72966d1",
@@ -2977,7 +3226,8 @@
       "promptTokens": 178767,
       "completionTokens": 6622,
       "cost": 0.014599458,
-      "ranAt": "2026-10-21T10:20:33.407Z"
+      "ranAt": "2026-10-21T10:20:33.407Z",
+      "retired": true
     },
     {
       "skillRevision": "d17f0554cc1c27346f6120e54960d969c3aa65f7",
@@ -3190,6 +3440,27 @@
       "ranAt": "2026-11-13T05:53:17.298Z"
     },
     {
+      "skillRevision": "ea05f86b252a1f645d1abca898c4f3282811db25",
+      "model": "deepseek-v4-1-flash",
+      "scenario": "component/fieldset",
+      "kind": "component",
+      "samples": 0,
+      "mean": 0,
+      "min": 0,
+      "max": 0,
+      "stdDev": 0,
+      "behaviourPassed": 0,
+      "behaviourTotal": 0,
+      "attempts": 0,
+      "dependencyFilesRead": 0,
+      "dependencyBytesRead": 0,
+      "redoable": 0,
+      "tokens": 0,
+      "promptTokens": 0,
+      "completionTokens": 0,
+      "ranAt": "2026-11-13T08:14:16.654Z"
+    },
+    {
       "skillRevision": "3df6d8308bc811f1d379851d3cadecf5a32434e6",
       "model": "deepseek-v4-flash",
       "scenario": "component/fieldset",
@@ -3207,7 +3478,8 @@
       "promptTokens": 210878,
       "completionTokens": 5113,
       "cost": 0.016809017,
-      "ranAt": "2026-10-14T00:50:17.844Z"
+      "ranAt": "2026-10-14T00:50:17.844Z",
+      "retired": true
     },
     {
       "skillRevision": "3f8ac1e89e3258ca014bd312c471a4689fb8fa06",
@@ -3227,7 +3499,8 @@
       "promptTokens": 324766,
       "completionTokens": 5005,
       "cost": 0.025447981,
-      "ranAt": "2026-10-15T21:37:04.852Z"
+      "ranAt": "2026-10-15T21:37:04.852Z",
+      "retired": true
     },
     {
       "skillRevision": "3a543648cbb2353adc8965d62c8f370e3aa07772",
@@ -3246,7 +3519,8 @@
       "tokens": 0,
       "promptTokens": 0,
       "completionTokens": 0,
-      "ranAt": "2026-10-17T17:26:36.159Z"
+      "ranAt": "2026-10-17T17:26:36.159Z",
+      "retired": true
     },
     {
       "skillRevision": "5e6fda934982a959c300566eea10bc7692d07e04",
@@ -3265,7 +3539,8 @@
       "tokens": 0,
       "promptTokens": 0,
       "completionTokens": 0,
-      "ranAt": "2026-10-18T09:59:32.838Z"
+      "ranAt": "2026-10-18T09:59:32.838Z",
+      "retired": true
     },
     {
       "skillRevision": "1b90deb5c3951288291a90687f9226a577631276",
@@ -3284,7 +3559,8 @@
       "tokens": 0,
       "promptTokens": 0,
       "completionTokens": 0,
-      "ranAt": "2026-10-20T09:04:06.171Z"
+      "ranAt": "2026-10-20T09:04:06.171Z",
+      "retired": true
     },
     {
       "skillRevision": "cfa84f5690a54321b9bbf0ebaa3a4551e72966d1",
@@ -3304,7 +3580,8 @@
       "promptTokens": 490087,
       "completionTokens": 20516,
       "cost": 0.04038556,
-      "ranAt": "2026-10-21T10:20:33.407Z"
+      "ranAt": "2026-10-21T10:20:33.407Z",
+      "retired": true
     },
     {
       "skillRevision": "d17f0554cc1c27346f6120e54960d969c3aa65f7",
@@ -3529,6 +3806,30 @@
       "ranAt": "2026-11-13T06:03:41.328Z"
     },
     {
+      "skillRevision": "ea05f86b252a1f645d1abca898c4f3282811db25",
+      "model": "deepseek-v4-1-flash",
+      "scenario": "component/form",
+      "kind": "component",
+      "provider": "openai-compatible",
+      "subject": "model",
+      "samples": 3,
+      "mean": 1,
+      "min": 1,
+      "max": 1,
+      "stdDev": 0,
+      "behaviourPassed": 1,
+      "behaviourTotal": 3,
+      "attempts": 3,
+      "redoable": 0,
+      "tokens": 497031,
+      "promptTokens": 486653,
+      "completionTokens": 10378,
+      "dependencyFilesRead": 0,
+      "dependencyBytesRead": 0,
+      "cost": 0.07922475,
+      "ranAt": "2026-11-13T08:16:01.708Z"
+    },
+    {
       "skillRevision": "3df6d8308bc811f1d379851d3cadecf5a32434e6",
       "model": "deepseek-v4-flash",
       "scenario": "component/form",
@@ -3546,7 +3847,8 @@
       "promptTokens": 294500,
       "completionTokens": 10493,
       "cost": 0.023987428999999998,
-      "ranAt": "2026-10-14T00:50:17.844Z"
+      "ranAt": "2026-10-14T00:50:17.844Z",
+      "retired": true
     },
     {
       "skillRevision": "166718cee0cb50634b22f3aef9194dcc91d57e50",
@@ -3566,7 +3868,8 @@
       "promptTokens": 146490,
       "completionTokens": 8432,
       "cost": 0.012423336,
-      "ranAt": "2026-10-14T23:28:37.211Z"
+      "ranAt": "2026-10-14T23:28:37.211Z",
+      "retired": true
     },
     {
       "skillRevision": "3f8ac1e89e3258ca014bd312c471a4689fb8fa06",
@@ -3586,7 +3889,8 @@
       "promptTokens": 224146,
       "completionTokens": 7883,
       "cost": 0.018241194999999998,
-      "ranAt": "2026-10-15T21:37:04.852Z"
+      "ranAt": "2026-10-15T21:37:04.852Z",
+      "retired": true
     },
     {
       "skillRevision": "3a543648cbb2353adc8965d62c8f370e3aa07772",
@@ -3605,7 +3909,8 @@
       "tokens": 0,
       "promptTokens": 0,
       "completionTokens": 0,
-      "ranAt": "2026-10-17T17:26:36.159Z"
+      "ranAt": "2026-10-17T17:26:36.159Z",
+      "retired": true
     },
     {
       "skillRevision": "5e6fda934982a959c300566eea10bc7692d07e04",
@@ -3624,7 +3929,8 @@
       "tokens": 0,
       "promptTokens": 0,
       "completionTokens": 0,
-      "ranAt": "2026-10-18T09:59:32.838Z"
+      "ranAt": "2026-10-18T09:59:32.838Z",
+      "retired": true
     },
     {
       "skillRevision": "1b90deb5c3951288291a90687f9226a577631276",
@@ -3643,7 +3949,8 @@
       "tokens": 0,
       "promptTokens": 0,
       "completionTokens": 0,
-      "ranAt": "2026-10-20T09:04:06.171Z"
+      "ranAt": "2026-10-20T09:04:06.171Z",
+      "retired": true
     },
     {
       "skillRevision": "cfa84f5690a54321b9bbf0ebaa3a4551e72966d1",
@@ -3663,7 +3970,8 @@
       "promptTokens": 866458,
       "completionTokens": 18771,
       "cost": 0.068722771,
-      "ranAt": "2026-10-21T10:20:33.407Z"
+      "ranAt": "2026-10-21T10:20:33.407Z",
+      "retired": true
     },
     {
       "skillRevision": "d17f0554cc1c27346f6120e54960d969c3aa65f7",
@@ -3874,6 +4182,27 @@
       "promptTokens": 0,
       "completionTokens": 0,
       "ranAt": "2026-11-13T05:53:17.298Z"
+    },
+    {
+      "skillRevision": "ea05f86b252a1f645d1abca898c4f3282811db25",
+      "model": "deepseek-v4-1-flash",
+      "scenario": "component/input",
+      "kind": "component",
+      "samples": 0,
+      "mean": 0,
+      "min": 0,
+      "max": 0,
+      "stdDev": 0,
+      "behaviourPassed": 0,
+      "behaviourTotal": 0,
+      "attempts": 0,
+      "dependencyFilesRead": 0,
+      "dependencyBytesRead": 0,
+      "redoable": 0,
+      "tokens": 0,
+      "promptTokens": 0,
+      "completionTokens": 0,
+      "ranAt": "2026-11-13T08:14:16.654Z"
     },
     {
       "skillRevision": "3df6d8308bc811f1d379851d3cadecf5a32434e6",
@@ -3893,7 +4222,8 @@
       "promptTokens": 257725,
       "completionTokens": 5859,
       "cost": 0.020483526999999998,
-      "ranAt": "2026-10-14T00:50:17.844Z"
+      "ranAt": "2026-10-14T00:50:17.844Z",
+      "retired": true
     },
     {
       "skillRevision": "3f8ac1e89e3258ca014bd312c471a4689fb8fa06",
@@ -3913,7 +4243,8 @@
       "promptTokens": 197873,
       "completionTokens": 3622,
       "cost": 0.015592513999999998,
-      "ranAt": "2026-10-15T21:37:04.852Z"
+      "ranAt": "2026-10-15T21:37:04.852Z",
+      "retired": true
     },
     {
       "skillRevision": "3a543648cbb2353adc8965d62c8f370e3aa07772",
@@ -3932,7 +4263,8 @@
       "tokens": 0,
       "promptTokens": 0,
       "completionTokens": 0,
-      "ranAt": "2026-10-17T17:26:36.159Z"
+      "ranAt": "2026-10-17T17:26:36.159Z",
+      "retired": true
     },
     {
       "skillRevision": "5e6fda934982a959c300566eea10bc7692d07e04",
@@ -3951,7 +4283,8 @@
       "tokens": 0,
       "promptTokens": 0,
       "completionTokens": 0,
-      "ranAt": "2026-10-18T09:59:32.838Z"
+      "ranAt": "2026-10-18T09:59:32.838Z",
+      "retired": true
     },
     {
       "skillRevision": "1b90deb5c3951288291a90687f9226a577631276",
@@ -3970,7 +4303,8 @@
       "tokens": 0,
       "promptTokens": 0,
       "completionTokens": 0,
-      "ranAt": "2026-10-20T09:04:06.171Z"
+      "ranAt": "2026-10-20T09:04:06.171Z",
+      "retired": true
     },
     {
       "skillRevision": "cfa84f5690a54321b9bbf0ebaa3a4551e72966d1",
@@ -3990,7 +4324,8 @@
       "promptTokens": 181702,
       "completionTokens": 3991,
       "cost": 0.014419975,
-      "ranAt": "2026-10-21T10:20:33.407Z"
+      "ranAt": "2026-10-21T10:20:33.407Z",
+      "retired": true
     },
     {
       "skillRevision": "d17f0554cc1c27346f6120e54960d969c3aa65f7",
@@ -4201,6 +4536,27 @@
       "promptTokens": 0,
       "completionTokens": 0,
       "ranAt": "2026-11-13T05:53:17.298Z"
+    },
+    {
+      "skillRevision": "ea05f86b252a1f645d1abca898c4f3282811db25",
+      "model": "deepseek-v4-1-flash",
+      "scenario": "component/input-amount",
+      "kind": "component",
+      "samples": 0,
+      "mean": 0,
+      "min": 0,
+      "max": 0,
+      "stdDev": 0,
+      "behaviourPassed": 0,
+      "behaviourTotal": 0,
+      "attempts": 0,
+      "dependencyFilesRead": 0,
+      "dependencyBytesRead": 0,
+      "redoable": 0,
+      "tokens": 0,
+      "promptTokens": 0,
+      "completionTokens": 0,
+      "ranAt": "2026-11-13T08:14:16.654Z"
     },
     {
       "skillRevision": "3df6d8308bc811f1d379851d3cadecf5a32434e6",
@@ -4220,7 +4576,8 @@
       "promptTokens": 174790,
       "completionTokens": 6277,
       "cost": 0.014244421,
-      "ranAt": "2026-10-14T00:50:17.844Z"
+      "ranAt": "2026-10-14T00:50:17.844Z",
+      "retired": true
     },
     {
       "skillRevision": "3f8ac1e89e3258ca014bd312c471a4689fb8fa06",
@@ -4240,7 +4597,8 @@
       "promptTokens": 236262,
       "completionTokens": 4064,
       "cost": 0.018577704,
-      "ranAt": "2026-10-15T21:37:04.852Z"
+      "ranAt": "2026-10-15T21:37:04.852Z",
+      "retired": true
     },
     {
       "skillRevision": "3a543648cbb2353adc8965d62c8f370e3aa07772",
@@ -4259,7 +4617,8 @@
       "tokens": 0,
       "promptTokens": 0,
       "completionTokens": 0,
-      "ranAt": "2026-10-17T17:26:36.159Z"
+      "ranAt": "2026-10-17T17:26:36.159Z",
+      "retired": true
     },
     {
       "skillRevision": "5e6fda934982a959c300566eea10bc7692d07e04",
@@ -4278,7 +4637,8 @@
       "tokens": 0,
       "promptTokens": 0,
       "completionTokens": 0,
-      "ranAt": "2026-10-18T09:59:32.838Z"
+      "ranAt": "2026-10-18T09:59:32.838Z",
+      "retired": true
     },
     {
       "skillRevision": "1b90deb5c3951288291a90687f9226a577631276",
@@ -4297,7 +4657,8 @@
       "tokens": 0,
       "promptTokens": 0,
       "completionTokens": 0,
-      "ranAt": "2026-10-20T09:04:06.171Z"
+      "ranAt": "2026-10-20T09:04:06.171Z",
+      "retired": true
     },
     {
       "skillRevision": "cfa84f5690a54321b9bbf0ebaa3a4551e72966d1",
@@ -4317,7 +4678,8 @@
       "promptTokens": 214150,
       "completionTokens": 7577,
       "cost": 0.017434681,
-      "ranAt": "2026-10-21T10:20:33.407Z"
+      "ranAt": "2026-10-21T10:20:33.407Z",
+      "retired": true
     },
     {
       "skillRevision": "d17f0554cc1c27346f6120e54960d969c3aa65f7",
@@ -4528,6 +4890,27 @@
       "promptTokens": 0,
       "completionTokens": 0,
       "ranAt": "2026-11-13T05:53:17.298Z"
+    },
+    {
+      "skillRevision": "ea05f86b252a1f645d1abca898c4f3282811db25",
+      "model": "deepseek-v4-1-flash",
+      "scenario": "component/input-amount-dropdown",
+      "kind": "component",
+      "samples": 0,
+      "mean": 0,
+      "min": 0,
+      "max": 0,
+      "stdDev": 0,
+      "behaviourPassed": 0,
+      "behaviourTotal": 0,
+      "attempts": 0,
+      "dependencyFilesRead": 0,
+      "dependencyBytesRead": 0,
+      "redoable": 0,
+      "tokens": 0,
+      "promptTokens": 0,
+      "completionTokens": 0,
+      "ranAt": "2026-11-13T08:14:16.654Z"
     },
     {
       "skillRevision": "3df6d8308bc811f1d379851d3cadecf5a32434e6",
@@ -4547,7 +4930,8 @@
       "promptTokens": 183762,
       "completionTokens": 10109,
       "cost": 0.015512589,
-      "ranAt": "2026-10-14T00:50:17.844Z"
+      "ranAt": "2026-10-14T00:50:17.844Z",
+      "retired": true
     },
     {
       "skillRevision": "3f8ac1e89e3258ca014bd312c471a4689fb8fa06",
@@ -4567,7 +4951,8 @@
       "promptTokens": 334866,
       "completionTokens": 8485,
       "cost": 0.026748021,
-      "ranAt": "2026-10-15T21:37:04.852Z"
+      "ranAt": "2026-10-15T21:37:04.852Z",
+      "retired": true
     },
     {
       "skillRevision": "3a543648cbb2353adc8965d62c8f370e3aa07772",
@@ -4586,7 +4971,8 @@
       "tokens": 0,
       "promptTokens": 0,
       "completionTokens": 0,
-      "ranAt": "2026-10-17T17:26:36.159Z"
+      "ranAt": "2026-10-17T17:26:36.159Z",
+      "retired": true
     },
     {
       "skillRevision": "5e6fda934982a959c300566eea10bc7692d07e04",
@@ -4605,7 +4991,8 @@
       "tokens": 0,
       "promptTokens": 0,
       "completionTokens": 0,
-      "ranAt": "2026-10-18T09:59:32.838Z"
+      "ranAt": "2026-10-18T09:59:32.838Z",
+      "retired": true
     },
     {
       "skillRevision": "1b90deb5c3951288291a90687f9226a577631276",
@@ -4624,7 +5011,8 @@
       "tokens": 0,
       "promptTokens": 0,
       "completionTokens": 0,
-      "ranAt": "2026-10-20T09:04:06.171Z"
+      "ranAt": "2026-10-20T09:04:06.171Z",
+      "retired": true
     },
     {
       "skillRevision": "cfa84f5690a54321b9bbf0ebaa3a4551e72966d1",
@@ -4644,7 +5032,8 @@
       "promptTokens": 321397,
       "completionTokens": 11159,
       "cost": 0.026133499,
-      "ranAt": "2026-10-21T10:20:33.407Z"
+      "ranAt": "2026-10-21T10:20:33.407Z",
+      "retired": true
     },
     {
       "skillRevision": "d17f0554cc1c27346f6120e54960d969c3aa65f7",
@@ -4857,6 +5246,27 @@
       "ranAt": "2026-11-13T05:53:17.298Z"
     },
     {
+      "skillRevision": "ea05f86b252a1f645d1abca898c4f3282811db25",
+      "model": "deepseek-v4-1-flash",
+      "scenario": "component/input-date",
+      "kind": "component",
+      "samples": 0,
+      "mean": 0,
+      "min": 0,
+      "max": 0,
+      "stdDev": 0,
+      "behaviourPassed": 0,
+      "behaviourTotal": 0,
+      "attempts": 0,
+      "dependencyFilesRead": 0,
+      "dependencyBytesRead": 0,
+      "redoable": 0,
+      "tokens": 0,
+      "promptTokens": 0,
+      "completionTokens": 0,
+      "ranAt": "2026-11-13T08:14:16.654Z"
+    },
+    {
       "skillRevision": "3df6d8308bc811f1d379851d3cadecf5a32434e6",
       "model": "deepseek-v4-flash",
       "scenario": "component/input-date",
@@ -4874,7 +5284,8 @@
       "promptTokens": 126013,
       "completionTokens": 3336,
       "cost": 0.010087395999999998,
-      "ranAt": "2026-10-14T00:50:17.844Z"
+      "ranAt": "2026-10-14T00:50:17.844Z",
+      "retired": true
     },
     {
       "skillRevision": "3f8ac1e89e3258ca014bd312c471a4689fb8fa06",
@@ -4894,7 +5305,8 @@
       "promptTokens": 169593,
       "completionTokens": 3141,
       "cost": 0.013369641,
-      "ranAt": "2026-10-15T21:37:04.852Z"
+      "ranAt": "2026-10-15T21:37:04.852Z",
+      "retired": true
     },
     {
       "skillRevision": "3a543648cbb2353adc8965d62c8f370e3aa07772",
@@ -4913,7 +5325,8 @@
       "tokens": 0,
       "promptTokens": 0,
       "completionTokens": 0,
-      "ranAt": "2026-10-17T17:26:36.159Z"
+      "ranAt": "2026-10-17T17:26:36.159Z",
+      "retired": true
     },
     {
       "skillRevision": "5e6fda934982a959c300566eea10bc7692d07e04",
@@ -4932,7 +5345,8 @@
       "tokens": 0,
       "promptTokens": 0,
       "completionTokens": 0,
-      "ranAt": "2026-10-18T09:59:32.838Z"
+      "ranAt": "2026-10-18T09:59:32.838Z",
+      "retired": true
     },
     {
       "skillRevision": "1b90deb5c3951288291a90687f9226a577631276",
@@ -4951,7 +5365,8 @@
       "tokens": 0,
       "promptTokens": 0,
       "completionTokens": 0,
-      "ranAt": "2026-10-20T09:04:06.171Z"
+      "ranAt": "2026-10-20T09:04:06.171Z",
+      "retired": true
     },
     {
       "skillRevision": "cfa84f5690a54321b9bbf0ebaa3a4551e72966d1",
@@ -4971,7 +5386,8 @@
       "promptTokens": 252005,
       "completionTokens": 9339,
       "cost": 0.020581246999999997,
-      "ranAt": "2026-10-21T10:20:33.407Z"
+      "ranAt": "2026-10-21T10:20:33.407Z",
+      "retired": true
     },
     {
       "skillRevision": "d17f0554cc1c27346f6120e54960d969c3aa65f7",
@@ -5187,6 +5603,30 @@
       "ranAt": "2026-11-13T05:53:17.298Z"
     },
     {
+      "skillRevision": "ea05f86b252a1f645d1abca898c4f3282811db25",
+      "model": "deepseek-v4-1-flash",
+      "scenario": "component/input-datepicker",
+      "kind": "component",
+      "provider": "openai-compatible",
+      "subject": "model",
+      "samples": 3,
+      "mean": 1,
+      "min": 1,
+      "max": 1,
+      "stdDev": 0,
+      "behaviourPassed": 3,
+      "behaviourTotal": 3,
+      "attempts": 3,
+      "redoable": 0,
+      "tokens": 174287,
+      "promptTokens": 169292,
+      "completionTokens": 4995,
+      "dependencyFilesRead": 0,
+      "dependencyBytesRead": 0,
+      "cost": 0.028390799999999997,
+      "ranAt": "2026-11-13T08:16:26.201Z"
+    },
+    {
       "skillRevision": "3df6d8308bc811f1d379851d3cadecf5a32434e6",
       "model": "deepseek-v4-flash",
       "scenario": "component/input-datepicker",
@@ -5204,7 +5644,8 @@
       "promptTokens": 148660,
       "completionTokens": 3047,
       "cost": 0.011764350999999998,
-      "ranAt": "2026-10-14T00:50:17.844Z"
+      "ranAt": "2026-10-14T00:50:17.844Z",
+      "retired": true
     },
     {
       "skillRevision": "3f8ac1e89e3258ca014bd312c471a4689fb8fa06",
@@ -5224,7 +5665,8 @@
       "promptTokens": 253610,
       "completionTokens": 4628,
       "cost": 0.019982444000000002,
-      "ranAt": "2026-10-15T21:37:04.852Z"
+      "ranAt": "2026-10-15T21:37:04.852Z",
+      "retired": true
     },
     {
       "skillRevision": "3a543648cbb2353adc8965d62c8f370e3aa07772",
@@ -5243,7 +5685,8 @@
       "tokens": 0,
       "promptTokens": 0,
       "completionTokens": 0,
-      "ranAt": "2026-10-17T17:26:36.159Z"
+      "ranAt": "2026-10-17T17:26:36.159Z",
+      "retired": true
     },
     {
       "skillRevision": "5e6fda934982a959c300566eea10bc7692d07e04",
@@ -5262,7 +5705,8 @@
       "tokens": 0,
       "promptTokens": 0,
       "completionTokens": 0,
-      "ranAt": "2026-10-18T09:59:32.838Z"
+      "ranAt": "2026-10-18T09:59:32.838Z",
+      "retired": true
     },
     {
       "skillRevision": "1b90deb5c3951288291a90687f9226a577631276",
@@ -5281,7 +5725,8 @@
       "tokens": 0,
       "promptTokens": 0,
       "completionTokens": 0,
-      "ranAt": "2026-10-20T09:04:06.171Z"
+      "ranAt": "2026-10-20T09:04:06.171Z",
+      "retired": true
     },
     {
       "skillRevision": "cfa84f5690a54321b9bbf0ebaa3a4551e72966d1",
@@ -5301,7 +5746,8 @@
       "promptTokens": 346547,
       "completionTokens": 9826,
       "cost": 0.02784095,
-      "ranAt": "2026-10-21T10:20:33.407Z"
+      "ranAt": "2026-10-21T10:20:33.407Z",
+      "retired": true
     },
     {
       "skillRevision": "d17f0554cc1c27346f6120e54960d969c3aa65f7",
@@ -5517,6 +5963,30 @@
       "ranAt": "2026-11-13T05:53:17.298Z"
     },
     {
+      "skillRevision": "ea05f86b252a1f645d1abca898c4f3282811db25",
+      "model": "deepseek-v4-1-flash",
+      "scenario": "component/input-email",
+      "kind": "component",
+      "provider": "openai-compatible",
+      "subject": "model",
+      "samples": 3,
+      "mean": 1,
+      "min": 1,
+      "max": 1,
+      "stdDev": 0,
+      "behaviourPassed": 2,
+      "behaviourTotal": 3,
+      "attempts": 3,
+      "redoable": 0,
+      "tokens": 426632,
+      "promptTokens": 418838,
+      "completionTokens": 7794,
+      "dependencyFilesRead": 0,
+      "dependencyBytesRead": 0,
+      "cost": 0.0675021,
+      "ranAt": "2026-11-13T08:17:14.090Z"
+    },
+    {
       "skillRevision": "3df6d8308bc811f1d379851d3cadecf5a32434e6",
       "model": "deepseek-v4-flash",
       "scenario": "component/input-email",
@@ -5534,7 +6004,8 @@
       "promptTokens": 184403,
       "completionTokens": 5117,
       "cost": 0.014797529000000002,
-      "ranAt": "2026-10-14T00:50:17.844Z"
+      "ranAt": "2026-10-14T00:50:17.844Z",
+      "retired": true
     },
     {
       "skillRevision": "3f8ac1e89e3258ca014bd312c471a4689fb8fa06",
@@ -5554,7 +6025,8 @@
       "promptTokens": 143256,
       "completionTokens": 3072,
       "cost": 0.011357471999999999,
-      "ranAt": "2026-10-15T21:37:04.852Z"
+      "ranAt": "2026-10-15T21:37:04.852Z",
+      "retired": true
     },
     {
       "skillRevision": "3a543648cbb2353adc8965d62c8f370e3aa07772",
@@ -5573,7 +6045,8 @@
       "tokens": 0,
       "promptTokens": 0,
       "completionTokens": 0,
-      "ranAt": "2026-10-17T17:26:36.159Z"
+      "ranAt": "2026-10-17T17:26:36.159Z",
+      "retired": true
     },
     {
       "skillRevision": "5e6fda934982a959c300566eea10bc7692d07e04",
@@ -5592,7 +6065,8 @@
       "tokens": 0,
       "promptTokens": 0,
       "completionTokens": 0,
-      "ranAt": "2026-10-18T09:59:32.838Z"
+      "ranAt": "2026-10-18T09:59:32.838Z",
+      "retired": true
     },
     {
       "skillRevision": "1b90deb5c3951288291a90687f9226a577631276",
@@ -5611,7 +6085,8 @@
       "tokens": 0,
       "promptTokens": 0,
       "completionTokens": 0,
-      "ranAt": "2026-10-20T09:04:06.171Z"
+      "ranAt": "2026-10-20T09:04:06.171Z",
+      "retired": true
     },
     {
       "skillRevision": "cfa84f5690a54321b9bbf0ebaa3a4551e72966d1",
@@ -5631,7 +6106,8 @@
       "promptTokens": 336652,
       "completionTokens": 7274,
       "cost": 0.026698474,
-      "ranAt": "2026-10-21T10:20:33.407Z"
+      "ranAt": "2026-10-21T10:20:33.407Z",
+      "retired": true
     },
     {
       "skillRevision": "d17f0554cc1c27346f6120e54960d969c3aa65f7",
@@ -5844,6 +6320,27 @@
       "ranAt": "2026-11-13T05:53:17.298Z"
     },
     {
+      "skillRevision": "ea05f86b252a1f645d1abca898c4f3282811db25",
+      "model": "deepseek-v4-1-flash",
+      "scenario": "component/input-file",
+      "kind": "component",
+      "samples": 0,
+      "mean": 0,
+      "min": 0,
+      "max": 0,
+      "stdDev": 0,
+      "behaviourPassed": 0,
+      "behaviourTotal": 0,
+      "attempts": 0,
+      "dependencyFilesRead": 0,
+      "dependencyBytesRead": 0,
+      "redoable": 0,
+      "tokens": 0,
+      "promptTokens": 0,
+      "completionTokens": 0,
+      "ranAt": "2026-11-13T08:14:16.654Z"
+    },
+    {
       "skillRevision": "3df6d8308bc811f1d379851d3cadecf5a32434e6",
       "model": "deepseek-v4-flash",
       "scenario": "component/input-file",
@@ -5861,7 +6358,8 @@
       "promptTokens": 135344,
       "completionTokens": 3235,
       "cost": 0.010781098999999999,
-      "ranAt": "2026-10-14T00:50:17.844Z"
+      "ranAt": "2026-10-14T00:50:17.844Z",
+      "retired": true
     },
     {
       "skillRevision": "3f8ac1e89e3258ca014bd312c471a4689fb8fa06",
@@ -5881,7 +6379,8 @@
       "promptTokens": 288183,
       "completionTokens": 3248,
       "cost": 0.022398852,
-      "ranAt": "2026-10-15T21:37:04.852Z"
+      "ranAt": "2026-10-15T21:37:04.852Z",
+      "retired": true
     },
     {
       "skillRevision": "3a543648cbb2353adc8965d62c8f370e3aa07772",
@@ -5900,7 +6399,8 @@
       "tokens": 0,
       "promptTokens": 0,
       "completionTokens": 0,
-      "ranAt": "2026-10-17T17:26:36.159Z"
+      "ranAt": "2026-10-17T17:26:36.159Z",
+      "retired": true
     },
     {
       "skillRevision": "5e6fda934982a959c300566eea10bc7692d07e04",
@@ -5919,7 +6419,8 @@
       "tokens": 0,
       "promptTokens": 0,
       "completionTokens": 0,
-      "ranAt": "2026-10-18T09:59:32.838Z"
+      "ranAt": "2026-10-18T09:59:32.838Z",
+      "retired": true
     },
     {
       "skillRevision": "1b90deb5c3951288291a90687f9226a577631276",
@@ -5938,7 +6439,8 @@
       "tokens": 0,
       "promptTokens": 0,
       "completionTokens": 0,
-      "ranAt": "2026-10-20T09:04:06.171Z"
+      "ranAt": "2026-10-20T09:04:06.171Z",
+      "retired": true
     },
     {
       "skillRevision": "cfa84f5690a54321b9bbf0ebaa3a4551e72966d1",
@@ -5958,7 +6460,8 @@
       "promptTokens": 230725,
       "completionTokens": 9990,
       "cost": 0.019063570000000002,
-      "ranAt": "2026-10-21T10:20:33.407Z"
+      "ranAt": "2026-10-21T10:20:33.407Z",
+      "retired": true
     },
     {
       "skillRevision": "d17f0554cc1c27346f6120e54960d969c3aa65f7",
@@ -6195,6 +6698,30 @@
       "ranAt": "2026-11-13T05:53:17.298Z"
     },
     {
+      "skillRevision": "ea05f86b252a1f645d1abca898c4f3282811db25",
+      "model": "deepseek-v4-1-flash",
+      "scenario": "component/input-iban",
+      "kind": "component",
+      "provider": "openai-compatible",
+      "subject": "model",
+      "samples": 3,
+      "mean": 1,
+      "min": 1,
+      "max": 1,
+      "stdDev": 0,
+      "behaviourPassed": 3,
+      "behaviourTotal": 3,
+      "attempts": 3,
+      "redoable": 0,
+      "tokens": 285505,
+      "promptTokens": 277518,
+      "completionTokens": 7987,
+      "dependencyFilesRead": 0,
+      "dependencyBytesRead": 0,
+      "cost": 0.04641989999999999,
+      "ranAt": "2026-11-13T08:18:03.158Z"
+    },
+    {
       "skillRevision": "3df6d8308bc811f1d379851d3cadecf5a32434e6",
       "model": "deepseek-v4-flash",
       "scenario": "component/input-iban",
@@ -6212,7 +6739,8 @@
       "promptTokens": 131423,
       "completionTokens": 3511,
       "cost": 0.010525331,
-      "ranAt": "2026-10-14T00:50:17.844Z"
+      "ranAt": "2026-10-14T00:50:17.844Z",
+      "retired": true
     },
     {
       "skillRevision": "3f8ac1e89e3258ca014bd312c471a4689fb8fa06",
@@ -6232,7 +6760,8 @@
       "promptTokens": 202571,
       "completionTokens": 4712,
       "cost": 0.016116332,
-      "ranAt": "2026-10-15T21:37:04.852Z"
+      "ranAt": "2026-10-15T21:37:04.852Z",
+      "retired": true
     },
     {
       "skillRevision": "3a543648cbb2353adc8965d62c8f370e3aa07772",
@@ -6251,7 +6780,8 @@
       "tokens": 0,
       "promptTokens": 0,
       "completionTokens": 0,
-      "ranAt": "2026-10-17T17:26:36.159Z"
+      "ranAt": "2026-10-17T17:26:36.159Z",
+      "retired": true
     },
     {
       "skillRevision": "5e6fda934982a959c300566eea10bc7692d07e04",
@@ -6270,7 +6800,8 @@
       "tokens": 0,
       "promptTokens": 0,
       "completionTokens": 0,
-      "ranAt": "2026-10-18T09:59:32.838Z"
+      "ranAt": "2026-10-18T09:59:32.838Z",
+      "retired": true
     },
     {
       "skillRevision": "1b90deb5c3951288291a90687f9226a577631276",
@@ -6290,7 +6821,8 @@
       "promptTokens": 223891,
       "completionTokens": 4388,
       "cost": 0.01768708,
-      "ranAt": "2026-10-20T09:04:06.171Z"
+      "ranAt": "2026-10-20T09:04:06.171Z",
+      "retired": true
     },
     {
       "skillRevision": "cfa84f5690a54321b9bbf0ebaa3a4551e72966d1",
@@ -6310,7 +6842,8 @@
       "promptTokens": 200095,
       "completionTokens": 5873,
       "cost": 0.016105789,
-      "ranAt": "2026-10-21T10:20:33.407Z"
+      "ranAt": "2026-10-21T10:20:33.407Z",
+      "retired": true
     },
     {
       "skillRevision": "d17f0554cc1c27346f6120e54960d969c3aa65f7",
@@ -6521,6 +7054,27 @@
       "promptTokens": 0,
       "completionTokens": 0,
       "ranAt": "2026-11-13T05:53:17.298Z"
+    },
+    {
+      "skillRevision": "ea05f86b252a1f645d1abca898c4f3282811db25",
+      "model": "deepseek-v4-1-flash",
+      "scenario": "component/input-range",
+      "kind": "component",
+      "samples": 0,
+      "mean": 0,
+      "min": 0,
+      "max": 0,
+      "stdDev": 0,
+      "behaviourPassed": 0,
+      "behaviourTotal": 0,
+      "attempts": 0,
+      "dependencyFilesRead": 0,
+      "dependencyBytesRead": 0,
+      "redoable": 0,
+      "tokens": 0,
+      "promptTokens": 0,
+      "completionTokens": 0,
+      "ranAt": "2026-11-13T08:14:16.654Z"
     },
     {
       "skillRevision": "3df6d8308bc811f1d379851d3cadecf5a32434e6",
@@ -6540,7 +7094,8 @@
       "promptTokens": 128632,
       "completionTokens": 4519,
       "cost": 0.010467438999999999,
-      "ranAt": "2026-10-14T00:50:17.844Z"
+      "ranAt": "2026-10-14T00:50:17.844Z",
+      "retired": true
     },
     {
       "skillRevision": "3f8ac1e89e3258ca014bd312c471a4689fb8fa06",
@@ -6560,7 +7115,8 @@
       "promptTokens": 190226,
       "completionTokens": 3001,
       "cost": 0.014916329,
-      "ranAt": "2026-10-15T21:37:04.852Z"
+      "ranAt": "2026-10-15T21:37:04.852Z",
+      "retired": true
     },
     {
       "skillRevision": "3a543648cbb2353adc8965d62c8f370e3aa07772",
@@ -6579,7 +7135,8 @@
       "tokens": 0,
       "promptTokens": 0,
       "completionTokens": 0,
-      "ranAt": "2026-10-17T17:26:36.159Z"
+      "ranAt": "2026-10-17T17:26:36.159Z",
+      "retired": true
     },
     {
       "skillRevision": "5e6fda934982a959c300566eea10bc7692d07e04",
@@ -6598,7 +7155,8 @@
       "tokens": 0,
       "promptTokens": 0,
       "completionTokens": 0,
-      "ranAt": "2026-10-18T09:59:32.838Z"
+      "ranAt": "2026-10-18T09:59:32.838Z",
+      "retired": true
     },
     {
       "skillRevision": "1b90deb5c3951288291a90687f9226a577631276",
@@ -6617,7 +7175,8 @@
       "tokens": 0,
       "promptTokens": 0,
       "completionTokens": 0,
-      "ranAt": "2026-10-20T09:04:06.171Z"
+      "ranAt": "2026-10-20T09:04:06.171Z",
+      "retired": true
     },
     {
       "skillRevision": "cfa84f5690a54321b9bbf0ebaa3a4551e72966d1",
@@ -6637,7 +7196,8 @@
       "promptTokens": 240959,
       "completionTokens": 5756,
       "cost": 0.019193552000000003,
-      "ranAt": "2026-10-21T10:20:33.407Z"
+      "ranAt": "2026-10-21T10:20:33.407Z",
+      "retired": true
     },
     {
       "skillRevision": "d17f0554cc1c27346f6120e54960d969c3aa65f7",
@@ -6848,6 +7408,27 @@
       "promptTokens": 0,
       "completionTokens": 0,
       "ranAt": "2026-11-13T05:53:17.298Z"
+    },
+    {
+      "skillRevision": "ea05f86b252a1f645d1abca898c4f3282811db25",
+      "model": "deepseek-v4-1-flash",
+      "scenario": "component/input-stepper",
+      "kind": "component",
+      "samples": 0,
+      "mean": 0,
+      "min": 0,
+      "max": 0,
+      "stdDev": 0,
+      "behaviourPassed": 0,
+      "behaviourTotal": 0,
+      "attempts": 0,
+      "dependencyFilesRead": 0,
+      "dependencyBytesRead": 0,
+      "redoable": 0,
+      "tokens": 0,
+      "promptTokens": 0,
+      "completionTokens": 0,
+      "ranAt": "2026-11-13T08:14:16.654Z"
     },
     {
       "skillRevision": "3df6d8308bc811f1d379851d3cadecf5a32434e6",
@@ -6867,7 +7448,8 @@
       "promptTokens": 143803,
       "completionTokens": 5219,
       "cost": 0.011727534999999999,
-      "ranAt": "2026-10-14T00:50:17.844Z"
+      "ranAt": "2026-10-14T00:50:17.844Z",
+      "retired": true
     },
     {
       "skillRevision": "3f8ac1e89e3258ca014bd312c471a4689fb8fa06",
@@ -6887,7 +7469,8 @@
       "promptTokens": 205639,
       "completionTokens": 3771,
       "cost": 0.016205526999999997,
-      "ranAt": "2026-10-15T21:37:04.852Z"
+      "ranAt": "2026-10-15T21:37:04.852Z",
+      "retired": true
     },
     {
       "skillRevision": "3a543648cbb2353adc8965d62c8f370e3aa07772",
@@ -6906,7 +7489,8 @@
       "tokens": 0,
       "promptTokens": 0,
       "completionTokens": 0,
-      "ranAt": "2026-10-17T17:26:36.159Z"
+      "ranAt": "2026-10-17T17:26:36.159Z",
+      "retired": true
     },
     {
       "skillRevision": "5e6fda934982a959c300566eea10bc7692d07e04",
@@ -6925,7 +7509,8 @@
       "tokens": 0,
       "promptTokens": 0,
       "completionTokens": 0,
-      "ranAt": "2026-10-18T09:59:32.838Z"
+      "ranAt": "2026-10-18T09:59:32.838Z",
+      "retired": true
     },
     {
       "skillRevision": "1b90deb5c3951288291a90687f9226a577631276",
@@ -6944,7 +7529,8 @@
       "tokens": 0,
       "promptTokens": 0,
       "completionTokens": 0,
-      "ranAt": "2026-10-20T09:04:06.171Z"
+      "ranAt": "2026-10-20T09:04:06.171Z",
+      "retired": true
     },
     {
       "skillRevision": "cfa84f5690a54321b9bbf0ebaa3a4551e72966d1",
@@ -6964,7 +7550,8 @@
       "promptTokens": 271164,
       "completionTokens": 14489,
       "cost": 0.022825281,
-      "ranAt": "2026-10-21T10:20:33.407Z"
+      "ranAt": "2026-10-21T10:20:33.407Z",
+      "retired": true
     },
     {
       "skillRevision": "d17f0554cc1c27346f6120e54960d969c3aa65f7",
@@ -7175,6 +7762,27 @@
       "promptTokens": 0,
       "completionTokens": 0,
       "ranAt": "2026-11-13T05:53:17.298Z"
+    },
+    {
+      "skillRevision": "ea05f86b252a1f645d1abca898c4f3282811db25",
+      "model": "deepseek-v4-1-flash",
+      "scenario": "component/input-tel",
+      "kind": "component",
+      "samples": 0,
+      "mean": 0,
+      "min": 0,
+      "max": 0,
+      "stdDev": 0,
+      "behaviourPassed": 0,
+      "behaviourTotal": 0,
+      "attempts": 0,
+      "dependencyFilesRead": 0,
+      "dependencyBytesRead": 0,
+      "redoable": 0,
+      "tokens": 0,
+      "promptTokens": 0,
+      "completionTokens": 0,
+      "ranAt": "2026-11-13T08:14:16.654Z"
     },
     {
       "skillRevision": "3df6d8308bc811f1d379851d3cadecf5a32434e6",
@@ -7194,7 +7802,8 @@
       "promptTokens": 189042,
       "completionTokens": 4758,
       "cost": 0.015095165999999998,
-      "ranAt": "2026-10-14T00:50:17.844Z"
+      "ranAt": "2026-10-14T00:50:17.844Z",
+      "retired": true
     },
     {
       "skillRevision": "3f8ac1e89e3258ca014bd312c471a4689fb8fa06",
@@ -7214,7 +7823,8 @@
       "promptTokens": 288999,
       "completionTokens": 4065,
       "cost": 0.022585868999999998,
-      "ranAt": "2026-10-15T21:37:04.852Z"
+      "ranAt": "2026-10-15T21:37:04.852Z",
+      "retired": true
     },
     {
       "skillRevision": "3a543648cbb2353adc8965d62c8f370e3aa07772",
@@ -7233,7 +7843,8 @@
       "tokens": 0,
       "promptTokens": 0,
       "completionTokens": 0,
-      "ranAt": "2026-10-17T17:26:36.159Z"
+      "ranAt": "2026-10-17T17:26:36.159Z",
+      "retired": true
     },
     {
       "skillRevision": "5e6fda934982a959c300566eea10bc7692d07e04",
@@ -7252,7 +7863,8 @@
       "tokens": 0,
       "promptTokens": 0,
       "completionTokens": 0,
-      "ranAt": "2026-10-18T09:59:32.838Z"
+      "ranAt": "2026-10-18T09:59:32.838Z",
+      "retired": true
     },
     {
       "skillRevision": "1b90deb5c3951288291a90687f9226a577631276",
@@ -7271,7 +7883,8 @@
       "tokens": 0,
       "promptTokens": 0,
       "completionTokens": 0,
-      "ranAt": "2026-10-20T09:04:06.171Z"
+      "ranAt": "2026-10-20T09:04:06.171Z",
+      "retired": true
     },
     {
       "skillRevision": "cfa84f5690a54321b9bbf0ebaa3a4551e72966d1",
@@ -7291,7 +7904,8 @@
       "promptTokens": 441835,
       "completionTokens": 23370,
       "cost": 0.03715507,
-      "ranAt": "2026-10-21T10:20:33.407Z"
+      "ranAt": "2026-10-21T10:20:33.407Z",
+      "retired": true
     },
     {
       "skillRevision": "d17f0554cc1c27346f6120e54960d969c3aa65f7",
@@ -7504,6 +8118,27 @@
       "ranAt": "2026-11-13T05:53:17.298Z"
     },
     {
+      "skillRevision": "ea05f86b252a1f645d1abca898c4f3282811db25",
+      "model": "deepseek-v4-1-flash",
+      "scenario": "component/input-tel-dropdown",
+      "kind": "component",
+      "samples": 0,
+      "mean": 0,
+      "min": 0,
+      "max": 0,
+      "stdDev": 0,
+      "behaviourPassed": 0,
+      "behaviourTotal": 0,
+      "attempts": 0,
+      "dependencyFilesRead": 0,
+      "dependencyBytesRead": 0,
+      "redoable": 0,
+      "tokens": 0,
+      "promptTokens": 0,
+      "completionTokens": 0,
+      "ranAt": "2026-11-13T08:14:16.654Z"
+    },
+    {
       "skillRevision": "3df6d8308bc811f1d379851d3cadecf5a32434e6",
       "model": "deepseek-v4-flash",
       "scenario": "component/input-tel-dropdown",
@@ -7521,7 +8156,8 @@
       "promptTokens": 149008,
       "completionTokens": 5658,
       "cost": 0.012190282,
-      "ranAt": "2026-10-14T00:50:17.844Z"
+      "ranAt": "2026-10-14T00:50:17.844Z",
+      "retired": true
     },
     {
       "skillRevision": "3f8ac1e89e3258ca014bd312c471a4689fb8fa06",
@@ -7541,7 +8177,8 @@
       "promptTokens": 344030,
       "completionTokens": 11813,
       "cost": 0.027953669,
-      "ranAt": "2026-10-15T21:37:04.852Z"
+      "ranAt": "2026-10-15T21:37:04.852Z",
+      "retired": true
     },
     {
       "skillRevision": "3a543648cbb2353adc8965d62c8f370e3aa07772",
@@ -7560,7 +8197,8 @@
       "tokens": 0,
       "promptTokens": 0,
       "completionTokens": 0,
-      "ranAt": "2026-10-17T17:26:36.159Z"
+      "ranAt": "2026-10-17T17:26:36.159Z",
+      "retired": true
     },
     {
       "skillRevision": "5e6fda934982a959c300566eea10bc7692d07e04",
@@ -7579,7 +8217,8 @@
       "tokens": 0,
       "promptTokens": 0,
       "completionTokens": 0,
-      "ranAt": "2026-10-18T09:59:32.838Z"
+      "ranAt": "2026-10-18T09:59:32.838Z",
+      "retired": true
     },
     {
       "skillRevision": "1b90deb5c3951288291a90687f9226a577631276",
@@ -7598,7 +8237,8 @@
       "tokens": 0,
       "promptTokens": 0,
       "completionTokens": 0,
-      "ranAt": "2026-10-20T09:04:06.171Z"
+      "ranAt": "2026-10-20T09:04:06.171Z",
+      "retired": true
     },
     {
       "skillRevision": "cfa84f5690a54321b9bbf0ebaa3a4551e72966d1",
@@ -7618,7 +8258,8 @@
       "promptTokens": 350537,
       "completionTokens": 8893,
       "cost": 0.028001441,
-      "ranAt": "2026-10-21T10:20:33.407Z"
+      "ranAt": "2026-10-21T10:20:33.407Z",
+      "retired": true
     },
     {
       "skillRevision": "d17f0554cc1c27346f6120e54960d969c3aa65f7",
@@ -7843,6 +8484,30 @@
       "ranAt": "2026-11-13T06:06:23.549Z"
     },
     {
+      "skillRevision": "ea05f86b252a1f645d1abca898c4f3282811db25",
+      "model": "deepseek-v4-1-flash",
+      "scenario": "component/listbox",
+      "kind": "component",
+      "provider": "openai-compatible",
+      "subject": "model",
+      "samples": 3,
+      "mean": 1,
+      "min": 1,
+      "max": 1,
+      "stdDev": 0,
+      "behaviourPassed": 3,
+      "behaviourTotal": 3,
+      "attempts": 3,
+      "redoable": 0,
+      "tokens": 271287,
+      "promptTokens": 265797,
+      "completionTokens": 5490,
+      "dependencyFilesRead": 0,
+      "dependencyBytesRead": 0,
+      "cost": 0.043163549999999995,
+      "ranAt": "2026-11-13T08:18:40.761Z"
+    },
+    {
       "skillRevision": "3df6d8308bc811f1d379851d3cadecf5a32434e6",
       "model": "deepseek-v4-flash",
       "scenario": "component/listbox",
@@ -7860,7 +8525,8 @@
       "promptTokens": 279274,
       "completionTokens": 6951,
       "cost": 0.022288327,
-      "ranAt": "2026-10-14T00:50:17.844Z"
+      "ranAt": "2026-10-14T00:50:17.844Z",
+      "retired": true
     },
     {
       "skillRevision": "166718cee0cb50634b22f3aef9194dcc91d57e50",
@@ -7880,7 +8546,8 @@
       "promptTokens": 261810,
       "completionTokens": 5942,
       "cost": 0.020806685999999998,
-      "ranAt": "2026-10-14T23:29:56.617Z"
+      "ranAt": "2026-10-14T23:29:56.617Z",
+      "retired": true
     },
     {
       "skillRevision": "3f8ac1e89e3258ca014bd312c471a4689fb8fa06",
@@ -7900,7 +8567,8 @@
       "promptTokens": 472859,
       "completionTokens": 6820,
       "cost": 0.036980744,
-      "ranAt": "2026-10-15T21:37:04.852Z"
+      "ranAt": "2026-10-15T21:37:04.852Z",
+      "retired": true
     },
     {
       "skillRevision": "3a543648cbb2353adc8965d62c8f370e3aa07772",
@@ -7919,7 +8587,8 @@
       "tokens": 0,
       "promptTokens": 0,
       "completionTokens": 0,
-      "ranAt": "2026-10-17T17:26:36.159Z"
+      "ranAt": "2026-10-17T17:26:36.159Z",
+      "retired": true
     },
     {
       "skillRevision": "5e6fda934982a959c300566eea10bc7692d07e04",
@@ -7938,7 +8607,8 @@
       "tokens": 0,
       "promptTokens": 0,
       "completionTokens": 0,
-      "ranAt": "2026-10-18T09:59:32.838Z"
+      "ranAt": "2026-10-18T09:59:32.838Z",
+      "retired": true
     },
     {
       "skillRevision": "1b90deb5c3951288291a90687f9226a577631276",
@@ -7957,7 +8627,8 @@
       "tokens": 0,
       "promptTokens": 0,
       "completionTokens": 0,
-      "ranAt": "2026-10-20T09:04:06.171Z"
+      "ranAt": "2026-10-20T09:04:06.171Z",
+      "retired": true
     },
     {
       "skillRevision": "cfa84f5690a54321b9bbf0ebaa3a4551e72966d1",
@@ -7977,7 +8648,8 @@
       "promptTokens": 636265,
       "completionTokens": 10396,
       "cost": 0.049946727999999996,
-      "ranAt": "2026-10-21T10:20:33.407Z"
+      "ranAt": "2026-10-21T10:20:33.407Z",
+      "retired": true
     },
     {
       "skillRevision": "d17f0554cc1c27346f6120e54960d969c3aa65f7",
@@ -8212,6 +8884,30 @@
       "ranAt": "2026-11-13T06:04:19.885Z"
     },
     {
+      "skillRevision": "ea05f86b252a1f645d1abca898c4f3282811db25",
+      "model": "deepseek-v4-1-flash",
+      "scenario": "component/menu",
+      "kind": "component",
+      "provider": "openai-compatible",
+      "subject": "model",
+      "samples": 3,
+      "mean": 1,
+      "min": 1,
+      "max": 1,
+      "stdDev": 0,
+      "behaviourPassed": 2,
+      "behaviourTotal": 3,
+      "attempts": 3,
+      "redoable": 0,
+      "tokens": 321842,
+      "promptTokens": 315758,
+      "completionTokens": 6084,
+      "dependencyFilesRead": 0,
+      "dependencyBytesRead": 0,
+      "cost": 0.05101409999999999,
+      "ranAt": "2026-11-13T08:19:12.419Z"
+    },
+    {
       "skillRevision": "166718cee0cb50634b22f3aef9194dcc91d57e50",
       "model": "deepseek-v4-flash",
       "scenario": "component/menu",
@@ -8229,7 +8925,8 @@
       "promptTokens": 185855,
       "completionTokens": 10666,
       "cost": 0.015756878,
-      "ranAt": "2026-10-14T23:24:50.118Z"
+      "ranAt": "2026-10-14T23:24:50.118Z",
+      "retired": true
     },
     {
       "skillRevision": "3f8ac1e89e3258ca014bd312c471a4689fb8fa06",
@@ -8249,7 +8946,8 @@
       "promptTokens": 334422,
       "completionTokens": 8636,
       "cost": 0.026737379999999998,
-      "ranAt": "2026-10-15T21:37:04.852Z"
+      "ranAt": "2026-10-15T21:37:04.852Z",
+      "retired": true
     },
     {
       "skillRevision": "3a543648cbb2353adc8965d62c8f370e3aa07772",
@@ -8268,7 +8966,8 @@
       "tokens": 0,
       "promptTokens": 0,
       "completionTokens": 0,
-      "ranAt": "2026-10-17T17:26:36.159Z"
+      "ranAt": "2026-10-17T17:26:36.159Z",
+      "retired": true
     },
     {
       "skillRevision": "5e6fda934982a959c300566eea10bc7692d07e04",
@@ -8288,7 +8987,8 @@
       "promptTokens": 495501,
       "completionTokens": 10969,
       "cost": 0.039336333,
-      "ranAt": "2026-10-18T09:59:32.838Z"
+      "ranAt": "2026-10-18T09:59:32.838Z",
+      "retired": true
     },
     {
       "skillRevision": "1b90deb5c3951288291a90687f9226a577631276",
@@ -8307,7 +9007,8 @@
       "tokens": 0,
       "promptTokens": 0,
       "completionTokens": 0,
-      "ranAt": "2026-10-20T09:04:06.171Z"
+      "ranAt": "2026-10-20T09:04:06.171Z",
+      "retired": true
     },
     {
       "skillRevision": "cfa84f5690a54321b9bbf0ebaa3a4551e72966d1",
@@ -8327,7 +9028,8 @@
       "promptTokens": 896050,
       "completionTokens": 19841,
       "cost": 0.071135473,
-      "ranAt": "2026-10-21T10:20:33.407Z"
+      "ranAt": "2026-10-21T10:20:33.407Z",
+      "retired": true
     },
     {
       "skillRevision": "d17f0554cc1c27346f6120e54960d969c3aa65f7",
@@ -8540,6 +9242,27 @@
       "ranAt": "2026-11-13T05:53:17.298Z"
     },
     {
+      "skillRevision": "ea05f86b252a1f645d1abca898c4f3282811db25",
+      "model": "deepseek-v4-1-flash",
+      "scenario": "component/pagination",
+      "kind": "component",
+      "samples": 0,
+      "mean": 0,
+      "min": 0,
+      "max": 0,
+      "stdDev": 0,
+      "behaviourPassed": 0,
+      "behaviourTotal": 0,
+      "attempts": 0,
+      "dependencyFilesRead": 0,
+      "dependencyBytesRead": 0,
+      "redoable": 0,
+      "tokens": 0,
+      "promptTokens": 0,
+      "completionTokens": 0,
+      "ranAt": "2026-11-13T08:14:16.654Z"
+    },
+    {
       "skillRevision": "3df6d8308bc811f1d379851d3cadecf5a32434e6",
       "model": "deepseek-v4-flash",
       "scenario": "component/pagination",
@@ -8557,7 +9280,8 @@
       "promptTokens": 120858,
       "completionTokens": 3556,
       "cost": 0.009729275999999999,
-      "ranAt": "2026-10-14T00:50:17.844Z"
+      "ranAt": "2026-10-14T00:50:17.844Z",
+      "retired": true
     },
     {
       "skillRevision": "3f8ac1e89e3258ca014bd312c471a4689fb8fa06",
@@ -8577,7 +9301,8 @@
       "promptTokens": 128685,
       "completionTokens": 3245,
       "cost": 0.010276545,
-      "ranAt": "2026-10-15T21:37:04.852Z"
+      "ranAt": "2026-10-15T21:37:04.852Z",
+      "retired": true
     },
     {
       "skillRevision": "3a543648cbb2353adc8965d62c8f370e3aa07772",
@@ -8596,7 +9321,8 @@
       "tokens": 0,
       "promptTokens": 0,
       "completionTokens": 0,
-      "ranAt": "2026-10-17T17:26:36.159Z"
+      "ranAt": "2026-10-17T17:26:36.159Z",
+      "retired": true
     },
     {
       "skillRevision": "5e6fda934982a959c300566eea10bc7692d07e04",
@@ -8615,7 +9341,8 @@
       "tokens": 0,
       "promptTokens": 0,
       "completionTokens": 0,
-      "ranAt": "2026-10-18T09:59:32.838Z"
+      "ranAt": "2026-10-18T09:59:32.838Z",
+      "retired": true
     },
     {
       "skillRevision": "1b90deb5c3951288291a90687f9226a577631276",
@@ -8634,7 +9361,8 @@
       "tokens": 0,
       "promptTokens": 0,
       "completionTokens": 0,
-      "ranAt": "2026-10-20T09:04:06.171Z"
+      "ranAt": "2026-10-20T09:04:06.171Z",
+      "retired": true
     },
     {
       "skillRevision": "cfa84f5690a54321b9bbf0ebaa3a4551e72966d1",
@@ -8654,7 +9382,8 @@
       "promptTokens": 229966,
       "completionTokens": 16364,
       "cost": 0.019981107999999997,
-      "ranAt": "2026-10-21T10:20:33.407Z"
+      "ranAt": "2026-10-21T10:20:33.407Z",
+      "retired": true
     },
     {
       "skillRevision": "d17f0554cc1c27346f6120e54960d969c3aa65f7",
@@ -8883,6 +9612,30 @@
       "ranAt": "2026-11-13T06:05:33.390Z"
     },
     {
+      "skillRevision": "ea05f86b252a1f645d1abca898c4f3282811db25",
+      "model": "deepseek-v4-1-flash",
+      "scenario": "component/progress-indicator",
+      "kind": "component",
+      "provider": "openai-compatible",
+      "subject": "model",
+      "samples": 3,
+      "mean": 1,
+      "min": 1,
+      "max": 1,
+      "stdDev": 0,
+      "behaviourPassed": 3,
+      "behaviourTotal": 3,
+      "attempts": 3,
+      "redoable": 0,
+      "tokens": 229240,
+      "promptTokens": 221054,
+      "completionTokens": 8186,
+      "dependencyFilesRead": 0,
+      "dependencyBytesRead": 0,
+      "cost": 0.0380697,
+      "ranAt": "2026-11-13T08:19:58.888Z"
+    },
+    {
       "skillRevision": "3df6d8308bc811f1d379851d3cadecf5a32434e6",
       "model": "deepseek-v4-flash",
       "scenario": "component/progress-indicator",
@@ -8900,7 +9653,8 @@
       "promptTokens": 87434,
       "completionTokens": 4838,
       "cost": 0.007385198,
-      "ranAt": "2026-10-14T00:50:17.844Z"
+      "ranAt": "2026-10-14T00:50:17.844Z",
+      "retired": true
     },
     {
       "skillRevision": "3f8ac1e89e3258ca014bd312c471a4689fb8fa06",
@@ -8920,7 +9674,8 @@
       "promptTokens": 134103,
       "completionTokens": 4733,
       "cost": 0.010915977,
-      "ranAt": "2026-10-15T21:37:04.852Z"
+      "ranAt": "2026-10-15T21:37:04.852Z",
+      "retired": true
     },
     {
       "skillRevision": "3a543648cbb2353adc8965d62c8f370e3aa07772",
@@ -8939,7 +9694,8 @@
       "tokens": 0,
       "promptTokens": 0,
       "completionTokens": 0,
-      "ranAt": "2026-10-17T17:26:36.159Z"
+      "ranAt": "2026-10-17T17:26:36.159Z",
+      "retired": true
     },
     {
       "skillRevision": "5e6fda934982a959c300566eea10bc7692d07e04",
@@ -8958,7 +9714,8 @@
       "tokens": 0,
       "promptTokens": 0,
       "completionTokens": 0,
-      "ranAt": "2026-10-18T09:59:32.838Z"
+      "ranAt": "2026-10-18T09:59:32.838Z",
+      "retired": true
     },
     {
       "skillRevision": "1b90deb5c3951288291a90687f9226a577631276",
@@ -8977,7 +9734,8 @@
       "tokens": 0,
       "promptTokens": 0,
       "completionTokens": 0,
-      "ranAt": "2026-10-20T09:04:06.171Z"
+      "ranAt": "2026-10-20T09:04:06.171Z",
+      "retired": true
     },
     {
       "skillRevision": "cfa84f5690a54321b9bbf0ebaa3a4551e72966d1",
@@ -8997,7 +9755,8 @@
       "promptTokens": 152456,
       "completionTokens": 6145,
       "cost": 0.012526841,
-      "ranAt": "2026-10-21T10:20:33.407Z"
+      "ranAt": "2026-10-21T10:20:33.407Z",
+      "retired": true
     },
     {
       "skillRevision": "d17f0554cc1c27346f6120e54960d969c3aa65f7",
@@ -9208,6 +9967,27 @@
       "promptTokens": 0,
       "completionTokens": 0,
       "ranAt": "2026-11-13T05:53:17.298Z"
+    },
+    {
+      "skillRevision": "ea05f86b252a1f645d1abca898c4f3282811db25",
+      "model": "deepseek-v4-1-flash",
+      "scenario": "component/radio-group",
+      "kind": "component",
+      "samples": 0,
+      "mean": 0,
+      "min": 0,
+      "max": 0,
+      "stdDev": 0,
+      "behaviourPassed": 0,
+      "behaviourTotal": 0,
+      "attempts": 0,
+      "dependencyFilesRead": 0,
+      "dependencyBytesRead": 0,
+      "redoable": 0,
+      "tokens": 0,
+      "promptTokens": 0,
+      "completionTokens": 0,
+      "ranAt": "2026-11-13T08:14:16.654Z"
     },
     {
       "skillRevision": "3df6d8308bc811f1d379851d3cadecf5a32434e6",
@@ -9227,7 +10007,8 @@
       "promptTokens": 149046,
       "completionTokens": 5289,
       "cost": 0.012136713,
-      "ranAt": "2026-10-14T00:50:17.844Z"
+      "ranAt": "2026-10-14T00:50:17.844Z",
+      "retired": true
     },
     {
       "skillRevision": "3f8ac1e89e3258ca014bd312c471a4689fb8fa06",
@@ -9247,7 +10028,8 @@
       "promptTokens": 321054,
       "completionTokens": 5818,
       "cost": 0.025290258,
-      "ranAt": "2026-10-15T21:37:04.852Z"
+      "ranAt": "2026-10-15T21:37:04.852Z",
+      "retired": true
     },
     {
       "skillRevision": "3a543648cbb2353adc8965d62c8f370e3aa07772",
@@ -9266,7 +10048,8 @@
       "tokens": 0,
       "promptTokens": 0,
       "completionTokens": 0,
-      "ranAt": "2026-10-17T17:26:36.159Z"
+      "ranAt": "2026-10-17T17:26:36.159Z",
+      "retired": true
     },
     {
       "skillRevision": "5e6fda934982a959c300566eea10bc7692d07e04",
@@ -9285,7 +10068,8 @@
       "tokens": 0,
       "promptTokens": 0,
       "completionTokens": 0,
-      "ranAt": "2026-10-18T09:59:32.838Z"
+      "ranAt": "2026-10-18T09:59:32.838Z",
+      "retired": true
     },
     {
       "skillRevision": "1b90deb5c3951288291a90687f9226a577631276",
@@ -9304,7 +10088,8 @@
       "tokens": 0,
       "promptTokens": 0,
       "completionTokens": 0,
-      "ranAt": "2026-10-20T09:04:06.171Z"
+      "ranAt": "2026-10-20T09:04:06.171Z",
+      "retired": true
     },
     {
       "skillRevision": "cfa84f5690a54321b9bbf0ebaa3a4551e72966d1",
@@ -9324,7 +10109,8 @@
       "promptTokens": 199963,
       "completionTokens": 4264,
       "cost": 0.015849580000000002,
-      "ranAt": "2026-10-21T10:20:33.407Z"
+      "ranAt": "2026-10-21T10:20:33.407Z",
+      "retired": true
     },
     {
       "skillRevision": "d17f0554cc1c27346f6120e54960d969c3aa65f7",
@@ -9537,6 +10323,27 @@
       "ranAt": "2026-11-13T05:53:17.298Z"
     },
     {
+      "skillRevision": "ea05f86b252a1f645d1abca898c4f3282811db25",
+      "model": "deepseek-v4-1-flash",
+      "scenario": "component/select",
+      "kind": "component",
+      "samples": 0,
+      "mean": 0,
+      "min": 0,
+      "max": 0,
+      "stdDev": 0,
+      "behaviourPassed": 0,
+      "behaviourTotal": 0,
+      "attempts": 0,
+      "dependencyFilesRead": 0,
+      "dependencyBytesRead": 0,
+      "redoable": 0,
+      "tokens": 0,
+      "promptTokens": 0,
+      "completionTokens": 0,
+      "ranAt": "2026-11-13T08:14:16.654Z"
+    },
+    {
       "skillRevision": "3df6d8308bc811f1d379851d3cadecf5a32434e6",
       "model": "deepseek-v4-flash",
       "scenario": "component/select",
@@ -9554,7 +10361,8 @@
       "promptTokens": 93184,
       "completionTokens": 4069,
       "cost": 0.0077045410000000005,
-      "ranAt": "2026-10-14T00:50:17.844Z"
+      "ranAt": "2026-10-14T00:50:17.844Z",
+      "retired": true
     },
     {
       "skillRevision": "3f8ac1e89e3258ca014bd312c471a4689fb8fa06",
@@ -9574,7 +10382,8 @@
       "promptTokens": 229297,
       "completionTokens": 3898,
       "cost": 0.018022966,
-      "ranAt": "2026-10-15T21:37:04.852Z"
+      "ranAt": "2026-10-15T21:37:04.852Z",
+      "retired": true
     },
     {
       "skillRevision": "3a543648cbb2353adc8965d62c8f370e3aa07772",
@@ -9593,7 +10402,8 @@
       "tokens": 0,
       "promptTokens": 0,
       "completionTokens": 0,
-      "ranAt": "2026-10-17T17:26:36.159Z"
+      "ranAt": "2026-10-17T17:26:36.159Z",
+      "retired": true
     },
     {
       "skillRevision": "5e6fda934982a959c300566eea10bc7692d07e04",
@@ -9612,7 +10422,8 @@
       "tokens": 0,
       "promptTokens": 0,
       "completionTokens": 0,
-      "ranAt": "2026-10-18T09:59:32.838Z"
+      "ranAt": "2026-10-18T09:59:32.838Z",
+      "retired": true
     },
     {
       "skillRevision": "1b90deb5c3951288291a90687f9226a577631276",
@@ -9631,7 +10442,8 @@
       "tokens": 0,
       "promptTokens": 0,
       "completionTokens": 0,
-      "ranAt": "2026-10-20T09:04:06.171Z"
+      "ranAt": "2026-10-20T09:04:06.171Z",
+      "retired": true
     },
     {
       "skillRevision": "cfa84f5690a54321b9bbf0ebaa3a4551e72966d1",
@@ -9651,7 +10463,8 @@
       "promptTokens": 346552,
       "completionTokens": 10995,
       "cost": 0.028020187000000002,
-      "ranAt": "2026-10-21T10:20:33.407Z"
+      "ranAt": "2026-10-21T10:20:33.407Z",
+      "retired": true
     },
     {
       "skillRevision": "d17f0554cc1c27346f6120e54960d969c3aa65f7",
@@ -9867,6 +10680,30 @@
       "ranAt": "2026-11-13T05:53:52.199Z"
     },
     {
+      "skillRevision": "ea05f86b252a1f645d1abca898c4f3282811db25",
+      "model": "deepseek-v4-1-flash",
+      "scenario": "component/select-rich",
+      "kind": "component",
+      "provider": "openai-compatible",
+      "subject": "model",
+      "samples": 3,
+      "mean": 1,
+      "min": 1,
+      "max": 1,
+      "stdDev": 0,
+      "behaviourPassed": 0,
+      "behaviourTotal": 0,
+      "attempts": 3,
+      "redoable": 0,
+      "tokens": 215004,
+      "promptTokens": 210349,
+      "completionTokens": 4655,
+      "dependencyFilesRead": 0,
+      "dependencyBytesRead": 0,
+      "cost": 0.03434535,
+      "ranAt": "2026-11-13T08:20:30.095Z"
+    },
+    {
       "skillRevision": "3df6d8308bc811f1d379851d3cadecf5a32434e6",
       "model": "deepseek-v4-flash",
       "scenario": "component/select-rich",
@@ -9884,7 +10721,8 @@
       "promptTokens": 230512,
       "completionTokens": 7850,
       "cost": 0.018719961999999996,
-      "ranAt": "2026-10-14T00:50:17.844Z"
+      "ranAt": "2026-10-14T00:50:17.844Z",
+      "retired": true
     },
     {
       "skillRevision": "3f8ac1e89e3258ca014bd312c471a4689fb8fa06",
@@ -9904,7 +10742,8 @@
       "promptTokens": 255009,
       "completionTokens": 5325,
       "cost": 0.020195408999999998,
-      "ranAt": "2026-10-15T21:37:04.852Z"
+      "ranAt": "2026-10-15T21:37:04.852Z",
+      "retired": true
     },
     {
       "skillRevision": "3a543648cbb2353adc8965d62c8f370e3aa07772",
@@ -9923,7 +10762,8 @@
       "tokens": 0,
       "promptTokens": 0,
       "completionTokens": 0,
-      "ranAt": "2026-10-17T17:26:36.159Z"
+      "ranAt": "2026-10-17T17:26:36.159Z",
+      "retired": true
     },
     {
       "skillRevision": "5e6fda934982a959c300566eea10bc7692d07e04",
@@ -9942,7 +10782,8 @@
       "tokens": 0,
       "promptTokens": 0,
       "completionTokens": 0,
-      "ranAt": "2026-10-18T09:59:32.838Z"
+      "ranAt": "2026-10-18T09:59:32.838Z",
+      "retired": true
     },
     {
       "skillRevision": "1b90deb5c3951288291a90687f9226a577631276",
@@ -9961,7 +10802,8 @@
       "tokens": 0,
       "promptTokens": 0,
       "completionTokens": 0,
-      "ranAt": "2026-10-20T09:04:06.171Z"
+      "ranAt": "2026-10-20T09:04:06.171Z",
+      "retired": true
     },
     {
       "skillRevision": "cfa84f5690a54321b9bbf0ebaa3a4551e72966d1",
@@ -9981,7 +10823,8 @@
       "promptTokens": 434974,
       "completionTokens": 6919,
       "cost": 0.034116631,
-      "ranAt": "2026-10-21T10:20:33.407Z"
+      "ranAt": "2026-10-21T10:20:33.407Z",
+      "retired": true
     },
     {
       "skillRevision": "d17f0554cc1c27346f6120e54960d969c3aa65f7",
@@ -10192,6 +11035,27 @@
       "promptTokens": 0,
       "completionTokens": 0,
       "ranAt": "2026-11-13T05:53:17.298Z"
+    },
+    {
+      "skillRevision": "ea05f86b252a1f645d1abca898c4f3282811db25",
+      "model": "deepseek-v4-1-flash",
+      "scenario": "component/steps",
+      "kind": "component",
+      "samples": 0,
+      "mean": 0,
+      "min": 0,
+      "max": 0,
+      "stdDev": 0,
+      "behaviourPassed": 0,
+      "behaviourTotal": 0,
+      "attempts": 0,
+      "dependencyFilesRead": 0,
+      "dependencyBytesRead": 0,
+      "redoable": 0,
+      "tokens": 0,
+      "promptTokens": 0,
+      "completionTokens": 0,
+      "ranAt": "2026-11-13T08:14:16.654Z"
     },
     {
       "skillRevision": "3df6d8308bc811f1d379851d3cadecf5a32434e6",
@@ -10211,7 +11075,8 @@
       "promptTokens": 112653,
       "completionTokens": 5769,
       "cost": 0.009444285,
-      "ranAt": "2026-10-14T00:50:17.844Z"
+      "ranAt": "2026-10-14T00:50:17.844Z",
+      "retired": true
     },
     {
       "skillRevision": "3f8ac1e89e3258ca014bd312c471a4689fb8fa06",
@@ -10231,7 +11096,8 @@
       "promptTokens": 167479,
       "completionTokens": 4690,
       "cost": 0.013445974,
-      "ranAt": "2026-10-15T22:24:45.736Z"
+      "ranAt": "2026-10-15T22:24:45.736Z",
+      "retired": true
     },
     {
       "skillRevision": "3a543648cbb2353adc8965d62c8f370e3aa07772",
@@ -10250,7 +11116,8 @@
       "tokens": 0,
       "promptTokens": 0,
       "completionTokens": 0,
-      "ranAt": "2026-10-17T17:26:36.159Z"
+      "ranAt": "2026-10-17T17:26:36.159Z",
+      "retired": true
     },
     {
       "skillRevision": "5e6fda934982a959c300566eea10bc7692d07e04",
@@ -10269,7 +11136,8 @@
       "tokens": 0,
       "promptTokens": 0,
       "completionTokens": 0,
-      "ranAt": "2026-10-18T09:59:32.838Z"
+      "ranAt": "2026-10-18T09:59:32.838Z",
+      "retired": true
     },
     {
       "skillRevision": "1b90deb5c3951288291a90687f9226a577631276",
@@ -10288,7 +11156,8 @@
       "tokens": 0,
       "promptTokens": 0,
       "completionTokens": 0,
-      "ranAt": "2026-10-20T09:04:06.171Z"
+      "ranAt": "2026-10-20T09:04:06.171Z",
+      "retired": true
     },
     {
       "skillRevision": "cfa84f5690a54321b9bbf0ebaa3a4551e72966d1",
@@ -10308,7 +11177,8 @@
       "promptTokens": 239932,
       "completionTokens": 42619,
       "cost": 0.024755539,
-      "ranAt": "2026-10-21T10:20:33.407Z"
+      "ranAt": "2026-10-21T10:20:33.407Z",
+      "retired": true
     },
     {
       "skillRevision": "d17f0554cc1c27346f6120e54960d969c3aa65f7",
@@ -10521,6 +11391,27 @@
       "ranAt": "2026-11-13T05:53:17.298Z"
     },
     {
+      "skillRevision": "ea05f86b252a1f645d1abca898c4f3282811db25",
+      "model": "deepseek-v4-1-flash",
+      "scenario": "component/switch",
+      "kind": "component",
+      "samples": 0,
+      "mean": 0,
+      "min": 0,
+      "max": 0,
+      "stdDev": 0,
+      "behaviourPassed": 0,
+      "behaviourTotal": 0,
+      "attempts": 0,
+      "dependencyFilesRead": 0,
+      "dependencyBytesRead": 0,
+      "redoable": 0,
+      "tokens": 0,
+      "promptTokens": 0,
+      "completionTokens": 0,
+      "ranAt": "2026-11-13T08:14:16.654Z"
+    },
+    {
       "skillRevision": "3df6d8308bc811f1d379851d3cadecf5a32434e6",
       "model": "deepseek-v4-flash",
       "scenario": "component/switch",
@@ -10538,7 +11429,8 @@
       "promptTokens": 133929,
       "completionTokens": 3231,
       "cost": 0.010672946999999999,
-      "ranAt": "2026-10-14T00:50:17.844Z"
+      "ranAt": "2026-10-14T00:50:17.844Z",
+      "retired": true
     },
     {
       "skillRevision": "3f8ac1e89e3258ca014bd312c471a4689fb8fa06",
@@ -10558,7 +11450,8 @@
       "promptTokens": 124653,
       "completionTokens": 2223,
       "cost": 0.009813747,
-      "ranAt": "2026-10-15T21:37:04.852Z"
+      "ranAt": "2026-10-15T21:37:04.852Z",
+      "retired": true
     },
     {
       "skillRevision": "3a543648cbb2353adc8965d62c8f370e3aa07772",
@@ -10577,7 +11470,8 @@
       "tokens": 0,
       "promptTokens": 0,
       "completionTokens": 0,
-      "ranAt": "2026-10-17T17:26:36.159Z"
+      "ranAt": "2026-10-17T17:26:36.159Z",
+      "retired": true
     },
     {
       "skillRevision": "5e6fda934982a959c300566eea10bc7692d07e04",
@@ -10596,7 +11490,8 @@
       "tokens": 0,
       "promptTokens": 0,
       "completionTokens": 0,
-      "ranAt": "2026-10-18T09:59:32.838Z"
+      "ranAt": "2026-10-18T09:59:32.838Z",
+      "retired": true
     },
     {
       "skillRevision": "1b90deb5c3951288291a90687f9226a577631276",
@@ -10615,7 +11510,8 @@
       "tokens": 0,
       "promptTokens": 0,
       "completionTokens": 0,
-      "ranAt": "2026-10-20T09:04:06.171Z"
+      "ranAt": "2026-10-20T09:04:06.171Z",
+      "retired": true
     },
     {
       "skillRevision": "cfa84f5690a54321b9bbf0ebaa3a4551e72966d1",
@@ -10635,7 +11531,8 @@
       "promptTokens": 154386,
       "completionTokens": 4066,
       "cost": 0.012355433999999998,
-      "ranAt": "2026-10-21T10:20:33.407Z"
+      "ranAt": "2026-10-21T10:20:33.407Z",
+      "retired": true
     },
     {
       "skillRevision": "d17f0554cc1c27346f6120e54960d969c3aa65f7",
@@ -10851,6 +11748,30 @@
       "ranAt": "2026-11-13T05:53:17.298Z"
     },
     {
+      "skillRevision": "ea05f86b252a1f645d1abca898c4f3282811db25",
+      "model": "deepseek-v4-1-flash",
+      "scenario": "component/tabs",
+      "kind": "component",
+      "provider": "openai-compatible",
+      "subject": "model",
+      "samples": 3,
+      "mean": 1,
+      "min": 1,
+      "max": 1,
+      "stdDev": 0,
+      "behaviourPassed": 3,
+      "behaviourTotal": 3,
+      "attempts": 3,
+      "redoable": 0,
+      "tokens": 152645,
+      "promptTokens": 149899,
+      "completionTokens": 2746,
+      "dependencyFilesRead": 0,
+      "dependencyBytesRead": 0,
+      "cost": 0.02413245,
+      "ranAt": "2026-11-13T08:20:47.172Z"
+    },
+    {
       "skillRevision": "3df6d8308bc811f1d379851d3cadecf5a32434e6",
       "model": "deepseek-v4-flash",
       "scenario": "component/tabs",
@@ -10868,7 +11789,8 @@
       "promptTokens": 136124,
       "completionTokens": 5094,
       "cost": 0.011124806,
-      "ranAt": "2026-10-14T00:50:17.844Z"
+      "ranAt": "2026-10-14T00:50:17.844Z",
+      "retired": true
     },
     {
       "skillRevision": "3f8ac1e89e3258ca014bd312c471a4689fb8fa06",
@@ -10888,7 +11810,8 @@
       "promptTokens": 138509,
       "completionTokens": 2459,
       "cost": 0.010902911,
-      "ranAt": "2026-10-15T21:37:04.852Z"
+      "ranAt": "2026-10-15T21:37:04.852Z",
+      "retired": true
     },
     {
       "skillRevision": "3a543648cbb2353adc8965d62c8f370e3aa07772",
@@ -10907,7 +11830,8 @@
       "tokens": 0,
       "promptTokens": 0,
       "completionTokens": 0,
-      "ranAt": "2026-10-17T17:26:36.159Z"
+      "ranAt": "2026-10-17T17:26:36.159Z",
+      "retired": true
     },
     {
       "skillRevision": "5e6fda934982a959c300566eea10bc7692d07e04",
@@ -10926,7 +11850,8 @@
       "tokens": 0,
       "promptTokens": 0,
       "completionTokens": 0,
-      "ranAt": "2026-10-18T09:59:32.838Z"
+      "ranAt": "2026-10-18T09:59:32.838Z",
+      "retired": true
     },
     {
       "skillRevision": "1b90deb5c3951288291a90687f9226a577631276",
@@ -10945,7 +11870,8 @@
       "tokens": 0,
       "promptTokens": 0,
       "completionTokens": 0,
-      "ranAt": "2026-10-20T09:04:06.171Z"
+      "ranAt": "2026-10-20T09:04:06.171Z",
+      "retired": true
     },
     {
       "skillRevision": "cfa84f5690a54321b9bbf0ebaa3a4551e72966d1",
@@ -10965,7 +11891,8 @@
       "promptTokens": 178916,
       "completionTokens": 3704,
       "cost": 0.014164328,
-      "ranAt": "2026-10-21T10:20:33.407Z"
+      "ranAt": "2026-10-21T10:20:33.407Z",
+      "retired": true
     },
     {
       "skillRevision": "d17f0554cc1c27346f6120e54960d969c3aa65f7",
@@ -11181,6 +12108,30 @@
       "ranAt": "2026-11-13T05:53:17.298Z"
     },
     {
+      "skillRevision": "ea05f86b252a1f645d1abca898c4f3282811db25",
+      "model": "deepseek-v4-1-flash",
+      "scenario": "component/textarea",
+      "kind": "component",
+      "provider": "openai-compatible",
+      "subject": "model",
+      "samples": 3,
+      "mean": 1,
+      "min": 1,
+      "max": 1,
+      "stdDev": 0,
+      "behaviourPassed": 3,
+      "behaviourTotal": 3,
+      "attempts": 3,
+      "redoable": 0,
+      "tokens": 196651,
+      "promptTokens": 190929,
+      "completionTokens": 5722,
+      "dependencyFilesRead": 0,
+      "dependencyBytesRead": 0,
+      "cost": 0.03207255,
+      "ranAt": "2026-11-13T08:21:23.036Z"
+    },
+    {
       "skillRevision": "3df6d8308bc811f1d379851d3cadecf5a32434e6",
       "model": "deepseek-v4-flash",
       "scenario": "component/textarea",
@@ -11198,7 +12149,8 @@
       "promptTokens": 149945,
       "completionTokens": 3978,
       "cost": 0.012004454,
-      "ranAt": "2026-10-14T00:50:17.844Z"
+      "ranAt": "2026-10-14T00:50:17.844Z",
+      "retired": true
     },
     {
       "skillRevision": "3f8ac1e89e3258ca014bd312c471a4689fb8fa06",
@@ -11218,7 +12170,8 @@
       "promptTokens": 187483,
       "completionTokens": 3215,
       "cost": 0.014740603000000001,
-      "ranAt": "2026-10-15T22:26:29.249Z"
+      "ranAt": "2026-10-15T22:26:29.249Z",
+      "retired": true
     },
     {
       "skillRevision": "3a543648cbb2353adc8965d62c8f370e3aa07772",
@@ -11237,7 +12190,8 @@
       "tokens": 0,
       "promptTokens": 0,
       "completionTokens": 0,
-      "ranAt": "2026-10-17T17:26:36.159Z"
+      "ranAt": "2026-10-17T17:26:36.159Z",
+      "retired": true
     },
     {
       "skillRevision": "5e6fda934982a959c300566eea10bc7692d07e04",
@@ -11256,7 +12210,8 @@
       "tokens": 0,
       "promptTokens": 0,
       "completionTokens": 0,
-      "ranAt": "2026-10-18T09:59:32.838Z"
+      "ranAt": "2026-10-18T09:59:32.838Z",
+      "retired": true
     },
     {
       "skillRevision": "1b90deb5c3951288291a90687f9226a577631276",
@@ -11275,7 +12230,8 @@
       "tokens": 0,
       "promptTokens": 0,
       "completionTokens": 0,
-      "ranAt": "2026-10-20T09:04:06.171Z"
+      "ranAt": "2026-10-20T09:04:06.171Z",
+      "retired": true
     },
     {
       "skillRevision": "cfa84f5690a54321b9bbf0ebaa3a4551e72966d1",
@@ -11295,7 +12251,8 @@
       "promptTokens": 255739,
       "completionTokens": 6138,
       "cost": 0.020375278,
-      "ranAt": "2026-10-21T10:20:33.407Z"
+      "ranAt": "2026-10-21T10:20:33.407Z",
+      "retired": true
     },
     {
       "skillRevision": "d17f0554cc1c27346f6120e54960d969c3aa65f7",
@@ -11508,6 +12465,27 @@
       "ranAt": "2026-11-13T05:53:17.298Z"
     },
     {
+      "skillRevision": "ea05f86b252a1f645d1abca898c4f3282811db25",
+      "model": "deepseek-v4-1-flash",
+      "scenario": "component/tooltip",
+      "kind": "component",
+      "samples": 0,
+      "mean": 0,
+      "min": 0,
+      "max": 0,
+      "stdDev": 0,
+      "behaviourPassed": 0,
+      "behaviourTotal": 0,
+      "attempts": 0,
+      "dependencyFilesRead": 0,
+      "dependencyBytesRead": 0,
+      "redoable": 0,
+      "tokens": 0,
+      "promptTokens": 0,
+      "completionTokens": 0,
+      "ranAt": "2026-11-13T08:14:16.654Z"
+    },
+    {
       "skillRevision": "3df6d8308bc811f1d379851d3cadecf5a32434e6",
       "model": "deepseek-v4-flash",
       "scenario": "component/tooltip",
@@ -11525,7 +12503,8 @@
       "promptTokens": 128223,
       "completionTokens": 6244,
       "cost": 0.01070028,
-      "ranAt": "2026-10-14T00:50:17.844Z"
+      "ranAt": "2026-10-14T00:50:17.844Z",
+      "retired": true
     },
     {
       "skillRevision": "3f8ac1e89e3258ca014bd312c471a4689fb8fa06",
@@ -11545,7 +12524,8 @@
       "promptTokens": 28847,
       "completionTokens": 669,
       "cost": 0.002294729,
-      "ranAt": "2026-10-15T21:37:04.852Z"
+      "ranAt": "2026-10-15T21:37:04.852Z",
+      "retired": true
     },
     {
       "skillRevision": "3a543648cbb2353adc8965d62c8f370e3aa07772",
@@ -11564,7 +12544,8 @@
       "tokens": 0,
       "promptTokens": 0,
       "completionTokens": 0,
-      "ranAt": "2026-10-17T17:26:36.159Z"
+      "ranAt": "2026-10-17T17:26:36.159Z",
+      "retired": true
     },
     {
       "skillRevision": "5e6fda934982a959c300566eea10bc7692d07e04",
@@ -11583,7 +12564,8 @@
       "tokens": 0,
       "promptTokens": 0,
       "completionTokens": 0,
-      "ranAt": "2026-10-18T09:59:32.838Z"
+      "ranAt": "2026-10-18T09:59:32.838Z",
+      "retired": true
     },
     {
       "skillRevision": "1b90deb5c3951288291a90687f9226a577631276",
@@ -11602,7 +12584,8 @@
       "tokens": 0,
       "promptTokens": 0,
       "completionTokens": 0,
-      "ranAt": "2026-10-20T09:04:06.171Z"
+      "ranAt": "2026-10-20T09:04:06.171Z",
+      "retired": true
     },
     {
       "skillRevision": "cfa84f5690a54321b9bbf0ebaa3a4551e72966d1",
@@ -11622,7 +12605,8 @@
       "promptTokens": 299502,
       "completionTokens": 5147,
       "cost": 0.023549643,
-      "ranAt": "2026-10-21T10:20:33.407Z"
+      "ranAt": "2026-10-21T10:20:33.407Z",
+      "retired": true
     },
     {
       "skillRevision": "3df6d8308bc811f1d379851d3cadecf5a32434e6",
@@ -11642,7 +12626,8 @@
       "promptTokens": 167082,
       "completionTokens": 7353,
       "cost": 0.013823241,
-      "ranAt": "2026-10-14T00:50:17.844Z"
+      "ranAt": "2026-10-14T00:50:17.844Z",
+      "retired": true
     },
     {
       "skillRevision": "d17f0554cc1c27346f6120e54960d969c3aa65f7",
@@ -11862,6 +12847,30 @@
       "ranAt": "2026-11-13T06:07:04.375Z"
     },
     {
+      "skillRevision": "ea05f86b252a1f645d1abca898c4f3282811db25",
+      "model": "deepseek-v4-1-flash",
+      "scenario": "form/iban-in-form",
+      "kind": "component",
+      "provider": "openai-compatible",
+      "subject": "model",
+      "samples": 3,
+      "mean": 1,
+      "min": 1,
+      "max": 1,
+      "stdDev": 0,
+      "behaviourPassed": 3,
+      "behaviourTotal": 3,
+      "attempts": 3,
+      "redoable": 0,
+      "tokens": 241203,
+      "promptTokens": 237836,
+      "completionTokens": 3367,
+      "dependencyFilesRead": 0,
+      "dependencyBytesRead": 0,
+      "cost": 0.037695599999999996,
+      "ranAt": "2026-11-13T08:21:44.343Z"
+    },
+    {
       "skillRevision": "9d077729ff216cc696ea08c5be34d18f93a52564",
       "model": "deepseek-v4-flash",
       "scenario": "form/iban-in-form",
@@ -11879,7 +12888,8 @@
       "promptTokens": 312108,
       "completionTokens": 7757,
       "cost": 0.024907029,
-      "ranAt": "2026-10-15T11:11:42.028Z"
+      "ranAt": "2026-10-15T11:11:42.028Z",
+      "retired": true
     },
     {
       "skillRevision": "451cadf02977a394c31467e35fed97e6880b0266",
@@ -11899,7 +12909,8 @@
       "promptTokens": 275915,
       "completionTokens": 5431,
       "cost": 0.021800483000000002,
-      "ranAt": "2026-10-15T20:56:50.415Z"
+      "ranAt": "2026-10-15T20:56:50.415Z",
+      "retired": true
     },
     {
       "skillRevision": "3f8ac1e89e3258ca014bd312c471a4689fb8fa06",
@@ -11919,7 +12930,8 @@
       "promptTokens": 410121,
       "completionTokens": 6070,
       "cost": 0.032097906,
-      "ranAt": "2026-10-15T22:39:57.529Z"
+      "ranAt": "2026-10-15T22:39:57.529Z",
+      "retired": true
     },
     {
       "skillRevision": "3a543648cbb2353adc8965d62c8f370e3aa07772",
@@ -11939,7 +12951,8 @@
       "promptTokens": 246693,
       "completionTokens": 4329,
       "cost": 0.019411005,
-      "ranAt": "2026-10-17T17:26:36.159Z"
+      "ranAt": "2026-10-17T17:26:36.159Z",
+      "retired": true
     },
     {
       "skillRevision": "5e6fda934982a959c300566eea10bc7692d07e04",
@@ -11958,7 +12971,8 @@
       "tokens": 0,
       "promptTokens": 0,
       "completionTokens": 0,
-      "ranAt": "2026-10-18T09:59:32.838Z"
+      "ranAt": "2026-10-18T09:59:32.838Z",
+      "retired": true
     },
     {
       "skillRevision": "1b90deb5c3951288291a90687f9226a577631276",
@@ -11978,7 +12992,8 @@
       "promptTokens": 577965,
       "completionTokens": 5861,
       "cost": 0.04482207299999999,
-      "ranAt": "2026-10-20T09:04:06.171Z"
+      "ranAt": "2026-10-20T09:04:06.171Z",
+      "retired": true
     },
     {
       "skillRevision": "cfa84f5690a54321b9bbf0ebaa3a4551e72966d1",
@@ -11998,7 +13013,8 @@
       "promptTokens": 283244,
       "completionTokens": 5246,
       "cost": 0.022329182,
-      "ranAt": "2026-10-21T10:20:33.407Z"
+      "ranAt": "2026-10-21T10:20:33.407Z",
+      "retired": true
     },
     {
       "skillRevision": "d17f0554cc1c27346f6120e54960d969c3aa65f7",
@@ -12211,6 +13227,27 @@
       "ranAt": "2026-11-13T05:53:17.298Z"
     },
     {
+      "skillRevision": "ea05f86b252a1f645d1abca898c4f3282811db25",
+      "model": "deepseek-v4-1-flash",
+      "scenario": "integration/mortgage-calculator",
+      "kind": "integration",
+      "samples": 0,
+      "mean": 0,
+      "min": 0,
+      "max": 0,
+      "stdDev": 0,
+      "behaviourPassed": 0,
+      "behaviourTotal": 0,
+      "attempts": 0,
+      "dependencyFilesRead": 0,
+      "dependencyBytesRead": 0,
+      "redoable": 0,
+      "tokens": 0,
+      "promptTokens": 0,
+      "completionTokens": 0,
+      "ranAt": "2026-11-13T08:14:16.654Z"
+    },
+    {
       "skillRevision": "d17f0554cc1c27346f6120e54960d969c3aa65f7",
       "model": "anthropic-claude-haiku-4-5",
       "scenario": "integration/native-form-to-lion-form",
@@ -12419,6 +13456,27 @@
       "promptTokens": 0,
       "completionTokens": 0,
       "ranAt": "2026-11-13T05:53:17.298Z"
+    },
+    {
+      "skillRevision": "ea05f86b252a1f645d1abca898c4f3282811db25",
+      "model": "deepseek-v4-1-flash",
+      "scenario": "integration/native-form-to-lion-form",
+      "kind": "integration",
+      "samples": 0,
+      "mean": 0,
+      "min": 0,
+      "max": 0,
+      "stdDev": 0,
+      "behaviourPassed": 0,
+      "behaviourTotal": 0,
+      "attempts": 0,
+      "dependencyFilesRead": 0,
+      "dependencyBytesRead": 0,
+      "redoable": 0,
+      "tokens": 0,
+      "promptTokens": 0,
+      "completionTokens": 0,
+      "ranAt": "2026-11-13T08:14:16.654Z"
     },
     {
       "skillRevision": "3df6d8308bc811f1d379851d3cadecf5a32434e6",
@@ -12438,7 +13496,8 @@
       "promptTokens": 518485,
       "completionTokens": 26819,
       "cost": 0.043508167,
-      "ranAt": "2026-10-14T00:50:17.844Z"
+      "ranAt": "2026-10-14T00:50:17.844Z",
+      "retired": true
     },
     {
       "skillRevision": "3f8ac1e89e3258ca014bd312c471a4689fb8fa06",
@@ -12458,7 +13517,8 @@
       "promptTokens": 337997,
       "completionTokens": 26018,
       "cost": 0.029668525999999997,
-      "ranAt": "2026-10-15T21:10:08.507Z"
+      "ranAt": "2026-10-15T21:10:08.507Z",
+      "retired": true
     },
     {
       "skillRevision": "3a543648cbb2353adc8965d62c8f370e3aa07772",
@@ -12477,7 +13537,8 @@
       "tokens": 0,
       "promptTokens": 0,
       "completionTokens": 0,
-      "ranAt": "2026-10-17T17:26:36.159Z"
+      "ranAt": "2026-10-17T17:26:36.159Z",
+      "retired": true
     },
     {
       "skillRevision": "5e6fda934982a959c300566eea10bc7692d07e04",
@@ -12496,7 +13557,8 @@
       "tokens": 0,
       "promptTokens": 0,
       "completionTokens": 0,
-      "ranAt": "2026-10-18T09:59:32.838Z"
+      "ranAt": "2026-10-18T09:59:32.838Z",
+      "retired": true
     },
     {
       "skillRevision": "1b90deb5c3951288291a90687f9226a577631276",
@@ -12515,7 +13577,8 @@
       "tokens": 0,
       "promptTokens": 0,
       "completionTokens": 0,
-      "ranAt": "2026-10-20T09:04:06.171Z"
+      "ranAt": "2026-10-20T09:04:06.171Z",
+      "retired": true
     },
     {
       "skillRevision": "cfa84f5690a54321b9bbf0ebaa3a4551e72966d1",
@@ -12535,7 +13598,8 @@
       "promptTokens": 447800,
       "completionTokens": 46381,
       "cost": 0.04112909299999999,
-      "ranAt": "2026-10-21T10:20:33.407Z"
+      "ranAt": "2026-10-21T10:20:33.407Z",
+      "retired": true
     },
     {
       "skillRevision": "d17f0554cc1c27346f6120e54960d969c3aa65f7",
@@ -12755,6 +13819,30 @@
       "ranAt": "2026-11-13T06:06:46.983Z"
     },
     {
+      "skillRevision": "ea05f86b252a1f645d1abca898c4f3282811db25",
+      "model": "deepseek-v4-1-flash",
+      "scenario": "repair/iban-field",
+      "kind": "repair",
+      "provider": "openai-compatible",
+      "subject": "model",
+      "samples": 3,
+      "mean": 1,
+      "min": 1,
+      "max": 1,
+      "stdDev": 0,
+      "behaviourPassed": 3,
+      "behaviourTotal": 3,
+      "attempts": 3,
+      "redoable": 0,
+      "tokens": 171265,
+      "promptTokens": 167159,
+      "completionTokens": 4106,
+      "dependencyFilesRead": 0,
+      "dependencyBytesRead": 0,
+      "cost": 0.027537449999999998,
+      "ranAt": "2026-11-13T08:22:04.171Z"
+    },
+    {
       "skillRevision": "3df6d8308bc811f1d379851d3cadecf5a32434e6",
       "model": "deepseek-v4-flash",
       "scenario": "repair/iban-field",
@@ -12772,7 +13860,8 @@
       "promptTokens": 393439,
       "completionTokens": 13756,
       "cost": 0.032006032,
-      "ranAt": "2026-10-14T00:50:17.844Z"
+      "ranAt": "2026-10-14T00:50:17.844Z",
+      "retired": true
     },
     {
       "skillRevision": "3f8ac1e89e3258ca014bd312c471a4689fb8fa06",
@@ -12792,7 +13881,8 @@
       "promptTokens": 460799,
       "completionTokens": 11992,
       "cost": 0.0368555,
-      "ranAt": "2026-10-15T21:07:38.812Z"
+      "ranAt": "2026-10-15T21:07:38.812Z",
+      "retired": true
     },
     {
       "skillRevision": "3a543648cbb2353adc8965d62c8f370e3aa07772",
@@ -12811,7 +13901,8 @@
       "tokens": 0,
       "promptTokens": 0,
       "completionTokens": 0,
-      "ranAt": "2026-10-17T17:26:36.159Z"
+      "ranAt": "2026-10-17T17:26:36.159Z",
+      "retired": true
     },
     {
       "skillRevision": "5e6fda934982a959c300566eea10bc7692d07e04",
@@ -12830,7 +13921,8 @@
       "tokens": 0,
       "promptTokens": 0,
       "completionTokens": 0,
-      "ranAt": "2026-10-18T09:59:32.838Z"
+      "ranAt": "2026-10-18T09:59:32.838Z",
+      "retired": true
     },
     {
       "skillRevision": "1b90deb5c3951288291a90687f9226a577631276",
@@ -12850,7 +13942,8 @@
       "promptTokens": 414622,
       "completionTokens": 8548,
       "cost": 0.032819116,
-      "ranAt": "2026-10-20T09:04:06.171Z"
+      "ranAt": "2026-10-20T09:04:06.171Z",
+      "retired": true
     },
     {
       "skillRevision": "cfa84f5690a54321b9bbf0ebaa3a4551e72966d1",
@@ -12870,7 +13963,8 @@
       "promptTokens": 682953,
       "completionTokens": 10585,
       "cost": 0.053523933,
-      "ranAt": "2026-10-21T10:20:33.407Z"
+      "ranAt": "2026-10-21T10:20:33.407Z",
+      "retired": true
     },
     {
       "skillRevision": "d17f0554cc1c27346f6120e54960d969c3aa65f7",
@@ -13083,6 +14177,27 @@
       "ranAt": "2026-11-13T05:53:17.298Z"
     },
     {
+      "skillRevision": "ea05f86b252a1f645d1abca898c4f3282811db25",
+      "model": "deepseek-v4-1-flash",
+      "scenario": "system/core",
+      "kind": "system",
+      "samples": 0,
+      "mean": 0,
+      "min": 0,
+      "max": 0,
+      "stdDev": 0,
+      "behaviourPassed": 0,
+      "behaviourTotal": 0,
+      "attempts": 0,
+      "dependencyFilesRead": 0,
+      "dependencyBytesRead": 0,
+      "redoable": 0,
+      "tokens": 0,
+      "promptTokens": 0,
+      "completionTokens": 0,
+      "ranAt": "2026-11-13T08:14:16.654Z"
+    },
+    {
       "skillRevision": "3df6d8308bc811f1d379851d3cadecf5a32434e6",
       "model": "deepseek-v4-flash",
       "scenario": "system/core",
@@ -13100,7 +14215,8 @@
       "promptTokens": 270730,
       "completionTokens": 19049,
       "cost": 0.023489977,
-      "ranAt": "2026-10-14T00:50:17.844Z"
+      "ranAt": "2026-10-14T00:50:17.844Z",
+      "retired": true
     },
     {
       "skillRevision": "3f8ac1e89e3258ca014bd312c471a4689fb8fa06",
@@ -13120,7 +14236,8 @@
       "promptTokens": 289170,
       "completionTokens": 15022,
       "cost": 0.024275285999999997,
-      "ranAt": "2026-10-15T21:37:04.852Z"
+      "ranAt": "2026-10-15T21:37:04.852Z",
+      "retired": true
     },
     {
       "skillRevision": "3a543648cbb2353adc8965d62c8f370e3aa07772",
@@ -13139,7 +14256,8 @@
       "tokens": 0,
       "promptTokens": 0,
       "completionTokens": 0,
-      "ranAt": "2026-10-17T17:26:36.159Z"
+      "ranAt": "2026-10-17T17:26:36.159Z",
+      "retired": true
     },
     {
       "skillRevision": "5e6fda934982a959c300566eea10bc7692d07e04",
@@ -13158,7 +14276,8 @@
       "tokens": 0,
       "promptTokens": 0,
       "completionTokens": 0,
-      "ranAt": "2026-10-18T09:59:32.838Z"
+      "ranAt": "2026-10-18T09:59:32.838Z",
+      "retired": true
     },
     {
       "skillRevision": "1b90deb5c3951288291a90687f9226a577631276",
@@ -13177,7 +14296,8 @@
       "tokens": 0,
       "promptTokens": 0,
       "completionTokens": 0,
-      "ranAt": "2026-10-20T09:04:06.171Z"
+      "ranAt": "2026-10-20T09:04:06.171Z",
+      "retired": true
     },
     {
       "skillRevision": "cfa84f5690a54321b9bbf0ebaa3a4551e72966d1",
@@ -13197,7 +14317,8 @@
       "promptTokens": 901697,
       "completionTokens": 72716,
       "cost": 0.07965451999999999,
-      "ranAt": "2026-10-21T10:20:33.407Z"
+      "ranAt": "2026-10-21T10:20:33.407Z",
+      "retired": true
     },
     {
       "skillRevision": "d17f0554cc1c27346f6120e54960d969c3aa65f7",
@@ -13426,6 +14547,30 @@
       "ranAt": "2026-11-13T06:05:52.620Z"
     },
     {
+      "skillRevision": "ea05f86b252a1f645d1abca898c4f3282811db25",
+      "model": "deepseek-v4-1-flash",
+      "scenario": "system/form",
+      "kind": "system",
+      "provider": "openai-compatible",
+      "subject": "model",
+      "samples": 3,
+      "mean": 1,
+      "min": 1,
+      "max": 1,
+      "stdDev": 0,
+      "behaviourPassed": 0,
+      "behaviourTotal": 0,
+      "attempts": 3,
+      "redoable": 0,
+      "tokens": 358037,
+      "promptTokens": 353063,
+      "completionTokens": 4974,
+      "dependencyFilesRead": 0,
+      "dependencyBytesRead": 0,
+      "cost": 0.055943849999999996,
+      "ranAt": "2026-11-13T08:22:40.045Z"
+    },
+    {
       "skillRevision": "3df6d8308bc811f1d379851d3cadecf5a32434e6",
       "model": "deepseek-v4-flash",
       "scenario": "system/form",
@@ -13443,7 +14588,8 @@
       "promptTokens": 425971,
       "completionTokens": 15964,
       "cost": 0.034816287999999994,
-      "ranAt": "2026-10-14T00:50:17.844Z"
+      "ranAt": "2026-10-14T00:50:17.844Z",
+      "retired": true
     },
     {
       "skillRevision": "166718cee0cb50634b22f3aef9194dcc91d57e50",
@@ -13463,7 +14609,8 @@
       "promptTokens": 641642,
       "completionTokens": 20479,
       "cost": 0.051898079,
-      "ranAt": "2026-10-14T23:32:25.907Z"
+      "ranAt": "2026-10-14T23:32:25.907Z",
+      "retired": true
     },
     {
       "skillRevision": "3f8ac1e89e3258ca014bd312c471a4689fb8fa06",
@@ -13483,7 +14630,8 @@
       "promptTokens": 756416,
       "completionTokens": 20673,
       "cost": 0.060650585,
-      "ranAt": "2026-10-15T22:31:28.585Z"
+      "ranAt": "2026-10-15T22:31:28.585Z",
+      "retired": true
     },
     {
       "skillRevision": "3a543648cbb2353adc8965d62c8f370e3aa07772",
@@ -13502,7 +14650,8 @@
       "tokens": 0,
       "promptTokens": 0,
       "completionTokens": 0,
-      "ranAt": "2026-10-17T17:26:36.159Z"
+      "ranAt": "2026-10-17T17:26:36.159Z",
+      "retired": true
     },
     {
       "skillRevision": "5e6fda934982a959c300566eea10bc7692d07e04",
@@ -13521,7 +14670,8 @@
       "tokens": 0,
       "promptTokens": 0,
       "completionTokens": 0,
-      "ranAt": "2026-10-18T09:59:32.838Z"
+      "ranAt": "2026-10-18T09:59:32.838Z",
+      "retired": true
     },
     {
       "skillRevision": "1b90deb5c3951288291a90687f9226a577631276",
@@ -13540,7 +14690,8 @@
       "tokens": 0,
       "promptTokens": 0,
       "completionTokens": 0,
-      "ranAt": "2026-10-20T09:04:06.171Z"
+      "ranAt": "2026-10-20T09:04:06.171Z",
+      "retired": true
     },
     {
       "skillRevision": "cfa84f5690a54321b9bbf0ebaa3a4551e72966d1",
@@ -13560,7 +14711,8 @@
       "promptTokens": 689115,
       "completionTokens": 20060,
       "cost": 0.05544192,
-      "ranAt": "2026-10-21T10:20:33.407Z"
+      "ranAt": "2026-10-21T10:20:33.407Z",
+      "retired": true
     },
     {
       "skillRevision": "d17f0554cc1c27346f6120e54960d969c3aa65f7",
@@ -13771,6 +14923,27 @@
       "promptTokens": 0,
       "completionTokens": 0,
       "ranAt": "2026-11-13T05:53:17.298Z"
+    },
+    {
+      "skillRevision": "ea05f86b252a1f645d1abca898c4f3282811db25",
+      "model": "deepseek-v4-1-flash",
+      "scenario": "system/icon",
+      "kind": "system",
+      "samples": 0,
+      "mean": 0,
+      "min": 0,
+      "max": 0,
+      "stdDev": 0,
+      "behaviourPassed": 0,
+      "behaviourTotal": 0,
+      "attempts": 0,
+      "dependencyFilesRead": 0,
+      "dependencyBytesRead": 0,
+      "redoable": 0,
+      "tokens": 0,
+      "promptTokens": 0,
+      "completionTokens": 0,
+      "ranAt": "2026-11-13T08:14:16.654Z"
     },
     {
       "skillRevision": "3df6d8308bc811f1d379851d3cadecf5a32434e6",
@@ -13790,7 +14963,8 @@
       "promptTokens": 89223,
       "completionTokens": 6785,
       "cost": 0.007819053,
-      "ranAt": "2026-10-14T00:50:17.844Z"
+      "ranAt": "2026-10-14T00:50:17.844Z",
+      "retired": true
     },
     {
       "skillRevision": "3f8ac1e89e3258ca014bd312c471a4689fb8fa06",
@@ -13810,7 +14984,8 @@
       "promptTokens": 196772,
       "completionTokens": 8932,
       "cost": 0.016321268,
-      "ranAt": "2026-10-15T22:34:52.166Z"
+      "ranAt": "2026-10-15T22:34:52.166Z",
+      "retired": true
     },
     {
       "skillRevision": "3a543648cbb2353adc8965d62c8f370e3aa07772",
@@ -13829,7 +15004,8 @@
       "tokens": 0,
       "promptTokens": 0,
       "completionTokens": 0,
-      "ranAt": "2026-10-17T17:26:36.159Z"
+      "ranAt": "2026-10-17T17:26:36.159Z",
+      "retired": true
     },
     {
       "skillRevision": "5e6fda934982a959c300566eea10bc7692d07e04",
@@ -13848,7 +15024,8 @@
       "tokens": 0,
       "promptTokens": 0,
       "completionTokens": 0,
-      "ranAt": "2026-10-18T09:59:32.838Z"
+      "ranAt": "2026-10-18T09:59:32.838Z",
+      "retired": true
     },
     {
       "skillRevision": "1b90deb5c3951288291a90687f9226a577631276",
@@ -13867,7 +15044,8 @@
       "tokens": 0,
       "promptTokens": 0,
       "completionTokens": 0,
-      "ranAt": "2026-10-20T09:04:06.171Z"
+      "ranAt": "2026-10-20T09:04:06.171Z",
+      "retired": true
     },
     {
       "skillRevision": "cfa84f5690a54321b9bbf0ebaa3a4551e72966d1",
@@ -13887,7 +15065,8 @@
       "promptTokens": 240232,
       "completionTokens": 7787,
       "cost": 0.019449043,
-      "ranAt": "2026-10-21T10:20:33.407Z"
+      "ranAt": "2026-10-21T10:20:33.407Z",
+      "retired": true
     },
     {
       "skillRevision": "d17f0554cc1c27346f6120e54960d969c3aa65f7",
@@ -14100,6 +15279,27 @@
       "ranAt": "2026-11-13T05:53:17.298Z"
     },
     {
+      "skillRevision": "ea05f86b252a1f645d1abca898c4f3282811db25",
+      "model": "deepseek-v4-1-flash",
+      "scenario": "system/localize",
+      "kind": "system",
+      "samples": 0,
+      "mean": 0,
+      "min": 0,
+      "max": 0,
+      "stdDev": 0,
+      "behaviourPassed": 0,
+      "behaviourTotal": 0,
+      "attempts": 0,
+      "dependencyFilesRead": 0,
+      "dependencyBytesRead": 0,
+      "redoable": 0,
+      "tokens": 0,
+      "promptTokens": 0,
+      "completionTokens": 0,
+      "ranAt": "2026-11-13T08:14:16.654Z"
+    },
+    {
       "skillRevision": "3df6d8308bc811f1d379851d3cadecf5a32434e6",
       "model": "deepseek-v4-flash",
       "scenario": "system/localize",
@@ -14117,7 +15317,8 @@
       "promptTokens": 160497,
       "completionTokens": 4583,
       "cost": 0.012898970999999999,
-      "ranAt": "2026-10-14T00:50:17.844Z"
+      "ranAt": "2026-10-14T00:50:17.844Z",
+      "retired": true
     },
     {
       "skillRevision": "3f8ac1e89e3258ca014bd312c471a4689fb8fa06",
@@ -14137,7 +15338,8 @@
       "promptTokens": 218981,
       "completionTokens": 5385,
       "cost": 0.017466461,
-      "ranAt": "2026-10-15T22:36:18.798Z"
+      "ranAt": "2026-10-15T22:36:18.798Z",
+      "retired": true
     },
     {
       "skillRevision": "3a543648cbb2353adc8965d62c8f370e3aa07772",
@@ -14156,7 +15358,8 @@
       "tokens": 0,
       "promptTokens": 0,
       "completionTokens": 0,
-      "ranAt": "2026-10-17T17:26:36.159Z"
+      "ranAt": "2026-10-17T17:26:36.159Z",
+      "retired": true
     },
     {
       "skillRevision": "5e6fda934982a959c300566eea10bc7692d07e04",
@@ -14175,7 +15378,8 @@
       "tokens": 0,
       "promptTokens": 0,
       "completionTokens": 0,
-      "ranAt": "2026-10-18T09:59:32.838Z"
+      "ranAt": "2026-10-18T09:59:32.838Z",
+      "retired": true
     },
     {
       "skillRevision": "1b90deb5c3951288291a90687f9226a577631276",
@@ -14194,7 +15398,8 @@
       "tokens": 0,
       "promptTokens": 0,
       "completionTokens": 0,
-      "ranAt": "2026-10-20T09:04:06.171Z"
+      "ranAt": "2026-10-20T09:04:06.171Z",
+      "retired": true
     },
     {
       "skillRevision": "cfa84f5690a54321b9bbf0ebaa3a4551e72966d1",
@@ -14214,7 +15419,8 @@
       "promptTokens": 214727,
       "completionTokens": 4946,
       "cost": 0.01707599,
-      "ranAt": "2026-10-21T10:20:33.407Z"
+      "ranAt": "2026-10-21T10:20:33.407Z",
+      "retired": true
     },
     {
       "skillRevision": "d17f0554cc1c27346f6120e54960d969c3aa65f7",
@@ -14433,6 +15639,30 @@
       "ranAt": "2026-11-13T06:12:54.178Z"
     },
     {
+      "skillRevision": "ea05f86b252a1f645d1abca898c4f3282811db25",
+      "model": "deepseek-v4-1-flash",
+      "scenario": "system/overlays",
+      "kind": "system",
+      "provider": "openai-compatible",
+      "subject": "model",
+      "samples": 3,
+      "mean": 1,
+      "min": 1,
+      "max": 1,
+      "stdDev": 0,
+      "behaviourPassed": 0,
+      "behaviourTotal": 0,
+      "attempts": 3,
+      "redoable": 0,
+      "tokens": 510830,
+      "promptTokens": 505748,
+      "completionTokens": 5082,
+      "dependencyFilesRead": 0,
+      "dependencyBytesRead": 0,
+      "cost": 0.07891139999999999,
+      "ranAt": "2026-11-13T08:23:22.440Z"
+    },
+    {
       "skillRevision": "3df6d8308bc811f1d379851d3cadecf5a32434e6",
       "model": "deepseek-v4-flash",
       "scenario": "system/overlays",
@@ -14450,7 +15680,8 @@
       "promptTokens": 189671,
       "completionTokens": 3803,
       "cost": 0.014996855,
-      "ranAt": "2026-10-14T00:50:17.844Z"
+      "ranAt": "2026-10-14T00:50:17.844Z",
+      "retired": true
     },
     {
       "skillRevision": "3f8ac1e89e3258ca014bd312c471a4689fb8fa06",
@@ -14470,7 +15701,8 @@
       "promptTokens": 276510,
       "completionTokens": 5510,
       "cost": 0.02185779,
-      "ranAt": "2026-10-15T22:37:46.761Z"
+      "ranAt": "2026-10-15T22:37:46.761Z",
+      "retired": true
     },
     {
       "skillRevision": "3a543648cbb2353adc8965d62c8f370e3aa07772",
@@ -14489,7 +15721,8 @@
       "tokens": 0,
       "promptTokens": 0,
       "completionTokens": 0,
-      "ranAt": "2026-10-17T17:26:36.159Z"
+      "ranAt": "2026-10-17T17:26:36.159Z",
+      "retired": true
     },
     {
       "skillRevision": "5e6fda934982a959c300566eea10bc7692d07e04",
@@ -14508,7 +15741,8 @@
       "tokens": 0,
       "promptTokens": 0,
       "completionTokens": 0,
-      "ranAt": "2026-10-18T09:59:32.838Z"
+      "ranAt": "2026-10-18T09:59:32.838Z",
+      "retired": true
     },
     {
       "skillRevision": "1b90deb5c3951288291a90687f9226a577631276",
@@ -14527,7 +15761,8 @@
       "tokens": 0,
       "promptTokens": 0,
       "completionTokens": 0,
-      "ranAt": "2026-10-20T09:04:06.171Z"
+      "ranAt": "2026-10-20T09:04:06.171Z",
+      "retired": true
     },
     {
       "skillRevision": "cfa84f5690a54321b9bbf0ebaa3a4551e72966d1",
@@ -14547,7 +15782,8 @@
       "promptTokens": 378542,
       "completionTokens": 9391,
       "cost": 0.030206015,
-      "ranAt": "2026-10-21T10:20:33.407Z"
+      "ranAt": "2026-10-21T10:20:33.407Z",
+      "retired": true
     },
     {
       "skillRevision": "d17f0554cc1c27346f6120e54960d969c3aa65f7",
@@ -14761,6 +15997,30 @@
       "ranAt": "2026-11-13T05:53:17.298Z"
     },
     {
+      "skillRevision": "ea05f86b252a1f645d1abca898c4f3282811db25",
+      "model": "deepseek-v4-1-flash",
+      "scenario": "use-case/combobox--narrow-a-long-list-by-typing",
+      "kind": "component",
+      "provider": "openai-compatible",
+      "subject": "model",
+      "samples": 3,
+      "mean": 1,
+      "min": 1,
+      "max": 1,
+      "stdDev": 0,
+      "behaviourPassed": 0,
+      "behaviourTotal": 0,
+      "attempts": 3,
+      "redoable": 0,
+      "tokens": 356965,
+      "promptTokens": 348075,
+      "completionTokens": 8890,
+      "dependencyFilesRead": 0,
+      "dependencyBytesRead": 0,
+      "cost": 0.05754525,
+      "ranAt": "2026-11-13T08:23:59.917Z"
+    },
+    {
       "skillRevision": "d17f0554cc1c27346f6120e54960d969c3aa65f7",
       "model": "anthropic-claude-haiku-4-5",
       "scenario": "use-case/combobox--suggest-while-you-type",
@@ -14970,6 +16230,30 @@
       "promptTokens": 0,
       "completionTokens": 0,
       "ranAt": "2026-11-13T05:53:17.298Z"
+    },
+    {
+      "skillRevision": "ea05f86b252a1f645d1abca898c4f3282811db25",
+      "model": "deepseek-v4-1-flash",
+      "scenario": "use-case/combobox--suggest-while-you-type",
+      "kind": "component",
+      "provider": "openai-compatible",
+      "subject": "model",
+      "samples": 3,
+      "mean": 1,
+      "min": 1,
+      "max": 1,
+      "stdDev": 0,
+      "behaviourPassed": 0,
+      "behaviourTotal": 0,
+      "attempts": 3,
+      "redoable": 0,
+      "tokens": 359391,
+      "promptTokens": 350478,
+      "completionTokens": 8913,
+      "dependencyFilesRead": 0,
+      "dependencyBytesRead": 0,
+      "cost": 0.0579195,
+      "ranAt": "2026-11-13T08:24:35.041Z"
     }
   ]
 }
