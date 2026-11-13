@@ -8,6 +8,46 @@
 
 ## Overview
 
+### Compose it, or extend it?
+
+Decide this first:
+
+- **You want a form in your own UI** (a page that collects and submits data) — **compose** the
+  documented components: write your own `LitElement`, apply `ScopedElementsMixin`, register `LionForm`
+  and the controls it renders in `static scopedElements`, and render `<lion-form>` / `<lion-input>` in
+  your template. Do **not** write `class MyElem extends LionForm` for this — a subclass without a
+  template of its own renders nothing.
+- **You want to change how the form _itself_ looks or behaves** — **extend** `LionForm`. That is the
+  subclassing job, documented on the Extensions page (`extensions.md` on the docs site), which stays out
+  of this component reference.
+
+The consumer shape:
+
+```js
+import { LitElement, html } from 'lit';
+import { ScopedElementsMixin } from '@open-wc/scoped-elements/lit-element.js';
+import { LionForm } from '@lion/ui/form.js';
+import { LionInput } from '@lion/ui/input.js';
+
+export class MyElem extends ScopedElementsMixin(LitElement) {
+  static scopedElements = { 'lion-form': LionForm, 'lion-input': LionInput };
+
+  render() {
+    return html`
+      <lion-form>
+        <form>
+          <lion-input name="firstName" label="First Name"></lion-input>
+        </form>
+      </lion-form>
+    `;
+  }
+}
+```
+
+`ScopedElementsMixin` comes from `@open-wc/scoped-elements/lit-element.js`; no `@lion/ui` entrypoint
+exports it — `@lion/ui/core.js` in particular does not. Read the [form system](../../fundamentals/systems/form/overview.md)
+for the light-dom and registration rules a form and its controls depend on.
+
 ```js script
 import { html } from 'lit';
 

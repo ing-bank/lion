@@ -25,6 +25,39 @@ against the design system it belongs to, so testing it against lion's documented
 thing. If a task only asks you to use a lion component, do not subclass — compose the documented
 component instead.
 
+## Decide first: compose, or extend?
+
+One question picks the shape of every file you write:
+
+- **The task shows or does something _with_ a lion component** — a page, a screen, a form, a progress
+  bar, a menu? Then **compose** it: write your own `LitElement`, apply `ScopedElementsMixin`, map the
+  lion class to its tag in `static scopedElements`, and render the element in your template. This is
+  the default for application code, and it is what the lion-ui tests measure.
+- **The task adds visuals or branding to the lion component _itself_** — a styled bar, a brand spinner?
+  Only then **extend** it (`class MyBar extends LionProgressIndicator`). That is the subclasser path,
+  reachable per component through that component's Extensions page.
+
+So never write `class MyElem extends LionProgressIndicator` (or any `extends Lion*`) when the job is to
+_use_ the component: a subclass with no template of its own renders nothing. The compose shape is:
+
+```js
+import { LitElement, html } from 'lit';
+import { ScopedElementsMixin } from '@open-wc/scoped-elements/lit-element.js';
+import { LionProgressIndicator } from '@lion/ui/progress-indicator.js';
+
+export class MyElem extends ScopedElementsMixin(LitElement) {
+  static scopedElements = { 'lion-progress-indicator': LionProgressIndicator };
+
+  render() {
+    return html`<lion-progress-indicator aria-label="Interest rate" value="50"></lion-progress-indicator>`;
+  }
+}
+```
+
+`ScopedElementsMixin` **always** comes from `@open-wc/scoped-elements/lit-element.js`. No `@lion/ui`
+entrypoint exports it — `@lion/ui/core.js` in particular does not — so importing it from one is a wrong
+specifier that fails at load.
+
 ## MANDATORY: read each component's reference doc before using it
 
 **Before writing markup for an `@lion/ui` component, open and read its reference doc under

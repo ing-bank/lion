@@ -20,6 +20,44 @@ A common convention for indicating that a menu item launches a dialog box is to 
 
 > From [menu wai-aria best practices](https://www.w3.org/TR/wai-aria-practices/#menu)
 
+## Compose it, or extend it?
+
+Decide this first:
+
+- **You want to offer a menu in your own UI** (a nav, an action list inside your page) — **compose** the
+  documented elements: write your own `LitElement`, apply `ScopedElementsMixin`, register `LionMenu` and
+  `LionMenuitem` in `static scopedElements`, and render `<lion-menu>` / `<lion-menuitem>` in your
+  template. Do **not** write `class MyElem extends LionMenu` for this — a subclass without a template of
+  its own renders nothing.
+- **You want to change how the menu _itself_ looks or behaves** — **extend** `LionMenu`. That is the
+  subclassing job, documented on the Extensions page (`extensions.md` on the docs site), which stays out
+  of this component reference.
+
+The consumer shape:
+
+```js
+import { LitElement, html } from 'lit';
+import { ScopedElementsMixin } from '@open-wc/scoped-elements/lit-element.js';
+import { LionMenu, LionMenuitem } from '@lion/ui/menu.js';
+
+export class MyElem extends ScopedElementsMixin(LitElement) {
+  static scopedElements = { 'lion-menu': LionMenu, 'lion-menuitem': LionMenuitem };
+
+  render() {
+    return html`
+      <lion-menu>
+        <lion-menuitem>Home</lion-menuitem>
+        <lion-menuitem>About</lion-menuitem>
+      </lion-menu>
+    `;
+  }
+}
+```
+
+`ScopedElementsMixin` comes from `@open-wc/scoped-elements/lit-element.js`; no `@lion/ui` entrypoint
+exports it — `@lion/ui/core.js` in particular does not. The classes are `LionMenu` and `LionMenuitem`
+(lower-case `i`), both from `@lion/ui/menu.js`.
+
 ```js script
 import { html } from 'lit';
 import '@lion/ui/define/lion-item.js';

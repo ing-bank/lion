@@ -52,6 +52,32 @@ LionInputIban }`). It **may** have a shadow root: it is the form's boundary, and
   shadow root in between makes the controls inside it stop registering to their parents, and validation
   and serialization lose them silently. `createRenderRoot()` returning the host is what achieves that.
 
+The overarching component is where a form starts — and it **composes** lion rather than extending it:
+
+```js
+import { LitElement, html } from 'lit';
+import { ScopedElementsMixin } from '@open-wc/scoped-elements/lit-element.js';
+import { LionForm } from '@lion/ui/form.js';
+import { LionInputIban } from '@lion/ui/input-iban.js';
+
+export class MyForm extends ScopedElementsMixin(LitElement) {
+  static scopedElements = { 'lion-form': LionForm, 'lion-input-iban': LionInputIban };
+
+  render() {
+    return html`
+      <lion-form>
+        <form>
+          <lion-input-iban name="account" label="Account"></lion-input-iban>
+        </form>
+      </lion-form>
+    `;
+  }
+}
+```
+
+`ScopedElementsMixin` comes from `@open-wc/scoped-elements/lit-element.js`; no `@lion/ui` entrypoint
+exports it — `@lion/ui/core.js` in particular does not.
+
 A second component also means a second template context. So when you only need to split a large form
 into several files, prefer a **shared template**: a plain lit-html template function renders in the
 overarching component's context, where the parent's scoped registry resolves every tag and no extra
