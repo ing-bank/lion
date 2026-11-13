@@ -370,7 +370,7 @@ LionSelectRich will give it acces to:
 - LionSelectRich itself, via `.hostElement`
 
 Code of an advanced custom invoker is shown below (this is the code for the
-invoker used in [IntlSelectRich](./examples.md)).
+invoker used in [IntlSelectRich](./extensions.md)).
 The invoker is usually added in the invoker slot of the LionSelectRich subclass.
 However, it would also be possible for an application developer to provide the invoker
 by putting it in light dom:
@@ -434,32 +434,26 @@ class IntlSelectInvoker extends LionSelectInvoker {
 
 ```js script
 import { html } from 'lit';
-import { repeat } from 'lit/directives/repeat.js';
 import { LionSelectRich } from '@lion/ui/select-rich.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
-
+// <lion-option> is not a module of its own - look its entrypoint up in references/entrypoints.md.// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
 ```
 
-### Select Rich International
+### Plain select-rich
 
-A visually advanced Subclasser implementation of `LionSelectRich`.
+You do not have to extend `LionSelectRich` to use it: the element renders the invoker and the option
+list itself. Put `<lion-option>` elements in the light DOM and it behaves like a native `<select>`
+with fully customizable options and invoker.
 
-Inspired by:
-
-- [intl-tel-input](https://intl-tel-input.com/)
-
-```js story
-export const IntlSelectRich = () => html`
-  <intl-select-rich label="Choose a region" name="regions">
-    ${repeat(
-      regionMetaList,
-      regionMeta => regionMeta.regionCode,
-      regionMeta =>
-        html` <intl-option .choiceValue="${regionMeta.regionCode}" .regionMeta="${regionMeta}">
-        </intl-option>`,
-    )}
-  </intl-select-rich>
-`;
+```html preview-story
+<lion-select-rich name="favoriteColor" label="Favorite color">
+  <lion-option .choiceValue="${'red'}">Red</lion-option>
+  <lion-option .choiceValue="${'hotpink'}">Hotpink</lion-option>
+  <lion-option .choiceValue="${'blue'}">Blue</lion-option>
+</lion-select-rich>
 ```
+
+See `extensions.md` for the international example: that one extends `LionSelectRich`, which is a
+different job from using select-rich as a consumer.
 
 ## API Reference
 

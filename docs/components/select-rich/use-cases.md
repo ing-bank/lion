@@ -328,7 +328,7 @@ LionSelectRich will give it acces to:
 - LionSelectRich itself, via `.hostElement`
 
 Code of an advanced custom invoker is shown below (this is the code for the
-invoker used in [IntlSelectRich](./examples.md)).
+invoker used in [IntlSelectRich](./extensions.md)).
 The invoker is usually added in the invoker slot of the LionSelectRich subclass.
 However, it would also be possible for an application developer to provide the invoker
 by putting it in light dom:

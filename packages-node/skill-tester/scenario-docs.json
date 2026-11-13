@@ -181,6 +181,7 @@
     "component/select-rich": [
       "docs/components/select-rich/api-table.md",
       "docs/components/select-rich/examples.md",
+      "docs/components/select-rich/extensions.md",
       "docs/components/select-rich/index.md",
       "docs/components/select-rich/overview.md",
       "docs/components/select-rich/use-cases.md"
@@ -201,6 +202,7 @@
     "component/tabs": [
       "docs/components/tabs/api-table.md",
       "docs/components/tabs/examples.md",
+      "docs/components/tabs/extensions.md",
       "docs/components/tabs/index.md",
       "docs/components/tabs/overview.md",
       "docs/components/tabs/use-cases.md"
