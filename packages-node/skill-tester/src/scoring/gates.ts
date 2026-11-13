@@ -185,6 +185,64 @@ export function unusedImportNames(source: string): string[] {
   return unused;
 }
 
+/** A module specifier that points inside the sandbox rather than at a package. */
+export function isRelativeSpecifier(value: string): boolean {
+  return value.startsWith('./') || value.startsWith('../');
+}
+
+/**
+ * Relative module specifiers of a file, each with the line/column of its import statement.
+ *
+ * Reuses the same oxc parse as `unusedImportNames` — no second parser. Only relative specifiers are
+ * returned: `@lion/ui/**` and bare packages are owned by the entrypoint checks and are resolved
+ * against the real repository, so they are not this check's business.
+ */
+export function relativeImports(source: string): { value: string; line: number; column: number }[] {
+  const result = parseSync('relative-imports.js', source) as OxcParseResult;
+  const found: { value: string; line: number; column: number }[] = [];
+  for (const node of [
+    ...(result.module?.staticImports ?? []),
+    ...(result.module?.dynamicImports ?? []),
+  ]) {
+    const value = specifierOf(node.moduleRequest, source);
+    if (!value || !isRelativeSpecifier(value)) continue;
+    const start = (node.moduleRequest as { start?: number } | undefined)?.start ?? 0;
+    found.push({ value, ...offsetToLineColumn(source, start) });
+  }
+  return found;
+}
+
+/**
+ * Relative imports of `relativeFile` that resolve to no file in the same sandbox.
+ *
+ * A relative import is the one specifier class the entrypoint checks cannot see: `@lion/ui/*` is
+ * resolved against the real repository (a workspace symlink), but `./x.js` must be a file this very
+ * run wrote. When it is not, the browser refuses the module and the run dies with the opaque
+ * "Could not import your test module" instead of naming the file and specifier. This names it.
+ *
+ * Resolution errs toward passing — the literal path plus the common extensionless forms are all
+ * accepted — because a wrongly-flagged correct answer is the defect class this harness removes.
+ */
+export function unresolvedRelativeImports(
+  sandboxRoot: string,
+  relativeFile: string,
+  source: string,
+): { value: string; line: number; column: number }[] {
+  const fileDir = path.dirname(path.join(sandboxRoot, relativeFile));
+  const resolves = (specifier: string): boolean => {
+    const target = path.resolve(fileDir, specifier);
+    const candidates = [
+      target,
+      `${target}.js`,
+      `${target}.mjs`,
+      `${target}.ts`,
+      path.join(target, 'index.js'),
+    ];
+    return candidates.some(candidate => fs.existsSync(candidate));
+  };
+  return relativeImports(source).filter(spec => !resolves(spec.value));
+}
+
 function syntaxGateFor(files: ParsedFile[]): GateResult {
   const failures: GateFailure[] = [];
   for (const file of files) {

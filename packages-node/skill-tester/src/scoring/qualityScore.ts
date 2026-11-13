@@ -31,7 +31,7 @@ import path from 'node:path';
 import { diffLines } from 'diff';
 import type { ScenarioCheck } from '../scenarios/types.ts';
 import type { GateResult } from './gates.ts';
-import { unusedImportNames } from './gates.ts';
+import { unusedImportNames, unresolvedRelativeImports } from './gates.ts';
 
 export type FileScore = {
   path: string;
@@ -180,6 +180,7 @@ const CHECK_DESCRIPTIONS: Record<ScenarioCheck['type'], (check: ScenarioCheck) =
   exists: check => `${check.file} exists`,
   noExtraFiles: check => `no files beyond "${check.file}" were created`,
   noUnusedImports: check => `${check.file} imports nothing it does not use`,
+  importsResolve: check => `${check.file} imports only modules that exist in the run`,
 };
 
 export function evaluateCheck(
@@ -227,6 +228,22 @@ export function evaluateCheck(
       if (unused.length > 0) {
         return {
           description: `${check.file} imports ${unused.join(', ')} without using it`,
+          passed: false,
+          weight,
+        };
+      }
+      passed = true;
+      break;
+    }
+    case 'importsResolve': {
+      // A relative import the run never wrote: the browser would die opaquely ("Could not import
+      // your test module"), so name the file, the line and the specifier instead.
+      const unresolved = unresolvedRelativeImports(sandboxRoot, check.file, content);
+      if (unresolved.length > 0) {
+        return {
+          description: unresolved
+            .map(entry => `${check.file}:${entry.line} imports '${entry.value}' but the run wrote no such file`)
+            .join('; '),
           passed: false,
           weight,
         };

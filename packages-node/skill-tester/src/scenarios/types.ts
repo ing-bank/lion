@@ -22,7 +22,13 @@ export type ScenarioCheck = {
      * Every imported binding is used. A *check*, never a gate: a stray import does not stop the code
      * from working, so zeroing a run over it would fail correct answers.
      */
-    | 'noUnusedImports';
+    | 'noUnusedImports'
+    /**
+     * Every *relative* import (`./x.js`, `../x.js`) resolves to a file the same run wrote. The one
+     * specifier class the entrypoint checks cannot see; without it a missing relative import dies
+     * opaquely in the browser as "Could not import your test module".
+     */
+    | 'importsResolve';
   /** File the check applies to, relative to the project root. */
   file: string;
   /** Needle for `contains` / `notContains`. */

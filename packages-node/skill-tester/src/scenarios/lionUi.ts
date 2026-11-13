@@ -278,6 +278,13 @@ function entrypointChecks(file: string, name: string): ScenarioCheck[] {
       pattern: '@lion/ui/(components|src)/',
       description: 'does not deep-import from @lion/ui internals',
     },
+    {
+      // Every relative import must resolve to a file this run wrote. `@lion/ui/*` and bare packages
+      // are resolved against the real repo, so they are out of scope here.
+      type: 'importsResolve',
+      file,
+      description: 'imports only relative modules that exist in the run',
+    },
   ];
 }
 
