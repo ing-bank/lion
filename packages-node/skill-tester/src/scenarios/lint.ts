@@ -70,10 +70,19 @@ function demandedValues(prompt: string): string[] {
 function referencedEntrypoints(scenario: TestScenario): string[] {
   const names = new Set<string>();
   for (const check of scenario.checks ?? []) {
-    for (const match of (check.pattern ?? '').matchAll(
+    const pattern = check.pattern ?? '';
+    for (const match of pattern.matchAll(
       /@lion\/ui\/(?:define\/lion-)?([a-z0-9-]+)\.js/g,
     )) {
       names.add(match[1]);
+    }
+    // An alternation entrypoint check, e.g. `@lion/ui/(?:overlays|dialog|tooltip)\.js`: each
+    // accepted module is a referenced entrypoint and must exist (the system scenario accepts the
+    // documented consumer routes as well as the system module).
+    for (const match of pattern.matchAll(
+      /@lion\/ui\/\(\?:((?:[a-z0-9-]+\|)+[a-z0-9-]+)\)\\\.js/g,
+    )) {
+      for (const name of match[1].split('|')) names.add(name);
     }
   }
   return [...names];

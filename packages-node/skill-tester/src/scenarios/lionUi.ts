@@ -204,6 +204,21 @@ export const NON_VISUAL_COMPONENT_DIRS = [
 /** Systems documented under `docs/fundamentals/systems`. */
 export const SYSTEM_NAMES = ['core', 'form', 'icon', 'localize', 'overlays'];
 
+/**
+ * Systems whose documentation puts a *consumer* module first and the system module second, so the
+ * scenario must accept what the docs put first rather than pinning the system API.
+ *
+ * `overlays` is the measured case. Its reference states "Usually you will use `lion-dialog` (or
+ * `lion-tooltip` if this makes more sense)" and its very first example imports `LionDialog` from
+ * `@lion/ui/dialog.js`; `@lion/ui/overlays.js` carries the OverlayController/OverlayMixin API the
+ * docs present *second*. Six of six samples over two n=3 sweeps produced the working dialog example
+ * and were failed by a contract that only accepted `overlays.js` — the docs were right, the contract
+ * was wrong. All three routes ship (`packages/ui/exports/{overlays,dialog,tooltip}.js`).
+ */
+const SYSTEM_CONSUMER_ENTRYPOINTS: Record<string, string[]> = {
+  overlays: ['overlays', 'dialog', 'tooltip'],
+};
+
 /** The file system scenarios still write; their contract is unchanged. */
 const SYSTEM_TARGET_FILE = 'src/example.js';
 
@@ -255,22 +270,40 @@ export function entrypointFor(name: string): string {
  * `@lion/ui/define/lion-x.js` entrypoint is never accepted - it opts out of the host's scoped registry,
  * which is the exact rule this skill teaches (and which the check below fails on).
  */
-function entrypointChecks(file: string, name: string): ScenarioCheck[] {
-  const escaped = escapeRegExp(name);
-  const classImport = `from\\s+['"]@lion/ui/${escaped}\\.js['"]`;
+function entrypointChecks(
+  file: string,
+  name: string,
+  options: { acceptedEntrypoints?: string[] } = {},
+): ScenarioCheck[] {
+  // The primary entrypoint, plus any documented consumer alternative. A single accepted entrypoint
+  // keeps the plain specifier, so the pattern and its description read exactly as before.
+  const accepted = options.acceptedEntrypoints ?? [name];
+  const alternation = accepted.map(escapeRegExp).join('|');
+  const specifierPart = accepted.length === 1 ? escapeRegExp(name) : `(?:${alternation})`;
+  const classImport = `from\\s+['"]@lion/ui/${specifierPart}\\.js['"]`;
 
   return [
     {
       type: 'matches',
       file,
       pattern: classImport,
-      description: `imports '${entrypointFor(name)}' and never a global define entrypoint`,
+      description:
+        accepted.length === 1
+          ? `imports '${entrypointFor(name)}' and never a global define entrypoint`
+          : `imports one of ${accepted
+              .map(entry => `'${entrypointFor(entry)}'`)
+              .join(', ')} and never a global define entrypoint`,
     },
     {
       type: 'notMatches',
       file,
-      pattern: `from\\s+['"]@lion/${escaped}['"]`,
-      description: `does not import from '@lion/${name}' directly`,
+      pattern: `from\\s+['"]@lion/${specifierPart}['"]`,
+      description:
+        accepted.length === 1
+          ? `does not import from '@lion/${name}' directly`
+          : `does not import from ${accepted
+              .map(entry => `'@lion/${entry}'`)
+              .join(', ')} directly`,
     },
     {
       type: 'notMatches',
@@ -480,7 +513,9 @@ export function createSystemScenario(
     },
     checks: [
       exists,
-      ...entrypointChecks(SYSTEM_TARGET_FILE, systemName),
+      ...entrypointChecks(SYSTEM_TARGET_FILE, systemName, {
+        acceptedEntrypoints: SYSTEM_CONSUMER_ENTRYPOINTS[systemName],
+      }),
       {
         type: 'noUnusedImports',
         file: SYSTEM_TARGET_FILE,

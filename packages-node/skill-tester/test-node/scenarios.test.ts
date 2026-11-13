@@ -177,6 +177,33 @@ test('a system without a define entrypoint only accepts its class entrypoint', (
   );
 });
 
+test('a system whose docs put a consumer route first accepts the routes the docs put first', () => {
+  // `system/overlays`: the reference says "Usually you will use `lion-dialog` (or `lion-tooltip` if
+  // this makes more sense)" and its first example imports `LionDialog` from `@lion/ui/dialog.js` -
+  // the consumer route the docs present FIRST, with `@lion/ui/overlays.js` (the OverlayController
+  // system API) SECOND. Six of six samples over two n=3 sweeps produced the working dialog example,
+  // so the contract has to accept it alongside the system module rather than pin the system module
+  // alone. The define ban and the unrelated-entrypoint rejection must stay.
+  const scenario = createSystemScenario('overlays', {});
+  const entrypointCheck = scenario.checks?.find(check => check.type === 'matches');
+  assert.ok(entrypointCheck?.pattern, 'expected an entrypoint check');
+  const pattern = new RegExp(entrypointCheck.pattern);
+  for (const name of ['overlays', 'dialog', 'tooltip']) {
+    assert.ok(
+      pattern.test(`import { X } from '@lion/ui/${name}.js';`),
+      `the contract must accept @lion/ui/${name}.js`,
+    );
+  }
+  assert.ok(
+    !pattern.test(`import { X } from '@lion/ui/accordion.js';`),
+    'an unrelated entrypoint must not be accepted',
+  );
+  assert.ok(
+    !pattern.test(`import { X } from '@lion/ui/define/lion-dialog.js';`),
+    'a global define entrypoint must never be accepted',
+  );
+});
+
 test('the tag check accepts markup and createElement, but not a different element name', () => {
   // Regression: a real run rendered the element via document.createElement('lion-button').
   const scenario = createComponentScenario('button', { knownTags: ['lion-button'] });
