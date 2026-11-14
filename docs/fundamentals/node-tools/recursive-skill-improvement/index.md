@@ -20,7 +20,7 @@ It exists because Lion is a living product: components gain APIs, docs gain page
 last quarter quietly stops matching the library. Improvement here means the skill is regenerated from
 its source docs and re-measured against the library, not patched by hand and hoped over.
 
-![a man holding a clamshell phone to his ear, in a close-up so tight that his shoulders are cropped at the bottom and the dark room behind him is out of focus — the frame the hero plate was trying to draw](./assets/recursive-skill-improvement-hero.jpg 'From the reference photo; a particular set of skills')
+![a man holding a clamshell phone to his ear, in a close-up so tight the frame is almost all face — the dark room behind him out of focus](./assets/recursive-skill-improvement-hero.jpg 'The reference photograph itself; the band the source watermark sat in is covered')
 
 ## The system, the task and the protocol
 
