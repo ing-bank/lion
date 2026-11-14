@@ -137,6 +137,7 @@ export class LionMenuitem extends LionItem {
 /**
  * @type {InteractiveListMixinType}
  * @param {import('@open-wc/dedupe-mixin').Constructor<import('lit').LitElement>} superclass
+ * @slot list - The element that holds the list items.
  */
 // prettier-ignore
 const InteractiveListMixinImplementation = /** @type {InteractiveListMixinType} */ (superclass =>

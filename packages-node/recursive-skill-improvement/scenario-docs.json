@@ -1,0 +1,316 @@
+{
+  "_comment": "Docs each scenario derives from. A change to any of these files makes the scenario affected: the entry point for the docs-to-use-case coupling that change-graph follows (optionalDep-style edge: soft, not a build requirement). Regenerate with `npm run scenarios:docs -w packages-node/recursive-skill-improvement`.",
+  "version": 1,
+  "scenarios": {
+    "component/accordion": [
+      "docs/components/accordion/api-table.md",
+      "docs/components/accordion/index.md",
+      "docs/components/accordion/overview.md",
+      "docs/components/accordion/reference.md",
+      "docs/components/accordion/use-cases.md"
+    ],
+    "component/accordion-run": [],
+    "component/button": [
+      "docs/components/button/api-table.md",
+      "docs/components/button/examples.md",
+      "docs/components/button/extensions.md",
+      "docs/components/button/index.md",
+      "docs/components/button/overview.md",
+      "docs/components/button/use-cases.md"
+    ],
+    "component/calendar": [
+      "docs/components/calendar/api-table.md",
+      "docs/components/calendar/index.md",
+      "docs/components/calendar/overview.md",
+      "docs/components/calendar/use-cases.md"
+    ],
+    "component/checkbox-group": [
+      "docs/components/checkbox-group/api-table.md",
+      "docs/components/checkbox-group/index.md",
+      "docs/components/checkbox-group/overview.md",
+      "docs/components/checkbox-group/use-cases.md"
+    ],
+    "component/collapsible": [
+      "docs/components/collapsible/api-table.md",
+      "docs/components/collapsible/examples.md",
+      "docs/components/collapsible/index.md",
+      "docs/components/collapsible/overview.md",
+      "docs/components/collapsible/use-cases.md"
+    ],
+    "component/combobox": [
+      "docs/components/combobox/api-table.md",
+      "docs/components/combobox/extensions.md",
+      "docs/components/combobox/index.md",
+      "docs/components/combobox/overview.md",
+      "docs/components/combobox/use-cases.md"
+    ],
+    "component/dialog": [
+      "docs/components/dialog/api-table.md",
+      "docs/components/dialog/index.md",
+      "docs/components/dialog/overview.md",
+      "docs/components/dialog/use-cases.md"
+    ],
+    "component/drawer": [
+      "docs/components/drawer/api-table.md",
+      "docs/components/drawer/index.md",
+      "docs/components/drawer/overview.md",
+      "docs/components/drawer/use-cases.md"
+    ],
+    "component/fieldset": [
+      "docs/components/fieldset/api-table.md",
+      "docs/components/fieldset/index.md",
+      "docs/components/fieldset/overview.md",
+      "docs/components/fieldset/use-cases.md"
+    ],
+    "component/form": [
+      "docs/components/form/api-table.md",
+      "docs/components/form/index.md",
+      "docs/components/form/overview.md",
+      "docs/components/form/use-cases.md"
+    ],
+    "component/input": [
+      "docs/components/input/api-table.md",
+      "docs/components/input/index.md",
+      "docs/components/input/overview.md",
+      "docs/components/input/use-cases.md"
+    ],
+    "component/input-amount": [
+      "docs/components/input-amount/api-table.md",
+      "docs/components/input-amount/index.md",
+      "docs/components/input-amount/overview.md",
+      "docs/components/input-amount/use-cases.md"
+    ],
+    "component/input-amount-dropdown": [
+      "docs/components/input-amount-dropdown/api-table.md",
+      "docs/components/input-amount-dropdown/index.md",
+      "docs/components/input-amount-dropdown/use-cases.md"
+    ],
+    "component/input-date": [
+      "docs/components/input-date/api-table.md",
+      "docs/components/input-date/index.md",
+      "docs/components/input-date/overview.md",
+      "docs/components/input-date/use-cases.md"
+    ],
+    "component/input-datepicker": [
+      "docs/components/input-datepicker/api-table.md",
+      "docs/components/input-datepicker/index.md",
+      "docs/components/input-datepicker/overview.md",
+      "docs/components/input-datepicker/use-cases.md"
+    ],
+    "component/input-email": [
+      "docs/components/input-email/api-table.md",
+      "docs/components/input-email/index.md",
+      "docs/components/input-email/overview.md",
+      "docs/components/input-email/use-cases.md"
+    ],
+    "component/input-file": [
+      "docs/components/input-file/api-table.md",
+      "docs/components/input-file/index.md",
+      "docs/components/input-file/overview.md",
+      "docs/components/input-file/use-cases.md"
+    ],
+    "component/input-iban": [
+      "docs/components/input-iban/api-table.md",
+      "docs/components/input-iban/index.md",
+      "docs/components/input-iban/overview.md",
+      "docs/components/input-iban/use-cases.md"
+    ],
+    "component/input-range": [
+      "docs/components/input-range/api-table.md",
+      "docs/components/input-range/index.md",
+      "docs/components/input-range/overview.md",
+      "docs/components/input-range/use-cases.md"
+    ],
+    "component/input-stepper": [
+      "docs/components/input-stepper/api-table.md",
+      "docs/components/input-stepper/index.md",
+      "docs/components/input-stepper/overview.md",
+      "docs/components/input-stepper/use-cases.md"
+    ],
+    "component/input-tel": [
+      "docs/components/input-tel/api-table.md",
+      "docs/components/input-tel/index.md",
+      "docs/components/input-tel/overview.md",
+      "docs/components/input-tel/use-cases.md"
+    ],
+    "component/input-tel-dropdown": [
+      "docs/components/input-tel-dropdown/api-table.md",
+      "docs/components/input-tel-dropdown/extensions.md",
+      "docs/components/input-tel-dropdown/index.md",
+      "docs/components/input-tel-dropdown/overview.md",
+      "docs/components/input-tel-dropdown/use-cases.md"
+    ],
+    "component/listbox": [
+      "docs/components/listbox/api-table.md",
+      "docs/components/listbox/index.md",
+      "docs/components/listbox/overview.md",
+      "docs/components/listbox/use-cases.md"
+    ],
+    "component/menu": [
+      "docs/components/menu/api-table.md",
+      "docs/components/menu/extensions.md",
+      "docs/components/menu/index.md",
+      "docs/components/menu/migration.md",
+      "docs/components/menu/overview.md",
+      "docs/components/menu/use-cases.md"
+    ],
+    "component/pagination": [
+      "docs/components/pagination/api-table.md",
+      "docs/components/pagination/index.md",
+      "docs/components/pagination/overview.md",
+      "docs/components/pagination/use-cases.md"
+    ],
+    "component/progress-indicator": [
+      "docs/components/progress-indicator/api-table.md",
+      "docs/components/progress-indicator/examples.md",
+      "docs/components/progress-indicator/index.md",
+      "docs/components/progress-indicator/overview.md"
+    ],
+    "component/radio-group": [
+      "docs/components/radio-group/api-table.md",
+      "docs/components/radio-group/index.md",
+      "docs/components/radio-group/overview.md",
+      "docs/components/radio-group/use-cases.md"
+    ],
+    "component/select": [
+      "docs/components/select/api-table.md",
+      "docs/components/select/index.md",
+      "docs/components/select/overview.md",
+      "docs/components/select/use-cases.md"
+    ],
+    "component/select-rich": [
+      "docs/components/select-rich/api-table.md",
+      "docs/components/select-rich/examples.md",
+      "docs/components/select-rich/extensions.md",
+      "docs/components/select-rich/index.md",
+      "docs/components/select-rich/overview.md",
+      "docs/components/select-rich/use-cases.md"
+    ],
+    "component/steps": [
+      "docs/components/steps/api-table.md",
+      "docs/components/steps/index.md",
+      "docs/components/steps/overview.md",
+      "docs/components/steps/use-cases.md"
+    ],
+    "component/switch": [
+      "docs/components/switch/api-table.md",
+      "docs/components/switch/index.md",
+      "docs/components/switch/overview.md",
+      "docs/components/switch/reference.md",
+      "docs/components/switch/use-cases.md"
+    ],
+    "component/tabs": [
+      "docs/components/tabs/api-table.md",
+      "docs/components/tabs/examples.md",
+      "docs/components/tabs/extensions.md",
+      "docs/components/tabs/index.md",
+      "docs/components/tabs/overview.md",
+      "docs/components/tabs/use-cases.md"
+    ],
+    "component/textarea": [
+      "docs/components/textarea/api-table.md",
+      "docs/components/textarea/index.md",
+      "docs/components/textarea/overview.md",
+      "docs/components/textarea/use-cases.md"
+    ],
+    "component/tooltip": [
+      "docs/components/tooltip/api-table.md",
+      "docs/components/tooltip/examples.md",
+      "docs/components/tooltip/index.md",
+      "docs/components/tooltip/overview.md",
+      "docs/components/tooltip/use-cases.md"
+    ],
+    "field/iban-field": [
+      "docs/fundamentals/systems/form/api-table.md",
+      "docs/fundamentals/systems/form/formatting-and-parsing.md",
+      "docs/fundamentals/systems/form/index.md",
+      "docs/fundamentals/systems/form/interaction-states.md",
+      "docs/fundamentals/systems/form/model-value.md",
+      "docs/fundamentals/systems/form/overview.md",
+      "docs/fundamentals/systems/form/styling.md",
+      "docs/fundamentals/systems/form/use-cases.md",
+      "docs/fundamentals/systems/form/validate.md"
+    ],
+    "form/iban-in-form": [
+      "docs/fundamentals/systems/form/api-table.md",
+      "docs/fundamentals/systems/form/formatting-and-parsing.md",
+      "docs/fundamentals/systems/form/index.md",
+      "docs/fundamentals/systems/form/interaction-states.md",
+      "docs/fundamentals/systems/form/model-value.md",
+      "docs/fundamentals/systems/form/overview.md",
+      "docs/fundamentals/systems/form/styling.md",
+      "docs/fundamentals/systems/form/use-cases.md",
+      "docs/fundamentals/systems/form/validate.md"
+    ],
+    "integration/mortgage-calculator": [],
+    "integration/native-form-to-lion-form": [],
+    "repair/iban-field": [
+      "docs/fundamentals/systems/form/api-table.md",
+      "docs/fundamentals/systems/form/formatting-and-parsing.md",
+      "docs/fundamentals/systems/form/index.md",
+      "docs/fundamentals/systems/form/interaction-states.md",
+      "docs/fundamentals/systems/form/model-value.md",
+      "docs/fundamentals/systems/form/overview.md",
+      "docs/fundamentals/systems/form/styling.md",
+      "docs/fundamentals/systems/form/use-cases.md",
+      "docs/fundamentals/systems/form/validate.md"
+    ],
+    "system/core": [
+      "docs/fundamentals/systems/core/ScopedElementsMixin.md",
+      "docs/fundamentals/systems/core/SlotMixin.md",
+      "docs/fundamentals/systems/core/api-table.md",
+      "docs/fundamentals/systems/core/index.md",
+      "docs/fundamentals/systems/core/overview.md"
+    ],
+    "system/form": [
+      "docs/fundamentals/systems/form/api-table.md",
+      "docs/fundamentals/systems/form/formatting-and-parsing.md",
+      "docs/fundamentals/systems/form/index.md",
+      "docs/fundamentals/systems/form/interaction-states.md",
+      "docs/fundamentals/systems/form/model-value.md",
+      "docs/fundamentals/systems/form/overview.md",
+      "docs/fundamentals/systems/form/styling.md",
+      "docs/fundamentals/systems/form/use-cases.md",
+      "docs/fundamentals/systems/form/validate.md",
+      "docs/guides/how-to/create-a-form.md"
+    ],
+    "system/icon": [
+      "docs/fundamentals/systems/icon/index.md",
+      "docs/fundamentals/systems/icon/overview.md"
+    ],
+    "system/localize": [
+      "docs/fundamentals/systems/localize/api-table.md",
+      "docs/fundamentals/systems/localize/dates.md",
+      "docs/fundamentals/systems/localize/index.md",
+      "docs/fundamentals/systems/localize/numbers.md",
+      "docs/fundamentals/systems/localize/overview.md",
+      "docs/fundamentals/systems/localize/rationale.md",
+      "docs/fundamentals/systems/localize/text.md",
+      "docs/fundamentals/systems/localize/use-cases.md"
+    ],
+    "system/overlays": [
+      "docs/fundamentals/systems/overlays/_configuration-positioning.md",
+      "docs/fundamentals/systems/overlays/_edge-cases.md",
+      "docs/fundamentals/systems/overlays/api-table.md",
+      "docs/fundamentals/systems/overlays/configuration.md",
+      "docs/fundamentals/systems/overlays/index.md",
+      "docs/fundamentals/systems/overlays/overview.md",
+      "docs/fundamentals/systems/overlays/rationale.md",
+      "docs/fundamentals/systems/overlays/use-cases.md"
+    ],
+    "use-case/combobox--narrow-a-long-list-by-typing": [
+      "docs/components/combobox/api-table.md",
+      "docs/components/combobox/extensions.md",
+      "docs/components/combobox/index.md",
+      "docs/components/combobox/overview.md",
+      "docs/components/combobox/use-cases.md"
+    ],
+    "use-case/combobox--suggest-while-you-type": [
+      "docs/components/combobox/api-table.md",
+      "docs/components/combobox/extensions.md",
+      "docs/components/combobox/index.md",
+      "docs/components/combobox/overview.md",
+      "docs/components/combobox/use-cases.md"
+    ]
+  }
+}

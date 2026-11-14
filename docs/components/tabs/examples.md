@@ -13,23 +13,25 @@ eleventyNavigation:
 # Examples
 
 ```js script
-import { LitElement, html } from '@mdjs/mdjs-preview';
-import './src/lea-tabs.js';
-import './src/lea-tab.js';
-import './src/lea-tab-panel.js';
+import { html } from '@mdjs/mdjs-preview';
+import '@lion/ui/define/lion-tabs.js';
 ```
 
-## Lea Tabs
+## Plain tabs
 
-Learn how to create the `lea tabs` in our ["introducing lion" blogpost](../../blog/ing-open-sources-lion.md).
+You do not have to extend `LionTabs` to use tabs: the element switches its own panels. Give each tab a
+`tab` slot and each panel a `panel` slot.
 
 ```js preview-story
 export const main = () => html`
-  <lea-tabs>
-    <lea-tab slot="tab">Info</lea-tab>
-    <lea-tab-panel slot="panel"> Info page with lots of information about us. </lea-tab-panel>
-    <lea-tab slot="tab">Work</lea-tab>
-    <lea-tab-panel slot="panel"> Work page that showcases our work. </lea-tab-panel>
-  </lea-tabs>
+  <lion-tabs>
+    <button slot="tab">Info</button>
+    <p slot="panel">Info page with lots of information about us.</p>
+    <button slot="tab">Work</button>
+    <p slot="panel">Work page that showcases our work.</p>
+  </lion-tabs>
 `;
 ```
+
+See `extensions.md` for a styled tabs example: that one extends `LionTabs`, which is a different job
+from using tabs as a consumer.

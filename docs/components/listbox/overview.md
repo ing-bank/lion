@@ -52,3 +52,9 @@ npm i --save @lion/ui
 import '@lion/ui/define/lion-listbox.js';
 import '@lion/ui/define/lion-option.js';
 ```
+
+## Entrypoints
+
+`@lion/ui/listbox.js` ships `LionListbox`, `LionOption` and `LionOptions` - the elements `<lion-listbox>`,
+`<lion-option>` and `<lion-options>`. Import them from that one module: **there is no `@lion/ui/option.js`
+and no `@lion/ui/options.js`**.
