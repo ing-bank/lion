@@ -8,6 +8,8 @@ eleventyNavigation:
   order: 16
 ---
 
+![recursive skill improvement](./assets/recursive-skill-improvement-logo.svg)
+
 # recursive-skill-improvement
 
 `recursive-skill-improvement` keeps the `lion-ui` skill honest as the product it describes keeps
