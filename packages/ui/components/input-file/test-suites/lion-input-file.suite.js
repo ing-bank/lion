@@ -160,6 +160,43 @@ export function runInputFileSuite({
       expect(el.hasAttribute('focused')).to.be.false;
     });
 
+    it('opens the file dialog via the native input when the select button is clicked', async () => {
+      const el = await fixture(html`<${tag} label="Select"></${tag}>`);
+      // @ts-expect-error [allow-protected-in-tests]
+      const { _inputNode } = getInputMembers(el);
+      // @ts-expect-error [allow-protected-in-test]
+      const buttonNode = /** @type {HTMLButtonElement} */ (el._buttonNode);
+      // do not open a real dialog
+      const inputClickStub = sinon.stub(_inputNode, 'click');
+      const hostClickSpy = sinon.spy();
+      el.addEventListener('click', hostClickSpy);
+
+      const clickEvent = new MouseEvent('click', {
+        bubbles: true,
+        cancelable: true,
+        composed: true,
+      });
+      buttonNode.dispatchEvent(clickEvent);
+
+      expect(inputClickStub).to.have.been.calledOnce;
+      expect(clickEvent.defaultPrevented).to.be.true;
+      // the click does not travel on, so it is not seen as a click on the host (or a form around it)
+      expect(hostClickSpy).to.not.have.been.called;
+      inputClickStub.restore();
+    });
+
+    it('clears the native input value on click, so selecting the same file again fires change', async () => {
+      const el = await fixture(html`<${tag} label="Select"></${tag}>`);
+      mimicSelectFile(el, [file]);
+      // @ts-expect-error [allow-protected-in-tests]
+      const { _inputNode } = getInputMembers(el);
+      expect(_inputNode.value).to.equal('C:\\fakepath\\foo.txt');
+
+      // a plain Event has no activation behaviour, so no dialog opens
+      _inputNode.dispatchEvent(new Event('click'));
+      expect(_inputNode.value).to.equal('');
+    });
+
     it('should set touched property true on change', async () => {
       const el = await fixture(html` <${tag} label="Select"></${tag}> `);
       expect(el.touched).to.be.false;
@@ -1081,6 +1118,125 @@ export function runInputFileSuite({
 
         expect(_processFilesSpy).have.been.calledOnce;
         _processFilesSpy.restore();
+      });
+
+      it('prevents the browser from opening a file dropped on the native input', async () => {
+        // @ts-ignore [allow-private] in test
+        const { _inputNode } = getInputMembers(el);
+        const dropOnInput = new Event('drop', { bubbles: true, cancelable: true, composed: true });
+        _inputNode.dispatchEvent(dropOnInput);
+        expect(dropOnInput.defaultPrevented).to.be.true;
+
+        const dropElsewhere = new Event('drop', { bubbles: true, cancelable: true });
+        document.body.dispatchEvent(dropElsewhere);
+        expect(dropElsewhere.defaultPrevented).to.be.false;
+      });
+
+      describe('without multiple', () => {
+        /** @type {LionInputFile} */
+        let singleEl;
+        beforeEach(async () => {
+          singleEl = await fixture(html`<${tag} name="myFile" enable-drop-zone></${tag}>`);
+        });
+
+        it('ignores dropping multiple files', async () => {
+          const list = new DataTransfer();
+          // @ts-ignore
+          list.items.add(file);
+          // @ts-ignore
+          list.items.add(file2);
+          // @ts-ignore
+          const _processFilesSpy = sinon.spy(singleEl, '_processFiles');
+
+          // @ts-expect-error [allow-protected-in-test]
+          await singleEl._processDroppedFiles({
+            // @ts-ignore
+            dataTransfer: { files: list.files, items: list.items },
+            preventDefault: () => {},
+          });
+          await singleEl.updateComplete;
+
+          expect(singleEl.modelValue).to.deep.equal([]);
+          expect(_processFilesSpy.callCount).to.equal(0);
+          _processFilesSpy.restore();
+        });
+
+        it('replaces the selected file by a dropped file', async () => {
+          const dropOne = async (/** @type {InputFile} */ droppedFile) => {
+            const list = new DataTransfer();
+            // @ts-ignore
+            list.items.add(droppedFile);
+            // @ts-expect-error [allow-protected-in-test]
+            await singleEl._processDroppedFiles({
+              // @ts-ignore
+              dataTransfer: { files: list.files, items: list.items },
+              preventDefault: () => {},
+            });
+            await singleEl.updateComplete;
+          };
+
+          await dropOne(file);
+          expect(singleEl.modelValue.map(f => f.name)).to.deep.equal(['foo.txt']);
+          await dropOne(file2);
+          expect(singleEl.modelValue.map(f => f.name)).to.deep.equal(['bar.txt']);
+        });
+      });
+    });
+
+    describe('misc', () => {
+      it('has operationMode "upload", for upload specific Required messages', async () => {
+        const el = await fixture(html`<${tag}></${tag}>`);
+        expect(el.operationMode).to.equal('upload');
+      });
+
+      it('parses the files of one user selection only once', async () => {
+        const el = await fixture(html`<${tag}></${tag}>`);
+        // @ts-ignore [allow-private] in test
+        const { _inputNode } = getInputMembers(el);
+        const list = new DataTransfer();
+        // @ts-ignore
+        list.items.add(file);
+        Object.defineProperty(_inputNode, 'files', { value: list.files, writable: true });
+
+        const firstParse = el.parser();
+        expect(firstParse.map(f => f.name)).to.deep.equal(['foo.txt']);
+        // The second call for the same user event (e.g. 'change' after 'user-input-change')
+        // returns the current modelValue instead of parsing again
+        el.modelValue = firstParse;
+        expect(el.parser()).to.equal(el.modelValue);
+      });
+
+      it('describes a max-file-size of 0 as 0 bytes', async () => {
+        const el = await fixture(html`<${tag} label="Select" max-file-size="0"></${tag}>`);
+        mimicSelectFile(el, [file]);
+        await el.updateComplete;
+
+        // @ts-expect-error [allow-protected-in-test]
+        const [feedback] = el._selectedFilesMetaData[0].validationFeedback;
+        expect(feedback.message).to.match(/ 0 bytes\.$/i);
+      });
+
+      it('does not remove a file when disabled', async () => {
+        const el = await fixture(html`<${tag}></${tag}>`);
+        mimicSelectFile(el, [file, file2]);
+        await el.updateComplete;
+        el.disabled = true;
+        await el.updateComplete;
+        // @ts-ignore
+        const removeFileSpy = sinon.spy(el, '_removeFile');
+
+        // @ts-expect-error [allow-protected-in-test]
+        const removedFile = el._selectedFilesMetaData[1];
+        // @ts-expect-error [allow-protected-in-test]
+        el._fileListNode.dispatchEvent(
+          new CustomEvent('file-remove-requested', { detail: { removedFile } }),
+        );
+        await el.updateComplete;
+
+        expect(removeFileSpy.callCount).to.equal(0);
+        // @ts-expect-error [allow-protected-in-test]
+        expect(el._selectedFilesMetaData.length).to.equal(2);
+        removeFileSpy.restore();
       });
     });
 

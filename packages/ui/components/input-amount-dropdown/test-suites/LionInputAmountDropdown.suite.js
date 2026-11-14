@@ -9,6 +9,8 @@ import {
   unsafeStatic,
 } from '@open-wc/testing';
 import sinon from 'sinon';
+import { getLocalizeManager } from '@lion/ui/localize-no-side-effects.js';
+import { localizeTearDown } from '@lion/ui/localize-test-helpers.js';
 
 import { resolveSuiteTag } from '../../core/test-helpers/resolveSuiteTag.js';
 import { isActiveElement } from '../../core/test-helpers/isActiveElement.js';
@@ -228,6 +230,48 @@ export function runInputAmountDropdownSuite(
         spy.restore();
       });
 
+      describe('Localized currency metadata', () => {
+        afterEach(() => {
+          localizeTearDown();
+        });
+
+        /**
+         * @param {string} currencyCode
+         * @param {string} locale
+         */
+        const getSymbol = (currencyCode, locale) =>
+          new Intl.NumberFormat(locale, { style: 'currency', currency: currencyCode })
+            .formatToParts(1)
+            .find(part => part.type === 'currency')?.value;
+
+        it('names currencies in the language of the full locale, not of its region', async () => {
+          // 'fr-BE' must give French names; the region 'BE' read as a language would be Belarusian
+          getLocalizeManager().locale = 'fr-BE';
+          const el = fixtureSync(html` <${tag}
+            .allowedCurrencies="${['EUR', 'GBP']}"
+            ></${tag}> `);
+          const spy = sinon.spy(
+            /** @type {typeof LionInputAmountDropdown} */ (el.constructor).templates,
+            'dropdown',
+          );
+          await el.updateComplete;
+          const { regionMetaList } = /** @type {TemplateDataForDropdownInputAmount} */ (
+            spy.lastCall.args[0]
+          ).data;
+          spy.restore();
+
+          const namesForLocale = new Intl.DisplayNames(['fr-BE'], { type: 'currency' });
+          expect(regionMetaList.map(meta => meta.nameForLocale)).to.eql([
+            namesForLocale.of('EUR'),
+            namesForLocale.of('GBP'),
+          ]);
+          expect(regionMetaList.map(meta => meta.currencySymbol)).to.eql([
+            getSymbol('EUR', 'fr-BE'),
+            getSymbol('GBP', 'fr-BE'),
+          ]);
+        });
+      });
+
       it('can override "all-currencies-label"', async () => {
         const el = fixtureSync(html` <${tag}
           .preferredCurrencies="${['GBP']}"
@@ -408,6 +452,91 @@ export function runInputAmountDropdownSuite(
       await el.updateComplete;
       // @ts-ignore
       expect(el._isEmpty(), 'null modelValue').to.be.true;
+    });
+  });
+
+  describe('Serialization', () => {
+    it('serializes currency and amount to the international notation', async () => {
+      const el = await fixture(html` <${tag}></${tag}> `);
+      el.modelValue = { currency: 'EUR', amount: 123.45 };
+      await el.updateComplete;
+      expect(el.serializedValue).to.equal('EUR 123.45');
+    });
+
+    it('serializes an empty amount to an empty string', async () => {
+      const el = await fixture(html` <${tag}></${tag}> `);
+      expect(el.serializedValue).to.equal('');
+
+      el.modelValue = { currency: 'EUR', amount: '' };
+      await el.updateComplete;
+      expect(el.serializedValue).to.equal('');
+
+      el.modelValue = { currency: 'EUR' };
+      await el.updateComplete;
+      expect(el.serializedValue).to.equal('');
+    });
+
+    it('deserializes the international notation back to a numeric amount', async () => {
+      const el = await fixture(html` <${tag}></${tag}> `);
+      el.serializedValue = 'EUR 123.45';
+      await el.updateComplete;
+      expect(el.modelValue).to.eql({ currency: 'EUR', amount: 123.45 });
+    });
+
+    it('round-trips modelValue through serializedValue', async () => {
+      const source = await fixture(html` <${tag}></${tag}> `);
+      const target = await fixture(html` <${tag}></${tag}> `);
+      source.modelValue = { currency: 'JPY', amount: 1234 };
+      await source.updateComplete;
+
+      target.serializedValue = /** @type {string} */ (source.serializedValue);
+      await target.updateComplete;
+      expect(target.modelValue).to.eql(source.modelValue);
+    });
+
+    it('deserializes an empty string to an empty amount in the active currency', async () => {
+      const el = await fixture(html` <${tag}></${tag}> `);
+      el.modelValue = { currency: 'EUR', amount: 1 };
+      await el.updateComplete;
+      el.serializedValue = '';
+      await el.updateComplete;
+      expect(el.modelValue).to.eql({ currency: el.currency, amount: '' });
+    });
+
+    it('deserializes a currency without amount to an empty amount in that currency', async () => {
+      const el = await fixture(html` <${tag} .allowedCurrencies="${['EUR', 'USD']}"></${tag}> `);
+      el.serializedValue = 'USD';
+      await el.updateComplete;
+      expect(el.modelValue).to.eql({ currency: 'USD', amount: '' });
+    });
+  });
+
+  describe('misc', () => {
+    it('only accepts the prefix and suffix slots for the dropdown', async () => {
+      const el = await fixture(html` <${tag} .allowedCurrencies="${['GBP']}"></${tag}> `);
+      expect(() => {
+        // @ts-ignore [allow-protected] in test
+        el._dropdownSlot = 'label';
+      }).to.throw('Only the suffix and prefix slots are valid positions for the dropdown.');
+      // @ts-ignore [allow-protected] in test
+      expect(el._dropdownSlot).to.equal('prefix');
+    });
+
+    it('has no currency when it can not be derived from allowed, preferred or locale', async () => {
+      // locale en-GB derives GBP, which is not allowed
+      const el = await fixture(html` <${tag} .allowedCurrencies="${['EUR', 'USD']}"></${tag}> `);
+      expect(el.currency).to.equal(undefined);
+      expect(el.modelValue).to.eql({ currency: undefined, amount: '' });
+    });
+
+    it('returns an empty currency symbol without currency or locale', async () => {
+      const el = await fixture(html` <${tag}></${tag}> `);
+      // @ts-ignore [allow-protected] in test
+      const { getCurrencySymbol } = el._currencyUtil;
+      expect(getCurrencySymbol('EUR', 'en-GB')).to.equal('€');
+      expect(getCurrencySymbol('EUR', '')).to.equal('');
+      // @ts-ignore [allow-private] in test
+      expect(getCurrencySymbol(undefined, 'en-GB')).to.equal('');
     });
   });
 }

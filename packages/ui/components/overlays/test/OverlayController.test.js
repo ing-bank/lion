@@ -1,6 +1,6 @@
 /* eslint-disable no-new */
 /* eslint-disable lit-a11y/no-autofocus */
-import { OverlayController, overlays } from '@lion/ui/overlays.js';
+import { OverlayController, overlays, withClickInteraction } from '@lion/ui/overlays.js';
 import { mimicClick } from '@lion/ui/overlays-test-helpers.js';
 import { sendKeys } from '@web/test-runner-commands';
 import sinon from 'sinon';
@@ -255,25 +255,6 @@ describe('OverlayController', () => {
         expect(ctrl.content.style.zIndex).to.equal(`${ctrl.config.zIndex + 1}`);
       });
 
-      it.skip("doesn't set a z-index when contentNode already has >= 1", async () => {
-        const ctrl = new OverlayController({
-          ...withLocalTestConfig(),
-          contentNode: await createZNode('1', { mode: 'global' }),
-        });
-        await ctrl.show();
-        expect(ctrl.content.style.zIndex).to.equal('');
-        ctrl.updateConfig({ contentNode: await createZNode('auto', { mode: 'inline' }) });
-        await ctrl.show();
-        expect(ctrl.content.style.zIndex).to.equal('');
-
-        ctrl.updateConfig({ contentNode: await createZNode('2', { mode: 'global' }) });
-        await ctrl.show();
-        expect(ctrl.content.style.zIndex).to.equal('');
-        ctrl.updateConfig({ contentNode: await createZNode('2', { mode: 'inline' }) });
-        await ctrl.show();
-        expect(ctrl.content.style.zIndex).to.equal('');
-      });
-
       it("doesn't touch the value of .contentNode", async () => {
         const ctrl = new OverlayController({
           ...withLocalTestConfig(),
@@ -311,6 +292,73 @@ describe('OverlayController', () => {
 
   // TODO: Add more teardown feature tests
   describe('Teardown', () => {
+    it('does not throw nor finish showing when torn down while a local show() is in flight', async () => {
+      const ctrl = new OverlayController({ ...withLocalTestConfig() });
+      const originalPopperModule = OverlayController.popperModule;
+      // @ts-ignore - popperModule is set in the test environment
+      const { createPopper } = await originalPopperModule;
+      // Tear down in the microtask right after the popper instance got created, before show()
+      // continues with positioning it (as happens when the host gets disconnected meanwhile)
+      // @ts-ignore - only createPopper is used by OverlayController
+      OverlayController.popperModule = Promise.resolve({
+        /** @param {any[]} args */
+        createPopper: (...args) => {
+          // @ts-ignore
+          const instance = createPopper(...args);
+          queueMicrotask(() => ctrl.teardown());
+          return instance;
+        },
+      });
+      const showSpy = sinon.spy();
+      ctrl.addEventListener('show', showSpy);
+      try {
+        /** @type {unknown} */
+        let error;
+        await ctrl.show().catch(e => {
+          error = e;
+        });
+        expect(error).to.be.undefined;
+        expect(showSpy.callCount).to.equal(0);
+        expect(ctrl.contentNode.hasAttribute('data-open')).to.be.false;
+      } finally {
+        OverlayController.popperModule = originalPopperModule;
+      }
+    });
+
+    it('does not throw when updateConfig() runs while a local show() is positioning', async () => {
+      const ctrl = new OverlayController({ ...withLocalTestConfig() });
+      const originalPopperModule = OverlayController.popperModule;
+      // @ts-ignore - popperModule is set in the test environment
+      const { createPopper } = await originalPopperModule;
+      let updated = false;
+      // updateConfig() with a changed config tears down (destroying the popper instance) and sets up again
+      // @ts-ignore - only createPopper is used by OverlayController
+      OverlayController.popperModule = Promise.resolve({
+        /** @param {any[]} args */
+        createPopper: (...args) => {
+          // @ts-ignore
+          const instance = createPopper(...args);
+          if (!updated) {
+            updated = true;
+            queueMicrotask(() => ctrl.updateConfig({ hidesOnEsc: !ctrl.config?.hidesOnEsc }));
+          }
+          return instance;
+        },
+      });
+      try {
+        /** @type {unknown} */
+        let error;
+        await ctrl.show().catch(e => {
+          error = e;
+        });
+        expect(error).to.be.undefined;
+        expect(updated).to.be.true;
+      } finally {
+        OverlayController.popperModule = originalPopperModule;
+        ctrl.teardown();
+      }
+    });
+
     it('allows removing content after teardown without leaving nodes in the DOM', async () => {
       const contentNode = /** @type {HTMLElement} */ (fixtureSync('<div>notification</div>'));
       const ctrl = new OverlayController({ placementMode: 'global', contentNode });
@@ -398,6 +446,20 @@ describe('OverlayController', () => {
       await ctrl.teardown();
       expect(ctrl.contentWrapperNode).to.not.exist;
       expect(ctrl.__wrappingDialogNode).to.not.exist;
+    });
+
+    it('destroys its Popper instance', async () => {
+      const ctrl = new OverlayController({
+        ...withLocalTestConfig(),
+      });
+      await ctrl.show();
+      const popper = /** @type {import('@popperjs/core').Instance} */ (ctrl._popper);
+      expect(popper).to.exist;
+      const destroySpy = sinon.spy(popper, 'destroy');
+
+      ctrl.teardown();
+      expect(destroySpy.callCount).to.equal(1);
+      expect(ctrl._popper).to.be.undefined;
     });
   });
 
@@ -761,6 +823,47 @@ describe('OverlayController', () => {
         });
         await ctrl.show();
         expect(isActiveElement(ctrl.contentNode)).to.be.true;
+      });
+
+      it('handles a focus on the wrapping dialog exactly once, also after repeated shows', async () => {
+        const ctrl = new OverlayController({
+          ...withGlobalTestConfig(),
+          trapsKeyboardFocus: true,
+        });
+        await ctrl.show();
+        await ctrl.hide();
+        await ctrl.show();
+        await ctrl.hide();
+        await ctrl.show();
+
+        const focusSpy = sinon.spy(ctrl.contentNode, 'focus');
+        ctrl.__wrappingDialogNode?.dispatchEvent(new Event('focus'));
+        focusSpy.restore();
+        expect(focusSpy.callCount).to.equal(1);
+      });
+
+      it('removes its window Shift key listeners when torn down while shown', async () => {
+        const addSpy = sinon.spy(window, 'addEventListener');
+        const removeSpy = sinon.spy(window, 'removeEventListener');
+        const ctrl = new OverlayController({
+          ...withGlobalTestConfig(),
+          trapsKeyboardFocus: true,
+        });
+        await ctrl.show();
+        ctrl.teardown();
+        addSpy.restore();
+        removeSpy.restore();
+
+        /** @param {sinon.SinonSpy} spy */
+        const getKeyListeners = spy =>
+          spy
+            .getCalls()
+            .filter(call => ['keydown', 'keyup'].includes(call.args[0]))
+            .map(call => call.args[1]);
+        const added = getKeyListeners(addSpy);
+        const removed = getKeyListeners(removeSpy);
+        expect(added).to.have.length(2);
+        expect(added.filter(listener => !removed.includes(listener))).to.deep.equal([]);
       });
 
       it('keeps focus within the overlay e.g. you can not tab out by accident', async function keepsFocusWithinOverlay() {
@@ -1931,13 +2034,114 @@ describe('OverlayController', () => {
         });
         expect(ctrl.__hasSetup).to.be.true;
       });
+
+      it('makes show() a no-op while not activated, like hide()', async () => {
+        const ctrl = new OverlayController({
+          ...withGlobalTestConfig(),
+          isActivated: false,
+        });
+        const showSpy = sinon.spy();
+        ctrl.addEventListener('show', showSpy);
+        await ctrl.show();
+        expect(ctrl.isShown).to.be.false;
+        expect(showSpy.callCount).to.equal(0);
+        expect(ctrl.__hasSetup).to.be.false;
+      });
+    });
+  });
+
+  describe('Controller api', () => {
+    it('reads back the elevation that was set', async () => {
+      const ctrl = new OverlayController({ ...withGlobalTestConfig() });
+      ctrl.elevation = 3;
+      expect(ctrl.elevation).to.equal(3);
+      // @ts-expect-error find out why config would/could be undfined
+      expect(ctrl.content.style.zIndex).to.equal(`${ctrl.config.zIndex + 3}`);
     });
 
-    // TODO
-    describe('hideVisually', () => {});
+    it('exposes .invoker as alias of .invokerNode and .popperConfig from the config', async () => {
+      const popperConfig = { placement: /** @type {const} */ ('top') };
+      const ctrl = new OverlayController({ ...withLocalTestConfig(), popperConfig });
+      expect(ctrl.invoker).to.equal(ctrl.invokerNode);
+      expect(ctrl.popperConfig.placement).to.equal('top');
+    });
 
-    // TODO
-    describe('requireConnectedNodes', () => {});
+    it('makes an absolutely positioned contentNode static inside its wrappers', async () => {
+      const contentNode = /** @type {HTMLElement} */ (
+        await fixture(html`<div style="position: absolute;">content</div>`)
+      );
+      const ctrl = new OverlayController({ ...withGlobalTestConfig(), contentNode });
+      expect(ctrl.contentNode.style.position).to.equal('static');
+    });
+
+    it('gives a local contentNode without z-index a z-index of 1 in the "setup" phase of _handleZIndex', async () => {
+      const contentNode = /** @type {HTMLElement} */ (await fixture(html`<div>content</div>`));
+      const ctrl = new OverlayController({ ...withLocalTestConfig(), contentNode });
+      // @ts-ignore - protected
+      ctrl._handleZIndex({ phase: 'setup' });
+      expect(contentNode.style.zIndex).to.equal('1');
+
+      contentNode.style.zIndex = '5';
+      // @ts-ignore - protected
+      ctrl._handleZIndex({ phase: 'setup' });
+      expect(contentNode.style.zIndex).to.equal('5');
+    });
+
+    it('reports no disabled invoker when there is no invoker', async () => {
+      const ctrl = new OverlayController({ ...withGlobalTestConfig() });
+      expect(ctrl._hasDisabledInvoker()).to.be.false;
+    });
+
+    it('does not toggle on invoker click with withClickInteraction when the invoker is disabled', async () => {
+      const invokerNode = /** @type {HTMLButtonElement} */ (
+        await fixture(html`<button disabled>invoker</button>`)
+      );
+      const ctrl = new OverlayController({
+        ...withLocalTestConfig(),
+        ...withClickInteraction(),
+        invokerNode,
+      });
+      // a disabled button does not dispatch clicks, so dispatch it ourselves
+      invokerNode.dispatchEvent(new MouseEvent('click'));
+      await aTimeout(0);
+      expect(ctrl.isShown).to.be.false;
+
+      invokerNode.disabled = false;
+      invokerNode.setAttribute('aria-disabled', 'true');
+      invokerNode.click();
+      await aTimeout(0);
+      expect(ctrl.isShown).to.be.false;
+
+      invokerNode.removeAttribute('aria-disabled');
+      invokerNode.click();
+      await ctrl._showComplete;
+      expect(ctrl.isShown).to.be.true;
+      await ctrl.hide();
+    });
+
+    it('lets focus pass a focused wrapping dialog while Shift is held, and moves it inside otherwise', async () => {
+      const contentNode = /** @type {HTMLElement} */ (
+        await fixture(html`<div><button>inside</button></div>`)
+      );
+      const ctrl = new OverlayController({
+        ...withGlobalTestConfig(),
+        contentNode,
+        trapsKeyboardFocus: true,
+      });
+      await ctrl.show();
+      const button = /** @type {HTMLButtonElement} */ (contentNode.querySelector('button'));
+      const dialog = /** @type {HTMLDialogElement} */ (ctrl.content);
+
+      button.focus();
+      window.dispatchEvent(new KeyboardEvent('keydown', { key: 'Shift' }));
+      dialog.dispatchEvent(new FocusEvent('focus'));
+      expect(isActiveElement(button)).to.be.true;
+
+      window.dispatchEvent(new KeyboardEvent('keyup', { key: 'Shift' }));
+      dialog.dispatchEvent(new FocusEvent('focus'));
+      expect(isActiveElement(contentNode)).to.be.true;
+      await ctrl.hide();
+    });
   });
 
   describe('Show / Hide / Toggle', () => {
@@ -1997,6 +2201,102 @@ describe('OverlayController', () => {
       expect(eventSpy.callCount).to.equal(2);
       await ctrl.show();
       expect(eventSpy.callCount).to.equal(2);
+    });
+
+    it('leaves no trace when "before-show" is prevented', async () => {
+      const ctrl = new OverlayController({
+        ...withGlobalTestConfig(),
+      });
+      ctrl.addEventListener('before-show', ev => ev.preventDefault());
+
+      await ctrl.show();
+      expect(ctrl.isShown).to.be.false;
+      expect(ctrl.contentNode.hasAttribute('data-open')).to.be.false;
+      expect(ctrl.manager.shownList).to.not.include(ctrl);
+    });
+
+    it('stays shown and registered as shown when "before-hide" is prevented', async () => {
+      const ctrl = new OverlayController({
+        ...withGlobalTestConfig(),
+      });
+      await ctrl.show();
+      ctrl.addEventListener('before-hide', ev => ev.preventDefault());
+
+      await ctrl.hide();
+      expect(ctrl.isShown).to.be.true;
+      expect(ctrl.contentNode.hasAttribute('data-open')).to.be.true;
+      expect(ctrl.manager.shownList).to.include(ctrl);
+    });
+
+    describe('[data-close]', () => {
+      it('hides the overlay when an element with [data-close] inside the content is clicked', async () => {
+        const contentNode = /** @type {HTMLElement} */ (
+          fixtureSync(html`<div><button data-close>close</button></div>`)
+        );
+        const ctrl = new OverlayController({ ...withGlobalTestConfig(), contentNode });
+        await ctrl.show();
+
+        /** @type {HTMLElement} */ (contentNode.querySelector('[data-close]')).click();
+        await ctrl._hideComplete;
+        expect(ctrl.isShown).to.be.false;
+      });
+
+      it('stays shown when an element without [data-close] inside the content is clicked', async () => {
+        const contentNode = /** @type {HTMLElement} */ (
+          fixtureSync(html`<div><button>other</button></div>`)
+        );
+        const ctrl = new OverlayController({ ...withGlobalTestConfig(), contentNode });
+        await ctrl.show();
+
+        /** @type {HTMLElement} */ (contentNode.querySelector('button')).click();
+        await aTimeout(0);
+        expect(ctrl.isShown).to.be.true;
+      });
+
+      it('only hides the nearest overlay when [data-close] is inside a nested overlay', async () => {
+        const parentContent = /** @type {HTMLElement} */ (
+          fixtureSync(html`
+            <div>
+              parent
+              <div id="child-content">
+                child
+                <button data-close>close child</button>
+              </div>
+            </div>
+          `)
+        );
+        const childContent = /** @type {HTMLElement} */ (
+          parentContent.querySelector('#child-content')
+        );
+        const parentCtrl = new OverlayController({
+          ...withGlobalTestConfig(),
+          contentNode: parentContent,
+        });
+        const childCtrl = new OverlayController({
+          ...withGlobalTestConfig(),
+          contentNode: childContent,
+        });
+        await parentCtrl.show();
+        await childCtrl.show();
+
+        /** @type {HTMLElement} */ (childContent.querySelector('[data-close]')).click();
+        await childCtrl._hideComplete;
+        expect(childCtrl.isShown).to.be.false;
+        expect(parentCtrl.isShown).to.be.true;
+      });
+
+      it('no longer hides via [data-close] after teardown', async () => {
+        const contentNode = /** @type {HTMLElement} */ (
+          fixtureSync(html`<div><button data-close>close</button></div>`)
+        );
+        const ctrl = new OverlayController({ ...withGlobalTestConfig(), contentNode });
+        await ctrl.show();
+        const hideSpy = sinon.spy(ctrl, 'hide');
+
+        ctrl.teardown();
+        /** @type {HTMLElement} */ (contentNode.querySelector('[data-close]')).click();
+        expect(hideSpy).to.not.have.been.called;
+      });
     });
 
     it('fires "hide" event once overlay becomes hidden', async () => {
@@ -2135,8 +2435,8 @@ describe('OverlayController', () => {
         ...withLocalTestConfig(),
         contentNode: /** @type {HTMLElement} */ (await fixture(html`<div>content1</div>`)),
       });
-      await ctrl.show(); // Popper adds inline styles
-      expect(ctrl.content.style.transform).not.to.be.undefined;
+      await ctrl.show(); // Popper adds inline styles to the contentWrapperNode
+      expect(ctrl.contentWrapperNode.style.transform).not.to.equal('');
       expect(ctrl.contentNode.textContent).to.include('content1');
 
       ctrl.updateConfig({
@@ -2177,11 +2477,13 @@ describe('OverlayController', () => {
       });
 
       ctrl.show();
-      expect(ctrl.contentWrapperNode.classList.contains('overlays__overlay-container--center'));
+      expect(ctrl.contentWrapperNode.classList.contains('overlays__overlay-container--center')).to
+        .be.true;
       expect(ctrl.isShown).to.be.true;
 
       ctrl.updateConfig({ viewportConfig: { placement: 'top-right' } });
-      expect(ctrl.contentWrapperNode.classList.contains('overlays__overlay-container--top-right'));
+      expect(ctrl.contentWrapperNode.classList.contains('overlays__overlay-container--top-right'))
+        .to.be.true;
       expect(ctrl.isShown).to.be.true;
     });
 
@@ -2300,10 +2602,6 @@ describe('OverlayController', () => {
       expect(properlyInstantiated).to.be.true;
     });
 
-    // TODO: check if we covered all functionality. "Inertness" should be handled by the platform with a modal overlay...
-    it.skip('adds attributes inert and aria-hidden="true" on all siblings of rootNode if an overlay is shown', async () => {});
-    it.skip('disables pointer events and selection on inert elements', async () => {});
-
     describe('Alert dialog', () => {
       it('sets role="alertdialog" when isAlertDialog is set', async () => {
         const invokerNode = /** @type {HTMLElement} */ (
@@ -2351,6 +2649,45 @@ describe('OverlayController', () => {
 
         expect(ctrl.invokerNode?.getAttribute('aria-describedby')).to.equal(null);
         expect(ctrl.invokerNode?.getAttribute('aria-labelledby')).to.equal(contentId);
+      });
+
+      it('references the own id of the content in [aria-describedby] when present', async () => {
+        const invokerNode = /** @type {HTMLElement} */ (
+          await fixture('<div role="button">invoker</div>')
+        );
+        const contentNode = /** @type {HTMLElement} */ (
+          await fixture('<div id="my-tooltip">content</div>')
+        );
+        const ctrl = new OverlayController({
+          ...withLocalTestConfig(),
+          handlesAccessibility: true,
+          isTooltip: true,
+          invokerNode,
+          contentNode,
+        });
+
+        expect(ctrl.contentNode.id).to.equal('my-tooltip');
+        expect(ctrl.invokerNode?.getAttribute('aria-describedby')).to.equal('my-tooltip');
+      });
+
+      it('references the own id of the content in [aria-labelledby] when present', async () => {
+        const invokerNode = /** @type {HTMLElement} */ (
+          await fixture('<div role="button">invoker</div>')
+        );
+        const contentNode = /** @type {HTMLElement} */ (
+          await fixture('<div id="my-tooltip">content</div>')
+        );
+        const ctrl = new OverlayController({
+          ...withLocalTestConfig(),
+          handlesAccessibility: true,
+          isTooltip: true,
+          invokerRelation: 'label',
+          invokerNode,
+          contentNode,
+        });
+
+        expect(ctrl.contentNode.id).to.equal('my-tooltip');
+        expect(ctrl.invokerNode?.getAttribute('aria-labelledby')).to.equal('my-tooltip');
       });
 
       it('adds [role=tooltip] on content', async () => {

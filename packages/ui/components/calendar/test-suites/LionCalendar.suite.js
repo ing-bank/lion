@@ -2,7 +2,7 @@ import { html } from 'lit/static-html.js';
 import { LionCalendar, isSameDate } from '@lion/ui/calendar.js';
 import { expect, fixture, fixture as _fixture, unsafeStatic, waitUntil } from '@open-wc/testing';
 import { sendKeys } from '@web/test-runner-commands';
-import { getLocalizeManager } from '@lion/ui/localize-no-side-effects.js';
+import { getLocalizeManager, getMonthNames } from '@lion/ui/localize-no-side-effects.js';
 import { localizeTearDown } from '@lion/ui/localize-test-helpers.js';
 import {
   CalendarObject as DefaultCalendarObject,
@@ -138,6 +138,10 @@ export function runCalendarSuite({
     const localizeManager = getLocalizeManager();
 
     beforeEach(() => {
+      localizeTearDown();
+    });
+
+    afterEach(() => {
       localizeTearDown();
     });
 
@@ -378,12 +382,7 @@ export function runCalendarSuite({
           .true;
       });
 
-      it.skip('sends event "user-selected-date-changed" when user selects a date via [Enter]', async () => {
-        /**
-         * TODO fix me
-         * The dispatchEvent of [Enter] should has to be on contentWrapperElement to be called
-         * But to get "selected" a check is done if the action comes from a button.
-         */
+      it('sends event "user-selected-date-changed" when user selects a date via [Enter]', async () => {
         const dateChangedSpy = sinon.spy();
         const el = await fixtureForSuite(html`
           <${tagCalendar}
@@ -393,19 +392,18 @@ export function runCalendarSuite({
         `);
         const elObj = new CalendarObject(el);
 
-        el.__contentWrapperElement?.dispatchEvent(
-          new KeyboardEvent('keydown', { key: 'ArrowLeft' }),
-        );
+        focusSelectedDate(el);
+        await sendKeys({ press: 'ArrowLeft' });
         await el.updateComplete;
         expect(elObj.activeMonth).to.equal('October');
         expect(elObj.activeYear).to.equal('2000');
         expect(elObj.focusedDayObj?.monthday).to.equal(11);
 
-        el.__contentWrapperElement?.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+        await sendKeys({ press: 'Enter' });
         await el.updateComplete;
         expect(isSameDate(/** @type {Date} */ (el.selectedDate), new Date('2000/10/11'))).to.be
           .true;
-        expect(dateChangedSpy.called).to.equal(true);
+        expect(dateChangedSpy.callCount).to.equal(1);
       });
 
       it('doesn\'t send event "user-selected-date-changed" when user selects a disabled date via [Enter]', async () => {
@@ -443,6 +441,42 @@ export function runCalendarSuite({
         expect(isSameDate(/** @type {Date} */ (el.focusedDate), new Date('2019/06/15'))).to.equal(
           true,
         );
+      });
+
+      it('updates focusedDate when a day button receives real focus', async () => {
+        const el = await fixtureForSuite(html`
+          <${tagCalendar} .centralDate="${new Date('2019/06/01')}"></${tagCalendar}>
+        `);
+        const elObj = new CalendarObject(el);
+        expect(el.focusedDate).to.be.null;
+        /** @type {DayObject} */ (elObj.centralDayObj).buttonEl.focus();
+        expect(isSameDate(/** @type {Date} */ (el.focusedDate), new Date('2019/06/01'))).to.be.true;
+      });
+
+      it('clears focusedDate when focus moves from a day to another calendar control', async () => {
+        const el = await fixtureForSuite(html`
+          <${tagCalendar} .centralDate="${new Date('2019/06/01')}"></${tagCalendar}>
+        `);
+        const elObj = new CalendarObject(el);
+        /** @type {DayObject} */ (elObj.centralDayObj).buttonEl.focus();
+        await el.updateComplete;
+        expect(el.focusedDate).to.not.be.null;
+        /** @type {HTMLElement} */ (elObj.nextMonthButtonEl).focus();
+        await waitUntil(() => el.focusedDate === null);
+        expect(el.focusedDate).to.be.null;
+      });
+
+      it('stops handling keyboard navigation after it is disconnected', async () => {
+        const el = await fixtureForSuite(html`
+          <${tagCalendar} .centralDate="${new Date('2019/06/10')}"></${tagCalendar}>
+        `);
+        const elObj = new CalendarObject(el);
+        const dayButton = /** @type {HTMLElement} */ (elObj.centralDayObj?.buttonEl);
+        el.remove();
+        dayButton.dispatchEvent(
+          new KeyboardEvent('keyup', { key: 'ArrowRight', bubbles: true, composed: true }),
+        );
+        expect(isSameDate(el.centralDate, new Date('2019/06/10'))).to.be.true;
       });
 
       it('has a focusDate() method to focus an arbitrary date', async () => {
@@ -1777,6 +1811,28 @@ export function runCalendarSuite({
           'vr',
           'za',
         ]);
+      });
+
+      it('describes the selectable range of disabled dates with localized month names', async () => {
+        localizeManager.locale = 'nl-NL';
+        const el = await fixtureForSuite(html`
+          <${tagCalendar}
+            .centralDate=${new Date('2019/10/20')}
+            .minDate=${new Date('2019/10/12')}
+            .maxDate=${new Date('2019/10/25')}
+          ></${tagCalendar}>
+        `);
+        await el.localizeNamespacesLoaded;
+        await el.updateComplete;
+        const elObj = new CalendarObject(el);
+        const october = getMonthNames({ locale: 'nl-NL' })[9];
+
+        const beforeMin = elObj.getDayObj(5);
+        const afterMax = elObj.getDayObj(28);
+        expect(beforeMin.isDisabled).to.be.true;
+        expect(afterMax.isDisabled).to.be.true;
+        expect(beforeMin.buttonEl.textContent).to.include(`12 ${october} 2019`);
+        expect(afterMax.buttonEl.textContent).to.include(`25 ${october} 2019`);
       });
     });
 

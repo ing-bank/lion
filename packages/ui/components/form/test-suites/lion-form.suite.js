@@ -98,6 +98,23 @@ export function runFormSuite({
       expect(el.getAttribute('role')).to.be.null;
     });
 
+    it('can be connected and disconnected without an inner <form>', async () => {
+      const el = await fixture(html`<${tags.host}></${tags.host}>`);
+      expect(el.isConnected).to.be.true;
+      const parent = /** @type {HTMLElement} */ (el.parentElement);
+      parent.removeChild(el);
+      parent.appendChild(el);
+      expect(el.isConnected).to.be.true;
+    });
+
+    it('throws a helpful error on submit() and reset() without an inner <form>', async () => {
+      const el = await fixture(html`<${tags.host}></${tags.host}>`);
+      const message =
+        'No form node found. Did you put a <form> element inside your custom-form element?';
+      expect(() => el.submit()).to.throw(message);
+      expect(() => el.reset()).to.throw(message);
+    });
+
     it('has a custom reset that gets triggered by native reset', async () => {
       const withDefaults = await fixture(html`
         <${tags.host}>

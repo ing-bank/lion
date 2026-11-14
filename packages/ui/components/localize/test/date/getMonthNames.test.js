@@ -21,10 +21,10 @@ describe('getMonthNames', () => {
     );
   });
   it('supports "short" style', () => {
-    // TODO: Chrome thinks it should be Sept, not Sep. Firefox/Webkit disagree. We could normalize it in lion.
-    // expect(getMonthNames({ locale: 'en-GB', style: 'short' })).to.deep.equal(
-    //   s`Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec`,
-    // );
+    // Chromium formats September as 'Sept' in en-GB, Firefox/Webkit as 'Sep': lion normalizes to 'Sep'.
+    expect(getMonthNames({ locale: 'en-GB', style: 'short' })).to.deep.equal(
+      s`Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec`,
+    );
     // Chromium default is leading
     expect(getMonthNames({ locale: 'nl-NL', style: 'short' })).to.deep.equal(
       s`jan. feb. mrt. apr. mei jun. jul. aug. sep. okt. nov. dec.`,

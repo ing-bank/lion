@@ -71,6 +71,35 @@ export function runLionMenuSuite({ classes = {}, tagString: legacyTagString } = 
       expect(el.axis).to.equal('inline');
     });
 
+    it('sets [role="menubar"] on the listNode when it is a bar', async () => {
+      const el = await fixture(html`
+        <${tag} bar>
+          <div role="menuitem">Item 0</div>
+          <div role="menuitem">Item 1</div>
+        </${tag}>
+      `);
+      const listNode = el.querySelector('[slot="list"]');
+      expect(listNode?.getAttribute('role')).to.equal('menubar');
+    });
+
+    it('updates the role of the listNode when bar is toggled', async () => {
+      const el = await fixture(html`
+        <${tag}>
+          <div role="menuitem">Item 0</div>
+          <div role="menuitem">Item 1</div>
+        </${tag}>
+      `);
+      const listNode = el.querySelector('[slot="list"]');
+      // @ts-ignore - bar property of LionMenu
+      el.bar = true;
+      await el.updateComplete;
+      expect(listNode?.getAttribute('role')).to.equal('menubar');
+      // @ts-ignore - bar property of LionMenu
+      el.bar = false;
+      await el.updateComplete;
+      expect(listNode?.getAttribute('role')).to.equal('menu');
+    });
+
     describe('Programmatic interaction', () => {
       it('allows groups within one menu level', async () => {
         const el = await fixture(html`

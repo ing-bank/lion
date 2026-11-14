@@ -85,6 +85,70 @@ export function runDrawerSuite({
         expect(drawer.minHeight).to.equal(minHeight);
         expect(drawer.maxHeight).to.equal(maxHeight);
       });
+
+      it('fires one "opened-changed" event per toggle', async () => {
+        const drawer = await fixture(template);
+        let count = 0;
+        drawer.addEventListener('opened-changed', () => {
+          count += 1;
+        });
+
+        drawer.toggle();
+        await drawer.updateComplete;
+        expect(count).to.equal(1);
+
+        drawer.toggle();
+        await drawer.updateComplete;
+        expect(count).to.equal(2);
+      });
+
+      /**
+       * Resolves after the drawer handled the next transitionend of its container
+       * @param {LionDrawer} drawer
+       */
+      const nextTransitionEnd = drawer =>
+        new Promise(resolve => {
+          // @ts-ignore [allow-protected-in-tests]
+          drawer.__contentNode.addEventListener('transitionend', () => setTimeout(resolve), {
+            once: true,
+          });
+        });
+
+      it('animates the width to maxWidth on open and to minWidth on close', async () => {
+        const drawer = await fixture(template);
+        // @ts-ignore [allow-protected-in-tests]
+        const container = /** @type {HTMLElement} */ (drawer.__contentNode);
+
+        let transitionEnd = nextTransitionEnd(drawer);
+        drawer.opened = true;
+        await transitionEnd;
+        expect(container.style.width).to.equal(drawer.maxWidth);
+        expect(drawer.transitioning).to.be.false;
+
+        transitionEnd = nextTransitionEnd(drawer);
+        drawer.opened = false;
+        await transitionEnd;
+        expect(container.style.width).to.equal(drawer.minWidth);
+        expect(drawer.transitioning).to.be.false;
+      });
+
+      it('animates the height when position=top', async () => {
+        const drawer = await fixture(template);
+        drawer.position = 'top';
+        await drawer.updateComplete;
+        // @ts-ignore [allow-protected-in-tests]
+        const container = /** @type {HTMLElement} */ (drawer.__contentNode);
+
+        let transitionEnd = nextTransitionEnd(drawer);
+        drawer.opened = true;
+        await transitionEnd;
+        expect(container.style.height).to.equal(drawer.maxHeight);
+
+        transitionEnd = nextTransitionEnd(drawer);
+        drawer.opened = false;
+        await transitionEnd;
+        expect(container.style.height).to.equal(drawer.minHeight);
+      });
     });
 
     describe('Accessibility', () => {

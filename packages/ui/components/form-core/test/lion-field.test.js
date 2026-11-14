@@ -136,6 +136,18 @@ describe('<lion-field>', () => {
     expect(el.focused).to.equal(false);
   });
 
+  it('becomes touched on blur after being moved in the DOM', async () => {
+    const el = /** @type {LionField} */ (await fixture(html`<${tag}>${inputSlot}</${tag}>`));
+    const wrapper = await fixture(html`<div></div>`);
+    wrapper.appendChild(el);
+    expect(el.touched).to.be.false;
+
+    await triggerFocusFor(el);
+    expect(el.focused).to.be.true;
+    await triggerBlurFor(el);
+    expect(el.touched).to.be.true;
+  });
+
   it('can be cleared which erases value, validation and interaction states', async () => {
     const el = /** @type {LionField} */ (
       await fixture(html`<${tag} value="Some value from attribute">${inputSlot}</${tag}>`)

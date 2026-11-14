@@ -136,6 +136,24 @@ export function runProgressIndicatorSuite({
         expect(el.getAttribute('aria-valuenow')).to.equal('0');
       });
 
+      it('clamps the value when min is raised above it or max is lowered below it', async () => {
+        const el = await fixture(html`
+          <${tag} value="50" aria-label="foo"></${tag}>
+        `);
+        el.min = 60;
+        await el.updateComplete;
+        expect(el.value).to.equal(60);
+        await el.updateComplete;
+        expect(el.getAttribute('aria-valuenow')).to.equal('60');
+
+        el.max = 55;
+        el.min = 0;
+        await el.updateComplete;
+        expect(el.value).to.equal(55);
+        await el.updateComplete;
+        expect(el.getAttribute('aria-valuenow')).to.equal('55');
+      });
+
       // TODO make this feature available
       it.skip('supports valuetext', async () => {
         const el = await fixture(html`
@@ -189,6 +207,11 @@ export function runProgressIndicatorSuite({
           <${tag} max="50" value="10" aria-label="foo"></${tag}>
         `);
         expect(el._progressPercentage).to.equal(20);
+      });
+
+      it('has no _progressPercentage when indeterminate', async () => {
+        const el = await fixture(html`<${tag}></${tag}>`);
+        expect(el._progressPercentage).to.be.undefined;
       });
     });
 

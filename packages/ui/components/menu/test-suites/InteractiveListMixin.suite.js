@@ -1,5 +1,6 @@
 import { LitElement } from 'lit';
 import { expect, html, fixture as _fixture, unsafeStatic } from '@open-wc/testing';
+import sinon from 'sinon';
 import { InteractiveListMixin } from '../src/InteractiveListMixin.js';
 import { mimicKeyPress } from '../test-helpers/mimicKeyPress.js';
 import { resolveSuiteTag } from '../../core/test-helpers/resolveSuiteTag.js';
@@ -28,6 +29,71 @@ const supportedRoles = [
  */
 
 const fixture = /** @type {(arg: TemplateResult) => Promise<LionMenu>} */ (_fixture);
+
+/**
+ * Makes an endless navigation loop fail fast instead of freezing the test runner.
+ * Every navigation step reads the items of the host, so once they have been read far more
+ * often than one key press could ever need, we throw.
+ * @param {HTMLElement} el host element
+ * @param {string} [itemsProp] name of the property that holds the items
+ * @returns {() => void} restores the original property
+ */
+function failFastOnEndlessLoop(el, itemsProp = 'listItems', budget = 500) {
+  let reads = 0;
+  const ownDescriptor = Object.getOwnPropertyDescriptor(el, itemsProp);
+  let proto = Object.getPrototypeOf(el);
+  while (proto && !Object.getOwnPropertyDescriptor(proto, itemsProp)) {
+    proto = Object.getPrototypeOf(proto);
+  }
+  const descriptor = /** @type {PropertyDescriptor} */ (
+    ownDescriptor || Object.getOwnPropertyDescriptor(proto, itemsProp)
+  );
+  Object.defineProperty(el, itemsProp, {
+    configurable: true,
+    get() {
+      reads += 1;
+      if (reads > budget) {
+        throw new Error(`Endless loop: ${itemsProp} was read more than ${budget} times`);
+      }
+      return descriptor.get ? descriptor.get.call(el) : descriptor.value;
+    },
+  });
+  return () => {
+    if (ownDescriptor) {
+      Object.defineProperty(el, itemsProp, ownDescriptor);
+    } else {
+      // @ts-ignore - removing the own property restores the prototype getter
+      // eslint-disable-next-line no-param-reassign
+      delete el[itemsProp];
+    }
+  };
+}
+
+/**
+ * Dispatches keydown on `el` and rethrows an error thrown by its listeners, so a fail-fast
+ * guard surfaces as a regular test failure.
+ * @param {HTMLElement} el
+ * @param {string} key
+ * @param {string} [code]
+ */
+function keyDownOrThrow(el, key, code = '') {
+  /** @type {Error|undefined} */
+  let listenerError;
+  /** @param {ErrorEvent} ev */
+  const onError = ev => {
+    listenerError = ev.error;
+    ev.preventDefault();
+  };
+  window.addEventListener('error', onError);
+  try {
+    el.dispatchEvent(new KeyboardEvent('keydown', { key, code }));
+  } finally {
+    window.removeEventListener('error', onError);
+  }
+  if (listenerError) {
+    throw listenerError;
+  }
+}
 
 /**
  * @typedef {import('@lion/ui/types/test-suites.js').SuiteElement} SuiteElement
@@ -69,9 +135,7 @@ export function runInteractiveListMixinSuite({ classes = {}, tagString: legacyTa
       expect(listItemEls.includes(el.listItems[1])).to.be.true;
     });
 
-    it('inherits from DisclosureMixin', async () => {});
-
-    describe('Active mode', async () => {
+    describe('Active mode', () => {
       it('supports "activedescendant" pattern', async () => {
         const el = await fixture(html`
         <${tag} name="foo" ._activeMode="${'activedescendant'}">
@@ -317,6 +381,70 @@ export function runInteractiveListMixinSuite({ classes = {}, tagString: legacyTa
       expect(item0.getAttribute('aria-current')).to.equal('page');
     });
 
+    describe('Pointer and keyboard edge cases', () => {
+      const itemsTemplate = html`
+        <div role="menuitemradio" aria-checked="false">Item 0</div>
+        <div role="menuitemradio" aria-checked="false">Item 1</div>
+        <div role="menuitemradio" aria-checked="false">Item 2</div>
+      `;
+
+      it('activates and checks the clicked item', async () => {
+        const el = await fixture(html`<${tag}>${itemsTemplate}</${tag}>`);
+        /** @type {HTMLElement} */ (el.listItems[2]).click();
+        expect(el.activeIndex).to.equal(2);
+        expect(el.listItems[2].hasAttribute('checked')).to.be.true;
+      });
+
+      it('ignores clicks outside of the items', async () => {
+        const el = await fixture(html`<${tag}>${itemsTemplate}</${tag}>`);
+        el.activeIndex = 1;
+        // @ts-expect-error [allow-protected-in-tests]
+        /** @type {HTMLElement} */ (el._listNode).click();
+        expect(el.activeIndex).to.equal(1);
+      });
+
+      it('does not navigate with the keyboard when disabled', async () => {
+        const el = await fixture(html`<${tag} disabled>${itemsTemplate}</${tag}>`);
+        // @ts-expect-error [allow-protected-in-tests]
+        const { _listNode } = el;
+        el.activeIndex = 0;
+        mimicKeyPress(_listNode, 'ArrowDown');
+        expect(el.activeIndex).to.equal(0);
+      });
+
+      it('checks the active item on keyboard navigation when "selectionFollowsFocus" is set', async () => {
+        const el = await fixture(html`<${tag} selection-follows-focus>${itemsTemplate}</${tag}>`);
+        // @ts-expect-error [allow-protected-in-tests]
+        const { _listNode } = el;
+        el.activeIndex = 0;
+        mimicKeyPress(_listNode, 'ArrowDown');
+        expect(el.activeIndex).to.equal(1);
+        expect(el.listItems[1].hasAttribute('checked')).to.be.true;
+        mimicKeyPress(_listNode, 'End');
+        expect(el.listItems[2].hasAttribute('checked')).to.be.true;
+      });
+
+      it('stays on the current item with "wrap" when no item is enabled', async () => {
+        const el = await fixture(html`
+          <${tag} wrap>
+            <div role="menuitem" disabled>Item 0</div>
+            <div role="menuitem" disabled>Item 1</div>
+            <div role="menuitem" disabled>Item 2</div>
+          </${tag}>
+        `);
+        // @ts-expect-error [allow-protected-in-tests]
+        const { _listNode } = el;
+        el.activeIndex = 0;
+        const restore = failFastOnEndlessLoop(el);
+        try {
+          keyDownOrThrow(_listNode, 'ArrowDown');
+        } finally {
+          restore();
+        }
+        expect(el.activeIndex).to.equal(0);
+      });
+    });
+
     // Copy tests from ListboxMixin. Later, make this mixin a fundament of the ListboxMixin
 
     // axis
@@ -392,6 +520,46 @@ export function runInteractiveListMixinSuite({ classes = {}, tagString: legacyTa
         el.activeIndex = 2;
         mimicKeyPress(_listNode, 'ArrowDown');
         expect(el.activeIndex).to.equal(2);
+      });
+
+      it('wraps around to the last enabled item on [ArrowUp] when "wrap" is set', async () => {
+        const el = await fixture(html`
+          <${tag} wrap>
+            <div role="menuitem">Item 0</div>
+            <div role="menuitem">Item 1</div>
+            <div role="menuitem" disabled>Item 2</div>
+          </${tag}>
+        `);
+        // @ts-expect-error [allow-protected-in-tests]
+        const { _listNode } = el;
+        el.activeIndex = 0;
+        const restore = failFastOnEndlessLoop(el);
+        try {
+          keyDownOrThrow(_listNode, 'ArrowUp');
+        } finally {
+          restore();
+        }
+        expect(el.activeIndex).to.equal(1);
+      });
+
+      it('wraps around to the first enabled item on [ArrowDown] when "wrap" is set', async () => {
+        const el = await fixture(html`
+          <${tag} wrap>
+            <div role="menuitem" disabled>Item 0</div>
+            <div role="menuitem">Item 1</div>
+            <div role="menuitem">Item 2</div>
+          </${tag}>
+        `);
+        // @ts-expect-error [allow-protected-in-tests]
+        const { _listNode } = el;
+        el.activeIndex = 2;
+        const restore = failFastOnEndlessLoop(el);
+        try {
+          keyDownOrThrow(_listNode, 'ArrowDown');
+        } finally {
+          restore();
+        }
+        expect(el.activeIndex).to.equal(1);
       });
 
       it('applies "wrap" when it changes after the first render', async () => {
@@ -519,15 +687,134 @@ export function runInteractiveListMixinSuite({ classes = {}, tagString: legacyTa
           mimicKeyPress(_listNode, 'End');
           expect(el.activeIndex).to.equal(2);
         });
-      });
-    });
 
-    describe('Widget extensions', () => {
-      it('can be extended to [role=listbox]', async () => {});
-      it('can be extended to [role=menu]', async () => {});
-      it('can be extended to [role=menubar]', async () => {});
-      it('can be extended to [role=toolbar]', async () => {});
-      it('can be extended to [role=tree]', async () => {});
+        it('navigates to the first enabled item with [Home] when the first item is disabled', async () => {
+          const el = await fixture(html`
+            <${tag}>
+              <div role="menuitem" disabled>Item 0</div>
+              <div role="menuitem">Item 1</div>
+              <div role="menuitem">Item 2</div>
+            </${tag}>
+          `);
+          // @ts-expect-error [allow-protected-in-tests]
+          const { _listNode } = el;
+          el.activeIndex = 2;
+          const restore = failFastOnEndlessLoop(el);
+          try {
+            keyDownOrThrow(_listNode, 'Home');
+          } finally {
+            restore();
+          }
+          expect(el.activeIndex).to.equal(1);
+        });
+
+        it('navigates to the last enabled item with [End] when the last item is disabled', async () => {
+          const el = await fixture(html`
+            <${tag}>
+              <div role="menuitem">Item 0</div>
+              <div role="menuitem">Item 1</div>
+              <div role="menuitem" disabled>Item 2</div>
+            </${tag}>
+          `);
+          // @ts-expect-error [allow-protected-in-tests]
+          const { _listNode } = el;
+          el.activeIndex = 0;
+          const restore = failFastOnEndlessLoop(el);
+          try {
+            keyDownOrThrow(_listNode, 'End');
+          } finally {
+            restore();
+          }
+          expect(el.activeIndex).to.equal(1);
+        });
+      });
+
+      describe('Typeahead', () => {
+        /** @type {import('sinon').SinonFakeTimers | undefined} */
+        let clock;
+
+        afterEach(() => {
+          clock?.restore();
+          clock = undefined;
+        });
+
+        const typeaheadFixture = () =>
+          fixture(html`
+            <${tag} ._activateOnTypedChars=${true}>
+              <div role="menuitem">Red</div>
+              <div role="menuitem">Teal</div>
+              <div role="menuitem">Turquoise</div>
+              <div role="menuitem">Turtle</div>
+            </${tag}>
+          `);
+
+        it('activates the first item that matches a typed character', async () => {
+          const el = await typeaheadFixture();
+          // @ts-expect-error [allow-protected-in-tests]
+          const { _listNode } = el;
+          el.activeIndex = 0;
+          mimicKeyPress(_listNode, 't', 'KeyT');
+          expect(el.activeIndex).to.equal(1);
+        });
+
+        it('activates the item that matches a sequence of typed characters', async () => {
+          const el = await typeaheadFixture();
+          // @ts-expect-error [allow-protected-in-tests]
+          const { _listNode } = el;
+          el.activeIndex = 0;
+          mimicKeyPress(_listNode, 't', 'KeyT');
+          mimicKeyPress(_listNode, 'u', 'KeyU');
+          expect(el.activeIndex).to.equal(2);
+          mimicKeyPress(_listNode, 'r', 'KeyR');
+          mimicKeyPress(_listNode, 't', 'KeyT');
+          expect(el.activeIndex).to.equal(3);
+        });
+
+        it('matches typed characters case-insensitively', async () => {
+          const el = await typeaheadFixture();
+          // @ts-expect-error [allow-protected-in-tests]
+          const { _listNode } = el;
+          el.activeIndex = 0;
+          mimicKeyPress(_listNode, 'T', 'KeyT');
+          expect(el.activeIndex).to.equal(1);
+        });
+
+        it('restarts the typeahead window on every typed character', async () => {
+          const el = await typeaheadFixture();
+          // @ts-expect-error [allow-protected-in-tests]
+          const { _listNode, _activateOnCharTimeout } = el;
+          el.activeIndex = 0;
+          clock = sinon.useFakeTimers();
+
+          mimicKeyPress(_listNode, 't', 'KeyT');
+          clock.tick(_activateOnCharTimeout * 0.75);
+          mimicKeyPress(_listNode, 'u', 'KeyU');
+          // The window of the first character has passed by now, the window of the second has not
+          clock.tick(_activateOnCharTimeout * 0.5);
+          mimicKeyPress(_listNode, 'r', 'KeyR');
+          // 'tur' still continues the sequence, so 'Turquoise' (and not 'Red') is active
+          expect(el.activeIndex).to.equal(2);
+
+          clock.tick(_activateOnCharTimeout);
+          mimicKeyPress(_listNode, 'r', 'KeyR');
+          // A pause longer than the window starts a new sequence
+          expect(el.activeIndex).to.equal(0);
+        });
+
+        it('matches items that have a non-string value', async () => {
+          const el = await fixture(html`
+            <${tag} ._activateOnTypedChars=${true}>
+              <div role="menuitem" .choiceValue=${10}>10</div>
+              <div role="menuitem" .choiceValue=${20}>20</div>
+            </${tag}>
+          `);
+          // @ts-expect-error [allow-protected-in-tests]
+          const { _listNode } = el;
+          el.activeIndex = 0;
+          keyDownOrThrow(_listNode, '2', 'Digit2');
+          expect(el.activeIndex).to.equal(1);
+        });
+      });
     });
   });
 }

@@ -49,6 +49,16 @@ export function runChoiceInputMixinSuite({ classes = {}, tagString: legacyTagStr
       });
     });
 
+    it('parses to its modelValue, since its view does not hold the value', async () => {
+      const el = /** @type {ChoiceInput} */ (
+        await fixture(html`<${tag} .choiceValue=${'foo'} checked></${tag}>`)
+      );
+      // @ts-ignore [allow-private] in test
+      expect(el.parser('anything')).to.equal(el.modelValue);
+      // @ts-ignore [allow-private] in test
+      expect(el.parser('anything')).to.deep.equal({ value: 'foo', checked: true });
+    });
+
     it('can handle complex data via choiceValue', async () => {
       const date = new Date(2018, 11, 24, 10, 33, 30, 0);
 

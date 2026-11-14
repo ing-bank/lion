@@ -26,26 +26,22 @@ function checkChrome(flavor = 'google-chrome') {
   const vendorName = winNav?.vendor;
   const isOpera =
     typeof (/** @type {typeof window & { opr?: boolean}} */ (globalThis).opr) !== 'undefined';
-  // @ts-ignore
-  const isIEedge = globalThis.userAgent?.indexOf('Edge') > -1;
-  // @ts-ignore
-  const isIOSChrome = globalThis.userAgent?.match('CriOS');
+  const userAgent = winNav?.userAgent || '';
+  const isIEedge = userAgent.indexOf('Edge') > -1;
+  const isIOSChrome = /CriOS/.test(userAgent);
 
   if (flavor === 'ios') {
     return isIOSChrome;
   }
 
-  if (flavor === 'google-chrome') {
-    return (
-      isChromium !== null &&
-      typeof isChromium !== 'undefined' &&
-      vendorName === 'Google Inc.' &&
-      isOpera === false &&
-      isIEedge === false
-    );
-  }
-
-  return undefined;
+  // flavor === 'google-chrome'
+  return (
+    isChromium !== null &&
+    typeof isChromium !== 'undefined' &&
+    vendorName === 'Google Inc.' &&
+    isOpera === false &&
+    isIEedge === false
+  );
 }
 
 export const browserDetection = {

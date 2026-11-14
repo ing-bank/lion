@@ -213,6 +213,22 @@ export function runPaginationSuite({
         const ellipsisText = Array.from(spans).map(span => span.textContent);
         expect(ellipsisText).to.include('...');
       });
+
+      /** @param {LionPagination} el */
+      const navItemTexts = el =>
+        Array.from(/** @type {ShadowRoot} */ (el.shadowRoot).querySelectorAll('li'))
+          .slice(1, -1) // skip the previous and next buttons
+          .map(li => /** @type {string} */ (li.textContent).trim());
+
+      it('shows the current page with its neighbours between two ellipses in the middle', async () => {
+        const el = await fixture(html` <${tag} count="20" current="10"></${tag}> `);
+        expect(navItemTexts(el)).to.deep.equal(['1', '...', '9', '10', '11', '...', '20']);
+      });
+
+      it('shows the last pages after one ellipsis near the end', async () => {
+        const el = await fixture(html` <${tag} count="20" current="18"></${tag}> `);
+        expect(navItemTexts(el)).to.deep.equal(['1', '...', '16', '17', '18', '19', '20']);
+      });
     });
   });
 }

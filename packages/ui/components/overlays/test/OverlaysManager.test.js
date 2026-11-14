@@ -49,6 +49,19 @@ describe('OverlaysManager', () => {
     expect(mngr._siblingsInert).to.be.false;
   });
 
+  it('throws when asked to hide a controller it does not know', () => {
+    const ctrl = new OverlayController(defaultOptions, mngr);
+    mngr.remove(ctrl);
+    expect(() => mngr.hide(ctrl)).to.throw('could not find controller to hide');
+  });
+
+  it('does not make siblings inert', async () => {
+    const ctrl = new OverlayController(defaultOptions, mngr);
+    await ctrl.show();
+    expect(mngr.siblingsInert).to.be.false;
+    await ctrl.hide();
+  });
+
   it('can add/remove controllers', () => {
     // OverlayControllers will add themselves
     const dialog = new OverlayController(defaultOptions, mngr);

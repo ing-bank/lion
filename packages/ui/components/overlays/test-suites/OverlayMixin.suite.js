@@ -306,6 +306,122 @@ export function runOverlayMixinSuite({ tagString, tag, suffix = '' }) {
       expect(el.opened).to.be.false;
     });
 
+    it('stays opened when "before-closed" is prevented', async () => {
+      function preventer(/** @type Event */ ev) {
+        ev.preventDefault();
+      }
+      const el = /** @type {OverlayEl} */ (
+        await fixture(html`
+        <${tag} opened @before-closed="${preventer}">
+          <div slot="content">content of the overlay</div>
+          <button slot="invoker">invoker button</button>
+        </${tag}>
+      `)
+      );
+      await el._overlayCtrl._showComplete;
+      expect(el._overlayCtrl.isShown).to.be.true;
+
+      el.opened = false;
+      await el.updateComplete;
+      await el._overlayCtrl._hideComplete;
+      await el.updateComplete;
+      expect(el.opened).to.be.true;
+      expect(el._overlayCtrl.isShown).to.be.true;
+
+      await el._overlayCtrl.hide();
+      await el.updateComplete;
+      expect(el.opened).to.be.true;
+      expect(el._overlayCtrl.isShown).to.be.true;
+    });
+
+    describe('Invoker lookup', () => {
+      it('uses an element with [data-invoker][for] that references its id', async () => {
+        const wrapper = await fixture(html`
+          <div>
+            <button data-invoker for="overlay-with-for">invoker</button>
+            <p>unrelated</p>
+            <${tag} id="overlay-with-for">
+              <div slot="content">content of the overlay</div>
+            </${tag}>
+          </div>
+        `);
+        const el = /** @type {OverlayEl} */ (wrapper.querySelector('#overlay-with-for'));
+        await el.updateComplete;
+        expect(el._overlayCtrl.invokerNode).to.equal(wrapper.querySelector('[data-invoker]'));
+      });
+
+      it('uses a preceding sibling with [data-invoker]', async () => {
+        const wrapper = await fixture(html`
+          <div>
+            <button data-invoker>invoker</button>
+            <${tag}>
+              <div slot="content">content of the overlay</div>
+            </${tag}>
+          </div>
+        `);
+        const el = /** @type {OverlayEl} */ (wrapper.querySelector(tagString));
+        await el.updateComplete;
+        expect(el._overlayCtrl.invokerNode).to.equal(wrapper.querySelector('[data-invoker]'));
+      });
+
+      it('ignores a preceding sibling without [data-invoker]', async () => {
+        const wrapper = await fixture(html`
+          <div>
+            <button>not an invoker</button>
+            <${tag}>
+              <div slot="content">content of the overlay</div>
+            </${tag}>
+          </div>
+        `);
+        const el = /** @type {OverlayEl} */ (wrapper.querySelector(tagString));
+        await el.updateComplete;
+        expect(el._overlayCtrl.invokerNode).to.be.undefined;
+      });
+
+      it('prioritizes [slot=invoker] over [data-invoker][for] over a [data-invoker] sibling', async () => {
+        const wrapper = await fixture(html`
+          <div>
+            <button data-invoker for="overlay-a" id="for-a">for a</button>
+            <button data-invoker for="overlay-b" id="for-b">for b</button>
+            <button data-invoker id="sibling-a">sibling a</button>
+            <${tag} id="overlay-a">
+              <button slot="invoker" id="slotted-a">slotted a</button>
+              <div slot="content">content of the overlay</div>
+            </${tag}>
+            <button data-invoker id="sibling-b">sibling b</button>
+            <${tag} id="overlay-b">
+              <div slot="content">content of the overlay</div>
+            </${tag}>
+          </div>
+        `);
+        const elA = /** @type {OverlayEl} */ (wrapper.querySelector('#overlay-a'));
+        const elB = /** @type {OverlayEl} */ (wrapper.querySelector('#overlay-b'));
+        await elA.updateComplete;
+        await elB.updateComplete;
+        expect(elA._overlayCtrl.invokerNode).to.equal(wrapper.querySelector('#slotted-a'));
+        expect(elB._overlayCtrl.invokerNode).to.equal(wrapper.querySelector('#for-b'));
+      });
+
+      it('looks up [data-invoker][for] within its own shadow root', async () => {
+        const decoy = await fixture(html`
+          <button data-invoker for="overlay-in-shadow">decoy in document</button>
+        `);
+        const host = /** @type {HTMLElement} */ (fixtureSync(html`<div></div>`));
+        const shadowRoot = host.attachShadow({ mode: 'open' });
+        shadowRoot.innerHTML = `
+          <button data-invoker for="overlay-in-shadow">invoker in shadow root</button>
+          <${tagString} id="overlay-in-shadow">
+            <div slot="content">content of the overlay</div>
+          </${tagString}>
+        `;
+        const el = /** @type {OverlayEl} */ (shadowRoot.querySelector('#overlay-in-shadow'));
+        await el.updateComplete;
+        const invokerInShadow = shadowRoot.querySelector('[data-invoker]');
+        expect(el._overlayCtrl.invokerNode).to.equal(invokerInShadow);
+        expect(el._overlayCtrl.invokerNode).to.not.equal(decoy);
+      });
+    });
+
     it('hides content on "close-overlay" event within the content ', async () => {
       function sendCloseEvent(/** @type {Event} */ e) {
         e.target?.dispatchEvent(new Event('close-overlay', { bubbles: true }));
@@ -367,16 +483,14 @@ export function runOverlayMixinSuite({ tagString, tag, suffix = '' }) {
       );
       await OverlayController.popperModule;
       // @ts-ignore [popper-instance-access-in-test]
-      sinon.spy(el._overlayCtrl._popper, 'update');
+      const updateSpy = sinon.spy(el._overlayCtrl._popper, 'update');
       el.repositionOverlay();
-      // @ts-ignore [popper-instance-access-in-test]
-      expect(el._overlayCtrl._popper.update).to.have.been.been.calledOnce;
+      expect(updateSpy.callCount).to.equal(1);
 
       if (!el._overlayCtrl.isTooltip) {
         el.config = { ...el.config, placementMode: 'global' };
         el.repositionOverlay();
-        // @ts-ignore [popper-instance-access-in-test]
-        expect(el._overlayCtrl._popper.update).to.have.been.been.calledOnce;
+        expect(updateSpy.callCount).to.equal(1);
       }
     });
 

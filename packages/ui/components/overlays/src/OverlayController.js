@@ -188,12 +188,6 @@ export class OverlayController extends EventTarget {
   __escKeyHandlerCalled;
 
   /**
-   * @type {OverlayConfig | undefined}
-   * @private
-   */
-  __prevConfig = undefined;
-
-  /**
    * @type {HTMLElement | undefined}
    * @private
    */
@@ -293,8 +287,6 @@ export class OverlayController extends EventTarget {
     this.__escKeyHandler = this.__escKeyHandler.bind(this);
     this.updateConfig(config);
     this.__hasActiveBackdrop = true;
-    /** @private */
-    this.__cancelHandler = this.__cancelHandler.bind(this);
     this.__escKeyHandlerCalled = false;
   }
 
@@ -536,7 +528,9 @@ export class OverlayController extends EventTarget {
    * @type {number}
    */
   get elevation() {
-    return Number(this.contentWrapperNode?.style.zIndex);
+    // The setter puts the elevation on top of config.zIndex of the wrapping dialog: read it back from there
+    // @ts-expect-error find out why config would/could be undfined
+    return Number(this.__wrappingDialogNode?.style.zIndex) - this.config.zIndex;
   }
 
   /**
@@ -726,11 +720,6 @@ export class OverlayController extends EventTarget {
       // parent stacking context
       // padding reset so we don't get a weird dialog visual square showing up
       wrappingDialogElement.style.cssText = `display:none; z-index: ${this.config.zIndex}; padding: 0;`;
-      // @ts-ignore - 'custom' is a valid extension of placementMode
-      if (this.config.placementMode === 'custom') {
-        // The user should have full freedom to control the content node, so its wrapper nodes should remain neutral.
-        wrappingDialogElement.style.cssText += `position: static;`;
-      }
       this.__wrappingDialogNode = wrappingDialogElement;
 
       /**
@@ -748,7 +737,6 @@ export class OverlayController extends EventTarget {
         wrappingDialogNodeL1: wrappingDialogElement,
         contentWrapperNodeL2: this.contentWrapperNode,
         contentNodeL3: this.contentNode,
-        // requireConnectedNodes: Boolean(this.config.requireConnectedNodes),
       });
       wrappingDialogElement.open = true;
 
@@ -855,7 +843,7 @@ export class OverlayController extends EventTarget {
         if (this.invokerNode) {
           this.invokerNode.setAttribute(
             this.invokerRelation === 'label' ? 'aria-labelledby' : 'aria-describedby',
-            this._contentId,
+            this.contentNode.id,
           );
         }
         this.contentNode.setAttribute('role', 'tooltip');
@@ -913,6 +901,8 @@ export class OverlayController extends EventTarget {
    * @param {HTMLElement} elementToFocusAfterHide
    */
   async show(elementToFocusAfterHide = this.elementToFocusAfterHide) {
+    // Like hide(), a no-op while the overlay functionality is not activated
+    if (!this.config?.isActivated) return;
     // Subsequent shows could happen, make sure we await it first.
     // Otherwise it gets replaced before getting resolved, and places awaiting it will time out.
     if (this._showComplete) {
@@ -929,11 +919,11 @@ export class OverlayController extends EventTarget {
       this._init();
     }
 
-    if (this.manager) {
-      this.manager.show(this);
-    }
-
     if (this.isShown) {
+      // Already shown: only move it to the top of the stack of shown overlays
+      if (this.manager) {
+        this.manager.show(this);
+      }
       /** @type {function} */
       (this._showResolve)();
       return;
@@ -941,24 +931,36 @@ export class OverlayController extends EventTarget {
 
     const event = new CustomEvent('before-show', { cancelable: true });
     this.dispatchEvent(event);
-    if (!event.defaultPrevented) {
-      if ('HTMLDialogElement' in window && this.__wrappingDialogNode instanceof HTMLDialogElement) {
-        this.__wrappingDialogNode.open = true;
-      }
-
-      // @ts-ignore
-      this.__wrappingDialogNode.style.display = '';
-      this._keepBodySize({ phase: 'before-show' });
-      await this._handleFeatures({ phase: 'show' });
-      this._keepBodySize({ phase: 'show' });
-      await this._handlePosition({ phase: 'show' });
-      this.__elementToFocusAfterHide = elementToFocusAfterHide;
-      this.dispatchEvent(new Event('show'));
-      await this._transitionShow({
-        backdropNode: this.backdropNode,
-        contentNode: this.contentNode,
-      });
+    if (event.defaultPrevented) {
+      // A prevented show leaves no trace: the overlay is not registered as shown on the
+      // manager and does not get the [data-open] state.
+      /** @type {function} */
+      (this._showResolve)();
+      return;
     }
+
+    if (this.manager) {
+      this.manager.show(this);
+    }
+
+    if ('HTMLDialogElement' in window && this.__wrappingDialogNode instanceof HTMLDialogElement) {
+      this.__wrappingDialogNode.open = true;
+    }
+
+    // @ts-ignore
+    this.__wrappingDialogNode.style.display = '';
+    this._keepBodySize({ phase: 'before-show' });
+    await this._handleFeatures({ phase: 'show' });
+    if (this.#isTornDownWhileShowing()) return;
+    this._keepBodySize({ phase: 'show' });
+    await this._handlePosition({ phase: 'show' });
+    if (this.#isTornDownWhileShowing()) return;
+    this.__elementToFocusAfterHide = elementToFocusAfterHide;
+    this.dispatchEvent(new Event('show'));
+    await this._transitionShow({
+      backdropNode: this.backdropNode,
+      contentNode: this.contentNode,
+    });
 
     // a styling/debug hook for open state
     this.contentNode.setAttribute('data-open', '');
@@ -969,6 +971,17 @@ export class OverlayController extends EventTarget {
 
     /** @type {function} */
     (this._showResolve)();
+  }
+
+  /**
+   * teardown() can run while show() awaits (for instance when the host gets disconnected).
+   * In that case show() must stop: the dom structure and popper instance it works on are gone.
+   * @returns {boolean}
+   */
+  #isTornDownWhileShowing() {
+    if (this.__hasSetup) return false;
+    /** @type {function} */ (this._showResolve)();
+    return true;
   }
 
   /**
@@ -997,7 +1010,8 @@ export class OverlayController extends EventTarget {
        * This is however necessary for initial placement.
        */
       await this.__createPopperInstance();
-      /** @type {import('@popperjs/core').Instance} */ (this._popper).forceUpdate();
+      // teardown() may have destroyed the instance while we awaited its creation
+      this._popper?.forceUpdate();
     }
     // N.B. leave it up to the user if placementMode === 'custom'
   }
@@ -1032,33 +1046,41 @@ export class OverlayController extends EventTarget {
       this.contentNode.getRootNode()
     ).activeElement;
 
-    if (this.manager && this.#isRegisteredOnManager()) {
-      this.manager.hide(this);
-    }
-
     if (!this.isShown) {
+      if (this.manager && this.#isRegisteredOnManager()) {
+        this.manager.hide(this);
+      }
       /** @type {function} */ (this._hideResolve)();
       return;
     }
 
     const event = new CustomEvent('before-hide', { cancelable: true });
     this.dispatchEvent(event);
-    if (!event.defaultPrevented) {
-      await this._transitionHide({
-        backdropNode: this.backdropNode,
-        contentNode: this.contentNode,
-      });
-
-      if ('HTMLDialogElement' in window && this.__wrappingDialogNode instanceof HTMLDialogElement) {
-        this.__wrappingDialogNode.close();
-      }
-      // @ts-ignore
-      this.__wrappingDialogNode.style.display = 'none';
-      this._handleFeatures({ phase: 'hide' });
-      this._keepBodySize({ phase: 'hide' });
-      this.dispatchEvent(new Event('hide'));
-      this._restoreFocus();
+    if (event.defaultPrevented) {
+      // A prevented hide keeps the overlay shown, so it stays registered as shown on the
+      // manager and keeps its [data-open] state.
+      /** @type {function} */ (this._hideResolve)();
+      return;
     }
+
+    if (this.manager && this.#isRegisteredOnManager()) {
+      this.manager.hide(this);
+    }
+
+    await this._transitionHide({
+      backdropNode: this.backdropNode,
+      contentNode: this.contentNode,
+    });
+
+    if ('HTMLDialogElement' in window && this.__wrappingDialogNode instanceof HTMLDialogElement) {
+      this.__wrappingDialogNode.close();
+    }
+    // @ts-ignore
+    this.__wrappingDialogNode.style.display = 'none';
+    this._handleFeatures({ phase: 'hide' });
+    this._keepBodySize({ phase: 'hide' });
+    this.dispatchEvent(new Event('hide'));
+    this._restoreFocus();
     /** @type {function} */ (this._hideResolve)();
 
     this.contentNode.removeAttribute('data-open');
@@ -1347,12 +1369,15 @@ export class OverlayController extends EventTarget {
    * move to the dialog from URL bar, nor the dialog element, nor the `contentNode` are focused.
    * Instead the first focusable element is focused right away
    */
+  #onWrappingDialogFocus = () => {
+    if (!this.#isShiftPressed) {
+      this.#getInitialElementToFocus().focus();
+    }
+  };
+
   #handleFocusInsideDialog = () => {
-    this.__wrappingDialogNode?.addEventListener('focus', () => {
-      if (!this.#isShiftPressed) {
-        this.#getInitialElementToFocus().focus();
-      }
-    });
+    // A stable listener reference, so repeated shows do not stack up listeners
+    this.__wrappingDialogNode?.addEventListener('focus', this.#onWrappingDialogFocus);
   };
 
   /**
@@ -1388,20 +1413,10 @@ export class OverlayController extends EventTarget {
        */
       this.#getInitialElementToFocus().focus();
     }
-    if (phase === 'hide') {
+    if (phase === 'hide' || phase === 'teardown') {
       this.#stopHandlingShiftKeyPress();
+      this.__wrappingDialogNode?.removeEventListener('focus', this.#onWrappingDialogFocus);
     }
-  }
-
-  /**
-   * When the overlay is a modal dialog hidesOnEsc works out of the box, so we prevent that.
-   *
-   * There is currently a bug in chrome that makes the dialog close when pressing Esc the second time
-   * @private
-   */
-  // eslint-disable-next-line class-methods-use-this
-  __cancelHandler(/** @type {Event} */ ev) {
-    ev.preventDefault();
   }
 
   /**
@@ -1643,6 +1658,11 @@ export class OverlayController extends EventTarget {
     }
 
     this.contentNode?.removeEventListener('click', this.#hideOnCloseButtonClick);
+
+    if (this._popper) {
+      this._popper.destroy();
+      this._popper = undefined;
+    }
 
     // if (this.config._shouldTeardownDomStructure) {
     this.__rearrangeNodesCleanup?.();

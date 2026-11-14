@@ -336,6 +336,34 @@ export function runChoiceGroupMixinSuite({
       expect(el.formElements[2].checked).to.be.true;
     });
 
+    it('has operationMode "select", for select specific Required messages', async () => {
+      const el = /** @type {ChoiceInputGroup} */ (
+        await fixture(html`
+        <${tags.host} name="gender[]">
+          <${tags.child} .choiceValue=${'male'}></${tags.child}>
+        </${tags.host}>
+      `)
+      );
+      expect(el.operationMode).to.equal('select');
+    });
+
+    it('collects other properties of its choices as an array', async () => {
+      const el = /** @type {ChoiceInputGroup} */ (
+        await fixture(html`
+        <${tags.host} name="gender[]">
+          <${tags.child} .choiceValue=${'male'}></${tags.child}>
+          <${tags.child} .choiceValue=${'female'} disabled></${tags.child}>
+        </${tags.host}>
+      `)
+      );
+      // @ts-ignore [allow-protected] in test
+      expect(el._getFromAllFormElements('choiceValue')).to.deep.equal(['male', 'female']);
+      expect(
+        // @ts-ignore [allow-protected] in test
+        el._getFromAllFormElements('choiceValue', (/** @type {any} */ c) => !c.disabled),
+      ).to.deep.equal(['male']);
+    });
+
     it('correctly handles modelValue being set before registrationComplete', async () => {
       const el = /** @type {ChoiceInputGroup} */ (
         fixtureSync(html`

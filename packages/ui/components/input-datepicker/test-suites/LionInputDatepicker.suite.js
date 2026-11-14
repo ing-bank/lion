@@ -491,6 +491,46 @@ export function runDatepickerSuite({
           expect(el.__calendarMaxDate.toString()).to.equal(new Date('2019/07/15').toString());
         });
 
+        it('releases the calendar limits of validators that are removed', async () => {
+          const myMinDate = new Date('2019/06/15');
+          const myMaxDate = new Date('2019/06/25');
+          const no20th = /** @param {Date} d */ d => d.getDate() === 20;
+          const el = await fixtureForSuite(html`
+            <${tag}
+              .validators=${[new MinDate(myMinDate), new MaxDate(myMaxDate), new IsDateDisabled(no20th)]}
+            ></${tag}>
+          `);
+          const elObj = new InputObject(el);
+          await elObj.openCalendar();
+          expect(elObj.calendarEl.minDate).to.equal(myMinDate);
+          expect(elObj.calendarEl.maxDate).to.equal(myMaxDate);
+          expect(elObj.calendarEl.disableDates(new Date('2019/06/20'))).to.be.true;
+          await elObj.closeCalendar();
+
+          el.validators = [];
+          await elObj.openCalendar();
+          const { minDate, maxDate } = elObj.calendarEl;
+          expect(!minDate || minDate <= new Date('2019/06/01'), 'minDate released').to.be.true;
+          expect(!maxDate || maxDate >= new Date('2019/06/30'), 'maxDate released').to.be.true;
+          expect(elObj.calendarEl.disableDates(new Date('2019/06/20')), 'disableDates released').to
+            .be.false;
+        });
+
+        it('keeps the calendar limits of validators that remain after a validators change', async () => {
+          const myMinDate = new Date('2019/06/15');
+          const myMaxDate = new Date('2019/06/25');
+          const maxDateValidator = new MaxDate(myMaxDate);
+          const el = await fixtureForSuite(html`
+            <${tag} .validators=${[new MinDate(myMinDate), maxDateValidator]}></${tag}>
+          `);
+          el.validators = [maxDateValidator];
+          const elObj = new InputObject(el);
+          await elObj.openCalendar();
+          const { minDate } = elObj.calendarEl;
+          expect(!minDate || minDate <= new Date('2019/06/01'), 'minDate released').to.be.true;
+          expect(elObj.calendarEl.maxDate).to.equal(myMaxDate);
+        });
+
         it('should update the central date of Calendar if updated validator made the current central date disabled', async () => {
           const initialValidators = [new MaxDate(new Date('2000/01/01'))];
           const updatedValidators = [new MaxDate(new Date('2020/01/01'))];

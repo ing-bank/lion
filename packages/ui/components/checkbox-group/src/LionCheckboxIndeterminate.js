@@ -253,18 +253,44 @@ export class LionCheckboxIndeterminate extends LionCheckbox {
     /** @type {boolean[]} */
     this._indeterminateSubStates = [];
     this.mixedState = false;
+    /**
+     * Sub checkboxes unregister from their parent form group directly (without an event that
+     * reaches us), so we watch our light dom to notice removed sub checkboxes.
+     * @private
+     */
+    this.__subCheckboxesObserver = new MutationObserver(() => this.__onLightDomChanged());
   }
 
   connectedCallback() {
     super.connectedCallback();
     this.addEventListener('model-value-changed', this.__onModelValueChanged);
     this.addEventListener('form-element-register', this._onRequestToAddFormElement);
+    this.__subCheckboxesObserver.observe(this, { childList: true, subtree: true });
   }
 
   disconnectedCallback() {
     super.disconnectedCallback();
     this.removeEventListener('model-value-changed', this.__onModelValueChanged);
     this.removeEventListener('form-element-register', this._onRequestToAddFormElement);
+    this.__subCheckboxesObserver.disconnect();
+  }
+
+  /**
+   * Drops sub checkboxes that are no longer in our light dom and updates our own state.
+   * @private
+   */
+  __onLightDomChanged() {
+    const removed = this.__subCheckboxes.filter(element => !this.contains(element));
+    if (!removed.length) {
+      return;
+    }
+    removed.forEach(element => {
+      if (element.getAttribute('role') === 'listitem') {
+        element.removeAttribute('role');
+      }
+      this.__removeFromSubCheckboxes(element);
+    });
+    this._setOwnCheckedState();
   }
 
   /** @param {import('lit').PropertyValues } changedProperties */

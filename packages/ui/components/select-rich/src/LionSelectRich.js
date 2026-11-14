@@ -510,6 +510,31 @@ export class LionSelectRich extends SlotMixin(ScopedElementsMixin(OverlayMixin(L
   }
 
   /**
+   * Like a native select, navigating within the invoker skips disabled options: they can't be
+   * checked, so landing on one would clear the selection. When no checkable option follows, the
+   * current index is returned, which keeps the current selection.
+   * @param {1|-1} direction
+   * @returns {number}
+   */
+  __getCheckableOption(direction) {
+    const start = /** @type {number} */ (this.checkedIndex);
+    let index = start;
+    // Bounded by the number of options, so a (rotating) list of disabled options always ends
+    for (let tries = 0; tries < this.formElements.length; tries += 1) {
+      const next =
+        direction === 1 ? this._getNextEnabledOption(index) : this._getPreviousEnabledOption(index);
+      if (next === index || next === start) {
+        break;
+      }
+      if (!this.formElements[next].disabled) {
+        return next;
+      }
+      index = next;
+    }
+    return start;
+  }
+
+  /**
    * @param {KeyboardEvent} ev
    * @protected
    */
@@ -537,9 +562,7 @@ export class LionSelectRich extends SlotMixin(ScopedElementsMixin(OverlayMixin(L
         ev.preventDefault();
 
         if (this.navigateWithinInvoker) {
-          this.setCheckedIndex(
-            this._getPreviousEnabledOption(/**  @type {number} */ (this.checkedIndex)),
-          );
+          this.setCheckedIndex(this.__getCheckableOption(-1));
         } else {
           this.opened = true;
         }
@@ -547,9 +570,7 @@ export class LionSelectRich extends SlotMixin(ScopedElementsMixin(OverlayMixin(L
       case 'ArrowDown':
         ev.preventDefault();
         if (this.navigateWithinInvoker) {
-          this.setCheckedIndex(
-            this._getNextEnabledOption(/**  @type {number} */ (this.checkedIndex)),
-          );
+          this.setCheckedIndex(this.__getCheckableOption(1));
         } else {
           this.opened = true;
         }
@@ -557,17 +578,13 @@ export class LionSelectRich extends SlotMixin(ScopedElementsMixin(OverlayMixin(L
       case 'ArrowLeft':
         ev.preventDefault();
         if (this.navigateWithinInvoker) {
-          this.setCheckedIndex(
-            this._getPreviousEnabledOption(/**  @type {number} */ (this.checkedIndex)),
-          );
+          this.setCheckedIndex(this.__getCheckableOption(-1));
         }
         break;
       case 'ArrowRight':
         ev.preventDefault();
         if (this.navigateWithinInvoker) {
-          this.setCheckedIndex(
-            this._getNextEnabledOption(/**  @type {number} */ (this.checkedIndex)),
-          );
+          this.setCheckedIndex(this.__getCheckableOption(1));
         }
         break;
       default:
