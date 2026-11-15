@@ -24,6 +24,16 @@ its source docs and re-measured against the library, not patched by hand and hop
 
 ![three hands drawing one another in a closed loop — the Escher tribute — cut out as a two-tone ink plate: solid black line work and even ink masses on a paper card, no dot screen, lifted with a hard ink edge and a grey offset shadow onto a technical sheet of fine grid, a halftone field, concentric rings and a ruler scale](./assets/recursive-skill-improvement-hero.png 'The self-drawing hands as a cut-out: the pencil drawing reduced to two even ink tones, pasted on its own paper card over the printed plate the other covers share')
 
+## The subject is any skill generated from docs
+
+The `lion-ui` skill is this repo's **current subject**, not the tool's definition. Nothing in the loop is
+Lion-specific: a scenario is a prompt, a check is a rule the source docs state, the behaviour tier is a
+browser running the produced file, and the ledger is keyed by the revision of a skill directory. The same
+tool therefore measures **any skill that is generated from source documentation**. Moving it to another
+docs tree means porting that skill's **data** — its scenarios, its entrypoint policy and its own
+`scenario-docs.json` coupling — never changing the machinery: the revision key, the `n=0` discipline,
+the retired rows and the correction loop all apply unchanged.
+
 ## The system, the task and the protocol
 
 Three names, one thing each, and they must not be read as rivals:
