@@ -22,7 +22,7 @@ It exists because Lion is a living product: components gain APIs, docs gain page
 last quarter quietly stops matching the library. Improvement here means the skill is regenerated from
 its source docs and re-measured against the library, not patched by hand and hoped over.
 
-![three hands drawing one another in a closed loop — the Escher tribute — cut out as a two-tone ink plate: solid black line work and even ink masses on a paper card, no dot screen, lifted with a hard ink edge and a grey offset shadow onto a technical sheet of fine grid, a halftone field, concentric rings and a ruler scale](./assets/recursive-skill-improvement-hero.png 'The self-drawing hands as a cut-out: the pencil drawing reduced to two even ink tones, pasted on its own paper card over the printed plate the other covers share')
+![three hands drawing one another in a closed loop — the Escher tribute — as one free-standing silhouette: a single white kiss-cut keyline around the whole group, no card and no frame, standing on a technical sheet of fine grid, pale angular fields, a hatched block, a halftone field, concentric rings, corner registration marks and a ruler scale](./assets/recursive-skill-improvement-hero.png 'The self-drawing hands as a free-standing die-cut: the pencil drawing reduced to two even ink tones and lifted as one silhouette under a single white kiss-cut edge, over the printed plate the other covers share')
 
 ## The subject is any skill generated from docs
 
