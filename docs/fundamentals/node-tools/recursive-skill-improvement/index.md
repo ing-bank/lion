@@ -217,17 +217,22 @@ Two earlier candidates and the abbreviation were considered and set aside:
 
 ```bash
 # one scenario, one model, with behaviour
-npm run eval -w packages-node/recursive-skill-improvement -- \
-  --models <model> --scenario component/form --samples 3 --behaviour
+npx recursive-skill-improvement -- --models <model> --scenario component/form --samples 3 --behaviour
 
-# a sweep that publishes the ledger and this results page
-npm run eval -w packages-node/recursive-skill-improvement -- \
-  sweep --models <model> --samples 3 --behaviour
+# a sweep that publishes the ledger and the results page
+npx recursive-skill-improvement sweep --models <model> --samples 3 --behaviour
 
 # measure and report the cells below 100%, with the failing check and its file:line
-npm run eval -w packages-node/recursive-skill-improvement -- \
-  improve --models <model> --samples 3
+npx recursive-skill-improvement improve --models <model> --samples 3
 ```
+
+Installed globally (`npm i -g recursive-skill-improvement`) the same tasks answer to the short form:
+`rsi sweep --models <model> --samples 3 --behaviour`. In `npx`, the **package name** is what is resolved, so
+`npx rsi` would fetch the npm package literally named `rsi` — use `npx recursive-skill-improvement`, or
+`npx -p recursive-skill-improvement rsi`.
+
+Working inside the monorepo the tasks run through the workspace instead
+(`npm run eval -w packages-node/recursive-skill-improvement -- sweep …`).
 
 `--models` has no default on purpose: the subject under test is the skill, and a model is a dimension,
 not an assumption. Regenerate and gate before quoting anything:
