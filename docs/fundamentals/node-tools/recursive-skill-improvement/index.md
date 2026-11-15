@@ -160,6 +160,29 @@ The loop is only credible if it turns on its author too. Four examples from real
   verbatim, which neither `importsResolve` nor `namedExportsExist` could see, because a placeholder is
   not a resolvable specifier at all. That gap is now a check.
 
+## The other lever: reinforcement fine-tuning
+
+The loop here improves the **documentation**; the ledger's run records are the same evidence a
+**reinforcement fine-tuning** round would need, and that makes RFT a deliberate **option**, not a
+rival.
+
+| | docs route (the product) | reinforcement fine-tuning (optional) |
+| --- | --- | --- |
+| what changes | the source doc, then the regenerated skill | the model's weights |
+| reward signal | the deterministic checks plus the browser behaviour tier | the same per-run pass/fail, per named check |
+| source of truth | `docs/**` and the ledger | the ledger's run records — prompt, produced file, verdict |
+| what it costs | a doc edit, a regeneration, an n>=3 re-run | verified records, a held-out scenario set, a training budget |
+| what can go wrong | a regression elsewhere in the library stays unmeasured | overfitting the measured cells; a tuned model that stops generalising |
+
+Conditions, stated so the option cannot be mistaken for the default:
+
+1. train only on **verified** records — a cell that was never attempted (`n=0`) is not a reward signal;
+2. **hold out** scenarios: the cells you tuned on stop being evidence about the skill, so they are recorded
+   as a tuned subject, never merged back into the base columns;
+3. re-measure the held-out cells at **n>=3** on the tuned model, beside the untuned one;
+4. run it in a **separate session** and keep it outside the gate: a training run must never sit inside
+   `skills:check`.
+
 ## What is not measured yet
 
 - Cells are historical **per revision**. After the tilt to `b9cf47ea`, the ledger carries fresh `n=0`
