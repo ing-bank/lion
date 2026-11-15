@@ -22,7 +22,7 @@ It exists because Lion is a living product: components gain APIs, docs gain page
 last quarter quietly stops matching the library. Improvement here means the skill is regenerated from
 its source docs and re-measured against the library, not patched by hand and hoped over.
 
-![a man holding a clamshell phone to his ear, printed as a two-tone halftone plate: ink dots on paper at a regular screen, framed by a thin ink keyline — the face, the furrowed brow and the glare are all that survive the screen, which is the point](./assets/recursive-skill-improvement-hero.png 'The reference photograph as a halftone plate: the 415px source is printed, not enlarged, and the screen makes its resolution a deliberate part of the style')
+![three hands drawing one another in a closed loop — the Escher tribute — cut out as a two-tone ink plate: solid black line work and even ink masses on a paper card, no dot screen, lifted with a hard ink edge and a grey offset shadow onto a technical sheet of fine grid, a halftone field, concentric rings and a ruler scale](./assets/recursive-skill-improvement-hero.png 'The self-drawing hands as a cut-out: the pencil drawing reduced to two even ink tones, pasted on its own paper card over the printed plate the other covers share')
 
 ## The system, the task and the protocol
 
