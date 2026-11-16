@@ -2,17 +2,18 @@
  * @param {unknown} amount
  * @returns {boolean}
  */
-const isEmptyAmount = amount => amount === undefined || amount === null || amount === '';
+const isEmptyAmount = amount =>
+  amount === undefined || amount === null || amount === '' || amount === 'undefined';
 
 /**
- * Serializes the modelValue to the international standard notation.
- * An empty amount serializes to an empty string, like the serializedValue of any empty field.
+ * Serializes the modelValue to the international standard notation, e.g. `EUR 123`.
+ * An empty amount keeps its currency (`EUR`), so that deserializing restores it.
  * @param {import("../types/index.js").AmountDropdownModelValue} modelValue
  * @returns {string}
  */
 export const serializer = modelValue => {
   if (isEmptyAmount(modelValue?.amount)) {
-    return '';
+    return modelValue?.currency || '';
   }
   /**
    * There seems to be some debate on a common international notation vs localization.
@@ -22,24 +23,20 @@ export const serializer = modelValue => {
 };
 
 /**
- * Deserializes the serializedValue back to modelValue.
- * The amount is restored as a number, so that deserializing is the inverse of serializing.
- * An empty serializedValue gives an undefined modelValue, which the `modelValue` setter turns
- * into an empty amount for the active currency.
+ * Deserializes the serializedValue back to a modelValue object `{ currency, amount }`.
+ * The amount is restored as a number (like the parser returns it), so that deserializing is the
+ * inverse of serializing. An empty amount becomes `''`, the amount of an empty field. Values written
+ * by older versions (`'EUR '`, `'EUR undefined'`) are read as an empty amount as well.
  * @param {string} serializedValue
- * @returns {import("../types/index.js").AmountDropdownModelValue | undefined}
+ * @returns {import("../types/index.js").AmountDropdownModelValue}
  */
 export const deserializer = serializedValue => {
-  if (!serializedValue) {
-    return undefined;
-  }
-  const [currency, amount] = serializedValue.split(' ');
+  const [currency, amount] = (serializedValue || '').split(' ');
+  /** @type {import("../types/index.js").AmountDropdownModelValue} */
+  const modelValue = currency ? { currency } : {};
   if (isEmptyAmount(amount)) {
-    return { currency, amount: '' };
+    return { ...modelValue, amount: '' };
   }
   const numericAmount = Number(amount);
-  return {
-    currency,
-    amount: Number.isNaN(numericAmount) ? amount : numericAmount,
-  };
+  return { ...modelValue, amount: Number.isNaN(numericAmount) ? amount : numericAmount };
 };

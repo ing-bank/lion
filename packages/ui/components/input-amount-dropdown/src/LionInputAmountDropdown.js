@@ -102,7 +102,10 @@ export class LionInputAmountDropdown extends LionInputAmount {
    */
   // @ts-expect-error - modelValue is overridden as an accessor but is defined as a property in parent class
   set modelValue(value) {
-    if (value) {
+    // An empty value (also an empty amount without a currency, as deserializing '' gives) is an
+    // empty amount in the active currency
+    const isEmptyWithoutCurrency = value && value.currency === undefined && value.amount === '';
+    if (value && !isEmptyWithoutCurrency) {
       this.__modelValue = /** @type {import('../types/index.js').AmountDropdownModelValue} */ (
         value
       );
