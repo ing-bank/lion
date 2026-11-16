@@ -411,11 +411,9 @@ export class LionTabs extends LitElement {
 
   /** @private */
   __updateSelected(withFocus = false) {
-    if (!(
-      this.__store &&
-      typeof this.selectedIndex === 'number' &&
-      this.__store[this.selectedIndex]
-    )) {
+    if (
+      !(this.__store && typeof this.selectedIndex === 'number' && this.__store[this.selectedIndex])
+    ) {
       return;
     }
     const previousButton = this.tabs.find(child => child.hasAttribute('selected'));
