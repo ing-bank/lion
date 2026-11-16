@@ -305,13 +305,12 @@ Please specify .groupSeparator / .decimalSeparator on the formatOptions object t
     });
   });
 
-  // TODO: make it work with big numbers, e.g. make use of BigInt
-  it.skip('can handle big numbers', async () => {
+  // formatNumber accepts a Number, so digits beyond its precision (Number.MAX_SAFE_INTEGER) are
+  // already lost before formatting. What it must guarantee is that big numbers are formatted in
+  // full, never in exponent notation ('1e+21').
+  it('can handle big numbers', async () => {
     expect(formatNumber(1e21)).to.equal('1,000,000,000,000,000,000,000');
-    // eslint-disable-next-line no-loss-of-precision
-    expect(formatNumber(999999999999999999999.42)).to.equal('999,999,999,999,999,999,999.42');
-    // eslint-disable-next-line no-loss-of-precision
-    expect(formatNumber(12345678987654321.42)).to.equal('12,345,678,987,654,321.42');
+    expect(formatNumber(Number.MAX_SAFE_INTEGER)).to.equal('9,007,199,254,740,991');
   });
 
   describe('normalization', () => {
