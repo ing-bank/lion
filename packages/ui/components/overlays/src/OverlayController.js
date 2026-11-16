@@ -566,8 +566,12 @@ export class OverlayController extends EventTarget {
 
     const shouldUpdate = !this.__hasSetup || !isEqualConfig(prevConfig, newConfig);
     if (!shouldUpdate) return;
-    // Teardown all previous configs
 
+    // The teardown below hides the overlay without a `hide` event, so a shown overlay is shown
+    // again with its new config afterwards (for instance a viewport placement switched while open).
+    const wasShown = this.isShown;
+
+    // Teardown all previous configs
     this.teardown();
 
     this.config = newConfig;
@@ -580,6 +584,32 @@ export class OverlayController extends EventTarget {
     if (!this.#isRegisteredOnManager()) {
       this.manager.add(this);
     }
+
+    if (wasShown) {
+      this.#restoreShownState();
+    }
+  }
+
+  /**
+   * Puts an overlay that was shown before `updateConfig()` tore it down back in its shown state,
+   * applying the new config. Unlike `show()`, it does not dispatch `before-show` and `show`:
+   * for the outside world the overlay never got hidden.
+   */
+  #restoreShownState() {
+    if (!this.config.isActivated || !this.__wrappingDialogNode) return;
+
+    if (this.manager) {
+      this.manager.show(this);
+    }
+    if ('HTMLDialogElement' in window && this.__wrappingDialogNode instanceof HTMLDialogElement) {
+      this.__wrappingDialogNode.open = true;
+    }
+    this.__wrappingDialogNode.style.display = '';
+    this._keepBodySize({ phase: 'before-show' });
+    this._handleFeatures({ phase: 'show' });
+    this._keepBodySize({ phase: 'show' });
+    // Positioning a local overlay is async (Popper): a subsequent show() awaits it
+    this._showComplete = this._handlePosition({ phase: 'show' });
   }
 
   #isRegisteredOnManager() {

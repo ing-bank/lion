@@ -867,8 +867,10 @@ describe('OverlayController', () => {
       });
 
       it('keeps focus within the overlay e.g. you can not tab out by accident', async function keepsFocusWithinOverlay() {
-        // Safari (WebKit 16.4 in the Safari 16 gate) does not move the focus the way this test expects
-        // while tabbing - measured on WebKit 16.4. Chromium and Firefox run it.
+        // WebKit does not move the focus the way this test expects while tabbing (measured on WebKit
+        // 16.4 in the Safari 16 gate). WebKit's Linux ports (WPE/GTK, used by Playwright) report a Mac
+        // Safari user agent, so `isMacSafari` skips it in all WebKit runs, not only on macOS; the `isMacSafari`
+        // branch at the end documents the order WebKit was expected to follow. Chromium and Firefox run it.
         if (browserDetection.isMacSafari) {
           this.skip();
         }
@@ -2465,8 +2467,7 @@ describe('OverlayController', () => {
       expect(ctrl.contentNode).to.equal(contentNode);
     });
 
-    // Currently not working, enable again when we fix updateConfig
-    it.skip('allows for updating viewport config placement only, while keeping the content shown', async () => {
+    it('allows for updating viewport config placement only, while keeping the content shown', async () => {
       const contentNode = /** @type {HTMLElement} */ (fixtureSync(html`<div>my content</div>`));
 
       const ctrl = new OverlayController({
@@ -2475,8 +2476,12 @@ describe('OverlayController', () => {
         handlesAccessibility: true,
         contentNode,
       });
+      const showSpy = sinon.spy();
+      const hideSpy = sinon.spy();
+      ctrl.addEventListener('show', showSpy);
+      ctrl.addEventListener('hide', hideSpy);
 
-      ctrl.show();
+      await ctrl.show();
       expect(ctrl.contentWrapperNode.classList.contains('overlays__overlay-container--center')).to
         .be.true;
       expect(ctrl.isShown).to.be.true;
@@ -2484,7 +2489,18 @@ describe('OverlayController', () => {
       ctrl.updateConfig({ viewportConfig: { placement: 'top-right' } });
       expect(ctrl.contentWrapperNode.classList.contains('overlays__overlay-container--top-right'))
         .to.be.true;
+      expect(ctrl.contentWrapperNode.classList.contains('overlays__overlay-container--center')).to
+        .be.false;
       expect(ctrl.isShown).to.be.true;
+      // For the outside world the overlay never got hidden
+      expect(showSpy.callCount).to.equal(1);
+      expect(hideSpy.callCount).to.equal(0);
+
+      await ctrl.hide();
+      expect(ctrl.isShown).to.be.false;
+      expect(ctrl.contentWrapperNode.classList.contains('overlays__overlay-container--top-right'))
+        .to.be.false;
+      ctrl.teardown();
     });
 
     it('disables backdrop when switching to hasBackrop "false"', async () => {
