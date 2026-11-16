@@ -312,10 +312,16 @@ const FormRegistrarMixinImplementation = /** @type {FormRegistrarMixin} */ (supe
         return;
       }
 
-      // Like registration, this throws when the new name is not available
-      this.#addFormElementName(child, newName);
-      if (Array.isArray(this.formElements[newName])) {
+      // Unlike registration, a rename never throws: like the platform, a form control can be
+      // renamed onto a name that is already in use
+      if (newName.substr(-2) === '[]') {
+        if (!Array.isArray(this.formElements[newName])) {
+          this.formElements[newName] = new FormControlsCollection();
+        }
+        this.formElements[newName].push(child);
         this.formElements[newName].sort(compareDocumentOrder);
+      } else {
+        this.formElements[newName] = child;
       }
 
       // Only the renamed child leaves its old name; siblings in an array name stay

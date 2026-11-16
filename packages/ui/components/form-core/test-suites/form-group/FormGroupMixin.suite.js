@@ -1142,10 +1142,8 @@ export function runFormGroupMixinSuite({
         expect(fieldset.serializedValue).to.deep.equal({ foo: '1' });
       });
 
-      it('throws when a child is renamed onto an already registered name', async () => {
-        const orig = console.info; // eslint-disable-line no-console
-        console.info = () => {}; // eslint-disable-line no-console
-
+      it('does not throw when a child is renamed onto an already registered name', async () => {
+        // Like the platform: renaming a form control onto a name that is in use is allowed
         const fieldset = /**  @type {FormGroup} */ (
           await fixture(html`
           <${tag}>
@@ -1154,32 +1152,13 @@ export function runFormGroupMixinSuite({
           </${tag}>
         `)
         );
-        const [foo, bar] = fieldset.formElements;
-        let error;
-        try {
-          // we test the api directly as errors thrown from a web component are in a
-          // different context and we can not catch them here
-          // @ts-ignore [allow-protected] in test
-          fieldset._onRequestToChangeFormElementName(
-            /** @type {CustomEvent} */ (
-              /** @type {unknown} */ ({
-                target: bar,
-                detail: { oldName: 'bar', newName: 'foo' },
-                stopPropagation: () => {},
-              })
-            ),
-          );
-        } catch (err) {
-          error = err;
-        }
-        console.info = orig; // eslint-disable-line no-console
-
-        expect(error).to.be.instanceOf(TypeError);
-        expect(/** @type {TypeError} */ (error).message).to.equal(
-          'Name "foo" is already registered - if you want an array add [] to the end',
-        );
-        expect(fieldset.formElements.foo).to.equal(foo);
-        expect(fieldset.formElements.bar).to.equal(bar);
+        const [, bar] = fieldset.formElements;
+        expect(() => {
+          bar.name = 'foo';
+        }).to.not.throw();
+        await fieldset.updateComplete;
+        expect(fieldset.formElements.foo).to.equal(bar);
+        expect(fieldset.formElements.bar).to.be.undefined;
       });
     });
 
