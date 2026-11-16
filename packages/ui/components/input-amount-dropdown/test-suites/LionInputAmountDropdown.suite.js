@@ -463,17 +463,15 @@ export function runInputAmountDropdownSuite(
       expect(el.serializedValue).to.equal('EUR 123.45');
     });
 
-    it('serializes an empty amount to an empty string', async () => {
+    it('serializes an empty amount to its currency only', async () => {
       const el = await fixture(html` <${tag}></${tag}> `);
-      expect(el.serializedValue).to.equal('');
-
       el.modelValue = { currency: 'EUR', amount: '' };
       await el.updateComplete;
-      expect(el.serializedValue).to.equal('');
+      expect(el.serializedValue).to.equal('EUR');
 
       el.modelValue = { currency: 'EUR' };
       await el.updateComplete;
-      expect(el.serializedValue).to.equal('');
+      expect(el.serializedValue).to.equal('EUR');
     });
 
     it('deserializes the international notation back to a numeric amount', async () => {
@@ -508,6 +506,16 @@ export function runInputAmountDropdownSuite(
       el.serializedValue = 'USD';
       await el.updateComplete;
       expect(el.modelValue).to.eql({ currency: 'USD', amount: '' });
+    });
+
+    it('deserializes to a modelValue object, also for empty and legacy values', async () => {
+      const el = await fixture(html` <${tag}></${tag}> `);
+      const { deserializer } = el;
+      expect(deserializer('EUR 12.5')).to.eql({ currency: 'EUR', amount: 12.5 });
+      expect(deserializer('EUR')).to.eql({ currency: 'EUR', amount: '' });
+      expect(deserializer('EUR ')).to.eql({ currency: 'EUR', amount: '' });
+      expect(deserializer('EUR undefined')).to.eql({ currency: 'EUR', amount: '' });
+      expect(deserializer('')).to.eql({ amount: '' });
     });
   });
 
