@@ -181,11 +181,11 @@ export function runSelectSuite({
         `)
       );
       const select = /** @type {HTMLSelectElement} */ (lionSelect.querySelector('select'));
-      expect(select.autocomplete).to.equal('country');
+      expect(select.getAttribute('autocomplete')).to.equal('country');
       // @ts-ignore - autocomplete is a property of LionSelect
       lionSelect.autocomplete = 'off';
       await lionSelect.updateComplete;
-      expect(select.autocomplete).to.equal('off');
+      expect(select.getAttribute('autocomplete')).to.equal('off');
     });
 
     it('is accessible', async () => {
