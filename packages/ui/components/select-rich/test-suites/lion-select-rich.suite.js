@@ -234,32 +234,49 @@ export function runSelectRichSuite({
         expect(firstChild.textContent).to.equal('30');
       });
 
-      // FIXME: wrong values in safari/webkit even though this passes in the "real" debug browsers
-      it.skip('inherits the content width including arrow width', async () => {
+      it('inherits the content width including arrow width', async () => {
         const el = await fixture(html`
           <${hostTag}>
             <${tagOption} .choiceValue=${10}>Item 1</${tagOption}>
-            <${tagOption} .choiceValue=${10}>Item 2 with long label</${tagOption}>
+            <${tagOption} .choiceValue=${20}>Item 2 with long label</${tagOption}>
           </${hostTag}>
         `);
         el.opened = true;
-        const options = el.formElements;
         await el.updateComplete;
-        const { _invokerNode, _inputNode } = getSelectRichMembers(el);
+        const { _invokerNode, _inputNode, _overlayCtrl } = getSelectRichMembers(el);
+        // @ts-ignore [allow-protected] in test
+        const arrowWidth = /** @type {number} */ (el._arrowWidth);
 
-        expect(_invokerNode.clientWidth).to.equal(options[1].clientWidth);
+        /**
+         * The width the content (listbox) takes when it is not stretched by the invoker:
+         * what LionSelectRich measures to size the invoker
+         */
+        const getNaturalContentWidth = () => {
+          const { contentWrapperNode } = _overlayCtrl;
+          const { minWidth, width } = contentWrapperNode.style;
+          contentWrapperNode.style.minWidth = 'auto';
+          contentWrapperNode.style.width = 'auto';
+          const contentWidth = contentWrapperNode.getBoundingClientRect().width;
+          contentWrapperNode.style.minWidth = minWidth;
+          contentWrapperNode.style.width = width;
+          return contentWidth;
+        };
+        const getInvokerWidth = () => parseFloat(_invokerNode.style.width);
+
+        const initialInvokerWidth = getInvokerWidth();
+        expect(initialInvokerWidth).to.be.closeTo(getNaturalContentWidth() + arrowWidth, 1);
 
         const newOption = /** @type {LionOption} */ (document.createElement(tagNameOption));
         newOption.choiceValue = 30;
-        newOption.textContent = '30 with longer label';
-
+        newOption.textContent = 'Item 3 with an even longer label';
         _inputNode.appendChild(newOption);
         await el.updateComplete;
-        expect(_invokerNode.clientWidth).to.equal(options[2].clientWidth);
+        expect(getInvokerWidth()).to.be.greaterThan(initialInvokerWidth);
+        expect(getInvokerWidth()).to.be.closeTo(getNaturalContentWidth() + arrowWidth, 1);
 
         _inputNode.removeChild(newOption);
         await el.updateComplete;
-        expect(_invokerNode.clientWidth).to.equal(options[1].clientWidth);
+        expect(getInvokerWidth()).to.equal(initialInvokerWidth);
       });
     });
 
