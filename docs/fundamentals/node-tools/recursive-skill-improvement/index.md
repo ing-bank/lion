@@ -8,7 +8,7 @@ eleventyNavigation:
   order: 16
 ---
 
-![recursive skill improvement](./assets/recursive-skill-improvement-logo.svg)
+![recursive skill improvement](./assets/recursive-skill-improvement-logotype.png)
 
 # recursive-skill-improvement
 
