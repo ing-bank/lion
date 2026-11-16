@@ -216,6 +216,10 @@ function npmLockPackages({ semverLockVersion, rootDependencies }) {
  * @param {string} [options.semverLockVersion] version the npm lock carries for `semver`
  * @param {string[]} [options.npmLockDropped] lock paths to omit from the npm lock
  * @param {string[]} [options.rootDependencies] extra root dependencies declared in package.json
+ * @param {Record<string, string>} [options.npmExtraPackages] extra npm lock records: lock path -> `name@version`
+ * @param {Record<string, unknown>} [options.npmOverrides] `overrides` written into package.json (npm's syntax)
+ * @param {Record<string, string>} [options.pnpmOverrides] `overrides` written into pnpm-workspace.yaml (pnpm's)
+ * @param {boolean} [options.withPnpmWorkspace] write pnpm-workspace.yaml at all (default true)
  * @param {boolean} [options.withPnpmLock] write a pnpm lock at all
  * @returns {{ root: string, cleanup: () => void }}
  */
@@ -225,6 +229,10 @@ export function makeFixtureRepo(options = {}) {
     semverLockVersion = semverVersion,
     npmLockDropped = [],
     rootDependencies = [],
+    npmExtraPackages = {},
+    npmOverrides = {},
+    pnpmOverrides = {},
+    withPnpmWorkspace = true,
     withPnpmLock = true,
   } = options;
 
@@ -246,9 +254,16 @@ export function makeFixtureRepo(options = {}) {
       'ansi-styles': '^3.2.1',
       ...Object.fromEntries(rootDependencies.map(dep => [dep, '^1.0.0'])),
     },
+    ...(Object.keys(npmOverrides).length ? { overrides: npmOverrides } : {}),
   };
   write('package.json', rootManifest);
-  write('pnpm-workspace.yaml', 'packages:\n  - "pkgs/*"\n');
+  if (withPnpmWorkspace) {
+    const overrideLines = Object.entries(pnpmOverrides).map(([k, v]) => `  "${k}": "${v}"`);
+    write(
+      'pnpm-workspace.yaml',
+      `packages:\n  - "pkgs/*"\n${overrideLines.length ? `overrides:\n${overrideLines.join('\n')}\n` : ''}`,
+    );
+  }
   write('pkgs/lib-a/package.json', {
     name: '@fixture/lib-a',
     version: '1.0.0',
@@ -270,6 +285,16 @@ export function makeFixtureRepo(options = {}) {
 
   const packages = npmLockPackages({ semverLockVersion, rootDependencies });
   for (const dropped of npmLockDropped) delete packages[dropped];
+  for (const [lockPath, nameVersion] of Object.entries(npmExtraPackages)) {
+    const at = nameVersion.lastIndexOf('@');
+    const name = nameVersion.slice(0, at);
+    const version = nameVersion.slice(at + 1);
+    packages[lockPath] = {
+      version,
+      resolved: registryTarball(`${name}@${version}`),
+      integrity: REAL_INTEGRITIES[`${name}@${version}`],
+    };
+  }
   write('package-lock.json', {
     name: 'fixture-root',
     version: '1.0.0',
@@ -279,4 +304,176 @@ export function makeFixtureRepo(options = {}) {
   });
 
   return { root, cleanup: () => fs.rmSync(root, { recursive: true, force: true }) };
+}
+
+/** A well-formed but fixture-only `sha512`: the `@fixture/*` names never exist on the registry. */
+const FIXTURE_INTEGRITY = `sha512-${'A'.repeat(86)}==`;
+
+/**
+ * Creates a fresh temp directory with the pnpm-lock plumbing the generators need, so a fixture only has to
+ * supply its lock text and npm side.
+ *
+ * @param {(write: (rel: string, content: unknown) => void) => void} fill
+ * @returns {{ root: string, cleanup: () => void }}
+ */
+function makeTempRepo(fill) {
+  counter += 1;
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), `lockfile-interop-${counter}-`));
+  /** @param {string} rel @param {unknown} content */
+  const write = (rel, content) => {
+    const target = path.join(root, rel);
+    fs.mkdirSync(path.dirname(target), { recursive: true });
+    fs.writeFileSync(target, typeof content === 'string' ? content : stringifyJson(content));
+  };
+  write('package.json', {
+    name: 'fixture-root',
+    version: '1.0.0',
+    private: true,
+    workspaces: ['pkgs/*'],
+  });
+  fill(write);
+  return { root, cleanup: () => fs.rmSync(root, { recursive: true, force: true }) };
+}
+
+/**
+ * A fixture whose pnpm lock carries the shapes that make the generator recurse forever or invent keys,
+ * all of which the real repo lock has:
+ *   - `@fixture/cycle-a` <-> `@fixture/cycle-b`, the two-node cycle that `@mdjs/mdjs-preview` -> `@lion/ui`
+ *     is in the real repo;
+ *   - `@fixture/self`, which (like a workspace self-reference) depends on itself;
+ *   - `@fixture/peer-host`, declared with a peer-suffixed version, the `@open-wc/eslint-config@12.0.3(...)`
+ *     / `patch_hash` shape that must not leak into a lock path.
+ *
+ * @returns {{ root: string, cleanup: () => void }}
+ */
+export function makeCyclicFixtureRepo() {
+  return makeTempRepo(write => {
+    const records = [
+      '@fixture/cycle-a@1.0.0',
+      '@fixture/cycle-b@1.0.0',
+      '@fixture/peer-host@1.0.0',
+      '@fixture/self@1.0.0',
+    ];
+    const lines = [
+      "lockfileVersion: '9.0'",
+      '',
+      'importers:',
+      '',
+      '  .:',
+      '    dependencies:',
+      "      '@fixture/cycle-a':",
+      '        specifier: ^1.0.0',
+      '        version: 1.0.0',
+      "      '@fixture/peer-host':",
+      '        specifier: ^1.0.0',
+      '        version: 1.0.0(@fixture/cycle-a@1.0.0)',
+      "      '@fixture/self':",
+      '        specifier: ^1.0.0',
+      '        version: 1.0.0',
+      '',
+      'packages:',
+      '',
+    ];
+    for (const key of [...records].sort()) {
+      lines.push(`  '${key}':`, `    resolution: {integrity: ${FIXTURE_INTEGRITY}}`, '');
+    }
+    lines.push(
+      'snapshots:',
+      '',
+      "  '@fixture/cycle-a@1.0.0':",
+      '    dependencies:',
+      "      '@fixture/cycle-b': 1.0.0",
+      '',
+      "  '@fixture/cycle-b@1.0.0':",
+      '    dependencies:',
+      "      '@fixture/cycle-a': 1.0.0",
+      '',
+      "  '@fixture/peer-host@1.0.0': {}",
+      '',
+      "  '@fixture/self@1.0.0':",
+      '    dependencies:',
+      "      '@fixture/self': 1.0.0",
+      '',
+    );
+    write('pnpm-lock.yaml', lines.join('\n'));
+    write('package-lock.json', {
+      name: 'fixture-root',
+      version: '1.0.0',
+      lockfileVersion: 3,
+      requires: true,
+      packages: {
+        '': {
+          name: 'fixture-root',
+          version: '1.0.0',
+          dependencies: { '@fixture/cycle-a': '^1.0.0', '@fixture/self': '^1.0.0' },
+        },
+      },
+    });
+  });
+}
+
+/**
+ * A fixture with a large, cyclic dependency graph — `count` registry packages in a chain where the last
+ * depends back on the first, and every one of them also pulls a shared two-package tail. It is the shape
+ * that catches a generator that is exponential rather than bounded: a diamond repeated under every
+ * requirer, plus a cycle at the end.
+ *
+ * @param {{ count?: number }} [options]
+ * @returns {{ root: string, cleanup: () => void }}
+ */
+export function makeLargeTreeFixtureRepo({ count = 1200 } = {}) {
+  return makeTempRepo(write => {
+    const name = i => `big-${i}`;
+    const records = [];
+    for (let i = 0; i < count; i += 1) records.push(`${name(i)}@1.0.0`);
+    records.push('common@1.0.0', 'leaf@1.0.0');
+
+    const lines = [
+      "lockfileVersion: '9.0'",
+      '',
+      'importers:',
+      '',
+      '  .:',
+      '    dependencies:',
+      '      big-0:',
+      '        specifier: ^1.0.0',
+      '        version: 1.0.0',
+      '',
+      'packages:',
+      '',
+    ];
+    for (const key of records) {
+      lines.push(`  ${key}:`, `    resolution: {integrity: ${FIXTURE_INTEGRITY}}`, '');
+    }
+    lines.push('snapshots:', '');
+    for (let i = 0; i < count; i += 1) {
+      // the last package closes the chain back onto the first: a cycle the generator must truncate
+      const next = i + 1 < count ? name(i + 1) : name(0);
+      lines.push(
+        `  ${name(i)}@1.0.0:`,
+        '    dependencies:',
+        `      ${next}: 1.0.0`,
+        '      common: 1.0.0',
+        '',
+      );
+    }
+    lines.push(
+      '  common@1.0.0:',
+      '    dependencies:',
+      '      leaf: 1.0.0',
+      '',
+      '  leaf@1.0.0: {}',
+      '',
+    );
+    write('pnpm-lock.yaml', lines.join('\n'));
+    write('package-lock.json', {
+      name: 'fixture-root',
+      version: '1.0.0',
+      lockfileVersion: 3,
+      requires: true,
+      packages: {
+        '': { name: 'fixture-root', version: '1.0.0', dependencies: { 'big-0': '^1.0.0' } },
+      },
+    });
+  });
 }

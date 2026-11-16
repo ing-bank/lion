@@ -1,1 +1,3 @@
 packages-node/awesome-phonenumber/upstream/** -text
+# a patch must stay byte-identical to the LF files npm installs; autocrlf on Windows would break every hunk
+patches/*.patch -text

@@ -22,15 +22,21 @@ Do not add this directory to `workspaces`, and do not call it from a root instal
 ## Usage
 
 ```bash
-npm install          # at the repo root: the library and its workspace links (see below)
+pnpm run repo:pnpm:install          # at the repo root: the library and its workspace links (see below)
 cd portal
-npm install          # installs the portal's own tree in portal/node_modules
-npm run build        # writes <repo root>/_site (astro + the base-url link pass)
-npm run dev          # astro dev server on the repo's docs tree
-npm run sync         # regenerate the content collection types
-npm run links        # only the link pass, over an existing _site
-npm run preview      # publish a branch preview (see below)
+pnpm install --ignore-workspace     # pinned to the portal's committed package-lock.json by portal/.pnpmfile.cjs
+pnpm install --ignore-workspace     # installs the portal's own tree in portal/node_modules
+pnpm run build        # writes <repo root>/_site (astro + the base-url link pass)
+pnpm run dev          # astro dev server on the repo's docs tree (or `npm start` at the repo root)
+pnpm run sync         # regenerate the content collection types
+pnpm run links        # only the link pass, over an existing _site
+pnpm run preview      # publish a branch preview (see below)
 ```
+
+`--ignore-workspace` is required for those two install commands: this directory is deliberately not a
+workspace member, and without the flag pnpm finds `pnpm-workspace.yaml` in the parent and installs the root
+workspace instead (measured: it ran the root's postinstall and created no `portal/node_modules`). The root
+scripts (`pnpm run repo:pnpm:install:portal`, `npm start`, `npm run build`) carry the flag for you.
 
 Two things are shared with the repository, and both are why the root install is a prerequisite:
 

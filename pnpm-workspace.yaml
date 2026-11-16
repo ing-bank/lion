@@ -1,0 +1,44 @@
+# Generated from package.json by `pnpm run repo:workspace:sync` (@lion/lockfile-interop).
+#
+# Edit package.json - the `workspaces` field and `overrides` - and re-run the sync: npm's spelling is the
+# source of truth (it produces the lock external tooling reads), and the gate (`pnpm run repo:lockfile:check`)
+# fails when the two files do not spell the same overrides.
+#
+# Keys without an npm counterpart (only pnpm reads them) are preserved as written.
+packages:
+  - packages/*
+  - packages-node/*
+  - test/typescript-legacy
+onlyBuiltDependencies: []
+patchedDependencies:
+  lit@3.3.3: patches/lit@3.3.3.patch
+  "@lit-labs/ssr@4.1.0": patches/@lit-labs__ssr@4.1.0.patch
+  "@mdjs/core@0.21.1": patches/@mdjs__core@0.21.1.patch
+  "@mdjs/mdjs-preview@0.6.0": patches/@mdjs__mdjs-preview@0.6.0.patch
+  "@open-wc/eslint-config@12.0.3": patches/@open-wc__eslint-config@12.0.3.patch
+overrides:
+  "@open-wc/semantic-dom-diff": ^0.21.0
+  "@mdjs/core": ^0.21.1
+  "@mdjs/mdjs-story": ^0.4.0
+  remark-rehype: ^8
+  "@mdjs/mdjs-preview": ^0.6.0
+  "@mdjs/mdjs-preview>@lion/ui": ^0.15.0
+  pug-code-gen: 3.0.3
+  astro: ^6.0.8
+  "@lit-labs/ssr": 4.1.0
+  "@lit-labs/ssr-client": 1.1.8
+  "@lit-labs/ssr-dom-shim": 1.6.0
+  lit: $lit
+  lit-element: 4.2.2
+  lit-html: 3.3.3
+  "@lit/reactive-element": $@lit/reactive-element
+  "@lion/listbox>lit": 2.8.0
+  "@lion/listbox>lit-element": 3.3.3
+  "@lion/listbox>lit-html": 2.8.0
+  "@lion/listbox>@lit/reactive-element": 1.6.3
+  "@lion/overlays>lit": 2.8.0
+  "@lion/overlays>lit-element": 3.3.3
+  "@lion/overlays>lit-html": 2.8.0
+  "@lion/overlays>@lit/reactive-element": 1.6.3
+  "@web/test-runner-commands": ^0.9.0
+  "@types/chai": 4.3.20
