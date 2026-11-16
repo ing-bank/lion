@@ -11,7 +11,7 @@ Raise unit-test coverage as a regression gate for future refactors (chromium lin
 - [select] one native `change` dispatches one `user-input-changed` (was two)
 - [form-core] removed validators stop triggering validation; the latest async validation wins and `isPending` stays true until it settles; `validateComplete` resolves on every path; focus tracking keeps working after a reconnect; renaming one `name[]` child no longer moves the whole collection, and renaming onto an existing name throws like registration does; setting `selectionStart`/`selectionEnd` works from caret 0
 - [form] `lion-form` without an inner `<form>` no longer throws on connect/disconnect
-- [overlays] tooltips reference the content's own id in `aria-describedby`/`aria-labelledby`; a prevented `before-show`/`before-hide` leaves no trace; teardown removes all listeners and destroys Popper, also while a `show()` is in flight
+- [overlays] tooltips reference the content's own id in `aria-describedby`/`aria-labelledby`; a prevented `before-show`/`before-hide` leaves no trace; teardown removes all listeners and destroys Popper, also while a `show()` is in flight; `updateConfig()` on a shown overlay keeps it shown with the new config (it used to hide it silently)
 - [drawer] fires `opened-changed` once per toggle
 - [button] the implicit submit helper is restored when removed and leaves no empty wrapper on teardown
 - [checkbox-group] the indeterminate checkbox updates when a sub checkbox is removed
