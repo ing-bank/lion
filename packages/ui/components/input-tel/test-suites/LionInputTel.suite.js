@@ -372,19 +372,13 @@ export function runInputTelSuite({
           await aTimeout(0);
           expect(el.formattedValue).to.equal('(+31) 6 12345678');
         });
-      });
 
-      // TODO: this should be allowed for in FormatMixin =>
-      // in _onModelValueChanged we can add a hook '_checkModelValueFormat'. This needs to be
-      // called whenever .modelValue is supplied by devleloper (not when being internal result
-      // of parser call).
-      // Alternatively, we could be forgiving by attempting to treat it as a view value and
-      // correct the format (although strictness will be preferred...)
-      it.skip('does not allow modelValues in non E164 format', async () => {
-        const el = await fixture(
-          html` <${tag} format-country-code-style="${hasParentheses ? 'parentheses' : nothing}" .modelValue="${'612345678'}" .allowedRegions="${['NL']}"></${tag}> `,
-        );
-        expect(el.modelValue).to.equal(undefined);
+        it.skip('does not allow modelValues in non E164 format', async () => {
+          const el = await fixture(
+            html` <${tag} format-country-code-style="${hasParentheses ? 'parentheses' : nothing}" .modelValue="${'612345678'}" .allowedRegions="${['NL']}"></${tag}> `,
+          );
+          expect(el.modelValue).to.equal(undefined);
+        });
       });
     });
 
@@ -533,15 +527,26 @@ export function runInputTelSuite({
         expect(el.activeRegion).to.equal(newCode);
       });
 
-      it.skip('reformats when region code is changed on the fly', async () => {
+      it('reformats when region code is changed on the fly', async () => {
         const el = await fixture(
-          html` <${tag} format-country-code-style="${hasParentheses ? 'parentheses' : nothing}" .allowedRegions="${['NL']}" .modelValue="${'+31612345678'}"></${tag}> `,
+          html` <${tag} format-country-code-style="${hasParentheses ? 'parentheses' : nothing}" format-strategy="national" .allowedRegions="${['NL']}" .modelValue="${'+31612345678'}"></${tag}> `,
         );
         await el.updateComplete;
-        expect(el.formattedValue).to.equal('+31 6 12345678');
-        el.allowedRegions = ['NL'];
+        expect(el.activeRegion).to.equal('NL');
+        expect(el.formattedValue).to.equal('06 12345678');
+        const formatterSpy = sinon.spy(el, 'formatter');
+
+        el.allowedRegions = ['DE'];
+        // allowedRegions sets activeRegion in updated(), which reformats in the next update
         await el.updateComplete;
-        expect(el.formattedValue).to.equal('612345678');
+        await el.updateComplete;
+        expect(el.activeRegion).to.equal('DE');
+        // The modelValue (E164) is the source of truth: it is kept and formatted again for the new
+        // region. A Dutch number stays a Dutch number, so its national format does not change.
+        expect(formatterSpy.callCount).to.equal(1);
+        expect(formatterSpy.firstCall.args[0]).to.equal('+31612345678');
+        expect(el.modelValue).to.equal('+31612345678');
+        expect(el.formattedValue).to.equal('06 12345678');
       });
     });
   });
