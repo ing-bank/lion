@@ -23,6 +23,8 @@ function detectInteractionMode() {
 /**
  * LionSelectRich: wraps the <lion-listbox> element
  *
+ * @slot invoker - The invoker that opens the listbox, e.g. a <lion-select-invoker>.
+ *
  * @customElement lion-field-with-select
  */
 export class LionSelectRich extends SlotMixin(ScopedElementsMixin(OverlayMixin(LionListbox))) {

@@ -4,7 +4,6 @@
 > portal now lives in `portal/` (`portal/src`, `portal/public`) and its commands are run from there
 > (`cd portal && npm run dev|build|preview`). Kept for the reasoning, not as a current how-to.
 
-
 ```
 npm create astro@latest -- --template minimal
 ```

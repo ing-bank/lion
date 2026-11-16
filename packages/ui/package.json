@@ -100,6 +100,8 @@
     "prepack": "node scripts/prepare-phone-build.js",
     "prepublishOnly": "npm run types && npm run create-npm-publish-docs && npm run publish-docs && npm run custom-elements-manifest && npm run generate-lion-exports",
     "publish-docs": "node ../../packages-node/publish-docs/src/cli.js --github-url https://github.com/ing-bank/lion/ --git-root-dir ../../",
+    "skills:generate": "node ./scripts/skills-generation/generate-skills.mjs",
+    "skills:link": "node ./scripts/skills-generation/link-skill.mjs",
     "test": "cd ../../ && npm run test:browser",
     "test:node": "node --test test-node/phone-packaging.test.js test-node/prepack.test.js test-node/declarations.test.js",
     "types": "wireit",

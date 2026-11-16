@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 208" role="img"
+     aria-label="recursive skill improvement">
+  <title>recursive skill improvement</title>
+  <!-- huisstijl: papier #e8e8e8, inkt #111111, accent #FFC107 -->
+  <rect width="520" height="208" fill="#e8e8e8"/>
+  <g font-family="Inter, system-ui, -apple-system, 'Helvetica Neue', Arial, sans-serif" fill="#111111">
+    <text x="32" y="62" font-size="34" font-weight="600" letter-spacing="-0.7">recursive</text>
+    <text x="32" y="140" font-size="86" font-weight="700" letter-spacing="-2.6">skill</text>
+    <text x="32" y="184" font-size="34" font-weight="500" letter-spacing="-0.7">improvement</text>
+  </g>
+  <!-- het accent-rule-device van het Lion UI-wordmark, onder het zwaartepunt -->
+  <rect x="32" y="152" width="188" height="7" fill="#FFC107"/>
+  <!-- het ledger-device: vijf staven, één per station van de lus -->
+  <g fill="#111111">
+    <rect x="418" y="150" width="6" height="26"/>
+    <rect x="430" y="138" width="6" height="38"/>
+    <rect x="442" y="126" width="6" height="50"/>
+    <rect x="454" y="138" width="6" height="38"/>
+    <rect x="466" y="150" width="6" height="26"/>
+  </g>
+  <rect x="418" y="180" width="54" height="4" fill="#FFC107"/>
+  <!-- het kader, zoals in de platen -->
+  <rect x="6" y="6" width="508" height="196" fill="none" stroke="#111111" stroke-width="4"/>
+</svg>

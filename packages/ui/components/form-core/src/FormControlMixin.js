@@ -38,6 +38,12 @@ import { FormRegisteringMixin } from './registration/FormRegisteringMixin.js';
  * @type {FormControlMixin}
  */
 // prettier-ignore
+/**
+ * The field structure this mixin creates. Annotated here, once, on the mixin that declares it: every field
+ * extends this mixin, so the CEM plugin propagates these slots to all of them.
+ * @slot label - The label of the field. Alternatively the `label` attribute can be used.
+ * @slot help-text - Help text shown below the field.
+ */
 const FormControlMixinImplementation = /** @type {FormControlMixin} */ (superclass =>
   // eslint-disable-next-line no-shadow, no-unused-vars
   class FormControlMixin extends FormRegisteringMixin(DisabledMixin(SlotMixin(superclass))) {

@@ -12,6 +12,8 @@ import { SlotMixin } from '@lion/ui/core.js';
 /**
  * LionSelectInvoker: invoker button consuming a selected element
  *
+ * @slot after - Content rendered after the invoker's label.
+ *
  * @customElement lion-select-invoker
  */
 export class LionSelectInvoker extends SlotMixin(LionButton) {

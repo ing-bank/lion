@@ -123,7 +123,11 @@ describe('Form Validation Integrations', () => {
       class DefaultLabelInput extends LionInput {
         constructor() {
           super();
-          this.setDefaultLabel();
+          // `setDefaultLabel` is async (it awaits `localizeManager.loadingComplete` before the label is set),
+          // so it has to be awaited somewhere. Leaving it floating made the first assertion below a race:
+          // the validator can format its message while `label` is still empty, which is how Chromium
+          // periodically reported 'Please enter a(n) .' instead of '... Text.'.
+          this.labelReady = this.setDefaultLabel();
         }
 
         async updateLabel() {
@@ -163,9 +167,14 @@ describe('Form Validation Integrations', () => {
       );
       el.touched = true;
       el.dirty = true;
+      // Wait for the label the constructor kicked off, before asserting anything that depends on it.
+      await el.labelReady;
       await el.updateComplete;
       await el.feedbackComplete;
       const { _feedbackNode } = getFormControlMembers(el);
+      // Assert the label before the sentence that interpolates it, so a future failure names the label
+      // instead of the message that happens to depend on it.
+      expect(el.label).to.equal('Text');
       expect(_feedbackNode.feedbackData?.[0].message).to.equal('Please enter a(n) Text.');
 
       localizeManager.locale = 'nl-NL';

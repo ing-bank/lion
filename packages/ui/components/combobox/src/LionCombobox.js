@@ -35,6 +35,7 @@ const matchA11ySpanReverseFns = new WeakMap();
  *
  * @slot listbox - The listbox element for the combobox, e.g. <lion-options>
  * @slot selection-display - The selection display element for the combobox, e.g. <lion-selection-display>
+ * @slot input - The interactive element of the combobox: the element that receives the keyboard input and filters the options.
  *
  * @customElement lion-combobox
  */
