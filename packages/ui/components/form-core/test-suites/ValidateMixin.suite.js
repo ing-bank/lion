@@ -895,67 +895,13 @@ export function runValidateMixinSuite({
           el.modelValue = 'dog';
           expect(abortSpy.callCount).to.equal(1);
         });
-      });
 
-      // TODO: 'mock' these methods without actually waiting for debounce?
-      it.skip('debounces async validation for performance', async () => {
-        const asyncV = new IsAsyncCat();
-        const asyncVExecuteSpy = sinon.spy(asyncV, 'execute');
+        it.skip('developer can configure condition for asynchronous validation', async () => {
+          const asyncV = new IsAsyncCat();
+          const asyncVExecuteSpy = sinon.spy(asyncV, 'execute');
 
-        const el = /** @type {ValidateElement} */ (
-          await fixture(html`
-          <${tag} .modelValue=${'dog'}>
-            ${lightDom}
-          </${tag}>
-        `)
-        );
-        // debounce started
-        el.validators = [asyncV];
-        expect(asyncVExecuteSpy.called).to.equal(0);
-        // TODO: consider wrapping debounce in instance/ctor function to make spying possible
-        // await debounceFinish
-        expect(asyncVExecuteSpy.called).to.equal(1);
-
-        // New validation cycle. Now change modelValue inbetween, so validation is retriggered.
-        asyncVExecuteSpy.resetHistory();
-        el.modelValue = 'dogger';
-        expect(asyncVExecuteSpy.called).to.equal(0);
-        el.modelValue = 'doggerer';
-        // await original debounce period...
-        expect(asyncVExecuteSpy.called).to.equal(0);
-        // await original debounce again without changing mv inbetween...
-        expect(asyncVExecuteSpy.called).to.equal(1);
-      });
-
-      // TODO: nice to have...
-      it.skip('developer can configure debounce on FormControl instance', async () => {});
-
-      it.skip('cancels and reschedules async validation on ".modelValue" change', async () => {
-        const asyncV = new IsAsyncCat();
-        const asyncVAbortSpy = sinon.spy(asyncV, 'abortExecution');
-
-        const el = /** @type {ValidateElement} */ (
-          await fixture(html`
-          <${tag} .modelValue=${'dog'}>
-            ${lightDom}
-          </${tag}>
-        `)
-        );
-        // debounce started
-        el.validators = [asyncV];
-        expect(asyncVAbortSpy.called).to.equal(0);
-        el.modelValue = 'dogger';
-        // await original debounce period...
-        expect(asyncVAbortSpy.called).to.equal(1);
-      });
-
-      // TODO: nice to have
-      it.skip('developer can configure condition for asynchronous validation', async () => {
-        const asyncV = new IsAsyncCat();
-        const asyncVExecuteSpy = sinon.spy(asyncV, 'execute');
-
-        const el = /** @type {ValidateElement & { isFocused: boolean }} */ (
-          await fixture(html`
+          const el = /** @type {ValidateElement & { isFocused: boolean }} */ (
+            await fixture(html`
           <${tag}
             .isFocused=${true}
             .modelValue=${'dog'}
@@ -969,12 +915,71 @@ export function runValidateMixinSuite({
           ${lightDom}
           </${tag}>
         `)
-        );
+          );
 
-        expect(asyncVExecuteSpy.called).to.equal(0);
-        el.isFocused = false;
-        el.validate();
-        expect(asyncVExecuteSpy.called).to.equal(1);
+          expect(asyncVExecuteSpy.called).to.equal(0);
+          el.isFocused = false;
+          el.validate();
+          expect(asyncVExecuteSpy.called).to.equal(1);
+        });
+
+        it.skip('developer can configure debounce on FormControl instance', async () => {});
+
+        it.skip('debounces async validation for performance', async () => {
+          const asyncV = new IsAsyncCat();
+          const asyncVExecuteSpy = sinon.spy(asyncV, 'execute');
+
+          const el = /** @type {ValidateElement} */ (
+            await fixture(html`
+          <${tag} .modelValue=${'dog'}>
+            ${lightDom}
+          </${tag}>
+        `)
+          );
+          // debounce started
+          el.validators = [asyncV];
+          expect(asyncVExecuteSpy.called).to.equal(0);
+          // TODO: consider wrapping debounce in instance/ctor function to make spying possible
+          // await debounceFinish
+          expect(asyncVExecuteSpy.called).to.equal(1);
+
+          // New validation cycle. Now change modelValue inbetween, so validation is retriggered.
+          asyncVExecuteSpy.resetHistory();
+          el.modelValue = 'dogger';
+          expect(asyncVExecuteSpy.called).to.equal(0);
+          el.modelValue = 'doggerer';
+          // await original debounce period...
+          expect(asyncVExecuteSpy.called).to.equal(0);
+          // await original debounce again without changing mv inbetween...
+          expect(asyncVExecuteSpy.called).to.equal(1);
+        });
+      });
+
+      it('cancels and reschedules async validation on ".modelValue" change', async () => {
+        const asyncV = new IsAsyncCat();
+        const abortSpy = sinon.spy(asyncV, 'abortExecution');
+        const executeSpy = sinon.spy(asyncV, 'execute');
+        const el = /** @type {ValidateElement} */ (
+          await fixture(html`
+          <${tag} .modelValue=${'dog'}>
+            ${lightDom}
+          </${tag}>
+        `)
+        );
+        el.validators = [asyncV];
+        expect(executeSpy.callCount).to.equal(1);
+        expect(abortSpy.callCount).to.equal(0);
+
+        // The pending run for 'dog' is cancelled and a new run is scheduled for 'cat'
+        el.modelValue = 'cat';
+        expect(abortSpy.callCount).to.equal(1);
+        expect(executeSpy.callCount).to.equal(2);
+        expect(executeSpy.secondCall.args[0]).to.equal('cat');
+
+        asyncVResolve();
+        await el.validateComplete;
+        expect(el.validationStates.error['delayed-cat']).to.be.undefined;
+        expect(el.isPending).to.be.false;
       });
     });
 
@@ -1450,36 +1455,54 @@ export function runValidateMixinSuite({
     });
 
     describe('Accessibility', () => {
-      it.skip('calls "._inputNode.setCustomValidity(errorMessage)"', async () => {
+      it('removes the validity message from the DOM instead of hiding it, so screen readers notice the change', async () => {
         const el = /** @type {ValidateElement} */ (
           await fixture(html`
+          <${tag}
+            .validators=${[new MinLength(3, { getMessage: async () => 'too short' })]}
+            .modelValue=${'a'}
+          >${lightDom}</${tag}>
+        `)
+        );
+        const { _feedbackNode } = getFormControlMembers(el);
+        await el.feedbackComplete;
+        await _feedbackNode.updateComplete;
+        expect(_feedbackNode.shadowRoot?.textContent).to.include('too short');
+
+        el.modelValue = 'abc';
+        await el.updateComplete;
+        await el.feedbackComplete;
+        await _feedbackNode.updateComplete;
+        expect(_feedbackNode.shadowRoot?.textContent).to.not.include('too short');
+        expect(_feedbackNode.shadowRoot?.querySelector('.validation-feedback__type')).to.be.null;
+      });
+    });
+
+    it.skip('calls "._inputNode.setCustomValidity(errorMessage)"', async () => {
+      const el = /** @type {ValidateElement} */ (
+        await fixture(html`
           <${tag}
             .modelValue=${'123'}
             .validators=${[new MinLength(3, { getMessage: async () => 'foo' })]}>
             <input slot="input">
           </${tag}>`)
-        );
-        const { _inputNode } = getFormControlMembers(el);
+      );
+      const { _inputNode } = getFormControlMembers(el);
 
-        if (_inputNode) {
-          // @ts-ignore -- we are testing the protected _inputNode here
-          const spy = sinon.spy(el._inputNode, 'setCustomValidity');
-          el.modelValue = '';
-          expect(spy.callCount).to.equal(1);
+      if (_inputNode) {
+        // @ts-ignore -- we are testing the protected _inputNode here
+        const spy = sinon.spy(el._inputNode, 'setCustomValidity');
+        el.modelValue = '';
+        expect(spy.callCount).to.equal(1);
 
-          // TODO: why are we testing validationMessage here?
-          // @ts-ignore
-          expect(el.validationMessage).to.be('foo');
-          el.modelValue = '123';
-          expect(spy.callCount).to.equal(2);
-          // @ts-ignore
-          expect(el.validationMessage).to.be('');
-        }
-      });
-
-      // TODO: check with open a11y issues and find best solution here
-      it.skip(`removes validity message from DOM instead of toggling "display:none", to trigger Jaws
-          and VoiceOver [to-be-implemented]`, async () => {});
+        // TODO: why are we testing validationMessage here?
+        // @ts-ignore
+        expect(el.validationMessage).to.be('foo');
+        el.modelValue = '123';
+        expect(spy.callCount).to.equal(2);
+        // @ts-ignore
+        expect(el.validationMessage).to.be('');
+      }
     });
 
     describe('Extensibility: Custom Validator types', () => {
