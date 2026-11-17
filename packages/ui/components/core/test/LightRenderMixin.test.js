@@ -562,3 +562,68 @@ describe('takeover when SlotMixin is in the same hierarchy', () => {
     expect(el.querySelectorAll('[slot="input"]').length).to.equal(1);
   });
 });
+
+/**
+ * Regression for a real incompatibility found while building a
+ * `shadowRoot` compat shim on top of this mixin (a consumer-side mixin
+ * that overrides the public `shadowRoot` getter so the same property
+ * works for shadow:false components too — e.g. to keep
+ * `el.shadowRoot.querySelector(...)` working everywhere).
+ *
+ * `renderLightDomInScopedContext` used to read `shadowHost.shadowRoot`
+ * directly to get the scoped custom element registry root. Once ANY
+ * subclass overrides the public `shadowRoot` getter (for a legitimate,
+ * unrelated reason), that read is redirected too, and the registry root
+ * no longer has `.createElement` -> `TypeError: registryRoot.createElement
+ * is not a function`. Fixed by reading the raw platform accessor via
+ * `Object.getOwnPropertyDescriptor(Element.prototype, 'shadowRoot')`
+ * instead of the (overridable) instance property.
+ */
+describe('LightRenderMixin: internal shadowRoot access survives a subclass shadowRoot override', () => {
+  class FakeShadowRootOverride extends LightRenderMixin(LitElement) {
+    static properties = { label: { type: String } };
+
+    constructor() {
+      super();
+      this.label = 'Overridden host';
+    }
+
+    get slots() {
+      return [{ name: 'label', template: this.renderLabel }];
+    }
+
+    render() {
+      return html`<div>${this.renderLabel()}</div>`;
+    }
+
+    renderLabel() {
+      return html`<label>${this.label}</label>`;
+    }
+
+    // Simulates ANY consumer-side mixin that legitimately shims
+    // `shadowRoot` (e.g. for shadow:false compatibility). Must not break
+    // this mixin's own scoped-registry internals. Arms only after
+    // connectedCallback, same as a real compat shim must (overriding
+    // from the very first access breaks Lit's own
+    // `this.shadowRoot ?? this.attachShadow(...)` bootstrap — a separate,
+    // already-known shim-authoring pitfall, not this mixin's bug).
+    connectedCallback() {
+      super.connectedCallback();
+      this.__fakeShadowRootArmed = true;
+    }
+
+    get shadowRoot() {
+      if (!this.__fakeShadowRootArmed) return super.shadowRoot;
+      return { fakeCompatView: true, host: this };
+    }
+  }
+  customElements.define('light-render-fake-shadowroot-override', FakeShadowRootOverride);
+
+  it('still renders the slot into light dom without throwing', async () => {
+    const el = await fixture(
+      html`<light-render-fake-shadowroot-override></light-render-fake-shadowroot-override>`,
+    );
+    expect(el.querySelector('label')).to.exist;
+    expect(el.querySelector('label').textContent).to.equal('Overridden host');
+  });
+});

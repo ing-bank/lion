@@ -268,7 +268,17 @@ function renderLightDomInScopedContext({
   if (isFirstRender) {
     // @ts-expect-error wait for browser support
     const supportsScopedRegistry = !!ShadowRoot.prototype.createElement;
-    const registryRoot = supportsScopedRegistry ? shadowHost.shadowRoot || document : document;
+    const registryRoot = supportsScopedRegistry
+      ? // Read the RAW native ShadowRoot via Element.prototype, never via
+        // `shadowHost.shadowRoot` directly: a subclass or consumer-side
+        // mixin may legitimately override the public `shadowRoot` getter
+        // (e.g. a compat shim that also serves shadow:false components).
+        // This internal always needs the platform object (it calls
+        // `.createElement` for scoped custom element registries), so it
+        // must not be observable/interceptable by such an override.
+        Object.getOwnPropertyDescriptor(Element.prototype, 'shadowRoot').get.call(shadowHost) ||
+        document
+      : document;
 
     // @ts-expect-error wait for browser support
     const renderTargetThatRespectsShadowRootScoping = registryRoot.createElement('div');
