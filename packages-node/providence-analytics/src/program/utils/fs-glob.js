@@ -22,6 +22,17 @@ function toForwardSlashes(filePath) {
 }
 
 /**
+ * Native `fs.promises.glob` yields absolute paths for absolute patterns, so only relative
+ * paths should be joined with cwd
+ * @param {string} cwd
+ * @param {string} filePath
+ * @returns {string}
+ */
+function toFullPath(cwd, filePath) {
+  return path.isAbsolute(filePath) ? filePath : path.join(cwd, filePath);
+}
+
+/**
  * @param {string} pattern
  * @returns {boolean}
  */
@@ -84,7 +95,7 @@ export async function fsGlob(globOrGlobs, opts) {
       exclude: negatedGlobPatterns,
       cwd,
     })) {
-      const fullPath = path.join(cwd, filePath);
+      const fullPath = toFullPath(cwd, filePath);
       try {
         const stat = await fs.promises.stat(fullPath);
         if (matchesTypeFilter(stat, opts)) {
@@ -98,7 +109,7 @@ export async function fsGlob(globOrGlobs, opts) {
 
   for (const filePath of positiveNonGlobPatterns) {
     try {
-      const fullPath = path.join(cwd, filePath);
+      const fullPath = toFullPath(cwd, filePath);
       const stat = await fs.promises.stat(fullPath);
       if (matchesTypeFilter(stat, opts)) {
         results.push(toForwardSlashes(opts?.absolute ? fullPath : filePath));
