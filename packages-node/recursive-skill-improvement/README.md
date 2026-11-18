@@ -2,10 +2,15 @@
 
 Scientifically sound evaluation of your AI skills and agents.
 
-recursive-skill-improvement runs a skill or agent against a set of **small, isolated scenarios**, on **any
-OpenAI-compatible model** (OpenAI, Azure OpenAI, Anthropic or Google models behind a gateway,
-Ollama, llama.cpp, vLLM, ...) **or on GitHub Copilot**, and scores every run with a single
-**quality score**. The provider is chosen explicitly and no model is assumed.
+recursive-skill-improvement runs a skill or agent against a set of **small, isolated scenarios** and
+scores every run on **two axes, never blended**: **convention** (does the produced file parse, import
+only documented entrypoints, export the demanded class) and **behaviour** (is it mounted in a real
+browser and does it do the job). Each measurement lands in a **ledger**, keyed by skill revision, model,
+scenario and provider — so a stale number can never pass for a current one.
+
+It runs on **any OpenAI-compatible endpoint** (OpenAI, Azure OpenAI, Anthropic or Google models behind
+a gateway, Ollama, llama.cpp, vLLM, ...), on **GitHub Copilot**, or as an **agent** through the
+`claude-code` CLI. The provider is chosen explicitly and no model is assumed.
 
 It closes the loop with [`recursive-skill-improver`](../../packages/ui/skills/recursive-skill-improver/SKILL.md):
 each run writes a markdown **run record** that lists failing checks as evidence, ready to be
@@ -42,19 +47,33 @@ npm run eval -- --provider copilot --models <copilot-model>
 See [`examples/`](examples/README.md) for ready-made presets (`openai`, `runware`, `local`,
 `copilot`) and a worked example of the library API.
 
-Anything after `--` is passed to the CLI; `node src/cli.ts --help` shows every option.
+Four tasks, as the first positional argument (no task defaults to `eval`): `eval` (one scenario ×
+model, scored), `sweep` (the whole round, then publish the ledger and the results page), `improve`
+(measure, then attribute every failure to the exact check and its `file:line`) and `report` (render the
+ledger; no runs, no model needed).
+
+```bash
+# from the published package
+npx recursive-skill-improvement sweep --models <model> --samples 3 --behaviour
+# or, installed globally (npm i -g recursive-skill-improvement), the short form
+rsi sweep --models <model> --samples 3 --behaviour
+```
+
+Anything after `--` is passed to the CLI; `npx recursive-skill-improvement --help` shows every option.
 `--models` (or `SKILL_TESTER_MODELS`) is required — recursive-skill-improvement never picks a model for you.
 
 ## Providers
 
 Selected explicitly with `--provider` / `SKILL_TESTER_PROVIDER`; never guessed from the model name.
 
-| Provider  | What it talks to                                        | Needs                                     |
-| --------- | ------------------------------------------------------- | ----------------------------------------- |
-| `openai`  | Any OpenAI-compatible `POST {baseUrl}/chat/completions` | a base URL (has a default) and a key      |
-| `copilot` | GitHub Copilot, via `@github/copilot-sdk`               | the optional SDK installed + Copilot auth |
+| Provider            | What it talks to                                        | Needs                                     |
+| ------------------- | ------------------------------------------------------- | ----------------------------------------- |
+| `openai-compatible` | Any OpenAI-compatible `POST {baseUrl}/chat/completions` | a base URL (has a default) and a key      |
+| `copilot`           | GitHub Copilot, via `@github/copilot-sdk`               | the optional SDK installed + Copilot auth |
+| `claude-code`       | The `claude` CLI, as an **agent** (tools, real edits)    | the CLI installed and authenticated       |
 
-`openai` is the default. Endpoint and credential resolution (first match wins):
+`openai-compatible` is the default (the alias `openai` is accepted). The environment variables keep
+their historical `SKILL_TESTER_*` prefix, which is a naming wart, not a second package. Endpoint and credential resolution (first match wins):
 
 | Setting             | CLI          | Environment                                                                       |
 | ------------------- | ------------ | --------------------------------------------------------------------------------- |
