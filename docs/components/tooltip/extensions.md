@@ -1,14 +1,20 @@
 ---
-title: 'Examples'
+title: 'Extensions'
 parts:
   - Tooltip
-  - Examples
+  - Extensions
 eleventyNavigation:
-  key: 'Tooltip: Examples'
-  order: 30
+  key: 'Tooltip: Extensions'
+  order: 40
   parent: Tooltip
-  title: Examples
+  title: Extensions
 ---
+
+# Extensions
+
+This page is the **extension surface**: adding your own tag name,
+branding or styling, or overriding a protected hook. A consumer composing `lion-tooltip` in the
+regular flow does not need any of it.
 
 # Examples
 

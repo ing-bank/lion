@@ -428,33 +428,6 @@ class IntlSelectInvoker extends LionSelectInvoker {
 > This example only works if your option elements don't have ShadowDOM boundaries themselves.
 > Cloning deeply only works up until the first shadow boundary.
 
----
-
-## Examples
-
-```js script
-import { html } from 'lit';
-import { LionSelectRich } from '@lion/ui/select-rich.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
-// <lion-option> is not a module of its own - look its entrypoint up in references/entrypoints.md.// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
-```
-
-### Plain select-rich
-
-You do not have to extend `LionSelectRich` to use it: the element renders the invoker and the option
-list itself. Put `<lion-option>` elements in the light DOM and it behaves like a native `<select>`
-with fully customizable options and invoker.
-
-```html preview-story
-<lion-select-rich name="favoriteColor" label="Favorite color">
-  <lion-option .choiceValue="${'red'}">Red</lion-option>
-  <lion-option .choiceValue="${'hotpink'}">Hotpink</lion-option>
-  <lion-option .choiceValue="${'blue'}">Blue</lion-option>
-</lion-select-rich>
-```
-
-See `extensions.md` for the international example: that one extends `LionSelectRich`, which is a
-different job from using select-rich as a consumer.
-
 ## API Reference
 
 ### class: `LionSelectInvoker`, `lion-select-invoker`

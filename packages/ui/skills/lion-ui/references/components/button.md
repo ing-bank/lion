@@ -149,8 +149,6 @@ Therefore, not only do we flash a native button on the form to delegate `<lion-b
 and thereby trigger form submission, we **also** add a native `button` inside the `<lion-button-submit>`
 whose `type` property is synchronized with the type of the `<lion-button-submit>`.
 
----
-
 ## Examples
 
 ```js script

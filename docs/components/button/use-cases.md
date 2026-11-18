@@ -119,3 +119,34 @@ To get this particular implicit form submission to work, having a native button 
 Therefore, not only do we flash a native button on the form to delegate `<lion-button-submit>` trigger to `<button>`
 and thereby trigger form submission, we **also** add a native `button` inside the `<lion-button-submit>`
 whose `type` property is synchronized with the type of the `<lion-button-submit>`.
+
+# Examples
+
+```js script
+import { html } from '@mdjs/mdjs-preview';
+import '@lion/ui/define/lion-button.js';
+import iconSvg from './src/icon.svg.js';
+```
+
+## Icon button
+
+```js preview-story
+export const iconButton = () => html`<lion-button>${iconSvg(html)}Bug</lion-button>`;
+```
+
+## Icon only button
+
+When only an icon is used, make sure the button still have an accessible name, via `aria-label`.
+
+```js preview-story
+export const iconOnly = () => html`<lion-button aria-label="Bug">${iconSvg(html)}</lion-button>`;
+```
+
+## Multiple buttons inline
+
+```js preview-story
+export const mainAndIconButton = () => html`
+  <lion-button>Default</lion-button>
+  <lion-button>${iconSvg(html)} Bug</lion-button>
+`;
+```
