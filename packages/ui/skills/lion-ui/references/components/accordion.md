@@ -482,11 +482,11 @@ If there is a button or a form inside the tab panel then these elements get focu
 
 #### Fields
 
-| Name           | Privacy | Type      | Default | Description                                                            | Inherited From |
-| -------------- | ------- | --------- | ------- | ---------------------------------------------------------------------- | -------------- |
-| `exclusive`    | public  | `boolean` | `false` | exclusive property allows only one accordion slot to be open at a time |                |
-| `expanded`     | public  | `array`   |         | array of indices of the expanded accordions                            |                |
-| `focusedIndex` | public  | `number`  |         | index number of the focused accordion                                  |                |
+| Name           | Privacy | Type       | Default | Description                                                            | Inherited From |
+| -------------- | ------- | ---------- | ------- | ---------------------------------------------------------------------- | -------------- |
+| `exclusive`    | public  | `boolean`  | `false` | exclusive property allows only one accordion slot to be open at a time |                |
+| `expanded`     | public  | `number[]` |         | array of indices of the expanded accordions                            |                |
+| `focusedIndex` | public  | `number`   |         | index number of the focused accordion                                  |                |
 
 #### Attributes
 

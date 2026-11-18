@@ -434,15 +434,15 @@ class IntlSelectInvoker extends LionSelectInvoker {
 
 #### Fields
 
-| Name              | Privacy | Type                     | Default    | Description                                                                                                         | Inherited From |
-| ----------------- | ------- | ------------------------ | ---------- | ------------------------------------------------------------------------------------------------------------------- | -------------- |
-| `active`          | public  | `boolean`                | `false`    |                                                                                                                     | LionButton     |
-| `hostElement`     | public  | `LionSelectRich \| null` | `null`     | The LionSelectRich element this invoker is part of. Will be set on connectedCallback of&#xA;LionSelectRich          |                |
-| `readOnly`        | public  | `boolean`                | `false`    | When the connected LionSelectRich instance is readOnly,&#xA;this should be reflected in the invoker as well         |                |
-| `selectedElement` | public  | `LionOption \| null`     | `null`     | The option element that is currently selected                                                                       |                |
-| `singleOption`    | public  | `boolean`                | `false`    | When the connected LionSelectRich instance has only one option,&#xA;this should be reflected in the invoker as well |                |
-| `slots`           | public  |                          |            |                                                                                                                     |                |
-| `type`            | public  | `string`                 | `'button'` |                                                                                                                     | LionButton     |
+| Name              | Privacy | Type                          | Default    | Description                                                                                                                                                   | Inherited From |
+| ----------------- | ------- | ----------------------------- | ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------- |
+| `active`          | public  | `boolean`                     | `false`    |                                                                                                                                                               | LionButton     |
+| `hostElement`     | public  | `LionSelectRich \| null`      | `null`     | The LionSelectRich element this invoker is part of. Will be set on connectedCallback of&#xA;LionSelectRich                                                    |                |
+| `readOnly`        | public  | `boolean`                     | `false`    | When the connected LionSelectRich instance is readOnly,&#xA;this should be reflected in the invoker as well                                                   |                |
+| `selectedElement` | public  | `LionOption \| null`          | `null`     | The option element that is currently selected                                                                                                                 |                |
+| `singleOption`    | public  | `boolean`                     | `false`    | When the connected LionSelectRich instance has only one option,&#xA;this should be reflected in the invoker as well                                           |                |
+| `slots`           | public  |                               |            |                                                                                                                                                               |                |
+| `type`            | public  | `'button'\|'submit'\|'reset'` | `'button'` | The type of the button. Drives native form behaviour: \`submit\` submits the form it belongs&#xA;to, \`reset\` resets it, \`button\` does nothing on its own. | LionButton     |
 
 #### Attributes
 

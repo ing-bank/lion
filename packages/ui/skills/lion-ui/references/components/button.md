@@ -186,10 +186,10 @@ export const mainAndIconButton = () => html`
 
 #### Fields
 
-| Name     | Privacy | Type      | Default    | Description | Inherited From |
-| -------- | ------- | --------- | ---------- | ----------- | -------------- |
-| `active` | public  | `boolean` | `false`    |             |                |
-| `type`   | public  | `string`  | `'button'` |             |                |
+| Name     | Privacy | Type                          | Default    | Description                                                                                                                                                   | Inherited From |
+| -------- | ------- | ----------------------------- | ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------- |
+| `active` | public  | `boolean`                     | `false`    |                                                                                                                                                               |                |
+| `type`   | public  | `'button'\|'submit'\|'reset'` | `'button'` | The type of the button. Drives native form behaviour: \`submit\` submits the form it belongs&#xA;to, \`reset\` resets it, \`button\` does nothing on its own. |                |
 
 #### Attributes
 
@@ -204,10 +204,10 @@ export const mainAndIconButton = () => html`
 
 #### Fields
 
-| Name     | Privacy | Type      | Default   | Description | Inherited From |
-| -------- | ------- | --------- | --------- | ----------- | -------------- |
-| `active` | public  | `boolean` | `false`   |             | LionButton     |
-| `type`   | public  | `string`  | `'reset'` |             | LionButton     |
+| Name     | Privacy | Type                          | Default   | Description                                                                                                                                                   | Inherited From |
+| -------- | ------- | ----------------------------- | --------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------- |
+| `active` | public  | `boolean`                     | `false`   |                                                                                                                                                               | LionButton     |
+| `type`   | public  | `'button'\|'submit'\|'reset'` | `'reset'` | The type of the button. Drives native form behaviour: \`submit\` submits the form it belongs&#xA;to, \`reset\` resets it, \`button\` does nothing on its own. | LionButton     |
 
 #### Attributes
 
@@ -222,10 +222,10 @@ export const mainAndIconButton = () => html`
 
 #### Fields
 
-| Name     | Privacy | Type      | Default    | Description | Inherited From |
-| -------- | ------- | --------- | ---------- | ----------- | -------------- |
-| `active` | public  | `boolean` | `false`    |             | LionButton     |
-| `type`   | public  | `string`  | `'submit'` |             | LionButton     |
+| Name     | Privacy | Type                          | Default    | Description                                                                                                                                                   | Inherited From |
+| -------- | ------- | ----------------------------- | ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------- |
+| `active` | public  | `boolean`                     | `false`    |                                                                                                                                                               | LionButton     |
+| `type`   | public  | `'button'\|'submit'\|'reset'` | `'submit'` | The type of the button. Drives native form behaviour: \`submit\` submits the form it belongs&#xA;to, \`reset\` resets it, \`button\` does nothing on its own. | LionButton     |
 
 #### Attributes
 

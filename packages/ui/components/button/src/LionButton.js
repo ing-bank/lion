@@ -34,6 +34,11 @@ export class LionButton extends DisabledWithTabIndexMixin(LitElement) {
   static get properties() {
     return {
       active: { type: Boolean, reflect: true },
+      /**
+       * The type of the button. Drives native form behaviour: `submit` submits the form it belongs
+       * to, `reset` resets it, `button` does nothing on its own.
+       * @type {'button'|'submit'|'reset'}
+       */
       type: { type: String, reflect: true },
     };
   }
@@ -126,6 +131,9 @@ export class LionButton extends DisabledWithTabIndexMixin(LitElement) {
 
   constructor() {
     super();
+    /**
+     * @type {'button'|'submit'|'reset'}
+     */
     this.type = 'button';
     this.active = false;
     /** @private */

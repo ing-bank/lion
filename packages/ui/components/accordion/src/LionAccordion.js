@@ -86,6 +86,7 @@ export class LionAccordion extends LitElement {
   /**
    * @param {number[]} value
    */
+  /** @param {number[]} value */
   set expanded(value) {
     const stale = this.__expanded;
     this.__expanded = value;
@@ -94,6 +95,7 @@ export class LionAccordion extends LitElement {
     this.requestUpdate('expanded', stale);
   }
 
+  /** @type {number[]} */
   get expanded() {
     return this.__expanded;
   }
