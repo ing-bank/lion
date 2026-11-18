@@ -11,6 +11,8 @@ import { litPlugin } from '@custom-elements-manifest/analyzer/src/features/frame
 import { generateCustomData } from 'cem-plugin-vs-code-custom-data-generator';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { customElementJetBrainsPlugin } from 'custom-element-jet-brains-integration';
+// eslint-disable-next-line import/no-extraneous-dependencies
+import { getTsProgram, typeParserPlugin } from '@wc-toolkit/type-parser';
 
 /**
  * Find all entrypoints for lion to create the CEM from
@@ -77,8 +79,18 @@ const deniedMemberNames = new Set(['localizeNamespaces']);
 
 const cem = create({
   modules,
+  /**
+   * Give the type-parser plugin the TypeScript program of the analysed modules, so it can resolve
+   * type aliases to their real shape (e.g. a named union type on a member, which the analyzer would
+   * otherwise leave as a bare `string`/`array`/`object`).
+   */
+  overrideModuleCreation: ({ ts }) => {
+    const program = getTsProgram(ts, modules.map(m => m.path), 'tsconfig.json');
+    return program.getSourceFiles();
+  },
   plugins: [
     ...litPlugin(),
+    typeParserPlugin(),
     {
       packageLinkPhase({ customElementsManifest }) {
         for (const definition of customElementsManifest.modules) {
