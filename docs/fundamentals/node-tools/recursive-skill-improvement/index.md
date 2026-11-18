@@ -17,8 +17,6 @@ eleventyNavigation:
 ![recursive skill improvement](./assets/recursive-skill-improvement-logotype.png)
 
 
-**Microbenchmarking your skills.**
-
 Every scenario measured, on both axes, at n≥3 — so a documentation change becomes a measurable
 event instead of an opinion, and drift shows up as a number.
 
