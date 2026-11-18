@@ -8,322 +8,129 @@ eleventyNavigation:
   order: 16
 ---
 
-![three hands drawing one another in a closed loop — the Escher tribute — printed on one white sticker base whose smoothed outer edge is the outline, with no spurious thumbs at the wrists and no card or frame, standing on a technical plate of fine grid, halftone fields, concentric rings, registration marks and a ruler scale](./assets/recursive-skill-improvement-hero.png 'The self-drawing hands as a free-standing die-cut on a white ground')
-
 # recursive-skill-improvement
 
 **Microbenchmarking your skills: 100% measured, 0% drift.**
 
-Every scenario measured, on both axes, at n≥3 — so a documentation change becomes a measurable
-event instead of an opinion, and drift shows up as a number.
+## The flow
 
-Skills rot. A skill is a document that promises how a library behaves; the library moves and the
-document quietly stops being true. This tool turns that drift into a number: it **creates test cases
-from the source docs**, runs them against models with the skill attached, scores them on **two axes**,
-and records every measurement in a **ledger** that drives the correction loop.
+```mermaid
+flowchart LR
+  M["1 measure<br/>scenarios x n>=3"] --> A["2 attribute<br/>docs-gap | harness-defect | model"]
+  A --> C["3 correct<br/>the source doc in docs/**"]
+  C --> R["4 regenerate<br/>skills:generate"]
+  R --> G["5 gate<br/>skills:check"]
+  G --> N["6 rerun<br/>the coupled use cases"]
+  N -->|each correction is re-measured| M
+  L[("the ledger")] --- A
+  L --- N
+  G -.->|stop condition| X(["every score 100%"])
+```
 
-It is **generic** — the subject is *any* skill generated from source documentation. Port it to another
-docs tree and only the **data** changes (the scenarios, the entrypoint policy, the docs coupling),
-never the machinery.
+![the hands as a free-standing die-cut on a white ground, over a printed technical plate](./assets/recursive-skill-improvement-hero.png 'The self-drawing hands: a free-standing die-cut whose smoothed outer edge is the outline')
 
-## The subject is any skill generated from docs
+Six stations, one ring. The loop closes only when **every** score is 100% — on **both** axes, at n≥3,
+on the live revision.
 
-The `lion-ui` skill is this repo's **current subject**, not the tool's definition. Nothing in the loop is
-Lion-specific: a scenario is a prompt, a check is a rule the source docs state, the behaviour tier is a
-browser running the produced file, and the ledger is keyed by the revision of a skill directory. The same
-tool therefore measures **any skill that is generated from source documentation**. Moving it to another
-docs tree means porting that skill's **data** — its scenarios, its entrypoint policy and its own
-`scenario-docs.json` coupling — never changing the machinery: the revision key, the `n=0` discipline,
-the retired rows and the correction loop all apply unchanged.
+## The ledger
+
+The ledger is not a report; it is the machine's memory, and everything else is derived from it.
+
+**A row is one measurement.** Its key is `(skill revision, model, scenario, provider)` — and each part
+of that key is load-bearing:
+
+| Key part | Why it is in the key |
+| --- | --- |
+| **skill revision** | the **git tree hash of the skill directory**, not a commit sha — so an unrelated commit elsewhere in the repo cannot invalidate stored results, while a real change to the skill always does |
+| **model** | a score belongs to a model; the same skill measures differently on different ones |
+| **scenario** | one cell is one scenario x model; nothing is aggregated across scenarios |
+| **provider** | plus the derived **subject** (`model` or `agent`), so an **agent** measurement and a **model** measurement never collide — and are never averaged |
+
+**What a row stores.** The score (mean/min/max/stdDev) and the sample count; the **behaviour** result
+(`passed/total`) separately from the convention score; the attempts; **dependency files read** and their
+bytes — a non-zero value is a *failure signal*, because the answer should come from the skill, not from
+reading the library source; the tokens (prompt/completion) and the **cost**, priced from a rate table
+with sources; and `ranAt`.
+
+**The honesty rules, enforced by the ledger.**
+
+- **`n=0` means not attempted, never 0%.** A run that never touched the deliverable, or that died on a
+  dead endpoint, is recorded as `n/a` and excluded from every average. Only **n≥3** is ever quoted.
+- **Averages cover comparable runs only.** Non-attempted runs are kept out of the per-scenario and
+  per-model aggregate too, so a dead endpoint can never drag a score down.
+- **Retired models are marked, not deleted.** A withdrawn model id stamps its rows with `†`; the history
+  stays readable and is excluded from the headline, so a retired model is never counted beside a live one.
+- **A revision tilt makes every older cell stale — and says so.** When the skill changes, its rows are
+  history by definition; the page shows fresh `n=0` markers instead of yesterday's numbers.
+- **A correction owes a re-run.** Regenerate, gate, then re-measure the coupled use cases at n≥3. An edit
+  without a re-run is a proposal, not a fix.
+
+That is why the ledger is the backbone of the ring above: the loop reads its own memory to decide what to
+fix, and the stop condition is a statement about the ledger, not about a feeling.
 
 ## The concepts
 
 | | Concept | In one line |
 | --- | --- | --- |
 | 1 | **Test cases from the docs** | a scenario is a realistic user request; the checks encode what the source docs state, never what the prompt says |
-| 2 | **Two axes, never blended** | *convention*: it parses, imports only documented entrypoints, exports the demanded class. *behaviour*: the produced file actually works in a real browser |
-| 3 | **The ledger** | every measurement keyed by (skill revision, model, scenario, provider) — a stale number cannot masquerade as a current one |
+| 2 | **Two axes** | *convention*: parses, imports only documented entrypoints, exports the demanded class. *behaviour*: works in a real browser |
+| 3 | **The ledger** | every measurement keyed by revision, model, scenario, provider |
 | 4 | **The loop** | measure → attribute → correct → regenerate → gate → rerun |
-| 5 | **The exit** | closed only when **every** score is 100%, on **both** axes, at n≥3, on the live revision |
+| 5 | **The exit** | 100% on both axes, at n≥3, on the live revision |
 
-### A concrete test case
+Everything is **generic**: the subject is *any* skill generated from source documentation. Port it to
+another docs tree and only the **data** changes — the scenarios, the entrypoint policy, the coupling —
+never the machinery.
+
+## A concrete test case
 
 **The scenario** — the prompt a user would actually write:
 
 > *"Build a from-scratch form: a native `<form>` element, one field wired into it, and the client-side
 > validation the library documents actually working."*
 
-Only **neutral boilerplate** is fixed by the harness (the file is `src/my-elem.js`, the class `MyElem`,
-one deliverable); every fact about *how* the library works stays in the docs, because that is what is
-being measured.
+Only **neutral boilerplate** is fixed (the file is `src/my-elem.js`, the class `MyElem`, one
+deliverable); every fact about *how* the library works stays in the docs, because that is what is
+measured.
 
-**The checks** — what the docs assert, none of it stated in the prompt: `importsResolve` (a relative
-import the run never wrote), `namedExportsExist` (a binding the entrypoint does not export), a
+**The checks** — what the docs assert, none of it in the prompt: `importsResolve` (a relative import the
+run never wrote), `namedExportsExist` (a binding the entrypoint does not export), a
 **placeholder-specifier** check (an import from `<something>`), the **import-policy gate** (documented
-entrypoints only), and the **behaviour tier** (the file mounted in a real browser and asserted).
+entrypoints only), and the **behaviour tier** (mounted in a real browser and asserted).
 
-**Why the split matters**: because the prompt stays a user request, a pass proves the **documentation**
-carried the behaviour — not that the prompt leaked the answer.
+## How a score moved: 0% → 100%
 
-### How a score moved: 0% → 100%
-
-A component scenario failed **every** run at **0%**. The produced file parsed, imported only documented
+A component scenario failed **every** run at **0%**: the file parsed, imported only documented
 entrypoints and exported the right class — and still did nothing, because it imported a **name that
 entrypoint does not export**. That is a **docs gap**, so the fix went there: the docs now name **the
-module that owns each element**, because models kept guessing it. Then the ritual that turns an edit
-into a fix — regenerate, gate (`skills:check`), re-run the coupled use cases at n≥3 — gave **0% → 100%
-with behaviour 3/3**.
+module that owns each element**. Regenerate, gate, re-run at n≥3: **0% → 100%, behaviour 3/3**.
 
-A sharper one: the docs themselves taught a bug. `SKILL.md` showed validator usage with a literal
-**placeholder specifier**; models copied it verbatim and **no check could see it**, because a
-placeholder is not a resolvable module. It is a check now.
+A sharper one: the docs themselves taught a bug — a literal **placeholder specifier** in the skill's own
+example, which models copied verbatim and **no check could see**. It is a check now.
 
-### What the docs had to change to reach 100%
+## The docs work that took it to 100%
 
 Every correction landed in the **source doc**, never in the generated skill:
 
-| Docs work | Why it was needed |
+| Docs work | Why |
 | --- | --- |
-| **Ownership** — which module ships which element | models guessed entrypoint names that do not exist |
-| **A generated entrypoint list** (the skill index) | a name that does not ship can never be recommended again |
-| **Synonyms in the index** | a user's vocabulary routes to the right component without leaking into the prompt |
+| **Ownership** — which module ships which element | models guessed entrypoints that do not exist |
+| **A generated entrypoint list** (the skill index) | a name that does not ship can never be recommended |
+| **Synonyms in the index** | a user's vocabulary routes to the right component, without leaking into the prompt |
 | **The real validator module** | the placeholder specifier above |
-| **Compose vs extend**, stated per component | the consumer path is the documented path |
+| **Compose vs extend**, per component | the consumer path is the documented path |
 | **The two-role shadow-DOM rule** | a form control's substructure has its own rule; every control points at it |
-| **Subclasser companions split out** | the extension surface became reachable only explicitly |
+| **Subclasser companions split out** | the extension surface became explicit instead of ambient |
 | **Never a global define entrypoint** | models reach for it; the docs forbid it and a check enforces it |
 | **Regenerate + gate on every change** | an edit without a re-run is a proposal, not a fix |
-
-## The system, the task and the protocol
-
-Three names, one thing each, and they must not be read as rivals:
-
-- the **system** is `recursive-skill-improvement` — this package, its docs and its CLI together, the
-  total product;
-- the **task** `improve` is a subcommand of that CLI: it runs the loop
-  (measure → attribute → correct → regenerate → rerun) and reports the actionable findings;
-- the **protocol** is the skill `recursive-skill-improver` — the hand-written description of that loop
-  (`packages/ui/skills/recursive-skill-improver`), consumed by the `improve` task.
-
-## Tasks
-
-The CLI exposes four tasks as the **first positional argument**
-(`recursive-skill-improvement <task> [flags]`); with no task argument the current behaviour is
-unchanged, because `eval` is the default. `retire` is deliberately **not** a task: a withdrawn model
-is data (`RATES[…].retired`), not an action.
-
-| Task | What it does | Command |
-| --- | --- | --- |
-| `eval` | the atom: one scenario × model, scored (the default) | `npm run eval -w packages-node/recursive-skill-improvement -- --models <model>` |
-| `sweep` | the whole round: measure, then publish the ledger and this results page (equivalent to `eval --docs`) | `npm run eval -w packages-node/recursive-skill-improvement -- sweep --models <model> --samples 3 --behaviour` |
-| `improve` | the failing set, attributed: measure, then classify every failure and report the exact check and its `file:line` | `npm run eval -w packages-node/recursive-skill-improvement -- improve --models <model>` |
-| `report` | render/print the ledger as the results page; no runs, no model needed | `npm run eval -w packages-node/recursive-skill-improvement -- report` |
-
-**`sweep` = the whole round; `improve` = the failing set, attributed.**
-
-`improve` cannot edit docs — that is human/agent work. It runs, attributes each failure to one of
-`{docs-gap | harness-defect | model-behaviour}`, prints the exact check and its `file:line`, and names
-the coupled scenario(s) that must be re-run at n>=3, so it **sets the correction up**. Correcting the
-doc, regenerating (`npm run skills:generate`) and gating (`npm run skills:check`) stay in the
-human/agent loop — `skills:check` is a gate, not a task.
-
-`node src/cli.ts --help` lists the tasks and the flags; the flags are unchanged and still compose with
-every task.
-
-## Why measurement, and why two axes
-
-A skill can produce code that parses, imports only from documented entrypoints and exports the demanded
-class — and still not work. The two axes are therefore reported separately and never blended:
-
-| Axis | What it is | What a failure means |
-| --- | --- | --- |
-| **convention** | deterministic, browser-free gates and checks: does it parse, does it import only through documented entrypoints, does it export the demanded class | the code violates a rule the docs state |
-| **behaviour** | the produced file is executed in a real browser (`@web/test-runner` + Chromium) and asserted against what the prompt demanded | the code loads but does not do the job |
-
-A cell can hold 100% on convention and 0/3 on behaviour. That gap is the finding worth publishing, not
-an artefact to average away.
-
-## How it works: measure → attribute → correct → regenerate → rerun
-
-| Step | What happens | Where |
-| --- | --- | --- |
-| measure | scenarios × samples × model, behaviour enabled | `npm run eval -w packages-node/recursive-skill-improvement` |
-| attribute | each failure is classified: skill gap, measurement gap (a defect in the tool), or not attempted | the run record's evidence table, and the `improve` task's findings |
-| correct | a skill gap produces an edit to the **source doc**, never to the generated skill | `docs/**` |
-| regenerate | the skill is rebuilt from those sources | `npm run skills:generate` |
-| gate | the generated skill is diff-checked and the skill tests pass | `npm run skills:check` |
-| rerun | the coupled use cases are re-measured at n>=3, serially | the scenarios the docs are coupled to |
-
-![recursive skill improvement - the recursive ring, with the ledger as its backbone](./assets/recursive-skill-improvement.png 'the loop itself, drawn: five stations in a ring - measure, attribute, correct, regenerate, rerun - joined by one band that is the ledger, each station carrying a revision stamp; the machinery is ink, the paper is the plate, and the caption is set as type by us')
-
-A correction is only finished after **regenerate + gate + rerun on n>=3**; an edit without a re-run is a
-proposal, not a fix. The worked example — a guessed entrypoint that zeroed seven runs — is written up in
-`packages-node/recursive-skill-improvement/docs/self-improvement-loop.md`.
-
-## The mechanisms that keep the numbers honest
-
-- **The ledger is keyed by (skill revision, model, scenario, provider).** A revision is the git tree
-  hash of the skill directory, so an unrelated commit does not invalidate stored results. `provider`
-  plus its derived `subject` (`model` or `agent`) means an **agent** measurement and a **model**
-  measurement with the same model name can never collide and are never averaged.
-- **`n=0` means not attempted, never 0%.** A run that never modified the deliverable, or an arm whose
-  endpoint failed, is recorded as `n/a` and excluded from the score. Only `n>=3` is quoted; a single
-  sample is never cited.
-- **Retired models are marked, not deleted.** `RATES[…].retired` stamps the rows of a withdrawn model
-  id: the history stays visible with a `†` and is excluded from the headline number, so a retired model
-  is never counted beside a current measurement. The ledger currently carries 264 such rows.
-- **A correction owes a re-run.** `npm run skills:generate`, `npm run skills:check`, then the coupled use
-  cases at n>=3, serially. If the skill hash tilted, every cell on the old revision is stale and is said
-  to be stale.
-- **Docs are coupled to use cases.** `packages-node/recursive-skill-improvement/scenario-docs.json` plus
-  `packages-node/change-graph/src/docs-coupling.js` make a docs change deterministically *affected* for
-  the scenarios derived from those docs — a soft, optionalDep-style edge, so it can never become a build
-  requirement.
-- **Failing checks name the fault** instead of staying vague: the **import-policy gate**, the
-  **syntax gate**, `importsResolve` (a missing relative import), `namedExportsExist` (a binding the
-  entrypoint does not export), and a check that rejects **placeholder specifiers** (an import from
-  `<something>` a model copied from an example).
-
-## The flow
-
-![the closed loop: six stations, the ledger as its backbone, and the exit only at 100%](./assets/recursive-skill-improvement-flow.png 'measure → attribute → correct → regenerate → gate → rerun, closed as a ring, with every score at 100% as the stop condition')
-
-```mermaid
-flowchart LR
-  M["1 measure<br/>scenarios x n>=3, behaviour on"] --> A["2 attribute<br/>docs-gap | harness-defect | model"]
-  A --> C["3 correct<br/>the source doc in docs/**"]
-  C --> R["4 regenerate<br/>skills:generate"]
-  R --> G["5 gate<br/>skills:check"]
-  G --> N["6 rerun<br/>the coupled use cases, n>=3"]
-  N -->|"each correction is re-measured"| M
-  L[("the ledger<br/>one row per revision, model, scenario, provider")] --- A
-  L --- N
-  G -.->|"stop condition"| X(["every score 100%"])
-```
-
-## The numbers
-
-Scenarios: **47** — 35 component, 5 system, 2 integration, 2 use-case, 1 form, 1 field, 1 repair.
-Ledger: **909 rows**. Newest revision: `b9cf47ea`.
-
-| Revision | Cells measured at n=3 | Samples | Prefix score | Behaviour |
-| --- | --- | --- | --- | --- |
-| `ea05f86b` | 18 (the live `deepseek-v4-1-flash` cells) | 54 | **18 of 18 cells at 100%** | 34/39 assertions |
-| `b9cf47ea` (newest) | 4 (the form-doc-coupled cells) | 12 | **4 of 4 cells at 100%** | 3/3 on the three behaviour-enabled cells |
-
-The four coupled cells on the newest revision, re-measured after the skill revision tilted:
-
-| Scenario | n | Mean | Behaviour |
-| --- | --- | --- | --- |
-| `component/form` | 3 | 100% | 3/3 |
-| `form/iban-in-form` | 3 | 100% | 3/3 |
-| `repair/iban-field` | 3 | 100% | 3/3 |
-| `system/form` | 3 | 100% | not run (0/0) |
-
-The harness measuring itself: **137/137** tests in `packages-node/recursive-skill-improvement`, and **40/40** in
-`packages-node/change-graph`.
-
-Live results per scenario and model are generated from the ledger into
-[recursive-skill-improvement: quality](/fundamentals/node-tools/recursive-skill-improvement/quality/),
-and the generated lion-ui references are indexed at
-[recursive-skill-improvement: skill index](/fundamentals/node-tools/recursive-skill-improvement/skill-index/).
-
-## What the docs are worth: the omission experiment
-
-The same scenarios were run **without** the skill in the harness: **79.4% on the static checks but 0/18
-behaviour** — the code looked documented and did not work. With the skill, the same arm scored **100%
-and 9/9 behaviour**. That is the evidence that the documentation, and not the model's prior, is what
-carries the behaviour tier.
-
-## Faults the tool found in its own work
-
-The loop is only credible if it turns on its author too. Four examples from real runs:
-
-- a docs typo we wrote ourselves — a menu-item class in the API table under a spelling the library does
-  not export (the real one is `LionMenuitem`, in the `menu` module);
-- **15 invented entrypoint specifiers the skill itself taught** — the model copied them faithfully;
-- a **comment-blind check** that failed correct code because the rule it wanted was commented out;
-- **placeholder imports in `SKILL.md`** — a literal `<lion-validate>` example that a model imported
-  verbatim, which neither `importsResolve` nor `namedExportsExist` could see, because a placeholder is
-  not a resolvable specifier at all. That gap is now a check.
-
-## The other lever: reinforcement fine-tuning
-
-The loop here improves the **documentation**; the ledger's run records are the same evidence a
-**reinforcement fine-tuning** round would need, and that makes RFT a deliberate **option**, not a
-rival.
-
-| | docs route (the product) | reinforcement fine-tuning (optional) |
-| --- | --- | --- |
-| what changes | the source doc, then the regenerated skill | the model's weights |
-| reward signal | the deterministic checks plus the browser behaviour tier | the same per-run pass/fail, per named check |
-| source of truth | `docs/**` and the ledger | the ledger's run records — prompt, produced file, verdict |
-| what it costs | a doc edit, a regeneration, an n>=3 re-run | verified records, a held-out scenario set, a training budget |
-| what can go wrong | a regression elsewhere in the library stays unmeasured | overfitting the measured cells; a tuned model that stops generalising |
-
-Conditions, stated so the option cannot be mistaken for the default:
-
-1. train only on **verified** records — a cell that was never attempted (`n=0`) is not a reward signal;
-2. **hold out** scenarios: the cells you tuned on stop being evidence about the skill, so they are recorded
-   as a tuned subject, never merged back into the base columns;
-3. re-measure the held-out cells at **n>=3** on the tuned model, beside the untuned one;
-4. run it in a **separate session** and keep it outside the gate: a training run must never sit inside
-   `skills:check`.
-
-## What is not measured yet
-
-- Cells are historical **per revision**. After the tilt to `b9cf47ea`, the ledger carries fresh `n=0`
-  markers for every scenario except the four coupled ones: those 43 scenarios must be re-measured before
-  any of their numbers are quoted.
-- The **agent** subject is a separate row (`provider: claude-code`), and there is currently one such
-  cell. It is never mixed into the model columns.
-- Behaviour is not run for every cell: scenario prompts that do not demand a runnable outcome report
-  `0/0` rather than a pass rate.
-- The retired model's rows are history by definition; they are not evidence about the current skill.
-
-## The name
-
-The package, the docs directory and the CLI all carry one name: `recursive-skill-improvement`. It is
-the name of the **total product**, spelled out rather than abbreviated: no `rsi`, no initialism that
-would have to be expanded on first use. The name states the job — the loop is recursive (each
-correction is re-measured against the regenerated skill), and the goal is improvement, not a verdict on
-one snapshot. The commands inside it are **subcommands** (tasks), not a second product: `improve` is the
-task that runs the loop, and the hand-written `recursive-skill-improver` skill is the protocol it
-follows.
-
-Two earlier candidates and the abbreviation were considered and set aside:
-
-| Candidate | The argument for it | Why it was not chosen |
-| --- | --- | --- |
-| `recursive-skill-improvement` | the total product: the recursive loop, its ledger and the docs coupling, named in full | chosen |
-| `skill-steward` | custodianship of a living document: measure, attribute, regenerate, re-measure | used as a provisional product label; it named the role, not the loop, and sat beside a near-identical package name |
-| `skill-vitals` | the ledger is the skill's vitals — published per revision, retired rows included | reads as measurement only, and the loop is half the product |
-| `rsi` (abbreviation) | shorter to type | an initialism is not a name a reader can place without a glossary |
 
 ## Running it
 
 ```bash
-# one scenario, one model, with behaviour
-npx recursive-skill-improvement -- --models <model> --scenario component/form --samples 3 --behaviour
-
-# a sweep that publishes the ledger and the results page
 npx recursive-skill-improvement sweep --models <model> --samples 3 --behaviour
-
-# measure and report the cells below 100%, with the failing check and its file:line
 npx recursive-skill-improvement improve --models <model> --samples 3
 ```
 
-Installed globally (`npm i -g recursive-skill-improvement`) the same tasks answer to the short form:
-`rsi sweep --models <model> --samples 3 --behaviour`. In `npx`, the **package name** is what is resolved, so
-`npx rsi` would fetch the npm package literally named `rsi` — use `npx recursive-skill-improvement`, or
-`npx -p recursive-skill-improvement rsi`.
-
-Working inside the monorepo the tasks run through the workspace instead
-(`npm run eval -w packages-node/recursive-skill-improvement -- sweep …`).
-
-`--models` has no default on purpose: the subject under test is the skill, and a model is a dimension,
-not an assumption. Regenerate and gate before quoting anything:
-
-```bash
-npm run skills:generate && npm run skills:check
-```
+Installed globally (`npm i -g recursive-skill-improvement`) the same tasks answer to `rsi`. Results per
+scenario and model: [quality](/fundamentals/node-tools/recursive-skill-improvement/quality/) ·
+[index](/fundamentals/node-tools/recursive-skill-improvement/skill-index/).
