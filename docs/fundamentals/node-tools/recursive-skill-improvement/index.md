@@ -8,9 +8,14 @@ eleventyNavigation:
   order: 16
 ---
 
-![recursive skill improvement](./assets/recursive-skill-improvement-logotype.png)
+![three hands drawing one another in a closed loop — the Escher tribute — printed on one white sticker base whose smoothed outer edge is the outline, with no spurious thumbs at the wrists and no card or frame, standing on a technical plate of fine grid, halftone fields, concentric rings, registration marks and a ruler scale](./assets/recursive-skill-improvement-hero.png 'The self-drawing hands as a free-standing die-cut on a white ground')
 
 # recursive-skill-improvement
+
+**Microbenchmarking your skills — 100% coverage, 100% quality, 0% drift.**
+
+![recursive skill improvement](./assets/recursive-skill-improvement-logotype.png)
+
 
 **Microbenchmarking your skills.**
 
@@ -26,7 +31,6 @@ It is **generic** — the subject is *any* skill generated from source documenta
 docs tree and only the **data** changes (the scenarios, the entrypoint policy, the docs coupling),
 never the machinery.
 
-![three hands drawing one another in a closed loop — the Escher tribute — printed on one white sticker base: the drawing lies on solid white, the outer edge of that white shape is the outline, drawn as one smooth, rounded closed contour that follows the forms only roughly — no spiky uithalen, slivers or narrow notches, the thin pencil-tip sliver and the silhouette's own lobes are enclosed rather than traced — rendered antialiased so it carries no pixel stair-steps, and the nail-less thumb-like bulge at the wrist of the uppermost hand is gone, the white also shows as ground in the openings between the hands, no card and no frame, standing on a technical sheet of fine grid and a finer micro-grid band, pale angular fields, two hatched blocks, a dotted field, two halftone fields, concentric rings with an arc fan and radial rays, corner registration marks, a horizontal and a vertical ruler scale, a stamp grid, a dotted accent band with a short tick row and a five-bar ledger device](./assets/recursive-skill-improvement-hero.png 'The self-drawing hands as a free-standing die-cut on a white ground: the pencil drawing reduced to two even ink tones, its whole silhouette under a pure white sticker base whose smoothed outer edge is the outline, over the printed plate the other covers share')
 
 ## The subject is any skill generated from docs
 
