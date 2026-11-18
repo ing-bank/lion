@@ -12,7 +12,10 @@ eleventyNavigation:
 
 # recursive-skill-improvement
 
-**100% coverage, 100% quality, 0% drift — for your skills.**
+**Microbenchmarking your skills.**
+
+Every scenario measured, on both axes, at n≥3 — so a documentation change becomes a measurable
+event instead of an opinion, and drift shows up as a number.
 
 Skills rot. A skill is a document that promises how a library behaves; the library moves and the
 document quietly stops being true. This tool turns that drift into a number: it **creates test cases
