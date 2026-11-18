@@ -14,9 +14,6 @@ eleventyNavigation:
 
 **Microbenchmarking your skills: 100% measured, 0% drift.**
 
-![recursive skill improvement](./assets/recursive-skill-improvement-logotype.png)
-
-
 Every scenario measured, on both axes, at n≥3 — so a documentation change becomes a measurable
 event instead of an opinion, and drift shows up as a number.
 
@@ -28,7 +25,6 @@ and records every measurement in a **ledger** that drives the correction loop.
 It is **generic** — the subject is *any* skill generated from source documentation. Port it to another
 docs tree and only the **data** changes (the scenarios, the entrypoint policy, the docs coupling),
 never the machinery.
-
 
 ## The subject is any skill generated from docs
 
