@@ -12,7 +12,7 @@ eleventyNavigation:
 
 # recursive-skill-improvement
 
-**Microbenchmarking your skills — 100% coverage, 100% quality, 0% drift.**
+**Microbenchmarking your skills: 100% measured, 0% drift.**
 
 ![recursive skill improvement](./assets/recursive-skill-improvement-logotype.png)
 
