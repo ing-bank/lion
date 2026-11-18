@@ -429,6 +429,21 @@ describe('remarkExtend', () => {
     );
   });
 
+  it('carries along js import blocks that precede the imported section, with rewritten relative paths', async () => {
+    const result = await execute(
+      [
+        //
+        '### Static Headline',
+        "```js ::importBlock('./fixtures/three-sections-red-with-import.md', '## More Red')",
+        '```',
+      ].join('\n'),
+      { shouldStringify: false },
+    );
+
+    const codeNode = result.children.find(node => node.type === 'code' && node.lang === 'js');
+    expect(codeNode.value).to.equal("import { color } from './assets/color.js';");
+  });
+
   it('supports files with frontmatter', async () => {
     const result = await execute(
       [

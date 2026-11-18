@@ -46,6 +46,32 @@ function stripFrontMatter(mdFileString) {
 
 let toInsertNodes = [];
 
+/**
+ * Rewrites relative local import/require specifiers (e.g. './foo.js', '../foo.js')
+ * found in a js code block so they keep resolving correctly once the block is
+ * moved from the imported file's location to the importing file's location.
+ * Bare specifiers (e.g. 'my-lib') are left untouched, since there is no
+ * reliable way to know their public import path from a file path alone.
+ * @param {string} value
+ * @param {{ fromFile: string; toFile: string }} options
+ * @returns {string}
+ */
+function rewriteLocalImportSpecifiers(value, { fromFile, toFile }) {
+  const fromDir = path.dirname(fromFile);
+  const toDir = path.dirname(toFile);
+  return value.replace(
+    /(\bfrom\s+|\brequire\(\s*|\bimport\s+)(['"])(\.\.?\/[^'"]+)\2/g,
+    (match, prefix, quote, specifier) => {
+      const absolute = path.resolve(fromDir, specifier);
+      let rel = path.relative(toDir, absolute).split(path.sep).join('/');
+      if (!rel.startsWith('.')) {
+        rel = `./${rel}`;
+      }
+      return `${prefix}${quote}${rel}${quote}`;
+    },
+  );
+}
+
 function handleImportedFile({
   startSelector,
   endSelector,
@@ -79,7 +105,25 @@ function handleImportedFile({
     }
 
     let insertIt = false;
+    // js code blocks (plain, not ::import directives) seen at root level
+    // BEFORE the start selector matches. When a section is imported via a
+    // selector (e.g. ::importBlock), these "dependency" blocks live outside
+    // the selected range but are still needed by it, so we carry them along.
+    const precedingImportNodes = [];
+    let precedingImportNodesInserted = false;
+
     visit(tree, (node, index, parent) => {
+      if (
+        !insertIt &&
+        parent &&
+        parent.type === 'root' &&
+        node.type === 'code' &&
+        node.lang === 'js' &&
+        !(node.meta && node.meta.startsWith('::import'))
+      ) {
+        precedingImportNodes.push(node);
+      }
+
       if (is(node, startIsNode)) {
         insertIt = true;
       }
@@ -98,6 +142,22 @@ function handleImportedFile({
       }
 
       if (insertIt && parent && parent.type === 'root') {
+        if (!precedingImportNodesInserted) {
+          precedingImportNodesInserted = true;
+          for (const importNode of precedingImportNodes) {
+            importNode.value = rewriteLocalImportSpecifiers(importNode.value, {
+              fromFile: filePath,
+              toFile: currentFile,
+            });
+          }
+          toInsertNodes.push(...precedingImportNodes);
+        }
+        if (node.type === 'code' && node.lang === 'js') {
+          node.value = rewriteLocalImportSpecifiers(node.value, {
+            fromFile: filePath,
+            toFile: currentFile,
+          });
+        }
         toInsertNodes.push(node);
       }
     });
