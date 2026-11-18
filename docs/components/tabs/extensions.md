@@ -44,7 +44,7 @@ import { html } from '@mdjs/mdjs-preview';
 import '@lion/ui/define/lion-tabs.js';
 ```
 
-## Plain tabs
+### Plain tabs
 
 You do not have to extend `LionTabs` to use tabs: the element switches its own panels. Give each tab a
 `tab` slot and each panel a `panel` slot.
