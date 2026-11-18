@@ -12,15 +12,16 @@ eleventyNavigation:
 
 # recursive-skill-improvement
 
-`recursive-skill-improvement` keeps the `lion-ui` skill honest as the product it describes keeps
-changing. It runs realistic consumer scenarios against models, scores every run with deterministic
-checks **plus a real-browser behaviour tier** (Chromium), records each measurement in a ledger, and
-drives the recursive improvement loop from that ledger — so a documentation change becomes a
-measurable event instead of an opinion.
+**100% coverage, 100% quality, 0% drift — for your skills.**
 
-It exists because Lion is a living product: components gain APIs, docs gain pages, and a skill written
-last quarter quietly stops matching the library. Improvement here means the skill is regenerated from
-its source docs and re-measured against the library, not patched by hand and hoped over.
+Skills rot. A skill is a document that promises how a library behaves; the library moves and the
+document quietly stops being true. This tool turns that drift into a number: it **creates test cases
+from the source docs**, runs them against models with the skill attached, scores them on **two axes**,
+and records every measurement in a **ledger** that drives the correction loop.
+
+It is **generic** — the subject is *any* skill generated from source documentation. Port it to another
+docs tree and only the **data** changes (the scenarios, the entrypoint policy, the docs coupling),
+never the machinery.
 
 ![three hands drawing one another in a closed loop — the Escher tribute — printed on one white sticker base: the drawing lies on solid white, the outer edge of that white shape is the outline, drawn as one smooth, rounded closed contour that follows the forms only roughly — no spiky uithalen, slivers or narrow notches, the thin pencil-tip sliver and the silhouette's own lobes are enclosed rather than traced — rendered antialiased so it carries no pixel stair-steps, and the nail-less thumb-like bulge at the wrist of the uppermost hand is gone, the white also shows as ground in the openings between the hands, no card and no frame, standing on a technical sheet of fine grid and a finer micro-grid band, pale angular fields, two hatched blocks, a dotted field, two halftone fields, concentric rings with an arc fan and radial rays, corner registration marks, a horizontal and a vertical ruler scale, a stamp grid, a dotted accent band with a short tick row and a five-bar ledger device](./assets/recursive-skill-improvement-hero.png 'The self-drawing hands as a free-standing die-cut on a white ground: the pencil drawing reduced to two even ink tones, its whole silhouette under a pure white sticker base whose smoothed outer edge is the outline, over the printed plate the other covers share')
 
@@ -33,6 +34,64 @@ tool therefore measures **any skill that is generated from source documentation*
 docs tree means porting that skill's **data** — its scenarios, its entrypoint policy and its own
 `scenario-docs.json` coupling — never changing the machinery: the revision key, the `n=0` discipline,
 the retired rows and the correction loop all apply unchanged.
+
+## The concepts
+
+| | Concept | In one line |
+| --- | --- | --- |
+| 1 | **Test cases from the docs** | a scenario is a realistic user request; the checks encode what the source docs state, never what the prompt says |
+| 2 | **Two axes, never blended** | *convention*: it parses, imports only documented entrypoints, exports the demanded class. *behaviour*: the produced file actually works in a real browser |
+| 3 | **The ledger** | every measurement keyed by (skill revision, model, scenario, provider) — a stale number cannot masquerade as a current one |
+| 4 | **The loop** | measure → attribute → correct → regenerate → gate → rerun |
+| 5 | **The exit** | closed only when **every** score is 100%, on **both** axes, at n≥3, on the live revision |
+
+### A concrete test case
+
+**The scenario** — the prompt a user would actually write:
+
+> *"Build a from-scratch form: a native `<form>` element, one field wired into it, and the client-side
+> validation the library documents actually working."*
+
+Only **neutral boilerplate** is fixed by the harness (the file is `src/my-elem.js`, the class `MyElem`,
+one deliverable); every fact about *how* the library works stays in the docs, because that is what is
+being measured.
+
+**The checks** — what the docs assert, none of it stated in the prompt: `importsResolve` (a relative
+import the run never wrote), `namedExportsExist` (a binding the entrypoint does not export), a
+**placeholder-specifier** check (an import from `<something>`), the **import-policy gate** (documented
+entrypoints only), and the **behaviour tier** (the file mounted in a real browser and asserted).
+
+**Why the split matters**: because the prompt stays a user request, a pass proves the **documentation**
+carried the behaviour — not that the prompt leaked the answer.
+
+### How a score moved: 0% → 100%
+
+A component scenario failed **every** run at **0%**. The produced file parsed, imported only documented
+entrypoints and exported the right class — and still did nothing, because it imported a **name that
+entrypoint does not export**. That is a **docs gap**, so the fix went there: the docs now name **the
+module that owns each element**, because models kept guessing it. Then the ritual that turns an edit
+into a fix — regenerate, gate (`skills:check`), re-run the coupled use cases at n≥3 — gave **0% → 100%
+with behaviour 3/3**.
+
+A sharper one: the docs themselves taught a bug. `SKILL.md` showed validator usage with a literal
+**placeholder specifier**; models copied it verbatim and **no check could see it**, because a
+placeholder is not a resolvable module. It is a check now.
+
+### What the docs had to change to reach 100%
+
+Every correction landed in the **source doc**, never in the generated skill:
+
+| Docs work | Why it was needed |
+| --- | --- |
+| **Ownership** — which module ships which element | models guessed entrypoint names that do not exist |
+| **A generated entrypoint list** (the skill index) | a name that does not ship can never be recommended again |
+| **Synonyms in the index** | a user's vocabulary routes to the right component without leaking into the prompt |
+| **The real validator module** | the placeholder specifier above |
+| **Compose vs extend**, stated per component | the consumer path is the documented path |
+| **The two-role shadow-DOM rule** | a form control's substructure has its own rule; every control points at it |
+| **Subclasser companions split out** | the extension surface became reachable only explicitly |
+| **Never a global define entrypoint** | models reach for it; the docs forbid it and a check enforces it |
+| **Regenerate + gate on every change** | an edit without a re-run is a proposal, not a fix |
 
 ## The system, the task and the protocol
 
@@ -123,6 +182,23 @@ proposal, not a fix. The worked example — a guessed entrypoint that zeroed sev
   **syntax gate**, `importsResolve` (a missing relative import), `namedExportsExist` (a binding the
   entrypoint does not export), and a check that rejects **placeholder specifiers** (an import from
   `<something>` a model copied from an example).
+
+## The flow
+
+![the closed loop: six stations, the ledger as its backbone, and the exit only at 100%](./assets/recursive-skill-improvement-flow.png 'measure → attribute → correct → regenerate → gate → rerun, closed as a ring, with every score at 100% as the stop condition')
+
+```mermaid
+flowchart LR
+  M["1 measure<br/>scenarios x n>=3, behaviour on"] --> A["2 attribute<br/>docs-gap | harness-defect | model"]
+  A --> C["3 correct<br/>the source doc in docs/**"]
+  C --> R["4 regenerate<br/>skills:generate"]
+  R --> G["5 gate<br/>skills:check"]
+  G --> N["6 rerun<br/>the coupled use cases, n>=3"]
+  N -->|"each correction is re-measured"| M
+  L[("the ledger<br/>one row per revision, model, scenario, provider")] --- A
+  L --- N
+  G -.->|"stop condition"| X(["every score 100%"])
+```
 
 ## The numbers
 
