@@ -7,6 +7,7 @@ describe('getDecimalSeparator', () => {
     expect(getDecimalSeparator('en-GB')).to.equal('.');
     expect(getDecimalSeparator('nl-NL')).to.equal(',');
     expect(getDecimalSeparator('fr-FR')).to.equal(',');
+    expect(getDecimalSeparator('es-ES')).to.equal(',');
   });
 
   it('will return the decimalSeparator from options if passed', () => {

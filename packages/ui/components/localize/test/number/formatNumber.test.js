@@ -105,11 +105,56 @@ describe('formatNumber', () => {
 
   it('can set locale to use', () => {
     expect(
-      formatNumber(123456.789, { locale: 'en-GB', style: 'decimal', maximumFractionDigits: 2 }),
-    ).to.equal('123,456.79');
+      formatNumber(2345.6789, { locale: 'en-GB', style: 'decimal', maximumFractionDigits: 2 }),
+    ).to.equal('2,345.68', '2 digits English, between 1.000 and 10.000');
     expect(
-      formatNumber(123456.789, { locale: 'de-DE', style: 'decimal', maximumFractionDigits: 2 }),
-    ).to.equal('123.456,79');
+      formatNumber(12345.6789, { locale: 'en-GB', style: 'decimal', maximumFractionDigits: 2 }),
+    ).to.equal('12,345.68', '2 digits English, with 10.000');
+    expect(
+      formatNumber(2345.6789, { locale: 'en-GB', style: 'decimal', maximumFractionDigits: 3 }),
+    ).to.equal('2,345.679', '3 digits English, between 1.000 and 10.000');
+    expect(
+      formatNumber(12345.6789, { locale: 'en-GB', style: 'decimal', maximumFractionDigits: 3 }),
+    ).to.equal('12,345.679', '3 digits English, above 10.000');
+
+    expect(
+      formatNumber(2345.6789, { locale: 'de-DE', style: 'decimal', maximumFractionDigits: 2 }),
+    ).to.equal('2.345,68', '2 digits German, between 1.000 and 10.000');
+    expect(
+      formatNumber(12345.6789, { locale: 'de-DE', style: 'decimal', maximumFractionDigits: 2 }),
+    ).to.equal('12.345,68', '2 digits German, above 10.000');
+    expect(
+      formatNumber(2345.6789, { locale: 'de-DE', style: 'decimal', maximumFractionDigits: 3 }),
+    ).to.equal('2.345,679', '3 digits German, between 1.000 and 10.000');
+    expect(
+      formatNumber(12345.6789, { locale: 'de-DE', style: 'decimal', maximumFractionDigits: 3 }),
+    ).to.equal('12.345,679', '3 digits German, above 10.000');
+
+    expect(
+      formatNumber(2345.6789, { locale: 'fr-FR', style: 'decimal', maximumFractionDigits: 2 }),
+    ).to.equal('2 345,68', '2 digits France, between 1.000 and 10.000');
+    expect(
+      formatNumber(12345.6789, { locale: 'fr-FR', style: 'decimal', maximumFractionDigits: 2 }),
+    ).to.equal('12 345,68', '2 digits France, above 10.000');
+    expect(
+      formatNumber(2345.6789, { locale: 'fr-FR', style: 'decimal', maximumFractionDigits: 3 }),
+    ).to.equal('2 345,679', '3 digits France, between 1.000 and 10.000');
+    expect(
+      formatNumber(12345.6789, { locale: 'fr-FR', style: 'decimal', maximumFractionDigits: 3 }),
+    ).to.equal('12 345,679', '3 digits France, above 10.000');
+
+    expect(
+      formatNumber(2345.6789, { locale: 'es-ES', style: 'decimal', maximumFractionDigits: 2 }),
+    ).to.equal('2345,68', '2 digits Spain, between 1.000 and 10.000');
+    expect(
+      formatNumber(12345.6789, { locale: 'es-ES', style: 'decimal', maximumFractionDigits: 2 }),
+    ).to.equal('12.345,68', '2 digits Spain, above 10.000');
+    expect(
+      formatNumber(2345.6789, { locale: 'es-ES', style: 'decimal', maximumFractionDigits: 3 }),
+    ).to.equal('2345,679', '3 digits Spain, between 1.000 and 10.000');
+    expect(
+      formatNumber(12345.6789, { locale: 'es-ES', style: 'decimal', maximumFractionDigits: 3 }),
+    ).to.equal('12.345,679', '3 digits Spain, above 10.000');
   });
 
   it('can specify max decimal places by `maximumFractionDigits: 3`', () => {
@@ -352,6 +397,18 @@ Please specify .groupSeparator / .decimalSeparator on the formatOptions object t
     });
 
     describe('fr-BE', () => {
+      it('supports basics', () => {
+        localizeManager.locale = 'fr-BE';
+        expect(formatNumber(123456.789, currencyCode('EUR'))).to.equal('123 456,79 EUR');
+        expect(formatNumber(123456.789, currencyCode('USD'))).to.equal('123 456,79 USD');
+        expect(formatNumber(123456.789, currencyCode('JPY'))).to.equal('123 457 JPY');
+        expect(formatNumber(123456.789, currencySymbol('EUR'))).to.equal('123 456,79 €');
+        expect(formatNumber(123456.789, currencySymbol('USD'))).to.equal('123 456,79 $US');
+        expect(formatNumber(123456.789, currencySymbol('JPY'))).to.equal('123 457 ¥');
+      });
+    });
+
+    describe('es-ES', () => {
       it('supports basics', () => {
         localizeManager.locale = 'fr-BE';
         expect(formatNumber(123456.789, currencyCode('EUR'))).to.equal('123 456,79 EUR');

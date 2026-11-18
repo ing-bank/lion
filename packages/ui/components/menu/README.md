@@ -341,13 +341,13 @@ Arrow key navigation inside a composite widget (menu, menubar, toolbar, tree, li
 (Open UI; shipping in Chrome 150, not part of the HTML spec yet). This component uses the same
 vocabulary, so an implementation that follows the platform proposal finds the same names here:
 
-| api | focusgroup term | note |
-| --- | --- | --- |
-| `axis` | axis: `inline` / `block` | `'block'` (default, up/down) or `'inline'` (left/right) |
-| `wrap` | modifier: `wrap` | arrow keys wrap around at the first/last item |
-| `multiple` | `multiple` in `<select multiple>` | whether more than one item can be checked; selection is not part of the focusgroup api |
-| `selectionFollowsFocus` | - | ARIA/APG vocabulary; selection is out of scope for focusgroup |
-| `hasNoDefaultSelected` | default selected (`HTMLOptionElement.defaultSelected`) | opt-out of the automatic selection of the first item; same property and attribute as `ListboxMixin` |
+| api                     | focusgroup term                                        | note                                                                                                |
+| ----------------------- | ------------------------------------------------------ | --------------------------------------------------------------------------------------------------- |
+| `axis`                  | axis: `inline` / `block`                               | `'block'` (default, up/down) or `'inline'` (left/right)                                             |
+| `wrap`                  | modifier: `wrap`                                       | arrow keys wrap around at the first/last item                                                       |
+| `multiple`              | `multiple` in `<select multiple>`                      | whether more than one item can be checked; selection is not part of the focusgroup api              |
+| `selectionFollowsFocus` | -                                                      | ARIA/APG vocabulary; selection is out of scope for focusgroup                                       |
+| `hasNoDefaultSelected`  | default selected (`HTMLOptionElement.defaultSelected`) | opt-out of the automatic selection of the first item; same property and attribute as `ListboxMixin` |
 
 ```html
 <lion-menu axis="inline" wrap>

@@ -56,7 +56,7 @@ the tree ran lit 3.x, which meant a clean install would have skipped it and brok
 
 ### Why this patch exists
 
-Upstream `lit-labs/ssr` deliberately does not run *element directives* while
+Upstream `lit-labs/ssr` deliberately does not run _element directives_ while
 rendering on the server. A directive bound to an element part
 (`<div ${myDirective()}>`) is skipped entirely: its `update()` callback is never
 called, and nothing is emitted for it. Server-only (non-hydratable) templates
