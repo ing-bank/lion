@@ -125,7 +125,8 @@ describe('Form inside dialog Integrations', () => {
     /** @type {HTMLInputElement} */ (el.querySelector('input[type="text"]')).focus();
     await sendKeys({ press: 'Enter' });
     await el.updateComplete;
-    await el.updateComplete;
+    // @ts-expect-error [allow-protected-in-tests]
+    await el._overlayCtrl._hideComplete;
 
     expect(isElementVisible(dialogEl)).to.be.false;
   });
