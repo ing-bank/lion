@@ -72,6 +72,141 @@ function rewriteLocalImportSpecifiers(value, { fromFile, toFile }) {
   );
 }
 
+/**
+ * A page that imports several sections of the same file receives the same preceding
+ * `js import` block more than once (see handleImportedFile below). mdjs joins every
+ * `js script` and `js client` block of a page into a single module (@mdjs/core:
+ * mdjsParse collects them into file.data.jsCode, mdjsSetupCode concatenates them), and
+ * a module cannot declare the same binding twice, so a repeated
+ * `import { html } from 'lit';` turns that page module into a SyntaxError:
+ * "Identifier 'html' has already been declared".
+ *
+ * So those statements are deduped per rendered page: the first occurrence is kept and
+ * later identical ones are dropped. Only the blocks that end up in the page module are
+ * touched - a plain `js` block is a code sample shown to the reader, it is never
+ * concatenated into the page, so its own preview keeps its import.
+ */
+const PAGE_LEVEL_CODE_META = ['script', 'client'];
+
+/**
+ * @param {object} node
+ * @returns {boolean}
+ */
+function isPageLevelJsCodeBlock(node) {
+  return (
+    node.type === 'code' &&
+    node.lang === 'js' &&
+    typeof node.meta === 'string' &&
+    PAGE_LEVEL_CODE_META.includes(node.meta)
+  );
+}
+
+/**
+ * @param {string} text
+ * @returns {string}
+ */
+function normalizeCode(text) {
+  return text.replace(/\s+/g, ' ').trim();
+}
+
+/**
+ * Line ranges (inclusive) of the top level import statements in `lines`.
+ * Returns null when a statement does not terminate within 10 lines: removing lines of a
+ * statement we did not delimit correctly would delete code instead of a duplicate, so
+ * in that case we refuse to guess.
+ * @param {string[]} lines
+ * @returns {Array<[number, number]> | null}
+ */
+function importStatementLineRanges(lines) {
+  const ranges = [];
+  let index = 0;
+  while (index < lines.length) {
+    if (!/^\s*import\b(?!\s*\()/.test(lines[index])) {
+      index += 1;
+    } else {
+      const start = index;
+      let end = index;
+      let terminated = false;
+      while (end < lines.length && end - start <= 10) {
+        const line = lines[end].trimEnd();
+        if (/;\s*$/.test(line) || (end === start && /['"]\s*;?$/.test(line))) {
+          terminated = true;
+          break;
+        }
+        end += 1;
+      }
+      if (!terminated || end >= lines.length) {
+        return null;
+      }
+      ranges.push([start, end]);
+      index = end + 1;
+    }
+  }
+  return ranges;
+}
+
+/**
+ * Drops every `js script`/`js client` statement (or whole block) that the page already
+ * declared earlier, in document order.
+ * @param {object} tree
+ */
+function dedupePageLevelImportStatements(tree) {
+  const seenBlockValues = new Set();
+  const seenStatements = new Set();
+
+  visit(tree, node => {
+    if (!isPageLevelJsCodeBlock(node) || !node.value) {
+      return;
+    }
+    const normalizedBlockValue = normalizeCode(node.value);
+    if (seenBlockValues.has(normalizedBlockValue)) {
+      // eslint-disable-next-line no-param-reassign
+      node.__remarkExtendRemove = true;
+      return;
+    }
+    seenBlockValues.add(normalizedBlockValue);
+
+    const lines = node.value.split('\n');
+    const ranges = importStatementLineRanges(lines);
+    if (!ranges || ranges.length === 0) {
+      return;
+    }
+
+    const duplicateLines = new Set();
+    for (const [start, end] of ranges) {
+      const statement = normalizeCode(lines.slice(start, end + 1).join('\n'));
+      if (seenStatements.has(statement)) {
+        for (let line = start; line <= end; line += 1) {
+          duplicateLines.add(line);
+        }
+      } else {
+        seenStatements.add(statement);
+      }
+    }
+
+    if (duplicateLines.size === 0) {
+      return;
+    }
+    const remainingLines = lines.filter((line, index) => !duplicateLines.has(index));
+    // eslint-disable-next-line no-param-reassign
+    node.value = remainingLines.join('\n');
+    if (normalizeCode(node.value) === '') {
+      // eslint-disable-next-line no-param-reassign
+      node.__remarkExtendRemove = true;
+    }
+  });
+
+  visit(
+    tree,
+    (node, index, parent) => {
+      if (node.__remarkExtendRemove) {
+        parent.children.splice(index, 1);
+      }
+    },
+    true,
+  );
+}
+
 function handleImportedFile({
   startSelector,
   endSelector,
@@ -289,6 +424,12 @@ function remarkExtend({ rootDir = process.cwd(), page, globalReplaceFunction } =
       },
       true,
     );
+
+    // The module mdjs builds from a page's `js script`/`js client` blocks can declare each
+    // import binding only once, so imports that reached this page more than once (the
+    // preceding blocks carried along above) are deduped here, per rendered page.
+    dedupePageLevelImportStatements(tree);
+
     return tree;
   };
 }

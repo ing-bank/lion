@@ -444,6 +444,70 @@ describe('remarkExtend', () => {
     expect(codeNode.value).to.equal("import { color } from './assets/color.js';");
   });
 
+  it('dedupes the js script imports of a page that imported several sections of the same file', async () => {
+    const result = await execute(
+      [
+        //
+        "```js ::importBlock('./fixtures/tabs-with-script.md', '## More Tabs')",
+        '```',
+        '',
+        "```js ::importBlock('./fixtures/tabs-with-script.md', '## Additional Tabs')",
+        '```',
+      ].join('\n'),
+      { shouldStringify: false },
+    );
+
+    const scriptNodes = result.children.filter(
+      node => node.type === 'code' && node.lang === 'js' && node.meta === 'script',
+    );
+    expect(scriptNodes.length).to.equal(1);
+    expect(scriptNodes[0].value).to.equal(
+      ["import { LitElement, html } from '@mdjs/mdjs-preview';", "import './assets/ref.js';"].join(
+        '\n',
+      ),
+    );
+  });
+
+  it('dedupes only the statements the page already has, and keeps the rest of the block', async () => {
+    const result = await execute(
+      [
+        //
+        "```js ::importBlock('./fixtures/tabs-with-script.md', '## More Tabs')",
+        '```',
+        '',
+        "```js ::importBlock('./fixtures/tabs-blue-with-script.md', '## More Tabs Blue')",
+        '```',
+      ].join('\n'),
+      { shouldStringify: false },
+    );
+
+    const scriptNodes = result.children.filter(
+      node => node.type === 'code' && node.lang === 'js' && node.meta === 'script',
+    );
+    expect(scriptNodes.length).to.equal(2);
+    expect(scriptNodes[1].value).to.equal("import { a11yLocalized } from './assets/a11y.js';");
+  });
+
+  it('keeps the import of a plain js block, so its preview still shows it', async () => {
+    const result = await execute(
+      [
+        //
+        "```js ::importBlock('./fixtures/three-sections-red-with-import.md', '## More Red')",
+        '```',
+        '',
+        "```js ::importBlock('./fixtures/three-sections-red-with-import.md', '## Additional Red')",
+        '```',
+      ].join('\n'),
+      { shouldStringify: false },
+    );
+
+    const sampleNodes = result.children.filter(
+      node => node.type === 'code' && node.lang === 'js' && !node.meta,
+    );
+    expect(sampleNodes.length).to.equal(2);
+    expect(sampleNodes[1].value).to.equal("import { color } from './assets/color.js';");
+  });
+
   it('supports files with frontmatter', async () => {
     const result = await execute(
       [
