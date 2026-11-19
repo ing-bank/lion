@@ -570,9 +570,19 @@ describe('Ajax', () => {
       return cacheId;
     };
 
+    /** @type {import('sinon').SinonFakeTimers|undefined} */
+    let clock;
+
     beforeEach(() => {
       getCacheIdentifier = () => String(cacheId);
       getCacheIdentifierAsync = () => Promise.resolve(String(cacheId));
+    });
+
+    // Restores in `afterEach`, so that an assertion that fails before the end of a test can not leak
+    // fake timers into the next test
+    afterEach(() => {
+      clock?.restore();
+      clock = undefined;
     });
 
     it('does not add cache interceptors when useCache is turned off', () => {
@@ -680,7 +690,7 @@ describe('Ajax', () => {
     };
 
     cachingTests.invalidatesOnTTLPassed = async (/** @type {Ajax} */ customAjax) => {
-      const clock = useFakeTimers({
+      clock = useFakeTimers({
         shouldAdvanceTime: true,
       });
 
@@ -699,8 +709,6 @@ describe('Ajax', () => {
       expect(await thirdResponse.text()).to.equal('mock response');
       expect(thirdResponse.headers.get('X-Custom-Header')).to.equal('y-custom-value');
       expect(thirdResponse.headers.get('Content-Type')).to.equal('application/json');
-
-      clock.restore();
     };
 
     describe('Caching interceptors: cache tests with synchronous getCacheIdentifier', async () => {
