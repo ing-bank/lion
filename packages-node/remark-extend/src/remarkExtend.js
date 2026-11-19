@@ -146,15 +146,19 @@ function importStatementLineRanges(lines) {
 }
 
 /**
- * The local names a statement declares do not have to be identical for a page module to
- * break: `import { html } from '@mdjs/mdjs-preview';` followed by
- * `import { html } from 'lit';` is the same `SyntaxError`, with two different specifiers.
- * So a statement is deduped on the bindings it declares, in document order, and the
- * first one wins - in this example the page keeps `@mdjs/mdjs-preview`, which re-exports
- * lit's `html`.
+ * Two statements that declare the same local name break a page module even when they name
+ * different specifiers: `import { html } from '@mdjs/mdjs-preview';` followed by
+ * `import { html } from 'lit';` is the same `SyntaxError: Identifier 'html' has already
+ * been declared`. Dropping one of them would silently change what the page renders, so the
+ * earlier declaration is renamed locally instead - `import { html as html1 } from
+ * '@mdjs/mdjs-preview';` - and the occurrences of `html` in that block are rewritten to
+ * `html1`. The last declaration keeps the plain name.
  */
 const IMPORT_FROM_STATEMENT = /^import\s+([\s\S]*?)\s+from\s*(['"])([^'"]+)\2\s*;?$/;
 const IMPORT_SIDE_EFFECT_STATEMENT = /^import\s*(['"])([^'"]+)\1\s*;?$/;
+const IDENTIFIER_START = /[A-Za-z_$]/;
+const IDENTIFIER_PART = /[A-Za-z0-9_$]/;
+const REGEX_PRECEDING_CHARS = '([{,;:=!&|?+-*%~^<>';
 
 /**
  * @typedef {Object} ParsedImportStatement
@@ -219,67 +223,210 @@ function parseImportStatement(statement) {
 }
 
 /**
- * Decides what happens to one import statement of a page module: keep it, drop it, or
- * rewrite it without the bindings the page already has.
- * @param {string} statementText
- * @param {{ boundNames: Set<string>, seenStatements: Set<string> }} registry
- * @returns {{ action: 'keep' } | { action: 'drop' } | { action: 'rewrite', value: string }}
+ * Rewrites the local names of an import statement and keeps the imported names as they are.
+ * @param {ParsedImportStatement} parsed
+ * @param {Array<{ from: string, to: string }>} renames
+ * @returns {string}
  */
-function dedupeImportStatement(statementText, registry) {
-  const { boundNames, seenStatements } = registry;
-  if (seenStatements.has(statementText)) {
-    return { action: 'drop' };
+function rewriteImportStatementBindings(parsed, renames) {
+  const renamed = new Map(renames.map(({ from, to }) => [from, to]));
+  const localName = name => renamed.get(name) || name;
+  const parts = [];
+  if (parsed.defaultBinding) {
+    parts.push(localName(parsed.defaultBinding));
   }
-  seenStatements.add(statementText);
-
-  const parsed = parseImportStatement(statementText);
-  if (!parsed) {
-    return { action: 'keep' };
+  if (parsed.namespaceBinding) {
+    parts.push(`* as ${localName(parsed.namespaceBinding)}`);
   }
-  const { bindings } = parsed;
-  if (bindings.length === 0) {
-    return { action: 'keep' };
+  if (parsed.named.length > 0) {
+    const specs = parsed.named.map(spec => {
+      const local = localName(spec.local);
+      return local === spec.imported ? spec.imported : `${spec.imported} as ${local}`;
+    });
+    parts.push(`{ ${specs.join(', ')} }`);
   }
-
-  const collisions = bindings.filter(name => boundNames.has(name));
-  if (collisions.length === 0) {
-    bindings.forEach(name => boundNames.add(name));
-    return { action: 'keep' };
-  }
-  if (collisions.length === bindings.length) {
-    return { action: 'drop' };
-  }
-
-  const keptNamed = parsed.named.filter(spec => !boundNames.has(spec.local));
-  const keepsDefault = Boolean(parsed.defaultBinding) && !boundNames.has(parsed.defaultBinding);
-  if (parsed.namespaceBinding || (keptNamed.length === 0 && !keepsDefault)) {
-    return { action: 'drop' };
-  }
-
-  keptNamed.forEach(spec => boundNames.add(spec.local));
-  const specifier = `${parsed.quote}${parsed.specifier}${parsed.quote}`;
-  if (keptNamed.length === 0) {
-    boundNames.add(parsed.defaultBinding);
-    return { action: 'rewrite', value: `import ${parsed.defaultBinding} from ${specifier};` };
-  }
-  const head = [
-    keepsDefault ? parsed.defaultBinding : '',
-    `{ ${keptNamed.map(spec => spec.raw).join(', ')} }`,
-  ]
-    .filter(Boolean)
-    .join(', ');
-  return { action: 'rewrite', value: `import ${head} from ${specifier};` };
+  return `import ${parts.join(', ')} from ${parsed.quote}${parsed.specifier}${parsed.quote};`;
 }
 
 /**
- * Drops every `js script`/`js client` statement (or whole block) that the page already
- * declared earlier, in document order, and rewrites a statement that only partly
- * collides. A block that loses all of its content is removed.
+ * @param {string} name
+ * @param {Set<string>} usedNames
+ * @returns {string} the first `name1`, `name2`, ... the page does not use yet
+ */
+function nextFreeName(name, usedNames) {
+  let counter = 1;
+  while (usedNames.has(`${name}${counter}`)) {
+    counter += 1;
+  }
+  return `${name}${counter}`;
+}
+
+/**
+ * Replaces whole identifiers in js source and leaves strings, template literals, comments,
+ * regular expressions and the `skipRanges` alone: a block that renders the word `html`
+ * inside a template literal has to keep that text, only the code around it may be renamed.
+ * @param {string} code
+ * @param {Map<string, string>} renames
+ * @param {Array<[number, number]>} skipRanges
+ * @returns {string}
+ */
+function rewriteIdentifiers(code, renames, skipRanges) {
+  let out = '';
+  let index = 0;
+  let mode = 'code';
+  let lastSignificant = '';
+  let inRegexClass = false;
+  const templateExpressions = [];
+  const skipRangeAt = offset => skipRanges.find(([start, end]) => offset >= start && offset <= end);
+
+  while (index < code.length) {
+    const skipped = skipRangeAt(index);
+    const char = code[index];
+    const next = code[index + 1];
+
+    if (skipped) {
+      out += code.slice(index, skipped[1] + 1);
+      index = skipped[1] + 1;
+    } else if (mode === 'code') {
+      if (char === '/' && next === '/') {
+        mode = 'lineComment';
+        out += '//';
+        index += 2;
+      } else if (char === '/' && next === '*') {
+        mode = 'blockComment';
+        out += '/*';
+        index += 2;
+      } else if (
+        char === '/' &&
+        (lastSignificant === '' || REGEX_PRECEDING_CHARS.includes(lastSignificant))
+      ) {
+        mode = 'regex';
+        inRegexClass = false;
+        out += char;
+        index += 1;
+      } else if (char === "'" || char === '"') {
+        mode = char === "'" ? 'single' : 'double';
+        out += char;
+        index += 1;
+      } else if (char === '`') {
+        mode = 'template';
+        out += char;
+        index += 1;
+      } else if (IDENTIFIER_START.test(char)) {
+        let end = index + 1;
+        while (end < code.length && IDENTIFIER_PART.test(code[end])) {
+          end += 1;
+        }
+        const identifier = code.slice(index, end);
+        out += renames.get(identifier) || identifier;
+        lastSignificant = 'a';
+        index = end;
+      } else {
+        if (char === '{' && templateExpressions.length > 0) {
+          templateExpressions[templateExpressions.length - 1] += 1;
+        }
+        if (char === '}' && templateExpressions.length > 0) {
+          if (templateExpressions[templateExpressions.length - 1] === 0) {
+            templateExpressions.pop();
+            mode = 'template';
+          } else {
+            templateExpressions[templateExpressions.length - 1] -= 1;
+          }
+        }
+        if (!/\s/.test(char)) {
+          lastSignificant = char;
+        }
+        out += char;
+        index += 1;
+      }
+    } else if (mode === 'single' || mode === 'double') {
+      if (char === '\\') {
+        out += code.slice(index, index + 2);
+        index += 2;
+      } else {
+        if (char === (mode === 'single' ? "'" : '"') || char === '\n') {
+          mode = 'code';
+        }
+        out += char;
+        index += 1;
+      }
+    } else if (mode === 'template') {
+      if (char === '\\') {
+        out += code.slice(index, index + 2);
+        index += 2;
+      } else if (char === '`') {
+        mode = 'code';
+        out += char;
+        index += 1;
+      } else if (char === '$' && next === '{') {
+        templateExpressions.push(0);
+        mode = 'code';
+        out += '${';
+        index += 2;
+      } else {
+        out += char;
+        index += 1;
+      }
+    } else if (mode === 'lineComment') {
+      if (char === '\n') {
+        mode = 'code';
+      }
+      out += char;
+      index += 1;
+    } else if (mode === 'blockComment') {
+      if (char === '*' && next === '/') {
+        mode = 'code';
+        out += '*/';
+        index += 2;
+      } else {
+        out += char;
+        index += 1;
+      }
+    } else if (char === '\\') {
+      out += code.slice(index, index + 2);
+      index += 2;
+    } else if (char === '[') {
+      inRegexClass = true;
+      out += char;
+      index += 1;
+    } else if (char === ']') {
+      inRegexClass = false;
+      out += char;
+      index += 1;
+    } else {
+      if (char === '/' && !inRegexClass) {
+        mode = 'code';
+      }
+      out += char;
+      index += 1;
+    }
+  }
+  return out;
+}
+
+/**
+ * @param {string[]} lines
+ * @param {number} lineIndex
+ * @returns {number} character offset of the start of that line
+ */
+function lineOffset(lines, lineIndex) {
+  let offset = 0;
+  for (let line = 0; line < lineIndex; line += 1) {
+    offset += lines[line].length + 1;
+  }
+  return offset;
+}
+
+/**
+ * Gives every import statement of a page module one declaration per local name: an exact
+ * duplicate statement is dropped, and a name that a later statement also declares is
+ * renamed on the earlier declaration (and in the code of that block). A block that loses
+ * all of its content is removed.
  * @param {object} tree
  */
 function dedupePageLevelImportStatements(tree) {
   const seenBlockValues = new Set();
-  const registry = { boundNames: new Set(), seenStatements: new Set() };
+  const blocks = [];
 
   visit(tree, node => {
     if (!isPageLevelJsCodeBlock(node) || !node.value) {
@@ -295,42 +442,89 @@ function dedupePageLevelImportStatements(tree) {
 
     const lines = node.value.split('\n');
     const ranges = importStatementLineRanges(lines);
-    if (!ranges || ranges.length === 0) {
-      return;
+    const statements = (ranges || []).map(([start, end]) => {
+      const text = normalizeCode(lines.slice(start, end + 1).join('\n'));
+      return { start, end, text, parsed: parseImportStatement(text), drop: false, renames: [] };
+    });
+    blocks.push({ node, lines, statements });
+  });
+
+  const seenStatements = new Set();
+  const declarations = new Map();
+  const usedNames = new Set();
+
+  for (const block of blocks) {
+    for (const statement of block.statements) {
+      if (seenStatements.has(statement.text)) {
+        statement.drop = true;
+      } else {
+        seenStatements.add(statement.text);
+        const { parsed } = statement;
+        if (parsed) {
+          parsed.bindings.forEach(name => usedNames.add(name));
+          for (const name of parsed.bindings) {
+            const previous = declarations.get(name);
+            if (previous) {
+              const renamedTo = nextFreeName(name, usedNames);
+              usedNames.add(renamedTo);
+              previous.statement.renames.push({ from: name, to: renamedTo });
+              declarations.set(renamedTo, previous);
+            }
+            declarations.set(name, { block, statement });
+          }
+        }
+      }
+    }
+  }
+
+  for (const block of blocks) {
+    const renames = new Map();
+    for (const statement of block.statements) {
+      for (const { from, to } of statement.renames) {
+        renames.set(from, to);
+      }
+    }
+
+    let rewrittenLines = block.lines;
+    if (renames.size > 0) {
+      const skipRanges = block.statements.map(statement => [
+        lineOffset(block.lines, statement.start),
+        lineOffset(block.lines, statement.end) + block.lines[statement.end].length,
+      ]);
+      rewrittenLines = rewriteIdentifiers(block.lines.join('\n'), renames, skipRanges).split('\n');
     }
 
     const outputLines = [];
     let cursor = 0;
-    for (const [start, end] of ranges) {
-      for (let line = cursor; line < start; line += 1) {
-        outputLines.push(lines[line]);
+    for (const statement of block.statements) {
+      for (let line = cursor; line < statement.start; line += 1) {
+        outputLines.push(rewrittenLines[line]);
       }
-      const statementText = normalizeCode(lines.slice(start, end + 1).join('\n'));
-      const result = dedupeImportStatement(statementText, registry);
-      if (result.action === 'keep') {
-        for (let line = start; line <= end; line += 1) {
-          outputLines.push(lines[line]);
+      if (!statement.drop) {
+        if (statement.renames.length > 0) {
+          outputLines.push(rewriteImportStatementBindings(statement.parsed, statement.renames));
+        } else {
+          for (let line = statement.start; line <= statement.end; line += 1) {
+            outputLines.push(rewrittenLines[line]);
+          }
         }
-      } else if (result.action === 'rewrite') {
-        outputLines.push(result.value);
       }
-      cursor = end + 1;
+      cursor = statement.end + 1;
     }
-    for (let line = cursor; line < lines.length; line += 1) {
-      outputLines.push(lines[line]);
+    for (let line = cursor; line < rewrittenLines.length; line += 1) {
+      outputLines.push(rewrittenLines[line]);
     }
 
     const newBlockValue = outputLines.join('\n');
-    if (newBlockValue === node.value) {
-      return;
-    }
-    // eslint-disable-next-line no-param-reassign
-    node.value = newBlockValue;
-    if (normalizeCode(newBlockValue) === '') {
+    if (newBlockValue !== block.node.value) {
       // eslint-disable-next-line no-param-reassign
-      node.__remarkExtendRemove = true;
+      block.node.value = newBlockValue;
+      if (normalizeCode(newBlockValue) === '') {
+        // eslint-disable-next-line no-param-reassign
+        block.node.__remarkExtendRemove = true;
+      }
     }
-  });
+  }
 
   visit(
     tree,
