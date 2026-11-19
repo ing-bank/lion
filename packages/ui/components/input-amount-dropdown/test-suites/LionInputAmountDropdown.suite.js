@@ -52,9 +52,17 @@ export function runInputAmountDropdownSuite(
   const tagName = resolveSuiteTag(classes.host, tagString, klass);
   const tag = unsafeStatic(tagName);
 
+  /**
+   * Currencies for tests that do not depend on the full currency list: GBP comes from the locale,
+   * EUR and USD are set by the tests. Rendering an option for each currency is the slowest part of
+   * these fixtures (it grows faster than linear with the option count in a listbox), and under load
+   * made such tests run into the mocha timeout.
+   */
+  const fewCurrencies = ['EUR', 'GBP', 'USD'];
+
   describe('LionInputAmountDropdown', () => {
     it('syncs value of dropdown on init if input has no value', async () => {
-      const el = await fixture(html` <${tag}></${tag}> `);
+      const el = await fixture(html` <${tag} .allowedCurrencies="${fewCurrencies}"></${tag}> `);
       expect(el.value).to.equal('');
       expect(getDropdownValue(/** @type {DropdownElement} */ (el.refs.dropdown.value))).to.equal(
         'GBP',
@@ -63,7 +71,7 @@ export function runInputAmountDropdownSuite(
     });
 
     it('syncs value of dropdown on reset if input has no value', async () => {
-      const el = await fixture(html` <${tag}></${tag}> `);
+      const el = await fixture(html` <${tag} .allowedCurrencies="${fewCurrencies}"></${tag}> `);
       el.modelValue = { currency: 'EUR', amount: 123 };
       await el.updateComplete;
       el.reset();
@@ -73,13 +81,13 @@ export function runInputAmountDropdownSuite(
     });
 
     it('syncs value of dropdown on init if input has no value does not influence interaction states', async () => {
-      const el = await fixture(html` <${tag}></${tag}> `);
+      const el = await fixture(html` <${tag} .allowedCurrencies="${fewCurrencies}"></${tag}> `);
       expect(el.dirty).to.be.false;
       expect(el.prefilled).to.be.false;
     });
 
     it('syncs value of dropdown on reset also resets interaction states', async () => {
-      const el = await fixture(html` <${tag}></${tag}> `);
+      const el = await fixture(html` <${tag} .allowedCurrencies="${fewCurrencies}"></${tag}> `);
       el.modelValue = { currency: 'EUR', amount: 123 };
       await el.updateComplete;
 
@@ -321,13 +329,17 @@ export function runInputAmountDropdownSuite(
       });
 
       it('syncs disabled attribute to dropdown', async () => {
-        const el = await fixture(html` <${tag} disabled></${tag}> `);
+        const el = await fixture(
+          html` <${tag} .allowedCurrencies="${fewCurrencies}" disabled></${tag}> `,
+        );
         expect(/** @type {HTMLElement} */ (el.refs.dropdown.value)?.hasAttribute('disabled')).to.be
           .true;
       });
 
       it('disables dropdown on readonly', async () => {
-        const el = await fixture(html` <${tag} readonly></${tag}> `);
+        const el = await fixture(
+          html` <${tag} .allowedCurrencies="${fewCurrencies}" readonly></${tag}> `,
+        );
         expect(/** @type {HTMLElement} */ (el.refs.dropdown.value)?.hasAttribute('disabled')).to.be
           .true;
       });
@@ -423,13 +435,13 @@ export function runInputAmountDropdownSuite(
 
   describe('is empty', () => {
     it('ignores initial currencyCode', async () => {
-      const el = await fixture(html` <${tag}></${tag}> `);
+      const el = await fixture(html` <${tag} .allowedCurrencies="${fewCurrencies}"></${tag}> `);
       // @ts-ignore
       expect(el._isEmpty(), 'empty').to.be.true;
     });
 
     it('only checks modelValue.amount', async () => {
-      const el = await fixture(html` <${tag}></${tag}> `);
+      const el = await fixture(html` <${tag} .allowedCurrencies="${fewCurrencies}"></${tag}> `);
 
       el.modelValue = { currency: 'GBP', amount: 1 };
       await el.updateComplete;
@@ -456,14 +468,14 @@ export function runInputAmountDropdownSuite(
 
   describe('Serialization', () => {
     it('serializes currency and amount to the international notation', async () => {
-      const el = await fixture(html` <${tag}></${tag}> `);
+      const el = await fixture(html` <${tag} .allowedCurrencies="${fewCurrencies}"></${tag}> `);
       el.modelValue = { currency: 'EUR', amount: 123.45 };
       await el.updateComplete;
       expect(el.serializedValue).to.equal('EUR 123.45');
     });
 
     it('serializes an empty amount to its currency only', async () => {
-      const el = await fixture(html` <${tag}></${tag}> `);
+      const el = await fixture(html` <${tag} .allowedCurrencies="${fewCurrencies}"></${tag}> `);
       el.modelValue = { currency: 'EUR', amount: '' };
       await el.updateComplete;
       expect(el.serializedValue).to.equal('EUR');
@@ -474,15 +486,15 @@ export function runInputAmountDropdownSuite(
     });
 
     it('deserializes the international notation back to a numeric amount', async () => {
-      const el = await fixture(html` <${tag}></${tag}> `);
+      const el = await fixture(html` <${tag} .allowedCurrencies="${fewCurrencies}"></${tag}> `);
       el.serializedValue = 'EUR 123.45';
       await el.updateComplete;
       expect(el.modelValue).to.eql({ currency: 'EUR', amount: 123.45 });
     });
 
     it('round-trips modelValue through serializedValue', async () => {
-      const source = await fixture(html` <${tag}></${tag}> `);
-      const target = await fixture(html` <${tag}></${tag}> `);
+      const source = await fixture(html` <${tag} .allowedCurrencies="${fewCurrencies}"></${tag}> `);
+      const target = await fixture(html` <${tag} .allowedCurrencies="${fewCurrencies}"></${tag}> `);
       source.modelValue = { currency: 'JPY', amount: 1234 };
       await source.updateComplete;
 
@@ -492,7 +504,7 @@ export function runInputAmountDropdownSuite(
     });
 
     it('deserializes an empty string to an empty amount in the active currency', async () => {
-      const el = await fixture(html` <${tag}></${tag}> `);
+      const el = await fixture(html` <${tag} .allowedCurrencies="${fewCurrencies}"></${tag}> `);
       el.modelValue = { currency: 'EUR', amount: 1 };
       await el.updateComplete;
       el.serializedValue = '';
@@ -508,7 +520,7 @@ export function runInputAmountDropdownSuite(
     });
 
     it('deserializes to a modelValue object, also for empty and legacy values', async () => {
-      const el = await fixture(html` <${tag}></${tag}> `);
+      const el = await fixture(html` <${tag} .allowedCurrencies="${fewCurrencies}"></${tag}> `);
       const { deserializer } = el;
       expect(deserializer('EUR 12.5')).to.eql({ currency: 'EUR', amount: 12.5 });
       expect(deserializer('EUR')).to.eql({ currency: 'EUR', amount: '' });
@@ -537,7 +549,7 @@ export function runInputAmountDropdownSuite(
     });
 
     it('returns an empty currency symbol without currency or locale', async () => {
-      const el = await fixture(html` <${tag}></${tag}> `);
+      const el = await fixture(html` <${tag} .allowedCurrencies="${fewCurrencies}"></${tag}> `);
       // @ts-ignore [allow-protected] in test
       const { getCurrencySymbol } = el._currencyUtil;
       expect(getCurrencySymbol('EUR', 'en-GB')).to.equal('€');

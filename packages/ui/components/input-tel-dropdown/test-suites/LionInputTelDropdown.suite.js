@@ -55,6 +55,14 @@ export function runInputTelDropdownSuite(
   const tagName = resolveSuiteTag(classes.host, tagString, klass);
   const tag = unsafeStatic(tagName);
 
+  /**
+   * Regions for tests that do not depend on the full region list: GB comes from the locale and NL
+   * from a phone number. Rendering an option for each of the ~245 regions is the slowest part of
+   * these fixtures (it grows faster than linear with the option count in a listbox), and under load
+   * made such tests run into the mocha timeout.
+   */
+  const fewRegions = ['NL', 'GB'];
+
   describe('LionInputTelDropdown', () => {
     beforeEach(async () => {
       // Wait till PhoneUtilManager has been loaded
@@ -63,7 +71,7 @@ export function runInputTelDropdownSuite(
 
     it('syncs value of dropdown on init if input has no value', async () => {
       const el = await fixture(
-        html` <${tag} format-country-code-style="${hasParentheses ? 'parentheses' : nothing}" ></${tag}> `,
+        html` <${tag} format-country-code-style="${hasParentheses ? 'parentheses' : nothing}" .allowedRegions="${fewRegions}"></${tag}> `,
       );
       expect(el.activeRegion).to.equal('GB');
       const expectedNumber = hasParentheses ? '(+44)' : '+44';
@@ -75,7 +83,7 @@ export function runInputTelDropdownSuite(
 
     it('syncs value of dropdown on reset if input has no value', async () => {
       const el = await fixture(
-        html` <${tag} format-country-code-style="${hasParentheses ? 'parentheses' : nothing}" ></${tag}> `,
+        html` <${tag} format-country-code-style="${hasParentheses ? 'parentheses' : nothing}" .allowedRegions="${fewRegions}"></${tag}> `,
       );
       el.modelValue = '+31612345678';
       await el.updateComplete;
@@ -89,7 +97,7 @@ export function runInputTelDropdownSuite(
 
     it('syncs value of dropdown on init if input has no value does not influence interaction states', async () => {
       const el = await fixture(
-        html` <${tag} format-country-code-style="${hasParentheses ? 'parentheses' : nothing}" ></${tag}> `,
+        html` <${tag} format-country-code-style="${hasParentheses ? 'parentheses' : nothing}" .allowedRegions="${fewRegions}"></${tag}> `,
       );
       expect(el.dirty).to.be.false;
       expect(el.prefilled).to.be.false;
@@ -97,7 +105,7 @@ export function runInputTelDropdownSuite(
 
     it('syncs value of dropdown on reset also resets interaction states', async () => {
       const el = await fixture(
-        html` <${tag} format-country-code-style="${hasParentheses ? 'parentheses' : nothing}" ></${tag}> `,
+        html` <${tag} format-country-code-style="${hasParentheses ? 'parentheses' : nothing}" .allowedRegions="${fewRegions}"></${tag}> `,
       );
       el.modelValue = '+31612345678';
       await el.updateComplete;
@@ -112,7 +120,7 @@ export function runInputTelDropdownSuite(
 
     it('sets correct interaction states on init if input has a value', async () => {
       const el = await fixture(
-        html` <${tag} format-country-code-style="${hasParentheses ? 'parentheses' : nothing}"  .modelValue="${'+31612345678'}"></${tag}> `,
+        html` <${tag} format-country-code-style="${hasParentheses ? 'parentheses' : nothing}" .allowedRegions="${fewRegions}" .modelValue="${'+31612345678'}"></${tag}> `,
       );
       expect(el.dirty).to.be.false;
       expect(el.prefilled).to.be.true;
@@ -185,6 +193,7 @@ export function runInputTelDropdownSuite(
       it('can override "all-countries-label"', async () => {
         const el =
           fixtureSync(html` <${tag} format-country-code-style="${hasParentheses ? 'parentheses' : nothing}" 
+          .allowedRegions="${['NL', 'PH']}"
           .preferredRegions="${['PH']}"
           ></${tag}> `);
         const spy = sinon.spy(
@@ -205,6 +214,7 @@ export function runInputTelDropdownSuite(
       it('can override "preferred-countries-label"', async () => {
         const el =
           fixtureSync(html` <${tag} format-country-code-style="${hasParentheses ? 'parentheses' : nothing}" 
+          .allowedRegions="${['NL', 'PH']}"
           .preferredRegions="${['PH']}"
           ></${tag}> `);
         const spy = sinon.spy(
@@ -232,7 +242,7 @@ export function runInputTelDropdownSuite(
 
       it('syncs disabled attribute to dropdown', async () => {
         const el = await fixture(
-          html` <${tag} format-country-code-style="${hasParentheses ? 'parentheses' : nothing}"  disabled></${tag}> `,
+          html` <${tag} format-country-code-style="${hasParentheses ? 'parentheses' : nothing}" .allowedRegions="${fewRegions}" disabled></${tag}> `,
         );
         expect(/** @type {HTMLElement} */ (el.refs.dropdown.value)?.hasAttribute('disabled')).to.be
           .true;
@@ -240,7 +250,7 @@ export function runInputTelDropdownSuite(
 
       it('disables dropdown on readonly', async () => {
         const el = await fixture(
-          html` <${tag} format-country-code-style="${hasParentheses ? 'parentheses' : nothing}"  readonly></${tag}> `,
+          html` <${tag} format-country-code-style="${hasParentheses ? 'parentheses' : nothing}" .allowedRegions="${fewRegions}" readonly></${tag}> `,
         );
         expect(/** @type {HTMLElement} */ (el.refs.dropdown.value)?.hasAttribute('disabled')).to.be
           .true;
@@ -454,7 +464,7 @@ export function runInputTelDropdownSuite(
     describe('On activeRegion change', () => {
       it('updates dropdown value ', async () => {
         const el = await fixture(
-          html` <${tag} format-country-code-style="${hasParentheses ? 'parentheses' : nothing}"  .modelValue="${'+31612345678'}"></${tag}> `,
+          html` <${tag} format-country-code-style="${hasParentheses ? 'parentheses' : nothing}" .allowedRegions="${['NL', 'BE']}" .modelValue="${'+31612345678'}"></${tag}> `,
         );
         expect(el.activeRegion).to.equal('NL');
         // @ts-expect-error [allow protected]
@@ -467,7 +477,7 @@ export function runInputTelDropdownSuite(
 
       it('keeps dropdown value if countryCode is the same', async () => {
         const el = await fixture(
-          html` <${tag} format-country-code-style="${hasParentheses ? 'parentheses' : nothing}"  .modelValue="${'+12345678901'}"></${tag}> `,
+          html` <${tag} format-country-code-style="${hasParentheses ? 'parentheses' : nothing}" .allowedRegions="${['US', 'AG']}" .modelValue="${'+12345678901'}"></${tag}> `,
         );
         expect(el.activeRegion).to.equal('US');
         // @ts-expect-error [allow-protected-in test]
@@ -482,7 +492,7 @@ export function runInputTelDropdownSuite(
     describe('is empthy', () => {
       it('ignores initial countrycode', async () => {
         const el = await fixture(
-          html` <${tag} format-country-code-style="${hasParentheses ? 'parentheses' : nothing}" ></${tag}> `,
+          html` <${tag} format-country-code-style="${hasParentheses ? 'parentheses' : nothing}" .allowedRegions="${fewRegions}"></${tag}> `,
         );
         // @ts-ignore
         expect(el._isEmpty()).to.be.true;
@@ -490,7 +500,7 @@ export function runInputTelDropdownSuite(
 
       it('ignores initial countrycode with parentheses', async () => {
         const el = await fixture(
-          html` <${tag} format-country-code-style="${hasParentheses ? 'parentheses' : nothing}"  format-country-code-style="parentheses"></${tag}> `,
+          html` <${tag} format-country-code-style="${hasParentheses ? 'parentheses' : nothing}" .allowedRegions="${fewRegions}" format-country-code-style="parentheses"></${tag}> `,
         );
         // @ts-ignore
         expect(el._isEmpty()).to.be.true;
