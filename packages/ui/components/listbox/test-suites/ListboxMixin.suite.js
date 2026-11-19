@@ -4,13 +4,14 @@ import { repeat } from 'lit/directives/repeat.js';
 import { Required } from '@lion/ui/form-core.js';
 import { LionListbox, LionOption, LionOptions } from '@lion/ui/listbox.js';
 import {
-  aTimeout,
   defineCE,
   expect,
   fixture as _fixture,
   html,
   nextFrame,
+  oneEvent,
   unsafeStatic,
+  waitUntil,
 } from '@open-wc/testing';
 import { sendKeys } from '@web/test-runner-commands';
 import sinon from 'sinon';
@@ -24,6 +25,28 @@ import { resolveSuiteTag } from '../../core/test-helpers/resolveSuiteTag.js';
  */
 
 const fixture = /** @type {(arg: TemplateResult) => Promise<LionListbox>} */ (_fixture);
+
+/**
+ * Resolves when a smooth scroll of `el` has ended. Uses the `scrollend` event where the engine
+ * supports it, otherwise waits until scrollTop no longer changes between two frames.
+ * Call it before starting the scroll.
+ * @param {HTMLElement} el
+ */
+function scrollEnd(el) {
+  if ('onscrollend' in window) {
+    return oneEvent(el, 'scrollend');
+  }
+  let last = NaN;
+  return waitUntil(
+    () => {
+      const settled = el.scrollTop === last;
+      last = el.scrollTop;
+      return settled;
+    },
+    'scroll did not end',
+    { interval: 100 },
+  );
+}
 
 /**
  * @param {HTMLElement} el
@@ -473,12 +496,14 @@ export function runListboxMixinSuite({
         await listboxEl.updateComplete;
         await nextFrame();
 
-        // Scroll to last option and wait for browser scroll animation (works)
+        // Scroll to last option and wait for the smooth scroll animation to end
+        let scrollEnded = scrollEnd(el);
         lastOption.active = true;
-        await aTimeout(1000);
+        await scrollEnded;
 
+        scrollEnded = scrollEnd(el);
         thirdOption.active = true;
-        await aTimeout(1000);
+        await scrollEnded;
 
         // top should be offset 2x40px (sticky header elems) instead of 0px
         expect(el.scrollTop).to.equal(116);
@@ -494,7 +519,9 @@ export function runListboxMixinSuite({
           </${tags.host}>
         `);
         await el.updateComplete;
-        await el.updateComplete; // need 2 awaits as overlay.show is an async function
+        // subclassers with an overlay (select-rich, combobox) show it asynchronously after the update
+        // @ts-ignore allow protected members in tests
+        await el._overlayCtrl?._showComplete;
         // for more info about why we need the ignoreRules, see: https://lion.js.org/fundamentals/systems/overlays/rationale/#considerations
         await expect(el).to.be.accessible({ ignoredRules: ['aria-allowed-role'] });
       });
