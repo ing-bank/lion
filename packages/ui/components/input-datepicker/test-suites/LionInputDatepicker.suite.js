@@ -8,8 +8,8 @@ import {
   fixture,
   fixture as _fixture,
   nextFrame,
+  oneEvent,
   unsafeStatic,
-  waitUntil,
 } from '@open-wc/testing';
 import { sendKeys, setViewport } from '@web/test-runner-commands';
 import { LionCalendar, isSameDate } from '@lion/ui/calendar.js';
@@ -22,6 +22,13 @@ import { DatepickerInputObject as DefaultInputObject } from '@lion/ui/input-date
 import { LionInputDatepicker } from '@lion/ui/input-datepicker.js';
 import sinon from 'sinon';
 import { resolveSuiteTag } from '../../core/test-helpers/resolveSuiteTag.js';
+
+/**
+ * An axe audit of the datepicker (with its open calendar: a grid of 42 day buttons) is inherently
+ * heavy. It takes 50-400ms alone, but more than the default 5s mocha timeout when the machine runs
+ * other test runs at the same time.
+ */
+const AXE_TIMEOUT = 15000;
 
 /**
  * @param {{
@@ -62,6 +69,31 @@ export function runDatepickerSuite({
     );
   }
 
+  /**
+   * Resolves when the datepicker has finished opening its calendar, including the focus that
+   * `_onCalendarOverlayOpened` (the last step of opening, a lifecycle callback for subclassers)
+   * moves into the calendar. Call it before the action that opens the calendar.
+   * @param {LionInputDatepicker} el
+   * @returns {Promise<void>}
+   */
+  function calendarOpened(el) {
+    return new Promise(resolve => {
+      const datepicker = /** @type {{ _onCalendarOverlayOpened: () => void }} */ (
+        /** @type {unknown} */ (el)
+      );
+      const original = datepicker._onCalendarOverlayOpened;
+      datepicker._onCalendarOverlayOpened = () => {
+        // Back to the prototype method, so that a later opening is not observed
+        delete (
+          /** @type {{ _onCalendarOverlayOpened?: () => void }} */ (datepicker)
+            ._onCalendarOverlayOpened
+        );
+        original.call(datepicker);
+        resolve();
+      };
+    });
+  }
+
   it('should not reopen the datepicker popup when the date is selected by keyboard', async () => {
     /** @type {LionInputDatepicker} */
     const el = await fixture(html`<${tag} .modelValue="${new Date('2018/05/30')}"></${tag}>`);
@@ -69,9 +101,10 @@ export function runDatepickerSuite({
 
     // @ts-ignore
     const openDatepickerButton = el._invokerNode;
+    const opened = calendarOpened(el);
     openDatepickerButton?.focus();
     openDatepickerButton?.click();
-    await waitUntil(() => el.opened === true);
+    await opened;
 
     // Opening through the invoker leaves the focus on the calendar, which is what the arrow key needs:
     // measured on Firefox, a day button focused by hand does not receive it, the selection stays put,
@@ -234,12 +267,14 @@ export function runDatepickerSuite({
         const selectedDate = new Date(2019, 5, 15);
         const el = await fixtureForSuite(html`<${tag} .modelValue="${selectedDate}"></${tag}>`);
         const elObj = new InputObject(el);
+        const opened = calendarOpened(el);
         await elObj.openCalendar({ click: true });
-        await waitUntil(() => el.opened);
+        await opened;
         expect(elObj.overlayController.isShown).to.be.true;
 
+        const hidden = oneEvent(elObj.overlayController, 'hide');
         el[property] = true;
-        await waitUntil(() => !elObj.overlayController.isShown);
+        await hidden;
         await sendKeys({ press: 'ArrowRight' });
         await sendKeys({ press: 'Enter' });
 
@@ -715,6 +750,27 @@ export function runDatepickerSuite({
     });
 
     describe('Accessibility', () => {
+      /**
+       * axe runs one audit at a time, and the body of a test that timed out keeps running. Audits
+       * are therefore queued: an audit starts when the previous one has settled, and `afterEach`
+       * waits for the queue. So a test that timed out during an audit can not fail the next test
+       * with "Axe is already running".
+       * @type {Promise<unknown>}
+       */
+      let pendingAudit = Promise.resolve();
+      /** @param {Element} node */
+      function expectAccessible(node) {
+        const audit = pendingAudit.catch(() => {}).then(() => expect(node).to.be.accessible());
+        pendingAudit = audit;
+        return audit;
+      }
+
+      afterEach(async function waitForPendingAudit() {
+        // An audit of the open calendar can take seconds on a loaded machine (see AXE_TIMEOUT)
+        this.timeout(AXE_TIMEOUT);
+        await pendingAudit.catch(() => {});
+      });
+
       it('has a heading of level 1', async () => {
         const el = await fixtureForSuite(html`
           <${tag} calendar-heading="foo"></${tag}>
@@ -750,33 +806,37 @@ export function runDatepickerSuite({
         expect(elObj.invokerEl.getAttribute('aria-expanded')).to.equal(null);
       });
 
-      it('is accessible when closed', async () => {
+      it('is accessible when closed', async function axeTest() {
+        this.timeout(AXE_TIMEOUT);
         const el = await fixtureForSuite(html`<${tag}></${tag}>`);
         const elObj = new InputObject(el);
 
-        await expect(elObj.invokerEl).to.be.accessible();
-        await expect(elObj.calendarEl).to.be.accessible();
+        await expectAccessible(elObj.invokerEl);
+        await expectAccessible(elObj.calendarEl);
       });
 
-      it('is accessible when open', async () => {
-        const el = await fixtureForSuite(html`<${tag}></${tag}>`);
-        const elObj = new InputObject(el);
-        await elObj.openCalendar();
-
-        await expect(elObj.calendarEl).to.be.accessible();
-        elObj.overlayCloseButtonEl.click();
-      });
-
-      it('has accessible invoker when open', async () => {
+      it('is accessible when open', async function axeTest() {
+        this.timeout(AXE_TIMEOUT);
         const el = await fixtureForSuite(html`<${tag}></${tag}>`);
         const elObj = new InputObject(el);
         await elObj.openCalendar();
 
-        await expect(elObj.invokerEl).to.be.accessible();
+        await expectAccessible(elObj.calendarEl);
         elObj.overlayCloseButtonEl.click();
       });
 
-      it('is accessible with a disabled date', async () => {
+      it('has accessible invoker when open', async function axeTest() {
+        this.timeout(AXE_TIMEOUT);
+        const el = await fixtureForSuite(html`<${tag}></${tag}>`);
+        const elObj = new InputObject(el);
+        await elObj.openCalendar();
+
+        await expectAccessible(elObj.invokerEl);
+        elObj.overlayCloseButtonEl.click();
+      });
+
+      it('is accessible with a disabled date', async function axeTest() {
+        this.timeout(AXE_TIMEOUT);
         const no15th = /** @param {Date} d */ d => d.getDate() !== 15;
         const el = await fixtureForSuite(html`
           <${tag} .validators=${[new IsDateDisabled(no15th)]}> </${tag}>
@@ -784,7 +844,7 @@ export function runDatepickerSuite({
         const elObj = new InputObject(el);
         await elObj.openCalendar();
 
-        await expect(elObj.calendarEl).to.be.accessible();
+        await expectAccessible(elObj.calendarEl);
         elObj.overlayCloseButtonEl.click();
       });
 
