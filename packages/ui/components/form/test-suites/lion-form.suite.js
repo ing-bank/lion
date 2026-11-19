@@ -6,14 +6,7 @@ import { LionRadio, LionRadioGroup } from '@lion/ui/radio-group.js';
 import { LionListbox, LionOption } from '@lion/ui/listbox.js';
 import { LionForm } from '@lion/ui/form.js';
 import { spy } from 'sinon';
-import {
-  fixture as _fixture,
-  unsafeStatic,
-  aTimeout,
-  defineCE,
-  oneEvent,
-  expect,
-} from '@open-wc/testing';
+import { fixture as _fixture, unsafeStatic, defineCE, oneEvent, expect } from '@open-wc/testing';
 import { resolveSuiteTag } from '../../core/test-helpers/resolveSuiteTag.js';
 import { isActiveElement } from '../../core/test-helpers/isActiveElement.js';
 
@@ -229,7 +222,6 @@ export function runFormSuite({
       const button = /** @type {HTMLButtonElement} */ (el.querySelector('button'));
       const internalHandlerSpy = spy(el, 'submitGroup');
       const dispatchSpy = spy(el, 'dispatchEvent');
-      await aTimeout(0);
       button.click();
       expect(internalHandlerSpy).to.be.calledBefore(dispatchSpy);
     });
