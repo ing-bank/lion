@@ -1,0 +1,5 @@
+{
+  "name": "message-format",
+  "description": "mirror of message-format, bundled and exposed as ES module",
+  "author": "Mikhail Bashkirov <bashmish@gmail.com>"
+}

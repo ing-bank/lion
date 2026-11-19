@@ -1,0 +1,1 @@
+import r from"./tr.B5TiCIvu.js";const e={...r,error:{...r.error,IsDate:"Lütfen geçerli bir tarih girin (GG/AA/YYYY)."},warning:{...r.warning,IsDate:"Lütfen geçerli bir tarih girin (GG/AA/YYYY)."}};export{e as default};

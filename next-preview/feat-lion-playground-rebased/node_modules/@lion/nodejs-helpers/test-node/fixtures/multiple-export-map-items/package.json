@@ -1,0 +1,12 @@
+{
+  "private": true,
+  "name": "multiple-export-map-items",
+  "author": "ing-bank",
+  "type": "module",
+  "exports": {
+    "./*": {
+      "module": "./exports/*"
+    },
+    "./calendar-translations/*": "./components/calendar/translations/*"
+  }
+}

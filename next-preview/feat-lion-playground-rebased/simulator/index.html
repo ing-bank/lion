@@ -1,0 +1,104 @@
+<!DOCTYPE html><html theme="light" platform="web" lang="en" data-astro-cid-z5duo6xp> <head><meta name="viewport" content="width=device-width, initial-scale=1"><meta charset="utf-8"><meta name="color-scheme" content="light dark"><script>
+  (() => {
+    const KEY = 'lion-portal-theme';
+    const CHOICES = ['auto', 'light', 'dark'];
+    const root = document.documentElement;
+
+    const read = () => {
+      try {
+        return localStorage.getItem(KEY);
+      } catch {
+        // private mode / storage disabled: fall back to the CSS-only behaviour
+        return null;
+      }
+    };
+
+    const write = choice => {
+      try {
+        localStorage.setItem(KEY, choice);
+      } catch {
+        // ignore: the theme is a comfort setting, not a requirement
+      }
+    };
+
+    const stored = read();
+    const choice = CHOICES.includes(stored) ? stored : 'auto';
+    root.dataset.theme = choice;
+
+    /*
+     * The canvas before the stylesheets arrive, which `color-scheme` alone does not cover: the portal's page background
+     * is its own token, darker than the browser's dark canvas, so until styles.css lands the page paints the default
+     * canvas — measured as `rgb(250, 250, 250)` for the first 116ms with dark stored, which is the light flash the
+     * theme appeared to have. These are the two values theme.css and styles.css paint moments later, applied inline
+     * here and before any sheet. `auto` writes neither, so nothing is pinned when the OS preference is in charge.
+     */
+    if (choice === 'dark') {
+      root.style.backgroundColor = '#0b0b0d';
+      root.style.colorScheme = 'dark';
+    } else if (choice === 'light') {
+      root.style.backgroundColor = '#fafafa';
+      root.style.colorScheme = 'light';
+    }
+
+    /*
+     * The colour-scheme meta is what the browser is allowed to use for the canvas before any
+     * stylesheet is parsed, and every layout ships it as "light dark". With the OS in dark mode that
+     * let it paint the dark canvas on a page whose stored choice is light - the dark flash you see
+     * on a light page, which is why it only happened sometimes (only on a dark OS). Matching the
+     * meta to the choice in this blocking script, before the first paint, removes it.
+     */
+    const meta = document.querySelector('meta[name="color-scheme"]');
+    if (meta) {
+      meta.setAttribute('content', choice === 'auto' ? 'light dark' : choice);
+    }
+
+    const syncRadios = () => {
+      const choice = root.dataset.theme;
+      if (!CHOICES.includes(choice)) return;
+      const radio = document.getElementById(`theme-${choice}`);
+      if (radio) radio.checked = true;
+    };
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', syncRadios, { once: true });
+    } else {
+      syncRadios();
+    }
+
+    // One listener for the whole document: the switch is re-rendered with every nav, so a listener
+    // bound to the inputs themselves would be lost on navigation.
+    document.addEventListener('change', event => {
+      const input = event.target;
+      if (!(input instanceof HTMLInputElement) || input.name !== 'theme') return;
+      if (!CHOICES.includes(input.value)) return;
+      root.dataset.theme = input.value;
+      write(input.value);
+    });
+  })();
+</script><script type="module" src="/next-preview/feat-lion-playground-rebased/_astro/simulator.astro_astro_type_script_index_0_lang.ChVUozFJ.js"></script><style>body{margin:0;height:fit-content}html[edge-distance] body{padding:8px}
+</style><script>/**
+ * Declarative Shadow DOM ponyfill, injected into `<head>` of every page.
+ *
+ * Browsers that already support declarative shadow DOM parsing do nothing here
+ * (the check below short-circuits). Older browsers hydrate the shadow roots
+ * once the document is parsed.
+ */
+async function polyfill() {
+  const { hydrateShadowRoots } = await import(
+    '@webcomponents/template-shadowroot/template-shadowroot.js'
+  );
+  window.addEventListener('DOMContentLoaded', () => hydrateShadowRoots(document.body), {
+    once: true,
+  });
+}
+
+const polyfillCheckEl = Document.parseHTMLUnsafe(
+  '<p><template shadowrootmode="open"></template></p>',
+).querySelector('p');
+
+if (!polyfillCheckEl?.shadowRoot) {
+  polyfill();
+}
+</script></head> <body data-astro-cid-z5duo6xp> <button id="share-demo" type="button" hidden data-astro-cid-z5duo6xp>Copy share link</button> <button id="open-shared-demo" type="button" hidden data-astro-cid-z5duo6xp>
+Open this demo in the playground (its code then runs in this page)
+</button> <div id="shared-demo" hidden data-astro-cid-z5duo6xp></div> <playground-ide editable-file-system="true" line-numbers="true" resizable="true" sandbox-base-url="/next-preview/feat-lion-playground-rebased/lion-playground/playground-elements" data-astro-cid-z5duo6xp="true"></playground-ide> </body></html>

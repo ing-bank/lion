@@ -1,0 +1,1 @@
+function n(){return{visibilityTriggerFunction:({controller:e})=>{function i(){e._hasDisabledInvoker()||e.toggle()}return{init:()=>{e.invokerNode?.addEventListener("click",i)},teardown:()=>{e.invokerNode?.removeEventListener("click",i)}}}}}export{n as w};

@@ -1,0 +1,34 @@
+
+@view-transition {
+  navigation: auto;
+}
+
+/* View Transitions */
+/* @media (prefers-reduced-motion: no-preference) { */
+    /* Assign view-transition-name to the card on the components page */
+    .features-grid a[href="button.html"] .card-icon {
+        view-transition-name: docs-icon;
+    }
+    
+    .features-grid a[href="button.html"] h3 {
+        view-transition-name: docs-title;
+        width: fit-content;
+    }
+
+    /* Assign matching view-transition-name to elements on the button page */
+    .component-header .card-icon {
+        view-transition-name: docs-icon;
+    }
+
+    .component-header h1 {
+        view-transition-name: docs-title;
+        width: fit-content;
+    }
+
+    /* Custom animation */
+    ::view-transition-group(docs-icon),
+    ::view-transition-group(docs-title) {
+        animation-duration: 0.4s;
+        animation-timing-function: cubic-bezier(0.2, 0, 0.2, 1);
+    }
+/* } */

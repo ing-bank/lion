@@ -1,0 +1,44 @@
+{
+  "name": "@parse5/tools",
+  "version": "0.3.0",
+  "description": "A small set of utilities for dealing with parse5 syntax trees",
+  "main": "lib/main.js",
+  "files": [
+    "lib/",
+    "!lib/test"
+  ],
+  "type": "module",
+  "scripts": {
+    "clean": "rimraf ./lib",
+    "lint": "eslint \"src/**/*.ts\"",
+    "prebuild": "npm run clean",
+    "build": "tsc",
+    "test": "c8 -r html -r text-summary node --test lib/test",
+    "format": "prettier --write \"src/**/*.ts\"",
+    "prepare": "npm run build",
+    "prepublishOnly": "npm run lint && npm run test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/43081j/parse5-tools.git"
+  },
+  "author": "James Garbutt (https://github.com/43081j)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/43081j/parse5-tools/issues"
+  },
+  "homepage": "https://github.com/43081j/parse5-tools#readme",
+  "devDependencies": {
+    "@types/node": "^20.5.8",
+    "@typescript-eslint/eslint-plugin": "^6.5.0",
+    "c8": "^8.0.1",
+    "eslint": "^8.48.0",
+    "eslint-config-google": "^0.14.0",
+    "prettier": "^3.0.3",
+    "rimraf": "^5.0.1",
+    "typescript": "^5.2.2"
+  },
+  "dependencies": {
+    "parse5": "^7.0.0"
+  }
+}

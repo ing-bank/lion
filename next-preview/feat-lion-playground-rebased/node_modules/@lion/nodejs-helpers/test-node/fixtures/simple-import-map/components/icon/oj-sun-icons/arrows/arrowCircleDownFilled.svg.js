@@ -1,0 +1,2 @@
+export default /** @param {(strings: TemplateStringsArray, ... expr: string[]) => string} tag */ tag =>
+  tag`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" focusable="false"><path d="M10.707,15.707 C10.316,16.098 9.684,16.098 9.293,15.707 L4.293,10.707 L5.707,9.293 L9,12.586 L9,4 L11,4 L11,12.586 L14.293,9.293 L15.707,10.707 L10.707,15.707 Z M10,0 C4.478,0 0,4.477 0,10 C0,15.522 4.478,20 10,20 C15.522,20 20,15.522 20,10 C20,4.477 15.522,0 10,0 L10,0 Z" transform="translate(2 2)"/></svg>`;

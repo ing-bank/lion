@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 24.0.1, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 2000 807" style="enable-background:new 0 0 2000 807;" xml:space="preserve">
+<style type="text/css">
+	.st0{fill:none;stroke:#000000;stroke-width:3;stroke-miterlimit:10;}
+	.st1{opacity:0.4;}
+	.st2{fill:#22B573;}
+	.st3{fill:#0071BC;}
+	.st4{opacity:0.4;fill:#0071BC;}
+	.st5{fill:#F7931E;}
+	.st6{opacity:0.65;}
+	.st7{opacity:0.65;fill:#0071BC;}
+	.st8{fill:#F2F2F2;}
+	.st9{font-family:'INGMe-Bold';}
+	.st10{font-size:36px;}
+	.st11{font-family:'INGMe';}
+	.st12{font-size:20px;}
+	.st13{font-size:19px;}
+	.st14{font-size:26px;}
+	.st15{fill:#4D4D4D;}
+	.st16{fill:none;}
+</style>
+<g>
+	<text transform="matrix(1 0 0 1 875.9043 69.99)"><tspan x="0" y="0" class="st9 st10">Imperative</tspan><tspan x="19.22" y="24" class="st11 st12">(programmatic)</tspan></text>
+	<text transform="matrix(1 0 0 1 525.8647 763.1797)" class="st11 st10">formattedValue</text>
+	<text transform="matrix(1 0 0 1 607.5366 189.1799)"><tspan x="0" y="0" class="st11 st10">User</tspan><tspan x="-51.3" y="22.8" class="st11 st13">(inputElement.input)</tspan></text>
+	<text transform="matrix(1 0 0 1 600.6436 383.1797)" class="st11 st10">value</text>
+	<text transform="matrix(1 0 0 1 544.7715 570.1797)" class="st9 st10">modelValue</text>
+	<text transform="matrix(1 0 0 1 116.335 570.1797)" class="st11 st10">serializedValue</text>
+	<g>
+		<g>
+			<line class="st0" x1="646.24" y1="332.31" x2="646.24" y2="258.72"/>
+			<g>
+				<polygon points="657.35,267.14 646.24,262.42 635.13,267.14 646.24,240.81 				"/>
+			</g>
+		</g>
+	</g>
+	<g>
+		<g>
+			<line class="st0" x1="642.24" y1="686.4" x2="642.24" y2="612.81"/>
+			<g>
+				<polygon points="653.35,677.97 642.24,682.69 631.13,677.97 642.24,704.31 				"/>
+			</g>
+		</g>
+	</g>
+	<g>
+		<g>
+			<path class="st0" d="M557.74,600.31c0,0-144.71,149.44-297.99,12.32"/>
+			<g>
+				<polygon points="273.55,610.22 262.5,615.09 258.35,626.43 246.74,600.31 				"/>
+			</g>
+		</g>
+	</g>
+	<g>
+		<g>
+			<path class="st0" d="M733.83,379.55c71.85,30.99,340.21,166.78,60.41,365.26"/>
+			<g>
+				<polygon points="737.35,393.12 737.22,381.05 745.82,372.58 717.24,372.81 				"/>
+			</g>
+		</g>
+	</g>
+	<g>
+		<text transform="matrix(1 0 0 1 343.5166 704.2012)" class="st3 st11 st14">serializer</text>
+	</g>
+	<text transform="matrix(1 0 0 1 663.5166 278.2014)" class="st2 st11 st14">delegate</text>
+	<text transform="matrix(1 0 0 1 872.5166 454.2014)" class="st2 st11 st14">sync</text>
+	<text transform="matrix(1 0 0 1 654.5166 645.2012)" class="st3 st11 st14">formatter</text>
+	<circle class="st2" cx="791.74" cy="278.31" r="16.97"/>
+	<circle class="st3" cx="318.24" cy="708.81" r="16.97"/>
+	<circle class="st3" cx="676.24" cy="670.81" r="16.97"/>
+	<text transform="matrix(1 0 0 1 712.5166 526.2014)" class="st5 st11 st14">changed</text>
+	<circle class="st5" cx="687.74" cy="520.31" r="16.97"/>
+	<text transform="matrix(1 0 0 1 681.8179 527.5596)" class="st9 st12">1</text>
+	<text transform="matrix(1 0 0 1 670.8179 677.5596)" class="st9 st12">2</text>
+	<text transform="matrix(1 0 0 1 311.8179 714.5596)" class="st9 st12">2</text>
+	<text transform="matrix(1 0 0 1 785.8179 284.5598)" class="st9 st12">4</text>
+	<circle class="st2" cx="855.74" cy="417.31" r="16.97"/>
+	<text transform="matrix(1 0 0 1 849.8179 424.5598)" class="st9 st12">3</text>
+	<text transform="matrix(1 0 0 1 1063.7729 198.0515)"><tspan x="0" y="0" class="st9 st12">1. modelValue is changed during</tspan><tspan x="0" y="24" class="st9 st12">     runtime        </tspan><tspan x="0" y="96" class="st9 st12">2. modelValue is formatted to </tspan><tspan x="0" y="120" class="st9 st12">    formattedValue and</tspan><tspan x="0" y="144" class="st9 st12">    modelValue is </tspan><tspan x="0" y="168" class="st9 st12">    serialized to serializedValue </tspan><tspan x="0" y="240" class="st15 st9 st12">3. </tspan><tspan x="21.26" y="240" class="st9 st12">formattedValue is reflected</tspan><tspan x="0" y="264" class="st9 st12">    back to the user through </tspan><tspan x="0" y="288" class="st9 st12">    the field value property</tspan><tspan x="0" y="336" class="st9 st12">4. Value is delegated back to </tspan><tspan x="0" y="360" class="st9 st12">    native input value </tspan><tspan x="0" y="384" class="st9 st12">    (what the user sees)</tspan><tspan x="0" y="432" class="st9 st12">  </tspan><tspan x="9.6" y="432" class="st15 st9 st12">  </tspan></text>
+	<text transform="matrix(1 0 0 1 1432.7729 189.0515)"><tspan x="0" y="0" class="st3 st9 st12"> [DateObject] </tspan><tspan x="0" y="24" class="st3 st9 st12">    (day + 1)</tspan><tspan x="0" y="96" class="st3 st9 st12">“30-11-2010”</tspan><tspan x="0" y="144" class="st3 st9 st12">“2010-10-30T00:00:00.000Z”      </tspan><tspan x="0" y="240" class="st3 st9 st12">“30-11-2010”</tspan><tspan x="0" y="336" class="st3 st9 st12">“30-10-2010”</tspan></text>
+	<text transform="matrix(1 0 0 1 1629.7729 189.0515)"><tspan x="0" y="0" class="st9 st12"> </tspan><tspan x="4.8" y="0" class="st15 st9 st12">@model-value-changed   </tspan><tspan x="0" y="96" class="st9 st12"> </tspan><tspan x="0" y="144" class="st15 st9 st12">    </tspan></text>
+</g>
+</svg>

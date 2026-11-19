@@ -1,0 +1,1 @@
+import e from"./en.C9-YMW_p.js";const r={...e,error:{...e.error,IsDate:"Please enter a valid date (MM/DD/YYYY)."},warning:{...e.warning,IsDate:"Please enter a valid date (MM/DD/YYYY)."}};export{r as default};
