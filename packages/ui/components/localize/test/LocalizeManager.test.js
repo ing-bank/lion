@@ -1,4 +1,4 @@
-import { expect, oneEvent, aTimeout } from '@open-wc/testing';
+import { expect, oneEvent } from '@open-wc/testing';
 import sinon from 'sinon';
 // @ts-ignore
 import { fetchMock } from '@bundled-es-modules/fetch-mock';
@@ -903,9 +903,13 @@ describe('[deprecated] When not supporting external translation tools like Googl
       'en-GB': { 'my-component': { greeting: 'Hello!' } },
     });
 
+    // With autoLoadOnLocaleChange, "localeChanged" is dispatched when the namespaces are loaded
+    const localeChanged = oneEvent(
+      /** @type {EventTarget} */ (/** @type {unknown} */ (manager)),
+      'localeChanged',
+    );
     document.documentElement.lang = 'nl-NL';
-    await aTimeout(0); // wait for mutation observer to be called
-    await manager.loadingComplete;
+    await localeChanged;
 
     expect(storage).to.deep.equal({
       'en-GB': { 'my-component': { greeting: 'Hello!' } },
