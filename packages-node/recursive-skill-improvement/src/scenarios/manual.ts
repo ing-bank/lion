@@ -20,8 +20,8 @@ export const nativeFormToLionFormScenario: TestScenario = {
   kind: 'integration',
   description: 'Migrate a native form to lion-form with a lion-form submit handler.',
   prompt: [
-    'Rewrite `src/login-form.js` so the form is wrapped in `lion-form` and uses `@lion/ui` form',
-    'controls instead of native `<input>` elements. Keep the same fields (email + password) and the',
+    'Rewrite `src/login-form.js` so the form is wrapped in the form component from `@lion/ui` and uses',
+    '`@lion/ui` form controls instead of native `<input>` elements. Keep the same fields (email + password) and the',
     'same submit behaviour. Rewrite that file only — nothing else.',
   ].join(' '),
   targetFile: 'src/login-form.js',
@@ -56,8 +56,10 @@ export const nativeFormToLionFormScenario: TestScenario = {
     {
       type: 'matches',
       file: 'src/login-form.js',
-      pattern: '<lion-form',
-      description: 'uses the <lion-form> element',
+      // Markup or createElement, as the generated component check accepts: the prompt names no tag,
+      // so a check that demanded one shape alone would be an over-strict contract (lint L8).
+      pattern: `<lion-form(?:[\\s>/]|$)|createElement\\(\\s*['"]lion-form['"]`,
+      description: 'uses the <lion-form> element (markup or createElement)',
     },
     {
       type: 'matches',
@@ -101,8 +103,8 @@ export const ibanFieldScenario: TestScenario = {
   description: 'Repair an IBAN field: deep import, native input, no form registration.',
   prompt: [
     'Repair `src/iban-field.js`. It renders a native `<input>` and reaches into `@lion/ui`',
-    'internals with a deep import. Make it render a `lion-input-iban` inside a `lion-form`,',
-    'registering the field on the form under the name `account`. Keep the class name `IbanField`',
+    'internals with a deep import. Make it render an IBAN input from `@lion/ui` inside a form from',
+    '`@lion/ui`, registering the field on the form under the name `account`. Keep the class name `IbanField`',
     'and its named export. Rewrite only that file — nothing else.',
   ].join(' '),
   targetFile: 'src/iban-field.js',
@@ -174,14 +176,14 @@ export const ibanFieldScenario: TestScenario = {
     {
       type: 'matches',
       file: 'src/iban-field.js',
-      pattern: '<lion-form',
-      description: 'renders a <lion-form>',
+      pattern: `<lion-form(?:[\\s>/]|$)|createElement\\(\\s*['"]lion-form['"]`,
+      description: 'renders a <lion-form> (markup or createElement)',
     },
     {
       type: 'matches',
       file: 'src/iban-field.js',
-      pattern: '<lion-input-iban',
-      description: 'renders a <lion-input-iban>',
+      pattern: `<lion-input-iban(?:[\\s>/]|$)|createElement\\(\\s*['"]lion-input-iban['"]`,
+      description: 'renders a <lion-input-iban> (markup or createElement)',
     },
     {
       type: 'matches',
