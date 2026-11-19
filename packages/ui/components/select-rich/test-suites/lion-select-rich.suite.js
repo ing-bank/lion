@@ -14,6 +14,7 @@ import {
   aTimeout,
   defineCE,
   expect,
+  oneEvent,
   waitUntil,
 } from '@open-wc/testing';
 import { cache } from 'lit/directives/cache.js';
@@ -296,7 +297,7 @@ export function runSelectRichSuite({
 
         el.opened = false;
         await el.updateComplete;
-        await el.updateComplete; // safari takes a little longer
+        await _overlayCtrl._hideComplete;
         expect(_overlayCtrl.isShown).to.be.false;
       });
 
@@ -324,7 +325,7 @@ export function runSelectRichSuite({
 
         el.opened = false;
         await el.updateComplete;
-        await el.updateComplete; // safari takes a little longer
+        await _overlayCtrl._hideComplete;
         expect(isActiveElement(_listboxNode)).to.be.false;
         expect(isActiveElement(_invokerNode)).to.be.true;
       });
@@ -451,12 +452,11 @@ export function runSelectRichSuite({
         // Emulate selecting hotpink, it closing, and opening it again
         el.modelValue = 'hotpink';
         el.opened = false;
-        await el.updateComplete; // necessary for overlay controller to actually close and re-open
-        await el.updateComplete; // safari takes a little longer
-        el.opened = true;
         await el.updateComplete;
-        await el.updateComplete; // safari takes a little longer
-        await _overlayCtrl._showComplete;
+        await _overlayCtrl._hideComplete;
+        const shown = oneEvent(_overlayCtrl, 'show');
+        el.opened = true;
+        await shown;
 
         // noDefaultSelected will now flip the override back to what was the initial reference width
         expect(_overlayCtrl.inheritsReferenceWidth).to.equal('full');
@@ -518,7 +518,7 @@ export function runSelectRichSuite({
 
         el.opened = false;
         await el.updateComplete;
-        await el.updateComplete; // safari takes a little longer
+        await getSelectRichMembers(el)._overlayCtrl._hideComplete;
         expect(_listboxNode.hasAttribute('autofocus')).to.be.false;
       });
 
@@ -535,7 +535,7 @@ export function runSelectRichSuite({
 
         el.opened = false;
         await el.updateComplete;
-        await el.updateComplete; // safari takes a little longer
+        await getSelectRichMembers(el)._overlayCtrl._hideComplete;
         expect(isActiveElement(_listboxNode)).to.be.false;
       });
     });
@@ -685,7 +685,6 @@ export function runSelectRichSuite({
         expect(_invokerNode.getAttribute('aria-expanded')).to.equal('false');
         el.opened = true;
         await el.updateComplete;
-        await el.updateComplete; // need 2 awaits as overlay.show is an async function
 
         expect(_invokerNode.getAttribute('aria-expanded')).to.equal('true');
       });
