@@ -507,8 +507,19 @@ export function runInputStepperSuite({
     });
 
     describe('_destroyOutputContent method', () => {
+      /** @type {import('sinon').SinonFakeTimers|undefined} */
+      let clock;
+
       beforeEach(() => {
         // Ensure clean state for each test
+        sinon.restore();
+      });
+
+      // Restores in `afterEach`, so that an assertion that fails before the end of a test can not
+      // leak fake timers or spies into the next test
+      afterEach(() => {
+        clock?.restore();
+        clock = undefined;
         sinon.restore();
       });
 
@@ -530,7 +541,7 @@ export function runInputStepperSuite({
       it('should set __valueText to nothing and request update after timeout', async () => {
         const el = await fixture(defaultInputStepper);
         const requestUpdateSpy = sinon.spy(el, 'requestUpdate');
-        const clock = sinon.useFakeTimers();
+        clock = sinon.useFakeTimers();
 
         // Set initial value text
         el.__valueText = 'test value';
@@ -544,7 +555,6 @@ export function runInputStepperSuite({
         await expect(el.__valueText).to.equal(nothing);
         expect(requestUpdateSpy.calledOnce).to.be.true;
 
-        clock.restore();
         requestUpdateSpy.restore();
       });
 
@@ -563,7 +573,7 @@ export function runInputStepperSuite({
           outputElement.dataset.selfDestruct = '5000';
         }
 
-        const clock = sinon.useFakeTimers();
+        clock = sinon.useFakeTimers();
         const requestUpdateSpy = sinon.spy(el, 'requestUpdate');
 
         el.__valueText = 'test value';
@@ -579,7 +589,6 @@ export function runInputStepperSuite({
         await expect(el.__valueText).to.equal(nothing);
         expect(requestUpdateSpy.calledOnce).to.be.true;
 
-        clock.restore();
         requestUpdateSpy.restore();
       });
 
@@ -598,7 +607,7 @@ export function runInputStepperSuite({
           outputElement.dataset.selfDestruct = 'invalid';
         }
 
-        const clock = sinon.useFakeTimers();
+        clock = sinon.useFakeTimers();
         const requestUpdateSpy = sinon.spy(el, 'requestUpdate');
 
         el.__valueText = 'test value';
@@ -609,7 +618,6 @@ export function runInputStepperSuite({
         await expect(el.__valueText).to.equal(nothing);
         expect(requestUpdateSpy.calledOnce).to.be.true;
 
-        clock.restore();
         requestUpdateSpy.restore();
       });
 
@@ -636,7 +644,7 @@ export function runInputStepperSuite({
 
       it('should only execute timeout callback if output element still has parent', async () => {
         const el = await fixture(defaultInputStepper);
-        const clock = sinon.useFakeTimers();
+        clock = sinon.useFakeTimers();
         const requestUpdateSpy = sinon.spy(el, 'requestUpdate');
 
         el.__valueText = 'test value';
@@ -655,7 +663,6 @@ export function runInputStepperSuite({
         expect(requestUpdateSpy.called).to.be.false;
         expect(el.__valueText).to.equal('test value');
 
-        clock.restore();
         requestUpdateSpy.restore();
       });
 
@@ -683,7 +690,7 @@ export function runInputStepperSuite({
 
       it('should handle multiple rapid calls by clearing previous timers', async () => {
         const el = await fixture(defaultInputStepper);
-        const clock = sinon.useFakeTimers();
+        clock = sinon.useFakeTimers();
         const requestUpdateSpy = sinon.spy(el, 'requestUpdate');
 
         el.__valueText = 'test value';
@@ -705,7 +712,6 @@ export function runInputStepperSuite({
         await expect(el.__valueText).to.equal(nothing);
         expect(requestUpdateSpy.calledOnce).to.be.true;
 
-        clock.restore();
         requestUpdateSpy.restore();
       });
     });

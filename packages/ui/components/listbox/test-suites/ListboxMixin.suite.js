@@ -917,6 +917,17 @@ export function runListboxMixinSuite({
         // TODO: add key combinations like shift+home/ctrl+A etc etc.
 
         describe('Typeahead', () => {
+          /** @type {import('sinon').SinonFakeTimers|undefined} */
+          let clock;
+
+          // Restores in `afterEach`, so that an assertion that fails before the end of a test can
+          // not leak fake timers or spies into the next test
+          afterEach(() => {
+            clock?.restore();
+            clock = undefined;
+            sinon.restore();
+          });
+
           it('activates a value with single [character] key', async () => {
             const el = await fixture(html`
             <${tags.host} opened id="color" name="color" label="Favorite color">
@@ -1043,7 +1054,7 @@ export function runListboxMixinSuite({
               return;
             }
 
-            const clock = sinon.useFakeTimers();
+            clock = sinon.useFakeTimers();
             const { _listboxNode } = getListboxMembers(el);
 
             mimicKeyPress(_listboxNode, 't', 'KeyT');
@@ -1057,8 +1068,6 @@ export function runListboxMixinSuite({
             clock.tick(1000);
             // @ts-ignore [allow-private] in test
             expect(el.__typedChars).to.deep.equal([]);
-
-            clock.restore();
           });
 
           it('clears scheduled timeouts', async () => {
