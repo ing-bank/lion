@@ -488,7 +488,7 @@ describe('remarkExtend', () => {
     expect(scriptNodes[1].value).to.equal("import { a11yLocalized } from './assets/a11y.js';");
   });
 
-  it('renames the earlier binding when a different specifier declares the same name', async () => {
+  it('renames the later binding when a different specifier declares the same name', async () => {
     const result = await execute(
       [
         //
@@ -506,19 +506,45 @@ describe('remarkExtend', () => {
     );
     expect(scriptNodes.length).to.equal(2);
     expect(scriptNodes[0].value).to.equal(
-      [
-        "import { LitElement, html as html1 } from '@mdjs/mdjs-preview';",
-        "import './assets/ref.js';",
-      ].join('\n'),
+      ["import { LitElement, html } from '@mdjs/mdjs-preview';", "import './assets/ref.js';"].join(
+        '\n',
+      ),
     );
-    expect(scriptNodes[1].value).to.equal("import { html } from 'lit';");
+    expect(scriptNodes[1].value).to.equal("import { html as html1 } from 'lit';");
   });
 
-  it('rewrites the occurrences of the renamed binding in that block only', async () => {
+  it('rewrites the occurrences of the renamed binding in the block it renamed', async () => {
     const result = await execute(
       [
         //
-        "```js ::importBlock('./fixtures/tabs-usage-with-script.md', '## More Tabs Usage')",
+        "```js ::importBlock('./fixtures/tabs-with-script.md', '## More Tabs')",
+        '```',
+        '',
+        "```js ::importBlock('./fixtures/tabs-lit-usage-with-script.md', '## More Tabs Lit Usage')",
+        '```',
+      ].join('\n'),
+      { shouldStringify: false },
+    );
+
+    const scriptNodes = result.children.filter(
+      node => node.type === 'code' && node.lang === 'js' && node.meta === 'script',
+    );
+    expect(scriptNodes[1].value).to.equal(
+      [
+        "import { html as html1 } from 'lit';",
+        '',
+        '// html from lit',
+        'export const litMain = () => html1`<p>html from lit</p>`;',
+      ].join('\n'),
+    );
+  });
+
+  it('keeps the plain name on the page itself, so other blocks keep resolving', async () => {
+    const result = await execute(
+      [
+        // the page's own setup comes first, the imported section after it
+        '```js script',
+        "import { html } from '@mdjs/mdjs-preview';",
         '```',
         '',
         "```js ::importBlock('./fixtures/tabs-lit-with-script.md', '## More Tabs Lit')",
@@ -530,16 +556,31 @@ describe('remarkExtend', () => {
     const scriptNodes = result.children.filter(
       node => node.type === 'code' && node.lang === 'js' && node.meta === 'script',
     );
-    expect(scriptNodes[0].value).to.equal(
+    expect(scriptNodes.length).to.equal(2);
+    expect(scriptNodes[0].value).to.equal("import { html } from '@mdjs/mdjs-preview';");
+    expect(scriptNodes[1].value).to.equal("import { html as html1 } from 'lit';");
+  });
+
+  it('renames the imported block when the page declares the name after it', async () => {
+    const result = await execute(
       [
-        "import { LitElement, html as html1 } from '@mdjs/mdjs-preview';",
-        "import './assets/ref.js';",
+        //
+        "```js ::importBlock('./fixtures/tabs-lit-with-script.md', '## More Tabs Lit')",
+        '```',
         '',
-        '// html is imported above',
-        'export const main = () => html1`<p>html stays html</p>`;',
+        '```js script',
+        "import { html } from '@mdjs/mdjs-preview';",
+        '```',
       ].join('\n'),
+      { shouldStringify: false },
     );
-    expect(scriptNodes[1].value).to.equal("import { html } from 'lit';");
+
+    const scriptNodes = result.children.filter(
+      node => node.type === 'code' && node.lang === 'js' && node.meta === 'script',
+    );
+    expect(scriptNodes.length).to.equal(2);
+    expect(scriptNodes[0].value).to.equal("import { html as html1 } from 'lit';");
+    expect(scriptNodes[1].value).to.equal("import { html } from '@mdjs/mdjs-preview';");
   });
 
   it('keeps a statement whole when the page does not declare its bindings yet', async () => {
@@ -560,13 +601,12 @@ describe('remarkExtend', () => {
     );
     expect(scriptNodes.length).to.equal(2);
     expect(scriptNodes[0].value).to.equal(
-      [
-        "import { LitElement, html as html1 } from '@mdjs/mdjs-preview';",
-        "import './assets/ref.js';",
-      ].join('\n'),
+      ["import { LitElement, html } from '@mdjs/mdjs-preview';", "import './assets/ref.js';"].join(
+        '\n',
+      ),
     );
     expect(scriptNodes[1].value).to.equal(
-      ["import { html, render } from 'lit';", "import './assets/green.js';"].join('\n'),
+      ["import { html as html1, render } from 'lit';", "import './assets/green.js';"].join('\n'),
     );
   });
 

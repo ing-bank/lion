@@ -150,9 +150,13 @@ function importStatementLineRanges(lines) {
  * different specifiers: `import { html } from '@mdjs/mdjs-preview';` followed by
  * `import { html } from 'lit';` is the same `SyntaxError: Identifier 'html' has already
  * been declared`. Dropping one of them would silently change what the page renders, so the
- * earlier declaration is renamed locally instead - `import { html as html1 } from
- * '@mdjs/mdjs-preview';` - and the occurrences of `html` in that block are rewritten to
- * `html1`. The last declaration keeps the plain name.
+ * colliding declaration is renamed locally instead - `import { html as html1 } from 'lit';`
+ * - and the occurrences of `html` in that block are rewritten to `html1`.
+ *
+ * Which one yields: the page's own declaration keeps the plain name. An imported block is a
+ * fragment, so it may be renamed freely - the page it was written on still has it under its
+ * own name, and code elsewhere on the constructed page that leans on the page's own import
+ * keeps resolving. Between two imported blocks the later one yields.
  */
 const IMPORT_FROM_STATEMENT = /^import\s+([\s\S]*?)\s+from\s*(['"])([^'"]+)\2\s*;?$/;
 const IMPORT_SIDE_EFFECT_STATEMENT = /^import\s*(['"])([^'"]+)\1\s*;?$/;
@@ -419,9 +423,9 @@ function lineOffset(lines, lineIndex) {
 
 /**
  * Gives every import statement of a page module one declaration per local name: an exact
- * duplicate statement is dropped, and a name that a later statement also declares is
- * renamed on the earlier declaration (and in the code of that block). A block that loses
- * all of its content is removed.
+ * duplicate statement is dropped, and a name a second statement also declares is renamed on
+ * the declaration that yields (and in the code of that block). A block that loses all of its
+ * content is removed.
  * @param {object} tree
  */
 function dedupePageLevelImportStatements(tree) {
@@ -446,7 +450,12 @@ function dedupePageLevelImportStatements(tree) {
       const text = normalizeCode(lines.slice(start, end + 1).join('\n'));
       return { start, end, text, parsed: parseImportStatement(text), drop: false, renames: [] };
     });
-    blocks.push({ node, lines, statements });
+    blocks.push({
+      node,
+      lines,
+      statements,
+      imported: Boolean(node.__remarkExtendImported),
+    });
   });
 
   const seenStatements = new Set();
@@ -464,13 +473,22 @@ function dedupePageLevelImportStatements(tree) {
           parsed.bindings.forEach(name => usedNames.add(name));
           for (const name of parsed.bindings) {
             const previous = declarations.get(name);
-            if (previous) {
+            if (!previous) {
+              declarations.set(name, { block, statement });
+            } else if (previous.block.imported && !block.imported) {
+              // The page's own declaration keeps the plain name: an imported block is a
+              // fragment, so it is the one that yields.
               const renamedTo = nextFreeName(name, usedNames);
               usedNames.add(renamedTo);
               previous.statement.renames.push({ from: name, to: renamedTo });
               declarations.set(renamedTo, previous);
+              declarations.set(name, { block, statement });
+            } else {
+              const renamedTo = nextFreeName(name, usedNames);
+              usedNames.add(renamedTo);
+              statement.renames.push({ from: name, to: renamedTo });
+              declarations.set(renamedTo, { block, statement });
             }
-            declarations.set(name, { block, statement });
           }
         }
       }
@@ -734,6 +752,13 @@ function remarkExtend({ rootDir = process.cwd(), page, globalReplaceFunction } =
             this.Compiler = () => '';
           });
         parser.processSync(stripFrontMatter(importFileContent.toString()));
+
+        // Mark what came out of the imported file: a binding of an imported block may be
+        // renamed freely, because that block is a fragment - the page it was written on
+        // still has it under its own name (see dedupePageLevelImportStatements).
+        toInsertNodes.forEach(insertedNode => {
+          insertedNode.__remarkExtendImported = true;
+        });
 
         if (node.type === 'root') {
           node.children.splice(0, 0, ...toInsertNodes);
