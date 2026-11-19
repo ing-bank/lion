@@ -993,14 +993,12 @@ export function runInputFileSuite({
           response: { name: 'file2.txt', status: 'FAIL' },
         };
 
-        setTimeout(() => {
-          // @ts-ignore ignore file typing
-          el._removeFile(removedFile);
-        });
-
-        await el.updateComplete;
-
-        const removeFileEvent = await oneEvent(el, 'file-removed');
+        // Listen before the action: an update of `el` that takes a task (like loading translations)
+        // could otherwise let a deferred action dispatch the event before anyone listens.
+        const fileRemoved = oneEvent(el, 'file-removed');
+        // @ts-ignore ignore file typing
+        el._removeFile(removedFile);
+        const removeFileEvent = await fileRemoved;
 
         // assertion for event data
         expect(removeFileEvent).to.exist;
