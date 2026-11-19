@@ -72,8 +72,8 @@ export function runTooltipSuite({
         // @ts-expect-error [allow-protected-in-tests]
         el._overlayInvokerNode.dispatchEvent(eventMouseLeave);
         clock.tick(300);
-        await el.updateComplete;
-        await el.updateComplete; // webkit needs longer
+        // @ts-expect-error [allow-protected-in-tests]
+        await el._overlayCtrl._hideComplete;
         // @ts-expect-error [allow-protected-in-tests]
         expect(el._overlayCtrl.isShown).to.equal(false);
       });
@@ -124,8 +124,8 @@ export function runTooltipSuite({
         const eventFocusOut = new Event('focusout');
         invoker.dispatchEvent(eventFocusOut);
         clock.tick(300);
-        await el.updateComplete;
-        await el.updateComplete; // webkit needs longer
+        // @ts-expect-error [allow-protected-in-tests]
+        await el._overlayCtrl._hideComplete;
         // @ts-expect-error [allow-protected-in-tests]
         expect(el._overlayCtrl.isShown).to.equal(false);
       });
@@ -228,8 +228,8 @@ export function runTooltipSuite({
         const eventFocusOut = new Event('focusout');
         invoker.dispatchEvent(eventFocusOut);
         clock.tick(300);
-        await el.updateComplete;
-        await el.updateComplete; // webkit needs longer
+        // @ts-expect-error [allow-protected-in-tests]
+        await el._overlayCtrl._hideComplete;
         // @ts-expect-error [allow-protected-in-tests]
         expect(el._overlayCtrl.isShown).to.equal(false);
       });
