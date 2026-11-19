@@ -583,6 +583,51 @@ describe('remarkExtend', () => {
     expect(scriptNodes[1].value).to.equal("import { html } from '@mdjs/mdjs-preview';");
   });
 
+  it('renames the later of two blocks the page itself declares, without failing', async () => {
+    const result = await execute(
+      [
+        '```js script',
+        "import { html } from '@mdjs/mdjs-preview';",
+        '```',
+        '',
+        '```js script',
+        "import { html } from 'lit';",
+        '```',
+      ].join('\n'),
+      { shouldStringify: false },
+    );
+
+    const scriptNodes = result.children.filter(
+      node => node.type === 'code' && node.lang === 'js' && node.meta === 'script',
+    );
+    expect(scriptNodes.length).to.equal(2);
+    expect(scriptNodes[0].value).to.equal("import { html } from '@mdjs/mdjs-preview';");
+    expect(scriptNodes[1].value).to.equal("import { html as html1 } from 'lit';");
+  });
+
+  it('handles a named import spread over many lines as one statement', async () => {
+    const result = await execute(
+      [
+        //
+        "```js ::importBlock('./fixtures/tabs-with-script.md', '## More Tabs')",
+        '```',
+        '',
+        "```js ::importBlock('./fixtures/tabs-long-with-script.md', '## More Tabs Long')",
+        '```',
+      ].join('\n'),
+      { shouldStringify: false },
+    );
+
+    const scriptNodes = result.children.filter(
+      node => node.type === 'code' && node.lang === 'js' && node.meta === 'script',
+    );
+    expect(scriptNodes[1].value).to.equal(
+      [
+        "import { html as html1, nothing, everything, something, nothingElse, everythingElse, one, two, three, four, five, six, seven } from 'lit';",
+      ].join('\n'),
+    );
+  });
+
   it('keeps a statement whole when the page does not declare its bindings yet', async () => {
     const result = await execute(
       [

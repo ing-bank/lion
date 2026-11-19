@@ -111,9 +111,11 @@ function normalizeCode(text) {
 
 /**
  * Line ranges (inclusive) of the top level import statements in `lines`.
- * Returns null when a statement does not terminate within 10 lines: removing lines of a
- * statement we did not delimit correctly would delete code instead of a duplicate, so
- * in that case we refuse to guess.
+ * A statement runs from its `import` line to the line that closes it - the first `;` at the
+ * end of a line, or, for a single-line side effect import, the line that ends with its
+ * specifier. There is no line budget: a named import spread over many lines is still one
+ * statement. Returns null for the block when a statement never closes, because rewriting
+ * lines we did not delimit correctly would delete code instead of a duplicate.
  * @param {string[]} lines
  * @returns {Array<[number, number]> | null}
  */
@@ -127,7 +129,7 @@ function importStatementLineRanges(lines) {
       const start = index;
       let end = index;
       let terminated = false;
-      while (end < lines.length && end - start <= 10) {
+      while (end < lines.length) {
         const line = lines[end].trimEnd();
         if (/;\s*$/.test(line) || (end === start && /['"]\s*;?$/.test(line))) {
           terminated = true;
@@ -135,7 +137,7 @@ function importStatementLineRanges(lines) {
         }
         end += 1;
       }
-      if (!terminated || end >= lines.length) {
+      if (!terminated) {
         return null;
       }
       ranges.push([start, end]);
