@@ -23,6 +23,17 @@ import { resolveSuiteTag } from '../../core/test-helpers/resolveSuiteTag.js';
 const fixture = /** @type {(arg: string | TemplateResult) => Promise<LionInputTel>} */ (_fixture);
 const fixtureSync = /** @type {(arg: string | TemplateResult) => LionInputTel} */ (_fixtureSync);
 
+/**
+ * Resolves once `el` has no update pending. Lit resolves `updateComplete` with `false` when the
+ * update requested another one (here: activeRegion is set in updated(), which reformats in the
+ * next update), so this awaits exactly the update cycles that are needed.
+ * @param {import('lit').LitElement} el
+ */
+async function updatesSettled(el) {
+  // eslint-disable-next-line no-await-in-loop
+  while (!(await el.updateComplete));
+}
+
 const getRegionCodeBasedOnLocale = () => {
   const localizeManager = getLocalizeManager();
   const localeSplitted = localizeManager.locale.split('-');
@@ -275,8 +286,7 @@ export function runInputTelSuite({
         expect(el.activeRegion).to.equal('PH');
         el.focus();
         mimicUserInput(el, '+31612345678');
-        await el.updateComplete;
-        await el.updateComplete;
+        await updatesSettled(el);
         expect(el.activeRegion).to.equal('NL');
         const expectedNumber = hasParentheses ? '(+31) 6 12345678' : '+31 6 12345678';
         expect(el.formattedValue).to.equal(expectedNumber);
@@ -538,8 +548,7 @@ export function runInputTelSuite({
 
         el.allowedRegions = ['DE'];
         // allowedRegions sets activeRegion in updated(), which reformats in the next update
-        await el.updateComplete;
-        await el.updateComplete;
+        await updatesSettled(el);
         expect(el.activeRegion).to.equal('DE');
         // The modelValue (E164) is the source of truth: it is kept and formatted again for the new
         // region. A Dutch number stays a Dutch number, so its national format does not change.

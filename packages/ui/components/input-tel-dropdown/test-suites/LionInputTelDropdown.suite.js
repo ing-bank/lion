@@ -369,7 +369,6 @@ export function runInputTelDropdownSuite(
         // @ts-ignore
         mimicUserChangingDropdown(el.refs.dropdown.value, 'BE');
         await el.updateComplete;
-        await el.updateComplete;
         const expectedNumber = hasParentheses ? '(+32)' : '+32';
         expect(el.value).to.equal(expectedNumber);
       });
@@ -385,7 +384,6 @@ export function runInputTelDropdownSuite(
         // @ts-ignore
         mimicUserChangingDropdown(el.refs.dropdown.value, 'BE');
         await el.updateComplete;
-        await el.updateComplete;
         expect(el.value).to.equal('(+32)');
       });
 
@@ -396,7 +394,6 @@ export function runInputTelDropdownSuite(
         el.value = '+3';
         // @ts-ignore
         mimicUserChangingDropdown(el.refs.dropdown.value, 'BE');
-        await el.updateComplete;
         await el.updateComplete;
         const expectedNumber = hasParentheses ? '(+32)' : '+32';
         expect(el.value).to.equal(expectedNumber);
@@ -410,7 +407,6 @@ export function runInputTelDropdownSuite(
         // @ts-ignore
         mimicUserChangingDropdown(el.refs.dropdown.value, 'BE');
         await el.updateComplete;
-        await el.updateComplete;
         const expectedNumber = hasParentheses ? '(+32) 2' : '+32 2';
         expect(el.value).to.equal(expectedNumber);
       });
@@ -423,7 +419,6 @@ export function runInputTelDropdownSuite(
         // @ts-ignore
         mimicUserChangingDropdown(el.refs.dropdown.value, 'BE');
         await el.updateComplete;
-        await el.updateComplete;
         const expectedNumber = hasParentheses ? '(+32)612345678' : '+32612345678';
         expect(el.value).to.equal(expectedNumber);
       });
@@ -435,7 +430,6 @@ export function runInputTelDropdownSuite(
         el.value = '+9912345678';
         // @ts-ignore
         mimicUserChangingDropdown(el.refs.dropdown.value, 'BE');
-        await el.updateComplete;
         await el.updateComplete;
         const expectedNumber = hasParentheses ? '(+32)' : '+32';
         expect(el.value).to.equal(expectedNumber);

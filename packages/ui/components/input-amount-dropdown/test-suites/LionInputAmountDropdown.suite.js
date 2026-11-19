@@ -400,7 +400,6 @@ export function runInputAmountDropdownSuite(
         // @ts-ignore
         mimicUserChangingDropdown(el.refs.dropdown.value, 'EUR');
         await el.updateComplete;
-        await el.updateComplete;
 
         expect(el.modelValue).to.eql({ currency: 'EUR', amount: '' });
       });
