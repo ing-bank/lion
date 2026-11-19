@@ -19,6 +19,17 @@ import { resolveSuiteTag } from '../../core/test-helpers/resolveSuiteTag.js';
 import { isActiveElement } from '../../core/test-helpers/isActiveElement.js';
 
 /**
+ * Resolves once `el` has no update pending. Lit resolves `updateComplete` with `false` when the
+ * update requested another one (for instance closing the overlay resets activeIndex in updated()),
+ * so this awaits exactly the update cycles that are needed instead of a fixed number of them.
+ * @param {import('lit').LitElement} el
+ */
+async function updatesSettled(el) {
+  // eslint-disable-next-line no-await-in-loop
+  while (!(await el.updateComplete));
+}
+
+/**
  * @typedef {import('@lion/ui/types/test-suites.js').SuiteElement} SuiteElement
  * Runs the `lion-combobox` behavioural suite. The caller hands the elements it should run against;
  * anything left out keeps Lion's own element.
@@ -997,8 +1008,7 @@ export function runComboboxSuite({
         await el.updateComplete;
 
         await mimicUserTypingAdvanced(el, ['Delete']);
-        await el.updateComplete;
-        await el.updateComplete;
+        await updatesSettled(el);
 
         mimicKeyPress(_inputNode, 'Enter');
         await el.updateComplete;
@@ -2093,11 +2103,9 @@ export function runComboboxSuite({
           `)
         );
         const { _inputNode } = getComboboxMembers(el);
-        mimicUserTypingAdvanced(el, ['m', 'a', 'k']);
-        await el.updateComplete;
+        await mimicUserTypingAdvanced(el, ['m', 'a', 'k']);
         mimicKeyPress(_inputNode, 'Enter');
-        await el.updateComplete;
-        await el.updateComplete;
+        await updatesSettled(el);
         expect(_inputNode.value).to.equal('Mak');
       });
 
@@ -2112,14 +2120,9 @@ export function runComboboxSuite({
           `)
         );
         const { _inputNode } = getComboboxMembers(el);
-        mimicUserTypingAdvanced(el, ['m', 'o', 'Backspace', 'Backspace', 'm', 'o']);
-        await el.updateComplete;
-        await el.updateComplete;
-        await el.updateComplete;
-        await el.updateComplete;
+        await mimicUserTypingAdvanced(el, ['m', 'o', 'Backspace', 'Backspace', 'm', 'o']);
         mimicKeyPress(_inputNode, 'Enter');
-        await el.updateComplete;
-        await el.updateComplete;
+        await updatesSettled(el);
         expect(_inputNode.value).to.equal('Mo');
       });
 
@@ -2548,11 +2551,13 @@ export function runComboboxSuite({
           const spy = sinon.spy(el.combobox, '_handleAutocompletion');
           el.addOption();
           await el.updateComplete;
-          await el.updateComplete;
+          // the wrapper rendered new options: the combobox autocompletes in its own update
+          await el.combobox.updateComplete;
           expect(spy).to.have.been.calledOnce;
           el.clearOptions();
           await el.updateComplete;
-          await el.updateComplete;
+          // the wrapper rendered new options: the combobox autocompletes in its own update
+          await el.combobox.updateComplete;
           expect(spy).to.have.been.calledTwice;
         });
 
@@ -2567,10 +2572,12 @@ export function runComboboxSuite({
           // simulate fetching data from server
           el.clearOptions();
           await el.updateComplete;
-          await el.updateComplete;
+          // the wrapper rendered new options: the combobox autocompletes in its own update
+          await el.combobox.updateComplete;
           el.updateOptions(defaultOptions);
           await el.updateComplete;
-          await el.updateComplete;
+          // the wrapper rendered new options: the combobox autocompletes in its own update
+          await el.combobox.updateComplete;
 
           // Assert
           expect(_inputNode.value).to.equal('lorem');
@@ -2583,10 +2590,12 @@ export function runComboboxSuite({
           // simulate fetching data from server
           el.clearOptions();
           await el.updateComplete;
-          await el.updateComplete;
+          // the wrapper rendered new options: the combobox autocompletes in its own update
+          await el.combobox.updateComplete;
           el.updateOptions(defaultOptions);
           await el.updateComplete;
-          await el.updateComplete;
+          // the wrapper rendered new options: the combobox autocompletes in its own update
+          await el.combobox.updateComplete;
 
           // Assert
           expect(_inputNode.value).to.equal('lorem');
@@ -2621,10 +2630,12 @@ export function runComboboxSuite({
           // Act (fetching server side suggestions)
           el.clearOptions();
           await el.updateComplete;
-          await el.updateComplete;
+          // the wrapper rendered new options: the combobox autocompletes in its own update
+          await el.combobox.updateComplete;
           el.updateOptions(['party', 'particularly long option', 'play']);
           await el.updateComplete;
-          await el.updateComplete;
+          // the wrapper rendered new options: the combobox autocompletes in its own update
+          await el.combobox.updateComplete;
 
           // Assert (the input has inline-completed with new suggestions)
           expect(_inputNode.value).to.equal('party');
@@ -2647,7 +2658,8 @@ export function runComboboxSuite({
 
           el.clearOptions();
           await el.updateComplete;
-          await el.updateComplete;
+          // the wrapper rendered new options: the combobox autocompletes in its own update
+          await el.combobox.updateComplete;
 
           expect(_inputNode.value).to.equal('a');
           expect(_inputNode.selectionStart).to.equal(1);
@@ -2655,7 +2667,8 @@ export function runComboboxSuite({
 
           el.updateOptions(['apple', 'apricot', 'avocado']);
           await el.updateComplete;
-          await el.updateComplete;
+          // the wrapper rendered new options: the combobox autocompletes in its own update
+          await el.combobox.updateComplete;
           expect(_inputNode.value).to.equal('apple');
           expect(_inputNode.selectionStart).to.equal(1);
           expect(_inputNode.selectionEnd).to.equal(_inputNode.value.length);
@@ -3323,15 +3336,13 @@ export function runComboboxSuite({
           await mimicUserTyping(/** @type {LionCombobox} */ (el), '');
           await el.updateComplete;
           await mimicUserTyping(/** @type {LionCombobox} */ (el), 'cha');
-          await el.updateComplete;
-          await el.updateComplete;
+          await updatesSettled(el);
           expect(el.opened).to.be.true;
 
           expect(el.activeIndex).to.equal(1);
 
           mimicKeyPress(_inputNode, 'Enter');
-          await el.updateComplete;
-          await el.updateComplete;
+          await updatesSettled(el);
 
           expect(el.activeIndex).to.equal(-1);
           expect(el.opened).to.be.false;
