@@ -216,34 +216,55 @@ export function runIconSuite({
     });
 
     it('does not create race conditions when icon changed while resolving icon id', async () => {
+      // The test resolves the icons itself, in the order of the race: the icon requested last
+      // (hammer) resolves first, the one requested first (heart) resolves after it.
+      /** @type {(svg: TemplateResult) => void} */
+      let resolveHeart = () => {};
+      /** @type {(svg: TemplateResult) => void} */
+      let resolveHammer = () => {};
       try {
         icons.addIconResolver(
           'foo',
           () =>
             /** @type {Promise<TemplateResult>} */ (
-              // eslint-disable-next-line no-promise-executor-return
-              new Promise(resolve => setTimeout(() => resolve(heartSvg)))
+              new Promise(resolve => {
+                resolveHeart = resolve;
+              })
             ),
         );
         icons.addIconResolver(
           'bar',
           () =>
             /** @type {Promise<TemplateResult>} */ (
-              // eslint-disable-next-line no-promise-executor-return
-              new Promise(resolve => setTimeout(() => resolve(hammerSvg)))
+              new Promise(resolve => {
+                resolveHammer = resolve;
+              })
             ),
         );
-        const el = await fixture(html`<${tag} icon-id="foo:lorem:ipsum"></${tag}>`);
-
+        const el = /** @type {LionIcon} */ (
+          fixtureSync(html`<${tag} icon-id="foo:lorem:ipsum"></${tag}>`)
+        );
+        // Each call handles one icon id; its promise settles when the resolved icon was handled.
+        // Spied before the first update, which handles the initial icon id.
+        const onIconIdChangedSpy = sinon.spy(
+          /** @type {{ _onIconIdChanged: (prevIconId: string) => Promise<void> }} */ (
+            /** @type {unknown} */ (el)
+          ),
+          '_onIconIdChanged',
+        );
         await el.updateComplete;
         el.iconId = 'bar:lorem:ipsum';
         await el.updateComplete;
-        await aTimeout(4);
+        expect(onIconIdChangedSpy.callCount).to.equal(2);
+        const [heartHandled, hammerHandled] = onIconIdChangedSpy.returnValues;
 
-        // heart is still loading at this point, but hammer came later so that should be later
+        resolveHammer(hammerSvg);
+        await hammerHandled;
         expect(/** @type {HTMLElement} */ (el.children[0]).dataset.testId).to.equal('svg-hammer');
-        await aTimeout(10);
+
         // heart finished loading, but it should not be rendered because hammer came later
+        resolveHeart(heartSvg);
+        await heartHandled;
         expect(/** @type {HTMLElement} */ (el.children[0]).dataset.testId).to.equal('svg-hammer');
       } finally {
         icons.removeIconResolver('foo');
