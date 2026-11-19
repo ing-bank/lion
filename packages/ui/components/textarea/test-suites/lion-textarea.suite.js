@@ -1,5 +1,5 @@
 import { html } from 'lit/static-html.js';
-import { unsafeStatic, aTimeout, expect, fixture as _fixture } from '@open-wc/testing';
+import { unsafeStatic, expect, fixture as _fixture, waitUntil } from '@open-wc/testing';
 import sinon from 'sinon';
 import { getFormControlMembers } from '@lion/ui/form-core-test-helpers.js';
 import { LionTextarea } from '@lion/ui/textarea.js';
@@ -207,8 +207,9 @@ export function runTextareaSuite({
 
       const resizeSpy = sinon.spy(textArea, 'resizeTextarea');
       el.style.display = 'block';
-      await aTimeout(20);
-      expect(resizeSpy.calledOnce).to.be.true;
+      // The IntersectionObserver callback is the signal; it runs a frame or so after the change
+      await waitUntil(() => resizeSpy.callCount > 0, 'resizeTextarea was not called');
+      expect(resizeSpy.callCount).to.equal(1);
     });
 
     it('disconnects its visibility (IntersectionObserver) observer when disconnected', async () => {
