@@ -67,6 +67,15 @@ export const RATES: Record<string, TokenRate> = {
     retrievedAt: '2026-10-12',
     note: 'the schema publishes two input tiers, $0.50 and $1.00 per 1M; the lower one is used here',
   },
+  'anthropic-claude-haiku-5-5': {
+    input: 0.1,
+    output: 0.5,
+    cached: 0.01,
+    source: 'https://www.claude.com/pricing',
+    confidence: 'aggregator',
+    retrievedAt: '2026-11-19',
+    note: 'vendor pricing page, not a model schema: publishes two context tiers, <=100K at $0.10 in / $0.50 out and >100K at $0.50 in / $2.50 out; the <=100K tier is used here. Runware lists the same $0.10 input rate on runware.ai/pricing, and the id resolves via api.runware.ai/v1/chat/completions',
+  },
   'deepseek-v4-1-flash': {
     input: 0.15,
     output: 0.6,

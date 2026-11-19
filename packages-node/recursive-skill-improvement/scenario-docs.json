@@ -12,7 +12,6 @@
     "component/accordion-run": [],
     "component/button": [
       "docs/components/button/api-table.md",
-      "docs/components/button/examples.md",
       "docs/components/button/extensions.md",
       "docs/components/button/index.md",
       "docs/components/button/overview.md",
@@ -32,7 +31,6 @@
     ],
     "component/collapsible": [
       "docs/components/collapsible/api-table.md",
-      "docs/components/collapsible/examples.md",
       "docs/components/collapsible/index.md",
       "docs/components/collapsible/overview.md",
       "docs/components/collapsible/use-cases.md"
@@ -180,7 +178,6 @@
     ],
     "component/select-rich": [
       "docs/components/select-rich/api-table.md",
-      "docs/components/select-rich/examples.md",
       "docs/components/select-rich/extensions.md",
       "docs/components/select-rich/index.md",
       "docs/components/select-rich/overview.md",
@@ -201,7 +198,6 @@
     ],
     "component/tabs": [
       "docs/components/tabs/api-table.md",
-      "docs/components/tabs/examples.md",
       "docs/components/tabs/extensions.md",
       "docs/components/tabs/index.md",
       "docs/components/tabs/overview.md",
@@ -215,7 +211,6 @@
     ],
     "component/tooltip": [
       "docs/components/tooltip/api-table.md",
-      "docs/components/tooltip/examples.md",
       "docs/components/tooltip/index.md",
       "docs/components/tooltip/overview.md",
       "docs/components/tooltip/use-cases.md"
