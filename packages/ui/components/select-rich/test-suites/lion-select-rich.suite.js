@@ -14,6 +14,7 @@ import {
   aTimeout,
   defineCE,
   expect,
+  oneEvent,
   waitUntil,
 } from '@open-wc/testing';
 import { cache } from 'lit/directives/cache.js';
@@ -234,32 +235,49 @@ export function runSelectRichSuite({
         expect(firstChild.textContent).to.equal('30');
       });
 
-      // FIXME: wrong values in safari/webkit even though this passes in the "real" debug browsers
-      it.skip('inherits the content width including arrow width', async () => {
+      it('inherits the content width including arrow width', async () => {
         const el = await fixture(html`
           <${hostTag}>
             <${tagOption} .choiceValue=${10}>Item 1</${tagOption}>
-            <${tagOption} .choiceValue=${10}>Item 2 with long label</${tagOption}>
+            <${tagOption} .choiceValue=${20}>Item 2 with long label</${tagOption}>
           </${hostTag}>
         `);
         el.opened = true;
-        const options = el.formElements;
         await el.updateComplete;
-        const { _invokerNode, _inputNode } = getSelectRichMembers(el);
+        const { _invokerNode, _inputNode, _overlayCtrl } = getSelectRichMembers(el);
+        // @ts-ignore [allow-protected] in test
+        const arrowWidth = /** @type {number} */ (el._arrowWidth);
 
-        expect(_invokerNode.clientWidth).to.equal(options[1].clientWidth);
+        /**
+         * The width the content (listbox) takes when it is not stretched by the invoker:
+         * what LionSelectRich measures to size the invoker
+         */
+        const getNaturalContentWidth = () => {
+          const { contentWrapperNode } = _overlayCtrl;
+          const { minWidth, width } = contentWrapperNode.style;
+          contentWrapperNode.style.minWidth = 'auto';
+          contentWrapperNode.style.width = 'auto';
+          const contentWidth = contentWrapperNode.getBoundingClientRect().width;
+          contentWrapperNode.style.minWidth = minWidth;
+          contentWrapperNode.style.width = width;
+          return contentWidth;
+        };
+        const getInvokerWidth = () => parseFloat(_invokerNode.style.width);
+
+        const initialInvokerWidth = getInvokerWidth();
+        expect(initialInvokerWidth).to.be.closeTo(getNaturalContentWidth() + arrowWidth, 1);
 
         const newOption = /** @type {LionOption} */ (document.createElement(tagNameOption));
         newOption.choiceValue = 30;
-        newOption.textContent = '30 with longer label';
-
+        newOption.textContent = 'Item 3 with an even longer label';
         _inputNode.appendChild(newOption);
         await el.updateComplete;
-        expect(_invokerNode.clientWidth).to.equal(options[2].clientWidth);
+        expect(getInvokerWidth()).to.be.greaterThan(initialInvokerWidth);
+        expect(getInvokerWidth()).to.be.closeTo(getNaturalContentWidth() + arrowWidth, 1);
 
         _inputNode.removeChild(newOption);
         await el.updateComplete;
-        expect(_invokerNode.clientWidth).to.equal(options[1].clientWidth);
+        expect(getInvokerWidth()).to.equal(initialInvokerWidth);
       });
     });
 
@@ -279,7 +297,7 @@ export function runSelectRichSuite({
 
         el.opened = false;
         await el.updateComplete;
-        await el.updateComplete; // safari takes a little longer
+        await _overlayCtrl._hideComplete;
         expect(_overlayCtrl.isShown).to.be.false;
       });
 
@@ -307,7 +325,7 @@ export function runSelectRichSuite({
 
         el.opened = false;
         await el.updateComplete;
-        await el.updateComplete; // safari takes a little longer
+        await _overlayCtrl._hideComplete;
         expect(isActiveElement(_listboxNode)).to.be.false;
         expect(isActiveElement(_invokerNode)).to.be.true;
       });
@@ -434,12 +452,11 @@ export function runSelectRichSuite({
         // Emulate selecting hotpink, it closing, and opening it again
         el.modelValue = 'hotpink';
         el.opened = false;
-        await el.updateComplete; // necessary for overlay controller to actually close and re-open
-        await el.updateComplete; // safari takes a little longer
-        el.opened = true;
         await el.updateComplete;
-        await el.updateComplete; // safari takes a little longer
-        await _overlayCtrl._showComplete;
+        await _overlayCtrl._hideComplete;
+        const shown = oneEvent(_overlayCtrl, 'show');
+        el.opened = true;
+        await shown;
 
         // noDefaultSelected will now flip the override back to what was the initial reference width
         expect(_overlayCtrl.inheritsReferenceWidth).to.equal('full');
@@ -501,7 +518,7 @@ export function runSelectRichSuite({
 
         el.opened = false;
         await el.updateComplete;
-        await el.updateComplete; // safari takes a little longer
+        await getSelectRichMembers(el)._overlayCtrl._hideComplete;
         expect(_listboxNode.hasAttribute('autofocus')).to.be.false;
       });
 
@@ -518,7 +535,7 @@ export function runSelectRichSuite({
 
         el.opened = false;
         await el.updateComplete;
-        await el.updateComplete; // safari takes a little longer
+        await getSelectRichMembers(el)._overlayCtrl._hideComplete;
         expect(isActiveElement(_listboxNode)).to.be.false;
       });
     });
@@ -668,7 +685,6 @@ export function runSelectRichSuite({
         expect(_invokerNode.getAttribute('aria-expanded')).to.equal('false');
         el.opened = true;
         await el.updateComplete;
-        await el.updateComplete; // need 2 awaits as overlay.show is an async function
 
         expect(_invokerNode.getAttribute('aria-expanded')).to.equal('true');
       });

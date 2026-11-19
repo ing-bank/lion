@@ -1,8 +1,8 @@
 import { html } from 'lit/static-html.js';
-import { nothing } from 'lit';
 import { until } from 'lit/directives/until.js';
 import { unsafeStatic, aTimeout, expect, fixture as _fixture, fixtureSync } from '@open-wc/testing';
 import { LionIcon, icons } from '@lion/ui/icon.js';
+import sinon from 'sinon';
 import hammerSvg from '../test/hammer.svg.js';
 import heartSvg from '../test/heart.svg.js';
 import { resolveSuiteTag } from '../../core/test-helpers/resolveSuiteTag.js';
@@ -158,7 +158,8 @@ export function runIconSuite({
     it('does not render "undefined" if changed from valid input to undefined', async () => {
       const el = await fixture(html`<${tag} .svg=${heartSvg}></${tag}>`);
       await el.updateComplete;
-      el.svg = nothing;
+      // @ts-expect-error [testing-invalid-svg-value]
+      el.svg = undefined;
       await el.updateComplete;
       expect(el.innerHTML).to.equal('<!---->'); // don't use lightDom.to.equal(''), it gives false positives
     });
@@ -166,7 +167,8 @@ export function runIconSuite({
     it('does not render "null" if changed from valid input to null', async () => {
       const el = await fixture(html`<${tag} .svg=${heartSvg}></${tag}>`);
       await el.updateComplete;
-      el.svg = nothing;
+      // @ts-expect-error [testing-invalid-svg-value]
+      el.svg = null;
       await el.updateComplete;
       expect(el.innerHTML).to.equal('<!---->'); // don't use lightDom.to.equal(''), it gives false positives
     });
@@ -195,35 +197,74 @@ export function runIconSuite({
       }
     });
 
+    it('logs and renders nothing when resolving the icon id fails', async () => {
+      const error = new Error('icon not found');
+      const consoleErrorStub = sinon.stub(console, 'error');
+      try {
+        icons.addIconResolver(
+          'foo',
+          () => /** @type {Promise<TemplateResult>} */ (Promise.reject(error)),
+        );
+        const el = await fixture(html`<${tag} icon-id="foo:lorem:ipsum"></${tag}>`);
+        await aTimeout(0);
+        expect(consoleErrorStub.args.map(args => args[0])).to.include(error);
+        expect(el.children.length).to.equal(0);
+      } finally {
+        consoleErrorStub.restore();
+        icons.removeIconResolver('foo');
+      }
+    });
+
     it('does not create race conditions when icon changed while resolving icon id', async () => {
+      // The test resolves the icons itself, in the order of the race: the icon requested last
+      // (hammer) resolves first, the one requested first (heart) resolves after it.
+      /** @type {(svg: TemplateResult) => void} */
+      let resolveHeart = () => {};
+      /** @type {(svg: TemplateResult) => void} */
+      let resolveHammer = () => {};
       try {
         icons.addIconResolver(
           'foo',
           () =>
             /** @type {Promise<TemplateResult>} */ (
-              // eslint-disable-next-line no-promise-executor-return
-              new Promise(resolve => setTimeout(() => resolve(heartSvg)))
+              new Promise(resolve => {
+                resolveHeart = resolve;
+              })
             ),
         );
         icons.addIconResolver(
           'bar',
           () =>
             /** @type {Promise<TemplateResult>} */ (
-              // eslint-disable-next-line no-promise-executor-return
-              new Promise(resolve => setTimeout(() => resolve(hammerSvg)))
+              new Promise(resolve => {
+                resolveHammer = resolve;
+              })
             ),
         );
-        const el = await fixture(html`<${tag} icon-id="foo:lorem:ipsum"></${tag}>`);
-
+        const el = /** @type {LionIcon} */ (
+          fixtureSync(html`<${tag} icon-id="foo:lorem:ipsum"></${tag}>`)
+        );
+        // Each call handles one icon id; its promise settles when the resolved icon was handled.
+        // Spied before the first update, which handles the initial icon id.
+        const onIconIdChangedSpy = sinon.spy(
+          /** @type {{ _onIconIdChanged: (prevIconId: string) => Promise<void> }} */ (
+            /** @type {unknown} */ (el)
+          ),
+          '_onIconIdChanged',
+        );
         await el.updateComplete;
         el.iconId = 'bar:lorem:ipsum';
         await el.updateComplete;
-        await aTimeout(4);
+        expect(onIconIdChangedSpy.callCount).to.equal(2);
+        const [heartHandled, hammerHandled] = onIconIdChangedSpy.returnValues;
 
-        // heart is still loading at this point, but hammer came later so that should be later
+        resolveHammer(hammerSvg);
+        await hammerHandled;
         expect(/** @type {HTMLElement} */ (el.children[0]).dataset.testId).to.equal('svg-hammer');
-        await aTimeout(10);
+
         // heart finished loading, but it should not be rendered because hammer came later
+        resolveHeart(heartSvg);
+        await heartHandled;
         expect(/** @type {HTMLElement} */ (el.children[0]).dataset.testId).to.equal('svg-hammer');
       } finally {
         icons.removeIconResolver('foo');

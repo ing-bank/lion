@@ -107,12 +107,10 @@ describe('model value event', () => {
       e = spy.firstCall.args[0];
     });
 
-    // TODO: Re-enable at some point...
-    // In my opinion (@CubLion) we should not bubble events.
-    // Instead each parent should explicitly listen to children events,
-    // and then re-dispatch on themselves.
-    it.skip('should not bubble', async () => {
-      expect(e.bubbles).to.be.false;
+    // Form groups rely on the event bubbling to them from their (light dom) children: they
+    // listen on themselves and redispatch a new event per level (see 'propagation' below)
+    it('should bubble', async () => {
+      expect(e.bubbles).to.be.true;
     });
 
     it('should not leave shadow boundary', async () => {

@@ -55,7 +55,7 @@ export default {
       '**/web_modules/**/*',
       '**/generated/awesome-phonenumber/**/*',
     ],
-    threshold: { statements: 95, functions: 94, branches: 95, lines: 95 },
+    threshold: { statements: 97, functions: 97, branches: 95, lines: 97 },
   },
   testFramework: {
     config: { timeout: '5000' },

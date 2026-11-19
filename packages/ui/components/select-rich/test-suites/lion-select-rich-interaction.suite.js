@@ -332,6 +332,54 @@ export function runSelectRichInteractionSuite({
         expect(isTriggeredByUser).to.be.true;
       });
 
+      it('skips disabled options with [ArrowDown] [ArrowUp] keys while listbox unopened, like a native select', async () => {
+        const el = /** @type {LionSelectRich} */ (
+          await fixture(html`
+            <${tag} interaction-mode="windows/linux">
+              <${tagOptions} slot="input">
+                <${tagOption} .choiceValue=${10}>Item 1</${tagOption}>
+                <${tagOption} .choiceValue=${20} disabled>Item 2</${tagOption}>
+                <${tagOption} .choiceValue=${30}>Item 3</${tagOption}>
+              </${tagOptions}>
+            </${tag}>
+          `)
+        );
+        const options = el.formElements;
+        expect(el.checkedIndex).to.equal(0);
+
+        el.dispatchEvent(new KeyboardEvent('keyup', { key: 'ArrowDown' }));
+        expect(el.checkedIndex).to.equal(2);
+        expectOnlyGivenOneOptionToBeChecked(options, 2);
+
+        el.dispatchEvent(new KeyboardEvent('keyup', { key: 'ArrowUp' }));
+        expect(el.checkedIndex).to.equal(0);
+        expectOnlyGivenOneOptionToBeChecked(options, 0);
+      });
+
+      it('keeps the selection when only disabled options follow while listbox unopened', async () => {
+        const el = /** @type {LionSelectRich} */ (
+          await fixture(html`
+            <${tag} interaction-mode="windows/linux">
+              <${tagOptions} slot="input">
+                <${tagOption} .choiceValue=${10}>Item 1</${tagOption}>
+                <${tagOption} .choiceValue=${20} disabled>Item 2</${tagOption}>
+                <${tagOption} .choiceValue=${30} disabled>Item 3</${tagOption}>
+              </${tagOptions}>
+            </${tag}>
+          `)
+        );
+        const options = el.formElements;
+
+        el.dispatchEvent(new KeyboardEvent('keyup', { key: 'ArrowDown' }));
+        expect(el.checkedIndex).to.equal(0);
+        expectOnlyGivenOneOptionToBeChecked(options, 0);
+        expect(el.modelValue).to.equal(10);
+
+        el.dispatchEvent(new KeyboardEvent('keyup', { key: 'ArrowRight' }));
+        expect(el.checkedIndex).to.equal(0);
+        expect(el.modelValue).to.equal(10);
+      });
+
       it('checks a value with [character] keys while listbox unopened', async () => {
         const el = /** @type {LionSelectRich} */ (
           await fixture(html`

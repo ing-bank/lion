@@ -34,18 +34,6 @@ export class LionDrawer extends LionCollapsible {
     };
   }
 
-  /** @private */
-  __toggle;
-
-  constructor() {
-    super();
-
-    this.__toggle = () => {
-      // @ts-ignore [ts7-2565] TS7 checks definite assignment on this inferred field; Lit reactive property: read through a typed local instead (e.g. const next = this.x ?? DEFAULT) - a class field would shadow the accessor Lit creates from static properties
-      this.opened = !this.opened;
-    };
-  }
-
   connectedCallback() {
     super.connectedCallback();
 
@@ -201,8 +189,7 @@ export class LionDrawer extends LionCollapsible {
     if (this._invokerNode) {
       this._invokerNode.setAttribute('aria-expanded', `${this.opened}`);
     }
-
-    this.dispatchEvent(new CustomEvent('opened-changed'));
+    // No 'opened-changed' dispatch here: LionCollapsible.updated() already fires it once per change
   }
 
   async _updateContentSize() {

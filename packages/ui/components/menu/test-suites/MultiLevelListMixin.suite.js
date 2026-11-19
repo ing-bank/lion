@@ -6,7 +6,14 @@ import { InteractiveListMixin } from '../src/InteractiveListMixin.js';
 import { mimicKeyPress } from '../test-helpers/mimicKeyPress.js';
 import { resolveSuiteTag } from '../../core/test-helpers/resolveSuiteTag.js';
 
-class MultiLevelListClass extends MultiLevelListMixin(LitElement) {}
+/**
+ * MultiLevelListMixin expects an openable host (DisclosureMixin or OverlayMixin): it calls
+ * `close()` when a sub level is left via the keyboard. This plain host provides a no-op.
+ */
+class MultiLevelListClass extends MultiLevelListMixin(LitElement) {
+  // eslint-disable-next-line class-methods-use-this
+  close() {}
+}
 class InteractiveListClass extends InteractiveListMixin(LitElement) {}
 
 /**
@@ -230,81 +237,110 @@ export function runMultiLevelListMixinSuite({
           expect(subList.activeIndex).to.be.equal(1);
         });
 
-        it('close method gets called on [ArrowUp] key when in L2 and horizontal', async () => {
-          const el = await fixture(html`
-            <${tag}>
+        /**
+         * @param {{ axis?: 'block'|'inline', subAxis?: 'block'|'inline' }} [options]
+         */
+        const twoLevelFixture = ({ axis = 'block', subAxis = 'block' } = {}) =>
+          fixture(html`
+            <${tag} axis="${axis}">
               <div role="listitem" id="item-0">
                 <button data-invoker>Item 0</button>
-                <${tagChild}>
+                <${tag} axis="${subAxis}">
                   <div role="listitem" id="item-0-0">
                     <div>Sub item 0</div>
                   </div>
                   <div role="listitem" id="item-0-1">
                     <div>Sub item 1</div>
                   </div>
-                  <div role="listitem" id="item-0-2">
-                    <div>Sub item 2</div>
-                  </div>
-                </${tagChild}>
+                </${tag}>
               </div>
               <div role="listitem" id="item-1">
                 <div>Item 1</div>
               </div>
             </${tag}>
           `);
-          const subList = /** @type {MultiLevelListClass} */ (el.querySelector(tagChildString));
-          // @ts-ignore
-          if (subList?.close) {
-            // @ts-ignore
-            const closeSpy = sinon.spy(subList, 'close');
-            // @ts-expect-error [allow-protected-in-tests]
-            const { _listNode } = subList;
 
-            // Normalize
-            subList.activeIndex = 0;
-            subList.axis = 'inline';
+        /** @param {LionMenu} el */
+        const getSubList = el => /** @type {LionMenu} */ (el.querySelector(tagString));
 
-            mimicKeyPress(_listNode, 'ArrowUp');
-            expect(closeSpy).to.have.been.calledOnce;
-          }
+        it('opens the subList of the active item on [ArrowRight] when axis is "block"', async () => {
+          const el = await twoLevelFixture();
+          // @ts-expect-error [allow-protected-in-tests]
+          const { _listNode } = el;
+          // @ts-ignore - parentList is set by MultiLevelListMixin
+          expect(getSubList(el).parentList).to.equal(el);
+
+          el.activeIndex = 0;
+          const clickSpy = sinon.spy(el.activeItem, 'click');
+          mimicKeyPress(_listNode, 'ArrowRight');
+          expect(clickSpy).to.have.been.calledOnce;
+
+          // An item without subList is not invoked
+          el.activeIndex = 1;
+          const clickSpyNoSubList = sinon.spy(el.activeItem, 'click');
+          mimicKeyPress(_listNode, 'ArrowRight');
+          expect(clickSpyNoSubList).to.not.have.been.called;
         });
 
-        it('close method gets called on [ArrowLeft] key when in L2 and vertical', async () => {
-          const el = await fixture(html`
-            <${tag}>
-              <div role="listitem" id="item-0">
-                <button data-invoker>Item 0</button>
-                <${tagChild} axis="block">
-                  <div role="listitem" id="item-0-0">
-                    <a href="#foo">Sub item 0</a>
-                  </div>
-                  <div role="listitem" id="item-0-1">
-                    <a href="#bar">Sub item 1</a>
-                  </div>
-                  <div role="listitem" id="item-0-2">
-                    <a href="#baz">Sub item 2</a>
-                  </div>
-                </${tagChild}>
-              </div>
-              <div role="listitem" id="item-1">
-                <a href="#foobar">Item 1</a>
-              </div>
-            </${tag}>
-          `);
-          const subList = /** @type {MultiLevelListClass} */ (el.querySelector(tagChildString));
-          // @ts-ignore
-          if (subList?.close) {
-            // @ts-ignore
-            const closeSpy = sinon.spy(subList, 'close');
-            // @ts-expect-error [allow-protected-in-tests]
-            const { _listNode } = subList;
+        it('opens the subList of the active item on [ArrowDown] when axis is "inline"', async () => {
+          const el = await twoLevelFixture({ axis: 'inline' });
+          // @ts-expect-error [allow-protected-in-tests]
+          const { _listNode } = el;
+          el.activeIndex = 0;
+          const clickSpy = sinon.spy(el.activeItem, 'click');
+          mimicKeyPress(_listNode, 'ArrowDown');
+          expect(clickSpy).to.have.been.calledOnce;
+        });
 
-            // Normalize
-            subList.activeIndex = 0;
+        it('closes L2 and returns to its parent on [ArrowLeft] when L2 axis is "block"', async () => {
+          const el = await twoLevelFixture();
+          const subList = getSubList(el);
+          // @ts-expect-error [allow-protected-in-tests]
+          const { _listNode } = subList;
+          subList.activeIndex = 0;
+          const closeSpy = sinon.spy(subList, 'close');
+          const parentCloseSpy = sinon.spy(el, 'close');
 
-            mimicKeyPress(_listNode, 'ArrowLeft');
-            expect(closeSpy).to.have.been.calledOnce;
-          }
+          mimicKeyPress(_listNode, 'ArrowLeft');
+          expect(closeSpy).to.have.been.calledOnce;
+          expect(parentCloseSpy).to.not.have.been.called;
+
+          // L1 has no parent to return to
+          el.activeIndex = 0;
+          // @ts-expect-error [allow-protected-in-tests]
+          mimicKeyPress(el._listNode, 'ArrowLeft');
+          expect(parentCloseSpy).to.not.have.been.called;
+        });
+
+        it('closes L2 and returns to its parent on [ArrowUp] when L2 axis is "inline"', async () => {
+          const el = await twoLevelFixture({ subAxis: 'inline' });
+          const subList = getSubList(el);
+          // @ts-expect-error [allow-protected-in-tests]
+          const { _listNode } = subList;
+          subList.activeIndex = 0;
+          const closeSpy = sinon.spy(subList, 'close');
+
+          mimicKeyPress(_listNode, 'ArrowUp');
+          expect(closeSpy).to.have.been.calledOnce;
+        });
+
+        it('stops propagation of [Escape] in L2, so the parent level stays open', async () => {
+          const el = await twoLevelFixture();
+          const subList = getSubList(el);
+          subList.activeIndex = 0;
+          const escInL2 = new KeyboardEvent('keydown', { key: 'Escape', bubbles: true });
+          const stopSpyL2 = sinon.spy(escInL2, 'stopPropagation');
+          // @ts-expect-error [allow-protected-in-tests]
+          subList._listNode.dispatchEvent(escInL2);
+          expect(stopSpyL2).to.have.been.called;
+
+          // In L1, Escape is left to the host (for instance to close an overlay)
+          el.activeIndex = 1;
+          const escInL1 = new KeyboardEvent('keydown', { key: 'Escape', bubbles: true });
+          const stopSpyL1 = sinon.spy(escInL1, 'stopPropagation');
+          // @ts-expect-error [allow-protected-in-tests]
+          el._listNode.dispatchEvent(escInL1);
+          expect(stopSpyL1).to.not.have.been.called;
         });
       });
     });

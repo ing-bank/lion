@@ -315,7 +315,8 @@ export function runDialogSuite({
         await el.updateComplete;
         buttonA.click();
         await el.updateComplete;
-        await el.updateComplete;
+        // the router rendered a new dialog: wait for its own first update
+        await getDialog().updateComplete;
 
         getInvoker().click();
 

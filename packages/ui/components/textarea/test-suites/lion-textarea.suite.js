@@ -1,5 +1,5 @@
 import { html } from 'lit/static-html.js';
-import { unsafeStatic, aTimeout, expect, fixture as _fixture } from '@open-wc/testing';
+import { unsafeStatic, expect, fixture as _fixture, waitUntil } from '@open-wc/testing';
 import sinon from 'sinon';
 import { getFormControlMembers } from '@lion/ui/form-core-test-helpers.js';
 import { LionTextarea } from '@lion/ui/textarea.js';
@@ -74,6 +74,15 @@ export function runTextareaSuite({
       const el = await fixture(`<${tagString} readonly>foo</${tagString}>`);
       expect(el.readOnly).to.be.true;
       expect(el.querySelector('textarea')?.readOnly).to.be.true;
+    });
+
+    it('sync autocomplete down to the native textarea', async () => {
+      const el = await fixture(`<${tagString} autocomplete="off">foo</${tagString}>`);
+      const textarea = /** @type {HTMLTextAreaElement} */ (el.querySelector('textarea'));
+      expect(textarea.getAttribute('autocomplete')).to.equal('off');
+      el.autocomplete = 'street-address';
+      await el.updateComplete;
+      expect(textarea.getAttribute('autocomplete')).to.equal('street-address');
     });
 
     it('disables user resize behavior', async () => {
@@ -198,8 +207,37 @@ export function runTextareaSuite({
 
       const resizeSpy = sinon.spy(textArea, 'resizeTextarea');
       el.style.display = 'block';
-      await aTimeout(20);
-      expect(resizeSpy.calledOnce).to.be.true;
+      // The IntersectionObserver callback is the signal; it runs a frame or so after the change
+      await waitUntil(() => resizeSpy.callCount > 0, 'resizeTextarea was not called');
+      expect(resizeSpy.callCount).to.equal(1);
+    });
+
+    it('disconnects its visibility (IntersectionObserver) observer when disconnected', async () => {
+      const observeSpy = sinon.spy(IntersectionObserver.prototype, 'observe');
+      const disconnectSpy = sinon.spy(IntersectionObserver.prototype, 'disconnect');
+      try {
+        const el = await fixture(html`<${tag}></${tag}>`);
+        const parent = /** @type {HTMLElement} */ (el.parentElement);
+        const observersOfEl = () =>
+          observeSpy
+            .getCalls()
+            .filter(call => call.args[0] === el)
+            .map(call => call.thisValue);
+
+        expect(observersOfEl().length).to.equal(1);
+        el.remove();
+        expect(disconnectSpy.getCalls().map(call => call.thisValue)).to.include(observersOfEl()[0]);
+
+        // reconnecting creates a fresh observer, which is disconnected again on the next removal
+        parent.appendChild(el);
+        expect(observersOfEl().length).to.equal(2);
+        el.remove();
+        const disconnected = disconnectSpy.getCalls().map(call => call.thisValue);
+        expect(observersOfEl().every(observer => disconnected.includes(observer))).to.be.true;
+      } finally {
+        observeSpy.restore();
+        disconnectSpy.restore();
+      }
     });
 
     it('is accessible', async () => {

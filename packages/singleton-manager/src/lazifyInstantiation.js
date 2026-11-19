@@ -1,5 +1,3 @@
-// TODO: testing is done now indirectly via @lion/ui tests. Aditionally, add dedicated tests for this package
-
 /**
  * Lazifies the instantiation of singletons. It does so by wrapping the singleton in a Proxy, which delays
  * instantiation until one of its members gets called/set for the first time.
@@ -12,6 +10,8 @@
  */
 const lazifyInstantiation = registerSingleton => {
   let /** @type any */ singletonInstance = null;
+  /** @type {WeakMap<Function, Function>} */
+  const boundMethods = new WeakMap();
 
   const getSingletonInstance = () => {
     if (singletonInstance === null) {
@@ -26,16 +26,27 @@ const lazifyInstantiation = registerSingleton => {
     {
       get(_target, prop) {
         const instance = getSingletonInstance();
-        // Somehow addEventListener and removeEventListner throws Illegal Invocation error without binding
-        if (prop === 'addEventListener' || prop === 'removeEventListener') {
-          return Reflect.get(instance, prop).bind(instance);
-        }
-
         if (prop === '__instance_for_testing') {
           return instance;
         }
 
-        return Reflect.get(instance, prop, instance);
+        const value = Reflect.get(instance, prop, instance);
+        // Methods inherited from the prototype chain are bound to the instance: native methods
+        // (like EventTarget's dispatchEvent) throw 'Illegal invocation' and methods using private
+        // fields throw a TypeError when called with the proxy as `this`.
+        // Own function properties (arrow function fields, sinon spies) are returned as is.
+        if (typeof value !== 'function' || Object.prototype.hasOwnProperty.call(instance, prop)) {
+          return value;
+        }
+        let bound = boundMethods.get(value);
+        if (!bound) {
+          bound = value.bind(instance);
+          boundMethods.set(value, /** @type {Function} */ (bound));
+        }
+        return bound;
+      },
+      has(_target, prop) {
+        return Reflect.has(getSingletonInstance(), prop);
       },
       set(_target, prop, value) {
         return Reflect.set(getSingletonInstance(), prop, value);

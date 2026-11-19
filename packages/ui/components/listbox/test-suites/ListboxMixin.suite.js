@@ -4,13 +4,14 @@ import { repeat } from 'lit/directives/repeat.js';
 import { Required } from '@lion/ui/form-core.js';
 import { LionListbox, LionOption, LionOptions } from '@lion/ui/listbox.js';
 import {
-  aTimeout,
   defineCE,
   expect,
   fixture as _fixture,
   html,
   nextFrame,
+  oneEvent,
   unsafeStatic,
+  waitUntil,
 } from '@open-wc/testing';
 import { sendKeys } from '@web/test-runner-commands';
 import sinon from 'sinon';
@@ -26,6 +27,28 @@ import { resolveSuiteTag } from '../../core/test-helpers/resolveSuiteTag.js';
 const fixture = /** @type {(arg: TemplateResult) => Promise<LionListbox>} */ (_fixture);
 
 /**
+ * Resolves when a smooth scroll of `el` has ended. Uses the `scrollend` event where the engine
+ * supports it, otherwise waits until scrollTop no longer changes between two frames.
+ * Call it before starting the scroll.
+ * @param {HTMLElement} el
+ */
+function scrollEnd(el) {
+  if ('onscrollend' in window) {
+    return oneEvent(el, 'scrollend');
+  }
+  let last = NaN;
+  return waitUntil(
+    () => {
+      const settled = el.scrollTop === last;
+      last = el.scrollTop;
+      return settled;
+    },
+    'scroll did not end',
+    { interval: 100 },
+  );
+}
+
+/**
  * @param {HTMLElement} el
  * @param {string} key
  * @param {string} code
@@ -35,6 +58,70 @@ function mimicKeyPress(el, key, code = '') {
   el.dispatchEvent(new KeyboardEvent('keyup', { key, code }));
 }
 
+/**
+ * Makes an endless navigation loop fail fast instead of freezing the test runner.
+ * Every navigation step reads the items of the host, so once they have been read far more
+ * often than one key press could ever need, we throw.
+ * @param {HTMLElement} el host element
+ * @param {string} [itemsProp] name of the property that holds the items
+ * @returns {() => void} restores the original property
+ */
+function failFastOnEndlessLoop(el, itemsProp = 'formElements', budget = 500) {
+  let reads = 0;
+  const ownDescriptor = Object.getOwnPropertyDescriptor(el, itemsProp);
+  let proto = Object.getPrototypeOf(el);
+  while (proto && !Object.getOwnPropertyDescriptor(proto, itemsProp)) {
+    proto = Object.getPrototypeOf(proto);
+  }
+  const descriptor = /** @type {PropertyDescriptor} */ (
+    ownDescriptor || Object.getOwnPropertyDescriptor(proto, itemsProp)
+  );
+  Object.defineProperty(el, itemsProp, {
+    configurable: true,
+    get() {
+      reads += 1;
+      if (reads > budget) {
+        throw new Error(`Endless loop: ${itemsProp} was read more than ${budget} times`);
+      }
+      return descriptor.get ? descriptor.get.call(el) : descriptor.value;
+    },
+  });
+  return () => {
+    if (ownDescriptor) {
+      Object.defineProperty(el, itemsProp, ownDescriptor);
+    } else {
+      // @ts-ignore - removing the own property restores the prototype getter
+      // eslint-disable-next-line no-param-reassign
+      delete el[itemsProp];
+    }
+  };
+}
+
+/**
+ * Dispatches keydown on `el` and rethrows an error thrown by its listeners, so a fail-fast
+ * guard surfaces as a regular test failure.
+ * @param {HTMLElement} el
+ * @param {string} key
+ * @param {string} [code]
+ */
+function keyDownOrThrow(el, key, code = '') {
+  /** @type {Error|undefined} */
+  let listenerError;
+  /** @param {ErrorEvent} ev */
+  const onError = ev => {
+    listenerError = ev.error;
+    ev.preventDefault();
+  };
+  window.addEventListener('error', onError);
+  try {
+    el.dispatchEvent(new KeyboardEvent('keydown', { key, code }));
+  } finally {
+    window.removeEventListener('error', onError);
+  }
+  if (listenerError) {
+    throw listenerError;
+  }
+}
 /**
  * @param { { classes?: Record<string, CustomElementConstructor>, tagString?:string, optionTagString?:string} } [customConfig]
  */
@@ -409,12 +496,14 @@ export function runListboxMixinSuite({
         await listboxEl.updateComplete;
         await nextFrame();
 
-        // Scroll to last option and wait for browser scroll animation (works)
+        // Scroll to last option and wait for the smooth scroll animation to end
+        let scrollEnded = scrollEnd(el);
         lastOption.active = true;
-        await aTimeout(1000);
+        await scrollEnded;
 
+        scrollEnded = scrollEnd(el);
         thirdOption.active = true;
-        await aTimeout(1000);
+        await scrollEnded;
 
         // top should be offset 2x40px (sticky header elems) instead of 0px
         expect(el.scrollTop).to.equal(116);
@@ -430,7 +519,9 @@ export function runListboxMixinSuite({
           </${tags.host}>
         `);
         await el.updateComplete;
-        await el.updateComplete; // need 2 awaits as overlay.show is an async function
+        // subclassers with an overlay (select-rich, combobox) show it asynchronously after the update
+        // @ts-ignore allow protected members in tests
+        await el._overlayCtrl?._showComplete;
         // for more info about why we need the ignoreRules, see: https://lion.js.org/fundamentals/systems/overlays/rationale/#considerations
         await expect(el).to.be.accessible({ ignoredRules: ['aria-allowed-role'] });
       });
@@ -826,6 +917,17 @@ export function runListboxMixinSuite({
         // TODO: add key combinations like shift+home/ctrl+A etc etc.
 
         describe('Typeahead', () => {
+          /** @type {import('sinon').SinonFakeTimers|undefined} */
+          let clock;
+
+          // Restores in `afterEach`, so that an assertion that fails before the end of a test can
+          // not leak fake timers or spies into the next test
+          afterEach(() => {
+            clock?.restore();
+            clock = undefined;
+            sinon.restore();
+          });
+
           it('activates a value with single [character] key', async () => {
             const el = await fixture(html`
             <${tags.host} opened id="color" name="color" label="Favorite color">
@@ -899,6 +1001,46 @@ export function runListboxMixinSuite({
             expect(el.checkedIndex).to.equal(2);
           });
 
+          it('matches typed characters case-insensitively', async () => {
+            const el = await fixture(html`
+            <${tags.host} opened id="color" name="color" label="Favorite color">
+              <${tags.option} .choiceValue=${'red'}>Red</${tags.option}>
+              <${tags.option} .choiceValue=${'teal'}>Teal</${tags.option}>
+              <${tags.option} .choiceValue=${'turquoise'}>Turquoise</${tags.option}>
+            </${tags.host}>
+          `);
+            // @ts-expect-error [allow-protected-in-tests]
+            if (el._noTypeAhead) {
+              return;
+            }
+            const { _listboxNode } = getListboxMembers(el);
+            el.activeIndex = 0;
+
+            mimicKeyPress(_listboxNode, 'T', 'KeyT');
+            expect(el.activeIndex).to.equal(1);
+          });
+
+          it('matches the text of options that have a non-string value', async () => {
+            const el = await fixture(html`
+            <${tags.host} opened id="color" name="color" label="Favorite color">
+              <${tags.option} .choiceValue=${1}>Red</${tags.option}>
+              <${tags.option} .choiceValue=${2}>Teal</${tags.option}>
+              <${tags.option} .choiceValue=${{ hex: '#40e0d0' }}>Turquoise</${tags.option}>
+            </${tags.host}>
+          `);
+            // @ts-expect-error [allow-protected-in-tests]
+            if (el._noTypeAhead) {
+              return;
+            }
+            const { _listboxNode } = getListboxMembers(el);
+            el.activeIndex = 0;
+
+            keyDownOrThrow(_listboxNode, 't', 'KeyT');
+            expect(el.activeIndex).to.equal(1);
+            keyDownOrThrow(_listboxNode, 'u', 'KeyU');
+            expect(el.activeIndex).to.equal(2);
+          });
+
           it('clears typedChars after _typeAheadTimeout', async () => {
             const el = await fixture(html`
             <${tags.host} opened id="color" name="color" label="Favorite color">
@@ -912,7 +1054,7 @@ export function runListboxMixinSuite({
               return;
             }
 
-            const clock = sinon.useFakeTimers();
+            clock = sinon.useFakeTimers();
             const { _listboxNode } = getListboxMembers(el);
 
             mimicKeyPress(_listboxNode, 't', 'KeyT');
@@ -926,8 +1068,6 @@ export function runListboxMixinSuite({
             clock.tick(1000);
             // @ts-ignore [allow-private] in test
             expect(el.__typedChars).to.deep.equal([]);
-
-            clock.restore();
           });
 
           it('clears scheduled timeouts', async () => {
@@ -977,6 +1117,54 @@ export function runListboxMixinSuite({
           expect(el.activeIndex).to.equal(0);
           mimicKeyPress(_listboxNode, 'End');
           expect(el.activeIndex).to.equal(3);
+        });
+
+        it('navigates to the first visible option with [Home] when the first option is hidden', async () => {
+          const el = await fixture(html`
+              <${tags.host} opened>
+                <${tags.option} .choiceValue=${'10'} aria-hidden="true">Item 1</${tags.option}>
+                <${tags.option} .choiceValue=${'20'}>Item 2</${tags.option}>
+                <${tags.option} .choiceValue=${'30'}>Item 3</${tags.option}>
+              </${tags.host}>
+            `);
+          const { _listboxNode } = getListboxMembers(el);
+          // @ts-ignore allow protected members in tests
+          if (el._listboxReceivesNoFocus) {
+            return;
+          }
+
+          el.activeIndex = 2;
+          const restore = failFastOnEndlessLoop(el);
+          try {
+            keyDownOrThrow(_listboxNode, 'Home');
+          } finally {
+            restore();
+          }
+          expect(el.activeIndex).to.equal(1);
+        });
+
+        it('navigates to the last visible option with [End] when the last option is hidden', async () => {
+          const el = await fixture(html`
+              <${tags.host} opened>
+                <${tags.option} .choiceValue=${'10'}>Item 1</${tags.option}>
+                <${tags.option} .choiceValue=${'20'}>Item 2</${tags.option}>
+                <${tags.option} .choiceValue=${'30'} aria-hidden="true">Item 3</${tags.option}>
+              </${tags.host}>
+            `);
+          const { _listboxNode } = getListboxMembers(el);
+          // @ts-ignore allow protected members in tests
+          if (el._listboxReceivesNoFocus) {
+            return;
+          }
+
+          el.activeIndex = 0;
+          const restore = failFastOnEndlessLoop(el);
+          try {
+            keyDownOrThrow(_listboxNode, 'End');
+          } finally {
+            restore();
+          }
+          expect(el.activeIndex).to.equal(1);
         });
 
         it('navigates through open lists with [ArrowDown] [ArrowUp] keys activates the option', async () => {

@@ -23,6 +23,17 @@ import { resolveSuiteTag } from '../../core/test-helpers/resolveSuiteTag.js';
 const fixture = /** @type {(arg: string | TemplateResult) => Promise<LionInputTel>} */ (_fixture);
 const fixtureSync = /** @type {(arg: string | TemplateResult) => LionInputTel} */ (_fixtureSync);
 
+/**
+ * Resolves once `el` has no update pending. Lit resolves `updateComplete` with `false` when the
+ * update requested another one (here: activeRegion is set in updated(), which reformats in the
+ * next update), so this awaits exactly the update cycles that are needed.
+ * @param {import('lit').LitElement} el
+ */
+async function updatesSettled(el) {
+  // eslint-disable-next-line no-await-in-loop
+  while (!(await el.updateComplete));
+}
+
 const getRegionCodeBasedOnLocale = () => {
   const localizeManager = getLocalizeManager();
   const localeSplitted = localizeManager.locale.split('-');
@@ -221,6 +232,24 @@ export function runInputTelSuite({
           expect(el.activePhoneNumberType).to.equal(type);
         });
       }
+
+      it('ignores assignments to the readonly accessors', async () => {
+        const el = await fixture(html` <${tag} .allowedRegions="${['NL']}"></${tag}> `);
+        mimicUserInput(el, '06 12345678');
+        await aTimeout(0);
+        // @ts-ignore readonly in types
+        el.activeRegion = 'DE';
+        // @ts-ignore readonly in types
+        el.activePhoneNumberType = 'fixed-line';
+        expect(el.activeRegion).to.equal('NL');
+        expect(el.activePhoneNumberType).to.equal('mobile');
+      });
+
+      it('exposes the loading of the phone util via protected `_phoneUtilLoadComplete`', async () => {
+        const el = await fixture(html` <${tag}></${tag}> `);
+        // @ts-ignore [allow-protected] in test
+        expect(el._phoneUtilLoadComplete).to.equal(PhoneUtilManager.loadComplete);
+      });
     });
 
     describe('User interaction', () => {
@@ -257,8 +286,7 @@ export function runInputTelSuite({
         expect(el.activeRegion).to.equal('PH');
         el.focus();
         mimicUserInput(el, '+31612345678');
-        await el.updateComplete;
-        await el.updateComplete;
+        await updatesSettled(el);
         expect(el.activeRegion).to.equal('NL');
         const expectedNumber = hasParentheses ? '(+31) 6 12345678' : '+31 6 12345678';
         expect(el.formattedValue).to.equal(expectedNumber);
@@ -354,19 +382,13 @@ export function runInputTelSuite({
           await aTimeout(0);
           expect(el.formattedValue).to.equal('(+31) 6 12345678');
         });
-      });
 
-      // TODO: this should be allowed for in FormatMixin =>
-      // in _onModelValueChanged we can add a hook '_checkModelValueFormat'. This needs to be
-      // called whenever .modelValue is supplied by devleloper (not when being internal result
-      // of parser call).
-      // Alternatively, we could be forgiving by attempting to treat it as a view value and
-      // correct the format (although strictness will be preferred...)
-      it.skip('does not allow modelValues in non E164 format', async () => {
-        const el = await fixture(
-          html` <${tag} format-country-code-style="${hasParentheses ? 'parentheses' : nothing}" .modelValue="${'612345678'}" .allowedRegions="${['NL']}"></${tag}> `,
-        );
-        expect(el.modelValue).to.equal(undefined);
+        it.skip('does not allow modelValues in non E164 format', async () => {
+          const el = await fixture(
+            html` <${tag} format-country-code-style="${hasParentheses ? 'parentheses' : nothing}" .modelValue="${'612345678'}" .allowedRegions="${['NL']}"></${tag}> `,
+          );
+          expect(el.modelValue).to.equal(undefined);
+        });
       });
     });
 
@@ -515,15 +537,25 @@ export function runInputTelSuite({
         expect(el.activeRegion).to.equal(newCode);
       });
 
-      it.skip('reformats when region code is changed on the fly', async () => {
+      it('reformats when region code is changed on the fly', async () => {
         const el = await fixture(
-          html` <${tag} format-country-code-style="${hasParentheses ? 'parentheses' : nothing}" .allowedRegions="${['NL']}" .modelValue="${'+31612345678'}"></${tag}> `,
+          html` <${tag} format-country-code-style="${hasParentheses ? 'parentheses' : nothing}" format-strategy="national" .allowedRegions="${['NL']}" .modelValue="${'+31612345678'}"></${tag}> `,
         );
         await el.updateComplete;
-        expect(el.formattedValue).to.equal('+31 6 12345678');
-        el.allowedRegions = ['NL'];
-        await el.updateComplete;
-        expect(el.formattedValue).to.equal('612345678');
+        expect(el.activeRegion).to.equal('NL');
+        expect(el.formattedValue).to.equal('06 12345678');
+        const formatterSpy = sinon.spy(el, 'formatter');
+
+        el.allowedRegions = ['DE'];
+        // allowedRegions sets activeRegion in updated(), which reformats in the next update
+        await updatesSettled(el);
+        expect(el.activeRegion).to.equal('DE');
+        // The modelValue (E164) is the source of truth: it is kept and formatted again for the new
+        // region. A Dutch number stays a Dutch number, so its national format does not change.
+        expect(formatterSpy.callCount).to.equal(1);
+        expect(formatterSpy.firstCall.args[0]).to.equal('+31612345678');
+        expect(el.modelValue).to.equal('+31612345678');
+        expect(el.formattedValue).to.equal('06 12345678');
       });
     });
   });

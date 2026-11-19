@@ -175,6 +175,46 @@ describe('Ajax', () => {
       expect(request.headers.get('accept')).to.equal('application/json');
     });
 
+    describe('keeps custom request headers for every HeadersInit form', () => {
+      it('accepts a plain object', async () => {
+        await ajax.fetchJson('/foo', { headers: { 'x-custom': 'object' } });
+        const request = fetchStub.getCall(0).args[0];
+        expect(request.headers.get('x-custom')).to.equal('object');
+        expect(request.headers.get('accept')).to.equal('application/json');
+      });
+
+      it('accepts a Headers instance', async () => {
+        await ajax.fetchJson('/foo', { headers: new Headers({ 'x-custom': 'headers' }) });
+        const request = fetchStub.getCall(0).args[0];
+        expect(request.headers.get('x-custom')).to.equal('headers');
+        expect(request.headers.get('accept')).to.equal('application/json');
+      });
+
+      it('accepts an array of [name, value] tuples', async () => {
+        await ajax.fetchJson('/foo', { headers: [['x-custom', 'tuples']] });
+        const request = fetchStub.getCall(0).args[0];
+        expect(request.headers.get('x-custom')).to.equal('tuples');
+        expect(request.headers.get('accept')).to.equal('application/json');
+      });
+
+      it('keeps custom headers next to the json content-type when a body is given', async () => {
+        await ajax.fetchJson('/foo', {
+          method: 'POST',
+          body: { a: 1 },
+          headers: new Headers({ 'x-custom': 'headers' }),
+        });
+        const request = fetchStub.getCall(0).args[0];
+        expect(request.headers.get('x-custom')).to.equal('headers');
+        expect(request.headers.get('content-type')).to.equal('application/json');
+      });
+
+      it('lets the json accept header win over a user supplied accept header', async () => {
+        await ajax.fetchJson('/foo', { headers: { accept: 'text/plain' } });
+        const request = fetchStub.getCall(0).args[0];
+        expect(request.headers.get('accept')).to.equal('application/json');
+      });
+    });
+
     it('decodes response from json', async () => {
       fetchStub.returns(Promise.resolve(new Response('{"a":1,"b":2}', responseInit())));
       const response = await ajax.fetchJson('/foo');
@@ -204,6 +244,30 @@ describe('Ajax', () => {
       });
       const response = await ajax.fetchJson('/foo');
       expect(response.body).to.eql({ a: 1, b: 2 });
+    });
+
+    it('throws on 5xx responses with an undefined body when the JSON body cannot be parsed', async () => {
+      fetchStub.returns(
+        Promise.resolve(
+          new Response('{invalid', {
+            status: 500,
+            headers: { 'content-type': 'application/json' },
+          }),
+        ),
+      );
+
+      let thrown = false;
+      try {
+        await ajax.fetchJson('/foo');
+      } catch (e) {
+        // https://github.com/microsoft/TypeScript/issues/20024 open issue, can't type catch clause in param
+        const _e = /** @type {AjaxFetchError} */ (e);
+        expect(_e).to.be.an.instanceOf(AjaxFetchError);
+        expect(_e.response.status).to.equal(500);
+        expect(_e.body).to.be.undefined;
+        thrown = true;
+      }
+      expect(thrown).to.be.true;
     });
 
     it('throws on 4xx responses, but still attempts parsing response body when using fetchJson', async () => {
@@ -506,9 +570,19 @@ describe('Ajax', () => {
       return cacheId;
     };
 
+    /** @type {import('sinon').SinonFakeTimers|undefined} */
+    let clock;
+
     beforeEach(() => {
       getCacheIdentifier = () => String(cacheId);
       getCacheIdentifierAsync = () => Promise.resolve(String(cacheId));
+    });
+
+    // Restores in `afterEach`, so that an assertion that fails before the end of a test can not leak
+    // fake timers into the next test
+    afterEach(() => {
+      clock?.restore();
+      clock = undefined;
     });
 
     it('does not add cache interceptors when useCache is turned off', () => {
@@ -616,7 +690,7 @@ describe('Ajax', () => {
     };
 
     cachingTests.invalidatesOnTTLPassed = async (/** @type {Ajax} */ customAjax) => {
-      const clock = useFakeTimers({
+      clock = useFakeTimers({
         shouldAdvanceTime: true,
       });
 
@@ -635,8 +709,6 @@ describe('Ajax', () => {
       expect(await thirdResponse.text()).to.equal('mock response');
       expect(thirdResponse.headers.get('X-Custom-Header')).to.equal('y-custom-value');
       expect(thirdResponse.headers.get('Content-Type')).to.equal('application/json');
-
-      clock.restore();
     };
 
     describe('Caching interceptors: cache tests with synchronous getCacheIdentifier', async () => {

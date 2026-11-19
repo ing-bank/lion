@@ -222,4 +222,35 @@ describe('deepContains()', () => {
     );
     expect(deepContains(dialogWrapperElement, inputElement)).to.be.true;
   });
+
+  describe('cache', () => {
+    it('answers from the cache for an element with a [slot] that was checked before', async () => {
+      const element = /** @type {HTMLElement} */ (await fixture('<div slot="content"></div>'));
+      const target = /** @type {HTMLElement} */ (await fixture('<span></span>'));
+      const cache = { content: [{ element, deepContains: true }] };
+      expect(deepContains(element, target, cache)).to.be.true;
+      expect(deepContains(element, target)).to.be.false;
+    });
+
+    it('answers from the cache for a child with a [slot] that was checked before', async () => {
+      const element = /** @type {HTMLElement} */ (
+        await fixture('<div><p slot="content"></p><p>unchecked sibling</p></div>')
+      );
+      const child = /** @type {HTMLElement} */ (element.querySelector('[slot]'));
+      const target = /** @type {HTMLElement} */ (await fixture('<span></span>'));
+      const cache = { content: [{ element: child, deepContains: true }] };
+      expect(deepContains(element, target, cache)).to.be.true;
+    });
+
+    it('fills the cache for elements with a [slot]', async () => {
+      const element = /** @type {HTMLElement} */ (
+        await fixture('<div slot="content"><span></span></div>')
+      );
+      const target = /** @type {HTMLElement} */ (element.querySelector('span'));
+      /** @type {{[key: string]: any[]}} */
+      const cache = {};
+      deepContains(element, target, cache);
+      expect(cache.content).to.deep.equal([{ element, deepContains: true }]);
+    });
+  });
 });

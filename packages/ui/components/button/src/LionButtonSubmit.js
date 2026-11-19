@@ -2,7 +2,7 @@ import { LionButtonReset } from './LionButtonReset.js';
 
 /**
  * @typedef {import('lit').TemplateResult} TemplateResult
- * @typedef {{lionButtons: Set<LionButtonSubmit>, helper:HTMLButtonElement, observer:MutationObserver}} HelperRegistration
+ * @typedef {{lionButtons: Set<LionButtonSubmit>, helper:HTMLButtonElement, wrapper:HTMLDivElement, observer:MutationObserver}} HelperRegistration
  */
 
 /** @type {WeakMap<HTMLFormElement, HelperRegistration>} */
@@ -73,17 +73,25 @@ export class LionButtonSubmit extends LionButtonReset {
       const buttonEl = createImplicitSubmitHelperButton();
       const wrapperEl = document.createElement('div');
       wrapperEl.appendChild(buttonEl);
+      // Prevent that the helper (or its wrapper) gets lost during a rerender of the form
+      // or of the wrapper: restore whatever part was removed.
+      const observer = new MutationObserver(() => {
+        if (buttonEl.parentNode !== wrapperEl) {
+          wrapperEl.appendChild(buttonEl);
+        }
+        if (wrapperEl.parentNode !== form) {
+          form.appendChild(wrapperEl);
+        }
+      });
       implicitHelperMap.set(this._form, {
         lionButtons: new Set(),
         helper: buttonEl,
-        observer: new MutationObserver(() => {
-          form.appendChild(wrapperEl);
-        }),
+        wrapper: wrapperEl,
+        observer,
       });
       form.appendChild(wrapperEl);
-
-      // Prevent that the just created button gets lost during rerender
-      implicitHelperMap.get(form)?.observer.observe(wrapperEl, { childList: true });
+      observer.observe(wrapperEl, { childList: true });
+      observer.observe(form, { childList: true });
     }
     implicitHelperMap.get(form)?.lionButtons.add(this);
   }
@@ -99,10 +107,9 @@ export class LionButtonSubmit extends LionButtonReset {
       if (registrationForCurForm) {
         registrationForCurForm.lionButtons.delete(this);
         if (!registrationForCurForm.lionButtons.size) {
-          if (this._form.contains(registrationForCurForm.helper)) {
-            registrationForCurForm.helper.remove();
-          }
-          implicitHelperMap.get(this._form)?.observer.disconnect();
+          // Disconnect first, so removing the wrapper is not undone by the observer
+          registrationForCurForm.observer.disconnect();
+          registrationForCurForm.wrapper.remove();
           implicitHelperMap.delete(this._form);
         }
       }

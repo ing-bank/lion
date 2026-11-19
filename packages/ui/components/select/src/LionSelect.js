@@ -68,7 +68,6 @@ export class LionSelect extends LionFieldWithSelect {
 
   connectedCallback() {
     super.connectedCallback();
-    this._inputNode.addEventListener('change', this._proxyChangeEvent);
 
     this.__selectObserver = new MutationObserver(() => {
       this._syncValueUpwards();
@@ -106,7 +105,6 @@ export class LionSelect extends LionFieldWithSelect {
 
   disconnectedCallback() {
     super.disconnectedCallback();
-    this._inputNode.removeEventListener('change', this._proxyChangeEvent);
     this.__selectObserver?.disconnect();
   }
 
@@ -130,6 +128,18 @@ export class LionSelect extends LionFieldWithSelect {
       // Text 'undefined' should not end up in <input>
       this.value = typeof this.modelValue !== 'undefined' ? this.modelValue : '';
     }
+  }
+
+  /**
+   * LionField already listens to the native 'change' event. Proxying it from here (instead of
+   * from a second 'change' listener) makes sure one change results in one 'user-input-changed'.
+   * @param {Event} [ev]
+   * @override LionField
+   * @protected
+   */
+  // eslint-disable-next-line no-unused-vars
+  _onChange(ev) {
+    this._proxyChangeEvent();
   }
 
   /** @protected */

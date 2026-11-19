@@ -1,4 +1,4 @@
-import { expect, oneEvent, aTimeout } from '@open-wc/testing';
+import { expect, oneEvent } from '@open-wc/testing';
 import sinon from 'sinon';
 // @ts-ignore
 import { fetchMock } from '@bundled-es-modules/fetch-mock';
@@ -404,6 +404,21 @@ describe('LocalizeManager', () => {
   });
 
   describe('loading using routes predefined via setupNamespaceLoader()', () => {
+    it('rejects loadNamespace() for a namespace without a matching route', async () => {
+      manager = new LocalizeManager();
+      manager.setupNamespaceLoader(/^my-.+$/, async () => ({}));
+
+      let error;
+      try {
+        await manager.loadNamespace('other-component');
+      } catch (e) {
+        error = e;
+      }
+      expect(/** @type {Error} */ (error)?.message).to.equal(
+        'Namespace "other-component" was not properly setup.',
+      );
+    });
+
     it('loads a namespace via loadNamespace() using string route', async () => {
       fetchMock.get('./my-component/en-GB.json', { greeting: 'Hello!' });
 
@@ -843,6 +858,19 @@ describe('[deprecated] When not supporting external translation tools like Googl
     expect(manager.locale).to.equal('en-GB');
   });
 
+  it('keeps the deprecated translation tool accessors as aliases of the internal state', () => {
+    manager = new LocalizeManager({});
+    // @ts-ignore [allow-protected-in-tests]
+    manager._supportExternalTranslationTools = true;
+    // @ts-ignore [allow-protected-in-tests]
+    manager._langAttrSetByTranslationTool = 'nl-NL';
+
+    // @ts-ignore [allow-protected-in-tests]
+    expect(manager._langAttrSetByTranslationTool).to.equal('nl-NL');
+    expect(manager.locale).to.equal('nl-NL');
+    expect(document.documentElement.lang).to.equal('en-GB');
+  });
+
   it('fires "localeChanged" event if locale was changed via <html lang> attribute', async () => {
     manager = new LocalizeManager({});
     setTimeout(() => {
@@ -875,9 +903,13 @@ describe('[deprecated] When not supporting external translation tools like Googl
       'en-GB': { 'my-component': { greeting: 'Hello!' } },
     });
 
+    // With autoLoadOnLocaleChange, "localeChanged" is dispatched when the namespaces are loaded
+    const localeChanged = oneEvent(
+      /** @type {EventTarget} */ (/** @type {unknown} */ (manager)),
+      'localeChanged',
+    );
     document.documentElement.lang = 'nl-NL';
-    await aTimeout(0); // wait for mutation observer to be called
-    await manager.loadingComplete;
+    await localeChanged;
 
     expect(storage).to.deep.equal({
       'en-GB': { 'my-component': { greeting: 'Hello!' } },

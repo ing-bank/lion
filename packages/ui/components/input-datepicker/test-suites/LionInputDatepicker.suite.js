@@ -8,12 +8,12 @@ import {
   fixture,
   fixture as _fixture,
   nextFrame,
+  oneEvent,
   unsafeStatic,
-  waitUntil,
 } from '@open-wc/testing';
 import { sendKeys, setViewport } from '@web/test-runner-commands';
 import { LionCalendar, isSameDate } from '@lion/ui/calendar.js';
-import { html as htmlNonStatic, LitElement } from 'lit';
+import { html as htmlNonStatic } from 'lit';
 import { IsDateDisabled, MaxDate, MinDate, MinMaxDate } from '@lion/ui/form-core.js';
 import { mimicClick } from '@lion/ui/overlays-test-helpers.js';
 import { parseDate } from '@lion/ui/localize.js';
@@ -22,6 +22,13 @@ import { DatepickerInputObject as DefaultInputObject } from '@lion/ui/input-date
 import { LionInputDatepicker } from '@lion/ui/input-datepicker.js';
 import sinon from 'sinon';
 import { resolveSuiteTag } from '../../core/test-helpers/resolveSuiteTag.js';
+
+/**
+ * An axe audit of the datepicker (with its open calendar: a grid of 42 day buttons) is inherently
+ * heavy. It takes 50-400ms alone, but more than the default 5s mocha timeout when the machine runs
+ * other test runs at the same time.
+ */
+const AXE_TIMEOUT = 15000;
 
 /**
  * @param {{
@@ -62,6 +69,31 @@ export function runDatepickerSuite({
     );
   }
 
+  /**
+   * Resolves when the datepicker has finished opening its calendar, including the focus that
+   * `_onCalendarOverlayOpened` (the last step of opening, a lifecycle callback for subclassers)
+   * moves into the calendar. Call it before the action that opens the calendar.
+   * @param {LionInputDatepicker} el
+   * @returns {Promise<void>}
+   */
+  function calendarOpened(el) {
+    return new Promise(resolve => {
+      const datepicker = /** @type {{ _onCalendarOverlayOpened: () => void }} */ (
+        /** @type {unknown} */ (el)
+      );
+      const original = datepicker._onCalendarOverlayOpened;
+      datepicker._onCalendarOverlayOpened = () => {
+        // Back to the prototype method, so that a later opening is not observed
+        delete (
+          /** @type {{ _onCalendarOverlayOpened?: () => void }} */ (datepicker)
+            ._onCalendarOverlayOpened
+        );
+        original.call(datepicker);
+        resolve();
+      };
+    });
+  }
+
   it('should not reopen the datepicker popup when the date is selected by keyboard', async () => {
     /** @type {LionInputDatepicker} */
     const el = await fixture(html`<${tag} .modelValue="${new Date('2018/05/30')}"></${tag}>`);
@@ -69,9 +101,10 @@ export function runDatepickerSuite({
 
     // @ts-ignore
     const openDatepickerButton = el._invokerNode;
+    const opened = calendarOpened(el);
     openDatepickerButton?.focus();
     openDatepickerButton?.click();
-    await waitUntil(() => el.opened === true);
+    await opened;
 
     // Opening through the invoker leaves the focus on the calendar, which is what the arrow key needs:
     // measured on Firefox, a day button focused by hand does not receive it, the selection stays put,
@@ -234,12 +267,14 @@ export function runDatepickerSuite({
         const selectedDate = new Date(2019, 5, 15);
         const el = await fixtureForSuite(html`<${tag} .modelValue="${selectedDate}"></${tag}>`);
         const elObj = new InputObject(el);
+        const opened = calendarOpened(el);
         await elObj.openCalendar({ click: true });
-        await waitUntil(() => el.opened);
+        await opened;
         expect(elObj.overlayController.isShown).to.be.true;
 
+        const hidden = oneEvent(elObj.overlayController, 'hide');
         el[property] = true;
-        await waitUntil(() => !elObj.overlayController.isShown);
+        await hidden;
         await sendKeys({ press: 'ArrowRight' });
         await sendKeys({ press: 'Enter' });
 
@@ -491,6 +526,46 @@ export function runDatepickerSuite({
           expect(el.__calendarMaxDate.toString()).to.equal(new Date('2019/07/15').toString());
         });
 
+        it('releases the calendar limits of validators that are removed', async () => {
+          const myMinDate = new Date('2019/06/15');
+          const myMaxDate = new Date('2019/06/25');
+          const no20th = /** @param {Date} d */ d => d.getDate() === 20;
+          const el = await fixtureForSuite(html`
+            <${tag}
+              .validators=${[new MinDate(myMinDate), new MaxDate(myMaxDate), new IsDateDisabled(no20th)]}
+            ></${tag}>
+          `);
+          const elObj = new InputObject(el);
+          await elObj.openCalendar();
+          expect(elObj.calendarEl.minDate).to.equal(myMinDate);
+          expect(elObj.calendarEl.maxDate).to.equal(myMaxDate);
+          expect(elObj.calendarEl.disableDates(new Date('2019/06/20'))).to.be.true;
+          await elObj.closeCalendar();
+
+          el.validators = [];
+          await elObj.openCalendar();
+          const { minDate, maxDate } = elObj.calendarEl;
+          expect(!minDate || minDate <= new Date('2019/06/01'), 'minDate released').to.be.true;
+          expect(!maxDate || maxDate >= new Date('2019/06/30'), 'maxDate released').to.be.true;
+          expect(elObj.calendarEl.disableDates(new Date('2019/06/20')), 'disableDates released').to
+            .be.false;
+        });
+
+        it('keeps the calendar limits of validators that remain after a validators change', async () => {
+          const myMinDate = new Date('2019/06/15');
+          const myMaxDate = new Date('2019/06/25');
+          const maxDateValidator = new MaxDate(myMaxDate);
+          const el = await fixtureForSuite(html`
+            <${tag} .validators=${[new MinDate(myMinDate), maxDateValidator]}></${tag}>
+          `);
+          el.validators = [maxDateValidator];
+          const elObj = new InputObject(el);
+          await elObj.openCalendar();
+          const { minDate } = elObj.calendarEl;
+          expect(!minDate || minDate <= new Date('2019/06/01'), 'minDate released').to.be.true;
+          expect(elObj.calendarEl.maxDate).to.equal(myMaxDate);
+        });
+
         it('should update the central date of Calendar if updated validator made the current central date disabled', async () => {
           const initialValidators = [new MaxDate(new Date('2000/01/01'))];
           const updatedValidators = [new MaxDate(new Date('2020/01/01'))];
@@ -675,6 +750,27 @@ export function runDatepickerSuite({
     });
 
     describe('Accessibility', () => {
+      /**
+       * axe runs one audit at a time, and the body of a test that timed out keeps running. Audits
+       * are therefore queued: an audit starts when the previous one has settled, and `afterEach`
+       * waits for the queue. So a test that timed out during an audit can not fail the next test
+       * with "Axe is already running".
+       * @type {Promise<unknown>}
+       */
+      let pendingAudit = Promise.resolve();
+      /** @param {Element} node */
+      function expectAccessible(node) {
+        const audit = pendingAudit.catch(() => {}).then(() => expect(node).to.be.accessible());
+        pendingAudit = audit;
+        return audit;
+      }
+
+      afterEach(async function waitForPendingAudit() {
+        // An audit of the open calendar can take seconds on a loaded machine (see AXE_TIMEOUT)
+        this.timeout(AXE_TIMEOUT);
+        await pendingAudit.catch(() => {});
+      });
+
       it('has a heading of level 1', async () => {
         const el = await fixtureForSuite(html`
           <${tag} calendar-heading="foo"></${tag}>
@@ -710,33 +806,37 @@ export function runDatepickerSuite({
         expect(elObj.invokerEl.getAttribute('aria-expanded')).to.equal(null);
       });
 
-      it('is accessible when closed', async () => {
+      it('is accessible when closed', async function axeTest() {
+        this.timeout(AXE_TIMEOUT);
         const el = await fixtureForSuite(html`<${tag}></${tag}>`);
         const elObj = new InputObject(el);
 
-        await expect(elObj.invokerEl).to.be.accessible();
-        await expect(elObj.calendarEl).to.be.accessible();
+        await expectAccessible(elObj.invokerEl);
+        await expectAccessible(elObj.calendarEl);
       });
 
-      it('is accessible when open', async () => {
-        const el = await fixtureForSuite(html`<${tag}></${tag}>`);
-        const elObj = new InputObject(el);
-        await elObj.openCalendar();
-
-        await expect(elObj.calendarEl).to.be.accessible();
-        elObj.overlayCloseButtonEl.click();
-      });
-
-      it('has accessible invoker when open', async () => {
+      it('is accessible when open', async function axeTest() {
+        this.timeout(AXE_TIMEOUT);
         const el = await fixtureForSuite(html`<${tag}></${tag}>`);
         const elObj = new InputObject(el);
         await elObj.openCalendar();
 
-        await expect(elObj.invokerEl).to.be.accessible();
+        await expectAccessible(elObj.calendarEl);
         elObj.overlayCloseButtonEl.click();
       });
 
-      it('is accessible with a disabled date', async () => {
+      it('has accessible invoker when open', async function axeTest() {
+        this.timeout(AXE_TIMEOUT);
+        const el = await fixtureForSuite(html`<${tag}></${tag}>`);
+        const elObj = new InputObject(el);
+        await elObj.openCalendar();
+
+        await expectAccessible(elObj.invokerEl);
+        elObj.overlayCloseButtonEl.click();
+      });
+
+      it('is accessible with a disabled date', async function axeTest() {
+        this.timeout(AXE_TIMEOUT);
         const no15th = /** @param {Date} d */ d => d.getDate() !== 15;
         const el = await fixtureForSuite(html`
           <${tag} .validators=${[new IsDateDisabled(no15th)]}> </${tag}>
@@ -744,7 +844,7 @@ export function runDatepickerSuite({
         const elObj = new InputObject(el);
         await elObj.openCalendar();
 
-        await expect(elObj.calendarEl).to.be.accessible();
+        await expectAccessible(elObj.calendarEl);
         elObj.overlayCloseButtonEl.click();
       });
 
@@ -762,28 +862,27 @@ export function runDatepickerSuite({
       });
     });
 
-    describe.skip('Subclassers', () => {
+    describe('Subclassers', () => {
       describe('Providing a custom invoker', () => {
-        it('can override the invoker template', async () => {
-          const myTag = defineCE(
-            class extends LionInputDatepicker {
-              /** @override */
-              _invokerTemplate() {
-                return htmlNonStatic`<my-button>Pick my date</my-button>`;
-              }
-            },
+        it('can override the invoker icon template', async () => {
+          const myTag = unsafeStatic(
+            defineCE(
+              class extends LionInputDatepicker {
+                /** @override */
+                _invokerIconTemplate() {
+                  return htmlNonStatic`<span class="my-icon">Pick my date</span>`;
+                }
+              },
+            ),
           );
 
           const myEl = await fixtureForSuite(html`<${myTag}></${myTag}>`);
           const myElObj = new InputObject(myEl);
           const { invokerId } = getProtectedMembersDatepicker(myEl);
-          expect(myElObj.invokerEl.tagName.toLowerCase()).to.equal('my-button');
+          expect(myElObj.invokerEl.querySelector('.my-icon')?.textContent).to.equal('Pick my date');
 
-          // All other tests will still pass. Small checkup:
-          expect(myElObj.invokerEl.getAttribute('title')).to.equal('Open date picker');
-          expect(myElObj.invokerEl.getAttribute('aria-label')).to.equal('Open date picker');
-          expect(myElObj.invokerEl.getAttribute('aria-expanded')).to.equal('false');
-          expect(myElObj.invokerEl.getAttribute('aria-haspopup')).to.equal('dialog');
+          // The invoker keeps its wiring and accessibility
+          expect(accessibleName(myElObj.invokerEl)).to.equal('Open "date" picker');
           expect(myElObj.invokerEl.getAttribute('slot')).to.equal('suffix');
           expect(myElObj.invokerEl.getAttribute('id')).to.equal(invokerId);
           await myElObj.openCalendar();
@@ -796,13 +895,15 @@ export function runDatepickerSuite({
            * When the input-datepicker knows where the calendar invoker is, it can attach
            * the right logic, localization and accessibility functionality.
            */
-          const myTag = defineCE(
-            class extends LionInputDatepicker {
-              constructor() {
-                super();
-                this._calendarInvokerSlot = 'prefix';
-              }
-            },
+          const myTag = unsafeStatic(
+            defineCE(
+              class extends LionInputDatepicker {
+                constructor() {
+                  super();
+                  this._calendarInvokerSlot = 'prefix';
+                }
+              },
+            ),
           );
 
           const myEl = await fixtureForSuite(html`<${myTag}></${myTag}>`);
@@ -822,16 +923,18 @@ export function runDatepickerSuite({
             }
           }
 
-          const myTag = defineCE(
-            class extends LionInputDatepicker {
-              static get scopedElements() {
-                return { ...LionInputDatepicker.scopedElements, 'my-calendar': CustomCalendar };
-              }
+          const myTag = unsafeStatic(
+            defineCE(
+              class extends LionInputDatepicker {
+                static get scopedElements() {
+                  return { ...LionInputDatepicker.scopedElements, 'my-calendar': CustomCalendar };
+                }
 
-              _calendarTemplate() {
-                return htmlNonStatic`<my-calendar id="calendar"></my-calendar>`;
-              }
-            },
+                _calendarTemplate() {
+                  return htmlNonStatic`<my-calendar slot="content"></my-calendar>`;
+                }
+              },
+            ),
           );
 
           const myEl = await fixtureForSuite(html`<${myTag}></${myTag}>`);
@@ -841,75 +944,44 @@ export function runDatepickerSuite({
           await myElObj.openCalendar();
           expect(myElObj.calendarEl.tagName.toLowerCase()).to.equal('my-calendar');
         });
+
+        it.skip('can configure the overlay presentation based on media query switch', async () => {});
       });
 
-      describe('Providing a custom overlay', () => {
-        it('can override the overlay template', async () => {
-          // Keep in mind there is no logic inside this overlay frame; it only handles visuals.
-          // All interaction should be delegated to parent, which interacts with the calendar
-          // component
-          defineCE(
-            class extends LitElement {
-              render() {
-                // eslint-disable-line class-methods-use-this
-                return html`
-                  <div class="c-calendar-overlay">
-                    <slot></slot>
-                    <div class="c-calendar-overlay__footer">
-                      <button id="cancel-button" class="c-calendar-overlay__cancel-button">
-                        Cancel
-                      </button>
-                    </div>
-                  </div>
-                `;
-              }
-            },
-          );
-
+      describe('Hooking into the calendar overlay', () => {
+        it('calls the overridable overlay opened and user selected date callbacks', async () => {
           let myOverlayOpenedCbHandled = false;
           let myUserSelectedChangedCbHandled = false;
 
-          const myTag = defineCE(
-            class extends LionInputDatepicker {
-              // TODO: this method doesn't exist on LionInputDatepicker, so if we re-enable these tests, they should be redone
-              // /** @override */
-              // _calendarOverlayTemplate() {
-              //   return html`
-              //     <my-calendar-overlay-frame id="calendar-overlay">
-              //       <span slot="heading">${this.calendarHeading}</span>
-              //     </my-calendar-overlay-frame>
-              //   `;
-              // }
+          const myTag = unsafeStatic(
+            defineCE(
+              class extends LionInputDatepicker {
+                /** @override */
+                _onCalendarOverlayOpened() {
+                  super._onCalendarOverlayOpened();
+                  myOverlayOpenedCbHandled = true;
+                }
 
-              /** @override */
-              _onCalendarOverlayOpened() {
-                super._onCalendarOverlayOpened();
-                myOverlayOpenedCbHandled = true;
-              }
-
-              /**
-               * @override
-               * @param {{ target: { selectedDate: Date }}} opts
-               */
-              _onCalendarUserSelectedChanged({ target: { selectedDate } }) {
-                super._onCalendarUserSelectedChanged({ target: { selectedDate } });
-                myUserSelectedChangedCbHandled = true;
-              }
-            },
+                /**
+                 * @override
+                 * @param {{ target: { selectedDate: Date }}} opts
+                 */
+                _onCalendarUserSelectedChanged({ target: { selectedDate } }) {
+                  super._onCalendarUserSelectedChanged({ target: { selectedDate } });
+                  myUserSelectedChangedCbHandled = true;
+                }
+              },
+            ),
           );
 
           const myEl = await fixtureForSuite(html`<${myTag}></${myTag}>`);
           const myElObj = new InputObject(myEl);
 
-          // All other tests will still pass. Small checkup:
           await myElObj.openCalendar();
-          expect(myElObj.overlayEl.tagName.toLowerCase()).to.equal('my-calendar-overlay-frame');
           expect(myOverlayOpenedCbHandled).to.be.true;
           await myElObj.selectMonthDay(1);
           expect(myUserSelectedChangedCbHandled).to.be.true;
         });
-
-        it.skip('can configure the overlay presentation based on media query switch', async () => {});
       });
     });
 
@@ -928,7 +1000,6 @@ export function runDatepickerSuite({
         expect(submitSpy.callCount).to.equal(0);
       });
 
-      // TODO: remove: became irrelevant after we don't need dialog-frame
       it.skip('is hidden when attribute hidden is true', async () => {
         const el = await fixtureForSuite(html`<${tag}></${tag}>`);
 
@@ -968,26 +1039,34 @@ export function runDatepickerSuite({
         ).to.be.true;
       });
 
-      // TODO: fix a bug in overlays which does not move global nodes back to the local dom
-      it.skip('can switch between bottom sheet and popover', async () => {
+      it('can switch between bottom sheet and popover', async () => {
         const el = await fixtureForSuite(html`<${tag}></${tag}>`);
         await el.updateComplete;
         const myElObj = new InputObject(el);
 
+        // The overlay config is redefined before each show, based on the viewport width
         await setViewport({ width: 360, height: 640 });
         await myElObj.openCalendar();
-        expect(
-          el?.shadowRoot?.contains(myElObj.overlayController.contentNode),
-          'Datepicker does not get rendered as bottom sheet',
-        ).to.be.false;
+        expect(el.hasArrow).to.be.false;
+        expect(myElObj.overlayController.config.placementMode).to.equal('global');
 
         await myElObj.closeCalendar();
         await setViewport({ width: 1200, height: 640 });
         await myElObj.openCalendar();
+        expect(el.hasArrow).to.be.true;
+        expect(myElObj.overlayController.config.placementMode).to.equal('local');
         expect(
           el?.shadowRoot?.contains(myElObj.overlayController.contentNode),
           'Datepicker does not get rendered as a popover',
         ).to.be.true;
+
+        await myElObj.closeCalendar();
+        await setViewport({ width: 360, height: 640 });
+        await myElObj.openCalendar();
+        expect(el.hasArrow).to.be.false;
+        expect(myElObj.overlayController.config.placementMode).to.equal('global');
+        await myElObj.closeCalendar();
+        await setViewport({ width: 1200, height: 640 });
       });
     });
   });

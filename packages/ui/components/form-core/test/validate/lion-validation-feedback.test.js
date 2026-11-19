@@ -10,6 +10,16 @@ import { AlwaysInvalid, AlwaysValid } from '@lion/ui/form-core-test-helpers.js';
  */
 
 describe('lion-validation-feedback', () => {
+  /** @type {import('sinon').SinonFakeTimers|undefined} */
+  let clock;
+
+  // Restores in `afterEach`, so that an assertion that fails before the end of a test can not leak
+  // fake timers into the next test
+  afterEach(() => {
+    clock?.restore();
+    clock = undefined;
+  });
+
   it('renders a validation message', async () => {
     const el = /** @type {LionValidationFeedback} */ (
       await fixture(html`<lion-validation-feedback></lion-validation-feedback>`)
@@ -38,7 +48,7 @@ describe('lion-validation-feedback', () => {
       await fixture(html`<lion-validation-feedback></lion-validation-feedback>`)
     );
 
-    const clock = sinon.useFakeTimers();
+    clock = sinon.useFakeTimers();
 
     el.feedbackData = [{ message: 'hello', type: 'success', validator: new AlwaysValid() }];
     await el.updateComplete;
@@ -48,8 +58,6 @@ describe('lion-validation-feedback', () => {
     await el.updateComplete;
     clock.tick(3100);
     expect(el.getAttribute('type')).to.equal('error');
-
-    clock.restore();
   });
 
   it('shares to the user the type of validation feedback', async () => {
