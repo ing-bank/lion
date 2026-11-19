@@ -404,7 +404,6 @@ describe('FormControlMixin', () => {
 
         // wait until the field element is done rendering
         await el.updateComplete;
-        await el.updateComplete;
 
         // @ts-ignore allow protected accessors in tests
         const inputId = el._inputId;

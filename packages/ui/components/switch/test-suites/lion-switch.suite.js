@@ -106,7 +106,6 @@ export function runSwitchSuite({
       expect(_inputNode.hasAttribute('disabled')).to.be.true;
       el.disabled = false;
       await el.updateComplete;
-      await el.updateComplete; // safari takes longer
       expect(_inputNode.disabled).to.be.false;
       expect(_inputNode.hasAttribute('disabled')).to.be.false;
     });
