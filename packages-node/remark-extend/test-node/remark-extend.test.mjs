@@ -488,6 +488,48 @@ describe('remarkExtend', () => {
     expect(scriptNodes[1].value).to.equal("import { a11yLocalized } from './assets/a11y.js';");
   });
 
+  it('drops a binding that a different specifier also declares', async () => {
+    const result = await execute(
+      [
+        //
+        "```js ::importBlock('./fixtures/tabs-with-script.md', '## More Tabs')",
+        '```',
+        '',
+        "```js ::importBlock('./fixtures/tabs-lit-with-script.md', '## More Tabs Lit')",
+        '```',
+      ].join('\n'),
+      { shouldStringify: false },
+    );
+
+    const scriptNodes = result.children.filter(
+      node => node.type === 'code' && node.lang === 'js' && node.meta === 'script',
+    );
+    expect(scriptNodes.length).to.equal(1);
+    expect(scriptNodes[0].value).to.contain("from '@mdjs/mdjs-preview'");
+  });
+
+  it('keeps the bindings a partly colliding statement declares', async () => {
+    const result = await execute(
+      [
+        //
+        "```js ::importBlock('./fixtures/tabs-with-script.md', '## More Tabs')",
+        '```',
+        '',
+        "```js ::importBlock('./fixtures/tabs-green-with-script.md', '## More Tabs Green')",
+        '```',
+      ].join('\n'),
+      { shouldStringify: false },
+    );
+
+    const scriptNodes = result.children.filter(
+      node => node.type === 'code' && node.lang === 'js' && node.meta === 'script',
+    );
+    expect(scriptNodes.length).to.equal(2);
+    expect(scriptNodes[1].value).to.equal(
+      ["import { render } from 'lit';", "import './assets/green.js';"].join('\n'),
+    );
+  });
+
   it('keeps the import of a plain js block, so its preview still shows it', async () => {
     const result = await execute(
       [

@@ -146,13 +146,140 @@ function importStatementLineRanges(lines) {
 }
 
 /**
+ * The local names a statement declares do not have to be identical for a page module to
+ * break: `import { html } from '@mdjs/mdjs-preview';` followed by
+ * `import { html } from 'lit';` is the same `SyntaxError`, with two different specifiers.
+ * So a statement is deduped on the bindings it declares, in document order, and the
+ * first one wins - in this example the page keeps `@mdjs/mdjs-preview`, which re-exports
+ * lit's `html`.
+ */
+const IMPORT_FROM_STATEMENT = /^import\s+([\s\S]*?)\s+from\s*(['"])([^'"]+)\2\s*;?$/;
+const IMPORT_SIDE_EFFECT_STATEMENT = /^import\s*(['"])([^'"]+)\1\s*;?$/;
+
+/**
+ * @typedef {Object} ParsedImportStatement
+ * @property {string[]} bindings all local names the statement declares
+ * @property {Array<{ imported: string, local: string, raw: string }>} named the `{ }` specifiers
+ * @property {string} defaultBinding
+ * @property {string} namespaceBinding
+ * @property {string} quote
+ * @property {string} specifier
+ */
+
+/**
+ * @param {string} statement
+ * @returns {ParsedImportStatement | null} null for a shape we do not reason about
+ */
+function parseImportStatement(statement) {
+  if (IMPORT_SIDE_EFFECT_STATEMENT.test(statement)) {
+    return {
+      bindings: [],
+      named: [],
+      defaultBinding: '',
+      namespaceBinding: '',
+      quote: '',
+      specifier: '',
+    };
+  }
+  const from = statement.match(IMPORT_FROM_STATEMENT);
+  if (!from) {
+    return null;
+  }
+  const [, head, quote, specifier] = from;
+  const braceStart = head.indexOf('{');
+  const braceEnd = head.lastIndexOf('}');
+  const hasBraces = braceStart !== -1 && braceEnd !== -1;
+  const beforeBrace = (hasBraces ? head.slice(0, braceStart) : head).replace(/,\s*$/, '').trim();
+  const named = hasBraces
+    ? head
+        .slice(braceStart + 1, braceEnd)
+        .split(',')
+        .map(part => part.trim())
+        .filter(Boolean)
+        .map(part => {
+          const [imported, local] = part.split(/\s+as\s+/);
+          return { imported: imported.trim(), local: (local || imported).trim(), raw: part };
+        })
+    : [];
+  let defaultBinding = '';
+  let namespaceBinding = '';
+  if (beforeBrace.startsWith('*')) {
+    namespaceBinding = beforeBrace.replace(/^\*\s*as\s*/, '').trim();
+  } else {
+    defaultBinding = beforeBrace;
+  }
+  return {
+    bindings: [defaultBinding, namespaceBinding, ...named.map(spec => spec.local)].filter(Boolean),
+    named,
+    defaultBinding,
+    namespaceBinding,
+    quote,
+    specifier,
+  };
+}
+
+/**
+ * Decides what happens to one import statement of a page module: keep it, drop it, or
+ * rewrite it without the bindings the page already has.
+ * @param {string} statementText
+ * @param {{ boundNames: Set<string>, seenStatements: Set<string> }} registry
+ * @returns {{ action: 'keep' } | { action: 'drop' } | { action: 'rewrite', value: string }}
+ */
+function dedupeImportStatement(statementText, registry) {
+  const { boundNames, seenStatements } = registry;
+  if (seenStatements.has(statementText)) {
+    return { action: 'drop' };
+  }
+  seenStatements.add(statementText);
+
+  const parsed = parseImportStatement(statementText);
+  if (!parsed) {
+    return { action: 'keep' };
+  }
+  const { bindings } = parsed;
+  if (bindings.length === 0) {
+    return { action: 'keep' };
+  }
+
+  const collisions = bindings.filter(name => boundNames.has(name));
+  if (collisions.length === 0) {
+    bindings.forEach(name => boundNames.add(name));
+    return { action: 'keep' };
+  }
+  if (collisions.length === bindings.length) {
+    return { action: 'drop' };
+  }
+
+  const keptNamed = parsed.named.filter(spec => !boundNames.has(spec.local));
+  const keepsDefault = Boolean(parsed.defaultBinding) && !boundNames.has(parsed.defaultBinding);
+  if (parsed.namespaceBinding || (keptNamed.length === 0 && !keepsDefault)) {
+    return { action: 'drop' };
+  }
+
+  keptNamed.forEach(spec => boundNames.add(spec.local));
+  const specifier = `${parsed.quote}${parsed.specifier}${parsed.quote}`;
+  if (keptNamed.length === 0) {
+    boundNames.add(parsed.defaultBinding);
+    return { action: 'rewrite', value: `import ${parsed.defaultBinding} from ${specifier};` };
+  }
+  const head = [
+    keepsDefault ? parsed.defaultBinding : '',
+    `{ ${keptNamed.map(spec => spec.raw).join(', ')} }`,
+  ]
+    .filter(Boolean)
+    .join(', ');
+  return { action: 'rewrite', value: `import ${head} from ${specifier};` };
+}
+
+/**
  * Drops every `js script`/`js client` statement (or whole block) that the page already
- * declared earlier, in document order.
+ * declared earlier, in document order, and rewrites a statement that only partly
+ * collides. A block that loses all of its content is removed.
  * @param {object} tree
  */
 function dedupePageLevelImportStatements(tree) {
   const seenBlockValues = new Set();
-  const seenStatements = new Set();
+  const registry = { boundNames: new Set(), seenStatements: new Set() };
 
   visit(tree, node => {
     if (!isPageLevelJsCodeBlock(node) || !node.value) {
@@ -172,25 +299,34 @@ function dedupePageLevelImportStatements(tree) {
       return;
     }
 
-    const duplicateLines = new Set();
+    const outputLines = [];
+    let cursor = 0;
     for (const [start, end] of ranges) {
-      const statement = normalizeCode(lines.slice(start, end + 1).join('\n'));
-      if (seenStatements.has(statement)) {
-        for (let line = start; line <= end; line += 1) {
-          duplicateLines.add(line);
-        }
-      } else {
-        seenStatements.add(statement);
+      for (let line = cursor; line < start; line += 1) {
+        outputLines.push(lines[line]);
       }
+      const statementText = normalizeCode(lines.slice(start, end + 1).join('\n'));
+      const result = dedupeImportStatement(statementText, registry);
+      if (result.action === 'keep') {
+        for (let line = start; line <= end; line += 1) {
+          outputLines.push(lines[line]);
+        }
+      } else if (result.action === 'rewrite') {
+        outputLines.push(result.value);
+      }
+      cursor = end + 1;
+    }
+    for (let line = cursor; line < lines.length; line += 1) {
+      outputLines.push(lines[line]);
     }
 
-    if (duplicateLines.size === 0) {
+    const newBlockValue = outputLines.join('\n');
+    if (newBlockValue === node.value) {
       return;
     }
-    const remainingLines = lines.filter((line, index) => !duplicateLines.has(index));
     // eslint-disable-next-line no-param-reassign
-    node.value = remainingLines.join('\n');
-    if (normalizeCode(node.value) === '') {
+    node.value = newBlockValue;
+    if (normalizeCode(newBlockValue) === '') {
       // eslint-disable-next-line no-param-reassign
       node.__remarkExtendRemove = true;
     }
