@@ -21,7 +21,7 @@ const fixture = /** @type {(arg: TemplateResult) => Promise<LionSteps>} */ (_fix
  * @returns {Promise<void>}
  */
 async function checkWorkflow(steps, expected) {
-  return new Promise(resolve => {
+  return new Promise((resolve, reject) => {
     /** @type {number[]} */
     const transitions = [];
     steps.addEventListener('transition', event => {
@@ -31,15 +31,21 @@ async function checkWorkflow(steps, expected) {
       }
       transitions.push(_event.detail.toStep.number);
     });
+    // Transitions are dispatched synchronously by the navigation that the caller schedules with a
+    // `setTimeout` before calling this: this later task runs after all of them.
     setTimeout(() => {
-      // allow time for other transitions to happen if any
-      const transitionsString = transitions.join(' => ');
-      expect(transitionsString).to.equal(expected.transitions, 'transition flow is different');
-      const statusesString = /** @type {LionStep[]} */ (Array.from(steps.children))
-        .map(step => step.status)
-        .join(' ');
-      expect(statusesString).to.equal(expected.statuses, 'steps statuses are different');
-      resolve();
+      try {
+        const transitionsString = transitions.join(' => ');
+        expect(transitionsString).to.equal(expected.transitions, 'transition flow is different');
+        const statusesString = /** @type {LionStep[]} */ (Array.from(steps.children))
+          .map(step => step.status)
+          .join(' ');
+        expect(statusesString).to.equal(expected.statuses, 'steps statuses are different');
+        resolve();
+      } catch (error) {
+        // Fail the test with the assertion, instead of an uncaught error and a timeout
+        reject(error);
+      }
     });
   });
 }
