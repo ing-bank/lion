@@ -215,7 +215,7 @@ export const SYSTEM_NAMES = ['core', 'form', 'icon', 'localize', 'overlays'];
  * and were failed by a contract that only accepted `overlays.js` — the docs were right, the contract
  * was wrong. All three routes ship (`packages/ui/exports/{overlays,dialog,tooltip}.js`).
  */
-const SYSTEM_CONSUMER_ENTRYPOINTS: Record<string, string[]> = {
+export const SYSTEM_CONSUMER_ENTRYPOINTS: Record<string, string[]> = {
   overlays: ['overlays', 'dialog', 'tooltip'],
 };
 
@@ -270,7 +270,7 @@ export function entrypointFor(name: string): string {
  * `@lion/ui/define/lion-x.js` entrypoint is never accepted - it opts out of the host's scoped registry,
  * which is the exact rule this skill teaches (and which the check below fails on).
  */
-function entrypointChecks(
+export function entrypointChecks(
   file: string,
   name: string,
   options: { acceptedEntrypoints?: string[] } = {},

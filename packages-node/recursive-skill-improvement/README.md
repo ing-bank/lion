@@ -47,10 +47,16 @@ npm run eval -- --provider copilot --models <copilot-model>
 See [`examples/`](examples/README.md) for ready-made presets (`openai`, `runware`, `local`,
 `copilot`) and a worked example of the library API.
 
-Four tasks, as the first positional argument (no task defaults to `eval`): `eval` (one scenario ×
+Five tasks, as the first positional argument (no task defaults to `eval`): `eval` (one scenario ×
 model, scored), `sweep` (the whole round, then publish the ledger and the results page), `improve`
-(measure, then attribute every failure to the exact check and its `file:line`) and `report` (render the
-ledger; no runs, no model needed).
+(measure, then attribute every failure to the exact check and its `file:line`), `report` (render the
+ledger; no runs, no model needed) and `scenarios` (derive one scenario per documented use case from
+`--docs` globs, read under the `--headings` pattern; it lints them and prints them, no model needed).
+
+```bash
+# the use-case scenarios, derived from the docs (the defaults, spelled out)
+node src/cli.ts scenarios --docs 'docs/components/*/use-cases.md,docs/fundamentals/systems/*/use-cases.md' --headings '^## '
+```
 
 ```bash
 # from the published package

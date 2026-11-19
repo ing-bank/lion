@@ -19,6 +19,12 @@ import { gray, green, red, yellow } from 'nanocolors';
 import { runSkillTester, defaultLionUiSkillLocation, createAgentConfig } from './skillTester.ts';
 import { loadLionUiScenarios, manualScenarios } from './scenarios/index.ts';
 import type { TestScenario } from './scenarios/types.ts';
+import {
+  deriveUseCaseScenarios,
+  lintDerivedUseCases,
+  DEFAULT_USE_CASE_DOCS,
+  DEFAULT_USE_CASE_HEADINGS,
+} from './scenarios/useCases.ts';
 import type { Provider } from './config.ts';
 import { execSync } from 'node:child_process';
 import { loadLedger, updateLedger, writeLedger } from './report/ledger.ts';
@@ -54,7 +60,7 @@ const repoRoot = path.resolve(__dirname, '../../..');
  *
  * `retire` is deliberately NOT a task: a retired model is data (`RATES[…].retired`), not an action.
  */
-export type TaskName = 'eval' | 'sweep' | 'improve' | 'report';
+export type TaskName = 'eval' | 'sweep' | 'improve' | 'report' | 'scenarios';
 
 type CliOptions = {
   /** The named task to run (default `eval`, so existing invocations stay valid). */
@@ -77,6 +83,10 @@ type CliOptions = {
   docs: boolean;
   docsPath?: string;
   ledgerPath?: string;
+  /** `scenarios` task only: the docs globs to derive use cases from (`--docs <a,b,c>`). */
+  docsGlobs?: string[];
+  /** `scenarios` task only: the regular expression that marks a use-case heading (`--headings`). */
+  headings?: string;
 };
 
 function parseArgs(argv: string[]): CliOptions {
@@ -137,9 +147,28 @@ function parseArgs(argv: string[]): CliOptions {
       case '--behaviour':
         options.behaviour = true;
         break;
-      case '--docs':
+      case '--docs': {
+        // For the `scenarios` task `--docs` takes the globs; for every other task it is the boolean
+        // that publishes the results page, exactly as before.
+        if (argv[0] === 'scenarios') {
+          const value = next();
+          if (value === undefined || value.startsWith('--')) {
+            throw new Error(`--docs needs one or more globs for the scenarios task, but got "${value ?? ''}"`);
+          }
+          options.docsGlobs = value.split(',').map(glob => glob.trim()).filter(Boolean);
+          break;
+        }
         options.docs = true;
         break;
+      }
+      case '--headings': {
+        const value = next();
+        if (value === undefined || value.startsWith('--')) {
+          throw new Error(`--headings needs a regular expression, but got "${value ?? ''}"`);
+        }
+        options.headings = value;
+        break;
+      }
       case '--docs-path': {
         const value = next();
         if (value.startsWith('--')) {
@@ -196,12 +225,16 @@ function parseArgs(argv: string[]): CliOptions {
   // The `sweep` task is "the full round": measuring plus publishing the ledger and results page.
   if (options.task === 'sweep') options.docs = true;
 
+  if (options.headings !== undefined && options.task !== 'scenarios') {
+    throw new Error('--headings only applies to the scenarios task');
+  }
+
   return options;
 }
 
-/** Resolve a task name, rejecting anything that is not one of the four documented tasks. */
+/** Resolve a task name, rejecting anything that is not one of the documented tasks. */
 function parseTaskName(value: string | undefined): TaskName {
-  const tasks: TaskName[] = ['eval', 'sweep', 'improve', 'report'];
+  const tasks: TaskName[] = ['eval', 'sweep', 'improve', 'report', 'scenarios'];
   if (value && (tasks as string[]).includes(value)) return value as TaskName;
   throw new Error(`Unknown task "${value}". Known tasks: ${tasks.join(', ')}.`);
 }
@@ -219,6 +252,8 @@ Tasks (the FIRST positional argument; no task defaults to eval):
                           report the exact check and its file:line. It reports; it does NOT edit
                           docs — that is human/agent work. It sets the correction up.
   report                  Render/print the ledger as the results page; no runs, no model needed.
+  scenarios               Derive one scenario per documented use case from the docs (--docs,
+                          --headings). It prints them and lints them; no runs, no model, no files.
 
   sweep = the whole round; improve = the failing set, attributed.
 
@@ -243,6 +278,13 @@ Options:
   --mock-agent            Test the mock-repo agent instead of the lion-ui skill
   --behaviour             Also run the behaviour tier: execute the produced code in a real
                           browser (headless Chromium) and report it as a separate axis
+  --docs                  Publish the ledger and the results page after the run (sweep does this).
+                          For the scenarios task, --docs takes the globs instead (see below).
+  --docs <globs>          scenarios task only: comma-separated globs of the docs to read. Quote them
+                          so the shell does not expand them. Default:
+                          'docs/components/*/use-cases.md,docs/fundamentals/systems/*/use-cases.md'
+  --headings <pattern>    scenarios task only: regular expression; a line that matches starts a
+                          use case, and the rest of that line is its name. Default: '^## '
   --kind <k>              Only scenarios of this kind (component|system|integration)
   --scenario <substring>  Only scenarios whose name contains this substring
   --limit <n>             Run at most n scenarios
@@ -253,6 +295,8 @@ Examples:
   # Any OpenAI-compatible endpoint (the default base URL is https://api.openai.com/v1)
   node src/cli.ts --models gpt-5-mini --api-key "$OPENAI_API_KEY"
   node src/cli.ts --models my-model --base-url http://localhost:8080/v1
+  # Derive the use-case scenarios from the docs (the defaults, spelled out)
+  node src/cli.ts scenarios --docs 'docs/components/*/use-cases.md,docs/fundamentals/systems/*/use-cases.md' --headings '^## '
   # GitHub Copilot (install the optional SDK first)
   npm install @github/copilot-sdk && node src/cli.ts --provider copilot --models <model>
 
@@ -261,6 +305,48 @@ Environment:
   SKILL_TESTER_MODELS, SKILL_TESTER_API_KEY, SKILL_TESTER_BASE_URL
   OPENAI_API_KEY, OPENAI_BASE_URL
 `);
+}
+
+/**
+ * The `scenarios` task: derive one scenario per documented use case (`--docs`, `--headings`), lint
+ * every one with the same rules `eval:list` applies, and print them. It runs no model and writes no
+ * file. A glob that matches nothing, a pattern that matches nothing, or a lint finding is an error.
+ */
+async function runScenariosTask(options: CliOptions): Promise<void> {
+  const globs = options.docsGlobs ?? DEFAULT_USE_CASE_DOCS;
+  const headings = options.headings ?? DEFAULT_USE_CASE_HEADINGS;
+  const { derived, files, headingOnlyGoals } = await deriveUseCaseScenarios({
+    repoRoot,
+    docs: globs,
+    headings,
+    reserved: manualScenarios.map(scenario => scenario.name),
+  });
+
+  console.log(
+    `${derived.length} use-case scenario(s) from ${files.length} docs file(s) ` +
+      `(headings ${headings}; docs ${globs.join(', ')}):`,
+  );
+  for (const { scenario, source } of derived) {
+    console.log(`  ${scenario.kind.padEnd(12)} ${scenario.name}  <- ${source.file}:${source.line}`);
+  }
+  if (headingOnlyGoals.length > 0) {
+    console.log(
+      gray(
+        `  ${headingOnlyGoals.length} use case(s) have prose that names a tag or class, so their goal is the heading alone.`,
+      ),
+    );
+  }
+
+  const findings = lintDerivedUseCases(derived, repoRoot);
+  if (findings.length > 0) {
+    console.error(red(`${findings.length} lint finding(s):`));
+    for (const finding of findings) {
+      console.error(red(`  ${finding.scenario} [${finding.assertion}] ${finding.message}`));
+    }
+    process.exitCode = 1;
+    return;
+  }
+  console.log(green('All generated scenarios pass lint (L1–L8) and the leak rule.'));
 }
 
 function selectScenarios(options: CliOptions): TestScenario[] {
@@ -433,6 +519,12 @@ async function main(): Promise<void> {
   // `report` renders the ledger into the results page; it runs no scenarios and needs no model.
   if (options.task === 'report') {
     runReportTask(options);
+    return;
+  }
+
+  // `scenarios` derives the use-case scenarios from the docs; it needs no model and no registry filter.
+  if (options.task === 'scenarios') {
+    await runScenariosTask(options);
     return;
   }
 
