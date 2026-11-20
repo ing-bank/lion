@@ -1,5 +1,19 @@
 # @lion/ui
 
+## 0.28.0
+
+### Minor Changes
+
+- 9c73d74: Fix: update locale handling for Intl.DisplayNames and Intl.NumberFormat
+- 06bbc36: Number validators support amount dropdown component
+
+### Patch Changes
+
+- a71e908: Close the input datepicker calendar when the field becomes disabled or read-only.
+- 65adb4d: [pagination] allow locale to consist only out of country part
+- f6c2423: [localize] test if number removes the group separator when it is between thousand and ten thousand
+- d6a3ef2: [input-stepper] reset default validators after min or max change
+
 ## 0.27.0
 
 ### Minor Changes
