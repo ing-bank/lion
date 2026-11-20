@@ -6,7 +6,6 @@ import { getInputMembers } from '@lion/ui/input-test-helpers.js';
 import { LionInputAmount, formatAmount, parseAmount } from '@lion/ui/input-amount.js';
 import { mimicUserInput } from '@lion/ui/form-core-test-helpers.js';
 import sinon from 'sinon';
-import '@lion/ui/define/lion-input-amount.js';
 import { resolveSuiteTag } from '../../core/test-helpers/resolveSuiteTag.js';
 
 /**
@@ -362,17 +361,18 @@ export function runInputAmountSuite({
     });
 
     it('can override the currency label slot', async () => {
-      customElements.define(
-        'my-input-amount',
-        class extends LionInputAmount {
-          constructor() {
-            super();
-            // Put the currency label in the suffix slot
-            this._currencyDisplayNodeSlot = 'suffix';
-          }
-        },
+      const customTag = unsafeStatic(
+        resolveSuiteTag(
+          class extends LionInputAmount {
+            constructor() {
+              super();
+              // Put the currency label in the suffix slot
+              this._currencyDisplayNodeSlot = 'suffix';
+            }
+          },
+        ),
       );
-      const el = await fixture(html`<my-input-amount currency="EUR"></my-input-amount>`);
+      const el = await fixture(html`<${customTag} currency="EUR"></${customTag}>`);
       expect(
         /** @type {HTMLElement[]} */ (Array.from(el.children)).find(
           child => child.slot === 'suffix',

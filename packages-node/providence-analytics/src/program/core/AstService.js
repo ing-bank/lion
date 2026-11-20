@@ -4,8 +4,6 @@ import { LogService } from './LogService.js';
 
 /** @type {typeof import('@babel/parser')} */
 let babelParser;
-/** @type {typeof import('@swc/core')} */
-let swcParser;
 /** @type {typeof import('oxc-parser')} */
 let oxcParser;
 
@@ -15,7 +13,7 @@ let oxcParser;
  * @typedef {import("oxc-parser").ParseResult} OxcParseResult
  * @typedef {import("oxc-parser").ParserOptions} OxcParserOptions
  * @typedef {import("@babel/parser").ParserOptions} ParserOptions
- * @typedef {import("@swc/core").Module} SwcAstModule
+ * @typedef {import("../../../types/index.js").AstNode} AstModule
  * @typedef {import("@babel/types").File} File
  */
 
@@ -46,34 +44,7 @@ export class AstService {
   }
 
   /**
-   * Compiles an array of file paths using swc.
-   * @param {string} code
-   * @param {ParserOptions} parserOptions
-   * @returns {Promise<SwcAstModule>}
-   */
-  static async _getSwcAst(code, parserOptions = {}) {
-    if (!swcParser) {
-      swcParser = (await import('@swc/core')).default;
-    }
-
-    const ast = swcParser.parseSync(code, {
-      syntax: 'typescript',
-      target: 'es2022',
-      ...parserOptions,
-    });
-    return ast;
-  }
-
-  /**
-   * Compensates for swc span bug: https://github.com/swc-project/swc/issues/1366#issuecomment-1516539812
-   * @returns {number}
-   */
-  static _getSwcOffset() {
-    return swcParser.parseSync('').span.end;
-  }
-
-  /**
-   * Compiles an array of file paths using swc.
+   * Compiles an array of file paths using oxc.
    * @param {string} code
    * @param {object} opts
    * @param {string} [opts.filePath]
@@ -121,7 +92,7 @@ export class AstService {
    * @param { string } code
    * @param {AnalyzerAst} astType
    * @param { {filePath?: PathFromSystemRoot} } options
-   * @returns {Promise<File|undefined|SwcAstModule|OxcParseResult>}
+   * @returns {Promise<File|undefined|AstModule|OxcParseResult>}
    */
   // eslint-disable-next-line consistent-return
   static async getAst(code, astType, { filePath } = {}) {
@@ -129,9 +100,6 @@ export class AstService {
     try {
       if (astType === 'babel') {
         return await this._getBabelAst(code);
-      }
-      if (astType === 'swc') {
-        return await this._getSwcAst(code);
       }
       if (astType === 'oxc') {
         return await this._getOxcAst(code, { filePath });
@@ -143,7 +111,7 @@ export class AstService {
   }
 }
 /**
- * This option can be used as a last resort when an swc AST combined with swc-to-babel, is backwards incompatible
+ * This option can be used as a last resort when an oxc AST combined with oxc-to-babel, is backwards incompatible
  * (for instance when @babel/generator expects a different ast structure and fails).
  */
 AstService.fallbackToBabel = false;

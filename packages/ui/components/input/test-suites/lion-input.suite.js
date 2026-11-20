@@ -1,6 +1,5 @@
 import { html } from 'lit/static-html.js';
 import { Validator } from '@lion/ui/form-core.js';
-import '@lion/ui/define/lion-input.js';
 import { LionInput } from '@lion/ui/input.js';
 import { aTimeout, expect, fixture, triggerFocusFor, unsafeStatic } from '@open-wc/testing';
 import { getInputMembers } from '@lion/ui/input-test-helpers.js';

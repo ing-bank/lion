@@ -1,6 +1,5 @@
 import { html } from 'lit/static-html.js';
 import { unsafeStatic, expect, fixture as _fixture } from '@open-wc/testing';
-import '@lion/ui/define/lion-progress-indicator.js';
 import { LionProgressIndicator } from '@lion/ui/progress-indicator.js';
 import { resolveSuiteTag } from '../../core/test-helpers/resolveSuiteTag.js';
 

@@ -3,9 +3,6 @@ import { unsafeStatic, expect, triggerBlurFor, triggerFocusFor, fixture } from '
 import { Required } from '@lion/ui/form-core.js';
 import { browserDetection } from '@lion/ui/core.js';
 import sinon from 'sinon';
-import '@lion/ui/define/lion-option.js';
-import '@lion/ui/define/lion-listbox.js';
-import '@lion/ui/define/lion-select-rich.js';
 import { LionOption, LionOptions } from '@lion/ui/listbox.js';
 import { LionSelectRich } from '@lion/ui/select-rich.js';
 import { getSelectRichMembers } from '@lion/ui/select-rich-test-helpers.js';
@@ -132,7 +129,7 @@ export function runSelectRichInteractionSuite({
         const el2 = /** @type {LionSelectRich} */ (
           await fixture(html`
             <${tag} interaction-mode="windows/linux"
-              ><${tagOption} .choiceValue=${10}>Item 1</${tagOption}></lion-select-rich
+              ><${tagOption} .choiceValue=${10}>Item 1</${tagOption}></${tag}
             >
           `)
         );
@@ -148,7 +145,7 @@ export function runSelectRichInteractionSuite({
         const el4 = /** @type {LionSelectRich} */ (
           await fixture(html`
             <${tag} interaction-mode="mac"
-              ><${tagOption} .choiceValue=${10}>Item 1</${tagOption}></lion-select-rich
+              ><${tagOption} .choiceValue=${10}>Item 1</${tagOption}></${tag}
             >
           `)
         );
@@ -160,7 +157,7 @@ export function runSelectRichInteractionSuite({
         const el = /** @type {LionSelectRich} */ (
           await fixture(html`
             <${tag} interaction-mode="windows/linux"
-              ><${tagOption} .choiceValue=${10}>Item 1</${tagOption}></lion-select-rich
+              ><${tagOption} .choiceValue=${10}>Item 1</${tagOption}></${tag}
             >
           `)
         );
@@ -170,7 +167,7 @@ export function runSelectRichInteractionSuite({
         const el2 = /** @type {LionSelectRich} */ (
           await fixture(html`
             <${tag} interaction-mode="mac"
-              ><${tagOption} .choiceValue=${10}>Item 1</${tagOption}></lion-select-rich
+              ><${tagOption} .choiceValue=${10}>Item 1</${tagOption}></${tag}
             >
           `)
         );

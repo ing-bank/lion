@@ -1,11 +1,10 @@
 import { html } from 'lit/static-html.js';
 import { LionTooltip } from '@lion/ui/tooltip.js';
-import '@lion/ui/define/lion-tooltip.js';
 import { aTimeout, expect, fixture, unsafeStatic } from '@open-wc/testing';
 import {
   runOverlayMixinSuite,
   runWithHoverInteractionSuite,
-} from '@lion/ui/overlays-test-suites.js';
+} from '@lion/ui/test-suites/overlays.js';
 import sinon from 'sinon';
 import { resolveSuiteTag } from '../../core/test-helpers/resolveSuiteTag.js';
 

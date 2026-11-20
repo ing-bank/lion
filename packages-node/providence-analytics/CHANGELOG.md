@@ -1,5 +1,70 @@
 # Change Log
 
+## 0.23.0
+
+### Minor Changes
+
+- 8956ad4: Drop the `@swc/core` optional dependency, and the `swc` ast type it existed for.
+
+  `@swc/core` was declared optional so `AstService` could lazily import it for `astType: 'swc'`, and its
+  node types were referenced from our shipped declarations. Nothing selected that path: all six analyzers
+  declare `static requiredAst = 'oxc'` and the base `Analyzer` defaults to `'babel'`, so no caller in the
+  repo - and no CLI flag - ever asked for an swc AST. The parser, its `_getSwcOffset()` span compensation
+  and the `'swc'` member of `AnalyzerAst` are removed with it.
+
+  Two consequences:
+  - The traversal (`oxc-traverse.js`, and the `SwcPath` / `SwcVisitor` / `SwcScope` / `SwcBinding` types it
+    is built on) now uses our own structural `AstNode` instead of `@swc/core`'s node union. Those type
+    _names_ are unchanged; only the node type they are built on changed.
+  - `AnalyzerAst` no longer accepts `'swc'`: passing it is a type error, and `AstService.getAst` throws
+    `astType "swc" not supported.`
+
+  Weight removed: 13 lock paths (11 `@swc/core-<platform>` binaries plus `@swc/core` and `@swc/types`);
+  a fresh `npm ci` installs 5 packages / 106 MB less (48 MB linux-x64-gnu + 59 MB linux-x64-musl, and the
+  musl build cannot load on a glibc host at all). On top of that an interrupted binary download had left
+  107 MB of extract debris (`node_modules/@swc/.core-linux-x64-*-<id>/`) in every install of this package.
+
+## 0.22.0
+
+### Minor Changes
+
+- 3361d1f: Resolve import specifiers with `oxc-resolver` instead of `@rollup/plugin-node-resolve`.
+
+  The rules are the ones the package used before - `exports` maps with the ESM conditions, `module`
+  preferred over `main`, `.mjs`/`.js`/`.json` extension guessing, `modulePaths` support - and a parity
+  test asserts both resolvers return the same path for relative, bare, subpath, exports-map,
+  `module`-field, extensionless and builtin specifiers. Resolution itself drops from ~1.7 ms to
+  ~0.03 ms per call (2400 calls: 4.2 s to 0.08 s, memoization disabled), and the rollup plugin moves to
+  `devDependencies`, where it stays only as the resolver the mock-fs suites swap in.
+
+  Also removes unused dependencies: `@types/inquirer` (the CLI no longer uses inquirer) and
+  `@babel/plugin-syntax-import-assertions` (`AstService` passes the built-in parser plugin names to
+  `@babel/parser`), plus the duplicate `@babel/parser` / `@swc/core` declarations. The dashboard imports (`@web/dev-server`,
+  `lit-element`) stay dev-only: both an `optionalDependencies` edge and a `dependencies` edge were
+  measured and rejected (the first breaks `packages/ui`'s type gate in CI, the second adds a
+  194-package closure to every consumer); the constraint is now recorded in `comments.dependencies`.
+
+- 8238df2: Serve the dashboard with our own dev server, exported as `miniDevServer`, and drop `@web/dev-server`
+
+  The dashboard only used a small part of `@web/dev-server` (wds): serve static files, rewrite bare
+  module specifiers for the browser and run the dashboard middleware. `miniDevServer`
+  (`src/program/utils/mini-dev-server.js`, exported from `providence-analytics/utils.js`) does exactly
+  that in ~250 lines on top of node's `http`, so `@web/dev-server` and `@web/dev-server-core` are no
+  longer needed - together with the ~195 entry dependency tree they brought in.
+
+  `miniDevServer` is a drop-in for the wds config subset we use: `rootDir`, `appIndex`, `nodeResolve`,
+  `moduleDirs`, `middleware`, `open`, `port`, `hostname` (and the legacy `host` alias). `watch` is
+  accepted and ignored. It follows wds's shape as well: `createServer(config)`,
+  `startDevServer({ config })` with `start()`/`stop()`/`url`/`server`, plus `createTestServer(config)`
+  returning `{ host, server }`. `createDashboardServerConfig()` therefore keeps returning a wds shaped
+  config, and the dashboard tests use `miniDevServer.createTestServer()` instead of the wds test
+  helpers.
+
+  Bare specifiers are resolved with `oxc-resolver` (the same resolver the analysis uses) and rewritten
+  through the AST (parsed with `oxc-parser`), so specifier-like text in comments or strings is left
+  alone. `/node_modules/<name>/<file>` is resolved back per request, which makes hoisted, nested and
+  symlinked installs all work.
+
 ## 0.21.0
 
 ### Minor Changes

@@ -23,7 +23,7 @@ import { LogService } from './LogService.js';
  * @typedef {import('../../../types/index.js').AnalyzerName} AnalyzerName
  * @typedef {import('../../../types/index.js').AnalyzerAst} AnalyzerAst
  * @typedef {import('../../../types/index.js').QueryOutput} QueryOutput
- * @typedef {import("@swc/core").Module} SwcAstModule
+ * @typedef {import("../../../types/index.js").AstNode} AstModule
  * @typedef {import('@babel/types').File} File
  */
 

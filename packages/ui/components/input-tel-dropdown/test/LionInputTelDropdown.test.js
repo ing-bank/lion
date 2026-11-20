@@ -2,7 +2,7 @@ import { mimicUserChangingDropdown } from '@lion/ui/input-tel-dropdown-test-help
 import {
   runInputTelDropdownSuite,
   runInputTelDropdownParenthesesSuite,
-} from '@lion/ui/input-tel-dropdown-test-suites.js';
+} from '@lion/ui/test-suites/input-tel-dropdown.js';
 import { LionInputTelDropdown } from '@lion/ui/input-tel-dropdown.js';
 import { aTimeout, expect, fixture } from '@open-wc/testing';
 import { LionSelectRich } from '@lion/ui/select-rich.js';

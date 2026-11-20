@@ -1,6 +1,5 @@
 import { html } from 'lit/static-html.js';
 import { unsafeStatic, expect, fixture as _fixture, nextFrame } from '@open-wc/testing';
-import '@lion/ui/define/lion-input-range.js';
 import { LionInputRange } from '@lion/ui/input-range.js';
 import { resolveSuiteTag } from '../../core/test-helpers/resolveSuiteTag.js';
 

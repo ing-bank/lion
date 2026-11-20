@@ -36,6 +36,10 @@ describe('getSeparatorsFromNumber', () => {
       groupSeparator: ' ',
       decimalSeparator: ',',
     });
+    expect(getSeparatorsFromNumber(1234.5, '1234,50')).to.eql({
+      groupSeparator: null,
+      decimalSeparator: ',',
+    });
     expect(getSeparatorsFromNumber(-1234, '-1,234')).to.eql({
       groupSeparator: ',',
       decimalSeparator: null,

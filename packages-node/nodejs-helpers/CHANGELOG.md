@@ -1,5 +1,14 @@
 # @lion/nodejs-helpers
 
+## 0.1.2
+
+### Patch Changes
+
+- 961193a: Use the current Providence analytics workspace version so import/export map helpers and build scripts
+  resolve its utilities and type declarations consistently.
+- Updated dependencies [8956ad4]
+  - providence-analytics@0.23.0
+
 ## 0.1.1
 
 ### Patch Changes

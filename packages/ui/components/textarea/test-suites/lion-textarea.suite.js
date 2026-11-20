@@ -2,7 +2,6 @@ import { html } from 'lit/static-html.js';
 import { unsafeStatic, aTimeout, expect, fixture as _fixture } from '@open-wc/testing';
 import sinon from 'sinon';
 import { getFormControlMembers } from '@lion/ui/form-core-test-helpers.js';
-import '@lion/ui/define/lion-textarea.js';
 import { LionTextarea } from '@lion/ui/textarea.js';
 import { resolveSuiteTag } from '../../core/test-helpers/resolveSuiteTag.js';
 

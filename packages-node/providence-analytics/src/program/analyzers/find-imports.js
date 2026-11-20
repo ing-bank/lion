@@ -7,7 +7,7 @@ import { LogService } from '../core/LogService.js';
 import { Analyzer } from '../core/Analyzer.js';
 
 /**
- * A structural representation of the AST nodes (swc/oxc/babel) that are visited by this
+ * A structural representation of the AST nodes (oxc/babel) that are visited by this
  * analyzer. Every field is optional because the concrete node type depends on the parser.
  * @typedef {object} LooseNode
  * @property {string} [type]
@@ -39,8 +39,8 @@ import { Analyzer } from '../core/Analyzer.js';
  * @typedef {import('../../../types/index.js').AnalyzerName} AnalyzerName
  * @typedef {import('../../../types/index.js').AnalyzerAst} AnalyzerAst
  * @typedef {import("../../../types/index.js").SwcPath} SwcPath
- * @typedef {import("@swc/core").Module} oxcAstModule
- * @typedef {import("@swc/core").Node} SwcNode
+ * @typedef {import("../../../types/index.js").AstNode} oxcAstModule
+ * @typedef {import("../../../types/index.js").AstNode} AstNode
  */
 
 /**
@@ -52,7 +52,7 @@ function isLiteral(node) {
 }
 
 /**
- * Intends to work for oxc, swc, and babel asts
+ * Intends to work for oxc and babel asts
  * @param {LooseNode} s
  * @returns {string|undefined}
  */
@@ -163,8 +163,7 @@ function findImportsPerAstFile(oxcAst) {
       }
       transformedFile.push(entry);
     },
-    // Dynamic imports for swc
-    // TODO: remove if swc is completely phased out
+    // Dynamic imports for babel: it parses `import('x')` as a CallExpression whose callee is `Import`
     CallExpression(astPath) {
       const { node } = /** @type {{ node: LooseNode }} */ (astPath);
       if (node.callee?.type !== 'Import') {

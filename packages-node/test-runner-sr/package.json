@@ -1,0 +1,90 @@
+{
+  "private": true,
+  "name": "test-runner-sr",
+  "version": "0.1.0",
+  "description": "Web Test Runner plugin and commands for screen reader testing with Guidepup",
+  "license": "MIT",
+  "author": "ing-bank",
+  "homepage": "https://github.com/ing-bank/lion/",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ing-bank/lion.git",
+    "directory": "packages-node/test-runner-sr"
+  },
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./types/index.d.ts",
+      "default": "./src/index.js"
+    },
+    "./commands.js": {
+      "types": "./types/commands.d.ts",
+      "default": "./src/commands.js"
+    },
+    "./reporter.js": {
+      "types": "./types/reporter.d.ts",
+      "default": "./src/reporter.js"
+    }
+  },
+  "main": "src/index.js",
+  "files": [
+    "dist-types",
+    "src",
+    "types"
+  ],
+  "scripts": {
+    "test": "npm run test:node",
+    "test:node": "mocha 'test-node/**/*.test.js'",
+    "test:watch": "npm run test:node -- --watch",
+    "types": "wireit"
+  },
+  "dependencies": {
+    "@guidepup/guidepup": "^0.36.1",
+    "@guidepup/virtual-screen-reader": "^0.33.0",
+    "@web/test-runner-commands": "^0.9.0"
+  },
+  "peerDependencies": {
+    "@web/test-runner": ">=0.18.0",
+    "@web/test-runner-core": ">=0.13.0",
+    "@web/test-runner-playwright": ">=0.11.0",
+    "playwright": ">=1.40.0"
+  },
+  "peerDependenciesMeta": {
+    "@web/test-runner": {
+      "optional": true
+    },
+    "@web/test-runner-core": {
+      "optional": true
+    },
+    "@web/test-runner-playwright": {
+      "optional": true
+    },
+    "playwright": {
+      "optional": true
+    }
+  },
+  "keywords": [
+    "a11y",
+    "accessibility",
+    "guidepup",
+    "lion-tools",
+    "screen-reader",
+    "testing",
+    "web-test-runner"
+  ],
+  "wireit": {
+    "types": {
+      "command": "tsc --build --pretty",
+      "files": [
+        "src",
+        "types",
+        "test-node",
+        "tsconfig.json",
+        "../../tsconfig.json"
+      ],
+      "output": [
+        "dist-types/**"
+      ]
+    }
+  }
+}

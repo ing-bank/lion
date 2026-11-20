@@ -187,7 +187,7 @@ const GLOBAL_OPTIONS = [
     name: 'fallback-to-babel',
     type: 'boolean',
     description:
-      'Uses babel instead of swc. This will be slower, but guaranteed to be 100% compatible with @babel/generate and @babel/traverse',
+      'Uses babel instead of oxc. This will be slower, but guaranteed to be 100% compatible with @babel/generate and @babel/traverse',
   },
 ];
 

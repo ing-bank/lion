@@ -1,7 +1,6 @@
 import { html } from 'lit/static-html.js';
 import { unsafeStatic, expect, fixture } from '@open-wc/testing';
 import { LionRadio } from '@lion/ui/radio-group.js';
-import '@lion/ui/define/lion-radio.js';
 import { resolveSuiteTag } from '../../core/test-helpers/resolveSuiteTag.js';
 
 /**

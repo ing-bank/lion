@@ -4,11 +4,7 @@ import { getSelectRichMembers } from '@lion/ui/select-rich-test-helpers.js';
 import { mimicClick } from '@lion/ui/overlays-test-helpers.js';
 import { OverlayController } from '@lion/ui/overlays.js';
 import { LionOption } from '@lion/ui/listbox.js';
-import '@lion/ui/define/lion-select-rich.js';
-import '@lion/ui/define/lion-listbox.js';
-import '@lion/ui/define/lion-option.js';
 import { LionTabs } from '@lion/ui/tabs.js';
-import '@lion/ui/define/lion-tabs.js';
 import { LitElement, nothing } from 'lit';
 import sinon from 'sinon';
 import {

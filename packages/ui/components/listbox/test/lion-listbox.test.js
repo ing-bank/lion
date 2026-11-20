@@ -1,3 +1,3 @@
-import { runListboxMixinSuite } from '@lion/ui/listbox-test-suites.js';
+import { runListboxMixinSuite } from '@lion/ui/test-suites/listbox.js';
 
 runListboxMixinSuite();

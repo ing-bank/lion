@@ -2,7 +2,7 @@ import {
   runFormatMixinSuite,
   runInteractionStateMixinSuite,
   runNativeTextFieldMixinSuite,
-} from '@lion/ui/form-core-test-suites.js';
+} from '@lion/ui/test-suites/form-core.js';
 import { LionInput } from '@lion/ui/input.js';
 
 class FieldInput extends LionInput {

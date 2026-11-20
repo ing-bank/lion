@@ -1,5 +1,55 @@
 # @lion/ui
 
+## 0.27.0
+
+### Minor Changes
+
+- 6859179: [browser support] drop support for browsers without `<dialog>.showModal()`.
+
+  A modal overlay is opened as a native modal dialog: the browser then keeps the keyboard focus inside it and
+  makes the rest of the page unreachable, which is also why a screen reader does not read that other content.
+  The library never had a fallback for browsers that cannot do this - the platform capability _is_ the
+  mechanism - so the support policy now states what the implementation requires instead of leaving it
+  implicit. Safari 16 is the oldest supported browser; Chrome, Edge and Firefox are supported for their last
+  four versions. This is recorded in `.browserslistrc`.
+
+### Patch Changes
+
+- 90eeca3: [button] a keyboard click needs its keydown on the button too. A keyup on its own, for example after a closing dialog moves the focus back to its lion-button invoker, no longer clicks it (#2555).
+- 65b8580: Make the combobox and steps suites work with renamed children, and let pagination suites query custom navigation elements and await deferred click handlers.
+
+  Allow combobox suites to configure label-property options before their values are formatted, including dynamically rendered options.
+
+  Make collapsible suite height fixtures independent of text wrapping and await switch host updates before asserting inner button events.
+
+  Configure pagination, calendar and datepicker suite page objects consistently through `pageObjects: { host: MyPageObject }`.
+
+  Build shared-suite fixtures from constructors without importing definition entry points or registering fixed global custom-element names.
+
+  Restore inherited SelectRich option-position accessibility updates when options are added, removed or reordered.
+
+- 1a35b59: [form-core] Keep registered fields in DOM order when groups are moved, fixing keyboard navigation and option positions in grouped country dropdowns.
+
+  Registration and removal remain synchronous. DOM ordering and listbox option positions are reconciled once per microtask batch, before the next browser paint.
+
+- aeb07b9: Fix the issue regarding async suggestion in combobox
+
+## 0.26.0
+
+### Minor Changes
+
+- 8b1e534: [test-suites] make every component's tests reusable: 35 public `*-test-suites.js` entry points and a `classes` map per runner (`host` for the element under test plus a key per role a composite renders), so a subclasser or extension layer hands the suite its own classes and runs Lion's guarantees against them; injectable page objects and a documented contract included. `klass`, `tagString` and the older role tag keys keep working as deprecated fallbacks
+- bcc572f: Keep provided amount dropdown preferred currency order
+
+### Patch Changes
+
+- 961193a: Use the current Providence analytics workspace version so import/export map helpers and build scripts
+  resolve its utilities and type declarations consistently.
+
+- df9d634: [input-amount] fix rounding of big numbers (20+ digits) resulting in `NaN`
+- 1f9f7f9: [core] make the ScopedElementsMixin typings independent of how npm hoists lit-element
+- f3b059c: [textarea] use the slotted textarea as `_inputNode` when another element (for example from a browser extension) is also slotted as input
+
 ## 0.25.0
 
 ### Minor Changes

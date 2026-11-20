@@ -1,6 +1,4 @@
 import { LitElement } from 'lit';
-import '@lion/ui/define/lion-field.js';
-import '@lion/ui/define/lion-validation-feedback.js';
 import { LionInput } from '@lion/ui/input.js';
 import { localizeTearDown } from '@lion/ui/localize-test-helpers.js';
 import { expect, fixture, html, unsafeStatic } from '@open-wc/testing';

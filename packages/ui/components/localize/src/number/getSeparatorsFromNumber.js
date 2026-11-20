@@ -1,3 +1,5 @@
+import { getLocale } from '../utils/getLocale.js';
+
 /**
  *
  * @param {number} parsedNumber
@@ -22,15 +24,29 @@ export function getSeparatorsFromNumber(parsedNumber, formattedNumber, options) 
 
   let groupSeparator = null;
   let decimalSeparator = null;
+
   if (separators) {
     if (separators.length === 1) {
       const parts = formattedNumber.split(separators[0]);
       // Not sure if decimal or group, because only 1 separator.
       // if the separator is followed by at least 3 or more digits
       // and if the original number value is more or equal than 1000 or less or equal than -1000
+      // and the locale removes the group separator when between thousand and ten thousand (e.g. 1000.00 instead of 1,000.00)
       // or the minimum integer digits is forced to more than 3,
       // it has to be the group separator
+      const computedLocale = getLocale(options && options.locale);
+      const formattedThousand = Intl.NumberFormat(computedLocale, {
+        style: 'decimal',
+        minimumFractionDigits: 0,
+      }).format(1000);
+      const regexNumber = /[0-9]/g;
       if (
+        regexNumber.test(formattedThousand[1]) &&
+        ((parsedNumber >= 1000 && parsedNumber < 10000) ||
+          (parsedNumber <= -1 * 1000 && parsedNumber > -1 * 10000))
+      ) {
+        [decimalSeparator] = separators;
+      } else if (
         parts[1].replace(/[^0-9]/g, '').length >= 3 &&
         (parsedNumber >= 1000 ||
           parsedNumber <= -1 * 1000 ||

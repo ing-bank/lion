@@ -7,7 +7,7 @@ import { trackDownIdentifierFromScope } from '../utils/track-down-identifier.js'
 import { Analyzer } from '../core/Analyzer.js';
 
 /**
- * A structural representation of the AST nodes (swc/oxc/babel) that are visited by this
+ * A structural representation of the AST nodes (oxc/babel) that are visited by this
  * analyzer. Every field is optional because the concrete node type depends on the parser.
  * @typedef {object} LooseNode
  * @property {string} [type]
@@ -195,7 +195,9 @@ async function findMembersPerAstEntry(babelAst, fullCurrentFilePath, projectPath
             (objectNode.properties || []).forEach(objectProperty => {
               if (
                 !isProperty(
-                  /** @type {import('@swc/core').Node} */ (/** @type {unknown} */ (objectProperty)),
+                  /** @type {import('../../../types/index.js').AstNode} */ (
+                    /** @type {unknown} */ (objectProperty)
+                  ),
                 )
               ) {
                 // we can also have a SpreadElement

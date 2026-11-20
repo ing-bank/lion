@@ -1,3 +1,4 @@
+/** @deprecated Import from `@lion/ui/test-suites/input-stepper.js` instead. */
 import { LionInputStepper } from './input-stepper.js';
 import { runInputStepperSuite } from '../components/input-stepper/test-suites/lion-input-stepper.suite.js';
 import { runInputStepperIntegrationSuite } from '../components/input-stepper/test-suites/lion-input-stepper.integration.suite.js';

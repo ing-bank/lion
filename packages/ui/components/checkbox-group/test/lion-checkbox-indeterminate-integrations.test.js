@@ -7,7 +7,7 @@ import {
   LionCheckboxGroup,
   LionCheckboxIndeterminate,
 } from '@lion/ui/checkbox-group.js';
-import { runChoiceInputMixinSuite } from '@lion/ui/form-core-test-suites.js';
+import { runChoiceInputMixinSuite } from '@lion/ui/test-suites/form-core.js';
 import { runCheckboxIndeterminateSuite } from '../test-suites/CheckboxIndeterminate.suite.js';
 
 runChoiceInputMixinSuite({ classes: { host: LionCheckboxIndeterminate } });

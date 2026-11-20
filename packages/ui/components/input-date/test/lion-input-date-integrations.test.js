@@ -1,7 +1,7 @@
 import {
   runFormatMixinSuite,
   runInteractionStateMixinSuite,
-} from '@lion/ui/form-core-test-suites.js';
+} from '@lion/ui/test-suites/form-core.js';
 
 import { LionInputDate } from '@lion/ui/input-date.js';
 import '@lion/ui/define/lion-input-date.js';

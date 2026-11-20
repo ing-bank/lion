@@ -179,6 +179,9 @@ export class LionInputDatepicker extends ScopedElementsMixin(
 
     if (name === 'disabled' || name === 'readOnly') {
       this.__toggleInvokerDisabled();
+      if ((this.disabled || this.readOnly) && this._overlayCtrl?.isShown) {
+        this._overlayCtrl.hide();
+      }
     }
   }
 
@@ -366,6 +369,10 @@ export class LionInputDatepicker extends ScopedElementsMixin(
    * @param {{ target: { selectedDate: Date }}} opts
    */
   _onCalendarUserSelectedChanged({ target: { selectedDate } }) {
+    if (this.disabled || this.readOnly) {
+      return;
+    }
+
     if (this._hideOnUserSelect) {
       this._overlayCtrl.hide();
     }

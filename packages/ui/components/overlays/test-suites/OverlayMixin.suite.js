@@ -12,7 +12,6 @@ import { overlays as overlaysManager, OverlayController } from '@lion/ui/overlay
 import { sendKeys } from '@web/test-runner-commands';
 import { browserDetection } from '@lion/ui/core.js';
 import { cache } from 'lit/directives/cache.js';
-import '@lion/ui/define/lion-dialog.js';
 import { LitElement } from 'lit';
 import sinon from 'sinon';
 import { isElementVisible } from '../../core/test-helpers/isElementVisible.js';

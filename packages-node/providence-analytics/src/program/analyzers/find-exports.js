@@ -11,7 +11,7 @@ import { LogService } from '../core/LogService.js';
 import { Analyzer } from '../core/Analyzer.js';
 
 /**
- * A structural representation of the AST nodes (swc/oxc/babel) that are visited by this
+ * A structural representation of the AST nodes (oxc/babel) that are visited by this
  * analyzer. Every field is optional because the concrete node type depends on the parser.
  * @typedef {object} LooseNode
  * @property {string} [type]
@@ -56,15 +56,15 @@ import { Analyzer } from '../core/Analyzer.js';
  * @typedef {import('../../../types/index.js').FindExportsAnalyzerEntry} FindExportsAnalyzerEntry
  * @typedef {import('../../../types/index.js').RootFileMapEntry} RootFileMapEntry
  * @typedef {import('../../../types/index.js').RootFile} RootFile
- * @typedef {import('@swc/core').VariableDeclaration} SwcVariableDeclaration
+ * @typedef {import('../../../types/index.js').AstNode} AstVariableDeclaration
  * @typedef {import('../../../types/index.js').AnalyzerName} AnalyzerName
  * @typedef {import('../../../types/index.js').AnalyzerAst} AnalyzerAst
  * @typedef {import('../../../types/index.js').SwcBinding} SwcBinding
  * @typedef {import('../../../types/index.js').SwcVisitor} SwcVisitor
  * @typedef {import('../../../types/index.js').SwcScope} SwcScope
  * @typedef {import('../../../types/index.js').SwcPath} SwcPath
- * @typedef {import("@swc/core").Module} SwcAstModule
- * @typedef {import("@swc/core").Node} SwcNode
+ * @typedef {import("../../../types/index.js").AstNode} AstModule
+ * @typedef {import("../../../types/index.js").AstNode} AstNode
  */
 
 /**
@@ -213,7 +213,7 @@ const isImportingSpecifier = pathOrNode =>
 
 /**
  * Finds import specifiers and sources for a given ast result
- * @param {SwcAstModule} oxcAst
+ * @param {AstModule} oxcAst
  * @param {FindExportsConfig} config
  */
 function findExportsPerAstFile(oxcAst, { skipFileImports }) {
@@ -286,8 +286,6 @@ function findExportsPerAstFile(oxcAst, { skipFileImports }) {
 
   /** @type {SwcVisitor} */
   const visitor = {
-    // for swc
-    Module: globalScopeHandler,
     // for oxc and babel
     Program: globalScopeHandler,
     ExportDeclaration: exportHandler,
@@ -326,7 +324,7 @@ export default class FindExportsAnalyzer extends Analyzer {
   }
 
   /**
-   * @param {SwcAstModule} ast
+   * @param {AstModule} ast
    * @param {{ relativePath:string; analyzerCfg: FindExportsConfig }} context
    */
   static async analyzeFile(ast, { relativePath, analyzerCfg }) {

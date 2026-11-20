@@ -64,4 +64,24 @@ describe('fsGlob', () => {
     });
     expect(results).to.deep.equal(['src/a.js']);
   });
+
+  it('matches absolute glob patterns regardless of cwd', async () => {
+    mockProject({ './src/a.js': 'a', './src/sub/c.js': 'c' });
+
+    const results = await fsGlob('/fictional/project/src/**/*.js', { cwd: '/other/cwd' });
+    expect(results).to.deep.equal([
+      '/fictional/project/src/a.js',
+      '/fictional/project/src/sub/c.js',
+    ]);
+  });
+
+  it('resolves absolute non-glob (literal) paths regardless of cwd', async () => {
+    mockProject({ './src/a.js': 'a' });
+
+    const results = await fsGlob(
+      ['/fictional/project/src/a.js', '/fictional/project/src/does-not-exist.js'],
+      { cwd: '/other/cwd' },
+    );
+    expect(results).to.deep.equal(['/fictional/project/src/a.js']);
+  });
 });

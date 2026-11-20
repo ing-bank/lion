@@ -1,5 +1,5 @@
 import { LionCheckbox, LionCheckboxGroup } from '@lion/ui/checkbox-group.js';
-import { runChoiceGroupMixinSuite } from '@lion/ui/form-core-test-suites.js';
+import { runChoiceGroupMixinSuite } from '@lion/ui/test-suites/form-core.js';
 import '@lion/ui/define/lion-checkbox-group.js';
 
 runChoiceGroupMixinSuite({

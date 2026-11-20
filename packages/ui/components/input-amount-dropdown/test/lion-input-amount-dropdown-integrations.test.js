@@ -1,4 +1,4 @@
-import { runFormatMixinSuite } from '@lion/ui/form-core-test-suites.js';
+import { runFormatMixinSuite } from '@lion/ui/test-suites/form-core.js';
 
 import { LionInputAmountDropdown } from '@lion/ui/input-amount-dropdown.js';
 import '@lion/ui/define/lion-input-amount-dropdown.js';

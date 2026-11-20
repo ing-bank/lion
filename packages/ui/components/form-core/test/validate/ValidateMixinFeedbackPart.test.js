@@ -1,3 +1,3 @@
-import { runValidateMixinFeedbackPart } from '@lion/ui/form-core-test-suites.js';
+import { runValidateMixinFeedbackPart } from '@lion/ui/test-suites/form-core.js';
 
 runValidateMixinFeedbackPart();

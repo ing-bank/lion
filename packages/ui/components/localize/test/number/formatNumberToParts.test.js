@@ -44,6 +44,8 @@ describe('formatNumberToParts', () => {
       ['fr-FR', 'USD', 1234.5, [i('1'), g(' '), i('234'), d(','), f('50'), l(' '), c('$US')]],
       ['fr-BE', 'EUR', 1234.5, [i('1'), g(' '), i('234'), d(','), f('50'), l(' '), c('€')]],
       ['fr-BE', 'USD', 1234.5, [i('1'), g(' '), i('234'), d(','), f('50'), l(' '), c('$US')]],
+      ['es-ES', 'EUR', 1234.5, [i('1234'), d(','), f('50'), l(' '), c('€')]],
+      ['es-ES', 'USD', 1234.5, [i('1234'), d(','), f('50'), l(' '), c('US$')]],
     ];
 
     specs.forEach(([locale, currency, amount, expectedResult]) => {
@@ -78,6 +80,8 @@ describe('formatNumberToParts', () => {
       ['fr-FR', 'EUR', -1234.5, [m, i('1'), g(' '), i('234'), d(','), f('50'), l(' '), c('EUR')]],
       ['fr-BE', 'EUR', 1234.5, [i('1'), g(' '), i('234'), d(','), f('50'), l(' '), c('EUR')]],
       ['fr-BE', 'EUR', -1234.5, [m, i('1'), g(' '), i('234'), d(','), f('50'), l(' '), c('EUR')]],
+      ['es-ES', 'EUR', 1234.5, [i('1234'), d(','), f('50'), l(' '), c('EUR')]],
+      ['es-ES', 'EUR', -1234.5, [m, i('1234'), d(','), f('50'), l(' '), c('EUR')]],
     ];
 
     specs.forEach(([locale, currency, amount, expectedResult]) => {
@@ -110,6 +114,8 @@ describe('formatNumberToParts', () => {
         ['fr-FR', -3500, [m, i('3'), g(' '), i('500')]],
         ['fr-BE', 3500, [i('3'), g(' '), i('500')]],
         ['fr-BE', -3500, [m, i('3'), g(' '), i('500')]],
+        ['es-ES', 3500, [i('3500')]],
+        ['es-ES', -3500, [m, i('3500')]],
       ];
 
       specs.forEach(([locale, amount, expectedResult]) => {
@@ -139,6 +145,8 @@ describe('formatNumberToParts', () => {
         ['fr-FR', -3500, [m, i('3'), g(' '), i('500'), d(','), f('00')]],
         ['fr-BE', 3500, [i('3'), g(' '), i('500'), d(','), f('00')]],
         ['fr-BE', -3500, [m, i('3'), g(' '), i('500'), d(','), f('00')]],
+        ['es-ES', 3500, [i('3500'), d(','), f('00')]],
+        ['es-ES', -3500, [m, i('3500'), d(','), f('00')]],
       ];
 
       specs.forEach(([locale, amount, expectedResult]) => {
@@ -169,6 +177,8 @@ describe('formatNumberToParts', () => {
       ['fr-FR', -1234.5, [m, i('1'), g(' '), i('234'), d(','), f('50'), l(' '), c('%')]],
       ['fr-BE', 1234.5, [i('1'), g(' '), i('234'), d(','), f('50'), l(' '), c('%')]],
       ['fr-BE', -1234.5, [m, i('1'), g(' '), i('234'), d(','), f('50'), l(' '), c('%')]],
+      ['es-ES', 1234.5, [i('1234'), d(','), f('50'), l(' '), c('%')]],
+      ['es-ES', -1234.5, [m, i('1234'), d(','), f('50'), l(' '), c('%')]],
     ];
 
     specs.forEach(([locale, amount, expectedResult]) => {

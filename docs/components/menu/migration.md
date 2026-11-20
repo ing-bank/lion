@@ -21,16 +21,16 @@ version.
 
 ## 1. Package and entry points
 
-| prerelease                                                                            | now                                                                                                                                             |
-| ------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
-| `@lion/ui@0.16.1-menu-system.N` ... `@lion/ui@0.21.1-menu-system.0`                   | the released `@lion/ui` minor                                                                                                                   |
-| `@lion/ui/exports/menu.js`                                                            | same path; exports `LionMenu`, `LionItem`, `LionMenuitem`                                                                                       |
-| `@lion/ui/define/lion-menu.js`                                                        | unchanged                                                                                                                                       |
-| `@lion/ui/define/lion-item.js`                                                        | unchanged                                                                                                                                       |
-| `@lion/ui/define/lion-menuitem.js`                                                    | new entry (see 3)                                                                                                                               |
-| `@lion/ui/define/lion-menu-overlay.js`, `.../lion-toolbar.js`, `.../lion-tree.js`     | removed                                                                                                                                         |
-| `@lion/ui/exports/menu-test-suites.js`                                                | same path; exports `runInteractiveListMixinSuite`, `runMultiLevelListMixinSuite`, `runLionMenuInteractionsSuite` (was `runLionMenuHybridSuite`) |
-| `@lion/ui/components/menu/index.js`, `.../menu/lion-menu.js`, `.../menu/package.json` | removed                                                                                                                                         |
+| prerelease                                                                            | now                                                       |
+| ------------------------------------------------------------------------------------- | --------------------------------------------------------- |
+| `@lion/ui@0.16.1-menu-system.N` ... `@lion/ui@0.21.1-menu-system.0`                   | the released `@lion/ui` minor                             |
+| `@lion/ui/exports/menu.js`                                                            | same path; exports `LionMenu`, `LionItem`, `LionMenuitem` |
+| `@lion/ui/define/lion-menu.js`                                                        | unchanged                                                 |
+| `@lion/ui/define/lion-item.js`                                                        | unchanged                                                 |
+| `@lion/ui/define/lion-menuitem.js`                                                    | new entry (see 3)                                         |
+| `@lion/ui/define/lion-menu-overlay.js`, `.../lion-toolbar.js`, `.../lion-tree.js`     | removed                                                   |
+| `@lion/ui/test-suites/menu.js`                                                        | exports the public LionMenu behavior suites               |
+| `@lion/ui/components/menu/index.js`, `.../menu/lion-menu.js`, `.../menu/package.json` | removed                                                   |
 
 Only `@lion/ui/exports/*` and `@lion/ui/define/*` are in the package `exports` map, so the
 component paths (`@lion/ui/components/...`) were never importable — that has not changed.
@@ -124,6 +124,6 @@ mixin's keyboard handling would both apply).
 - The mixins themselves (`InteractiveListMixin`, `MultiLevelListMixin`, `MoreButtonMenuMixin`,
   `OverlayWithListInvokerMixin`) are not re-exported from `@lion/ui/exports/menu.js`, and deep
   component paths are not in the package `exports` map. If you extend one of them, the test suites in
-  `@lion/ui/exports/menu-test-suites.js` are the supported surface; your own copy of the mixin is the
+  `@lion/ui/test-suites/menu.js` are the supported surface; your own copy of the mixin is the
   workaround until that is decided.
 - The `MoreButtonMenuMixin` item-wrap strategy is still "more-menu" only (`itemWrap`).

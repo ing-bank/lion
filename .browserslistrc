@@ -1,0 +1,13 @@
+# Supported browsers.
+#
+# Lion needs the native modal dialog. A modal overlay is opened with `<dialog>.showModal()`, and from
+# then on the platform is what keeps the keyboard focus inside the dialog and makes the rest of the page
+# unreachable - which is also why a screen reader does not read that other content. There is no fallback
+# for a browser that cannot do this, because the same two effects cannot be re-created reliably without
+# the top layer of the browser. IE11 and Safari 15 and older are therefore not supported: the oldest
+# supported browser is Safari 16.
+safari >= 16
+ios_saf >= 16
+last 4 Chrome versions
+last 4 Edge versions
+last 4 Firefox versions

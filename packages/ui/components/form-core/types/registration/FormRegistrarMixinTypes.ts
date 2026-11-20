@@ -13,6 +13,7 @@ export declare class FormRegistrarHost {
   /**
    * Closely mimics the natively supported HTMLFormControlsCollection. It can be accessed
    * both like an array and an object (based on control/element names).
+   * Registration is synchronous; DOM order is reconciled in a batched microtask.
    */
   formElements: FormControlsCollection & { [x: string]: any };
 
@@ -74,6 +75,11 @@ export declare class FormRegistrarHost {
    * Resolves the registrationComplete promise. Subclassers can delay if needed
    */
   protected _completeRegistration(): void;
+
+  /**
+   * Called once per microtask batch after registered fields are restored to DOM order.
+   */
+  protected _onFormElementsChanged(): void;
 }
 
 export declare function FormRegistrarImplementation<T extends Constructor<LitElement>>(

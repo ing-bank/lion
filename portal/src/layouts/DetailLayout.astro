@@ -326,10 +326,13 @@ if (items.length > 0 && componentsByCategory.size === 0) {
                                 const hasActiveItem = categoryItems.some(item =>
                                   currentPath.replace(/\/$/, '').toLowerCase().endsWith(item.href.replace(/\/$/, '').toLowerCase())
                                 );
+                                const isSectionLanding = pathSegments.length === 2;
+                                const isCategorySectionActive = isSectionLanding && pathSegments[1] && category.toLowerCase().startsWith(pathSegments[1].toLowerCase() + ':');
+                                const isExpanded = hasActiveItem || isCategorySectionActive;
                                 return (
                                 <>
                                     <li class="category-item">
-                                        <button class="category-toggle" data-category={category} aria-expanded={hasActiveItem ? "true" : "false"}>
+                                        <button class="category-toggle" data-category={category} aria-expanded={isExpanded ? "true" : "false"}>
                                             {category.charAt(0).toUpperCase() + category.slice(1)}
                                         </button>
                                     </li>
@@ -396,7 +399,7 @@ if (items.length > 0 && componentsByCategory.size === 0) {
   // Handle category toggle interactions and persistence
   document.querySelectorAll('.category-toggle').forEach(toggle => {
     const category = toggle.getAttribute('data-category');
-    const submenu = document.querySelector(`.category-submenu[data-category="${category}"]`);
+    const submenu = toggle.closest('.category-item')?.nextElementSibling || (category ? document.querySelector(`.category-submenu[data-category="${CSS.escape(category)}"]`) : null);
 
     // Restore previous state from localStorage, or use current aria-expanded state
     const savedState = localStorage.getItem(`category-${category}`);

@@ -1,3 +1,3 @@
-import { runChoiceGroupMixinSuite } from '@lion/ui/form-core-test-suites.js';
+import { runChoiceGroupMixinSuite } from '@lion/ui/test-suites/form-core.js';
 
 runChoiceGroupMixinSuite();

@@ -22,7 +22,10 @@ async function getTestGroups() {
   return allDirs.map(dir => ({
     // @ts-expect-error
     name: dir.split('/').at(-2),
-    files: `${dir}/**/*.test.js`,
+    // Screen reader tests run through their own config (web-test-runner-sr.config.mjs) with the
+    // plugin that drives a real reader; the default run has no such plugin, so they are excluded
+    // here instead of relying on a file extension.
+    files: [`${dir}/**/*.test.js`, `!${dir}/**/*.sr.test.js`],
   }));
 }
 

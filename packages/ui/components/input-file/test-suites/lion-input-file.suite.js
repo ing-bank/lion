@@ -1,7 +1,5 @@
 import { html } from 'lit/static-html.js';
 import { LionInputFile, LionSelectedFileList } from '@lion/ui/input-file.js';
-import '@lion/ui/define/lion-input-file.js';
-import '@lion/ui/define/lion-selected-file-list.js';
 import { Required } from '@lion/ui/form-core.js';
 import { getInputMembers } from '@lion/ui/input-test-helpers.js';
 import { getLocalizeManager } from '@lion/ui/localize-no-side-effects.js';
