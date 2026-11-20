@@ -159,6 +159,15 @@ export class OverlayController extends EventTarget {
   /** @private */
   __sharedConfig;
 
+  /** @private */
+  __hasInitializedConfig = false;
+
+  /** @private */
+  __hasIsActivatedOverride = false;
+
+  /** @type {boolean | undefined} @private */
+  __isActivatedOverride;
+
   /** @type {Element | null} @private */
   __activeElementRightBeforeHide;
 
@@ -547,6 +556,16 @@ export class OverlayController extends EventTarget {
    * @param { OverlayConfig } cfgToAdd
    */
   updateConfig(cfgToAdd) {
+    // Keep explicit activation changes across later partial config updates.
+    if (
+      this.__hasInitializedConfig &&
+      Object.prototype.hasOwnProperty.call(cfgToAdd, 'isActivated')
+    ) {
+      this.__hasIsActivatedOverride = cfgToAdd.isActivated !== undefined;
+      this.__isActivatedOverride = cfgToAdd.isActivated;
+    }
+    this.__hasInitializedConfig = true;
+
     /**
      * @type {OverlayConfig}
      * @private
@@ -569,6 +588,9 @@ export class OverlayController extends EventTarget {
         ],
       },
     };
+    if (this.__hasIsActivatedOverride) {
+      newConfig.isActivated = this.__isActivatedOverride;
+    }
 
     const shouldUpdate = !this.__hasSetup || !isEqualConfig(prevConfig, newConfig);
     if (!shouldUpdate) return;
@@ -583,7 +605,7 @@ export class OverlayController extends EventTarget {
     /** @protected */
     this._init();
 
-    if (!this.#isRegisteredOnManager()) {
+    if (this.__hasSetup && !this.#isRegisteredOnManager()) {
       this.manager.add(this);
     }
   }
@@ -913,6 +935,8 @@ export class OverlayController extends EventTarget {
    * @param {HTMLElement} elementToFocusAfterHide
    */
   async show(elementToFocusAfterHide = this.elementToFocusAfterHide) {
+    if (!this.config.isActivated) return;
+
     // Subsequent shows could happen, make sure we await it first.
     // Otherwise it gets replaced before getting resolved, and places awaiting it will time out.
     if (this._showComplete) {
@@ -1625,6 +1649,8 @@ export class OverlayController extends EventTarget {
     if (phase === 'init' || phase === 'teardown') {
       this.__setupTeardownAccessibility({ phase });
     }
+    if (phase === 'teardown') return;
+
     const isModal = this.trapsKeyboardFocus;
     if (this.invokerNode && !this.isTooltip && !isModal) {
       this.invokerNode.setAttribute('aria-expanded', `${phase === 'show'}`);
