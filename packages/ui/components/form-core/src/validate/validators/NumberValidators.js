@@ -2,6 +2,11 @@
 import { Validator } from '../Validator.js';
 
 /**
+ * @param {any} value
+ */
+const getAmount = value => (value !== null && typeof value === 'object' ? value.amount : value);
+
+/**
  * check for not being NaN (NaN is the only value in javascript which is not equal to itself)
  *
  * @param {number} value to check
@@ -16,10 +21,11 @@ export class IsNumber extends Validator {
   }
 
   /**
-   * @param {any} value
+   * @param {any} modelValue
    */
   // eslint-disable-next-line class-methods-use-this
-  execute(value) {
+  execute(modelValue) {
+    const value = getAmount(modelValue);
     let isEnabled = false;
     if (!isNumber(value)) {
       isEnabled = true;
@@ -34,9 +40,10 @@ export class MinNumber extends Validator {
   }
 
   /**
-   * @param {any} value
+   * @param {any} modelValue
    */
-  execute(value, min = this.param) {
+  execute(modelValue, min = this.param) {
+    const value = getAmount(modelValue);
     let isEnabled = false;
     if (!isNumber(value) || value < min) {
       isEnabled = true;
@@ -51,9 +58,10 @@ export class MaxNumber extends Validator {
   }
 
   /**
-   * @param {any} value
+   * @param {any} modelValue
    */
-  execute(value, max = this.param) {
+  execute(modelValue, max = this.param) {
+    const value = getAmount(modelValue);
     let isEnabled = false;
     if (!isNumber(value) || value > max) {
       isEnabled = true;
@@ -68,9 +76,10 @@ export class MinMaxNumber extends Validator {
   }
 
   /**
-   * @param {any} value
+   * @param {any} modelValue
    */
-  execute(value, { min = 0, max = 0 } = this.param) {
+  execute(modelValue, { min = 0, max = 0 } = this.param) {
+    const value = getAmount(modelValue);
     let isEnabled = false;
     if (!isNumber(value) || value < min || value > max) {
       isEnabled = true;

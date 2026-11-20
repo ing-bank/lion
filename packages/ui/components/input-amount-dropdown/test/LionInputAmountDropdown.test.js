@@ -1,18 +1,18 @@
+import { MaxNumber, MinMaxNumber, MinNumber, Required } from '@lion/ui/form-core.js';
 import { mimicUserChangingDropdown } from '@lion/ui/input-amount-dropdown-test-helpers.js';
-import { runInputAmountDropdownSuite } from '@lion/ui/test-suites/input-amount-dropdown.js';
 import { LionInputAmountDropdown } from '@lion/ui/input-amount-dropdown.js';
-import { Required } from '@lion/ui/form-core.js';
-import { aTimeout, expect, fixture } from '@open-wc/testing';
-import { LionSelectRich } from '@lion/ui/select-rich.js';
-import { repeat } from 'lit/directives/repeat.js';
 import { LionOption } from '@lion/ui/listbox.js';
-import { ref } from 'lit/directives/ref.js';
+import { LionSelectRich } from '@lion/ui/select-rich.js';
+import { runInputAmountDropdownSuite } from '@lion/ui/test-suites/input-amount-dropdown.js';
+import { aTimeout, expect, fixture } from '@open-wc/testing';
 import { html } from 'lit';
+import { ref } from 'lit/directives/ref.js';
+import { repeat } from 'lit/directives/repeat.js';
 
-import { ifDefined } from 'lit/directives/if-defined.js';
-import { isActiveElement } from '../../core/test-helpers/isActiveElement.js';
-import { ScopedElementsMixin } from '../../core/src/ScopedElementsMixin.js';
 import '@lion/ui/define/lion-input-amount-dropdown.js';
+import { ifDefined } from 'lit/directives/if-defined.js';
+import { ScopedElementsMixin } from '../../core/src/ScopedElementsMixin.js';
+import { isActiveElement } from '../../core/test-helpers/isActiveElement.js';
 
 /**
  * @typedef {import('../types/index.js').TemplateDataForDropdownInputAmount} TemplateDataForDropdownInputAmount
@@ -198,6 +198,36 @@ describe('WithFormControlInputAmountDropdown', () => {
       await aTimeout(0);
       el.modelValue = { currency: 'EUR', amount: '' };
       expect(el.hasFeedbackFor).to.deep.equal([]);
+    });
+  });
+
+  [
+    { validator: new MinNumber(10), amounts: [9, 10, 11], invalidAmounts: [9] },
+    { validator: new MaxNumber(20), amounts: [21, 20, 19], invalidAmounts: [21] },
+    {
+      validator: new MinMaxNumber({ min: 10, max: 20 }),
+      amounts: [9, 10, 15, 20, 21, 15],
+      invalidAmounts: [9, 21],
+    },
+  ].forEach(({ validator, amounts, invalidAmounts }) => {
+    it(`validates the amount with ${validator.constructor.name}`, async () => {
+      const el = /** @type {LionInputAmountDropdown} */ (
+        await fixture(html`
+          <lion-input-amount-dropdown
+            .allowedCurrencies="${['EUR']}"
+            .validators="${[validator]}"
+          ></lion-input-amount-dropdown>
+        `)
+      );
+
+      for (const amount of amounts) {
+        el.modelValue = { currency: 'EUR', amount };
+        await el.updateComplete;
+        await el.validate();
+        expect(Boolean(el.validationStates.error[validator.constructor.name])).to.equal(
+          invalidAmounts.includes(amount),
+        );
+      }
     });
   });
 

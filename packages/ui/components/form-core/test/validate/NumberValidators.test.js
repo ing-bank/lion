@@ -1,8 +1,39 @@
 import { expect } from '@open-wc/testing';
 
-import { IsNumber, MinNumber, MaxNumber, MinMaxNumber } from '@lion/ui/form-core.js';
+import { IsNumber, MaxNumber, MinMaxNumber, MinNumber } from '@lion/ui/form-core.js';
 
 describe('Number Validation', () => {
+  [
+    { validator: new IsNumber(), validAmounts: [0, 3], invalidAmounts: [] },
+    { validator: new MinNumber(0), validAmounts: [0, 3], invalidAmounts: [-1] },
+    { validator: new MaxNumber(3), validAmounts: [0, 3], invalidAmounts: [4] },
+    {
+      validator: new MinMaxNumber({ min: 0, max: 3 }),
+      validAmounts: [0, 1.5, 3],
+      invalidAmounts: [-1, 4],
+    },
+  ].forEach(({ validator, validAmounts, invalidAmounts }) => {
+    describe(validator.constructor.name, () => {
+      it('accepts valid amount-dropdown model values', () => {
+        validAmounts.forEach(amount => {
+          expect(validator.execute({ currency: 'EUR', amount })).to.be.false;
+        });
+      });
+
+      it('rejects invalid amount-dropdown model values', () => {
+        [...invalidAmounts, NaN, '3', '', null, undefined, {}, true].forEach(amount => {
+          expect(validator.execute({ currency: 'EUR', amount })).to.be.true;
+        });
+      });
+
+      it('rejects missing amounts and invalid non-numeric values', () => {
+        [null, undefined, {}, { currency: 'EUR' }, '3', '', true].forEach(value => {
+          expect(validator.execute(value)).to.be.true;
+        });
+      });
+    });
+  });
+
   it('provides new IsNumber() to allow only numbers', () => {
     let isEnabled;
     const validator = new IsNumber();
