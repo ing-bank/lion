@@ -1,6 +1,8 @@
 import { localizeTearDown } from '@lion/ui/localize-test-helpers.js';
 import { expect, fixture as _fixture } from '@open-wc/testing';
 import { html } from 'lit/static-html.js';
+import sinon from 'sinon';
+import { Required } from '@lion/ui/form-core.js';
 import '@lion/ui/define/lion-checkbox.js';
 import '@lion/ui/define/lion-checkbox-group.js';
 
@@ -105,5 +107,46 @@ describe('<lion-checkbox-group>', () => {
       </lion-checkbox-group>
     `);
     await expect(el).to.be.accessible();
+  });
+
+  it('does not invoke feedbackCondition when removed from DOM', async () => {
+    const feedbackConditionSpy = sinon.spy();
+    const container = await fixture(html`
+      <div>
+        <lion-checkbox-group name="scientists[]" .feedbackCondition="${feedbackConditionSpy}">
+          <lion-checkbox label="Archimedes" .choiceValue=${'Archimedes'}></lion-checkbox>
+          <lion-checkbox label="Francis Bacon" .choiceValue=${'Francis Bacon'}></lion-checkbox>
+        </lion-checkbox-group>
+      </div>
+    `);
+    const el = /** @type {LionCheckboxGroup} */ (container.firstElementChild);
+    await el.updateComplete;
+    feedbackConditionSpy.resetHistory();
+
+    el.remove();
+    expect(feedbackConditionSpy).to.not.have.been.called;
+  });
+
+  it('does not invoke feedbackCondition when removed from DOM with validators and touched', async () => {
+    const feedbackConditionSpy = sinon.spy();
+    const container = await fixture(html`
+      <div>
+        <lion-checkbox-group
+          name="scientists[]"
+          .validators=${[new Required()]}
+          .feedbackCondition="${feedbackConditionSpy}"
+        >
+          <lion-checkbox label="Archimedes" .choiceValue=${'Archimedes'}></lion-checkbox>
+          <lion-checkbox label="Francis Bacon" .choiceValue=${'Francis Bacon'}></lion-checkbox>
+        </lion-checkbox-group>
+      </div>
+    `);
+    const el = /** @type {LionCheckboxGroup} */ (container.firstElementChild);
+    el.touched = true;
+    await el.updateComplete;
+    feedbackConditionSpy.resetHistory();
+
+    el.remove();
+    expect(feedbackConditionSpy).to.not.have.been.called;
   });
 });
