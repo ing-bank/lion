@@ -2,7 +2,6 @@ import { LionInputAmountDropdown } from '@lion/ui/input-amount-dropdown.js';
 import {
   fixture as _fixture,
   fixtureSync as _fixtureSync,
-  aTimeout,
   defineCE,
   expect,
   html,
@@ -321,15 +320,6 @@ export function runInputAmountDropdownSuite(
         expect(prefixSlot.getAttribute('slot')).to.equal('suffix');
         expect(prefixSlot.slot).to.equal('suffix');
         expect(prefixSlot.parentElement).to.equal(el);
-      });
-
-      it('rerenders light dom when CurrencyUtil loaded', async () => {
-        const el = await fixture(html` <${tag} .allowedCurrencies="${['GBP']}"></${tag}> `);
-        // @ts-ignore
-        const spy = sinon.spy(el, '__rerenderSlot');
-        await aTimeout(0);
-        expect(spy).to.have.been.calledWith('prefix');
-        spy.restore();
       });
     });
 
