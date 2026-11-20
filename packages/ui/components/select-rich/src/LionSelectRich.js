@@ -1,5 +1,5 @@
 import { LionListbox } from '@lion/ui/listbox.js';
-import { html } from 'lit';
+import { css, html } from 'lit';
 import { SlotMixin, browserDetection } from '@lion/ui/core.js';
 import { OverlayMixin, withDropdownConfig } from '@lion/ui/overlays.js';
 import { ScopedElementsMixin } from '../../core/src/ScopedElementsMixin.js';
@@ -26,6 +26,17 @@ function detectInteractionMode() {
  * @customElement lion-field-with-select
  */
 export class LionSelectRich extends SlotMixin(ScopedElementsMixin(OverlayMixin(LionListbox))) {
+  static get styles() {
+    return [
+      ...(super.styles || []),
+      css`
+        :host([data-overlay-inactive]) ::slotted([slot='input']) {
+          display: none;
+        }
+      `,
+    ];
+  }
+
   static get scopedElements() {
     return {
       // @ts-ignore [ts7-2855] TS7 rejects field access via super (the parent declares this as a field). Dot form kept deliberately: bracket access is exempt from property mangling (terser keep_quoted), which could split this property into two names. Upstream fix: declare an accessor in the parent type
@@ -95,6 +106,18 @@ export class LionSelectRich extends SlotMixin(ScopedElementsMixin(OverlayMixin(L
    */
   get _focusableNode() {
     return this._invokerNode;
+  }
+
+  get config() {
+    return super.config;
+  }
+
+  set config(value) {
+    if ((!this.singleOption && value?.isActivated === false) || this.singleOption) {
+      this.opened = false;
+    }
+    super.config = value;
+    this.__syncOverlayActivation();
   }
 
   /**
@@ -225,6 +248,7 @@ export class LionSelectRich extends SlotMixin(ScopedElementsMixin(OverlayMixin(L
         this._invokerNode.setAttribute('aria-haspopup', 'listbox');
         this._invokerNode.setAttribute('aria-expanded', `${this.opened}`);
       }
+      this.__syncOverlayActivation();
     }
 
     if (this._inputNode && this._invokerNode) {
@@ -374,9 +398,30 @@ export class LionSelectRich extends SlotMixin(ScopedElementsMixin(OverlayMixin(L
   _defineOverlayConfig() {
     return {
       ...withDropdownConfig(),
+      isActivated: !this.singleOption,
       // Needs more advanced behavior (see `__invokerOnClick`)
       visibilityTriggerFunction: undefined,
     };
+  }
+
+  /** @private */
+  __syncOverlayActivation() {
+    const isActivated = !this.singleOption && this.config?.isActivated !== false;
+    this.toggleAttribute('data-overlay-inactive', !isActivated);
+    if (!this._overlayCtrl) return;
+
+    if (!isActivated && this.opened) {
+      this.opened = false;
+    }
+    if (this._overlayCtrl.config.isActivated !== isActivated) {
+      this._overlayCtrl.updateConfig({ isActivated });
+      if (isActivated) {
+        this._alignInvokerWidth();
+      }
+    }
+    if (!isActivated) {
+      this._invokerNode.removeAttribute('aria-expanded');
+    }
   }
 
   /**
@@ -435,6 +480,7 @@ export class LionSelectRich extends SlotMixin(ScopedElementsMixin(OverlayMixin(L
     this._overlayCtrl.addEventListener('show', this.__overlayOnShow);
 
     this._overlayCtrl.addEventListener('hide', this.__overlayOnHide);
+    this.__syncOverlayActivation();
   }
 
   /**
@@ -461,7 +507,7 @@ export class LionSelectRich extends SlotMixin(ScopedElementsMixin(OverlayMixin(L
   async _alignInvokerWidth() {
     await this.updateComplete;
 
-    if (!this._overlayCtrl?.content) {
+    if (!this._overlayCtrl?.content || !this._overlayCtrl.contentWrapperNode) {
       return;
     }
 

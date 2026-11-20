@@ -1931,6 +1931,70 @@ describe('OverlayController', () => {
         });
         expect(ctrl.__hasSetup).to.be.true;
       });
+
+      it('does not register or initialize an initially inactive overlay', () => {
+        const ctrl = new OverlayController({
+          ...withGlobalTestConfig(),
+          isActivated: false,
+        });
+
+        expect(ctrl.__hasSetup).to.be.false;
+        expect(isRegisteredOnManager(ctrl)).to.be.false;
+      });
+
+      it('does not show an inactive overlay', async () => {
+        const ctrl = new OverlayController({
+          ...withGlobalTestConfig(),
+          isActivated: false,
+        });
+
+        await ctrl.show();
+        await ctrl.hide();
+
+        expect(ctrl.isShown).to.be.false;
+        expect(isRegisteredOnManager(ctrl)).to.be.false;
+      });
+
+      it('closes and restores original invoker attributes when deactivated', async () => {
+        const invokerNode = /** @type {HTMLElement} */ (
+          fixtureSync('<div role="button">invoker</div>')
+        );
+        const ctrl = new OverlayController({
+          ...withLocalTestConfig(),
+          handlesAccessibility: true,
+          invokerNode,
+        });
+
+        await ctrl.show();
+        expect(ctrl.isShown).to.be.true;
+        ctrl.updateConfig({ isActivated: false });
+
+        expect(ctrl.isShown).to.be.false;
+        expect(invokerNode.hasAttribute('aria-expanded')).to.be.false;
+        expect(ctrl.__hasSetup).to.be.false;
+        expect(isRegisteredOnManager(ctrl)).to.be.false;
+      });
+
+      it('keeps a dynamic inactive state across partial config updates', () => {
+        const ctrl = new OverlayController(withGlobalTestConfig());
+        ctrl.updateConfig({ isActivated: false });
+        ctrl.updateConfig({ inheritsReferenceWidth: 'full' });
+
+        expect(ctrl.config.isActivated).to.be.false;
+        expect(ctrl.__hasSetup).to.be.false;
+        expect(isRegisteredOnManager(ctrl)).to.be.false;
+      });
+
+      it('can be reactivated after being dynamically deactivated', async () => {
+        const ctrl = new OverlayController(withGlobalTestConfig());
+        ctrl.updateConfig({ isActivated: false });
+        ctrl.updateConfig({ isActivated: true });
+
+        expect(ctrl.__hasSetup).to.be.true;
+        expect(isRegisteredOnManager(ctrl)).to.be.true;
+        await ctrl.show();
+        expect(ctrl.isShown).to.be.true;
+      });
     });
 
     // TODO

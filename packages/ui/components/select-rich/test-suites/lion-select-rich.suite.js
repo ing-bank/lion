@@ -172,6 +172,66 @@ export function runSelectRichSuite({
         expect(_invokerNode.hasAttribute('single-option')).to.be.true;
       });
 
+      it('does not initialize the overlay for a single option and hides its listbox', async () => {
+        const el = await fixture(html`
+          <${hostTag}>
+            <${tagOption} .choiceValue=${10}>Item 1</${tagOption}>
+          </${hostTag}>
+        `);
+        const { _overlayCtrl, _invokerNode, _listboxNode } = getSelectRichMembers(el);
+
+        await el.updateComplete;
+        expect(el.singleOption).to.be.true;
+        expect(_overlayCtrl.config.isActivated).to.be.false;
+        expect(_overlayCtrl.__hasSetup).to.be.false;
+        expect(_invokerNode.hasAttribute('aria-expanded')).to.be.false;
+        expect(getComputedStyle(_listboxNode).display).to.equal('none');
+      });
+
+      it('activates the overlay when a second option is added', async () => {
+        const el = await fixture(html`
+          <${hostTag}>
+            <${tagOption} .choiceValue=${10}>Item 1</${tagOption}>
+          </${hostTag}>
+        `);
+        const { _overlayCtrl, _invokerNode, _listboxNode } = getSelectRichMembers(el);
+        const secondOption = /** @type {LionOption} */ (document.createElement(tagNameOption));
+        secondOption.choiceValue = 20;
+        el.appendChild(secondOption);
+        await el.updateComplete;
+
+        expect(el.singleOption).to.be.false;
+        expect(_overlayCtrl.config.isActivated).to.be.true;
+        expect(_overlayCtrl.__hasSetup).to.be.true;
+        expect(_invokerNode.getAttribute('aria-expanded')).to.equal('false');
+        expect(getComputedStyle(_listboxNode).display).to.not.equal('none');
+
+        secondOption.remove();
+        el.requestUpdate();
+        await el.updateComplete;
+
+        expect(el.singleOption).to.be.true;
+        expect(_overlayCtrl.config.isActivated).to.be.false;
+        expect(_overlayCtrl.__hasSetup).to.be.false;
+        expect(_invokerNode.hasAttribute('aria-expanded')).to.be.false;
+        expect(getComputedStyle(_listboxNode).display).to.equal('none');
+      });
+
+      it('does not activate the overlay when multiple options have been configured inactive', async () => {
+        const el = await fixture(html`
+          <${hostTag} .config=${{ isActivated: false }}>
+            <${tagOption} .choiceValue=${10}>Item 1</${tagOption}>
+            <${tagOption} .choiceValue=${20}>Item 2</${tagOption}>
+          </${hostTag}>
+        `);
+        const { _overlayCtrl, _invokerNode, _listboxNode } = getSelectRichMembers(el);
+
+        expect(_overlayCtrl.config.isActivated).to.be.false;
+        expect(_overlayCtrl.__hasSetup).to.be.false;
+        expect(_invokerNode.hasAttribute('aria-expanded')).to.be.false;
+        expect(getComputedStyle(_listboxNode).display).to.equal('none');
+      });
+
       it('sets and removes the button role and aria attributes on change of singleOption', async () => {
         const el = await fixture(html`
           <${hostTag}>
@@ -589,6 +649,7 @@ export function runSelectRichSuite({
         const el = await fixture(html`
           <${hostTag} opened>
             <${tagOption} .choiceValue=${10}>Item 1</${tagOption}>
+            <${tagOption} .choiceValue=${20}>Item 2</${tagOption}>
           </${hostTag}>
         `);
         expect(el.opened).to.be.true;
