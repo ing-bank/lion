@@ -303,16 +303,16 @@ export class LionInputAmountDropdown extends LionInputAmount {
   onLocaleUpdated() {
     super.onLocaleUpdated();
 
-    const localeSplitted = this._localizeManager.locale.split('-');
+    const { locale } = this._localizeManager;
     /**
      * @protected
-     * @type {RegionCode}
+     * @type {RegionCode | undefined}
      */
-    this._langIso = /** @type {RegionCode} */ (
-      localeSplitted[localeSplitted.length - 1].toUpperCase()
+    this._langIso = /** @type {RegionCode | undefined} */ (
+      new Intl.Locale(locale).region?.toUpperCase()
     );
 
-    this.__namesForLocale = new Intl.DisplayNames([this._langIso], {
+    this.__namesForLocale = new Intl.DisplayNames([locale], {
       type: 'currency',
     });
 
@@ -562,7 +562,10 @@ export class LionInputAmountDropdown extends LionInputAmount {
       destinationList.push({
         currencyCode,
         nameForLocale: this.__namesForLocale?.of(currencyCode),
-        currencySymbol: this._currencyUtil.getCurrencySymbol(currencyCode, this._langIso ?? ''),
+        currencySymbol: this._currencyUtil.getCurrencySymbol(
+          currencyCode,
+          this._localizeManager.locale,
+        ),
       });
     });
   }
