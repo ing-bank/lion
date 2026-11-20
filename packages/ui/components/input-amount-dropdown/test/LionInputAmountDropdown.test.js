@@ -16,44 +16,6 @@ import { ifDefined } from 'lit/directives/if-defined.js';
 import { ScopedElementsMixin } from '../../core/src/ScopedElementsMixin.js';
 import { isActiveElement } from '../../core/test-helpers/isActiveElement.js';
 
-describe('locale support', () => {
-  const localizeManager = getLocalizeManager();
-
-  afterEach(localizeTearDown);
-
-  [
-    { locale: 'fr-FR', currency: 'EUR' },
-    { locale: 'en-GB', currency: 'GBP' },
-    { locale: 'nl-NL', currency: 'EUR' },
-    { locale: 'nl-BE', currency: 'EUR' },
-    { locale: 'fr-BE', currency: 'EUR' },
-  ].forEach(({ locale, currency }) => {
-    it(`uses ${locale} for currency labels and region-based currency selection`, async () => {
-      localizeManager.locale = locale;
-      const el = /** @type {LionInputAmountDropdown} */ (
-        await fixture(html`
-          <lion-input-amount-dropdown
-            .allowedCurrencies="${['EUR', 'GBP']}"
-          ></lion-input-amount-dropdown>
-        `)
-      );
-      await el.updateComplete;
-
-      const expectedName = new Intl.DisplayNames([locale], { type: 'currency' }).of('EUR');
-      const expectedSymbol = new Intl.NumberFormat(locale, {
-        style: 'currency',
-        currency: 'EUR',
-      })
-        .formatToParts(1)
-        .find(part => part.type === 'currency')?.value;
-      const euroOption = el.refs.dropdown.value?.querySelector('option[value="EUR"]');
-
-      expect(el.currency).to.equal(currency);
-      expect(euroOption?.getAttribute('aria-label')).to.equal(`${expectedName}, ${expectedSymbol}`);
-    });
-  });
-});
-
 /**
  * @typedef {import('../types/index.js').TemplateDataForDropdownInputAmount} TemplateDataForDropdownInputAmount
  * @typedef {HTMLSelectElement|HTMLElement & {modelValue:string}} DropdownElement
@@ -287,5 +249,43 @@ describe('WithFormControlInputAmountDropdown', () => {
     await el.feedbackComplete;
     expect(el.hasFeedbackFor).to.include('error', 'hasFeedbackFor');
     expect(el.showsFeedbackFor).to.include('error', 'showsFeedbackFor');
+  });
+});
+
+describe('locale support', () => {
+  const localizeManager = getLocalizeManager();
+
+  afterEach(localizeTearDown);
+
+  [
+    { locale: 'fr-FR', currency: 'EUR' },
+    { locale: 'en-GB', currency: 'GBP' },
+    { locale: 'nl-NL', currency: 'EUR' },
+    { locale: 'nl-BE', currency: 'EUR' },
+    { locale: 'fr-BE', currency: 'EUR' },
+  ].forEach(({ locale, currency }) => {
+    it(`uses ${locale} for currency labels and region-based currency selection`, async () => {
+      localizeManager.locale = locale;
+      const el = /** @type {LionInputAmountDropdown} */ (
+        await fixture(html`
+          <lion-input-amount-dropdown
+            .allowedCurrencies="${['EUR', 'GBP']}"
+          ></lion-input-amount-dropdown>
+        `)
+      );
+      await el.updateComplete;
+
+      const expectedName = new Intl.DisplayNames([locale], { type: 'currency' }).of('EUR');
+      const expectedSymbol = new Intl.NumberFormat(locale, {
+        style: 'currency',
+        currency: 'EUR',
+      })
+        .formatToParts(1)
+        .find(part => part.type === 'currency')?.value;
+      const euroOption = el.refs.dropdown.value?.querySelector('option[value="EUR"]');
+
+      expect(el.currency).to.equal(currency);
+      expect(euroOption?.getAttribute('aria-label')).to.equal(`${expectedName}, ${expectedSymbol}`);
+    });
   });
 });
