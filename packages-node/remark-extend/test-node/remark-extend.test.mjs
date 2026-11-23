@@ -1,5 +1,7 @@
 import path from 'path';
 import url from 'url';
+import fs from 'fs';
+import os from 'os';
 import { expect } from 'chai';
 import unified from 'unified';
 import markdown from 'remark-parse';
@@ -758,6 +760,41 @@ describe('remarkExtend', () => {
       node => node.type === 'code' && node.meta === 'preview-story',
     );
     expect(importedStory.value).to.contain('() => html`<p>tabs story</p>`');
+  });
+
+  it('normalises the line endings of an imported file, whatever the platform checked it out with', async () => {
+    // A Windows checkout can give a file CRLF; remark keeps the carriage return inside a
+    // code block, so it would land in the page the block is copied to.
+    const crlfFile = path.join(os.tmpdir(), `remark-extend-crlf-${process.pid}.md`);
+    fs.writeFileSync(
+      crlfFile,
+      [
+        '```js script',
+        "import { html } from 'lit';",
+        '```',
+        '',
+        '# Crlf',
+        '',
+        '## More Crlf',
+        '',
+        'content',
+      ].join('\r\n'),
+      'utf8',
+    );
+
+    try {
+      const result = await execute(
+        [`\`\`\`js ::importBlock('${crlfFile}', '## More Crlf')`, '```'].join('\n'),
+        { shouldStringify: false },
+      );
+      const scriptNode = result.children.find(
+        node => node.type === 'code' && node.lang === 'js' && node.meta === 'script',
+      );
+      expect(scriptNode.value).to.equal("import { html } from 'lit';");
+      expect(scriptNode.value).to.not.contain('\r');
+    } finally {
+      fs.unlinkSync(crlfFile);
+    }
   });
 
   it('keeps a statement whole when the page does not declare its bindings yet', async () => {
