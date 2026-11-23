@@ -36,12 +36,17 @@ function requireFromString(src, filename = 'tmp.js') {
 /**
  * Frontmatter is problematic when traversing md files with
  * unist-util-select: https://github.com/syntax-tree/unist-util-select/blob/main/index.js.
- * So we remove it before parsing
+ * So we remove it before parsing.
+ *
+ * Line endings are normalised first: a file checked out on Windows can use CRLF, and remark
+ * keeps the carriage return inside a code block, so an imported block would carry `\r` into
+ * the page it is copied to. Nothing downstream wants that - the content is written back with
+ * LF everywhere else - and it must not depend on the platform the docs are built on.
  * @param {string} mdFileString
  * @returns {string}
  */
 function stripFrontMatter(mdFileString) {
-  return mdFileString.replace(/^\s*---(.|\n)*?---/, '');
+  return mdFileString.replace(/\r\n?/g, '\n').replace(/^\s*---(.|\n)*?---/, '');
 }
 
 let toInsertNodes = [];
