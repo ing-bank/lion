@@ -254,3 +254,14 @@ export type RegionCode =
   | 'ZA'
   | 'ZM'
   | 'ZW';
+
+import { LionInputTel } from '../src/LionInputTel.js';
+
+declare global {
+  interface HTMLElementTagNameMap {
+    'lion-input-tel': LionInputTel;
+  }
+}
+
+export { LionInputTel };
+

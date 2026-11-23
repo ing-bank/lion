@@ -1,1 +1,1 @@
-export { InputFile, SystemFile } from '../../components/input-file/types/input-file.js'
+export * from '../../components/input-file/types/index.js';
