@@ -11,6 +11,10 @@ module.exports = {
     absolutePaths.forEach(p => {
       sortPackages.push(`node ./scripts/sort-package-json.js ${p}`);
     });
-    return [...sortPackages, `node ./scripts/lint-versions.js`];
+    return [
+      ...sortPackages,
+      `node ./scripts/lint-versions.js`,
+      `node ./scripts/lint-bin-modes.mjs`,
+    ];
   },
 };
