@@ -67,6 +67,7 @@ async function runAgainst(producedFile: string) {
     components: ['button'],
     systems: [],
     includeManual: false,
+    includeUseCases: false,
   });
   assert.equal(scenarios.length, 1, 'expected exactly the button component scenario');
 

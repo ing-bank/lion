@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import path from 'node:path';
 import { defaultRepoRoot } from '../src/behaviour/runner.ts';
+import { deriveUseCaseScenariosSync } from '../src/scenarios/useCases.ts';
 
 const repoRoot = defaultRepoRoot();
 
@@ -28,4 +29,21 @@ test('every declared doc path exists', () => {
     docs.filter(doc => !fs.existsSync(path.join(repoRoot, doc))).map(doc => `${unit}: ${doc}`),
   );
   assert.deepEqual(dangling, []);
+});
+
+test('every derived use-case scenario declares the docs file it was derived from', () => {
+  // The derived scenarios are generated from the docs, so the declaration must be too: a use case whose
+  // docs change would otherwise leave the scenario unaffected and its cell stale.
+  const declaration = JSON.parse(
+    fs.readFileSync(path.join(repoRoot, 'packages-node/recursive-skill-improvement/scenario-docs.json'), 'utf-8'),
+  ).scenarios as Record<string, string[]>;
+  const { derived } = deriveUseCaseScenariosSync({ repoRoot });
+  const undeclared = derived
+    .filter(entry => !(declaration[entry.scenario.name] ?? []).includes(entry.source.file))
+    .map(entry => `${entry.scenario.name} -> ${entry.source.file}`);
+  assert.deepEqual(
+    undeclared,
+    [],
+    'run `npm run scenarios:docs -w packages-node/recursive-skill-improvement` to declare them',
+  );
 });

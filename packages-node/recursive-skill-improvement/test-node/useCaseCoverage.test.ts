@@ -10,10 +10,10 @@ import assert from 'node:assert/strict';
 import { defaultRepoRoot } from '../src/behaviour/runner.ts';
 import { measureUseCaseCoverage } from '../scripts/report-use-case-coverage.mjs';
 
-/** Components with a scenario (`component/<name>` or `system/<name>`), measured 2026-11-19. */
+/** Components with a scenario (`component/<name>` or `system/<name>`), measured 2026-11-23. */
 const MIN_COMPONENTS_WITH_SCENARIO = 34;
-/** Documented use-case sections reachable from a scenario, measured 2026-11-19. */
-const MIN_REACHABLE_SECTIONS = 167;
+/** Documented use-case sections reachable from a scenario, measured 2026-11-23 (was 167 before the derived use cases). */
+const MIN_REACHABLE_SECTIONS = 170;
 
 const report = (await measureUseCaseCoverage(defaultRepoRoot())) as {
   totals: {

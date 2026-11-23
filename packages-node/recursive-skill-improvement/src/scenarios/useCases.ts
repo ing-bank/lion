@@ -26,7 +26,6 @@
  */
 import fs from 'node:fs';
 import path from 'node:path';
-import fsGlob from '../fsGlob.ts';
 import { lintScenarios, type LintFinding } from './lint.ts';
 import {
   classNameFor,
@@ -39,7 +38,7 @@ import {
   discoverKnownTags,
   discoverSystemNames,
   discoverTagClasses,
-} from './index.ts';
+} from './discover.ts';
 import type { ScenarioCheck, TestScenario } from './types.ts';
 
 /** The docs the use cases live in. Systems live under `docs/fundamentals/systems`, not `docs/systems`. */
@@ -166,12 +165,26 @@ function kindOf(file: string): { unit: string; kind: 'component' | 'system' } {
  * file, a heading pattern matches no line, a heading is empty or unslugifiable, two use cases claim one
  * name, or a heading itself names a tag or class.
  */
-export async function deriveUseCaseScenarios(options: DeriveUseCasesOptions): Promise<{
+export type DerivedUseCases = {
   derived: DerivedUseCase[];
   files: string[];
   /** Use cases whose prose named a tag or class, so their goal is the heading alone. */
   headingOnlyGoals: string[];
-}> {
+};
+
+/**
+ * Async entry point for the `scenarios` task and the tests. The work is synchronous (see
+ * `deriveUseCaseScenariosSync`), so this wrapper only makes a failure a rejection, as before.
+ */
+export async function deriveUseCaseScenarios(options: DeriveUseCasesOptions): Promise<DerivedUseCases> {
+  return deriveUseCaseScenariosSync(options);
+}
+
+/**
+ * The derivation itself. Synchronous, because the scenario registry (`loadLionUiScenarios`) is synchronous
+ * and must include these scenarios: `eval:list` reaches the documented use cases only because it does.
+ */
+export function deriveUseCaseScenariosSync(options: DeriveUseCasesOptions): DerivedUseCases {
   const { repoRoot } = options;
   const docs = options.docs ?? DEFAULT_USE_CASE_DOCS;
   const headings = options.headings ?? DEFAULT_USE_CASE_HEADINGS;
@@ -188,7 +201,9 @@ export async function deriveUseCaseScenarios(options: DeriveUseCasesOptions): Pr
 
   const files = new Set<string>();
   for (const glob of docs) {
-    const matched = await fsGlob(glob, { cwd: repoRoot, onlyFiles: true });
+    const matched = fs
+      .globSync(glob, { cwd: repoRoot })
+      .filter(relative => fs.statSync(path.join(repoRoot, relative)).isFile());
     if (matched.length === 0) {
       throw new Error(`--docs "${glob}" matched no files under ${repoRoot}`);
     }

@@ -20,7 +20,7 @@ eleventyNavigation:
 
 Totals: **34** components with documented use cases, **170** documented
 use cases, **34** components with a scenario, **32** with a behaviour
-test, **167** documented use cases reachable from a scenario.
+test, **170** documented use cases reachable from a scenario.
 
 "Reachable" means the scenario declares the use-case file, so a docs change re-runs it. It does not
 mean a use case is asserted: scenarios are one per component, so this page is the gap list.
@@ -37,7 +37,7 @@ mean a use case is asserted: scenarios are one per component, so this page is th
 | `drawer` | 4 | `component/drawer` | yes | 4 |
 | `fieldset` | 4 | `component/fieldset` | yes | 4 |
 | `form` | 3 | `component/form` | yes | 3 |
-| `icon` | 3 | `system/icon` | no | 0 |
+| `icon` | 3 | `system/icon` | no | 3 |
 | `input` | 6 | `component/input` | yes | 6 |
 | `input-amount` | 7 | `component/input-amount` | yes | 7 |
 | `input-amount-dropdown` | 4 | `component/input-amount-dropdown` | yes | 4 |

@@ -7,89 +7,48 @@
  * plus the hand-authored scenarios in `manual.ts`.
  */
 
-import fs from 'node:fs';
-import path from 'node:path';
-import { createLionUiScenarios, NON_VISUAL_COMPONENT_DIRS } from './lionUi.ts';
+import { createLionUiScenarios } from './lionUi.ts';
+import { deriveUseCaseScenariosSync } from './useCases.ts';
+import {
+  discoverComponentNames,
+  discoverKnownTags,
+  discoverSystemNames,
+  discoverTagClasses,
+} from './discover.ts';
 import { manualScenarios } from './manual.ts';
 import { runScenarios } from './runs.ts';
 import type { TestScenario } from './types.ts';
 
 export { NON_VISUAL_COMPONENT_DIRS, SYSTEM_NAMES } from './lionUi.ts';
+export {
+  discoverComponentNames,
+  discoverKnownTags,
+  discoverSystemNames,
+  discoverTagClasses,
+} from './discover.ts';
 export type { LionUiScenarioContext } from './lionUi.ts';
 export { manualScenarios } from './manual.ts';
 export { runScenarios } from './runs.ts';
 export type { TestScenario, ScenarioCheck } from './types.ts';
 
-export function discoverComponentNames(repoRoot: string): string[] {
-  const componentsDir = path.join(repoRoot, 'packages/ui/components');
-  return fs
-    .readdirSync(componentsDir, { withFileTypes: true })
-    .filter(entry => entry.isDirectory())
-    .map(entry => entry.name)
-    .filter(name => !NON_VISUAL_COMPONENT_DIRS.includes(name))
-    .sort();
-}
-
-export function discoverSystemNames(repoRoot: string): string[] {
-  const systemsDir = path.join(repoRoot, 'docs/fundamentals/systems');
-  return fs
-    .readdirSync(systemsDir, { withFileTypes: true })
-    .filter(entry => entry.isDirectory())
-    .map(entry => entry.name)
-    .sort();
-}
-
-/** Custom-element tag names declared in the custom elements manifest (used for tag assertions). */
-export function discoverKnownTags(repoRoot: string): string[] {
-  const manifestPath = path.join(repoRoot, 'packages/ui/custom-elements.json');
-  if (!fs.existsSync(manifestPath)) return [];
-  const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf-8')) as {
-    modules?: { declarations?: { customElement?: boolean; tagName?: string }[] }[];
-  };
-  const tags = new Set<string>();
-  for (const module of manifest.modules ?? []) {
-    for (const declaration of module.declarations ?? []) {
-      // Some entries carry a backtick/quoted tag (e.g. "`lion-input-range`"), so normalize.
-      const tagName = (declaration.tagName ?? '').replace(/^[`'"]+|[`'"]+$/g, '').trim();
-      if (tagName) tags.add(tagName);
-    }
-  }
-  return [...tags].sort();
-}
-
 /**
- * Tag -> class name, from the same manifest. The generated behaviour test registers the class in
- * the host's `scopedElements` mapping, so it needs the class name, not just the tag.
+ * The whole registry: the generated per-component and per-system scenarios, one derived scenario per
+ * documented use case (`useCases.ts`), then the hand-authored ones. A derived use case that clashes with a
+ * hand-authored name is an error (`deriveUseCaseScenariosSync` throws), never a silent duplicate.
  */
-export function discoverTagClasses(repoRoot: string): Record<string, string> {
-  const manifestPath = path.join(repoRoot, 'packages/ui/custom-elements.json');
-  if (!fs.existsSync(manifestPath)) return {};
-  const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf-8')) as {
-    modules?: {
-      declarations?: { customElement?: boolean; tagName?: string; name?: string }[];
-    }[];
-  };
-  const map: Record<string, string> = {};
-  for (const module of manifest.modules ?? []) {
-    for (const declaration of module.declarations ?? []) {
-      // Some entries carry a backtick/quoted tag (e.g. "`lion-input-range`"), so normalize.
-      const tagName = (declaration.tagName ?? '').replace(/^[`'"]+|[`'"]+$/g, '').trim();
-      if (tagName && declaration.name) map[tagName] = declaration.name;
-    }
-  }
-  return map;
-}
-
 export function loadLionUiScenarios({
   repoRoot,
   components = discoverComponentNames(repoRoot),
   systems = discoverSystemNames(repoRoot),
   includeManual = true,
+  includeUseCases = true,
 }: {
   repoRoot: string;
   components?: string[];
   systems?: string[];
   includeManual?: boolean;
+  /** Derive one scenario per documented use case of the selected components and systems. */
+  includeUseCases?: boolean;
 }): TestScenario[] {
   const generated = createLionUiScenarios({
     components,
@@ -97,5 +56,16 @@ export function loadLionUiScenarios({
     knownTags: discoverKnownTags(repoRoot),
     tagClasses: discoverTagClasses(repoRoot),
   });
-  return includeManual ? [...generated, ...manualScenarios, ...runScenarios] : generated;
+  const handAuthored = [...manualScenarios, ...runScenarios];
+  // The use cases follow the same selection as the generated set: a unit that is not selected gets none.
+  const selected = new Set([...components, ...systems]);
+  const useCases = includeUseCases
+    ? deriveUseCaseScenariosSync({
+        repoRoot,
+        reserved: includeManual ? handAuthored.map(scenario => scenario.name) : [],
+      })
+        .derived.filter(entry => selected.has(entry.source.unit))
+        .map(entry => entry.scenario)
+    : [];
+  return includeManual ? [...generated, ...useCases, ...handAuthored] : [...generated, ...useCases];
 }

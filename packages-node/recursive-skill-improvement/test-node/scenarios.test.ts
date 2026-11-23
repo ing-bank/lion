@@ -16,6 +16,7 @@ import {
   entrypointFor,
 } from '../src/scenarios/lionUi.ts';
 import { scoreScenario } from '../src/scoring/qualityScore.ts';
+import { deriveUseCaseScenariosSync } from '../src/scenarios/useCases.ts';
 
 const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../..');
 
@@ -217,4 +218,14 @@ test('the tag check accepts markup and createElement, but not a different elemen
 
   const wrongTag = `${classImport}export class MyElem {}\nMyElem.scopedElements = { 'lion-button': LionButton };\nconst el = document.createElement('lion-not-this-component');\n`;
   assert.ok(scoreExample(wrongTag, scenario).score < 1, 'a different element name must fail');
+});
+
+test('the registry reaches every documented use case: one derived scenario per heading', () => {
+  // `eval:list` must reach the documented use cases, not only the per-component scenarios: each derived use
+  // case is a registered scenario, under the same name the `scenarios` task prints.
+  const names = new Set(loadLionUiScenarios({ repoRoot }).map(scenario => scenario.name));
+  const { derived } = deriveUseCaseScenariosSync({ repoRoot });
+  assert.ok(derived.length > 0, 'the docs derive no use cases');
+  const missing = derived.map(entry => entry.scenario.name).filter(name => !names.has(name));
+  assert.deepEqual(missing, [], 'documented use cases missing from the registry');
 });

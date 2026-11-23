@@ -22,6 +22,7 @@ import {
   runScenarios,
 } from '../src/scenarios/index.ts';
 import { createLionUiScenarios } from '../src/scenarios/lionUi.ts';
+import { deriveUseCaseScenariosSync } from '../src/scenarios/useCases.ts';
 import type { TestScenario } from '../src/scenarios/types.ts';
 
 const repoRoot = defaultRepoRoot();
@@ -32,8 +33,10 @@ const tagClasses = discoverTagClasses(repoRoot);
 
 /** The generated component + system scenarios, built exactly as `loadLionUiScenarios` builds them. */
 const generated: TestScenario[] = createLionUiScenarios({ components, systems, knownTags, tagClasses });
+/** One scenario per documented use case: the prompts a docs heading produces must not leak either. */
+const useCases: TestScenario[] = deriveUseCaseScenariosSync({ repoRoot }).derived.map(entry => entry.scenario);
 const handAuthored: TestScenario[] = [...manualScenarios, ...runScenarios];
-const everyScenario = [...generated, ...handAuthored];
+const everyScenario = [...generated, ...useCases, ...handAuthored];
 
 /** `button` -> `Button`, `input-iban` -> `InputIban`. */
 const pascal = (name: string): string =>

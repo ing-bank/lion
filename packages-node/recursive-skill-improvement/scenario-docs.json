@@ -293,11 +293,134 @@
       "docs/fundamentals/systems/overlays/rationale.md",
       "docs/fundamentals/systems/overlays/use-cases.md"
     ],
+    "use-case/accordion--default-accordion-collapsed": [
+      "docs/components/accordion/use-cases.md"
+    ],
+    "use-case/accordion--distribute-new-elements": [
+      "docs/components/accordion/use-cases.md"
+    ],
+    "use-case/accordion--exclusive": [
+      "docs/components/accordion/use-cases.md"
+    ],
+    "use-case/accordion--expanded": [
+      "docs/components/accordion/use-cases.md"
+    ],
+    "use-case/accordion--multiline-header": [
+      "docs/components/accordion/use-cases.md"
+    ],
+    "use-case/accordion--slots-order": [
+      "docs/components/accordion/use-cases.md"
+    ],
+    "use-case/button--considerations": [
+      "docs/components/button/use-cases.md"
+    ],
+    "use-case/button--disabled-button": [
+      "docs/components/button/use-cases.md"
+    ],
+    "use-case/button--icon-button": [
+      "docs/components/button/use-cases.md"
+    ],
+    "use-case/button--icon-only-button": [
+      "docs/components/button/use-cases.md"
+    ],
+    "use-case/button--minimum-click-area": [
+      "docs/components/button/use-cases.md"
+    ],
+    "use-case/button--multiple-buttons-inline": [
+      "docs/components/button/use-cases.md"
+    ],
+    "use-case/button--usage-with-native-form": [
+      "docs/components/button/use-cases.md"
+    ],
+    "use-case/button--with-click-handler": [
+      "docs/components/button/use-cases.md"
+    ],
+    "use-case/calendar--central-date": [
+      "docs/components/calendar/use-cases.md"
+    ],
+    "use-case/calendar--controlling-focus": [
+      "docs/components/calendar/use-cases.md"
+    ],
+    "use-case/calendar--limiting-selectable-values": [
+      "docs/components/calendar/use-cases.md"
+    ],
+    "use-case/calendar--selected-date": [
+      "docs/components/calendar/use-cases.md"
+    ],
+    "use-case/checkbox-group--disabled": [
+      "docs/components/checkbox-group/use-cases.md"
+    ],
+    "use-case/checkbox-group--event": [
+      "docs/components/checkbox-group/use-cases.md"
+    ],
+    "use-case/checkbox-group--example": [
+      "docs/components/checkbox-group/use-cases.md"
+    ],
+    "use-case/checkbox-group--help-text": [
+      "docs/components/checkbox-group/use-cases.md"
+    ],
+    "use-case/checkbox-group--indeterminate": [
+      "docs/components/checkbox-group/use-cases.md"
+    ],
+    "use-case/checkbox-group--label": [
+      "docs/components/checkbox-group/use-cases.md"
+    ],
+    "use-case/checkbox-group--model-value": [
+      "docs/components/checkbox-group/use-cases.md"
+    ],
+    "use-case/checkbox-group--pre-select": [
+      "docs/components/checkbox-group/use-cases.md"
+    ],
+    "use-case/checkbox-group--the-name-attribute": [
+      "docs/components/checkbox-group/use-cases.md"
+    ],
+    "use-case/collapsible--default-open": [
+      "docs/components/collapsible/use-cases.md"
+    ],
+    "use-case/collapsible--events": [
+      "docs/components/collapsible/use-cases.md"
+    ],
+    "use-case/collapsible--methods": [
+      "docs/components/collapsible/use-cases.md"
+    ],
+    "use-case/combobox--autocomplete": [
+      "docs/components/combobox/use-cases.md"
+    ],
+    "use-case/combobox--complex-options": [
+      "docs/components/combobox/use-cases.md"
+    ],
+    "use-case/combobox--disabled-option": [
+      "docs/components/combobox/use-cases.md"
+    ],
+    "use-case/combobox--invoker-button": [
+      "docs/components/combobox/use-cases.md"
+    ],
+    "use-case/combobox--listbox-compatibility": [
+      "docs/components/combobox/use-cases.md"
+    ],
+    "use-case/combobox--match-mode": [
+      "docs/components/combobox/use-cases.md"
+    ],
+    "use-case/combobox--multiple-choice": [
+      "docs/components/combobox/use-cases.md"
+    ],
     "use-case/combobox--narrow-a-long-list-by-typing": [
       "docs/components/combobox/api-table.md",
       "docs/components/combobox/extensions.md",
       "docs/components/combobox/index.md",
       "docs/components/combobox/overview.md",
+      "docs/components/combobox/use-cases.md"
+    ],
+    "use-case/combobox--options": [
+      "docs/components/combobox/use-cases.md"
+    ],
+    "use-case/combobox--readonly-option": [
+      "docs/components/combobox/use-cases.md"
+    ],
+    "use-case/combobox--require-option-match": [
+      "docs/components/combobox/use-cases.md"
+    ],
+    "use-case/combobox--server-interaction": [
       "docs/components/combobox/use-cases.md"
     ],
     "use-case/combobox--suggest-while-you-type": [
@@ -306,6 +429,429 @@
       "docs/components/combobox/index.md",
       "docs/components/combobox/overview.md",
       "docs/components/combobox/use-cases.md"
+    ],
+    "use-case/combobox--validation": [
+      "docs/components/combobox/use-cases.md"
+    ],
+    "use-case/dialog--alert-dialog": [
+      "docs/components/dialog/use-cases.md"
+    ],
+    "use-case/dialog--external-trigger": [
+      "docs/components/dialog/use-cases.md"
+    ],
+    "use-case/dialog--other-overrides": [
+      "docs/components/dialog/use-cases.md"
+    ],
+    "use-case/dialog--placement-overrides": [
+      "docs/components/dialog/use-cases.md"
+    ],
+    "use-case/drawer--events": [
+      "docs/components/drawer/use-cases.md"
+    ],
+    "use-case/drawer--methods": [
+      "docs/components/drawer/use-cases.md"
+    ],
+    "use-case/drawer--opened": [
+      "docs/components/drawer/use-cases.md"
+    ],
+    "use-case/drawer--positioning": [
+      "docs/components/drawer/use-cases.md"
+    ],
+    "use-case/fieldset--disabled": [
+      "docs/components/fieldset/use-cases.md"
+    ],
+    "use-case/fieldset--nesting-fieldsets": [
+      "docs/components/fieldset/use-cases.md"
+    ],
+    "use-case/fieldset--validation": [
+      "docs/components/fieldset/use-cases.md"
+    ],
+    "use-case/fieldset--with-data": [
+      "docs/components/fieldset/use-cases.md"
+    ],
+    "use-case/form--prefilled-data": [
+      "docs/components/form/use-cases.md"
+    ],
+    "use-case/form--sub-forms": [
+      "docs/components/form/use-cases.md"
+    ],
+    "use-case/form--submit-reset": [
+      "docs/components/form/use-cases.md"
+    ],
+    "use-case/form--umbrella-form": [
+      "docs/fundamentals/systems/form/use-cases.md"
+    ],
+    "use-case/icon--accessibility": [
+      "docs/components/icon/use-cases.md"
+    ],
+    "use-case/icon--icon-sets": [
+      "docs/components/icon/use-cases.md"
+    ],
+    "use-case/icon--styling": [
+      "docs/components/icon/use-cases.md"
+    ],
+    "use-case/input--disabled": [
+      "docs/components/input/use-cases.md"
+    ],
+    "use-case/input--help-text": [
+      "docs/components/input/use-cases.md"
+    ],
+    "use-case/input--label": [
+      "docs/components/input/use-cases.md"
+    ],
+    "use-case/input--label-sr-only-a11y": [
+      "docs/components/input/use-cases.md"
+    ],
+    "use-case/input--prefilled": [
+      "docs/components/input/use-cases.md"
+    ],
+    "use-case/input--read-only": [
+      "docs/components/input/use-cases.md"
+    ],
+    "use-case/input-amount--faulty-prefilled": [
+      "docs/components/input-amount/use-cases.md"
+    ],
+    "use-case/input-amount--force-digits-as-input": [
+      "docs/components/input-amount/use-cases.md"
+    ],
+    "use-case/input-amount--force-locale": [
+      "docs/components/input-amount/use-cases.md"
+    ],
+    "use-case/input-amount--modifying-the-amount-of-decimals": [
+      "docs/components/input-amount/use-cases.md"
+    ],
+    "use-case/input-amount--negative-number": [
+      "docs/components/input-amount/use-cases.md"
+    ],
+    "use-case/input-amount--paste-behavior": [
+      "docs/components/input-amount/use-cases.md"
+    ],
+    "use-case/input-amount--set-currency": [
+      "docs/components/input-amount/use-cases.md"
+    ],
+    "use-case/input-amount-dropdown--allowed-currencies": [
+      "docs/components/input-amount-dropdown/use-cases.md"
+    ],
+    "use-case/input-amount-dropdown--input-amount-dropdown": [
+      "docs/components/input-amount-dropdown/use-cases.md"
+    ],
+    "use-case/input-amount-dropdown--preferred-currencies": [
+      "docs/components/input-amount-dropdown/use-cases.md"
+    ],
+    "use-case/input-amount-dropdown--suffix-or-prefix": [
+      "docs/components/input-amount-dropdown/use-cases.md"
+    ],
+    "use-case/input-date--faulty-prefilled": [
+      "docs/components/input-date/use-cases.md"
+    ],
+    "use-case/input-date--is-a-date": [
+      "docs/components/input-date/use-cases.md"
+    ],
+    "use-case/input-date--with-maximum-date": [
+      "docs/components/input-date/use-cases.md"
+    ],
+    "use-case/input-date--with-minimum-and-maximum-date": [
+      "docs/components/input-date/use-cases.md"
+    ],
+    "use-case/input-date--with-minimum-date": [
+      "docs/components/input-date/use-cases.md"
+    ],
+    "use-case/input-datepicker--accessibility": [
+      "docs/components/input-datepicker/use-cases.md"
+    ],
+    "use-case/input-datepicker--calendar-heading": [
+      "docs/components/input-datepicker/use-cases.md"
+    ],
+    "use-case/input-datepicker--disable-specific-dates": [
+      "docs/components/input-datepicker/use-cases.md"
+    ],
+    "use-case/input-datepicker--disabled": [
+      "docs/components/input-datepicker/use-cases.md"
+    ],
+    "use-case/input-datepicker--faulty-prefilled": [
+      "docs/components/input-datepicker/use-cases.md"
+    ],
+    "use-case/input-datepicker--minimum-and-maximum-date": [
+      "docs/components/input-datepicker/use-cases.md"
+    ],
+    "use-case/input-datepicker--read-only": [
+      "docs/components/input-datepicker/use-cases.md"
+    ],
+    "use-case/input-email--custom-validator": [
+      "docs/components/input-email/use-cases.md"
+    ],
+    "use-case/input-email--faulty-prefilled": [
+      "docs/components/input-email/use-cases.md"
+    ],
+    "use-case/input-file--events": [
+      "docs/components/input-file/use-cases.md"
+    ],
+    "use-case/input-file--features": [
+      "docs/components/input-file/use-cases.md"
+    ],
+    "use-case/input-file--parameters": [
+      "docs/components/input-file/use-cases.md"
+    ],
+    "use-case/input-file--usage": [
+      "docs/components/input-file/use-cases.md"
+    ],
+    "use-case/input-iban--blacklisted-country": [
+      "docs/components/input-iban/use-cases.md"
+    ],
+    "use-case/input-iban--country-restrictions": [
+      "docs/components/input-iban/use-cases.md"
+    ],
+    "use-case/input-iban--faulty-prefilled": [
+      "docs/components/input-iban/use-cases.md"
+    ],
+    "use-case/input-iban--prefilled": [
+      "docs/components/input-iban/use-cases.md"
+    ],
+    "use-case/input-range--custom-min-max-labels": [
+      "docs/components/input-range/use-cases.md"
+    ],
+    "use-case/input-range--disabled": [
+      "docs/components/input-range/use-cases.md"
+    ],
+    "use-case/input-range--steps": [
+      "docs/components/input-range/use-cases.md"
+    ],
+    "use-case/input-range--units": [
+      "docs/components/input-range/use-cases.md"
+    ],
+    "use-case/input-range--without-min-max-labels": [
+      "docs/components/input-range/use-cases.md"
+    ],
+    "use-case/input-stepper--attributes-properties": [
+      "docs/components/input-stepper/use-cases.md"
+    ],
+    "use-case/input-stepper--default": [
+      "docs/components/input-stepper/use-cases.md"
+    ],
+    "use-case/input-tel--active-phone-number-type": [
+      "docs/components/input-tel/use-cases.md"
+    ],
+    "use-case/input-tel--allowed-regions": [
+      "docs/components/input-tel/use-cases.md"
+    ],
+    "use-case/input-tel--format": [
+      "docs/components/input-tel/use-cases.md"
+    ],
+    "use-case/input-tel--regions-some-context": [
+      "docs/components/input-tel/use-cases.md"
+    ],
+    "use-case/input-tel-dropdown--allowed-regions": [
+      "docs/components/input-tel-dropdown/use-cases.md"
+    ],
+    "use-case/input-tel-dropdown--format": [
+      "docs/components/input-tel-dropdown/use-cases.md"
+    ],
+    "use-case/input-tel-dropdown--input-tel-dropdown": [
+      "docs/components/input-tel-dropdown/use-cases.md"
+    ],
+    "use-case/input-tel-dropdown--preferred-regions": [
+      "docs/components/input-tel-dropdown/use-cases.md"
+    ],
+    "use-case/listbox--disabled-options": [
+      "docs/components/listbox/use-cases.md"
+    ],
+    "use-case/listbox--multiple-choice": [
+      "docs/components/listbox/use-cases.md"
+    ],
+    "use-case/listbox--orientation": [
+      "docs/components/listbox/use-cases.md"
+    ],
+    "use-case/listbox--rotate-keyboard-navigation": [
+      "docs/components/listbox/use-cases.md"
+    ],
+    "use-case/listbox--selection-follows-focus": [
+      "docs/components/listbox/use-cases.md"
+    ],
+    "use-case/listbox--validation": [
+      "docs/components/listbox/use-cases.md"
+    ],
+    "use-case/localize--localizemanager": [
+      "docs/fundamentals/systems/localize/use-cases.md"
+    ],
+    "use-case/localize--usage-for-application-developers": [
+      "docs/fundamentals/systems/localize/use-cases.md"
+    ],
+    "use-case/localize--usage-for-component-developers": [
+      "docs/fundamentals/systems/localize/use-cases.md"
+    ],
+    "use-case/menu--attributes-properties": [
+      "docs/components/menu/use-cases.md"
+    ],
+    "use-case/menu--default": [
+      "docs/components/menu/use-cases.md"
+    ],
+    "use-case/menu--overflow": [
+      "docs/components/menu/use-cases.md"
+    ],
+    "use-case/overlays--configuration": [
+      "docs/fundamentals/systems/overlays/use-cases.md"
+    ],
+    "use-case/overlays--intercepting-open-close": [
+      "docs/fundamentals/systems/overlays/use-cases.md"
+    ],
+    "use-case/overlays--local-backdrop": [
+      "docs/fundamentals/systems/overlays/use-cases.md"
+    ],
+    "use-case/overlays--local-overlay-with-an-arrow": [
+      "docs/fundamentals/systems/overlays/use-cases.md"
+    ],
+    "use-case/overlays--opened-state": [
+      "docs/fundamentals/systems/overlays/use-cases.md"
+    ],
+    "use-case/overlays--overlaycontroller": [
+      "docs/fundamentals/systems/overlays/use-cases.md"
+    ],
+    "use-case/overlays--overlaymixin": [
+      "docs/fundamentals/systems/overlays/use-cases.md"
+    ],
+    "use-case/overlays--overlaysmanager": [
+      "docs/fundamentals/systems/overlays/use-cases.md"
+    ],
+    "use-case/pagination--ensure-a-count-value": [
+      "docs/components/pagination/use-cases.md"
+    ],
+    "use-case/pagination--without-current-defined": [
+      "docs/components/pagination/use-cases.md"
+    ],
+    "use-case/radio-group--disabled": [
+      "docs/components/radio-group/use-cases.md"
+    ],
+    "use-case/radio-group--event": [
+      "docs/components/radio-group/use-cases.md"
+    ],
+    "use-case/radio-group--help-text": [
+      "docs/components/radio-group/use-cases.md"
+    ],
+    "use-case/radio-group--label": [
+      "docs/components/radio-group/use-cases.md"
+    ],
+    "use-case/radio-group--model-value": [
+      "docs/components/radio-group/use-cases.md"
+    ],
+    "use-case/radio-group--pre-select": [
+      "docs/components/radio-group/use-cases.md"
+    ],
+    "use-case/radio-group--the-name-attribute": [
+      "docs/components/radio-group/use-cases.md"
+    ],
+    "use-case/select--disabled": [
+      "docs/components/select/use-cases.md"
+    ],
+    "use-case/select--pre-select": [
+      "docs/components/select/use-cases.md"
+    ],
+    "use-case/select--rendering-and-updating-select-options": [
+      "docs/components/select/use-cases.md"
+    ],
+    "use-case/select--validation": [
+      "docs/components/select/use-cases.md"
+    ],
+    "use-case/select-rich--checked-index-value": [
+      "docs/components/select-rich/use-cases.md"
+    ],
+    "use-case/select-rich--custom-invoker": [
+      "docs/components/select-rich/use-cases.md"
+    ],
+    "use-case/select-rich--disabled-select": [
+      "docs/components/select-rich/use-cases.md"
+    ],
+    "use-case/select-rich--interaction-mode": [
+      "docs/components/select-rich/use-cases.md"
+    ],
+    "use-case/select-rich--many-options-with-scrolling": [
+      "docs/components/select-rich/use-cases.md"
+    ],
+    "use-case/select-rich--model-value": [
+      "docs/components/select-rich/use-cases.md"
+    ],
+    "use-case/select-rich--no-default-selection": [
+      "docs/components/select-rich/use-cases.md"
+    ],
+    "use-case/select-rich--options-with-html": [
+      "docs/components/select-rich/use-cases.md"
+    ],
+    "use-case/select-rich--read-only-prefilled": [
+      "docs/components/select-rich/use-cases.md"
+    ],
+    "use-case/select-rich--render-options": [
+      "docs/components/select-rich/use-cases.md"
+    ],
+    "use-case/select-rich--single-option": [
+      "docs/components/select-rich/use-cases.md"
+    ],
+    "use-case/steps--conditions": [
+      "docs/components/steps/use-cases.md"
+    ],
+    "use-case/steps--define-steps": [
+      "docs/components/steps/use-cases.md"
+    ],
+    "use-case/steps--events": [
+      "docs/components/steps/use-cases.md"
+    ],
+    "use-case/steps--forward-only-steps": [
+      "docs/components/steps/use-cases.md"
+    ],
+    "use-case/switch--disabled": [
+      "docs/components/switch/use-cases.md"
+    ],
+    "use-case/switch--validation": [
+      "docs/components/switch/use-cases.md"
+    ],
+    "use-case/switch--with-model-value-changed-handler": [
+      "docs/components/switch/use-cases.md"
+    ],
+    "use-case/tabs--disabled-tabs": [
+      "docs/components/tabs/use-cases.md"
+    ],
+    "use-case/tabs--distribute-new-elements": [
+      "docs/components/tabs/use-cases.md"
+    ],
+    "use-case/tabs--nesting-tabs": [
+      "docs/components/tabs/use-cases.md"
+    ],
+    "use-case/tabs--selected-index": [
+      "docs/components/tabs/use-cases.md"
+    ],
+    "use-case/tabs--slots-order": [
+      "docs/components/tabs/use-cases.md"
+    ],
+    "use-case/textarea--disabled": [
+      "docs/components/textarea/use-cases.md"
+    ],
+    "use-case/textarea--intersection-observer": [
+      "docs/components/textarea/use-cases.md"
+    ],
+    "use-case/textarea--non-growing": [
+      "docs/components/textarea/use-cases.md"
+    ],
+    "use-case/textarea--prefilled": [
+      "docs/components/textarea/use-cases.md"
+    ],
+    "use-case/textarea--readonly": [
+      "docs/components/textarea/use-cases.md"
+    ],
+    "use-case/textarea--stop-growing": [
+      "docs/components/textarea/use-cases.md"
+    ],
+    "use-case/tooltip--arrow": [
+      "docs/components/tooltip/use-cases.md"
+    ],
+    "use-case/tooltip--invokerrelation": [
+      "docs/components/tooltip/use-cases.md"
+    ],
+    "use-case/tooltip--mobile-longpress": [
+      "docs/components/tooltip/use-cases.md"
+    ],
+    "use-case/tooltip--override-popper-configuration": [
+      "docs/components/tooltip/use-cases.md"
+    ],
+    "use-case/tooltip--placements": [
+      "docs/components/tooltip/use-cases.md"
     ]
   }
 }
