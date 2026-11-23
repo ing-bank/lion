@@ -11,28 +11,36 @@ jobs:
     if: github.repository == 'ing-bank/lion'
     name: Release
     runs-on: ubuntu-latest
+    concurrency:
+      group: lion-npm-release
+      cancel-in-progress: false
+    permissions:
+      contents: write
+      pull-requests: write
     steps:
       - uses: google/wireit@setup-github-actions-caching/v2
       - name: Checkout Repo
         uses: actions/checkout@v3
         with:
-          # This makes Actions fetch all Git history so that Changesets can generate changelogs with the correct commits
+          # The staging script compares package versions with the push's previous commit.
           fetch-depth: 0
 
-      - name: Setup Node.js 22.x
+      - name: Setup Node.js 24.x
         uses: actions/setup-node@v3
         with:
-          node-version: 22.x
+          node-version: 24.x
           registry-url: 'https://registry.npmjs.org'
 
       - name: Install Dependencies
         run: npm install --ci
 
-      - name: Create Release Pull Request or Publish to npm
+      - name: Create Release Pull Request or Stage packages on npm
         id: changesets
         uses: changesets/action@v1
         with:
-          # This expects you to have a script called release which does a build for your packages and calls changeset publish
+          create-github-releases: false
+          push-git-tags: false
+          # Keeps Changesets' version PR flow; the release script stages versions without tagging them as published.
           publish: npm run release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
