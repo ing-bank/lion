@@ -148,17 +148,27 @@ function parseArgs(argv: string[]): CliOptions {
         options.behaviour = true;
         break;
       case '--docs': {
-        // For the `scenarios` task `--docs` takes the globs; for every other task it is the boolean
-        // that publishes the results page, exactly as before.
+        // `--docs` means two things, one per task: for `sweep` and `report` it is the boolean that
+        // publishes the results page; for the `scenarios` task it is the OLD spelling of `--docs-globs`,
+        // kept as an alias so existing invocations still work.
         if (argv[0] === 'scenarios') {
           const value = next();
           if (value === undefined || value.startsWith('--')) {
-            throw new Error(`--docs needs one or more globs for the scenarios task, but got "${value ?? ''}"`);
+            throw new Error(`--docs needs one or more globs for the scenarios task (an alias of --docs-globs), but got "${value ?? ''}"`);
           }
+          console.error(gray('note: for the scenarios task, --docs is an alias of --docs-globs; prefer --docs-globs.'));
           options.docsGlobs = value.split(',').map(glob => glob.trim()).filter(Boolean);
           break;
         }
         options.docs = true;
+        break;
+      }
+      case '--docs-globs': {
+        const value = next();
+        if (value === undefined || value.startsWith('--')) {
+          throw new Error(`--docs-globs needs one or more globs for the scenarios task, but got "${value ?? ''}"`);
+        }
+        options.docsGlobs = value.split(',').map(glob => glob.trim()).filter(Boolean);
         break;
       }
       case '--headings': {
@@ -228,6 +238,9 @@ function parseArgs(argv: string[]): CliOptions {
   if (options.headings !== undefined && options.task !== 'scenarios') {
     throw new Error('--headings only applies to the scenarios task');
   }
+  if (options.docsGlobs !== undefined && options.task !== 'scenarios') {
+    throw new Error('--docs-globs only applies to the scenarios task');
+  }
 
   return options;
 }
@@ -252,7 +265,7 @@ Tasks (the FIRST positional argument; no task defaults to eval):
                           report the exact check and its file:line. It reports; it does NOT edit
                           docs — that is human/agent work. It sets the correction up.
   report                  Render/print the ledger as the results page; no runs, no model needed.
-  scenarios               Derive one scenario per documented use case from the docs (--docs,
+  scenarios               Derive one scenario per documented use case from the docs (--docs-globs,
                           --headings). It prints them and lints them; no runs, no model, no files.
 
   sweep = the whole round; improve = the failing set, attributed.
@@ -279,9 +292,9 @@ Options:
   --behaviour             Also run the behaviour tier: execute the produced code in a real
                           browser (headless Chromium) and report it as a separate axis
   --docs                  Publish the ledger and the results page after the run (sweep does this).
-                          For the scenarios task, --docs takes the globs instead (see below).
-  --docs <globs>          scenarios task only: comma-separated globs of the docs to read. Quote them
-                          so the shell does not expand them. Default:
+  --docs-globs <globs>    scenarios task only: comma-separated globs of the docs to read. Quote them
+                          so the shell does not expand them. (--docs is accepted as an old alias.)
+                          Default:
                           'docs/components/*/use-cases.md,docs/fundamentals/systems/*/use-cases.md'
   --headings <pattern>    scenarios task only: regular expression; a line that matches starts a
                           use case, and the rest of that line is its name. Default: '^## '
@@ -296,7 +309,7 @@ Examples:
   node src/cli.ts --models gpt-5-mini --api-key "$OPENAI_API_KEY"
   node src/cli.ts --models my-model --base-url http://localhost:8080/v1
   # Derive the use-case scenarios from the docs (the defaults, spelled out)
-  node src/cli.ts scenarios --docs 'docs/components/*/use-cases.md,docs/fundamentals/systems/*/use-cases.md' --headings '^## '
+  node src/cli.ts scenarios --docs-globs 'docs/components/*/use-cases.md,docs/fundamentals/systems/*/use-cases.md' --headings '^## '
   # GitHub Copilot (install the optional SDK first)
   npm install @github/copilot-sdk && node src/cli.ts --provider copilot --models <model>
 

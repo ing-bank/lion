@@ -340,16 +340,58 @@ test('negative: a docs file that is neither under components/ nor systems/ is re
   }
 });
 
-test('the CLI: --help documents the scenarios task and both of its flags', () => {
+test('the CLI: --help documents the scenarios task under its honest flag name', () => {
   const result = spawnSync(process.execPath, ['src/cli.ts', '--help'], {
     cwd: packageRoot,
     encoding: 'utf8',
   });
   assert.equal(result.status, 0, result.stderr);
   assert.match(result.stdout, /^ {2}scenarios {15}Derive one scenario per documented use case/m);
-  assert.match(result.stdout, /^ {2}--docs <globs> {10}scenarios task only/m);
+  assert.match(result.stdout, /^ {2}--docs-globs <globs> {4}scenarios task only/m);
   assert.match(result.stdout, /^ {2}--headings <pattern> {4}scenarios task only/m);
-  assert.match(result.stdout, /node src\/cli\.ts scenarios --docs/);
+  assert.match(result.stdout, /node src\/cli\.ts scenarios --docs-globs/);
+  // The old spelling is an alias, and the help must not present it as the name of the flag.
+  assert.doesNotMatch(result.stdout, /^ {2}--docs <globs>/m);
+  // `--docs` stays the boolean for sweep/report.
+  assert.match(result.stdout, /^ {2}--docs {18}Publish the ledger/m);
+});
+
+test('the CLI: --docs-globs is the scenarios flag, and --docs still works as its alias', () => {
+  const args = ['--headings', '^## '];
+  const byName = spawnSync(
+    process.execPath,
+    ['src/cli.ts', 'scenarios', '--docs-globs', 'docs/components/combobox/use-cases.md', ...args],
+    { cwd: packageRoot, encoding: 'utf8' },
+  );
+  const byAlias = spawnSync(
+    process.execPath,
+    ['src/cli.ts', 'scenarios', '--docs', 'docs/components/combobox/use-cases.md', ...args],
+    { cwd: packageRoot, encoding: 'utf8' },
+  );
+  assert.equal(byName.status, 0, byName.stderr);
+  assert.equal(byAlias.status, 0, byAlias.stderr);
+  assert.match(byName.stdout, /^12 use-case scenario\(s\) from 1 docs file\(s\)/m);
+  assert.equal(byAlias.stdout, byName.stdout);
+  assert.match(byAlias.stderr, /--docs is an alias of --docs-globs/);
+});
+
+test('the CLI: --docs-globs is refused for any other task', () => {
+  const result = spawnSync(
+    process.execPath,
+    ['src/cli.ts', 'report', '--docs-globs', 'docs/components/*/use-cases.md'],
+    { cwd: packageRoot, encoding: 'utf8' },
+  );
+  assert.equal(result.status, 1);
+  assert.match(result.stderr, /--docs-globs only applies to the scenarios task/);
+});
+
+test('the CLI: --docs-globs without a glob is refused for the scenarios task', () => {
+  const result = spawnSync(process.execPath, ['src/cli.ts', 'scenarios', '--docs-globs'], {
+    cwd: packageRoot,
+    encoding: 'utf8',
+  });
+  assert.equal(result.status, 1);
+  assert.match(result.stderr, /--docs-globs needs one or more globs/);
 });
 
 test('the CLI: scenarios with the two parameters lists the derived scenarios and exits 0', () => {
