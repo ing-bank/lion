@@ -17,11 +17,11 @@ Scores are the recursive-skill-improvement convention checks plus behaviour in a
 
 `Rev` is the skill revision the row was measured against — the git tree hash of the skill directory, so it changes when the skill does and not when an unrelated commit lands. A scenario can hold rows from more than one revision; they are listed newest first, and only rows on the same revision are comparable.
 
-Ledger updated: 2026-11-24T06:53:59.989Z
+Ledger updated: 2026-11-24T07:12:04.647Z
 
 ## Live picture
 
-32 live cell(s) — newest measured (n>0) row per model × scenario × provider, retired models excluded: **29 at 100%**, 3 below 100%. 44 further cell(s) belong to a withdrawn model (`deepseek-v4-flash`) and are marked † as history below; they do not count in the headline.
+70 live cell(s) — newest measured (n>0) row per model × scenario × provider, retired models excluded: **47 at 100%**, 23 below 100%. 44 further cell(s) belong to a withdrawn model (`deepseek-v4-flash`) and are marked † as history below; they do not count in the headline.
 
 ## component/accordion (component)
 
@@ -1213,193 +1213,193 @@ Ledger updated: 2026-11-24T06:53:59.989Z
 
 | Model | Mean | Min | Max | sd | n | Behaviour | Attempts | Redo | Tokens/run | Cost | Rev |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| `anthropic-claude-haiku-5-5` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `0958d28` |
+| `anthropic-claude-haiku-5-5` | **94.4%** | 91.7% | 100.0% | 0.0 | 3 | — | 3/3 | 0 | 73,249 | $0.02 | `0958d28` |
 
 ## use-case/button--disabled-button (component)
 
 | Model | Mean | Min | Max | sd | n | Behaviour | Attempts | Redo | Tokens/run | Cost | Rev |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| `anthropic-claude-haiku-5-5` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `0958d28` |
+| `anthropic-claude-haiku-5-5` | **100.0%** | 100.0% | 100.0% | 0.0 | 3 | — | 3/3 | 0 | 31,108 | $0.01 | `0958d28` |
 
 ## use-case/button--icon-button (component)
 
 | Model | Mean | Min | Max | sd | n | Behaviour | Attempts | Redo | Tokens/run | Cost | Rev |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| `anthropic-claude-haiku-5-5` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `0958d28` |
+| `anthropic-claude-haiku-5-5` | **100.0%** | 100.0% | 100.0% | 0.0 | 3 | — | 3/3 | 0 | 40,255 | $0.01 | `0958d28` |
 
 ## use-case/button--icon-only-button (component)
 
 | Model | Mean | Min | Max | sd | n | Behaviour | Attempts | Redo | Tokens/run | Cost | Rev |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| `anthropic-claude-haiku-5-5` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `0958d28` |
+| `anthropic-claude-haiku-5-5` | **100.0%** | 100.0% | 100.0% | 0.0 | 3 | — | 3/3 | 0 | 39,374 | $0.01 | `0958d28` |
 
 ## use-case/button--minimum-click-area (component)
 
 | Model | Mean | Min | Max | sd | n | Behaviour | Attempts | Redo | Tokens/run | Cost | Rev |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| `anthropic-claude-haiku-5-5` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `0958d28` |
+| `anthropic-claude-haiku-5-5` | **100.0%** | 100.0% | 100.0% | 0.0 | 3 | — | 3/3 | 0 | 36,643 | $0.01 | `0958d28` |
 
 ## use-case/button--multiple-buttons-inline (component)
 
 | Model | Mean | Min | Max | sd | n | Behaviour | Attempts | Redo | Tokens/run | Cost | Rev |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| `anthropic-claude-haiku-5-5` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `0958d28` |
+| `anthropic-claude-haiku-5-5` | **100.0%** | 100.0% | 100.0% | 0.0 | 3 | — | 3/3 | 0 | 31,583 | $0.01 | `0958d28` |
 
 ## use-case/button--usage-with-native-form (component)
 
 | Model | Mean | Min | Max | sd | n | Behaviour | Attempts | Redo | Tokens/run | Cost | Rev |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| `anthropic-claude-haiku-5-5` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `0958d28` |
+| `anthropic-claude-haiku-5-5` | **91.7%** | 91.7% | 91.7% | 0.0 | 3 | — | 3/3 | 0 | 84,010 | $0.03 | `0958d28` |
 
 ## use-case/button--with-click-handler (component)
 
 | Model | Mean | Min | Max | sd | n | Behaviour | Attempts | Redo | Tokens/run | Cost | Rev |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| `anthropic-claude-haiku-5-5` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `0958d28` |
+| `anthropic-claude-haiku-5-5` | **94.4%** | 91.7% | 100.0% | 0.0 | 3 | — | 3/3 | 0 | 33,000 | $0.01 | `0958d28` |
 
 ## use-case/calendar--central-date (component)
 
 | Model | Mean | Min | Max | sd | n | Behaviour | Attempts | Redo | Tokens/run | Cost | Rev |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| `anthropic-claude-haiku-5-5` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `0958d28` |
+| `anthropic-claude-haiku-5-5` | **100.0%** | 100.0% | 100.0% | 0.0 | 3 | — | 3/3 | 0 | 36,237 | $0.01 | `0958d28` |
 
 ## use-case/calendar--controlling-focus (component)
 
 | Model | Mean | Min | Max | sd | n | Behaviour | Attempts | Redo | Tokens/run | Cost | Rev |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| `anthropic-claude-haiku-5-5` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `0958d28` |
+| `anthropic-claude-haiku-5-5` | **97.2%** | 91.7% | 100.0% | 0.0 | 3 | — | 3/3 | 0 | 79,226 | $0.03 | `0958d28` |
 
 ## use-case/calendar--limiting-selectable-values (component)
 
 | Model | Mean | Min | Max | sd | n | Behaviour | Attempts | Redo | Tokens/run | Cost | Rev |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| `anthropic-claude-haiku-5-5` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `0958d28` |
+| `anthropic-claude-haiku-5-5` | **97.2%** | 91.7% | 100.0% | 0.0 | 3 | — | 3/3 | 0 | 166,116 | $0.05 | `0958d28` |
 
 ## use-case/calendar--selected-date (component)
 
 | Model | Mean | Min | Max | sd | n | Behaviour | Attempts | Redo | Tokens/run | Cost | Rev |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| `anthropic-claude-haiku-5-5` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `0958d28` |
+| `anthropic-claude-haiku-5-5` | **100.0%** | 100.0% | 100.0% | 0.0 | 3 | — | 3/3 | 0 | 44,897 | $0.01 | `0958d28` |
 
 ## use-case/checkbox-group--disabled (component)
 
 | Model | Mean | Min | Max | sd | n | Behaviour | Attempts | Redo | Tokens/run | Cost | Rev |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| `anthropic-claude-haiku-5-5` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `0958d28` |
+| `anthropic-claude-haiku-5-5` | **91.7%** | 91.7% | 91.7% | 0.0 | 3 | — | 3/3 | 0 | 35,813 | $0.01 | `0958d28` |
 
 ## use-case/checkbox-group--event (component)
 
 | Model | Mean | Min | Max | sd | n | Behaviour | Attempts | Redo | Tokens/run | Cost | Rev |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| `anthropic-claude-haiku-5-5` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `0958d28` |
+| `anthropic-claude-haiku-5-5` | **100.0%** | 100.0% | 100.0% | 0.0 | 3 | — | 3/3 | 0 | 63,284 | $0.02 | `0958d28` |
 
 ## use-case/checkbox-group--example (component)
 
 | Model | Mean | Min | Max | sd | n | Behaviour | Attempts | Redo | Tokens/run | Cost | Rev |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| `anthropic-claude-haiku-5-5` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `0958d28` |
+| `anthropic-claude-haiku-5-5` | **91.7%** | 91.7% | 91.7% | 0.0 | 3 | — | 3/3 | 0 | 20,432 | $0.0071 | `0958d28` |
 
 ## use-case/checkbox-group--help-text (component)
 
 | Model | Mean | Min | Max | sd | n | Behaviour | Attempts | Redo | Tokens/run | Cost | Rev |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| `anthropic-claude-haiku-5-5` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `0958d28` |
+| `anthropic-claude-haiku-5-5` | **91.7%** | 91.7% | 91.7% | 0.0 | 3 | — | 3/3 | 0 | 29,288 | $0.0099 | `0958d28` |
 
 ## use-case/checkbox-group--indeterminate (component)
 
 | Model | Mean | Min | Max | sd | n | Behaviour | Attempts | Redo | Tokens/run | Cost | Rev |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| `anthropic-claude-haiku-5-5` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `0958d28` |
+| `anthropic-claude-haiku-5-5` | **100.0%** | 100.0% | 100.0% | 0.0 | 3 | — | 3/3 | 0 | 49,895 | $0.02 | `0958d28` |
 
 ## use-case/checkbox-group--label (component)
 
 | Model | Mean | Min | Max | sd | n | Behaviour | Attempts | Redo | Tokens/run | Cost | Rev |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| `anthropic-claude-haiku-5-5` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `0958d28` |
+| `anthropic-claude-haiku-5-5` | **91.7%** | 91.7% | 91.7% | 0.0 | 3 | — | 3/3 | 0 | 38,654 | $0.01 | `0958d28` |
 
 ## use-case/checkbox-group--model-value (component)
 
 | Model | Mean | Min | Max | sd | n | Behaviour | Attempts | Redo | Tokens/run | Cost | Rev |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| `anthropic-claude-haiku-5-5` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `0958d28` |
+| `anthropic-claude-haiku-5-5` | **91.7%** | 91.7% | 91.7% | 0.0 | 3 | — | 3/3 | 0 | 70,901 | $0.02 | `0958d28` |
 
 ## use-case/checkbox-group--pre-select (component)
 
 | Model | Mean | Min | Max | sd | n | Behaviour | Attempts | Redo | Tokens/run | Cost | Rev |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| `anthropic-claude-haiku-5-5` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `0958d28` |
+| `anthropic-claude-haiku-5-5` | **100.0%** | 100.0% | 100.0% | 0.0 | 3 | — | 3/3 | 0 | 66,029 | $0.02 | `0958d28` |
 
 ## use-case/checkbox-group--the-name-attribute (component)
 
 | Model | Mean | Min | Max | sd | n | Behaviour | Attempts | Redo | Tokens/run | Cost | Rev |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| `anthropic-claude-haiku-5-5` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `0958d28` |
+| `anthropic-claude-haiku-5-5` | **91.7%** | 91.7% | 91.7% | 0.0 | 3 | — | 3/3 | 0 | 30,656 | $0.01 | `0958d28` |
 
 ## use-case/collapsible--default-open (component)
 
 | Model | Mean | Min | Max | sd | n | Behaviour | Attempts | Redo | Tokens/run | Cost | Rev |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| `anthropic-claude-haiku-5-5` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `0958d28` |
+| `anthropic-claude-haiku-5-5` | **100.0%** | 100.0% | 100.0% | 0.0 | 3 | — | 3/3 | 0 | 60,816 | $0.02 | `0958d28` |
 
 ## use-case/collapsible--events (component)
 
 | Model | Mean | Min | Max | sd | n | Behaviour | Attempts | Redo | Tokens/run | Cost | Rev |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| `anthropic-claude-haiku-5-5` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `0958d28` |
+| `anthropic-claude-haiku-5-5` | **91.7%** | 91.7% | 91.7% | 0.0 | 3 | — | 3/3 | 0 | 114,752 | $0.04 | `0958d28` |
 
 ## use-case/collapsible--methods (component)
 
 | Model | Mean | Min | Max | sd | n | Behaviour | Attempts | Redo | Tokens/run | Cost | Rev |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| `anthropic-claude-haiku-5-5` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `0958d28` |
+| `anthropic-claude-haiku-5-5` | **100.0%** | 100.0% | 100.0% | 0.0 | 3 | — | 3/3 | 0 | 37,498 | $0.01 | `0958d28` |
 
 ## use-case/combobox--autocomplete (component)
 
 | Model | Mean | Min | Max | sd | n | Behaviour | Attempts | Redo | Tokens/run | Cost | Rev |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| `anthropic-claude-haiku-5-5` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `0958d28` |
+| `anthropic-claude-haiku-5-5` | **100.0%** | 100.0% | 100.0% | 0.0 | 3 | — | 3/3 | 0 | 124,350 | $0.04 | `0958d28` |
 
 ## use-case/combobox--complex-options (component)
 
 | Model | Mean | Min | Max | sd | n | Behaviour | Attempts | Redo | Tokens/run | Cost | Rev |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| `anthropic-claude-haiku-5-5` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `0958d28` |
+| `anthropic-claude-haiku-5-5` | **97.2%** | 91.7% | 100.0% | 0.0 | 3 | — | 3/3 | 0 | 111,835 | $0.04 | `0958d28` |
 
 ## use-case/combobox--disabled-option (component)
 
 | Model | Mean | Min | Max | sd | n | Behaviour | Attempts | Redo | Tokens/run | Cost | Rev |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| `anthropic-claude-haiku-5-5` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `0958d28` |
+| `anthropic-claude-haiku-5-5` | **91.7%** | 91.7% | 91.7% | 0.0 | 3 | — | 3/3 | 0 | 62,256 | $0.02 | `0958d28` |
 
 ## use-case/combobox--invoker-button (component)
 
 | Model | Mean | Min | Max | sd | n | Behaviour | Attempts | Redo | Tokens/run | Cost | Rev |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| `anthropic-claude-haiku-5-5` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `0958d28` |
+| `anthropic-claude-haiku-5-5` | **91.7%** | 91.7% | 91.7% | 0.0 | 3 | — | 3/3 | 0 | 45,916 | $0.02 | `0958d28` |
 
 ## use-case/combobox--listbox-compatibility (component)
 
 | Model | Mean | Min | Max | sd | n | Behaviour | Attempts | Redo | Tokens/run | Cost | Rev |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| `anthropic-claude-haiku-5-5` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `0958d28` |
+| `anthropic-claude-haiku-5-5` | **91.7%** | 91.7% | 91.7% | 0.0 | 3 | — | 3/3 | 0 | 54,452 | $0.02 | `0958d28` |
 
 ## use-case/combobox--match-mode (component)
 
 | Model | Mean | Min | Max | sd | n | Behaviour | Attempts | Redo | Tokens/run | Cost | Rev |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| `anthropic-claude-haiku-5-5` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `0958d28` |
+| `anthropic-claude-haiku-5-5` | **100.0%** | 100.0% | 100.0% | 0.0 | 3 | — | 3/3 | 0 | 129,605 | $0.04 | `0958d28` |
 
 ## use-case/combobox--multiple-choice (component)
 
 | Model | Mean | Min | Max | sd | n | Behaviour | Attempts | Redo | Tokens/run | Cost | Rev |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| `anthropic-claude-haiku-5-5` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `0958d28` |
+| `anthropic-claude-haiku-5-5` | **91.7%** | 91.7% | 91.7% | 0.0 | 3 | — | 3/3 | 0 | 53,924 | $0.02 | `0958d28` |
 
 ## use-case/combobox--narrow-a-long-list-by-typing (component)
 
 | Model | Mean | Min | Max | sd | n | Behaviour | Attempts | Redo | Tokens/run | Cost | Rev |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| `anthropic-claude-haiku-5-5` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `0958d28` |
+| `anthropic-claude-haiku-5-5` | **100.0%** | 100.0% | 100.0% | 0.0 | 3 | — | 3/3 | 0 | 96,881 | $0.03 | `0958d28` |
 | `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `b9cf47e` |
 | `anthropic-claude-haiku-4-5` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | no published rate | `fcc7e1a` |
 | `anthropic-claude-haiku-4-5` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | no published rate | `ea05f86` |
@@ -1419,31 +1419,31 @@ Ledger updated: 2026-11-24T06:53:59.989Z
 
 | Model | Mean | Min | Max | sd | n | Behaviour | Attempts | Redo | Tokens/run | Cost | Rev |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| `anthropic-claude-haiku-5-5` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `0958d28` |
+| `anthropic-claude-haiku-5-5` | **91.7%** | 91.7% | 91.7% | 0.0 | 3 | — | 3/3 | 0 | 55,255 | $0.02 | `0958d28` |
 
 ## use-case/combobox--readonly-option (component)
 
 | Model | Mean | Min | Max | sd | n | Behaviour | Attempts | Redo | Tokens/run | Cost | Rev |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| `anthropic-claude-haiku-5-5` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `0958d28` |
+| `anthropic-claude-haiku-5-5` | **91.7%** | 91.7% | 91.7% | 0.0 | 3 | — | 3/3 | 0 | 51,991 | $0.02 | `0958d28` |
 
 ## use-case/combobox--require-option-match (component)
 
 | Model | Mean | Min | Max | sd | n | Behaviour | Attempts | Redo | Tokens/run | Cost | Rev |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| `anthropic-claude-haiku-5-5` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `0958d28` |
+| `anthropic-claude-haiku-5-5` | **100.0%** | 100.0% | 100.0% | 0.0 | 3 | — | 3/3 | 0 | 120,198 | $0.04 | `0958d28` |
 
 ## use-case/combobox--server-interaction (component)
 
 | Model | Mean | Min | Max | sd | n | Behaviour | Attempts | Redo | Tokens/run | Cost | Rev |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| `anthropic-claude-haiku-5-5` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `0958d28` |
+| `anthropic-claude-haiku-5-5` | **91.7%** | 91.7% | 91.7% | 0.0 | 3 | — | 3/3 | 0 | 36,680 | $0.01 | `0958d28` |
 
 ## use-case/combobox--suggest-while-you-type (component)
 
 | Model | Mean | Min | Max | sd | n | Behaviour | Attempts | Redo | Tokens/run | Cost | Rev |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| `anthropic-claude-haiku-5-5` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `0958d28` |
+| `anthropic-claude-haiku-5-5` | **100.0%** | 100.0% | 100.0% | 0.0 | 3 | — | 3/3 | 0 | 104,683 | $0.03 | `0958d28` |
 | `deepseek-v4-1-flash` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `b9cf47e` |
 | `anthropic-claude-haiku-4-5` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | no published rate | `fcc7e1a` |
 | `anthropic-claude-haiku-4-5` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | no published rate | `ea05f86` |
@@ -1463,7 +1463,7 @@ Ledger updated: 2026-11-24T06:53:59.989Z
 
 | Model | Mean | Min | Max | sd | n | Behaviour | Attempts | Redo | Tokens/run | Cost | Rev |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| `anthropic-claude-haiku-5-5` | n/a | n/a | n/a | n/a | 0 (n/a) | — | n/a | n/a | n/a | n/a — recorded before the token split | `0958d28` |
+| `anthropic-claude-haiku-5-5` | **100.0%** | 100.0% | 100.0% | 0.0 | 3 | — | 3/3 | 0 | 126,409 | $0.04 | `0958d28` |
 
 ## use-case/dialog--alert-dialog (component)
 
