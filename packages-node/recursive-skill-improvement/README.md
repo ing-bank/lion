@@ -76,7 +76,7 @@ Selected explicitly with `--provider` / `SKILL_TESTER_PROVIDER`; never guessed f
 | ------------------- | ------------------------------------------------------- | ----------------------------------------- |
 | `openai-compatible` | Any OpenAI-compatible `POST {baseUrl}/chat/completions` | a base URL (has a default) and a key      |
 | `copilot`           | GitHub Copilot, via `@github/copilot-sdk`               | the optional SDK installed + Copilot auth |
-| `claude-code`       | The `claude` CLI, as an **agent** (tools, real edits)    | the CLI installed and authenticated       |
+| `claude-code`       | The `claude` CLI, as an **agent** (tools, real edits)   | the CLI installed and authenticated       |
 
 `openai-compatible` is the default (the alias `openai` is accepted). The environment variables keep
 their historical `SKILL_TESTER_*` prefix, which is a naming wart, not a second package. Endpoint and credential resolution (first match wins):
@@ -162,6 +162,14 @@ record uses the shape of `recursive-skill-improver`'s `references/run-record.md`
 
 That record is the hand-off: point `recursive-skill-improver` at a skill, run a fixed set of
 scenarios repeatedly, and turn the failing-check evidence into minimal, correctly-placed edits.
+
+## Authoring docs for both audiences
+
+The docs a human reads on the portal are also the source of the `lion-ui` skill the harness measures.
+[`dual-audience-docs`](../../packages/ui/skills/dual-audience-docs/SKILL.md) is the skill for writing a
+page that serves both: how `generate-skills.mjs` merges and strips a page, the human-first order versus
+the agent-usable reference, and a per-page checklist. It is hand-written, like `recursive-skill-improver`,
+and lives beside it in `packages/ui/skills/`.
 
 ## Testing
 
