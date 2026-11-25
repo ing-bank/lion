@@ -283,7 +283,7 @@ Options:
   --provider <p>          "openai-compatible" (default), "copilot" or "claude-code"
   --models <m1,m2>        Models to test. No default: pass --models or set $SKILL_TESTER_MODELS
   --samples <n>           Runs per (scenario, model) pair (default: 1)
-  --max-turns <n>         Max model round-trips per run, "openai" provider only (default: 25)
+  --max-turns <n>         Max model round-trips per run, "openai-compatible" provider only (default: 25)
   --pass-threshold <n>    Pass threshold percentage (default: 100)
   --base-url <url>        OpenAI-compatible base URL (default: $SKILL_TESTER_BASE_URL, $OPENAI_BASE_URL)
   --api-key <key>         API key (prefer env vars so it stays out of your shell history)
@@ -298,7 +298,7 @@ Options:
                           'docs/components/*/use-cases.md,docs/fundamentals/systems/*/use-cases.md'
   --headings <pattern>    scenarios task only: regular expression; a line that matches starts a
                           use case, and the rest of that line is its name. Default: '^## '
-  --kind <k>              Only scenarios of this kind (component|system|integration)
+  --kind <k>              Only scenarios of this kind (component|system|integration|repair)
   --scenario <substring>  Only scenarios whose name contains this substring
   --limit <n>             Run at most n scenarios
   --list                  List the scenarios that would run, then exit
@@ -314,7 +314,7 @@ Examples:
   npm install @github/copilot-sdk && node src/cli.ts --provider copilot --models <model>
 
 Environment:
-  SKILL_TESTER_PROVIDER (openai | copilot)
+  SKILL_TESTER_PROVIDER (openai-compatible | copilot | claude-code)
   SKILL_TESTER_MODELS, SKILL_TESTER_API_KEY, SKILL_TESTER_BASE_URL
   OPENAI_API_KEY, OPENAI_BASE_URL
 `);

@@ -55,7 +55,7 @@ ledger; no runs, no model needed) and `scenarios` (derive one scenario per docum
 
 ```bash
 # the use-case scenarios, derived from the docs (the defaults, spelled out)
-node src/cli.ts scenarios --docs 'docs/components/*/use-cases.md,docs/fundamentals/systems/*/use-cases.md' --headings '^## '
+node src/cli.ts scenarios --docs-globs 'docs/components/*/use-cases.md,docs/fundamentals/systems/*/use-cases.md' --headings '^## '
 ```
 
 ```bash

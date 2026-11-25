@@ -12,7 +12,7 @@ parts:
 
 ```mermaid
 flowchart LR
-  M["1 measure<br/>scenarios x n>=3"] --> A["2 attribute<br/>docs-gap | harness-defect | model"]
+  M["1 measure<br/>scenarios x n>=3"] --> A["2 attribute<br/>docs-gap | harness-defect | model-behaviour"]
   A --> C["3 correct<br/>the source doc in docs/**"]
   C --> R["4 regenerate<br/>skills:generate"]
   R --> G["5 gate<br/>skills:check"]
