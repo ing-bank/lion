@@ -58,7 +58,7 @@ run automatically within its timebox.
    every attempt. Never rely only on the final response: the transcript is the
    evidence used to improve the skill.
 
-If harness or setup behavior changes, restore comparability before
+If harness or setup behaviour changes, restore comparability before
 interpreting the next result.
 
 ## Run the task
@@ -89,7 +89,7 @@ lists it under findings with the scenario that triggered it, and the ledger carr
 
 Read the run's transcript/logs and complete
 [references/run-record.md](references/run-record.md). Flag every occurrence of
-these behaviors:
+these behaviours:
 
 - searching project, dependency, global, or external source code for an
   answer the skill should have provided directly;
@@ -142,7 +142,7 @@ For each valid run:
 1. Rank actionable findings by wasted time, recurrence, and impact on
    correctness.
 2. Select the smallest high-value lesson that would have prevented the
-   observed behavior.
+   observed behaviour.
 3. Put it in the narrowest authoritative owner within the target skill.
    Prefer a specific reference file for topic-specific facts and the
    top-level `SKILL.md` only for cross-cutting rules.
@@ -227,7 +227,7 @@ Report each valid run with:
 
 - outcome and furthest completed milestone;
 - elapsed time, turns, tool calls, searches, and retries;
-- evidenced undesirable behaviors;
+- evidenced undesirable behaviours;
 - classification of each finding;
 - skill change and commit, or the reason no skill change was justified; and
 - current clean-run streak and remaining campaign budget.
