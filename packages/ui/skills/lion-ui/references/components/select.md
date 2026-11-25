@@ -15,7 +15,8 @@ Sets of options where each option name starts with the same word or phrase can a
 
 ```js script
 import { html } from 'lit';
-import { LionSelect } from '@lion/ui/select.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
+import { LionSelect } from '@lion/ui/select.js';
+// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
 ```
 
 ```js preview-story
@@ -48,7 +49,7 @@ npm i --save @lion/ui
 ```js
 import { LionSelect } from '@lion/ui/select.js';
 // or
-import { LionSelect } from '@lion/ui/select.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
+// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
 ```
 
 ---
@@ -59,7 +60,8 @@ import { LionSelect } from '@lion/ui/select.js';// Rendered through the host's s
 import { html } from 'lit';
 import { Required } from '@lion/ui/form-core.js';
 import { loadDefaultFeedbackMessages } from '@lion/ui/validate-messages.js';
-import { LionSelect } from '@lion/ui/select.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
+import { LionSelect } from '@lion/ui/select.js';
+// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
 loadDefaultFeedbackMessages();
 ```
 
@@ -108,7 +110,7 @@ Or by setting the `disabled` attribute on the entire `lion-select` field.
 
 ### Validation
 
-A validator can be used to make it e.g. `required`. If you want to know how to do that, please take a look at our [validation examples](../../fundamentals/systems/form/validate.md).
+A validator can be used to make it e.g. `required`. If you want to know how to do that, please take a look at our validation examples.
 
 ### Rendering and updating select options
 

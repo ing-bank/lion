@@ -15,23 +15,42 @@
  */
 const LIT_BINDINGS = new Set(['html', 'css', 'svg', 'nothing', 'render', 'LitElement']);
 
+/**
+ * Directives are not exported from the `lit` root: each lives in its own module. A binding kept from
+ * the preview import that is a directive must be imported from that module, or the kept code does not run.
+ */
+const LIT_DIRECTIVE_MODULES = new Map([['repeat', 'lit/directives/repeat.js']]);
+
 export function stripDocNoise(markdown) {
-  return markdown
-    .replace(
-      /^import\s*\{([^}]*)\}\s*from\s*['"]@mdjs\/mdjs-preview['"];?[ \t]*$/gm,
-      (line, bindings) => {
-        const kept = bindings
-          .split(',')
-          .map(binding => binding.trim())
-          .filter(Boolean)
-          .filter(binding => LIT_BINDINGS.has(binding.split(/\s+as\s+/)[0].trim()));
-        return kept.length > 0 ? `import { ${kept.join(', ')} } from 'lit';` : '';
-      },
-    )
-    // Relative demo modules: only paths that reach into a `src/` folder do not resolve for a consumer.
-    .replace(/^import\s+[^;]*from\s*['"](?:\.\.?\/)(?:[^'"]*\/)?src\/[^'"]*['"];?[ \t]*$/gm, '')
-    // Side-effect variant: `import './src/demoStyle.js';`
-    .replace(/^import\s*['"](?:\.\.?\/)(?:[^'"]*\/)?src\/[^'"]*['"];?[ \t]*$/gm, '')
-    .replace(/<\/?mdjs-preview[^>]*>/g, '')
-    .replace(/\n{3,}/g, '\n\n');
+  return (
+    markdown
+      .replace(
+        /^import\s*\{([^}]*)\}\s*from\s*['"]@mdjs\/mdjs-preview['"];?[ \t]*$/gm,
+        (line, bindings) => {
+          const kept = bindings
+            .split(',')
+            .map(binding => binding.trim())
+            .filter(Boolean)
+            .filter(binding => LIT_BINDINGS.has(binding.split(/\s+as\s+/)[0].trim()));
+          const directives = bindings
+            .split(',')
+            .map(binding => binding.trim())
+            .filter(Boolean)
+            .filter(binding => LIT_DIRECTIVE_MODULES.has(binding.split(/\s+as\s+/)[0].trim()));
+          const lines = [];
+          if (kept.length > 0) lines.push(`import { ${kept.join(', ')} } from 'lit';`);
+          for (const binding of directives) {
+            const name = binding.split(/\s+as\s+/)[0].trim();
+            lines.push(`import { ${binding} } from '${LIT_DIRECTIVE_MODULES.get(name)}';`);
+          }
+          return lines.join('\n');
+        },
+      )
+      // Relative demo modules: only paths that reach into a `src/` folder do not resolve for a consumer.
+      .replace(/^import\s+[^;]*from\s*['"](?:\.\.?\/)(?:[^'"]*\/)?src\/[^'"]*['"];?[ \t]*$/gm, '')
+      // Side-effect variant: `import './src/demoStyle.js';`
+      .replace(/^import\s*['"](?:\.\.?\/)(?:[^'"]*\/)?src\/[^'"]*['"];?[ \t]*$/gm, '')
+      .replace(/<\/?mdjs-preview[^>]*>/g, '')
+      .replace(/\n{3,}/g, '\n\n')
+  );
 }

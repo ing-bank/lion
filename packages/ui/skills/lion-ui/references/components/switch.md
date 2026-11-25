@@ -12,7 +12,8 @@
 
 ```js script
 import { html as previewHtml } from 'lit';
-import { LionSwitch } from '@lion/ui/switch.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
+import { LionSwitch } from '@lion/ui/switch.js';
+// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
 ```
 
 ```js preview-story
@@ -76,7 +77,8 @@ class MyComponent extends ScopedElementsMixin(LitElement) {
 
 ```html
 <script type="module">
-  import { LionSwitch } from '@lion/ui/switch.js';  // Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
+  import { LionSwitch } from '@lion/ui/switch.js';
+  // Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
 </script>
 
 <lion-switch></lion-switch>
@@ -90,7 +92,7 @@ class MyComponent extends ScopedElementsMixin(LitElement) {
 import { html } from 'lit';
 import { Validator } from '@lion/ui/form-core.js';
 import { LionSwitch } from '@lion/ui/switch.js';
-import { LionSwitch } from '@lion/ui/switch.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
+// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
 import '@lion/ui/define-helpers/sb-action-logger.js';
 ```
 

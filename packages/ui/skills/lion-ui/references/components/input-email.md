@@ -12,7 +12,8 @@ A web component based on the generic text input field. Its purpose is to provide
 
 ```js script
 import { html } from 'lit';
-import { LionInputEmail } from '@lion/ui/input-email.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
+import { LionInputEmail } from '@lion/ui/input-email.js';
+// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
 ```
 
 ```js preview-story
@@ -23,8 +24,8 @@ export const main = () => {
 
 ### Features
 
-- Based on our [input](../input/overview.md)
-- Makes use of email [validators](../../fundamentals/systems/form/validate.md) with corresponding error messages in different languages
+- Based on our input
+- Makes use of email validators with corresponding error messages in different languages
   - IsEmail (default)
 
 ### Installation
@@ -36,7 +37,7 @@ npm i --save @lion/ui
 ```js
 import { LionInputEmail } from '@lion/ui/input-email.js';
 // or
-import { LionInputEmail } from '@lion/ui/input-email.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
+// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
 ```
 
 ---
@@ -46,7 +47,8 @@ import { LionInputEmail } from '@lion/ui/input-email.js';// Rendered through the
 ```js script
 import { html } from 'lit';
 import { Validator } from '@lion/ui/form-core.js';
-import { LionInputEmail } from '@lion/ui/input-email.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
+import { LionInputEmail } from '@lion/ui/input-email.js';
+// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
 ```
 
 ### Faulty Prefilled

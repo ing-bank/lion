@@ -148,7 +148,7 @@ Manages their position on the screen relative to other elements, including other
 
 Its purpose is to make it easy to use our Overlay System declaratively. It can be easily extended where needed, to override event listeners and more.
 
-See [lion-dialog](../../../components/dialog/overview.md) and [lion-tooltip](../../../components/tooltip/overview.md) for example Web Component implementations using the Overlay System.
+See lion-dialog and lion-tooltip for example Web Component implementations using the Overlay System.
 
 ### Features
 
@@ -160,9 +160,9 @@ See [lion-dialog](../../../components/dialog/overview.md) and [lion-tooltip](../
 - lion-overlay web component:
   - Show content when clicking the invoker
   - Have a `.config` object to set or update the OverlayController's configuration
-- [**OverlaysManager**](./use-cases.md#overlaysmanager), a global repository keeping track of all different types of overlays
-- [**OverlayController**](./use-cases.md#overlaycontroller), a single controller class for handling overlays
-- [**OverlayMixin**](./use-cases.md#overlaymixin), a mixin that can be used to create webcomponents that use the OverlayController under the hood
+- **OverlaysManager**, a global repository keeping track of all different types of overlays
+- **OverlayController**, a single controller class for handling overlays
+- **OverlayMixin**, a mixin that can be used to create webcomponents that use the OverlayController under the hood
 
 Usually you will use `lion-dialog` (or `lion-tooltip` if this makes more sense).
 
@@ -175,7 +175,8 @@ npm i --save @lion/ui
 #### Example
 
 ```js
-import { LionDialog } from '@lion/ui/dialog.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
+import { LionDialog } from '@lion/ui/dialog.js';
+// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
 
 html`
   <lion-dialog .config=${{
@@ -252,7 +253,7 @@ class MyOverlayComponent extends OverlayMixin(LitElement) {
 
 ### Rationales
 
-Please check the [system rationals](./rationale.md) folder, where we go more in-depth.
+Please check the system rationals folder, where we go more in-depth.
 
 ---
 
@@ -279,7 +280,7 @@ The overlay system allows to create different types of overlays like dialogs, to
 It's designed to be highly flexible, while still delivering sensible defaults.
 On top of this, the system was built having accessibility in mind.
 
-For a detailed rationale, please consult [Rationale](./rationale.md).
+For a detailed rationale, please consult Rationale.
 
 ```js preview-story
 export const main = () => html`
@@ -327,7 +328,7 @@ Global refers to overlays where the content is positioned in a global root node 
 
 Overlays can be configured in many ways to suit your needs. We go in-depth into each option in the Overlay System - Configuration chapter.
 
-We also export a few [preset configuration objects](./configuration.md).
+We also export a few preset configuration objects.
 
 - withModalDialogConfig
 - withDropdownConfig
@@ -1402,7 +1403,7 @@ export const alertDialog = () => {
 
 ### isTooltip (placementMode: 'local')
 
-As specified in the [overlay rationale](./rationale.md) there are only two official types of overlays: dialogs and tooltips. And their main differences are:
+As specified in the overlay rationale there are only two official types of overlays: dialogs and tooltips. And their main differences are:
 
 - Dialogs have a modal option, tooltips don’t
 - Dialogs have interactive content, tooltips don’t
@@ -1736,7 +1737,7 @@ Features:
 
 > Popper strictly is scoped on positioning. **It does not change the dimensions of the content node nor the invoker node**.
 > This also means that if you use the arrow feature, you are in charge of styling it properly, use the data-popper-placement attribute for this.
-> An example implementation can be found in [lion-tooltip](../../../components/tooltip/overview.md), where an arrow is set by default.
+> An example implementation can be found in lion-tooltip, where an arrow is set by default.
 
 To override the default options we set for local mode, you add a `popperConfig` object to the config passed to the OverlayController.
 Here's a succinct overview of some often used popper properties:

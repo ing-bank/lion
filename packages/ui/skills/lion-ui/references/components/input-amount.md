@@ -19,7 +19,8 @@ If there are no valid characters in the input whatsoever, it will provide an err
 
 ```js script
 import { html } from 'lit';
-import { LionInputAmount } from '@lion/ui/input-amount.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
+import { LionInputAmount } from '@lion/ui/input-amount.js';
+// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
 ```
 
 ```js preview-story
@@ -32,13 +33,13 @@ export const main = () => {
 
 ### Features
 
-- Based on our [input](../input/overview.md)
-- Makes use of [formatNumber](../../fundamentals/systems/localize/numbers.md) for formatting and parsing.
+- Based on our input
+- Makes use of formatNumber for formatting and parsing.
 - Option to show currency as a suffix
 - Option to override locale to change the formatting and parsing
 - Option to provide additional format options overrides
 - Default label in different languages
-- Can make use of number specific [validators](../../fundamentals/systems/form/validate.md) with corresponding error messages in different languages
+- Can make use of number specific validators with corresponding error messages in different languages
   - IsNumber (default)
   - MinNumber
   - MaxNumber
@@ -53,7 +54,7 @@ npm i --save @lion/ui
 ```js
 import { LionInputAmount } from '@lion/ui/input-amount.js';
 // or
-import { LionInputAmount } from '@lion/ui/input-amount.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
+// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
 ```
 
 ---
@@ -67,7 +68,8 @@ import { loadDefaultFeedbackMessages } from '@lion/ui/validate-messages.js';
 
 import { localize } from '@lion/ui/localize.js';
 
-import { LionInputAmount } from '@lion/ui/input-amount.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
+import { LionInputAmount } from '@lion/ui/input-amount.js';
+// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
 ```
 
 ### Negative Number

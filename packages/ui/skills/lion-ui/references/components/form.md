@@ -45,18 +45,20 @@ export class MyElem extends ScopedElementsMixin(LitElement) {
 ```
 
 `ScopedElementsMixin` comes from `@open-wc/scoped-elements/lit-element.js`; no `@lion/ui` entrypoint
-exports it — `@lion/ui/core.js` in particular does not. Read the [form system](../../fundamentals/systems/form/overview.md)
+exports it — `@lion/ui/core.js` in particular does not. Read the form system
 for the light-dom and registration rules a form and its controls depend on.
 
 ```js script
 import { html } from 'lit';
 
-import { LionInput } from '@lion/ui/input.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
-import { LionForm } from '@lion/ui/form.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
+import { LionInput } from '@lion/ui/input.js';
+// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
+import { LionForm } from '@lion/ui/form.js';
+// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
 ```
 
 A web component that enhances the functionality of the native `form` component.
-It is designed to interact with (instances of) the [form controls](../../fundamentals/systems/form/overview.md).
+It is designed to interact with (instances of) the form controls.
 
 ```js preview-story
 export const main = () => {
@@ -85,11 +87,11 @@ export const main = () => {
 - Data synchronization with models
 - Easy retrieval of form data based on field names
 - Advanced validation possibilities
-- Advanced user interaction scenarios via [interaction states](../../fundamentals/systems/form/interaction-states.md)
+- Advanced user interaction scenarios via interaction states
 - Registration mechanism for form controls
 - Accessible out of the box
 
-For more information about fields that are designed for our `form`, please read [form system](../../fundamentals/systems/form/overview.md).
+For more information about fields that are designed for our `form`, please read form system.
 
 ### Installation
 
@@ -98,7 +100,8 @@ npm i --save @lion/ui
 ```
 
 ```js
-import { LionForm } from '@lion/ui/form.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
+import { LionForm } from '@lion/ui/form.js';
+// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
 ```
 
 ---
@@ -109,9 +112,12 @@ import { LionForm } from '@lion/ui/form.js';// Rendered through the host's scope
 import { html as previewHtml } from 'lit';
 import { Required } from '@lion/ui/form-core.js';
 import { loadDefaultFeedbackMessages } from '@lion/ui/validate-messages.js';
-import { LionFieldset } from '@lion/ui/fieldset.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
-import { LionInput } from '@lion/ui/input.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
-import { LionForm } from '@lion/ui/form.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
+import { LionFieldset } from '@lion/ui/fieldset.js';
+// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
+import { LionInput } from '@lion/ui/input.js';
+// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
+import { LionForm } from '@lion/ui/form.js';
+// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
 ```
 
 ### Submit & Reset
@@ -119,7 +125,7 @@ import { LionForm } from '@lion/ui/form.js';// Rendered through the host's scope
 To submit a form, use a regular `<button>` (or `<lion-button-submit>`) somewhere inside the native `<form>`. Then, add a `submit` handler on the `<lion-form>`. You can use this event to do your own (pre-)submit logic, like getting the serialized form data and sending it to a backend API.
 
 Another example is checking if the form has errors, and focusing the first field with a validation error.
-To learn more about form validation, please take a look at [validate](../../fundamentals/systems/form/validate.md).
+To learn more about form validation, please take a look at validate.
 
 To fire a submit from JavaScript, select the `<lion-form>` element and call `.submit()`.
 
@@ -221,7 +227,7 @@ export const prefilledData = () => {
 };
 ```
 
-Learn more about [formatting and parsing](../../fundamentals/systems/form/formatting-and-parsing.md).
+Learn more about formatting and parsing.
 
 ### Sub forms
 

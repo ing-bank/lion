@@ -23,8 +23,10 @@ availability of the pop-up.
 ```js script
 import { html } from 'lit';
 
-import { LionCombobox } from '@lion/ui/combobox.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
-// <lion-option> is not a module of its own - look its entrypoint up in references/entrypoints.md.// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
+import { LionCombobox } from '@lion/ui/combobox.js';
+// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
+// <lion-option> is not a module of its own - look its entrypoint up in references/entrypoints.md.
+// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
 
 ```
 
@@ -41,8 +43,6 @@ export const main = () => html`
   </lion-combobox>
 `;
 ```
-
-[...show more](./extensions.md)
 
 ### Features
 
@@ -65,34 +65,27 @@ npm i --save @lion/ui
 ```
 
 ```js
-import { LionCombobox } from '@lion/ui/combobox.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
-// <lion-option> is not a module of its own - look its entrypoint up in references/entrypoints.md.// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
+import { LionCombobox } from '@lion/ui/combobox.js';
+// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
+// <lion-option> is not a module of its own - look its entrypoint up in references/entrypoints.md.
+// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
 ```
 
 ---
 
 ## Use Cases
 
-A combobox is a widget made up of the combination of two distinct elements:
-
-- a single-line textbox
-- an associated listbox overlay
-
-Based on the combobox configuration and entered textbox value, options in the listbox will be
-filtered, checked, focused and the textbox value may be autocompleted.
-Optionally the combobox contains a graphical button adjacent to the textbox, indicating the
-availability of the popup.
-
-> Fore more information, consult [Combobox wai-aria design pattern](https://www.w3.org/TR/wai-aria-practices/#combobox)
-
 ```js script
 import { LitElement, html } from 'lit';
+import { repeat } from 'lit/directives/repeat.js';
 
 import { LionCombobox } from '@lion/ui/combobox.js';
 import { Required } from '@lion/ui/form-core.js';
-import { LionButton } from '@lion/ui/button.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
-import { LionCombobox } from '@lion/ui/combobox.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
-// <lion-option> is not a module of its own - look its entrypoint up in references/entrypoints.md.// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
+import { LionButton } from '@lion/ui/button.js';
+// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
+// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
+// <lion-option> is not a module of its own - look its entrypoint up in references/entrypoints.md.
+// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
 
 import { loadDefaultFeedbackMessages } from '@lion/ui/validate-messages.js';
 loadDefaultFeedbackMessages();
@@ -212,29 +205,10 @@ export const matchModeAll = () => html`
 `;
 ```
 
-When the preconfigurable `match-mode` conditions are not sufficient,
-one can define a custom matching function.
-The example below matches when the Levenshtein distance is below 3 (including some other conditions).
-
-```js preview-story
-export const customMatchCondition = () => html`
-  <lion-combobox
-    name="combo"
-    label="Custom Match Mode 'levenshtein'"
-    help-text="Spelling mistakes will be forgiven. Try typing 'Aple' instead of 'Apple'"
-    .matchCondition="${({ choiceValue }, textboxValue) => {
-      const oVal = choiceValue.toLowerCase();
-      const tVal = textboxValue.toLowerCase();
-      const t = 1; // treshold
-      return oVal.slice(0, t) === tVal.slice(0, t) && levenshtein(oVal, tVal) < 3;
-    }}"
-  >
-    ${lazyRender(
-      listboxData.map(entry => html` <lion-option .choiceValue="${entry}">${entry}</lion-option> `),
-    )}
-  </lion-combobox>
-`;
-```
+When the preconfigurable `match-mode` conditions are not sufficient, a custom `matchCondition`
+function decides which options match. For example, an option can match when it starts with the same
+letter as the typed text and differs from it by only a few spelling mistakes, so that a typo such as
+`Aple` still finds `Apple`.
 
 ### Disabled option
 
@@ -617,7 +591,7 @@ export const complexObjectChoiceValue = () =>
 ### Listbox compatibility
 
 All configurations that can be applied to `lion-listbox`, can be applied to `lion-combobox` as well.
-See the [listbox documentation](../listbox/overview.md) for more information.
+See the listbox documentation for more information.
 
 ## API Reference
 

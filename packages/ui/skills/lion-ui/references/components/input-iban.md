@@ -13,7 +13,8 @@ Its purpose is to provide a way for users to fill in an IBAN (International Bank
 
 ```js script
 import { html } from 'lit';
-import { LionInputIban } from '@lion/ui/input-iban.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
+import { LionInputIban } from '@lion/ui/input-iban.js';
+// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
 ```
 
 ```js preview-story
@@ -24,9 +25,9 @@ export const main = () => {
 
 ### Features
 
-- Based on our [input](../input/overview.md)
+- Based on our input
 - Default label in different languages
-- Makes use of IBAN specific [validate](../../fundamentals/systems/form/validate.md) with corresponding error messages in different languages
+- Makes use of IBAN specific validate with corresponding error messages in different languages
   - IsIBAN (default)
   - IsCountryIBAN
 - Parses IBANs automatically
@@ -41,7 +42,8 @@ npm i --save @lion/ui
 ```js
 import { LionInputIban } from '@lion/ui/input-iban.js';
 // or
-import { LionInputAmount } from '@lion/ui/input-amount.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
+import { LionInputAmount } from '@lion/ui/input-amount.js';
+// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
 ```
 
 ---
@@ -52,7 +54,8 @@ import { LionInputAmount } from '@lion/ui/input-amount.js';// Rendered through t
 import { html } from 'lit';
 import { loadDefaultFeedbackMessages } from '@lion/ui/validate-messages.js';
 import { IsCountryIBAN, IsNotCountryIBAN } from '@lion/ui/input-iban.js';
-import { LionInputIban } from '@lion/ui/input-iban.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
+import { LionInputIban } from '@lion/ui/input-iban.js';
+// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
 ```
 
 ### Prefilled

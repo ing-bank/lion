@@ -10,7 +10,8 @@
 
 ```js script
 import { html } from 'lit';
-import { LionInput } from '@lion/ui/input.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
+import { LionInput } from '@lion/ui/input.js';
+// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
 ```
 
 A web component that enhances the functionality of the native `<input>` element.
@@ -31,7 +32,7 @@ export const main = () => html`<lion-input label="First Name"></lion-input>`;
   - **before**: does not have an active use case yet, but the option is in place.
   - **after**: can be used to show a currency or percentage.
 - Delegates attributes like `type`, `disabled`, `placeholder` and `readonly` to the native input.
-- Can make use of [validation](../../fundamentals/systems/form/validate.md).
+- Can make use of validation.
 
 ### Installation
 
@@ -40,7 +41,8 @@ npm i --save @lion/ui
 ```
 
 ```js
-import { LionInput } from '@lion/ui/input.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
+import { LionInput } from '@lion/ui/input.js';
+// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
 ```
 
 ---
@@ -49,7 +51,8 @@ import { LionInput } from '@lion/ui/input.js';// Rendered through the host's sco
 
 ```js script
 import { html } from 'lit';
-import { LionInput } from '@lion/ui/input.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
+import { LionInput } from '@lion/ui/input.js';
+// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
 ```
 
 ### Label

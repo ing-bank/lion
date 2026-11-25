@@ -40,3 +40,15 @@ test('stripDocNoise unwraps mdjs-preview elements and collapses blank runs', () 
   // The wrapper is removed; surrounding blank lines are the page's, not the transform's business.
   assert.equal(stripDocNoise('<mdjs-preview>\nsome code\n</mdjs-preview>').trim(), 'some code');
 });
+
+test('stripDocNoise keeps a lit directive that the kept body uses, from the module that exports it', () => {
+  // `repeat` is not exported from the `lit` root; dropping it left `repeat(` in the kept code without an import.
+  assert.equal(
+    stripDocNoise("import { LitElement, html, repeat } from '@mdjs/mdjs-preview';"),
+    "import { LitElement, html } from 'lit';\nimport { repeat } from 'lit/directives/repeat.js';",
+  );
+  assert.equal(
+    stripDocNoise("import { repeat as r } from '@mdjs/mdjs-preview';"),
+    "import { repeat as r } from 'lit/directives/repeat.js';",
+  );
+});

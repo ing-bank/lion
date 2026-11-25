@@ -13,15 +13,15 @@ In it's simplest form it is a function that returns the translated text for a na
 - Formatting of numbers, amounts
 - Formatting of dates
 
-Further examples and a more in depth description can be found at the [Use Cases Page](./use-cases.md).
+Further examples and a more in depth description can be found at the Use Cases Page.
 
 ### Content
 
 | Feature                                  | Description                                   |
 | ---------------------------------------- | --------------------------------------------- |
-| [Translate Text](../localize/text.md)    | Load and translate text in multiple languages |
-| [Format Numbers](../localize/numbers.md) | Format numbers in multiple languages          |
-| [Format Dates](../localize/dates.md)     | Format dates in multiple languages            |
+| Translate Text    | Load and translate text in multiple languages |
+| Format Numbers | Format numbers in multiple languages          |
+| Format Dates     | Format dates in multiple languages            |
 
 ### Installation
 

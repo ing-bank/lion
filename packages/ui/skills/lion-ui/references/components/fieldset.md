@@ -11,8 +11,10 @@
 ```js script
 import { html } from 'lit';
 
-import { LionInput } from '@lion/ui/input.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
-import { LionFieldset } from '@lion/ui/fieldset.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
+import { LionInput } from '@lion/ui/input.js';
+// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
+import { LionFieldset } from '@lion/ui/fieldset.js';
+// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
 ```
 
 A web component that can be used to group multiple input fields or other fieldsets together.
@@ -28,9 +30,9 @@ export const main = () => html`
 
 We have three specific fieldset implementations:
 
-- [form](../form/overview.md)
-- [checkbox-group](../checkbox-group/overview.md)
-- [radio-group](../radio-group/overview.md)
+- form
+- checkbox-group
+- radio-group
 
 A native fieldset element should always have a legend-element for a11y purposes.
 However, our fieldset element is not native and should not have a legend-element.
@@ -39,8 +41,8 @@ Our fieldset instead has a label attribute or you can add a label with a div- or
 ### Features
 
 - Easy retrieval of form data based on field names
-- Advanced user interaction scenarios via [interaction states](../../fundamentals/systems/form/interaction-states.md)
-- Can have [validate](../../fundamentals/systems/form/validate.md) on fieldset level and shows the validation feedback below the fieldset
+- Advanced user interaction scenarios via interaction states
+- Can have validate on fieldset level and shows the validation feedback below the fieldset
 - Can disable input fields on fieldset level
 - Accessible out of the box
 
@@ -53,7 +55,7 @@ npm i --save @lion/ui
 ```js
 import { LionFieldset } from '@lion/ui/fieldset.js';
 // or
-import { LionFieldset } from '@lion/ui/fieldset.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
+// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
 ```
 
 ---
@@ -65,8 +67,10 @@ import { html } from 'lit';
 import { localize } from '@lion/ui/localize.js';
 import { MinLength, Validator, Required } from '@lion/ui/form-core.js';
 
-import { LionInput } from '@lion/ui/input.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
-import { LionFieldset } from '@lion/ui/fieldset.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
+import { LionInput } from '@lion/ui/input.js';
+// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
+import { LionFieldset } from '@lion/ui/fieldset.js';
+// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
 ```
 
 ### With Data

@@ -9,7 +9,8 @@ Its purpose is to make it easy to use our Overlay System declaratively.
 
 ```js script
 import { html } from 'lit';
-import { LionDialog } from '@lion/ui/dialog.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
+import { LionDialog } from '@lion/ui/dialog.js';
+// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
 
 ```
 
@@ -48,7 +49,7 @@ npm i --save @lion/ui
 ```js
 import { LionDialog } from '@lion/ui/dialog.js';
 // or
-import { LionDialog } from '@lion/ui/dialog.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
+// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
 ```
 
 - To close the overlay from within the content node, you need to dispatch a `close-overlay` event that bubbles.
@@ -57,7 +58,7 @@ import { LionDialog } from '@lion/ui/dialog.js';// Rendered through the host's s
 ### Changing the configuration
 
 You can use the `.config` property on the dialog to change the configuration.
-The documentation of the full config object can be found in the `overlays` folder or here in [Overlay System - Configuration](../../fundamentals/systems/overlays/configuration.md).
+The documentation of the full config object can be found in the `overlays` folder or here in Overlay System - Configuration.
 
 The `config` property uses a setter to merge the passed configuration with the current, so you only **overwrite what you pass** when updating `config`.
 
@@ -70,7 +71,8 @@ Its purpose is to make it easy to use our Overlay System declaratively.
 
 ```js script
 import { html } from 'lit';
-import { LionDialog } from '@lion/ui/dialog.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
+import { LionDialog } from '@lion/ui/dialog.js';
+// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
 
 ```
 

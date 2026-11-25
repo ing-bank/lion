@@ -12,7 +12,8 @@ Extension of Input Tel that prefixes a dropdown list that shows all possible reg
 
 ```js script
 import { html } from 'lit';
-import { LionInputTelDropdown } from '@lion/ui/input-tel-dropdown.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
+import { LionInputTelDropdown } from '@lion/ui/input-tel-dropdown.js';
+// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
 import { loadDefaultFeedbackMessages } from '@lion/ui/validate-messages.js';
 ```
 
@@ -27,7 +28,7 @@ export const main = () => {
 
 ### Features
 
-- Extends our [input-tel](../input-tel/overview.md)
+- Extends our input-tel
 - Shows dropdown list with all possible regions
 - Shows only allowed regions in dropdown list when .allowedRegions is configured
 - Highlights regions on top of dropdown list when .preferredRegions is configured
@@ -42,7 +43,7 @@ npm i --save @lion/ui
 ```js
 import { LionInputTelDropdown } from '@lion/ui/input-tel-dropdown.js';
 // or
-import { LionInputTelDropdown } from '@lion/ui/input-tel-dropdown.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
+// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
 ```
 
 ---
@@ -54,7 +55,8 @@ import { html } from 'lit';
 import { ref, createRef } from 'lit/directives/ref.js';
 import { loadDefaultFeedbackMessages } from '@lion/ui/validate-messages.js';
 import { PhoneUtilManager } from '@lion/ui/input-tel.js';
-import { LionInputTelDropdown } from '@lion/ui/input-tel-dropdown.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
+import { LionInputTelDropdown } from '@lion/ui/input-tel-dropdown.js';
+// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
 import '../../../docs/fundamentals/systems/form/assets/h-output.js';
 
 // TODO: make each example load/use the dependencies by default

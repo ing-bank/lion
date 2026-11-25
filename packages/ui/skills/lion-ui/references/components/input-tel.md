@@ -15,7 +15,8 @@ import { html } from 'lit';
 import { ref, createRef } from 'lit/directives/ref.js';
 
 import { PhoneUtilManager } from '@lion/ui/input-tel.js';
-import { LionInputTel } from '@lion/ui/input-tel.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
+import { LionInputTel } from '@lion/ui/input-tel.js';
+// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
 import { loadDefaultFeedbackMessages } from '@lion/ui/validate-messages.js';
 import '../../../docs/fundamentals/systems/form/assets/h-output.js';
 ```
@@ -47,7 +48,7 @@ export const main = () => {
 
 ### Features
 
-- Extends our [input](../input/overview.md)
+- Extends our input
 - Shows a mobile telephone keypad on mobile (by having a native `<input inputmode="tel">` inside)
 - Can be configured with a list of allowed region codes
 - Will be preconfigured with region derived from locale
@@ -66,7 +67,7 @@ npm i --save @lion/ui
 ```js
 import { LionInputTel } from '@lion/ui/input-tel.js';
 // or
-import { LionInputTel } from '@lion/ui/input-tel.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
+// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
 ```
 
 ---
@@ -80,7 +81,8 @@ import { Unparseable } from '@lion/ui/form-core.js';
 import { localize } from '@lion/ui/localize.js';
 import { loadDefaultFeedbackMessages } from '@lion/ui/validate-messages.js';
 import { PhoneUtilManager } from '@lion/ui/input-tel.js';
-import { LionInputTel } from '@lion/ui/input-tel.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
+import { LionInputTel } from '@lion/ui/input-tel.js';
+// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
 
 import '../../../docs/fundamentals/systems/form/assets/h-output.js';
 
@@ -203,7 +205,7 @@ export const heuristic = () => {
 Once it is configured, validation and formatting will be restricted to those
 values that are present in this list.
 
-> Note that for [InputTelDropdown](../input-tel-dropdown/index.md), only allowed regions will
+> Note that for InputTelDropdown, only allowed regions will
 > be shown in the dropdown list.
 
 ```js preview-story

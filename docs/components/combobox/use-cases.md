@@ -12,18 +12,6 @@ eleventyNavigation:
 
 # Use Cases
 
-A combobox is a widget made up of the combination of two distinct elements:
-
-- a single-line textbox
-- an associated listbox overlay
-
-Based on the combobox configuration and entered textbox value, options in the listbox will be
-filtered, checked, focused and the textbox value may be autocompleted.
-Optionally the combobox contains a graphical button adjacent to the textbox, indicating the
-availability of the popup.
-
-> Fore more information, consult [Combobox wai-aria design pattern](https://www.w3.org/TR/wai-aria-practices/#combobox)
-
 ```js script
 import { LitElement, html, repeat } from '@mdjs/mdjs-preview';
 import { listboxData, listboxComplexData } from '../listbox/src/listboxData.js';
@@ -34,7 +22,6 @@ import '@lion/ui/define/lion-combobox.js';
 import '@lion/ui/define/lion-option.js';
 import './src/demo-selection-display.js';
 import { lazyRender } from './src/lazyRender.js';
-import levenshtein from './src/levenshtein.js';
 import { loadDefaultFeedbackMessages } from '@lion/ui/validate-messages.js';
 loadDefaultFeedbackMessages();
 ```
@@ -153,29 +140,10 @@ export const matchModeAll = () => html`
 `;
 ```
 
-When the preconfigurable `match-mode` conditions are not sufficient,
-one can define a custom matching function.
-The example below matches when the Levenshtein distance is below 3 (including some other conditions).
-
-```js preview-story
-export const customMatchCondition = () => html`
-  <lion-combobox
-    name="combo"
-    label="Custom Match Mode 'levenshtein'"
-    help-text="Spelling mistakes will be forgiven. Try typing 'Aple' instead of 'Apple'"
-    .matchCondition="${({ choiceValue }, textboxValue) => {
-      const oVal = choiceValue.toLowerCase();
-      const tVal = textboxValue.toLowerCase();
-      const t = 1; // treshold
-      return oVal.slice(0, t) === tVal.slice(0, t) && levenshtein(oVal, tVal) < 3;
-    }}"
-  >
-    ${lazyRender(
-      listboxData.map(entry => html` <lion-option .choiceValue="${entry}">${entry}</lion-option> `),
-    )}
-  </lion-combobox>
-`;
-```
+When the preconfigurable `match-mode` conditions are not sufficient, a custom `matchCondition`
+function decides which options match. For example, an option can match when it starts with the same
+letter as the typed text and differs from it by only a few spelling mistakes, so that a typo such as
+`Aple` still finds `Apple`.
 
 ## Disabled option
 

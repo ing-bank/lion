@@ -16,8 +16,10 @@ Its implementation is based on the following Design pattern:
 
 ```js script
 import { LitElement, html } from 'lit';
-import { LionSelectRich } from '@lion/ui/select-rich.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
-// <lion-option> is not a module of its own - look its entrypoint up in references/entrypoints.md.// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
+import { LionSelectRich } from '@lion/ui/select-rich.js';
+// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
+// <lion-option> is not a module of its own - look its entrypoint up in references/entrypoints.md.
+// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
 ```
 
 ```html preview-story
@@ -46,8 +48,9 @@ npm i --save @lion/ui
 import { LionSelectRich } from '@lion/ui/select-rich.js';
 import { LionOptions, LionOption } from '@lion/ui/listbox.js';
 // or
-import { LionSelectRich } from '@lion/ui/select-rich.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
-// <lion-option> is not a module of its own - look its entrypoint up in references/entrypoints.md.// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
+// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
+// <lion-option> is not a module of its own - look its entrypoint up in references/entrypoints.md.
+// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
 ```
 
 ---
@@ -56,8 +59,10 @@ import { LionSelectRich } from '@lion/ui/select-rich.js';// Rendered through the
 
 ```js script
 import { LitElement, html } from 'lit';
-import { LionSelectRich } from '@lion/ui/select-rich.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
-// <lion-option> is not a module of its own - look its entrypoint up in references/entrypoints.md.// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
+import { LionSelectRich } from '@lion/ui/select-rich.js';
+// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
+// <lion-option> is not a module of its own - look its entrypoint up in references/entrypoints.md.
+// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
 ```
 
 ### Model value
@@ -370,7 +375,7 @@ LionSelectRich will give it acces to:
 - LionSelectRich itself, via `.hostElement`
 
 Code of an advanced custom invoker is shown below (this is the code for the
-invoker used in [IntlSelectRich](./extensions.md)).
+invoker used in IntlSelectRich).
 The invoker is usually added in the invoker slot of the LionSelectRich subclass.
 However, it would also be possible for an application developer to provide the invoker
 by putting it in light dom:

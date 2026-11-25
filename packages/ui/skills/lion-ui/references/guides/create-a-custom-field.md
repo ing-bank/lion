@@ -7,8 +7,10 @@
 ```js script
 import { html, css, LitElement } from 'lit';
 import { LionField } from '@lion/ui/form-core.js';
-// <lion-field> is not a module of its own - look its entrypoint up in references/entrypoints.md.// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
-// <lion-validation-feedback> is not a module of its own - look its entrypoint up in references/entrypoints.md.// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
+// <lion-field> is not a module of its own - look its entrypoint up in references/entrypoints.md.
+// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
+// <lion-validation-feedback> is not a module of its own - look its entrypoint up in references/entrypoints.md.
+// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
 
 import '../../fundamentals/systems/form/assets/h-output.js';
 
@@ -79,7 +81,7 @@ if (!customElements.get('dummy-slider')) {
 }
 ```
 
-Custom Fields can be created in just a few steps. All you need is an interaction element (like for instance a slider, a listbox or a combobox) and connect it to the [LionField](../../components/input/overview.md).
+Custom Fields can be created in just a few steps. All you need is an interaction element (like for instance a slider, a listbox or a combobox) and connect it to the LionField.
 
 > In case you want to extend a native element, follow [Extend a native Input](./extend-a-native-input.md).
 
@@ -130,7 +132,7 @@ export const createAnInteractiveElement = () => {
 ### B) your LionField extension
 
 Now we want to integrate the slider in our form system to enrich the user interface, get
-validation support and all other [benefits of LionField](../../components/input/overview.md).
+validation support and all other benefits of LionField.
 We start by creating a component `<slider-field>` that extends from `LionField`.
 Then we follow the steps below:
 
@@ -143,7 +145,7 @@ Then we follow the steps below:
 
   The `user-input-changed` event is listened to by the FormatMixin: it should be regarded as the
   equivalent of the `input` event of the platform, but for custom built interaction elements.
-  You now synchronized [modelValue](../../fundamentals/systems/form/model-value.md), which can be regarded as
+  You now synchronized modelValue, which can be regarded as
   the glue to integrate all other functionality like parsing/formatting/serializing, validating,
   tracking interaction states etc.
 
@@ -151,7 +153,7 @@ Then we follow the steps below:
 > because those properties will lose their reactivity (they won't be considered anymore in the
 > update loop of LitElement).
 > Whenever a .modelValue/.formattedValue/.serializedValue needs to be computed, use
-> [parser/formatter/serializer](../../docs/../fundamentals/systems/form/formatting-and-parsing.md)
+> parser/formatter/serializer
 
 Implement with the following code:
 

@@ -8,7 +8,8 @@ A combination of a button (the invoker) and a chunk of 'extra content'. This web
 
 ```js script
 import { html } from 'lit';
-import { LionCollapsible } from '@lion/ui/collapsible.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
+import { LionCollapsible } from '@lion/ui/collapsible.js';
+// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
 ```
 
 ```js preview-story
@@ -26,7 +27,7 @@ export const main = () => html`
 ### Features
 
 - Use `opened` attribute or `toggle()` method to render default open.
-- `invoker` slot can be custom template e.g. our [button](../button/overview.md) or native `button` with custom styling.
+- `invoker` slot can be custom template e.g. our button or native `button` with custom styling.
 - Observe the state with the help of `@opened-changed` event.
 - `show()` and `hide()` are helper methods to hide or show the content from outside.
 
@@ -39,7 +40,7 @@ npm i --save @lion/ui
 ```js
 import { LionCollapsible } from '@lion/ui/collapsible.js';
 // or
-import { LionCollapsible } from '@lion/ui/collapsible.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
+// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
 ```
 
 ---
@@ -48,7 +49,8 @@ import { LionCollapsible } from '@lion/ui/collapsible.js';// Rendered through th
 
 ```js script
 import { html } from 'lit';
-import { LionCollapsible } from '@lion/ui/collapsible.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
+import { LionCollapsible } from '@lion/ui/collapsible.js';
+// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
 ```
 
 ### Default open

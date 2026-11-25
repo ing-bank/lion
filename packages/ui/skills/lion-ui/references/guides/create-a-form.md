@@ -91,7 +91,7 @@ scoped elements exist to avoid: it opts out of the host's registry, it makes a s
 tag impossible, and inside a scoped host it is unnecessary. Import the class and register it in
 `static scopedElements`.
 
-> Today, rendering to light dom is the only way to [stay accessible](../../fundamentals/rationales/accessibility.md#shadow-roots-and-accessibility).
+> Today, rendering to light dom is the only way to stay accessible.
 
 #### Example of a component that renders into Light DOM
 

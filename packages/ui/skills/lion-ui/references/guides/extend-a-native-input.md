@@ -9,13 +9,13 @@ import { html } from 'lit';
 import { LionInput } from '@lion/ui/input.js';
 import { LionInputDate } from '@lion/ui/input-date.js';
 import { loadDefaultFeedbackMessages } from '@lion/ui/validate-messages.js';
-import { LionInput } from '@lion/ui/input.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
+// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
 import '../../fundamentals/systems/form/assets/h-output.js';
 
 loadDefaultFeedbackMessages();
 ```
 
-Input fields can be created by extending [LionInput](../../components/input/overview.md).
+Input fields can be created by extending LionInput.
 
 > In case you want to wrap a custom form element, follow [Create a custom Field](./create-a-custom-field.md).
 

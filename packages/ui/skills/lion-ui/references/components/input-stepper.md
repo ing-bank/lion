@@ -13,7 +13,8 @@ A web component that enables the user to increase and decrease a numeric value b
 ```js script
 import { html } from 'lit';
 import { loadDefaultFeedbackMessages } from '@lion/ui/validate-messages.js';
-import { LionInputStepper } from '@lion/ui/input-stepper.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
+import { LionInputStepper } from '@lion/ui/input-stepper.js';
+// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
 loadDefaultFeedbackMessages();
 ```
 
@@ -26,7 +27,7 @@ loadDefaultFeedbackMessages();
 
 ### Features
 
-- Based on our [input](../input/overview.md).
+- Based on our input.
 - Set `min` and `max` value to define the range.
 - Set `step` value in integer or decimal to increase and decrease the value.
 - Use `ArrowUp` or `ArrowDown` to update the value.
@@ -40,7 +41,7 @@ npm i --save @lion/ui
 ```js
 import { LionInputStepper } from '@lion/ui/input-stepper.js';
 // or
-import { LionInputStepper } from '@lion/ui/input-stepper.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
+// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
 ```
 
 ---
@@ -50,7 +51,8 @@ import { LionInputStepper } from '@lion/ui/input-stepper.js';// Rendered through
 ```js script
 import { html } from 'lit';
 import { loadDefaultFeedbackMessages } from '@lion/ui/validate-messages.js';
-import { LionInputStepper } from '@lion/ui/input-stepper.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
+import { LionInputStepper } from '@lion/ui/input-stepper.js';
+// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
 loadDefaultFeedbackMessages();
 ```
 

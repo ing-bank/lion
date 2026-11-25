@@ -10,11 +10,12 @@
 
 A web component based on the date text input field. Its purpose is to provide a way for users to fill in a date with a datepicker.
 For an input field with a big range, such as `birthday-input`, a datepicker is not the best choice due to the high variance between possible inputs.
-We encourage using our standard [input-date](../input-date/overview.md) for this.
+We encourage using our standard input-date for this.
 
 ```js script
 import { html } from 'lit';
-import { LionInputDatepicker } from '@lion/ui/input-datepicker.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
+import { LionInputDatepicker } from '@lion/ui/input-datepicker.js';
+// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
 ```
 
 ```js preview-story
@@ -26,11 +27,11 @@ export const main = () => {
 ### Features
 
 - Input field with a datepicker to help to choose a date
-- Based on our [input-date](../input-date/overview.md)
-- Makes use of our [calendar](../calendar/overview.md) inside the datepicker
-- Makes use of [formatDate](../../fundamentals/systems/localize/dates.md) for formatting and parsing.
+- Based on our input-date
+- Makes use of our calendar inside the datepicker
+- Makes use of formatDate for formatting and parsing.
 - Option to overwrite locale to change the formatting and parsing
-- Can make use of date specific [validators](../../fundamentals/systems/form/validate.md) with corresponding error messages in different languages
+- Can make use of date specific validators with corresponding error messages in different languages
   - IsDate (default)
   - MinDate
   - MaxDate
@@ -46,7 +47,7 @@ npm i --save @lion/ui
 ```js
 import { LionInputDatepicker } from '@lion/ui/input-datepicker.js';
 // or
-import { LionInputDatepicker } from '@lion/ui/input-datepicker.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
+// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
 ```
 
 ---
@@ -58,7 +59,8 @@ import { html } from 'lit';
 import { MinMaxDate, IsDateDisabled } from '@lion/ui/form-core.js';
 import { loadDefaultFeedbackMessages } from '@lion/ui/validate-messages.js';
 import { formatDate } from '@lion/ui/localize.js';
-import { LionInputDatepicker } from '@lion/ui/input-datepicker.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
+import { LionInputDatepicker } from '@lion/ui/input-datepicker.js';
+// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
 loadDefaultFeedbackMessages();
 ```
 

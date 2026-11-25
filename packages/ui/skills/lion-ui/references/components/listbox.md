@@ -16,8 +16,10 @@ multiple options to be selected is a `multi-select listbox`.
 
 ```js script
 import { html } from 'lit';
-import { LionListbox } from '@lion/ui/listbox.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
-// <lion-option> is not a module of its own - look its entrypoint up in references/entrypoints.md.// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
+import { LionListbox } from '@lion/ui/listbox.js';
+// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
+// <lion-option> is not a module of its own - look its entrypoint up in references/entrypoints.md.
+// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
 ```
 
 ```js preview-story
@@ -45,8 +47,10 @@ npm i --save @lion/ui
 ```
 
 ```js
-import { LionListbox } from '@lion/ui/listbox.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
-// <lion-option> is not a module of its own - look its entrypoint up in references/entrypoints.md.// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
+import { LionListbox } from '@lion/ui/listbox.js';
+// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
+// <lion-option> is not a module of its own - look its entrypoint up in references/entrypoints.md.
+// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
 ```
 
 ### Entrypoints
@@ -64,8 +68,10 @@ import { html } from 'lit';
 
 import { Required } from '@lion/ui/form-core.js';
 import { loadDefaultFeedbackMessages } from '@lion/ui/validate-messages.js';
-import { LionListbox } from '@lion/ui/listbox.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
-// <lion-option> is not a module of its own - look its entrypoint up in references/entrypoints.md.// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
+import { LionListbox } from '@lion/ui/listbox.js';
+// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
+// <lion-option> is not a module of its own - look its entrypoint up in references/entrypoints.md.
+// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
 loadDefaultFeedbackMessages();
 ```
 
@@ -198,7 +204,7 @@ Navigation will skip over disabled options. Let's disable Artichoke and Brussel 
 
 ### Validation
 
-A validator can be used to make it e.g. `required`. If you want to know how to do that, please take a look at our [validation examples](../../fundamentals/systems/form/validate.md).
+A validator can be used to make it e.g. `required`. If you want to know how to do that, please take a look at our validation examples.
 
 ## API Reference
 

@@ -13,7 +13,8 @@ Its purpose is to provide a way for users to write text that is multiple lines l
 
 ```js script
 import { html } from 'lit';
-import { LionTextarea } from '@lion/ui/textarea.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
+import { LionTextarea } from '@lion/ui/textarea.js';
+// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
 ```
 
 ```js preview-story
@@ -39,7 +40,7 @@ npm i --save @lion/ui
 ```js
 import { LionTextarea } from '@lion/ui/textarea.js';
 // or
-import { LionTextarea } from '@lion/ui/textarea.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
+// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
 ```
 
 ---
@@ -48,7 +49,8 @@ import { LionTextarea } from '@lion/ui/textarea.js';// Rendered through the host
 
 ```js script
 import { html } from 'lit';
-import { LionTextarea } from '@lion/ui/textarea.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
+import { LionTextarea } from '@lion/ui/textarea.js';
+// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
 ```
 
 ### Prefilled

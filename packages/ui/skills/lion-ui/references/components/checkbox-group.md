@@ -15,8 +15,10 @@ Its purpose is to provide a way for users to check **multiple** options amongst 
 
 ```js script
 import { html } from 'lit';
-import { LionCheckboxGroup } from '@lion/ui/checkbox-group.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
-// <lion-checkbox> is not a module of its own - look its entrypoint up in references/entrypoints.md.// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
+import { LionCheckboxGroup } from '@lion/ui/checkbox-group.js';
+// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
+// <lion-checkbox> is not a module of its own - look its entrypoint up in references/entrypoints.md.
+// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
 ```
 
 ```html preview-story
@@ -27,11 +29,11 @@ import { LionCheckboxGroup } from '@lion/ui/checkbox-group.js';// Rendered throu
 </lion-checkbox-group>
 ```
 
-> Make sure that the checkbox-group also has a name attribute, this is necessary for our [form](../form/overview.md)'s serialization result.
+> Make sure that the checkbox-group also has a name attribute, this is necessary for our form's serialization result.
 
 ### Features
 
-Since it extends from our [fieldset](../fieldset/overview.md),
+Since it extends from our fieldset,
 it has all the features a fieldset has.
 
 ### Installation
@@ -41,9 +43,12 @@ npm i --save @lion/ui
 ```
 
 ```js
-import { LionCheckboxGroup } from '@lion/ui/checkbox-group.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
-// <lion-checkbox-indeterminate> is not a module of its own - look its entrypoint up in references/entrypoints.md.// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
-// <lion-checkbox> is not a module of its own - look its entrypoint up in references/entrypoints.md.// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
+import { LionCheckboxGroup } from '@lion/ui/checkbox-group.js';
+// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
+// <lion-checkbox-indeterminate> is not a module of its own - look its entrypoint up in references/entrypoints.md.
+// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
+// <lion-checkbox> is not a module of its own - look its entrypoint up in references/entrypoints.md.
+// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
 ```
 
 ### Entrypoints
@@ -58,9 +63,12 @@ that one module: **there is no `<lion-checkbox>`**.
 
 ```js script
 import { html } from 'lit';
-import { LionCheckboxGroup } from '@lion/ui/checkbox-group.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
-// <lion-checkbox-indeterminate> is not a module of its own - look its entrypoint up in references/entrypoints.md.// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
-// <lion-checkbox> is not a module of its own - look its entrypoint up in references/entrypoints.md.// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
+import { LionCheckboxGroup } from '@lion/ui/checkbox-group.js';
+// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
+// <lion-checkbox-indeterminate> is not a module of its own - look its entrypoint up in references/entrypoints.md.
+// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
+// <lion-checkbox> is not a module of its own - look its entrypoint up in references/entrypoints.md.
+// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
 ```
 
 ### Model value

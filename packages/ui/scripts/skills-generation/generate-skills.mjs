@@ -7,7 +7,12 @@ import {
   SYSTEM_SYNONYMS,
 } from '../../../../scripts/lib/component-synonyms.mjs';
 import { stripDocNoise } from '../../../../scripts/lib/strip-doc-noise.mjs';
-import { rewriteDefineImports, repairUnshippedSpecifiers } from '../lib/consumer-imports.mjs';
+import {
+  EXCLUDED_DOC_PAGES,
+  neutraliseDeadLinks,
+  rewriteDefineImports,
+  repairUnshippedSpecifiers,
+} from '../lib/consumer-imports.mjs';
 import {
   computeApiTablesByDocGroup,
   findClassDeclaration,
@@ -105,11 +110,7 @@ function mergeDocPages(dirPath) {
     // `index.md` is just an Eleventy nav redirect and `api-table.md` is recomputed from the CEM.
     // `extensions.md` (subclassing/extension) and `migration.md` are deliberately excluded for now:
     // they belong to flows the skill does not support yet. Both will get explicit support later.
-    .filter(
-      f =>
-        f.endsWith('.md') &&
-        !['index.md', 'api-table.md', 'extensions.md', 'migration.md'].includes(f),
-    );
+    .filter(f => f.endsWith('.md') && !EXCLUDED_DOC_PAGES.includes(f));
 
   const pages = files.map(file => {
     const raw = fs.readFileSync(path.join(dirPath, file), 'utf8');
@@ -499,7 +500,12 @@ function main() {
   for (const file of walk(skillDir)) {
     if (file === entrypointReference) continue;
     const original = fs.readFileSync(file, 'utf-8');
-    const updated = repairUnshippedSpecifiers(rewriteDefineImports(original));
+    // A dead link is one whose target the skill does not ship: it is checked against the files this run wrote.
+    const isDead = target => !fs.existsSync(path.resolve(path.dirname(file), target.split('#')[0]));
+    const updated = neutraliseDeadLinks(
+      repairUnshippedSpecifiers(rewriteDefineImports(original)),
+      isDead,
+    );
     if (updated !== original) {
       fs.writeFileSync(file, updated);
       rewrittenFiles.push(path.relative(repoRoot, file));

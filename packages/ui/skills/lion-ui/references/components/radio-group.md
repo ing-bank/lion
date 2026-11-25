@@ -14,8 +14,10 @@ You should use our `radio` inside this element.
 
 ```js script
 import { html } from 'lit';
-import { LionRadioGroup } from '@lion/ui/radio-group.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
-// <lion-radio> is not a module of its own - look its entrypoint up in references/entrypoints.md.// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
+import { LionRadioGroup } from '@lion/ui/radio-group.js';
+// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
+// <lion-radio> is not a module of its own - look its entrypoint up in references/entrypoints.md.
+// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
 ```
 
 ```js preview-story
@@ -28,12 +30,12 @@ export const main = () => html`
 `;
 ```
 
-- Make sure that to use a name attribute as it is necessary for our [form](../form/overview.md)'s serialization result.
-- If you have many options for a user to pick from, consider using our [select](../select/overview.md) instead.
+- Make sure that to use a name attribute as it is necessary for our form's serialization result.
+- If you have many options for a user to pick from, consider using our select instead.
 
 ### Features
 
-Since it extends from our [fieldset](../fieldset/overview.md), it has all the features a fieldset has.
+Since it extends from our fieldset, it has all the features a fieldset has.
 
 - Get or set the checked value of the group:
   - modelValue (default) - `checkedValue()`
@@ -49,8 +51,9 @@ npm i --save @lion/ui
 ```js
 import { LionRadioGroup, LionRadio } from '@lion/ui/radio-group.js';
 // or
-import { LionRadioGroup } from '@lion/ui/radio-group.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
-// <lion-radio> is not a module of its own - look its entrypoint up in references/entrypoints.md.// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
+// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
+// <lion-radio> is not a module of its own - look its entrypoint up in references/entrypoints.md.
+// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
 ```
 
 ---
@@ -59,8 +62,10 @@ import { LionRadioGroup } from '@lion/ui/radio-group.js';// Rendered through the
 
 ```js script
 import { html } from 'lit';
-import { LionRadioGroup } from '@lion/ui/radio-group.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
-// <lion-radio> is not a module of its own - look its entrypoint up in references/entrypoints.md.// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
+import { LionRadioGroup } from '@lion/ui/radio-group.js';
+// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
+// <lion-radio> is not a module of its own - look its entrypoint up in references/entrypoints.md.
+// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
 ```
 
 ### Model value

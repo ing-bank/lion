@@ -52,9 +52,12 @@ exports it — `@lion/ui/core.js` in particular does not. The classes are `LionM
 
 ```js script
 import { html } from 'lit';
-// <lion-item> is not a module of its own - look its entrypoint up in references/entrypoints.md.// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
-import { LionMenu } from '@lion/ui/menu.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
-// <lion-menuitem> is not a module of its own - look its entrypoint up in references/entrypoints.md.// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
+// <lion-item> is not a module of its own - look its entrypoint up in references/entrypoints.md.
+// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
+import { LionMenu } from '@lion/ui/menu.js';
+// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
+// <lion-menuitem> is not a module of its own - look its entrypoint up in references/entrypoints.md.
+// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
 
 import { applyMenuDemoStyles } from './applyMenuDemoStyles.js';
 
@@ -489,8 +492,10 @@ export is a `SyntaxError` at load, and the entrypoint's export list is authorita
 
 ```js script
 import { html } from 'lit';
-// <lion-item> is not a module of its own - look its entrypoint up in references/entrypoints.md.// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
-import { LionMenu } from '@lion/ui/menu.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
+// <lion-item> is not a module of its own - look its entrypoint up in references/entrypoints.md.
+// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
+import { LionMenu } from '@lion/ui/menu.js';
+// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
 import { applyMenuDemoStyles } from './applyMenuDemoStyles.js';
 
 applyMenuDemoStyles();

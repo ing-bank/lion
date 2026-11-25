@@ -9,7 +9,8 @@ Its purpose is to show content appearing when the user hovers over an invoker el
 
 ```js script
 import { html } from 'lit';
-import { LionTooltip } from '@lion/ui/tooltip.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
+import { LionTooltip } from '@lion/ui/tooltip.js';
+// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
 ```
 
 ```js preview-story
@@ -44,7 +45,7 @@ npm i --save @lion/ui
 ```js
 import { LionTooltip } from '@lion/ui/tooltip.js';
 // or
-import { LionTooltip } from '@lion/ui/tooltip.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
+// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
 ```
 
 ---
@@ -54,7 +55,7 @@ import { LionTooltip } from '@lion/ui/tooltip.js';// Rendered through the host's
 ```js script
 import { css, html } from 'lit';
 import { LionTooltip } from '@lion/ui/tooltip.js';
-import { LionTooltip } from '@lion/ui/tooltip.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
+// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
 ```
 
 ### invokerRelation

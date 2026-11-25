@@ -15,7 +15,8 @@ import { html } from 'lit';
 import { MinDate, MinMaxDate, MaxDate } from '@lion/ui/form-core.js';
 import { loadDefaultFeedbackMessages } from '@lion/ui/validate-messages.js';
 import { formatDate } from '@lion/ui/localize.js';
-import { LionInputDate } from '@lion/ui/input-date.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
+import { LionInputDate } from '@lion/ui/input-date.js';
+// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
 ```
 
 ```html preview-story
@@ -24,11 +25,11 @@ import { LionInputDate } from '@lion/ui/input-date.js';// Rendered through the h
 
 ### Features
 
-- Based on our [input](../input/overview.md)
-- Makes use of [formatDate](../../fundamentals/systems/localize/dates.md) for formatting and parsing.
+- Based on our input
+- Makes use of formatDate for formatting and parsing.
 - Option to override locale to change the formatting and parsing
 - Default label in different languages
-- Can make use of date specific [validators](../../fundamentals/systems/form/validate.md) with corresponding error messages in different languages
+- Can make use of date specific validators with corresponding error messages in different languages
   - IsDate (default)
   - MinDate
   - MaxDate
@@ -43,7 +44,7 @@ npm i --save @lion/ui
 ```js
 import { LionInputDate } from '@lion/ui/input-date.js';
 // or
-import { LionInputDate } from '@lion/ui/input-date.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
+// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
 ```
 
 ---
@@ -55,7 +56,8 @@ import { html } from 'lit';
 import { MinDate, MinMaxDate, MaxDate } from '@lion/ui/form-core.js';
 import { loadDefaultFeedbackMessages } from '@lion/ui/validate-messages.js';
 import { formatDate } from '@lion/ui/localize.js';
-import { LionInputDate } from '@lion/ui/input-date.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
+import { LionInputDate } from '@lion/ui/input-date.js';
+// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
 ```
 
 ### Is a date

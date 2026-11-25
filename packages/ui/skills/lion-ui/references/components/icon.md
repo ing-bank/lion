@@ -9,7 +9,8 @@ A web component for displaying icons.
 ```js script
 import { html } from 'lit';
 import { icons } from '@lion/ui/icon.js';
-import { LionIcon } from '@lion/ui/icon.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
+import { LionIcon } from '@lion/ui/icon.js';
+// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
 
 icons.addIconResolver('lion', (iconset, name) => {
   switch (iconset) {
@@ -40,7 +41,7 @@ npm i --save @lion/ui
 ```js
 import { LionIcon } from '@lion/ui/icon.js';
 // or
-import { LionIcon } from '@lion/ui/icon.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
+// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
 ```
 
 ---
@@ -54,13 +55,14 @@ import './assets/iconset-bugs.js';
 import './assets/iconset-misc.js';
 import * as spaceSet from './assets/iconset-space.js';
 
-import { LionIcon } from '@lion/ui/icon.js';// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
+import { LionIcon } from '@lion/ui/icon.js';
+// Rendered through the host's scoped registry (ScopedElementsMixin), never a global define entrypoint.
 ```
 
 ### Icon sets
 
 Icons are displayed using icon sets. These are collections of icons, lazily loaded on demand for performance.
-See the [system documentation](../../fundamentals/systems/icon/overview.md) to learn more about icon sets.
+See the system documentation to learn more about icon sets.
 
 ```js preview-story
 export const iconSets = () => html`
