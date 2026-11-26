@@ -7,13 +7,15 @@ const { spawnSync } = require('node:child_process');
 const plugin = require('../index.js');
 
 /**
- * Integration test for the oxlint jsPlugins bridge and the compatibility adapter in
- * `compat/oxlint-compat.js`.
+ * Integration test for the oxlint jsPlugins bridge.
  *
  * Runs the repo's own oxlint over fixtures and asserts the diagnostics, so a plugin bump that
- * stops loading, a regression in our ported rules, or a break in the adapter (which provides
- * `sourceCode.getJSDocComment` and a writable `parserServices`, both of which oxlint does not
- * offer) fails here instead of silently dropping coverage in the repo.
+ * stops loading or a regression in our ported rules fails here instead of silently dropping
+ * coverage in the repo.
+ *
+ * `eslint-plugin-lit-a11y` and `eslint-plugin-wc` load as raw jsPlugins: oxlint >= 1.95
+ * provides the `sourceCode.getJSDocComment` and writable `sourceCode.parserServices` they use,
+ * which is why the compat adapter this package used to ship is gone.
  *
  * Invoked as `npm run test:node` from this package, which is picked up by the root
  * `test:node` task.
@@ -52,40 +54,18 @@ function runOxlint(files, rules, jsPlugins) {
   return { status: result.status, output: `${result.stdout || ''}${result.stderr || ''}` };
 }
 
-test('the adapter keeps eslint-plugin-lit-a11y and eslint-plugin-wc working', () => {
-  const { output } = runOxlint(
-    { 'a11y.js': A11Y_FIXTURE, 'wc.js': WC_FIXTURE },
-    { 'lit-a11y/alt-text': 'error', 'lit-a11y/no-autofocus': 'error', 'wc/no-typos': 'error' },
-    [
-      { name: 'lit-a11y', specifier: 'eslint-plugin-lion/compat/lit-a11y' },
-      { name: 'wc', specifier: 'eslint-plugin-lion/compat/wc' },
-    ],
-  );
-
-  // lit-a11y needs the writable parserServices bag (it stores the lit-html tag names there),
-  // wc needs sourceCode.getJSDocComment (it inspects the class' JSDoc for @customElement).
-  assert.match(output, /lit-a11y\(alt-text\)/u);
-  assert.match(output, /lit-a11y\(no-autofocus\)/u);
-  assert.match(output, /wc\(no-typos\)/u);
-});
-
-test('the raw plugins report nothing without the adapter', () => {
-  // Pins down why the adapter exists: on stock oxlint the frozen parserServices makes every
-  // lit-a11y rule bail out (no tag names -> no template analysis) and wc's
-  // sourceCode.getJSDocComment call throws. If this ever starts reporting, oxlint grew the
-  // API and the adapter can go.
+test('eslint-plugin-lit-a11y and eslint-plugin-wc load as raw oxlint jsPlugins', () => {
   const { output } = runOxlint(
     { 'a11y.js': A11Y_FIXTURE, 'wc.js': WC_FIXTURE },
     { 'lit-a11y/alt-text': 'error', 'lit-a11y/no-autofocus': 'error', 'wc/no-typos': 'error' },
     ['eslint-plugin-lit-a11y', 'eslint-plugin-wc'],
   );
 
-  assert.ok(!/lit-a11y\(alt-text\)/u.test(output), 'lit-a11y must not report without the adapter');
-  assert.ok(
-    !/lit-a11y\(no-autofocus\)/u.test(output),
-    'lit-a11y must not report without the adapter',
-  );
-  assert.ok(!/wc\(no-typos\)/u.test(output), 'wc must not report without the adapter');
+  // lit-a11y stores the lit-html tag names in the writable parserServices bag; wc inspects the
+  // class' JSDoc through sourceCode.getJSDocComment. Both work on stock oxlint >= 1.95.
+  assert.match(output, /lit-a11y\(alt-text\)/u);
+  assert.match(output, /lit-a11y\(no-autofocus\)/u);
+  assert.match(output, /wc\(no-typos\)/u);
 });
 
 test('the ported core rules report what eslint reports', () => {

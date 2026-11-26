@@ -12,23 +12,18 @@
     "directory": "packages-node/eslint-plugin-lion"
   },
   "exports": {
-    ".": "./index.js",
-    "./compat/lit-a11y": "./compat/lit-a11y.js",
-    "./compat/wc": "./compat/wc.js"
+    ".": "./index.js"
   },
   "main": "index.js",
   "files": [
-    "*.js",
-    "compat/*.js"
+    "*.js"
   ],
   "keywords": [
     "oxlint",
     "lint"
   ],
   "dependencies": {
-    "eslint-plugin-lit-a11y": "^4.1.4",
-    "eslint-plugin-wc": "^2.2.0",
-    "oxc-resolver": "^1.12.0"
+    "oxc-resolver": "^11.24.2"
   },
   "scripts": {
     "test": "npm run test:node",
