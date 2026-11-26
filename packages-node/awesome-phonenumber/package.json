@@ -8,11 +8,11 @@
     "build": "wireit"
   },
   "devDependencies": {
-    "@rollup/plugin-commonjs": "29.0.0",
+    "@rollup/plugin-commonjs": "29.0.3",
     "@rollup/plugin-node-resolve": "16.0.3",
-    "google-closure-compiler": "20251104.0.0",
+    "google-closure-compiler": "20261123.0.0",
     "google-closure-library": "20230802.0.0",
-    "rollup": "4.59.0"
+    "rollup": "4.68.8"
   },
   "wireit": {
     "build": {

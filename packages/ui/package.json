@@ -116,10 +116,10 @@
   "dependencies": {
     "@bundled-es-modules/message-format": "^6.2.4",
     "@open-wc/dedupe-mixin": "^2.0.1",
-    "@open-wc/scoped-elements": "^3.0.6",
+    "@open-wc/scoped-elements": "^3.0.10",
     "@popperjs/core": "^2.11.8",
-    "autosize": "^6.0.0",
-    "ibantools": "^4.3.9",
+    "autosize": "^6.0.1",
+    "ibantools": "^4.5.4",
     "lit": "^3.3.3",
     "singleton-manager": "^1.8.0"
   },
