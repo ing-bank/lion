@@ -20,8 +20,8 @@
     "@lit-labs/ssr": "^4.1.0"
   },
   "devDependencies": {
-    "@lit-labs/ssr-client": "^1.1.7",
-    "lit": "^3.3.2"
+    "@lit-labs/ssr-client": "^1.1.8",
+    "lit": "^3.3.3"
   },
   "keywords": [
     "lion-tools",

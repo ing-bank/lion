@@ -6,14 +6,7 @@ import { LionRadio, LionRadioGroup } from '@lion/ui/radio-group.js';
 import { LionListbox, LionOption } from '@lion/ui/listbox.js';
 import { LionForm } from '@lion/ui/form.js';
 import { spy } from 'sinon';
-import {
-  fixture as _fixture,
-  unsafeStatic,
-  aTimeout,
-  defineCE,
-  oneEvent,
-  expect,
-} from '@open-wc/testing';
+import { fixture as _fixture, unsafeStatic, defineCE, oneEvent, expect } from '@open-wc/testing';
 import { resolveSuiteTag } from '../../core/test-helpers/resolveSuiteTag.js';
 import { isActiveElement } from '../../core/test-helpers/isActiveElement.js';
 
@@ -96,6 +89,23 @@ export function runFormSuite({
         </${tags.host}>
       `);
       expect(el.getAttribute('role')).to.be.null;
+    });
+
+    it('can be connected and disconnected without an inner <form>', async () => {
+      const el = await fixture(html`<${tags.host}></${tags.host}>`);
+      expect(el.isConnected).to.be.true;
+      const parent = /** @type {HTMLElement} */ (el.parentElement);
+      parent.removeChild(el);
+      parent.appendChild(el);
+      expect(el.isConnected).to.be.true;
+    });
+
+    it('throws a helpful error on submit() and reset() without an inner <form>', async () => {
+      const el = await fixture(html`<${tags.host}></${tags.host}>`);
+      const message =
+        'No form node found. Did you put a <form> element inside your custom-form element?';
+      expect(() => el.submit()).to.throw(message);
+      expect(() => el.reset()).to.throw(message);
     });
 
     it('has a custom reset that gets triggered by native reset', async () => {
@@ -212,7 +222,6 @@ export function runFormSuite({
       const button = /** @type {HTMLButtonElement} */ (el.querySelector('button'));
       const internalHandlerSpy = spy(el, 'submitGroup');
       const dispatchSpy = spy(el, 'dispatchEvent');
-      await aTimeout(0);
       button.click();
       expect(internalHandlerSpy).to.be.calledBefore(dispatchSpy);
     });

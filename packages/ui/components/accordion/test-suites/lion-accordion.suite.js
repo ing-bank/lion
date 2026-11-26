@@ -426,6 +426,21 @@ export function runAccordionSuite({
         expect(el.focusedIndex).to.equal(2);
       });
 
+      it('prevents the default (page scroll) of keydown on arrow keys, [home] and [end] only', async () => {
+        const el = /** @type {LionAccordion} */ (await fixture(basicAccordion));
+        const invokerButton = /** @type {HTMLElement} */ (getInvokers(el)[1].firstElementChild);
+        for (const key of ['ArrowDown', 'ArrowRight', 'ArrowUp', 'ArrowLeft', 'Home', 'End']) {
+          const ev = new KeyboardEvent('keydown', { key, cancelable: true, bubbles: true });
+          invokerButton.dispatchEvent(ev);
+          expect(ev.defaultPrevented, key).to.be.true;
+        }
+        for (const key of ['Tab', 'a']) {
+          const ev = new KeyboardEvent('keydown', { key, cancelable: true, bubbles: true });
+          invokerButton.dispatchEvent(ev);
+          expect(ev.defaultPrevented, key).to.be.false;
+        }
+      });
+
       it('stays on last invoker on [arrow-right]', async () => {
         const el = /** @type {LionAccordion} */ (
           await fixture(html`
@@ -508,12 +523,10 @@ export function runAccordionSuite({
           el.append(content);
         }
         await el.updateComplete;
-        const invokers = /** @type {HTMLElement[]} */ (
-          Array.from(el.querySelectorAll('[slot=invoker]'))
-        );
-        const contents = /** @type {HTMLElement[]} */ (
-          Array.from(el.querySelectorAll('[slot=content]'))
-        );
+        const invokers = /** @type {HTMLElement[]} */ (getInvokers(el));
+        const contents = /** @type {HTMLElement[]} */ (getContents(el));
+        expect(invokers.length).to.equal(5);
+        expect(contents.length).to.equal(5);
         invokers.forEach((invoker, index) => {
           const content = contents[index];
           expect(invoker.style.getPropertyValue('order')).to.equal(`${index + 1}`);

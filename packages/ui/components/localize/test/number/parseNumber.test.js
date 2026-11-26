@@ -1,8 +1,13 @@
 import { expect } from '@open-wc/testing';
 import { getLocalizeManager, parseNumber } from '@lion/ui/localize-no-side-effects.js';
+import { localizeTearDown } from '@lion/ui/localize-test-helpers.js';
 
 describe('parseNumber()', () => {
   const localizeManager = getLocalizeManager();
+
+  afterEach(() => {
+    localizeTearDown();
+  });
 
   it('parses integers', () => {
     expect(parseNumber('1')).to.equal(1);
@@ -83,6 +88,43 @@ describe('parseNumber()', () => {
     expect(
       parseNumber('123.456,78', { mode: 'user-edited', viewValueStates: ['formatted'] }),
     ).to.equal(123456.78);
+  });
+
+  describe('user editing a formatted value', () => {
+    /** @type {import('../../types/LocalizeMixinTypes.js').FormatNumberOptions} */
+    const editingFormatted = {
+      mode: 'user-edited',
+      viewValueStates: ['formatted'],
+    };
+
+    it('sticks to the locale when more than 2 decimal places are entered e.g. 1,234', () => {
+      localizeManager.locale = 'nl-NL';
+      expect(parseNumber('1,234', editingFormatted)).to.equal(1.234);
+      expect(parseNumber('1.234', editingFormatted)).to.equal(1234);
+      expect(parseNumber('1.234,567', editingFormatted)).to.equal(1234.567);
+
+      localizeManager.locale = 'en-GB';
+      expect(parseNumber('1,234', editingFormatted)).to.equal(1234);
+      expect(parseNumber('1.234', editingFormatted)).to.equal(1.234);
+      expect(parseNumber('1,234.567', editingFormatted)).to.equal(1234.567);
+    });
+
+    it('uses the locale passed in the options over the global one', () => {
+      localizeManager.locale = 'en-GB';
+      expect(parseNumber('1,234', { ...editingFormatted, locale: 'nl-NL' })).to.equal(1.234);
+    });
+
+    it('uses heuristic when 2 or fewer decimal places are entered e.g. 1,23', () => {
+      localizeManager.locale = 'en-GB';
+      expect(parseNumber('1,23', editingFormatted)).to.equal(1.23);
+      expect(parseNumber('1.234,5', editingFormatted)).to.equal(1234.5);
+    });
+
+    it('uses heuristic when the view value was not formatted before e.g. 1,234', () => {
+      localizeManager.locale = 'en-GB';
+      expect(parseNumber('1,234', { mode: 'user-edited', viewValueStates: [] })).to.equal(1.234);
+      expect(parseNumber('1,234', { mode: 'user-edited' })).to.equal(1.234);
+    });
   });
 
   it('detects separators unparseable when there are 2 same ones e.g. 1.234.56', () => {

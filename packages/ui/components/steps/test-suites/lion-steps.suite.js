@@ -21,7 +21,7 @@ const fixture = /** @type {(arg: TemplateResult) => Promise<LionSteps>} */ (_fix
  * @returns {Promise<void>}
  */
 async function checkWorkflow(steps, expected) {
-  return new Promise(resolve => {
+  return new Promise((resolve, reject) => {
     /** @type {number[]} */
     const transitions = [];
     steps.addEventListener('transition', event => {
@@ -31,15 +31,21 @@ async function checkWorkflow(steps, expected) {
       }
       transitions.push(_event.detail.toStep.number);
     });
+    // Transitions are dispatched synchronously by the navigation that the caller schedules with a
+    // `setTimeout` before calling this: this later task runs after all of them.
     setTimeout(() => {
-      // allow time for other transitions to happen if any
-      const transitionsString = transitions.join(' => ');
-      expect(transitionsString).to.equal(expected.transitions, 'transition flow is different');
-      const statusesString = /** @type {LionStep[]} */ (Array.from(steps.children))
-        .map(step => step.status)
-        .join(' ');
-      expect(statusesString).to.equal(expected.statuses, 'steps statuses are different');
-      resolve();
+      try {
+        const transitionsString = transitions.join(' => ');
+        expect(transitionsString).to.equal(expected.transitions, 'transition flow is different');
+        const statusesString = /** @type {LionStep[]} */ (Array.from(steps.children))
+          .map(step => step.status)
+          .join(' ');
+        expect(statusesString).to.equal(expected.statuses, 'steps statuses are different');
+        resolve();
+      } catch (error) {
+        // Fail the test with the assertion, instead of an uncaught error and a timeout
+        reject(error);
+      }
     });
   });
 }
@@ -207,6 +213,38 @@ export function runStepsSuite({
 
         expect(() => el._goTo(3, el.current)).to.throw(Error, 'There is no step at index 3.');
         expect(() => el._goTo(-1, el.current)).to.throw(Error, 'There is no step at index -1.');
+      });
+
+      it('can navigate to a step that was added after first render', async () => {
+        const el = await fixture(html`
+          <${tags.host}>
+            <${tags.step} initial-step>Step 0</${tags.step}>
+            <${tags.step}>Step 1</${tags.step}>
+          </${tags.host}>
+        `);
+        const addedStep = document.createElement(tagNameStep);
+        addedStep.textContent = 'Step 2';
+        el.appendChild(addedStep);
+
+        el.next();
+        el.next();
+        expect(el.current).to.equal(2);
+        expect(/** @type {LionStep} */ (addedStep).status).to.equal('entered');
+      });
+
+      it('throws the out of bounds error for a step that was removed after first render', async () => {
+        const el = await fixture(html`
+          <${tags.host}>
+            <${tags.step} initial-step>Step 0</${tags.step}>
+            <${tags.step}>Step 1</${tags.step}>
+            <${tags.step}>Step 2</${tags.step}>
+          </${tags.host}>
+        `);
+        /** @type {Element} */ (el.lastElementChild).remove();
+
+        el.next();
+        expect(() => el.next()).to.throw(Error, 'There is no step at index 2.');
+        expect(el.current).to.equal(1);
       });
     });
 

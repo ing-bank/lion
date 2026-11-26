@@ -1,5 +1,5 @@
 /* eslint-disable no-shadow */
-import child_process from 'child_process'; // eslint-disable-line camelcase
+import child_process from 'child_process'; // eslint-disable-line lion/camelcase
 import path from 'path';
 import { fsGlob } from '#utils/fs-glob.js';
 import { toPosixPath } from '#utils/to-posix-path.js';

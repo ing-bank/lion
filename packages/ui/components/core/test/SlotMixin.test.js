@@ -694,6 +694,49 @@ describe('SlotMixin', () => {
       expect(varThatProvesAfterRenderIsCalled).to.equal('called');
       expect(el._templateNode.textContent).to.equal('1');
     });
+
+    it('throws a descriptive error for an unsupported slot function result', () => {
+      const tag = defineCE(
+        class extends SlotMixin(LitElement) {
+          // @ts-expect-error [testing-invalid-slot-function-result]
+          get slots() {
+            return {
+              ...super.slots,
+              feedback: () => 42,
+            };
+          }
+        },
+      );
+      const el = /** @type {SlotHost} */ (/** @type {unknown} */ (document.createElement(tag)));
+      // @ts-expect-error [allow-protected-in-tests]
+      expect(() => el._connectSlotMixin()).to.throw(
+        /Slot "feedback" configured inside "get slots\(\)".*may return these types/,
+      );
+    });
+
+    it('reports a missing shadowRoot when rendering a template slot', async () => {
+      const consoleErrorStub = sinon.stub(console, 'error');
+      try {
+        const tag = defineCE(
+          class extends SlotMixin(LitElement) {
+            createRenderRoot() {
+              return this;
+            }
+
+            get slots() {
+              return { ...super.slots, feedback: () => html`<p>text</p>` };
+            }
+          },
+        );
+        const el = await fixture(`<${tag}></${tag}>`);
+        expect(consoleErrorStub.args.map(args => args[0])).to.include(
+          '[SlotMixin] No shadowRoot was found',
+        );
+        expect(el.querySelector('[slot="feedback"]')?.textContent).to.equal('text');
+      } finally {
+        consoleErrorStub.restore();
+      }
+    });
   });
 
   describe('Scoped Registries', () => {

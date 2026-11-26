@@ -1,5 +1,6 @@
-import { expect } from '@open-wc/testing';
+import { expect, fixture, html } from '@open-wc/testing';
 import { MaxFileCount } from '@lion/ui/input-file.js';
+import '@lion/ui/define/lion-input-file.js';
 import { IsAcceptedFile } from '../src/validators.js';
 
 describe('lion-input-file: IsAcceptedFile', () => {
@@ -196,6 +197,24 @@ describe('lion-input-file: IsAcceptedFile', () => {
       const validator = new MaxFileCount();
       const isEnabled = validator.execute([newFile('file1.txt'), newFile('file2.txt')]);
       expect(isEnabled).to.be.false;
+    });
+
+    it('provides a message with the max file count', async () => {
+      // the lion-input-file namespace is loaded by the element
+      const el = /** @type {import('@lion/ui/input-file.js').LionInputFile} */ (
+        await fixture(html`<lion-input-file></lion-input-file>`)
+      );
+      await el.localizeNamespacesLoaded;
+      expect(await MaxFileCount.getMessage({ params: 2 })).to.equal(
+        'The number of uploaded files must not exceed 2.',
+      );
+    });
+
+    it('provides a configuration hint as message for an invalid max file count', async () => {
+      const hint = 'Invalid MaxFileCount parameter. Please provide a valid number greater than 0.';
+      expect(await MaxFileCount.getMessage()).to.equal(hint);
+      expect(await MaxFileCount.getMessage({ params: 0 })).to.equal(hint);
+      expect(await MaxFileCount.getMessage({ params: '2' })).to.equal(hint);
     });
   });
 });

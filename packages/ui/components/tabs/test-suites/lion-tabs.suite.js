@@ -1,5 +1,5 @@
 import { html } from 'lit/static-html.js';
-import { unsafeStatic, expect, fixture } from '@open-wc/testing';
+import { unsafeStatic, expect, fixture, aTimeout } from '@open-wc/testing';
 import sinon from 'sinon';
 import { LionTabs } from '@lion/ui/tabs.js';
 import { resolveSuiteTag } from '../../core/test-helpers/resolveSuiteTag.js';
@@ -343,6 +343,48 @@ export function runTabsSuite({
         expect(el.selectedIndex).to.equal(0);
       });
 
+      it('prevents the default (page scroll) of keydown on arrow keys, [home] and [end] only', async () => {
+        const el = /** @type {LionTabs} */ (await fixture(basicTabs));
+        const tabs = el.querySelectorAll('[slot=tab]');
+        for (const key of ['ArrowDown', 'ArrowRight', 'ArrowUp', 'ArrowLeft', 'Home', 'End']) {
+          const ev = new KeyboardEvent('keydown', { key, cancelable: true, bubbles: true });
+          tabs[1].dispatchEvent(ev);
+          expect(ev.defaultPrevented, key).to.be.true;
+        }
+        for (const key of ['Enter', ' ', 'Tab', 'a']) {
+          const ev = new KeyboardEvent('keydown', { key, cancelable: true, bubbles: true });
+          tabs[1].dispatchEvent(ev);
+          expect(ev.defaultPrevented, key).to.be.false;
+        }
+        // keydown alone does not change the selection
+        expect(el.selectedIndex).to.equal(0);
+      });
+
+      it('skips disabled tabs on [home] and [end]', async () => {
+        const el = /** @type {LionTabs} */ (
+          await fixture(html`
+            <${tag}>
+              <button slot="tab" disabled>tab 0</button>
+              <div slot="panel">panel 0</div>
+              <button slot="tab">tab 1</button>
+              <div slot="panel">panel 1</div>
+              <button slot="tab">tab 2</button>
+              <div slot="panel">panel 2</div>
+              <button slot="tab">tab 3</button>
+              <div slot="panel">panel 3</div>
+              <button slot="tab" disabled>tab 4</button>
+              <div slot="panel">panel 4</div>
+            </${tag}>
+          `)
+        );
+        const tabs = el.querySelectorAll('[slot=tab]');
+        el.selectedIndex = 2;
+        tabs[2].dispatchEvent(new KeyboardEvent('keyup', { key: 'Home' }));
+        expect(el.selectedIndex).to.equal(1);
+        tabs[1].dispatchEvent(new KeyboardEvent('keyup', { key: 'End' }));
+        expect(el.selectedIndex).to.equal(3);
+      });
+
       it('cycles through tabs even if the last or first tabs are disabled', async () => {
         const el = /** @type {LionTabs} */ (
           await fixture(html`
@@ -368,6 +410,46 @@ export function runTabsSuite({
         // 3 is disabled, same for 0, so should go to 1
         tabs[2].dispatchEvent(new KeyboardEvent('keyup', { key: 'ArrowRight' }));
         expect(el.selectedIndex).to.equal(1);
+      });
+    });
+
+    describe('Disabled and removed tabs', () => {
+      it('keeps the selected tab when all other tabs are disabled', async () => {
+        const el = /** @type {LionTabs} */ (
+          await fixture(html`
+            <${tag}>
+              <button slot="tab">tab 0</button>
+              <div slot="panel">panel 0</div>
+              <button slot="tab" disabled>tab 1</button>
+              <div slot="panel">panel 1</div>
+              <button slot="tab" disabled>tab 2</button>
+              <div slot="panel">panel 2</div>
+            </${tag}>
+          `)
+        );
+        const spy = sinon.spy();
+        el.addEventListener('selected-changed', spy);
+        const tabs = el.querySelectorAll('[slot=tab]');
+        tabs[0].dispatchEvent(new KeyboardEvent('keyup', { key: 'ArrowRight' }));
+        expect(el.selectedIndex).to.equal(0);
+        tabs[0].dispatchEvent(new KeyboardEvent('keyup', { key: 'ArrowLeft' }));
+        expect(el.selectedIndex).to.equal(0);
+        expect(spy.callCount).to.equal(0);
+      });
+
+      it('stops reacting to a tab after it is removed', async () => {
+        const el = /** @type {LionTabs} */ (await fixture(basicTabs));
+        const removedTab = /** @type {HTMLElement} */ (el.querySelectorAll('[slot=tab]')[3]);
+        const removedPanel = /** @type {HTMLElement} */ (el.querySelectorAll('[slot=panel]')[3]);
+        removedTab.remove();
+        removedPanel.remove();
+        // wait for the slotchange that rebuilds the tab store
+        await aTimeout(0);
+        // a detached element still dispatches events to its own listeners
+        removedTab.click();
+        removedTab.dispatchEvent(new KeyboardEvent('keyup', { key: 'ArrowLeft' }));
+        expect(el.selectedIndex).to.equal(0);
+        expect(el.tabs.length).to.equal(3);
       });
     });
 

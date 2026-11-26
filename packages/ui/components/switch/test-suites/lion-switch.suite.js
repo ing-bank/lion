@@ -106,7 +106,6 @@ export function runSwitchSuite({
       expect(_inputNode.hasAttribute('disabled')).to.be.true;
       el.disabled = false;
       await el.updateComplete;
-      await el.updateComplete; // safari takes longer
       expect(_inputNode.disabled).to.be.false;
       expect(_inputNode.hasAttribute('disabled')).to.be.false;
     });
@@ -425,7 +424,25 @@ export function runSwitchSuite({
         expect(handlerSpy.called).to.be.true;
       });
 
+      it('prevents the default of a space keydown (page scroll) and of no other key', () => {
+        const space = new KeyboardEvent('keydown', { key: ' ', cancelable: true });
+        el.dispatchEvent(space);
+        expect(space.defaultPrevented).to.be.true;
+        // keydown itself does not toggle: that happens on keyup
+        expect(el.checked).to.be.false;
+
+        for (const key of ['Enter', 'Tab', 'ArrowDown', 'a']) {
+          const other = new KeyboardEvent('keydown', { key, cancelable: true });
+          el.dispatchEvent(other);
+          expect(other.defaultPrevented, key).to.be.false;
+        }
+      });
+
       describe('a11y', () => {
+        it('has role="switch"', () => {
+          expect(el.getAttribute('role')).to.equal('switch');
+        });
+
         it('should manage "aria-checked"', async () => {
           expect(el.hasAttribute('aria-checked')).to.be.true;
           expect(el.getAttribute('aria-checked')).to.equal('false');

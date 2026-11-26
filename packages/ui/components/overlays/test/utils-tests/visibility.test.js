@@ -3,6 +3,24 @@ import { expect, fixture } from '@open-wc/testing';
 import { isVisible } from '../../src/utils/is-visible.js';
 
 describe('isVisible()', () => {
+  it('returns false when there is no element', async () => {
+    // @ts-ignore - testing invalid input
+    expect(isVisible(null)).to.equal(false);
+  });
+
+  it('returns false for elements that are not connected', async () => {
+    const element = document.createElement('div');
+    element.style.cssText = 'width:10px; height:10px;';
+    expect(isVisible(element)).to.equal(false);
+  });
+
+  it('returns false for elements hidden via their inline style', async () => {
+    const element = /** @type {HTMLElement} */ (
+      await fixture(`<div style="width:10px; height:10px; visibility: hidden;"></div>`)
+    );
+    expect(isVisible(element)).to.equal(false);
+  });
+
   it('returns true for static block elements', async () => {
     const element = /** @type {HTMLElement} */ (
       await fixture(`<div style="width:10px; height:10px;"></div>`)

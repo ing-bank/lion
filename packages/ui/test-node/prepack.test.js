@@ -21,9 +21,9 @@ for (const [command, expectedTask] of [
       const { stdout, stderr } = await execFile(process.execPath, [script], {
         env: {
           ...process.env,
-          // eslint-disable-next-line camelcase
+          // eslint-disable-next-line lion/camelcase
           npm_execpath: npmCli,
-          // eslint-disable-next-line camelcase
+          // eslint-disable-next-line lion/camelcase
           npm_command: command,
         },
       });

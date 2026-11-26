@@ -41,12 +41,11 @@ describe('parseAmount()', async () => {
     expect(parseAmount('1.015')).to.equal(1.015);
   });
 
-  // TODO: make it work with big numbers, e.g. make use of BigInt
-  it.skip('rounds up big numbers', async () => {
-    // eslint-disable-next-line no-loss-of-precision
-    expect(parseAmount('999999999999999999999,42')).to.equal(999999999999999999999.42);
-    // eslint-disable-next-line no-loss-of-precision
-    expect(parseAmount('12,345,678,987,654,321.42')).to.equal(12345678987654321.42);
+  // The parsed amount is a Number, so digits beyond Number.MAX_SAFE_INTEGER cannot be kept;
+  // within that range big amounts are parsed exactly.
+  it('parses big numbers', async () => {
+    expect(parseAmount('9,007,199,254,740,991.00')).to.equal(Number.MAX_SAFE_INTEGER);
+    expect(parseAmount('1.000.000.000.000.000.000.000,00')).to.equal(1e21);
   });
 
   it('returns undefined if an invalid value is entered', async () => {

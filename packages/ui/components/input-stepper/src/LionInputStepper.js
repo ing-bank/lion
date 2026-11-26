@@ -163,6 +163,12 @@ export class LionInputStepper extends LocalizeMixin(LionInput) {
       this.__toggleSpinnerButtonsState();
     }
 
+    if (changedProperties.has('min') || changedProperties.has('max')) {
+      this.__setDefaultValidators();
+      // a change of defaultValidators is not observed by ValidateMixin, so revalidate ourselves
+      this.validate();
+    }
+
     if (changedProperties.has('valueTextMapping')) {
       this._updateAriaAttributes();
     }
@@ -194,7 +200,14 @@ export class LionInputStepper extends LocalizeMixin(LionInput) {
         this.max !== Infinity ? new MaxNumber(this.max) : null,
       ].filter(validator => validator !== null)
     );
-    this.defaultValidators.push(...validators);
+    // Replace (instead of append to) the validators we added before, so reconnecting or changing
+    // min/max does not leave duplicate or stale validators behind
+    /** @type {import('@lion/ui/form-core.js').Validator[]} */
+    const previous = this.__stepperDefaultValidators || [];
+    const others = this.defaultValidators.filter(validator => !previous.includes(validator));
+    this.defaultValidators.splice(0, this.defaultValidators.length, ...others, ...validators);
+    /** @private */
+    this.__stepperDefaultValidators = validators;
   }
 
   /**

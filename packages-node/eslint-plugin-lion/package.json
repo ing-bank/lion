@@ -1,0 +1,32 @@
+{
+  "name": "eslint-plugin-lion",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Oxlint JS plugins for the Lion monorepo",
+  "license": "MIT",
+  "author": "ing-bank",
+  "homepage": "https://github.com/ing-bank/lion/",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ing-bank/lion.git",
+    "directory": "packages-node/eslint-plugin-lion"
+  },
+  "exports": {
+    ".": "./index.js"
+  },
+  "main": "index.js",
+  "files": [
+    "*.js"
+  ],
+  "keywords": [
+    "oxlint",
+    "lint"
+  ],
+  "dependencies": {
+    "oxc-resolver": "^11.24.2"
+  },
+  "scripts": {
+    "test": "npm run test:node",
+    "test:node": "node --test test-node/*.test.js"
+  }
+}

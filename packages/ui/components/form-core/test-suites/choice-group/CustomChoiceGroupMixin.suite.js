@@ -189,6 +189,40 @@ export function runCustomChoiceGroupMixinSuite({ classes = {}, choiceType = 'sin
       }
     });
 
+    it('drops its custom choices when formattedValue is set to null', async () => {
+      const el = /** @type {CustomChoiceGroup} */ (
+        await fixture(html`
+        <${parentTag} allow-custom-choice name="gender[]" .formattedValue=${'other'}>
+          <${childTag} .choiceValue=${'male'}></${childTag}>
+          <${childTag} .choiceValue=${'female'}></${childTag}>
+        </${parentTag}>
+      `)
+      );
+      // @ts-ignore [allow-private] in test
+      expect(el.customChoices).to.deep.equal(['other']);
+
+      // @ts-ignore null is allowed to clear
+      el.formattedValue = null;
+      // @ts-ignore [allow-private] in test
+      expect(el.customChoices).to.deep.equal([]);
+      // Hosts like lion-combobox derive modelValue from their text input as well, so only the
+      // group's own state is asserted here: no option stays checked.
+      expect(el.formElements.filter(child => child.checked)).to.have.length(0);
+    });
+
+    it('has no custom choices when allowCustomChoice is false', async () => {
+      const el = /** @type {CustomChoiceGroup} */ (
+        await fixture(html`
+        <${parentTag} name="gender[]">
+          <${childTag} .choiceValue=${'male'} checked></${childTag}>
+          <${childTag} .choiceValue=${'female'}></${childTag}>
+        </${parentTag}>
+      `)
+      );
+      // @ts-ignore [allow-private] in test
+      expect(el.customChoices).to.deep.equal([]);
+    });
+
     describe('multipleChoice', () => {
       it('has a single modelValue representing all currently checked values, including custom values', async () => {
         const el = /** @type {CustomChoiceGroup} */ (

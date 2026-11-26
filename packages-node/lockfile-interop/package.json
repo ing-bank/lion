@@ -29,6 +29,6 @@
     "test:node": "mocha 'test-node/**/*.test.js'"
   },
   "dependencies": {
-    "yaml": "^2.5.1"
+    "yaml": "^2.9.1"
   }
 }

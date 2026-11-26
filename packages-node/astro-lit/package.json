@@ -29,11 +29,11 @@
     "@lit-labs/ssr": "^4.1.0",
     "@lit-labs/ssr-dom-shim": "^1.6.0",
     "@webcomponents/template-shadowroot": "^0.2.1",
-    "parse5": "^8.0.0"
+    "parse5": "^8.1.1"
   },
   "devDependencies": {
-    "@lit-labs/ssr-client": "^1.1.7",
-    "lit": "^3.3.2"
+    "@lit-labs/ssr-client": "^1.1.8",
+    "lit": "^3.3.3"
   },
   "keywords": [
     "lion-tools",

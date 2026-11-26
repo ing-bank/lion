@@ -26,6 +26,7 @@ const path = require('path');
 function requireFromString(src, filename = 'tmp.js') {
   const srcWithPath = `const path = require('path');\n${src}`;
   // @ts-expect-error
+  // oxlint-disable-next-line new-cap -- the CommonJS module loader is not a class
   const m = new module.constructor();
   // @ts-expect-error
   m.paths = module.paths;
