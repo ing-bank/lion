@@ -829,10 +829,10 @@ export function runChoiceGroupMixinSuite({
       const feedbackConditionSpy = sinon.spy();
       const container = await fixture(html`
         <div>
-          <${parentTag} name="group" .feedbackCondition="${feedbackConditionSpy}">
-            <${childTag} label="Option 1" .choiceValue=${'1'}></${childTag}>
-            <${childTag} label="Option 2" .choiceValue=${'2'}></${childTag}>
-          </${parentTag}>
+          <${tags.host} name="group" .feedbackCondition="${feedbackConditionSpy}">
+            <${tags.child} label="Option 1" .choiceValue=${'1'}></${tags.child}>
+            <${tags.child} label="Option 2" .choiceValue=${'2'}></${tags.child}>
+          </${tags.host}>
         </div>
       `);
       const el = /** @type {ChoiceInputGroup} */ (container.firstElementChild);
@@ -847,14 +847,14 @@ export function runChoiceGroupMixinSuite({
       const feedbackConditionSpy = sinon.spy();
       const container = await fixture(html`
         <div>
-          <${parentTag}
+          <${tags.host}
             name="group"
             .validators=${[new Required()]}
             .feedbackCondition="${feedbackConditionSpy}"
           >
-            <${childTag} label="Option 1" .choiceValue=${'1'}></${childTag}>
-            <${childTag} label="Option 2" .choiceValue=${'2'}></${childTag}>
-          </${parentTag}>
+            <${tags.child} label="Option 1" .choiceValue=${'1'}></${tags.child}>
+            <${tags.child} label="Option 2" .choiceValue=${'2'}></${tags.child}>
+          </${tags.host}>
         </div>
       `);
       const el = /** @type {ChoiceInputGroup} */ (container.firstElementChild);

@@ -184,10 +184,10 @@ export function runRadioGroupSuite({
       const feedbackConditionSpy = sinon.spy();
       const container = await fixture(html`
         <div>
-          <${tag} name="gender" .feedbackCondition="${feedbackConditionSpy}">
-            <${childTag} label="Male" value="male"></${childTag}>
-            <${childTag} label="Female" value="female"></${childTag}>
-          </${tag}>
+          <${tags.host} name="gender" .feedbackCondition="${feedbackConditionSpy}">
+            <${tags.radio} label="Male" value="male"></${tags.radio}>
+            <${tags.radio} label="Female" value="female"></${tags.radio}>
+          </${tags.host}>
         </div>
       `);
       const el = /** @type {LionRadioGroup} */ (container.firstElementChild);
@@ -202,14 +202,14 @@ export function runRadioGroupSuite({
       const feedbackConditionSpy = sinon.spy();
       const container = await fixture(html`
         <div>
-          <${tag}
+          <${tags.host}
             name="gender"
             .validators=${[new Required()]}
             .feedbackCondition="${feedbackConditionSpy}"
           >
-            <${childTag} label="Male" value="male"></${childTag}>
-            <${childTag} label="Female" value="female"></${childTag}>
-          </${tag}>
+            <${tags.radio} label="Male" value="male"></${tags.radio}>
+            <${tags.radio} label="Female" value="female"></${tags.radio}>
+          </${tags.host}>
         </div>
       `);
       const el = /** @type {LionRadioGroup} */ (container.firstElementChild);
@@ -223,10 +223,10 @@ export function runRadioGroupSuite({
 
     it('updates validity when a selected option is removed from a connected group', async () => {
       const el = await fixture(html`
-        <${tag} name="gender" .validators=${[new Required()]}>
-          <${childTag} label="Male" .choiceValue=${'male'}></${childTag}>
-          <${childTag} label="Female" .choiceValue=${'female'}></${childTag}>
-        </${tag}>
+        <${tags.host} name="gender" .validators=${[new Required()]}>
+          <${tags.radio} label="Male" .choiceValue=${'male'}></${tags.radio}>
+          <${tags.radio} label="Female" .choiceValue=${'female'}></${tags.radio}>
+        </${tags.host}>
       `);
       el.formElements[0].checked = true;
       expect(el.modelValue).to.equal('male');
@@ -242,12 +242,12 @@ export function runRadioGroupSuite({
     it('updates validity when a selected option is moved to another connected group', async () => {
       const container = await fixture(html`
         <div>
-          <${tag} id="group1" name="g1" .validators=${[new Required()]}>
-            <${childTag} id="r1" label="Option 1" .choiceValue=${'1'}></${childTag}>
-          </${tag}>
-          <${tag} id="group2" name="g2" .validators=${[new Required()]}>
-            <${childTag} id="r2" label="Option 2" .choiceValue=${'2'}></${childTag}>
-          </${tag}>
+          <${tags.host} id="group1" name="g1" .validators=${[new Required()]}>
+            <${tags.radio} id="r1" label="Option 1" .choiceValue=${'1'}></${tags.radio}>
+          </${tags.host}>
+          <${tags.host} id="group2" name="g2" .validators=${[new Required()]}>
+            <${tags.radio} id="r2" label="Option 2" .choiceValue=${'2'}></${tags.radio}>
+          </${tags.host}>
         </div>
       `);
       const g1 = /** @type {LionRadioGroup} */ (container.querySelector('#group1'));
