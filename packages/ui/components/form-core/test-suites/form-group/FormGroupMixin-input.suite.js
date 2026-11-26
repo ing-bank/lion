@@ -133,7 +133,7 @@ export function runFormGroupMixinInputSuite({
         /** @type {InstanceType<typeof FormGroup>} */ childAriaFixture,
         { cleanupPhase = false } = {},
       ) => {
-        /* eslint-disable camelcase */
+        /* eslint-disable lion/camelcase */
         // Message elements: all elements pointed at by inputs
         const msg_l1_g = /** @type {InstanceType<typeof FormGroup>} */ (
           childAriaFixture.querySelector('#msg_l1_g')

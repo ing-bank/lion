@@ -1,3 +1,5 @@
+/* oxlint-disable class-methods-use-this, max-classes-per-file -- three exported validators live in this file */
+
 import { Validator } from '@lion/ui/form-core.js';
 import { getLocalizeManager } from '@lion/ui/localize-no-side-effects.js';
 

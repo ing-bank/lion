@@ -1,4 +1,4 @@
-/* eslint-disable class-methods-use-this, camelcase, no-param-reassign, max-classes-per-file */
+/* eslint-disable class-methods-use-this, lion/camelcase, no-param-reassign, max-classes-per-file */
 import { DisabledMixin, SlotMixin } from '@lion/ui/core.js';
 import { dedupeMixin } from '@open-wc/dedupe-mixin';
 // TODO: make form-core independent from localize
