@@ -192,6 +192,54 @@ describe('change-graph selection', () => {
   });
 });
 
+describe('change-graph selection with non-ASCII file names', () => {
+  /** @type {string} */
+  let root;
+  const git = (/** @type {string[]} */ args) =>
+    execFileSync('git', ['-c', 'user.name=t', '-c', 'user.email=t@example.com', ...args], {
+      cwd: root,
+    });
+
+  beforeEach(async () => {
+    root = await createFixture();
+    // git C-quotes such names by default ("caf\303\251.js") unless the output is NUL separated.
+    await fs.writeFile(path.join(root, 'packages/a/src/café.js'), 'export const c = 1;\n');
+    await fs.writeFile(
+      path.join(root, 'packages/a/src/a.js'),
+      "import './shared.js';\nimport './café.js';\nexport const a = 1;\n",
+    );
+    git(['add', '.']);
+    git(['commit', '-qm', 'non-ascii']);
+  });
+
+  afterEach(async () => {
+    await fs.rm(root, { recursive: true, force: true });
+  });
+
+  it('selects the tests that reach a changed file in the working tree', async () => {
+    await fs.writeFile(path.join(root, 'packages/a/src/café.js'), 'export const c = 2;\n');
+    const selection = await selectTests({ cwd: root, cache: false });
+    expect(selection.changedFiles).to.deep.equal(['packages/a/src/café.js']);
+    expect(selection.testFiles).to.deep.equal([path.normalize('packages/a/test/a.test.js')]);
+  });
+
+  it('selects an untracked test file', async () => {
+    await fs.writeFile(path.join(root, 'packages/b/test/über.test.js'), "import '../src/b.js';\n");
+    const selection = await selectTests({ cwd: root, cache: false });
+    expect(selection.changedFiles).to.deep.equal(['packages/b/test/über.test.js']);
+    expect(selection.units).to.deep.equal([path.normalize('packages/b/test')]);
+  });
+
+  it('selects the tests that reach a file changed on the branch', async () => {
+    git(['branch', 'target']);
+    await fs.writeFile(path.join(root, 'packages/a/src/café.js'), 'export const c = 3;\n');
+    git(['commit', '-qam', 'change']);
+    const selection = await selectTests({ cwd: root, mode: 'pr', base: 'target', cache: false });
+    expect(selection.changedFiles).to.deep.equal(['packages/a/src/café.js']);
+    expect(selection.testFiles).to.deep.equal([path.normalize('packages/a/test/a.test.js')]);
+  });
+});
+
 describe('change-graph selection cache', () => {
   /** @type {string} */
   let root;
