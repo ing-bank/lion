@@ -22,6 +22,17 @@ eleventyNavigation:
 
 With the `formatDate` you can safely display dates for all languages.
 
+For a date without a time or time zone, pass an ISO calendar date string directly:
+
+```js
+formatDate('1987-05-12');
+```
+
+This formats the calendar date in UTC by default, so it does not shift in time zones west of UTC.
+An explicit `timeZone` option is still respected and can change the displayed day. A `Date` is
+always formatted as an instant in the local time zone (or the explicitly supplied `timeZone`);
+`new Date('1987-05-12')` represents midnight UTC and may display as the previous day.
+
 The input value is `new Date('1987/05/12')`.
 
 ```js script

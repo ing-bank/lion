@@ -64,6 +64,26 @@ describe('formatDate', () => {
     expect(formatDate(testDate)).to.equal('05/21/2012');
   });
 
+  it('formats ISO calendar dates without shifting them to the local time zone', () => {
+    expect(formatDate('2000-05-12')).to.equal('12/05/2000');
+    expect(formatDate('2000-05-12', { timeZone: undefined })).to.equal('12/05/2000');
+    expect(formatDate('2024-02-29', { locale: 'en-US' })).to.equal('02/29/2024');
+    expect(formatDate('0001-01-01')).to.equal('01/01/1');
+  });
+
+  it('rejects invalid ISO calendar dates and other strings', () => {
+    expect(formatDate('2023-02-29')).to.equal('');
+    expect(formatDate('2024-13-01')).to.equal('');
+    expect(formatDate('2024-01-01T00:00:00Z')).to.equal('');
+  });
+
+  it('preserves timestamp formatting and explicit time zones', () => {
+    const options = { locale: 'en-US', timeZone: 'America/Curacao' };
+    expect(formatDate(new Date('2000-05-12T00:00:00Z'), options)).to.equal('05/11/2000');
+    expect(formatDate('2000-05-12', options)).to.equal('05/11/2000');
+    expect(formatDate(new Date(2000, 4, 12))).to.equal('12/05/2000');
+  });
+
   it('displays the date based on options', async () => {
     const testDate = new Date('2012/05/21');
     /** @type {FormatDateOptions} */

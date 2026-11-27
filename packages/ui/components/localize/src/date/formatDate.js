@@ -7,18 +7,25 @@ import { normalizeIntlDate } from './utils/normalizeIntlDate.js';
 /**
  * Formats date based on locale and options
  *
- * @param {Date} date
+ * @param {Date | string} date A Date or an ISO calendar date (YYYY-MM-DD)
  * @param {import('../../types/LocalizeMixinTypes.js').FormatDateOptions} [options] Intl options are available
  * @returns {string}
  */
 export function formatDate(date, options) {
   const localizeManager = getLocalizeManager();
-  if (!(date instanceof Date)) {
+  const isCalendarDate = typeof date === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(date);
+  const dateToFormat = isCalendarDate ? new Date(date) : date;
+  if (
+    !(dateToFormat instanceof Date) ||
+    (isCalendarDate &&
+      (Number.isNaN(dateToFormat.getTime()) || dateToFormat.toISOString().slice(0, 10) !== date))
+  ) {
     return '';
   }
 
   const formatOptions =
-    options || /** @type {import('../../types/LocalizeMixinTypes.js').FormatDateOptions} */ ({});
+    (isCalendarDate ? { ...options, timeZone: options?.timeZone ?? 'UTC' } : options) ||
+    /** @type {import('../../types/LocalizeMixinTypes.js').FormatDateOptions} */ ({});
   /**
    * Set smart defaults if:
    * 1) no options object is passed
@@ -32,7 +39,7 @@ export function formatDate(date, options) {
   const computedLocale = getLocale(formatOptions && formatOptions.locale);
   let formattedDate = '';
   try {
-    formattedDate = new Intl.DateTimeFormat(computedLocale, formatOptions).format(date);
+    formattedDate = new Intl.DateTimeFormat(computedLocale, formatOptions).format(dateToFormat);
   } catch (e) {
     formattedDate = '';
   }
