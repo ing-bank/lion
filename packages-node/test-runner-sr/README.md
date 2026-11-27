@@ -101,29 +101,34 @@ CI runs `--nvda` on `windows-latest` and `--voiceover` on `macos-15`, both with
 window, so those runs launch a non headless browser with
 `__experimentalWindowFocus__`.
 
-## Patched virtual reader (live regions in shadow roots)
+## The virtual reader fix for live regions in shadow roots
 
-`patches/@guidepup+virtual-screen-reader+0.33.0.patch` makes the virtual reader
-announce live regions that live inside a shadow root, which is where Lion renders
-validation messages. Upstream misses them in three coupled places:
+The virtual reader has to announce live regions that live inside a shadow root, which is where
+Lion renders validation messages. Upstream misses them in three coupled places:
 
-- `observeDOM` observes the container subtree only, so a shadow root is never a
-  mutation target's observed tree;
-- `getElementFromNode` is `isElement(node) ? node : node.parentElement`, and a
-  mutation whose target is a `ShadowRoot` has no `parentElement`, so the target
-  resolves to `undefined`;
-- `getLiveRegionAttributes` walks up with `parentElement` only, so it cannot reach
-  the `aria-live` attribute on a shadow root's host element.
+- the mutation observer is rooted at the container subtree, so a shadow root is never observed -
+  and a shadow root attached after the reader started is missed entirely;
+- `getElementFromNode` is `isElement(node) ? node : node.parentElement`, and a mutation whose
+  target is a `ShadowRoot` has no `parentElement`, so the target resolves to `undefined`;
+- `getLiveRegionAttributes` walks up with `parentElement` only, so it cannot reach the
+  `aria-live` attribute on a shadow root's host element.
 
-The patch observes shadow roots (including ones attached later, by wrapping
-`attachShadow`), maps a `ShadowRoot` target to its host, and hops to the host
-while walking up.
+Measured on `<lion-input-iban>`: without the fix the virtual reader says nothing about
+`Please enter a valid IBAN`; with it the announcement is in its phrase log. The assertions on the
+invalid _state_ hold either way, which is how the flow shipped before this was pinned.
 
-**Revisit this patch on every upgrade of `@guidepup/virtual-screen-reader`**: it is
-a diff against 0.33.0's browser bundle, which is minified (hence a ~400 KB patch
-file for three small edits), and it fails the build rather than degrading silently
-because the root `postinstall` runs `patch-package --error-on-fail`. It should be
-dropped as soon as the same behaviour lands upstream.
+This used to be `patches/@guidepup+virtual-screen-reader+0.33.0.patch` - a diff against 0.33.0's
+browser bundle (three small edits, ~400 KB of minified file) that the root `postinstall` applied
+to `node_modules` with `patch-package --error-on-fail`. The flow serves that bundle itself now:
+`screenreaderPlugin` answers the request with the healed bundle
+(`packages-node/test-runner-sr/src/virtualReaderBundle.js`). The fix therefore lives in the
+package that needs it - no patch file, no postinstall step for it, and the same three edits fail
+loudly inside the run when the bundle changes shape instead of leaving a stale patch that
+`patch-package` still reports as applied.
+
+**Revisit on every upgrade of `@guidepup/virtual-screen-reader`**: the anchors are minified code,
+so an upgrade that moves them fails the virtual run with the anchor and the file to edit. The fix
+should be dropped as soon as the same behaviour lands upstream.
 
 ## Failure output
 
@@ -361,26 +366,27 @@ got slower.
 
 ## Commands
 
-| command                  | returns             | description                                     |
-| ------------------------ | ------------------- | ----------------------------------------------- |
-| `sr.focus(selector)`     | `void`              | anchor the reader on a control (see below)      |
-| `sr.initialize()`        | `Promise<Reader>`   | start the reader bound to this run              |
-| `sr.stop()`              | `Promise<void>`     | stop the reader                                 |
-| `sr.reset()`             | `Promise<void>`     | clear the phrase log so a test sees one state   |
-| `sr.phraseLog()`         | `Promise<string[]>` | every phrase spoken since the last reset        |
-| `sr.itemText()`          | `Promise<string>`   | text of the item the reader is on               |
-| `sr.waitFor(phrase)`     | `Promise<string[]>` | wait until a phrase shows up                    |
-| `sr.expect(expectation)` | `Promise<void>`     | assert the spoken phrases, all readers required |
-| `sr.press(key)`          | `Promise<void>`     | send a key through the reader                   |
-| `sr.type(text)`          | `Promise<void>`     | type text through the reader                    |
-| `sr.next(count?)`        | `Promise<void>`     | move to the next item                           |
-| `sr.previous(count?)`    | `Promise<void>`     | move to the previous item                       |
-| `sr.act()`               | `Promise<void>`     | activate the current item                       |
-| `sr.interact()`          | `Promise<void>`     | start interacting with the current item         |
-| `sr.stopInteracting()`   | `Promise<void>`     | stop interacting with the current item          |
-| `exact(...phrases)`      | `SrPhraseList`      | phrase log has to match one to one              |
-| `contains(...phrases)`   | `SrPhraseList`      | phrases have to appear in this order            |
-| `containsLike(...texts)` | `SrPhraseList`      | each text has to be part of a spoken phrase     |
+| command                  | returns             | description                                         |
+| ------------------------ | ------------------- | --------------------------------------------------- |
+| `sr.focus(selector)`     | `void`              | anchor the reader on a control (see below)          |
+| `sr.initialize()`        | `Promise<Reader>`   | start the reader bound to this run                  |
+| `sr.stop()`              | `Promise<void>`     | stop the reader                                     |
+| `sr.reset()`             | `Promise<void>`     | clear the phrase log so a test sees one state       |
+| `sr.phraseLog()`         | `Promise<string[]>` | every phrase spoken since the last reset            |
+| `sr.itemText()`          | `Promise<string>`   | text of the item the reader is on                   |
+| `sr.waitFor(phrase)`     | `Promise<string[]>` | wait until a phrase shows up                        |
+| `sr.expect(expectation)` | `Promise<void>`     | assert the spoken phrases, all readers required     |
+| `sr.press(key)`          | `Promise<void>`     | send a key through the reader                       |
+| `sr.type(text)`          | `Promise<void>`     | type text through the reader                        |
+| `sr.next(count?)`        | `Promise<void>`     | move to the next item                               |
+| `sr.previous(count?)`    | `Promise<void>`     | move to the previous item                           |
+| `sr.act()`               | `Promise<void>`     | activate the current item                           |
+| `sr.interact()`          | `Promise<void>`     | start interacting with the current item             |
+| `sr.stopInteracting()`   | `Promise<void>`     | stop interacting with the current item              |
+| `exact(...phrases)`      | `SrPhraseList`      | phrase log has to match one to one                  |
+| `contains(...phrases)`   | `SrPhraseList`      | phrases have to appear in this order                |
+| `containsLike(...texts)` | `SrPhraseList`      | each text has to be part of a spoken phrase         |
+| `once(...texts)`         | `SrPhraseList`      | each text has to be spoken in exactly one utterance |
 
 Note on VoiceOver: its cursor does not start inside the browser. The machine setup
 leaves a mounted preferences volume in the Finder and VoiceOver reads that instead
@@ -409,6 +415,22 @@ arrives as `"polite: Error,, Please enter a valid IBAN."`, where the politeness 
 joined additions phrase are not what a user hears. The message itself is asserted with
 `containsLike('Please enter a valid IBAN')`; use `contains` when the whole phrase is
 the point.
+
+`once` exists for the announcement that is read out _twice_, which is the most common
+screen reader bug and one that `contains` and `containsLike` cannot see: a phrase read
+twice satisfies them exactly as well as one read once. It counts the utterances that
+contain the text and fails on anything but one, so a live region that fires again, a
+description that is both rendered and described, or a field announced by two nodes turns
+the run red:
+
+```js
+await sr.expect({ virtual: once('Ada'), nvda: once('Ada'), voiceover: once('Ada') });
+```
+
+The failure names the count: `"Ada" was spoken 3 times, expected exactly once`. Because
+matching is a substring of the utterance, the text has to be distinctive - `once('Name')`
+also matches the label's own utterance next to the control's phrase, which is real speech
+but rarely what was meant.
 
 Note on waits: `sr.waitFor()` defaults to 15s, below the 20s after which the browser
 side gives up on a test runner command, so a phrase that never comes is reported as

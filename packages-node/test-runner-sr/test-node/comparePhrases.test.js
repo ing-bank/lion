@@ -107,6 +107,51 @@ describe('comparePhrases', () => {
     });
   });
 
+  describe('once', () => {
+    it('passes when the text is spoken in exactly one utterance', () => {
+      const result = comparePhrases({ mode: 'once', phrases: ['Please enter a valid IBAN'] }, [
+        'textbox, IBAN',
+        'polite: Error,, Please enter a valid IBAN.',
+      ]);
+      expect(result.ok).to.be.true;
+    });
+
+    it('fails when the text is read out twice', () => {
+      const result = comparePhrases({ mode: 'once', phrases: ['Please enter a valid IBAN'] }, [
+        'assertive: Error,, Please enter a valid IBAN.',
+        'textbox, IBAN',
+        'polite: Error,, Please enter a valid IBAN.',
+      ]);
+      expect(result.ok).to.be.false;
+      expect(result.expectedPhrase).to.equal('Please enter a valid IBAN');
+      expect(result.occurrences).to.equal(2);
+    });
+
+    it('fails when the text is never spoken', () => {
+      const result = comparePhrases({ mode: 'once', phrases: ['Please enter a valid IBAN'] }, [
+        'textbox, IBAN',
+      ]);
+      expect(result.ok).to.be.false;
+      expect(result.occurrences).to.equal(0);
+    });
+
+    it('checks every expected phrase', () => {
+      const result = comparePhrases({ mode: 'once', phrases: ['textbox', 'valid IBAN'] }, [
+        'textbox, IBAN',
+        'Error, valid IBAN',
+        'polite, valid IBAN',
+      ]);
+      expect(result.ok).to.be.false;
+      expect(result.expectedPhrase).to.equal('valid IBAN');
+      expect(result.occurrences).to.equal(2);
+    });
+
+    it('ignores the whitespace a reader pads an announcement with', () => {
+      const result = comparePhrases({ mode: 'once', phrases: ['IBAN, edit'] }, [' IBAN, edit ']);
+      expect(result.ok).to.be.true;
+    });
+  });
+
   describe('normalisation', () => {
     it('ignores the whitespace a reader pads an announcement with', () => {
       const result = comparePhrases({ mode: 'contains', phrases: ['IBAN, edit,'] }, [
@@ -144,6 +189,24 @@ describe('comparePhrases', () => {
       expect(message).to.include('screen reader "nvda" did not speak what the test expects');
       expect(message).to.include('[2] "NL17 INGB 0002 8226 08"');
       expect(message).to.include('first divergence at index 2');
+    });
+
+    it('says how often a phrase was spoken when it has to be spoken once', () => {
+      const expected = /** @type {SrPhraseList} */ ({
+        mode: 'once',
+        phrases: ['Please enter a valid IBAN'],
+      });
+      const heard = [
+        'assertive: Error,, Please enter a valid IBAN.',
+        'polite: Error,, Please enter a valid IBAN.',
+      ];
+      const message = formatMismatch({
+        reader: 'nvda',
+        expected,
+        heard,
+        comparison: comparePhrases(expected, heard),
+      });
+      expect(message).to.include('spoken 2 times, expected exactly once');
     });
 
     it('says so when nothing was spoken at all', () => {

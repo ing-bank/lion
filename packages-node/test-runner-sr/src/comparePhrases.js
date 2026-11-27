@@ -3,7 +3,8 @@
  * Pure functions, so they can be unit tested in node.
  *
  * @typedef {import('../types/index.js').SrPhraseList} SrPhraseList
- * @typedef {{ ok: boolean, index: number, expectedPhrase?: string, heardPhrase?: string }} Comparison
+ * @typedef {{ ok: boolean, index: number, expectedPhrase?: string, heardPhrase?: string,
+ *   occurrences?: number }} Comparison
  */
 
 /**
@@ -80,7 +81,7 @@ export function compareContains(expected, heard) {
 }
 
 /**
- * Like `compareContains`, but a phrase may be part of a spoken phrase. Readers
+ * Like `containsLike`, but a phrase may be part of a spoken phrase. Readers
  * decorate an announcement that belongs to a live region ("assertive: Error,,
  * Please enter a valid IBAN." for the virtual reader, "polite: Error,," after a
  * re-validation), and that decoration is not what a user hears - the message is.
@@ -115,6 +116,45 @@ export function compareContainsLike(expected, heard) {
 }
 
 /**
+ * Every expected phrase has to be spoken in exactly one utterance.
+ *
+ * This is the check for the most common announcement bug: text that is read out
+ * twice (a live region that fires again, a description that is both rendered and
+ * described, a field announced by two nodes). `contains` and `containsLike`
+ * cannot see it - a phrase that shows up twice satisfies them as easily as one
+ * that shows up once.
+ *
+ * Matching is a substring of the utterance, like `containsLike`, so a reader that
+ * packs the text into a longer utterance still matches. The text therefore has to
+ * be distinctive: `once('Name')` fails when a label node *and* the control's own
+ * phrase both mention it, which is real speech, but not usually what is meant.
+ *
+ * Order is not part of this check - the assertion is about how often something is
+ * said, not about where in the log it appears.
+ *
+ * @param {string[]} expected
+ * @param {string[]} heard
+ * @returns {Comparison}
+ */
+export function compareOnce(expected, heard) {
+  const expectedPhrases = normalizePhrases(expected);
+  const heardPhrases = normalizePhrases(heard);
+  for (const phrase of expectedPhrases) {
+    const utterances = heardPhrases.filter(spoken => spoken.includes(phrase));
+    if (utterances.length !== 1) {
+      return {
+        ok: false,
+        index: 0,
+        expectedPhrase: phrase,
+        heardPhrase: utterances[0],
+        occurrences: utterances.length,
+      };
+    }
+  }
+  return { ok: true, index: -1 };
+}
+
+/**
  * @param {SrPhraseList} expected
  * @param {string[]} heard
  * @returns {Comparison}
@@ -122,6 +162,9 @@ export function compareContainsLike(expected, heard) {
 export function comparePhrases(expected, heard) {
   if (expected.mode === 'exact') {
     return compareExact(expected.phrases, heard);
+  }
+  if (expected.mode === 'once') {
+    return compareOnce(expected.phrases, heard);
   }
   return expected.mode === 'containsLike'
     ? compareContainsLike(expected.phrases, heard)
@@ -162,6 +205,16 @@ export function formatMismatch({ reader, expected, heard, comparison }) {
     lines.push(`first divergence at index ${comparison.index}:`);
     lines.push(`    expected: ${JSON.stringify(comparison.expectedPhrase)}`);
     lines.push(`    heard:    ${JSON.stringify(comparison.heardPhrase)}`);
+  } else if (expected.mode === 'once') {
+    const times = comparison.occurrences ?? 0;
+    lines.push(
+      times === 0
+        ? `${JSON.stringify(comparison.expectedPhrase)} was not spoken at all, expected exactly once`
+        : `${JSON.stringify(comparison.expectedPhrase)} was spoken ${times} times, expected exactly once`,
+    );
+    if (times > 1) {
+      lines.push(`    the first utterance was ${JSON.stringify(comparison.heardPhrase)}`);
+    }
   } else {
     lines.push(`missing phrase ${JSON.stringify(comparison.expectedPhrase)}`);
     lines.push(

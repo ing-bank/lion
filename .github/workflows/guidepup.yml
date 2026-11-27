@@ -100,7 +100,16 @@ jobs:
               sleep 15
             done
             echo "- \`$file\`: $status" >> "$GITHUB_STEP_SUMMARY"
-            grep -E "test files \||Error:" "$log" | tail -2
+            if [ "$status" = "FAIL" ]; then
+              # What the reader actually said, not the last two progress lines: the expectation
+              # failure names the expected and the heard phrase log, and without it a red run only
+              # reports that something failed.
+              echo "::group::$file ($status)"
+              tail -n 200 "$log"
+              echo "::endgroup::"
+            else
+              grep -E "test files \|" "$log" | tail -1
+            fi
             if [ "$status" = "FAIL" ]; then failures="$failures $file"; fi
           done
           if [ -n "$failures" ]; then
@@ -158,7 +167,16 @@ jobs:
               sleep 15
             done
             echo "- \`$file\`: $status" >> "$GITHUB_STEP_SUMMARY"
-            grep -E "test files \||Error:" "$log" | tail -2
+            if [ "$status" = "FAIL" ]; then
+              # What the reader actually said, not the last two progress lines: the expectation
+              # failure names the expected and the heard phrase log, and without it a red run only
+              # reports that something failed.
+              echo "::group::$file ($status)"
+              tail -n 200 "$log"
+              echo "::endgroup::"
+            else
+              grep -E "test files \|" "$log" | tail -1
+            fi
             if [ "$status" = "FAIL" ]; then failures="$failures $file"; fi
           done
           if [ -n "$failures" ]; then
