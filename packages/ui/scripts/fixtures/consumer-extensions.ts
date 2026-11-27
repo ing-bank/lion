@@ -7,6 +7,17 @@ import { ValidationExtension } from './consumer-mixins.js';
 import { Constructor } from '@open-wc/dedupe-mixin';
 import { SlotHost } from '@lion/ui/types/core.js';
 import { restorePhoneUtilManager } from '@lion/ui/input-tel-test-helpers.js';
+import { runComboboxSuite } from '@lion/ui/test-suites/combobox.js';
+import { runDialogSuite } from '@lion/ui/test-suites/dialog.js';
+import { runInteractionStateMixinSuite } from '@lion/ui/test-suites/form-core.js';
+import { runInputRangeSuite } from '@lion/ui/test-suites/input-range.js';
+import { runPaginationSuite } from '@lion/ui/test-suites/pagination.js';
+import {
+  runSelectInvokerSuite,
+  runSelectRichInteractionSuite,
+  runSelectRichSuite,
+} from '@lion/ui/test-suites/select-rich.js';
+import { runTooltipSuite } from '@lion/ui/test-suites/tooltip.js';
 
 type Assert<T extends true> = T;
 type RestoreHelperHasNoParameters = Assert<
@@ -101,3 +112,51 @@ class ConstructorBase extends LitElement {
 const SlottedConstructor = SlotMixin(ConstructorBase);
 export const constructorLabel: string = new SlottedConstructor('retained').label;
 export const prototypeLabel: string = SlottedConstructor.prototype.label;
+
+export function configureSharedSuites(): void {
+  runComboboxSuite({
+    showAllOnEmptyByDefault: true,
+    displaysOptionLabel: true,
+    opensOnInputClick: true,
+    supportsRichOptionContent: false,
+    getOptionTextNode: option => option,
+  });
+  runDialogSuite({ usesHeaderSlotForAccessibleName: true });
+  runInteractionStateMixinSuite({ submittedFeedbackTypes: ['error', 'warning'] });
+  runInputRangeSuite({
+    configureMinMaxLabels: host => {
+      host.noMinMaxLabels = false;
+    },
+  });
+  runPaginationSuite({
+    assertDisabled: node => {
+      node.hasAttribute('aria-disabled');
+    },
+  });
+  runSelectInvokerSuite({
+    configureSelectedElement: option => {
+      option.dataset.label = 'label';
+    },
+    assertSelectedContent: invoker => {
+      invoker.textContent;
+    },
+    getAfterElement: invoker => invoker.shadowRoot?.querySelector('span') ?? null,
+  });
+  runSelectRichInteractionSuite({
+    optionValue: value => String(value),
+    supportsEmptyOption: false,
+  });
+  runSelectRichSuite({
+    optionValue: value => String(value),
+    getInvokerLabel: invoker => invoker.textContent ?? undefined,
+    modalOverlay: true,
+    invokerUsesModelValue: true,
+    hidesOnOutsideClick: false,
+    trapsKeyboardFocus: true,
+    noSelectionReferenceWidth: 'none',
+    selectedReferenceWidth: 'none',
+  });
+  runTooltipSuite({ arrowWidth: 16, defaultInvokerRelation: 'label' });
+  // @ts-expect-error invalid relation
+  runTooltipSuite({ defaultInvokerRelation: 'other' });
+}

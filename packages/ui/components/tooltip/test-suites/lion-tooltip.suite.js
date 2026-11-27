@@ -19,11 +19,13 @@ import { resolveSuiteTag } from '../../core/test-helpers/resolveSuiteTag.js';
  * `tagString`, `klass` and the older role tag keys are deprecated: pass `classes` instead (Lion
  * itself uses `classes` everywhere).
  * @typedef {import('@lion/ui/types/test-suites.js').SuiteElement} SuiteElement
- * @param {import('@lion/ui/types/test-suites.js').SuiteConfig<{host: SuiteElement}>} [customConfig]
+ * @param {import('@lion/ui/types/test-suites.js').SuiteConfig<{host: SuiteElement}, {arrowWidth?: number, defaultInvokerRelation?: 'label'|'description'}>} [customConfig]
  */
 export function runTooltipSuite({
   classes: { host = LionTooltip } = {},
   tagString: legacyTagString,
+  arrowWidth = 12,
+  defaultInvokerRelation = 'description',
 } = {}) {
   const tagString = resolveSuiteTag(host, legacyTagString);
   const tag = unsafeStatic(tagString);
@@ -309,14 +311,10 @@ export function runTooltipSuite({
           '30px (content height) - 8px = 22px, divided by 2 = 11px offset --> arrow is in the middle',
         ); */
 
-        expect(
-          getComputedStyle(/** @type {HTMLElement} */ (el._arrowNode)).getPropertyValue('left'),
-        ).to.equal(
-          '-10px',
-          `arrow height is 8px so this offset should be taken into account to align the arrow properly,
-            as well as half the difference between width and height ((12 - 8) / 2 = 2)
-          `,
-        );
+        const arrowStyle = getComputedStyle(/** @type {HTMLElement} */ (el._arrowNode));
+        expect(arrowStyle.width).to.equal(`${arrowWidth}px`);
+        expect(arrowStyle.height).to.equal('8px');
+        expect(arrowStyle.left).to.equal(`${-(8 + (arrowWidth - 8) / 2)}px`);
       });
     });
 
@@ -372,7 +370,7 @@ export function runTooltipSuite({
         expect(content.getAttribute('role')).to.be.equal('tooltip');
       });
 
-      it('should have aria-describedby role set on the invoker', async () => {
+      it('sets the default accessible relation on the invoker', async () => {
         const el = /** @type {LionTooltip} */ (
           await fixture(html`
             <${tag}>
@@ -383,8 +381,11 @@ export function runTooltipSuite({
         );
         const content = /** @type {HTMLElement} */ (el.querySelector('[slot=content]'));
         const invoker = /** @type {HTMLElement} */ (el.querySelector('[slot=invoker]'));
-        expect(invoker.getAttribute('aria-describedby')).to.be.equal(content.id);
-        expect(invoker.getAttribute('aria-labelledby')).to.be.equal(null);
+        const expected =
+          defaultInvokerRelation === 'label' ? 'aria-labelledby' : 'aria-describedby';
+        const other = defaultInvokerRelation === 'label' ? 'aria-describedby' : 'aria-labelledby';
+        expect(invoker.getAttribute(expected)).to.equal(content.id);
+        expect(invoker.getAttribute(other)).to.equal(null);
       });
 
       it('should have aria-labelledby role set on the invoker when [ invoker-relation="label"]', async () => {

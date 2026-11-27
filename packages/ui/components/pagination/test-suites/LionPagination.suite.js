@@ -18,13 +18,14 @@ import { resolveSuiteTag } from '../../core/test-helpers/resolveSuiteTag.js';
  * itself uses `classes` everywhere).
  * @param {import('@lion/ui/types/test-suites.js').SuiteConfig<
  *   {host: SuiteElement},
- *   {pageObjects?: {host?: typeof DefaultPaginationObject}}
+ *   {pageObjects?: {host?: typeof DefaultPaginationObject}, assertDisabled?: (node: HTMLElement) => void}
  * >} [customConfig]
  */
 export function runPaginationSuite({
   classes: { host = LionPagination } = {},
   pageObjects: { host: PaginationObject = DefaultPaginationObject } = {},
   tagString: legacyTagString,
+  assertDisabled = node => expect(node).to.have.attribute('disabled'),
 } = {}) {
   const tag = unsafeStatic(resolveSuiteTag(host, legacyTagString));
   const fixture = /** @type {(arg: TemplateResult) => Promise<LionPagination>} */ (_fixture);
@@ -52,12 +53,12 @@ export function runPaginationSuite({
 
     it('disables the previous button if on first page', async () => {
       const el = await fixture(html` <${tag} count="4"></${tag}> `);
-      expect(new PaginationObject(el).previousButtonEl).to.has.attribute('disabled');
+      assertDisabled(new PaginationObject(el).previousButtonEl);
     });
 
     it('disables the next button if on last page', async () => {
       const el = await fixture(html` <${tag} count="4" current="4"></${tag}> `);
-      expect(new PaginationObject(el).nextButtonEl).to.has.attribute('disabled');
+      assertDisabled(new PaginationObject(el).nextButtonEl);
     });
 
     describe('User interaction', () => {

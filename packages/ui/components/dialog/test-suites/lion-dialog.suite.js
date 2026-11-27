@@ -31,12 +31,13 @@ const fixture = /** @type {(arg: TemplateResult) => Promise<LionDialog>} */ (_fi
  * Runs the `lion-dialog` behavioural suite. The caller hands the elements it should run against;
  * anything left out keeps Lion's own element.
  * @typedef {import('@lion/ui/types/test-suites.js').SuiteElement} SuiteElement
- * @param {import('@lion/ui/types/test-suites.js').SuiteConfig<{host: SuiteElement; tabs: SuiteElement}>} [customConfig]
+ * @param {import('@lion/ui/types/test-suites.js').SuiteConfig<{host: SuiteElement; tabs: SuiteElement}, {usesHeaderSlotForAccessibleName?: boolean}>} [customConfig]
  */
 export function runDialogSuite({
   classes: { host = LionDialog, tabs = LionTabs } = {},
   tagString: legacyTagString,
   tabsTagString: legacyTabsTagString,
+  usesHeaderSlotForAccessibleName = false,
 } = {}) {
   const hostTagString = resolveSuiteTag(host, legacyTagString);
   const tags = {
@@ -121,8 +122,9 @@ export function runDialogSuite({
         const invokerNode = el._overlayInvokerNode;
         invokerNode.focus();
         invokerNode.click();
-        const contentNode = /** @type {Element} */ (el.querySelector('[slot="content"]'));
-        expect(isActiveElement(contentNode)).to.be.true;
+        // @ts-expect-error [allow-protected-in-tests]
+        const { contentNode } = el._overlayCtrl;
+        expect(isActiveElement(contentNode, { deep: true })).to.be.true;
       });
 
       it('sets focus on autofocused element', async () => {
@@ -214,6 +216,7 @@ export function runDialogSuite({
         const el = await fixture(html`
           <${tags.host} opened>
             <button slot="invoker">Invoker</button>
+            ${usesHeaderSlotForAccessibleName ? html`<div slot="header">Dialog</div>` : nothing}
             <div slot="content" class="dialog" aria-label="Dialog">Hey there</div>
           </${tags.host}>
         `);
@@ -246,7 +249,8 @@ export function runDialogSuite({
             <button slot="invoker">Popup button</button>
           </${tags.host}>`,
         );
-        const contentNode = /** @type {HTMLElement} */ (el.querySelector('[slot="content"]'));
+        // @ts-expect-error [allow-protected-in-tests]
+        const { contentNode } = el._overlayCtrl;
 
         expect(contentNode.getAttribute('role')).to.equal('dialog');
       });
@@ -258,7 +262,8 @@ export function runDialogSuite({
             <button slot="invoker">Popup button</button>
           </${tags.host}>`,
         );
-        const contentNode = /** @type {HTMLElement} */ (el.querySelector('[slot="content"]'));
+        // @ts-expect-error [allow-protected-in-tests]
+        const { contentNode } = el._overlayCtrl;
 
         expect(contentNode.getAttribute('role')).to.equal('alertdialog');
       });
@@ -267,6 +272,7 @@ export function runDialogSuite({
         const el = await fixture(html`
           <${tags.host} opened is-alert-dialog>
             <button slot="invoker">Invoker</button>
+            ${usesHeaderSlotForAccessibleName ? html`<div slot="header">Dialog</div>` : nothing}
             <div slot="content" class="dialog" aria-label="Dialog">Hey there</div>
           </${tags.host}>
         `);
@@ -317,6 +323,8 @@ export function runDialogSuite({
         await el.updateComplete;
         await el.updateComplete;
 
+        // @ts-expect-error [allow-protected-in-tests]
+        await waitUntil(() => !!getDialog()?._overlayCtrl);
         getInvoker().click();
 
         const dialogAfterRouteChange = getDialog();

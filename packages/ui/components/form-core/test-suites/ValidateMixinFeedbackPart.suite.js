@@ -91,15 +91,19 @@ export function runValidateMixinFeedbackPart(customConfig = {}) {
     it('has .showsFeedbackFor indicating for which type it actually shows messages', async () => {
       const el = /** @type {ValidateElement} */ (
         await fixture(html`
-        <${tag} submitted .validators=${[new MinLength(3)]}>${lightDom}</${tag}>
+        <${tag} .submitted=${true} .validators=${[new MinLength(3)]}>${lightDom}</${tag}>
       `)
       );
 
       el.modelValue = 'a';
+      await el.updateComplete;
+      await el.validateComplete;
       await el.feedbackComplete;
       expect(el.showsFeedbackFor).to.deep.equal(['error']);
 
       el.modelValue = 'abc';
+      await el.updateComplete;
+      await el.validateComplete;
       await el.feedbackComplete;
       expect(el.showsFeedbackFor).to.deep.equal([]);
     });

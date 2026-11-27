@@ -5,6 +5,7 @@ import { browserDetection } from '@lion/ui/core.js';
 import sinon from 'sinon';
 import { LionOption, LionOptions } from '@lion/ui/listbox.js';
 import { LionSelectRich } from '@lion/ui/select-rich.js';
+import { nothing } from 'lit';
 import { getSelectRichMembers } from '@lion/ui/select-rich-test-helpers.js';
 import { resolveSuiteTag } from '../../core/test-helpers/resolveSuiteTag.js';
 
@@ -44,7 +45,7 @@ function expectOnlyGivenOneOptionToBeChecked(options, selectedIndex) {
  * Runs the `lion-select-rich` behavioural suite, moved out of `test/lion-select-rich-interaction.test.js` so a Subclasser can run
  * the same guarantees against its own element. Pass `tagString` to point it at your registered
  * tag; see docs/guides/principles/test-suites.md.
- * @param {import('@lion/ui/types/test-suites.js').SuiteConfig<{host: SuiteElement; option: SuiteElement; options: SuiteElement}, {optionTagString?: any; optionsTagString?: any}>} [customConfig]
+ * @param {import('@lion/ui/types/test-suites.js').SuiteConfig<{host: SuiteElement; option: SuiteElement; options: SuiteElement}, {optionTagString?: any; optionsTagString?: any; optionValue?: (value: any) => any; supportsEmptyOption?: boolean;}>} [customConfig]
  */
 export function runSelectRichInteractionSuite({
   classes: {
@@ -55,6 +56,8 @@ export function runSelectRichInteractionSuite({
   tagString: legacyTagString,
   optionsTagString: legacyOptionsTagString,
   optionTagString: legacyOptionTagString,
+  optionValue = value => value,
+  supportsEmptyOption = true,
 } = {}) {
   const tag = unsafeStatic(resolveSuiteTag(hostEl, legacyTagString));
   const tagNameOptions = resolveSuiteTag(optionsEl, legacyOptionsTagString);
@@ -72,8 +75,8 @@ export function runSelectRichInteractionSuite({
         const el = /** @type {LionSelectRich} */ (
           await fixture(html`
             <${tag} interaction-mode="windows/linux">
-              <${tagOption} .choiceValue=${'red'}>Red</${tagOption}>
-              <${tagOption} .choiceValue=${'teal'}>Teal</${tagOption}>
+              <${tagOption} .choiceValue=${optionValue('red')}>Red</${tagOption}>
+              <${tagOption} .choiceValue=${optionValue('teal')}>Teal</${tagOption}>
             </${tag}>
           `)
         );
@@ -91,9 +94,9 @@ export function runSelectRichInteractionSuite({
         const el = /** @type {LionSelectRich} */ (
           await fixture(html`
             <${tag} interaction-mode="mac">
-              <${tagOption} .choiceValue=${10}>Item 1</${tagOption}>
-              <${tagOption} .choiceValue=${20} checked>Item 2</${tagOption}>
-              <${tagOption} .choiceValue=${30}>Item 3</${tagOption}>
+              <${tagOption} .choiceValue=${optionValue(10)}>Item 1</${tagOption}>
+              <${tagOption} .choiceValue=${optionValue(20)} checked>Item 2</${tagOption}>
+              <${tagOption} .choiceValue=${optionValue(30)}>Item 3</${tagOption}>
             </${tag}>
           `)
         );
@@ -122,14 +125,14 @@ export function runSelectRichInteractionSuite({
         browserDetection.isMac = true;
         const el = /** @type {LionSelectRich} */ (
           await fixture(html`
-            <${tag}><${tagOption} .choiceValue=${10}>Item 1</${tagOption}></${tag}>
+            <${tag}><${tagOption} .choiceValue=${optionValue(10)}>Item 1</${tagOption}></${tag}>
           `)
         );
         expect(el.interactionMode).to.equal('mac');
         const el2 = /** @type {LionSelectRich} */ (
           await fixture(html`
             <${tag} interaction-mode="windows/linux"
-              ><${tagOption} .choiceValue=${10}>Item 1</${tagOption}></${tag}
+              ><${tagOption} .choiceValue=${optionValue(10)}>Item 1</${tagOption}></${tag}
             >
           `)
         );
@@ -138,14 +141,14 @@ export function runSelectRichInteractionSuite({
         browserDetection.isMac = false;
         const el3 = /** @type {LionSelectRich} */ (
           await fixture(html`
-            <${tag}><${tagOption} .choiceValue=${10}>Item 1</${tagOption}></${tag}>
+            <${tag}><${tagOption} .choiceValue=${optionValue(10)}>Item 1</${tagOption}></${tag}>
           `)
         );
         expect(el3.interactionMode).to.equal('windows/linux');
         const el4 = /** @type {LionSelectRich} */ (
           await fixture(html`
             <${tag} interaction-mode="mac"
-              ><${tagOption} .choiceValue=${10}>Item 1</${tagOption}></${tag}
+              ><${tagOption} .choiceValue=${optionValue(10)}>Item 1</${tagOption}></${tag}
             >
           `)
         );
@@ -157,7 +160,7 @@ export function runSelectRichInteractionSuite({
         const el = /** @type {LionSelectRich} */ (
           await fixture(html`
             <${tag} interaction-mode="windows/linux"
-              ><${tagOption} .choiceValue=${10}>Item 1</${tagOption}></${tag}
+              ><${tagOption} .choiceValue=${optionValue(10)}>Item 1</${tagOption}></${tag}
             >
           `)
         );
@@ -167,7 +170,7 @@ export function runSelectRichInteractionSuite({
         const el2 = /** @type {LionSelectRich} */ (
           await fixture(html`
             <${tag} interaction-mode="mac"
-              ><${tagOption} .choiceValue=${10}>Item 1</${tagOption}></${tag}
+              ><${tagOption} .choiceValue=${optionValue(10)}>Item 1</${tagOption}></${tag}
             >
           `)
         );
@@ -182,9 +185,9 @@ export function runSelectRichInteractionSuite({
           await fixture(html`
             <${tag} interaction-mode="mac">
               <${tagOptions} slot="input">
-                <${tagOption} .choiceValue=${10}>Item 1</${tagOption}>
-                <${tagOption} .choiceValue=${20}>Item 2</${tagOption}>
-                <${tagOption} .choiceValue=${30}>Item 3</${tagOption}>
+                <${tagOption} .choiceValue=${optionValue(10)}>Item 1</${tagOption}>
+                <${tagOption} .choiceValue=${optionValue(20)}>Item 2</${tagOption}>
+                <${tagOption} .choiceValue=${optionValue(30)}>Item 3</${tagOption}>
               </${tagOptions}>
             </${tag}>
           `)
@@ -213,9 +216,9 @@ export function runSelectRichInteractionSuite({
           await fixture(html`
             <${tag} interaction-mode="mac">
               <${tagOptions} slot="input">
-                <${tagOption} .choiceValue=${10}>Item 1</${tagOption}>
-                <${tagOption} .choiceValue=${20}>Item 2</${tagOption}>
-                <${tagOption} .choiceValue=${30}>Item 3</${tagOption}>
+                <${tagOption} .choiceValue=${optionValue(10)}>Item 1</${tagOption}>
+                <${tagOption} .choiceValue=${optionValue(20)}>Item 2</${tagOption}>
+                <${tagOption} .choiceValue=${optionValue(30)}>Item 3</${tagOption}>
               </${tagOptions}>
             </${tag}>
           `)
@@ -242,9 +245,9 @@ export function runSelectRichInteractionSuite({
           await fixture(html`
             <${tag} interaction-mode="mac">
               <${tagOptions} slot="input">
-                <${tagOption} .choiceValue=${'red'}>Red</${tagOption}>
-                <${tagOption} .choiceValue=${'teal'}>Teal</${tagOption}>
-                <${tagOption} .choiceValue=${'turquoise'}>Turquoise</${tagOption}>
+                <${tagOption} .choiceValue=${optionValue('red')}>Red</${tagOption}>
+                <${tagOption} .choiceValue=${optionValue('teal')}>Teal</${tagOption}>
+                <${tagOption} .choiceValue=${optionValue('turquoise')}>Turquoise</${tagOption}>
               </${tagOptions}>
             </${tag}>
           `)
@@ -271,9 +274,9 @@ export function runSelectRichInteractionSuite({
               }}"
             >
               <${tagOptions} slot="input">
-                <${tagOption} .choiceValue=${10}>Item 1</${tagOption}>
-                <${tagOption} .choiceValue=${20}>Item 2</${tagOption}>
-                <${tagOption} .choiceValue=${30}>Item 3</${tagOption}>
+                <${tagOption} .choiceValue=${optionValue(10)}>Item 1</${tagOption}>
+                <${tagOption} .choiceValue=${optionValue(20)}>Item 2</${tagOption}>
+                <${tagOption} .choiceValue=${optionValue(30)}>Item 3</${tagOption}>
               </${tagOptions}>
             </${tag}>
           `)
@@ -307,9 +310,9 @@ export function runSelectRichInteractionSuite({
               }}"
             >
               <${tagOptions} slot="input">
-                <${tagOption} .choiceValue=${10}>Item 1</${tagOption}>
-                <${tagOption} .choiceValue=${20}>Item 2</${tagOption}>
-                <${tagOption} .choiceValue=${30}>Item 3</${tagOption}>
+                <${tagOption} .choiceValue=${optionValue(10)}>Item 1</${tagOption}>
+                <${tagOption} .choiceValue=${optionValue(20)}>Item 2</${tagOption}>
+                <${tagOption} .choiceValue=${optionValue(30)}>Item 3</${tagOption}>
               </${tagOptions}>
             </${tag}>
           `)
@@ -337,9 +340,9 @@ export function runSelectRichInteractionSuite({
           await fixture(html`
             <${tag} interaction-mode="windows/linux">
               <${tagOptions} slot="input">
-                <${tagOption} .choiceValue=${'red'}>Red</${tagOption}>
-                <${tagOption} .choiceValue=${'teal'}>Teal</${tagOption}>
-                <${tagOption} .choiceValue=${'turquoise'}>Turquoise</${tagOption}>
+                <${tagOption} .choiceValue=${optionValue('red')}>Red</${tagOption}>
+                <${tagOption} .choiceValue=${optionValue('teal')}>Teal</${tagOption}>
+                <${tagOption} .choiceValue=${optionValue('turquoise')}>Turquoise</${tagOption}>
               </${tagOptions}>
             </${tag}>
           `)
@@ -403,8 +406,8 @@ export function runSelectRichInteractionSuite({
           await fixture(html`
             <${tag}>
               <${tagOptions} slot="input">
-                <${tagOption} .choiceValue=${10}>Item 1</${tagOption}>
-                <${tagOption} .choiceValue=${20}>Item 2</${tagOption}>
+                <${tagOption} .choiceValue=${optionValue(10)}>Item 1</${tagOption}>
+                <${tagOption} .choiceValue=${optionValue(20)}>Item 2</${tagOption}>
               </${tagOptions}>
             </${tag}>
           `)
@@ -421,10 +424,14 @@ export function runSelectRichInteractionSuite({
       it('sets [aria-invalid="true"] to "._invokerNode" when there is an error', async () => {
         const el = /** @type {LionSelectRich} */ (
           await fixture(html`
-            <${tag} .validators=${[new Required()]}>
+            <${tag} .validators=${[new Required()]} ?has-no-default-selected=${!supportsEmptyOption}>
               <${tagOptions} slot="input">
-                <${tagOption} .choiceValue=${null}>Please select a value</${tagOption}>
-                <${tagOption} .modelValue=${{ value: 10, checked: true }}>Item 1</${tagOption}>
+                ${
+                  supportsEmptyOption
+                    ? html`<${tagOption} .choiceValue=${null}>Please select a value</${tagOption}>`
+                    : nothing
+                }
+                <${tagOption} .modelValue=${{ value: optionValue(10), checked: true }}>Item 1</${tagOption}>
               </${tagOptions}>
             </${tag}>
           `)
@@ -434,13 +441,15 @@ export function runSelectRichInteractionSuite({
         await el.feedbackComplete;
         await el.updateComplete;
         expect(_invokerNode.getAttribute('aria-invalid')).to.equal('false');
-
-        options[0].checked = true;
+        if (supportsEmptyOption) {
+          options[0].checked = true;
+        } else {
+          el.clear();
+        }
         await el.feedbackComplete;
         await el.updateComplete;
         expect(_invokerNode.getAttribute('aria-invalid')).to.equal('true');
-
-        options[1].checked = true;
+        options[supportsEmptyOption ? 1 : 0].checked = true;
         await el.feedbackComplete;
         await el.updateComplete;
         expect(_invokerNode.getAttribute('aria-invalid')).to.equal('false');
