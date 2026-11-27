@@ -7,6 +7,7 @@ import {
   fixture,
   expect,
   html,
+  waitUntil,
 } from '@open-wc/testing';
 import { overlays as overlaysManager, OverlayController } from '@lion/ui/overlays.js';
 import { sendKeys } from '@web/test-runner-commands';
@@ -583,7 +584,7 @@ export function runOverlayMixinSuite({ tagString, tag, suffix = '' }) {
         // render the new content
         await el.updateComplete;
         // wait for the teardown to complete
-        await el.updateComplete;
+        await waitUntil(() => teardownSpy.callCount === 1);
 
         expect(spyDisconnected.callCount).to.equal(1);
         expect(teardownSpy.callCount).to.equal(1);
@@ -591,6 +592,7 @@ export function runOverlayMixinSuite({ tagString, tag, suffix = '' }) {
 
         el.showOverlay = true;
         await el.updateComplete;
+        await waitUntil(() => setupSpy.callCount === 1);
         expect(setupSpy.callCount).to.equal(1);
 
         const elCtrl = /** @type {OverlayEl} */ (el.overlayEl)?._overlayCtrl;
@@ -730,7 +732,7 @@ export function runOverlayMixinSuite({ tagString, tag, suffix = '' }) {
       await aTimeout(0);
       expect(el._overlayCtrl.contentNode).to.be.displayed;
       const nestedOverlayEl = /** @type {OverlayEl} */ (
-        el._overlayCtrl.contentNode.querySelector(tagString)
+        el.querySelector(tagString) || el._overlayCtrl.contentNode.querySelector(tagString)
       );
       nestedOverlayEl.opened = true;
       await aTimeout(0);

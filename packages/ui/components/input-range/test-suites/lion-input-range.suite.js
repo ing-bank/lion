@@ -1,6 +1,7 @@
 import { html } from 'lit/static-html.js';
 import { unsafeStatic, expect, fixture as _fixture, nextFrame } from '@open-wc/testing';
 import { LionInputRange } from '@lion/ui/input-range.js';
+import { ref } from 'lit/directives/ref.js';
 import { resolveSuiteTag } from '../../core/test-helpers/resolveSuiteTag.js';
 
 /**
@@ -15,14 +16,20 @@ const fixture = /** @type {(arg: TemplateResult|string) => Promise<LionInputRang
  * registered tag; see docs/guides/principles/test-suites.md.
  * `tagString`, `klass` and the older role tag keys are deprecated: pass `classes` instead (Lion
  * itself uses `classes` everywhere).
- * @param {import('@lion/ui/types/test-suites.js').SuiteConfig<{host: SuiteElement}>} [customConfig]
+ * @param {import('@lion/ui/types/test-suites.js').SuiteConfig<{host: SuiteElement}, {configureMinMaxLabels?: (host: LionInputRange) => void}>} [customConfig]
  */
 export function runInputRangeSuite({
   classes: { host = LionInputRange } = {},
   tagString: legacyTagString,
+  configureMinMaxLabels,
 } = {}) {
   const tagString = resolveSuiteTag(host, legacyTagString);
   const tag = unsafeStatic(tagString);
+  const enableLabels = ref(element => {
+    if (element && configureMinMaxLabels) {
+      configureMinMaxLabels(/** @type {LionInputRange} */ (element));
+    }
+  });
 
   describe('<lion-input-range>', () => {
     it('has a type = range', async () => {
@@ -46,8 +53,8 @@ export function runInputRangeSuite({
       ).to.equal('%');
     });
 
-    it('displays 2 tick labels (min and max values) by default', async () => {
-      const el = await fixture(`<${tagString} min="100" max="200"></${tagString}>`);
+    it('displays 2 tick labels (min and max values)', async () => {
+      const el = await fixture(html`<${tag} ${enableLabels} min="100" max="200"></${tag}>`);
       expect(el.shadowRoot?.querySelectorAll('.input-range__limits span').length).to.equal(2);
       expect(
         /** @type {HTMLElement} */ (
@@ -108,7 +115,7 @@ export function runInputRangeSuite({
     describe('Custom min/max labels', () => {
       it('displays custom minLabel in the limits when provided', async () => {
         const el = await fixture(html`
-          <${tag} min="0" max="100" min-label="Low" .modelValue=${50}></${tag}>
+          <${tag} ${enableLabels} min="0" max="100" min-label="Low" .modelValue=${50}></${tag}>
         `);
         const minDiv = /** @type {HTMLElement} */ (
           /** @type {ShadowRoot} */ (el.shadowRoot).querySelectorAll(
@@ -120,7 +127,7 @@ export function runInputRangeSuite({
 
       it('displays custom maxLabel in the limits when provided', async () => {
         const el = await fixture(html`
-          <${tag} min="0" max="100" max-label="High" .modelValue=${50}></${tag}>
+          <${tag} ${enableLabels} min="0" max="100" max-label="High" .modelValue=${50}></${tag}>
         `);
         const maxDiv = /** @type {HTMLElement} */ (
           /** @type {ShadowRoot} */ (el.shadowRoot).querySelectorAll(

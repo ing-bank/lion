@@ -34,7 +34,16 @@ const fixture = /** @type {(arg: TemplateResult) => Promise<LionSelectRich>} */ 
  * Runs the `lion-select-rich` behavioural suite. The caller hands the elements it should run against;
  * anything left out keeps Lion's own element.
  * @typedef {import('@lion/ui/types/test-suites.js').SuiteElement} SuiteElement
- * @param {import('@lion/ui/types/test-suites.js').SuiteConfig<{host: SuiteElement; option: SuiteElement; tabs: SuiteElement}>} [customConfig]
+ * @param {import('@lion/ui/types/test-suites.js').SuiteConfig<{host: SuiteElement; option: SuiteElement; tabs: SuiteElement}, {
+ *   optionValue?: (value: any) => any;
+ *   getInvokerLabel?: (invoker: LionSelectInvoker) => string | undefined;
+ *   modalOverlay?: boolean;
+ *   invokerUsesModelValue?: boolean;
+ *   hidesOnOutsideClick?: boolean;
+ *   trapsKeyboardFocus?: boolean;
+ *   noSelectionReferenceWidth?: 'min'|'full'|'none';
+ *   selectedReferenceWidth?: 'min'|'full'|'none';
+ * }>} [customConfig]
  */
 export function runSelectRichSuite({
   classes: {
@@ -45,6 +54,15 @@ export function runSelectRichSuite({
   tagString: legacyTagString,
   optionTagString: legacyOptionTagString,
   tabsTagString: legacyTabsTagString,
+  optionValue = value => value,
+  getInvokerLabel = invoker =>
+    invoker.shadowRoot?.querySelector('#content-wrapper')?.textContent?.trim(),
+  modalOverlay = false,
+  invokerUsesModelValue = false,
+  hidesOnOutsideClick = true,
+  trapsKeyboardFocus = false,
+  noSelectionReferenceWidth = modalOverlay ? 'none' : 'min',
+  selectedReferenceWidth = modalOverlay ? 'none' : 'full',
 } = {}) {
   const hostTagString = resolveSuiteTag(hostEl, legacyTagString);
   const hostTag = unsafeStatic(hostTagString);
@@ -78,9 +96,9 @@ export function runSelectRichSuite({
     it('checks the first enabled option', async () => {
       const el = await fixture(html`
         <${hostTag}>
-          <${tagOption} .choiceValue=${'Red'}></${tagOption}>
-          <${tagOption} .choiceValue=${'Hotpink'}></${tagOption}>
-          <${tagOption} .choiceValue=${'Blue'}></${tagOption}>
+          <${tagOption} .choiceValue=${optionValue('Red')}></${tagOption}>
+          <${tagOption} .choiceValue=${optionValue('Hotpink')}></${tagOption}>
+          <${tagOption} .choiceValue=${optionValue('Blue')}></${tagOption}>
         </${hostTag}>
       `);
       expect(el.activeIndex).to.equal(0);
@@ -90,21 +108,20 @@ export function runSelectRichSuite({
     it('still has a checked value while disabled', async () => {
       const el = await fixture(html`
         <${hostTag} disabled>
-          <${tagOption} .choiceValue=${'Red'}>Red</${tagOption}>
-          <${tagOption} .choiceValue=${'Hotpink'}>Hotpink</${tagOption}>
-          <${tagOption} .choiceValue=${'Blue'}>Blue</${tagOption}>
+          <${tagOption} .choiceValue=${optionValue('Red')}>Red</${tagOption}>
+          <${tagOption} .choiceValue=${optionValue('Hotpink')}>Hotpink</${tagOption}>
+          <${tagOption} .choiceValue=${optionValue('Blue')}>Blue</${tagOption}>
         </${hostTag}>
       `);
-
-      expect(el.modelValue).to.equal('Red');
+      expect(el.modelValue).to.equal(optionValue('Red'));
     });
 
     it('supports having no default selection initially', async () => {
       const el = await fixture(html`
         <${hostTag} id="color" name="color" label="Favorite color" has-no-default-selected>
-          <${tagOption} .choiceValue=${'red'}>Red</${tagOption}>
-          <${tagOption} .choiceValue=${'hotpink'}>Hotpink</${tagOption}>
-          <${tagOption} .choiceValue=${'teal'}>Teal</${tagOption}>
+          <${tagOption} .choiceValue=${optionValue('red')}>Red</${tagOption}>
+          <${tagOption} .choiceValue=${optionValue('hotpink')}>Hotpink</${tagOption}>
+          <${tagOption} .choiceValue=${optionValue('teal')}>Teal</${tagOption}>
         </${hostTag}>
       `);
       const { _invokerNode } = getSelectRichMembers(el);
@@ -124,8 +141,8 @@ export function runSelectRichSuite({
       it('sets the first option as the selectedElement if no option is checked', async () => {
         const el = await fixture(html`
           <${hostTag} name="foo">
-            <${tagOption} .choiceValue=${10}>Item 1</${tagOption}>
-            <${tagOption} .choiceValue=${20}>Item 2</${tagOption}>
+            <${tagOption} .choiceValue=${optionValue(10)}>Item 1</${tagOption}>
+            <${tagOption} .choiceValue=${optionValue(20)}>Item 2</${tagOption}>
           </${hostTag}>
         `);
         const { _invokerNode } = getSelectRichMembers(el);
@@ -136,8 +153,8 @@ export function runSelectRichSuite({
       it('syncs the selected element to the invoker', async () => {
         const el = await fixture(html`
           <${hostTag} name="foo">
-            <${tagOption} .choiceValue=${10}>Item 1</${tagOption}>
-            <${tagOption} .choiceValue=${20} checked>Item 2</${tagOption}>
+            <${tagOption} .choiceValue=${optionValue(10)}>Item 1</${tagOption}>
+            <${tagOption} .choiceValue=${optionValue(20)} checked>Item 2</${tagOption}>
           </${hostTag}>
         `);
         const { _invokerNode } = getSelectRichMembers(el);
@@ -152,8 +169,8 @@ export function runSelectRichSuite({
       it('delegates readonly to the invoker', async () => {
         const el = await fixture(html`
           <${hostTag} readonly>
-            <${tagOption} .choiceValue=${10}>Item 1</${tagOption}>
-            <${tagOption} .choiceValue=${20}>Item 2</${tagOption}>
+            <${tagOption} .choiceValue=${optionValue(10)}>Item 1</${tagOption}>
+            <${tagOption} .choiceValue=${optionValue(20)}>Item 2</${tagOption}>
           </${hostTag}>
         `);
         const { _invokerNode } = getSelectRichMembers(el);
@@ -164,7 +181,7 @@ export function runSelectRichSuite({
       it('delegates singleOption to the invoker', async () => {
         const el = await fixture(html`
           <${hostTag}>
-            <${tagOption} .choiceValue=${10}>Item 1</${tagOption}>
+            <${tagOption} .choiceValue=${optionValue(10)}>Item 1</${tagOption}>
           </${hostTag}>
         `);
         const { _invokerNode } = getSelectRichMembers(el);
@@ -175,16 +192,15 @@ export function runSelectRichSuite({
       it('sets and removes the button role and aria attributes on change of singleOption', async () => {
         const el = await fixture(html`
           <${hostTag}>
-            <${tagOption} .choiceValue=${10}>Item 1</${tagOption}>
-            <${tagOption} .choiceValue=${20}>Item 2</${tagOption}>
+            <${tagOption} .choiceValue=${optionValue(10)}>Item 1</${tagOption}>
+            <${tagOption} .choiceValue=${optionValue(20)}>Item 2</${tagOption}>
           </${hostTag}>
         `);
         const { _invokerNode } = getSelectRichMembers(el);
 
         expect(_invokerNode.hasAttribute('role')).to.be.true;
         expect(_invokerNode.hasAttribute('aria-haspopup')).to.be.true;
-        expect(_invokerNode.hasAttribute('aria-expanded')).to.be.true;
-
+        expect(_invokerNode.hasAttribute('aria-expanded')).to.equal(!modalOverlay);
         el.singleOption = true;
         await el.updateComplete;
         expect(_invokerNode.hasAttribute('role')).to.be.false;
@@ -195,10 +211,28 @@ export function runSelectRichSuite({
         await el.updateComplete;
         expect(_invokerNode.hasAttribute('role')).to.be.true;
         expect(_invokerNode.hasAttribute('aria-haspopup')).to.be.true;
-        expect(_invokerNode.hasAttribute('aria-expanded')).to.be.true;
+        expect(_invokerNode.hasAttribute('aria-expanded')).to.equal(!modalOverlay);
       });
 
       it('updates the invoker when the selected element is the same but the modelValue was updated asynchronously', async () => {
+        if (invokerUsesModelValue) {
+          const el = await fixture(html`
+            <${hostTag}>
+              <${tagOption} checked .choiceValue=${optionValue('red')}>Red</${tagOption}>
+              <${tagOption} .choiceValue=${optionValue('blue')}>Blue</${tagOption}>
+            </${hostTag}>
+          `);
+          const { _invokerNode } = getSelectRichMembers(el);
+          const firstOption = el.formElements[0];
+          await _invokerNode.updateComplete;
+          expect(getInvokerLabel(_invokerNode)).to.equal('Red');
+          firstOption.modelValue = { value: optionValue('teal'), checked: true };
+          await el.updateComplete;
+          await _invokerNode.updateComplete;
+          expect(_invokerNode.selectedElement).to.equal(firstOption);
+          expect(getInvokerLabel(_invokerNode)).to.equal('Teal');
+          return;
+        }
         const tagString = defineCE(
           class LionCustomOption extends LionOption {
             render() {
@@ -238,8 +272,8 @@ export function runSelectRichSuite({
       it.skip('inherits the content width including arrow width', async () => {
         const el = await fixture(html`
           <${hostTag}>
-            <${tagOption} .choiceValue=${10}>Item 1</${tagOption}>
-            <${tagOption} .choiceValue=${10}>Item 2 with long label</${tagOption}>
+            <${tagOption} .choiceValue=${optionValue(10)}>Item 1</${tagOption}>
+            <${tagOption} .choiceValue=${optionValue(10)}>Item 2 with long label</${tagOption}>
           </${hostTag}>
         `);
         el.opened = true;
@@ -248,9 +282,8 @@ export function runSelectRichSuite({
         const { _invokerNode, _inputNode } = getSelectRichMembers(el);
 
         expect(_invokerNode.clientWidth).to.equal(options[1].clientWidth);
-
         const newOption = /** @type {LionOption} */ (document.createElement(tagNameOption));
-        newOption.choiceValue = 30;
+        newOption.choiceValue = optionValue(30);
         newOption.textContent = '30 with longer label';
 
         _inputNode.appendChild(newOption);
@@ -285,14 +318,18 @@ export function runSelectRichSuite({
 
       it('syncs opened state with overlay shown', async () => {
         const el = await fixture(html` <${hostTag} .opened=${true}></${hostTag}> `);
+        const { _overlayCtrl } = getSelectRichMembers(el);
         const outerEl = /** @type {HTMLButtonElement} */ (
           await _fixture('<button>somewhere</button>')
         );
-
         expect(el.opened).to.be.true;
 
         mimicClick(outerEl);
         await aTimeout(0);
+        expect(el.opened).to.equal(!hidesOnOutsideClick);
+        if (el.opened) {
+          await _overlayCtrl.hide();
+        }
         expect(el.opened).to.be.false;
       });
 
@@ -315,8 +352,8 @@ export function runSelectRichSuite({
       it('opens the listbox with checked option as active', async () => {
         const el = await fixture(html`
           <${hostTag}>
-            <${tagOption} .choiceValue=${10}>Item 1</${tagOption}>
-            <${tagOption} .choiceValue=${20} checked>Item 2</${tagOption}>
+            <${tagOption} .choiceValue=${optionValue(10)}>Item 1</${tagOption}>
+            <${tagOption} .choiceValue=${optionValue(20)} checked>Item 2</${tagOption}>
           </${hostTag}>
         `);
         const { _overlayCtrl } = getSelectRichMembers(el);
@@ -332,23 +369,23 @@ export function runSelectRichSuite({
       it('stays closed on click if it is disabled or readonly or has a single option', async () => {
         const elReadOnly = await fixture(html`
           <${hostTag} readonly>
-            <${tagOption} .choiceValue=${10}>Item 1</${tagOption}>
-            <${tagOption} .choiceValue=${20} checked>Item 2</${tagOption}>
+            <${tagOption} .choiceValue=${optionValue(10)}>Item 1</${tagOption}>
+            <${tagOption} .choiceValue=${optionValue(20)} checked>Item 2</${tagOption}>
           </${hostTag}>
         `);
         const { _invokerNode: _invokerNodeReadOnly } = getSelectRichMembers(elReadOnly);
 
         const elDisabled = await fixture(html`
           <${hostTag} disabled>
-            <${tagOption} .choiceValue=${10}>Item 1</${tagOption}>
-            <${tagOption} .choiceValue=${20} checked>Item 2</${tagOption}>
+            <${tagOption} .choiceValue=${optionValue(10)}>Item 1</${tagOption}>
+            <${tagOption} .choiceValue=${optionValue(20)} checked>Item 2</${tagOption}>
           </${hostTag}>
         `);
         const { _invokerNode: _invokerNodeDisabled } = getSelectRichMembers(elDisabled);
 
         const elSingleoption = await fixture(html`
           <${hostTag}>
-            <${tagOption} .choiceValue=${10}>Item 1</${tagOption}>
+            <${tagOption} .choiceValue=${optionValue(10)}>Item 1</${tagOption}>
           </${hostTag}>
         `);
         const { _invokerNode: _invokerNodeSingleOption } = getSelectRichMembers(elSingleoption);
@@ -369,14 +406,14 @@ export function runSelectRichSuite({
       it('stays closed with [ArrowUp] or [ArrowDown] key in readonly mode or has a single option', async () => {
         const elReadOnly = await fixture(html`
           <${hostTag} readonly>
-            <${tagOption} .choiceValue=${10}>Item 1</${tagOption}>
-            <${tagOption} .choiceValue=${20} checked>Item 2</${tagOption}>
+            <${tagOption} .choiceValue=${optionValue(10)}>Item 1</${tagOption}>
+            <${tagOption} .choiceValue=${optionValue(20)} checked>Item 2</${tagOption}>
           </${hostTag}>
         `);
 
         const elSingleOption = await fixture(html`
           <${hostTag}>
-            <${tagOption} .choiceValue=${10}>Item 1</${tagOption}>
+            <${tagOption} .choiceValue=${optionValue(10)}>Item 1</${tagOption}>
           </${hostTag}>
         `);
 
@@ -396,26 +433,24 @@ export function runSelectRichSuite({
       it('sets inheritsReferenceWidth to min by default', async () => {
         const el = await fixture(html`
           <${hostTag} name="favoriteColor" label="Favorite color">
-            <${tagOption} .choiceValue=${'red'}>Red</${tagOption}>
-            <${tagOption} .choiceValue=${'hotpink'}>Hotpink</${tagOption}>
-            <${tagOption} .choiceValue=${'teal'}>Teal</${tagOption}>
+            <${tagOption} .choiceValue=${optionValue('red')}>Red</${tagOption}>
+            <${tagOption} .choiceValue=${optionValue('hotpink')}>Hotpink</${tagOption}>
+            <${tagOption} .choiceValue=${optionValue('teal')}>Teal</${tagOption}>
           </${hostTag}>
         `);
         const { _overlayCtrl } = getSelectRichMembers(el);
-
-        expect(_overlayCtrl.inheritsReferenceWidth).to.equal('min');
+        expect(_overlayCtrl.inheritsReferenceWidth).to.equal(modalOverlay ? 'none' : 'min');
         el.opened = true;
         await el.updateComplete;
-
-        expect(_overlayCtrl.inheritsReferenceWidth).to.equal('min');
+        expect(_overlayCtrl.inheritsReferenceWidth).to.equal(modalOverlay ? 'none' : 'min');
       });
 
       it('should override the inheritsWidth prop when no default selected feature is used', async () => {
         const el = await fixture(html`
           <${hostTag} name="favoriteColor" label="Favorite color" has-no-default-selected>
-            <${tagOption} .choiceValue=${'red'}>Red</${tagOption}>
-            <${tagOption} .choiceValue=${'hotpink'}>Hotpink</${tagOption}>
-            <${tagOption} .choiceValue=${'teal'}>Teal</${tagOption}>
+            <${tagOption} .choiceValue=${optionValue('red')}>Red</${tagOption}>
+            <${tagOption} .choiceValue=${optionValue('hotpink')}>Hotpink</${tagOption}>
+            <${tagOption} .choiceValue=${optionValue('teal')}>Teal</${tagOption}>
           </${hostTag}>
         `);
 
@@ -429,10 +464,10 @@ export function runSelectRichSuite({
         el.opened = true;
         await el.updateComplete;
         // Opens while hasNoDefaultSelected = true, so we expect an override
-        expect(_overlayCtrl.inheritsReferenceWidth).to.equal('min');
+        expect(_overlayCtrl.inheritsReferenceWidth).to.equal(noSelectionReferenceWidth);
 
         // Emulate selecting hotpink, it closing, and opening it again
-        el.modelValue = 'hotpink';
+        el.modelValue = optionValue('hotpink');
         el.opened = false;
         await el.updateComplete; // necessary for overlay controller to actually close and re-open
         await el.updateComplete; // safari takes a little longer
@@ -442,14 +477,14 @@ export function runSelectRichSuite({
         await _overlayCtrl._showComplete;
 
         // noDefaultSelected will now flip the override back to what was the initial reference width
-        expect(_overlayCtrl.inheritsReferenceWidth).to.equal('full');
+        expect(_overlayCtrl.inheritsReferenceWidth).to.equal(selectedReferenceWidth);
       });
 
       it('should have singleOption only if there is exactly one option', async () => {
         const el = await fixture(html`
           <${hostTag}>
-            <${tagOption} .choiceValue=${10}>Item 1</${tagOption}>
-            <${tagOption} .choiceValue=${20}>Item 2</${tagOption}>
+            <${tagOption} .choiceValue=${optionValue(10)}>Item 1</${tagOption}>
+            <${tagOption} .choiceValue=${optionValue(20)}>Item 2</${tagOption}>
           </${hostTag}>
         `);
 
@@ -465,9 +500,8 @@ export function runSelectRichSuite({
         await el.updateComplete;
         expect(el.singleOption).to.be.true;
         expect(_invokerNode.singleOption).to.be.true;
-
         const newOption = /** @type {LionOption} */ (document.createElement(tagNameOption));
-        newOption.choiceValue = 30;
+        newOption.choiceValue = optionValue(30);
         _inputNode.appendChild(newOption);
         // @ts-ignore [test] allow to not provide args for testing purposes
         el.requestUpdate();
@@ -479,7 +513,7 @@ export function runSelectRichSuite({
       it('should have singleOption only if one option and no hasNoDefaultSelected', async () => {
         const el = await fixture(html`
           <${hostTag} has-no-default-selected>
-            <${tagOption} .choiceValue=${10}>Item 1</${tagOption}>
+            <${tagOption} .choiceValue=${optionValue(10)}>Item 1</${tagOption}>
           </${hostTag}>
         `);
 
@@ -560,8 +594,12 @@ export function runSelectRichSuite({
         const el = await fixture(html` <${hostTag} opened> </${hostTag}> `);
         // tab can only be caught via keydown
         const { _listboxNode } = getSelectRichMembers(el);
-        _listboxNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab' }));
-        expect(el.opened).to.be.false;
+        _listboxNode.dispatchEvent(
+          new KeyboardEvent('keydown', {
+            key: 'Tab',
+          }),
+        );
+        expect(el.opened).to.equal(trapsKeyboardFocus);
       });
 
       it('does not close the listbox with [Tab] key once opened when trapsKeyboardFocus is true', async () => {
@@ -588,7 +626,7 @@ export function runSelectRichSuite({
       it('closes the listbox when an option gets clicked', async () => {
         const el = await fixture(html`
           <${hostTag} opened>
-            <${tagOption} .choiceValue=${10}>Item 1</${tagOption}>
+            <${tagOption} .choiceValue=${optionValue(10)}>Item 1</${tagOption}>
           </${hostTag}>
         `);
         expect(el.opened).to.be.true;
@@ -610,8 +648,8 @@ export function runSelectRichSuite({
       it('checks active item and closes the listbox with [Enter] key via click handler once opened', async () => {
         const el = await fixture(html`
           <${hostTag} opened interaction-mode="mac">
-            <${tagOption} .choiceValue=${10}>Item 1</${tagOption}>
-            <${tagOption} .choiceValue=${20}>Item 2</${tagOption}>
+            <${tagOption} .choiceValue=${optionValue(10)}>Item 1</${tagOption}>
+            <${tagOption} .choiceValue=${optionValue(20)}>Item 2</${tagOption}>
           </${hostTag}>
         `);
         const { _listboxNode } = getSelectRichMembers(el);
@@ -647,8 +685,8 @@ export function runSelectRichSuite({
       it('has the right references to its inner elements', async () => {
         const el = await fixture(html`
           <${hostTag} label="age">
-            <${tagOption} .choiceValue=${10}>Item 1</${tagOption}>
-            <${tagOption} .choiceValue=${20}>Item 2</${tagOption}>
+            <${tagOption} .choiceValue=${optionValue(10)}>Item 1</${tagOption}>
+            <${tagOption} .choiceValue=${optionValue(20)}>Item 2</${tagOption}>
           </${hostTag}>
         `);
         const { _invokerNode, _feedbackNode, _labelNode, _helpTextNode } = getSelectRichMembers(el);
@@ -662,15 +700,28 @@ export function runSelectRichSuite({
 
       it('notifies when the listbox is expanded or not', async () => {
         // smoke test for overlay functionality
-        const el = await fixture(html` <${hostTag}> </${hostTag}> `);
-        const { _invokerNode } = getSelectRichMembers(el);
-
-        expect(_invokerNode.getAttribute('aria-expanded')).to.equal('false');
+        const el = await fixture(html`
+          <${hostTag}>
+            ${
+              trapsKeyboardFocus
+                ? html`<${tagOption} .choiceValue=${optionValue('red')}>Red</${tagOption}>
+                  <${tagOption} .choiceValue=${optionValue('blue')}>Blue</${tagOption}>`
+                : nothing
+            }
+          </${hostTag}>
+        `);
+        const { _invokerNode, _overlayCtrl } = getSelectRichMembers(el);
+        expect(_invokerNode.getAttribute('aria-expanded')).to.equal(modalOverlay ? null : 'false');
         el.opened = true;
-        await el.updateComplete;
-        await el.updateComplete; // need 2 awaits as overlay.show is an async function
+        await _overlayCtrl._showComplete;
+        await waitUntil(
+          () => _invokerNode.getAttribute('aria-expanded') === (modalOverlay ? null : 'true'),
+        );
 
-        expect(_invokerNode.getAttribute('aria-expanded')).to.equal('true');
+        expect(_invokerNode.getAttribute('aria-expanded')).to.equal(modalOverlay ? null : 'true');
+        if (modalOverlay) {
+          expect(_overlayCtrl.contentNode.getAttribute('aria-modal')).to.equal('true');
+        }
       });
     });
 
@@ -712,7 +763,10 @@ export function runSelectRichSuite({
                   ${this.colorList.map(
                     colorObj => html`
                       <${tagOption}
-                        .modelValue=${{ value: colorObj.value, checked: colorObj.checked }}
+                        .modelValue=${{
+                          value: optionValue(colorObj.value),
+                          checked: colorObj.checked,
+                        }}
                         >${colorObj.label}</${tagOption}
                       >
                     `,
@@ -734,18 +788,34 @@ export function runSelectRichSuite({
         const { _invokerNode, _listboxNode } = getSelectRichMembers(selectRich);
 
         expect(selectRich.checkedIndex).to.equal(1);
-        expect(selectRich.modelValue).to.equal('hotpink');
-        expect(/** @type {LionOption} */ (_invokerNode.selectedElement).value).to.equal('hotpink');
-
+        expect(selectRich.modelValue).to.equal(optionValue('hotpink'));
+        expect(/** @type {LionOption} */ (_invokerNode.selectedElement).modelValue.value).to.equal(
+          optionValue('hotpink'),
+        );
+        if (typeof optionValue('hotpink') === 'string') {
+          expect(/** @type {LionOption} */ (_invokerNode.selectedElement).value).to.equal(
+            optionValue('hotpink'),
+          );
+        }
         const newOption = /** @type {LionOption} */ (document.createElement(tagNameOption));
-        newOption.modelValue = { checked: false, value: 'blue' };
+        newOption.modelValue = {
+          checked: false,
+          value: optionValue('blue'),
+        };
         newOption.textContent = 'Blue';
         const hotpinkEl = _listboxNode.children[1];
         hotpinkEl.insertAdjacentElement('beforebegin', newOption);
 
         expect(selectRich.checkedIndex).to.equal(2);
-        expect(selectRich.modelValue).to.equal('hotpink');
-        expect(/** @type {LionOption} */ (_invokerNode.selectedElement).value).to.equal('hotpink');
+        expect(selectRich.modelValue).to.equal(optionValue('hotpink'));
+        expect(/** @type {LionOption} */ (_invokerNode.selectedElement).modelValue.value).to.equal(
+          optionValue('hotpink'),
+        );
+        if (typeof optionValue('hotpink') === 'string') {
+          expect(/** @type {LionOption} */ (_invokerNode.selectedElement).value).to.equal(
+            optionValue('hotpink'),
+          );
+        }
       });
     });
 
@@ -800,8 +870,7 @@ export function runSelectRichSuite({
                       this.activeTabIndex === 0
                         ? html`<${hostTag} name="favoriteColor" label="Favorite color">
                             ${colours.map(
-                              colour =>
-                                html`<${tagOption} .choiceValue="${colour.value}"
+                              colour => html`<${tagOption} .choiceValue="${optionValue(colour.value)}"
                                   >${colour.label}</${tagOption}
                                 >`,
                             )}
@@ -843,7 +912,12 @@ export function runSelectRichSuite({
           /**
            * @returns { HTMLElement | null | undefined }
            */
-          const getInvoker = () => wrapperElementShadowRoot?.querySelector('lion-select-invoker');
+          const getInvoker = () => {
+            const select = /** @type {LionSelectRich | null | undefined} */ (
+              wrapperElementShadowRoot?.querySelector(hostTagString)
+            );
+            return select ? getSelectRichMembers(select)._invokerNode : undefined;
+          };
           /**
            * @returns { boolean }
            */
@@ -852,24 +926,32 @@ export function runSelectRichSuite({
            * @returns { string | undefined }
            */
           const getSelectedColourLabel = () =>
-            getInvoker()?.shadowRoot?.querySelector('#content-wrapper')?.textContent?.trim();
-          const getDialog = () =>
-            wrapperElementShadowRoot
-              ?.querySelector(hostTagString)
-              ?.shadowRoot?.querySelector('dialog');
-          const isDialogVisible = () =>
-            // @ts-ignore
-            isElementVisible(getDialog()) &&
-            getDialog()?.querySelector('#overlay-content-node-wrapper[data-popper-placement]');
+            getInvoker()
+              ? getInvokerLabel(/** @type {LionSelectInvoker} */ (getInvoker()))
+              : undefined;
+          const isDialogVisible = () => {
+            const select = /** @type {LionSelectRich | null | undefined} */ (
+              wrapperElementShadowRoot?.querySelector(hostTagString)
+            );
+            const ctrl = select ? getSelectRichMembers(select)._overlayCtrl : undefined;
+            return !!ctrl?.isShown && isElementVisible(ctrl.contentNode);
+          };
           await waitUntil(isSelectRichRendered);
           getInvoker()?.click();
           await waitUntil(isDialogVisible);
-          // @ts-ignore [dynamic-key-access-in-test]
-          const optionBlue = /** @type { HTMLElement | undefined } */ (
-            wrapperElementShadowRoot?.querySelectorAll(tagNameOption)
-          )?.[1];
-          optionBlue?.click();
+          const select = /** @type {LionSelectRich} */ (
+            wrapperElementShadowRoot?.querySelector(hostTagString)
+          );
+          await getSelectRichMembers(select)._overlayCtrl._showComplete;
+          await select.updateComplete;
+          const optionBlue = select.formElements[1];
+          expect(optionBlue, `expected two registered options, got ${select.formElements.length}`)
+            .to.exist;
+          optionBlue.click();
+          expect(select.opened).to.be.false;
           await waitUntil(() => !isDialogVisible());
+          expect(isElementVisible(getSelectRichMembers(select)._overlayCtrl.contentNode)).to.be
+            .false;
           const selectedColourLabelBeforeTabSwitch = getSelectedColourLabel();
           expect(selectedColourLabelBeforeTabSwitch).to.equal('Blue');
           getSecondButton()?.click();
@@ -932,9 +1014,8 @@ export function runSelectRichSuite({
                       this.activeTabIndex === 0
                         ? html`<${hostTag} name="favoriteColor" label="Favorite color">
                             ${colours.map(
-                              colour =>
-                                html`<${tagOption}
-                                  .choiceValue="${colour.value}"
+                              colour => html`<${tagOption}
+                                  .choiceValue="${optionValue(colour.value)}"
                                   checked="${colour.checked || nothing}"
                                   >${colour.label}</${tagOption}
                                 >`,
@@ -977,7 +1058,12 @@ export function runSelectRichSuite({
           /**
            * @returns { HTMLElement | null | undefined }
            */
-          const getInvoker = () => wrapperElementShadowRoot?.querySelector('lion-select-invoker');
+          const getInvoker = () => {
+            const select = /** @type {LionSelectRich | null | undefined} */ (
+              wrapperElementShadowRoot?.querySelector(hostTagString)
+            );
+            return select ? getSelectRichMembers(select)._invokerNode : undefined;
+          };
           /**
            * @returns { boolean }
            */
@@ -986,24 +1072,32 @@ export function runSelectRichSuite({
            * @returns { string | undefined }
            */
           const getSelectedColourLabel = () =>
-            getInvoker()?.shadowRoot?.querySelector('#content-wrapper')?.textContent?.trim();
-          const getDialog = () =>
-            wrapperElementShadowRoot
-              ?.querySelector(hostTagString)
-              ?.shadowRoot?.querySelector('dialog');
-          const isDialogVisible = () =>
-            // @ts-ignore
-            isElementVisible(getDialog()) &&
-            getDialog()?.querySelector('#overlay-content-node-wrapper[data-popper-placement]');
+            getInvoker()
+              ? getInvokerLabel(/** @type {LionSelectInvoker} */ (getInvoker()))
+              : undefined;
+          const isDialogVisible = () => {
+            const select = /** @type {LionSelectRich | null | undefined} */ (
+              wrapperElementShadowRoot?.querySelector(hostTagString)
+            );
+            const ctrl = select ? getSelectRichMembers(select)._overlayCtrl : undefined;
+            return !!ctrl?.isShown && isElementVisible(ctrl.contentNode);
+          };
           await waitUntil(isSelectRichRendered);
           getInvoker()?.click();
           await waitUntil(isDialogVisible);
-          // @ts-ignore [dynamic-key-access-in-test]
-          const optionBlue = /** @type { HTMLElement | undefined } */ (
-            wrapperElementShadowRoot?.querySelectorAll(tagNameOption)
-          )?.[1];
-          optionBlue?.click();
+          const select = /** @type {LionSelectRich} */ (
+            wrapperElementShadowRoot?.querySelector(hostTagString)
+          );
+          await getSelectRichMembers(select)._overlayCtrl._showComplete;
+          await select.updateComplete;
+          const optionBlue = select.formElements[1];
+          expect(optionBlue, `expected two registered options, got ${select.formElements.length}`)
+            .to.exist;
+          optionBlue.click();
+          expect(select.opened).to.be.false;
           await waitUntil(() => !isDialogVisible());
+          expect(isElementVisible(getSelectRichMembers(select)._overlayCtrl.contentNode)).to.be
+            .false;
           const selectedColourLabelBeforeTabSwitch = getSelectedColourLabel();
           expect(selectedColourLabelBeforeTabSwitch).to.equal('Blue');
           getSecondButton()?.click();
@@ -1073,7 +1167,10 @@ export function runSelectRichSuite({
                                     // eslint-disable-next-line no-param-reassign
                                     colour.checked = lionOption.modelValue.checked;
                                   }}
-                                  .modelValue=${{ value: colour.value, checked: colour.checked }}
+                                  .modelValue=${{
+                                    value: optionValue(colour.value),
+                                    checked: colour.checked,
+                                  }}
                                   >${colour.label}</${tagOption}
                                 >`,
                             )}
@@ -1115,7 +1212,12 @@ export function runSelectRichSuite({
           /**
            * @returns { HTMLElement | null | undefined }
            */
-          const getInvoker = () => wrapperElementShadowRoot?.querySelector('lion-select-invoker');
+          const getInvoker = () => {
+            const select = /** @type {LionSelectRich | null | undefined} */ (
+              wrapperElementShadowRoot?.querySelector(hostTagString)
+            );
+            return select ? getSelectRichMembers(select)._invokerNode : undefined;
+          };
           /**
            * @returns { boolean }
            */
@@ -1124,24 +1226,32 @@ export function runSelectRichSuite({
            * @returns { string | undefined }
            */
           const getSelectedColourLabel = () =>
-            getInvoker()?.shadowRoot?.querySelector('#content-wrapper')?.textContent?.trim();
-          const getDialog = () =>
-            wrapperElementShadowRoot
-              ?.querySelector(hostTagString)
-              ?.shadowRoot?.querySelector('dialog');
-          const isDialogVisible = () =>
-            // @ts-ignore
-            isElementVisible(getDialog()) &&
-            getDialog()?.querySelector('#overlay-content-node-wrapper[data-popper-placement]');
+            getInvoker()
+              ? getInvokerLabel(/** @type {LionSelectInvoker} */ (getInvoker()))
+              : undefined;
+          const isDialogVisible = () => {
+            const select = /** @type {LionSelectRich | null | undefined} */ (
+              wrapperElementShadowRoot?.querySelector(hostTagString)
+            );
+            const ctrl = select ? getSelectRichMembers(select)._overlayCtrl : undefined;
+            return !!ctrl?.isShown && isElementVisible(ctrl.contentNode);
+          };
           await waitUntil(isSelectRichRendered);
           getInvoker()?.click();
           await waitUntil(isDialogVisible);
-          // @ts-ignore [dynamic-key-access-in-test]
-          const optionBlue = /** @type { HTMLElement | undefined } */ (
-            wrapperElementShadowRoot?.querySelectorAll(tagNameOption)
-          )?.[1];
-          optionBlue?.click();
+          const select = /** @type {LionSelectRich} */ (
+            wrapperElementShadowRoot?.querySelector(hostTagString)
+          );
+          await getSelectRichMembers(select)._overlayCtrl._showComplete;
+          await select.updateComplete;
+          const optionBlue = select.formElements[1];
+          expect(optionBlue, `expected two registered options, got ${select.formElements.length}`)
+            .to.exist;
+          optionBlue.click();
+          expect(select.opened).to.be.false;
           await waitUntil(() => !isDialogVisible());
+          expect(isElementVisible(getSelectRichMembers(select)._overlayCtrl.contentNode)).to.be
+            .false;
           const selectedColourLabelBeforeTabSwitch = getSelectedColourLabel();
           expect(selectedColourLabelBeforeTabSwitch).to.equal('Blue');
           getSecondButton()?.click();
@@ -1165,8 +1275,8 @@ export function runSelectRichSuite({
       it('correctly removes event listeners when disconnected from dom', async () => {
         const el = await fixture(html`
           <${hostTag} label="age">
-            <${tagOption} .choiceValue=${10}>Item 1</${tagOption}>
-            <${tagOption} .choiceValue=${20}>Item 2</${tagOption}>
+            <${tagOption} .choiceValue=${optionValue(10)}>Item 1</${tagOption}>
+            <${tagOption} .choiceValue=${optionValue(20)}>Item 2</${tagOption}>
           </${hostTag}>
         `);
 
@@ -1272,9 +1382,9 @@ export function runSelectRichSuite({
         const el = await fixture(html`
           <${selectTag} id="color" name="color" label="Favorite color" has-no-default-selected>
 
-              <${tagOption} .choiceValue=${'red'}>Red</${tagOption}>
-              <${tagOption} .choiceValue=${'hotpink'} disabled>Hotpink</${tagOption}>
-              <${tagOption} .choiceValue=${'teal'}>Teal</${tagOption}>
+              <${tagOption} .choiceValue=${optionValue('red')}>Red</${tagOption}>
+              <${tagOption} .choiceValue=${optionValue('hotpink')} disabled>Hotpink</${tagOption}>
+              <${tagOption} .choiceValue=${optionValue('teal')}>Teal</${tagOption}>
 
           </${selectTag}>
         `);

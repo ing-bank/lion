@@ -106,6 +106,32 @@ describe('my-input', () => {
    runDatepickerSuite({ pageObjects: { host: MyDatepickerInputObject } });
    ```
 
+   When a pagination control exposes its disabled state differently, `assertDisabled(node)` can
+   assert that state on the previous and next controls. Without it, the suite requires the
+   `disabled` attribute. `runInteractionStateMixinSuite` accepts `submittedFeedbackTypes` when a
+   host shows additional feedback types after submission; its default remains `['error']`.
+
+   The combobox runner also accepts `showAllOnEmptyByDefault`, `displaysOptionLabel`, and
+   `opensOnInputClick` for hosts with those defaults. `getOptionTextNode(option)` selects the
+   rendered label for highlight assertions, and `supportsRichOptionContent: false` tests
+   plain-label options instead of rich content. Their defaults retain Lion's behavior.
+   `runInputRangeSuite` accepts `configureMinMaxLabels(host)` to enable labels on fixtures whose
+   host hides them by default. `runDialogSuite` accepts `usesHeaderSlotForAccessibleName: true`
+   for opened accessibility fixtures that require a header.
+
+   Select-rich runners accept `optionValue(value)` to adapt fixture values; it must return a
+   consistent value for the same input. The interaction runner's `supportsEmptyOption: false`
+   checks required validation by clearing the selection instead of selecting an empty option.
+   The main runner accepts `getInvokerLabel`, `invokerUsesModelValue`, `modalOverlay`,
+   `hidesOnOutsideClick`, `trapsKeyboardFocus`, `noSelectionReferenceWidth` and
+   `selectedReferenceWidth` for variations in rendering and overlay behavior. Defaults preserve
+   the dropdown assertions. `runSelectInvokerSuite` accepts `configureSelectedElement`,
+   `assertSelectedContent` and `getAfterElement` for custom option data and invoker markup;
+   the supplied assertion must still verify the selected content.
+
+   `runTooltipSuite` accepts `arrowWidth` and `defaultInvokerRelation` for tooltip variants. It
+   still checks the arrow position and both accessible relation attributes.
+
 7. **Accessibility is Lion's; styling and markup are the extension layer's.** So the accessible
    _name_ is asserted, but not the attribute it lives on: the suite reads it from `title`,
    `aria-label` or a `label` attribute, and the copy stays Lion's (localized messages). Asserting

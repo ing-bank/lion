@@ -18,11 +18,12 @@ import { resolveSuiteTag } from '../../core/test-helpers/resolveSuiteTag.js';
  * Runs the interaction-state suite. The caller hands the element to run against; leaving `host` out
  * keeps the element this suite builds from the mixin.
  * @typedef {import('@lion/ui/types/test-suites.js').SuiteElement} SuiteElement
- * @param {import('@lion/ui/types/test-suites.js').SuiteConfig<{host: SuiteElement}, {allowedModelValueTypes?: any[]}>} [customConfig]
+ * @param {import('@lion/ui/types/test-suites.js').SuiteConfig<{host: SuiteElement}, {allowedModelValueTypes?: any[], submittedFeedbackTypes?: string[]}>} [customConfig]
  */
 export function runInteractionStateMixinSuite({
   classes = {},
   allowedModelValueTypes = [Array, Object, Number, Boolean, String, Date],
+  submittedFeedbackTypes = ['error'],
   tagString: legacyTagString,
 } = {}) {
   describe(`InteractionStateMixin`, async () => {
@@ -230,7 +231,7 @@ export function runInteractionStateMixinSuite({
         el.submitted = true;
         await el.updateComplete;
         // @ts-ignore [allow-private] in test
-        expect(el.shouldShowFeedbackFor).to.deep.equal(['error']);
+        expect(el.shouldShowFeedbackFor).to.deep.equal(submittedFeedbackTypes);
       });
 
       it('keeps the feedback component in sync', async () => {

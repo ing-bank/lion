@@ -15,11 +15,26 @@ import { resolveSuiteTag } from '../../core/test-helpers/resolveSuiteTag.js';
  * tag; see docs/guides/principles/test-suites.md.
  * `tagString`, `klass` and the older role tag keys are deprecated: pass `classes` instead (Lion
  * itself uses `classes` everywhere).
- * @param {import('@lion/ui/types/test-suites.js').SuiteConfig<{host: SuiteElement}>} [customConfig]
+ * @param {import('@lion/ui/types/test-suites.js').SuiteConfig<{host: SuiteElement}, {
+ *   configureSelectedElement?: (option: LionOption, scenario: 'children'|'text') => void;
+ *   assertSelectedContent?: (invoker: LionSelectInvoker, scenario: 'children'|'text') => void;
+ *   getAfterElement?: (invoker: LionSelectInvoker) => Element|null;
+ * }>} [customConfig]
  */
 export function runSelectInvokerSuite({
   classes: { host = LionSelectInvoker } = {},
   tagString: legacyTagString,
+  configureSelectedElement = () => {},
+  assertSelectedContent = (invoker, scenario) => {
+    if (scenario === 'text') {
+      expect(invoker._contentWrapperNode).lightDom.to.equal('just textContent');
+    } else {
+      expect(invoker._contentWrapperNode).lightDom.to.equal('Textnode<h2>I am</h2><p>2 lines</p>', {
+        ignoreAttributes: ['class'],
+      });
+    }
+  },
+  getAfterElement = invoker => invoker.shadowRoot?.querySelector('slot[name="after"]') ?? null,
 } = {}) {
   const tag = unsafeStatic(resolveSuiteTag(host, legacyTagString));
 
@@ -34,18 +49,10 @@ export function runSelectInvokerSuite({
       el.selectedElement = /** @type {LionOption} */ (
         await fixture(`<div class="option">Textnode<h2>I am</h2><p>2 lines</p></div>`)
       );
+      configureSelectedElement(el.selectedElement, 'children');
       await el.updateComplete;
 
-      expect(el._contentWrapperNode).lightDom.to.equal(
-        `
-          Textnode
-          <h2>I am</h2>
-          <p>2 lines</p>
-        `,
-        {
-          ignoreAttributes: ['class'], // ShadyCss automatically adds classes
-        },
-      );
+      assertSelectedContent(el, 'children');
     });
 
     it('renders invoker info based on selectedElement textContent', async () => {
@@ -53,9 +60,10 @@ export function runSelectInvokerSuite({
       el.selectedElement = /** @type {LionOption} */ (
         await fixture(`<div class="option">just textContent</div>`)
       );
+      configureSelectedElement(el.selectedElement, 'text');
       await el.updateComplete;
 
-      expect(el._contentWrapperNode).lightDom.to.equal('just textContent');
+      assertSelectedContent(el, 'text');
     });
 
     it('has tabindex="0"', async () => {
@@ -69,15 +77,13 @@ export function runSelectInvokerSuite({
         await fixture(html` <${tag} .singleOption="${true}"></${tag}> `)
       );
 
-      expect(/** @type {ShadowRoot} */ (el.shadowRoot).querySelector('slot[name="after"]')).to.not
-        .exist;
+      expect(getAfterElement(el)).to.not.exist;
     });
 
     it('should render after slot when singleOption is not true', async () => {
       const el = /** @type {LionSelectInvoker} */ (await fixture(html`<${tag}></${tag}>`));
 
-      expect(/** @type {ShadowRoot} */ (el.shadowRoot).querySelector('slot[name="after"]')).to
-        .exist;
+      expect(getAfterElement(el)).to.exist;
     });
 
     describe('Subclassers', () => {

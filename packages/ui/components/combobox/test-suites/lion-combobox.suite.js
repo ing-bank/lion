@@ -25,6 +25,11 @@ import { isActiveElement } from '../../core/test-helpers/isActiveElement.js';
  * @param {import('@lion/ui/types/test-suites.js').SuiteConfig<{host: SuiteElement; option: SuiteElement}, {
  *   optionTagString?: string;
  *   configureOption?: (option: import('@lion/ui/listbox.js').LionOption, label: string) => void;
+ *   showAllOnEmptyByDefault?: boolean;
+ *   displaysOptionLabel?: boolean;
+ *   opensOnInputClick?: boolean;
+ *   getOptionTextNode?: (option: import('@lion/ui/listbox.js').LionOption) => Element;
+ *   supportsRichOptionContent?: boolean;
  * }>} [customConfig]
  */
 export function runComboboxSuite({
@@ -32,6 +37,11 @@ export function runComboboxSuite({
   tagString: legacyTagString,
   optionTagString,
   configureOption,
+  showAllOnEmptyByDefault = false,
+  displaysOptionLabel = false,
+  opensOnInputClick = false,
+  getOptionTextNode = option => option,
+  supportsRichOptionContent = true,
 } = {}) {
   const tagNameHost = resolveSuiteTag(classes.host, legacyTagString, LionCombobox);
   const tagNameOption = resolveSuiteTag(classes.option, optionTagString, LionOption);
@@ -59,6 +69,7 @@ export function runComboboxSuite({
 
   /**
    * @param {{ autocomplete?:'none'|'list'|'both', matchMode?:'begin'|'all', disabled?: boolean, readonly?: boolean }} config
+   * @returns {Promise<[LionCombobox, LionOption[]]>}
    */
   async function fruitFixture({ autocomplete, matchMode, disabled, readonly } = {}) {
     const el = /** @type {LionCombobox} */ (
@@ -125,7 +136,7 @@ export function runComboboxSuite({
           }
 
           render() {
-            return html`<${tags.host} name="foo">
+            return html`<${tags.host} name="foo" .showAllOnEmpty=${false}>
               ${this.entries.map(
                 entry =>
                   html`<${tags.option} ${optionFixture(`${entry.label}`)} .choiceValue="${entry.id}">${entry.label}</${tags.option}>`,
@@ -153,10 +164,12 @@ export function runComboboxSuite({
           },
         ];
 
+        await wrapperElement.updateComplete;
         await waitUntil(
           () =>
             getComboboxMembers(combobox)._listboxNode?.querySelectorAll(tagNameOption).length ===
-            wrapperElement.entries.length,
+              wrapperElement.entries.length &&
+            wrapperElement.shadowRoot?.querySelector(tagNameOption)?.textContent === 'Banana',
         );
 
         const optionElements = wrapperElement.shadowRoot?.querySelectorAll(tagNameOption);
@@ -167,7 +180,7 @@ export function runComboboxSuite({
     });
 
     describe('Options visibility', () => {
-      it('hides options when text in input node is cleared after typing something by default', async () => {
+      it('updates options when text in input node is cleared after typing something', async () => {
         const el = /** @type {LionCombobox} */ (
           await fixture(html`
             <${tags.host} name="foo">
@@ -189,7 +202,10 @@ export function runComboboxSuite({
           // Remove [hard], [c]
           await mimicUserTypingAdvanced(el, ['Backspace', 'Backspace']);
           await el.updateComplete;
-          expect(visibleOptions().length).to.equal(0, `autocompleteMode is ${el.autocomplete}`);
+          expect(visibleOptions().length).to.equal(
+            showAllOnEmptyByDefault ? 4 : 0,
+            `autocompleteMode is ${el.autocomplete}`,
+          );
         }
 
         el.autocomplete = 'none';
@@ -201,8 +217,7 @@ export function runComboboxSuite({
         el.autocomplete = 'both';
         await performChecks();
       });
-
-      it('hides all options on reset()', async () => {
+      it('updates visible options on reset()', async () => {
         const el = /** @type {LionCombobox} */ (
           await fixture(html`
             <${tags.host} name="foo">
@@ -222,7 +237,7 @@ export function runComboboxSuite({
         expect(visibleOptions().length).to.equal(1);
         el.reset();
         await el.updateComplete;
-        expect(visibleOptions().length).to.equal(0);
+        expect(visibleOptions().length).to.equal(showAllOnEmptyByDefault ? 4 : 0);
       });
 
       it('shows all options on reset() when showAllOnEmpty is set to true and overlay was open', async () => {
@@ -513,12 +528,10 @@ export function runComboboxSuite({
           `)
         );
         const { _inputNode } = getComboboxMembers(el);
-
-        expect(_inputNode.value).to.equal('10');
-
+        expect(_inputNode.value).to.equal(displaysOptionLabel ? 'Item 1' : '10');
         el.modelValue = '20';
         await el.updateComplete;
-        expect(_inputNode.value).to.equal('20');
+        expect(_inputNode.value).to.equal(displaysOptionLabel ? 'Item 2' : '20');
       });
 
       it('sets modelValue to Unparseable if no option is selected', async () => {
@@ -688,7 +701,7 @@ export function runComboboxSuite({
 
         el.clear();
         await el.updateComplete;
-        expect(visibleOptions().length).to.equal(0, 'after clear');
+        expect(visibleOptions().length).to.equal(showAllOnEmptyByDefault ? 4 : 0, 'after clear');
       });
 
       it('keeps interaction states on clear()', async () => {
@@ -1302,7 +1315,7 @@ export function runComboboxSuite({
     });
 
     describe('Overlay visibility', () => {
-      it('does not show overlay on click', async () => {
+      it('handles a click on the combobox node with an empty value', async () => {
         const el = /** @type {LionCombobox} */ (
           await fixture(html`
             <${tags.host} name="foo">
@@ -1313,12 +1326,11 @@ export function runComboboxSuite({
             </${tags.host}>
           `)
         );
-        const { _comboboxNode } = getComboboxMembers(el);
-
+        const { _comboboxNode, _inputNode } = getComboboxMembers(el);
         expect(el.opened).to.equal(false);
         _comboboxNode.dispatchEvent(new Event('click', { bubbles: true, composed: true }));
         await el.updateComplete;
-        expect(el.opened).to.equal(false);
+        expect(el.opened).to.equal(opensOnInputClick && _comboboxNode === _inputNode);
       });
 
       it('does not flash the menu when _showOverlayCondition returns "false"', async () => {
@@ -1364,8 +1376,7 @@ export function runComboboxSuite({
         });
         expect(hasDropdownFlashed).to.be.false;
       });
-
-      it('shows overlay on click when filled', async () => {
+      it('handles a click on the combobox node when filled', async () => {
         const el = /** @type {LionCombobox} */ (
           await fixture(html`
             <${tags.host} name="foo">
@@ -1376,12 +1387,12 @@ export function runComboboxSuite({
             </${tags.host}>
           `)
         );
-        const { _comboboxNode } = getComboboxMembers(el);
+        const { _comboboxNode, _inputNode } = getComboboxMembers(el);
         el.modelValue = 'Art';
         expect(el.opened).to.equal(false);
         _comboboxNode.dispatchEvent(new Event('click', { bubbles: true, composed: true }));
         await el.updateComplete;
-        expect(el.opened).to.equal(false);
+        expect(el.opened).to.equal(opensOnInputClick && _comboboxNode === _inputNode);
       });
 
       it('shows overlay again after select and char keyup', async () => {
@@ -1411,7 +1422,7 @@ export function runComboboxSuite({
         // step [1]
         _inputNode.dispatchEvent(new Event('click', { bubbles: true, composed: true }));
         await el.updateComplete;
-        expect(el.opened).to.equal(false);
+        expect(el.opened).to.equal(opensOnInputClick);
 
         // step [2]
         await mimicUserTyping(el, 'c');
@@ -1534,6 +1545,7 @@ export function runComboboxSuite({
         // N.B. we do only trigger keydown here (and not mimicKeypress (both keyup and down)),
         // because this closely mimics what happens in the browser
         _inputNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab' }));
+        await waitUntil(() => !el.opened);
         expect(el.opened).to.equal(false);
         expect(_inputNode.value).to.equal('Artichoke');
       });
@@ -2705,32 +2717,40 @@ export function runComboboxSuite({
         await mimicUserTyping(/** @type {LionCombobox} */ (el), 'c');
 
         await el.updateComplete;
-        expect(options[0]).lightDom.to.equal(
+        expect(getOptionTextNode(options[0])).lightDom.to.equal(
           `<span aria-label="Artichoke">Arti<b>c</b>hoke</span>`,
         );
-        expect(options[1]).lightDom.to.equal(`<span aria-label="Chard"><b>C</b>hard</span>`);
-        expect(options[2]).lightDom.to.equal(`<span aria-label="Chicory"><b>C</b>hicory</span>`);
-        expect(options[3]).lightDom.to.equal(
+        expect(getOptionTextNode(options[1])).lightDom.to.equal(
+          `<span aria-label="Chard"><b>C</b>hard</span>`,
+        );
+        expect(getOptionTextNode(options[2])).lightDom.to.equal(
+          `<span aria-label="Chicory"><b>C</b>hicory</span>`,
+        );
+        expect(getOptionTextNode(options[3])).lightDom.to.equal(
           `<span aria-label="Victoria Plum">Vi<b>c</b>toria Plum</span>`,
         );
 
         await mimicUserTyping(/** @type {LionCombobox} */ (el), 'ch');
 
         await el.updateComplete;
-        expect(options[0]).lightDom.to.equal(
+        expect(getOptionTextNode(options[0])).lightDom.to.equal(
           `<span aria-label="Artichoke">Arti<b>ch</b>oke</span>`,
         );
-        expect(options[1]).lightDom.to.equal(`<span aria-label="Chard"><b>Ch</b>ard</span>`);
-        expect(options[2]).lightDom.to.equal(`<span aria-label="Chicory"><b>Ch</b>icory</span>`);
-        expect(options[3]).lightDom.to.equal(`Victoria Plum`);
-
+        expect(getOptionTextNode(options[1])).lightDom.to.equal(
+          `<span aria-label="Chard"><b>Ch</b>ard</span>`,
+        );
+        expect(getOptionTextNode(options[2])).lightDom.to.equal(
+          `<span aria-label="Chicory"><b>Ch</b>icory</span>`,
+        );
+        expect(getOptionTextNode(options[3])).lightDom.to.equal(`Victoria Plum`);
         await mimicUserTyping(/** @type {LionCombobox} */ (el), 'D');
-
         await el.updateComplete;
-        expect(options[0]).lightDom.to.equal(`Artichoke`);
-        expect(options[1]).lightDom.to.equal(`<span aria-label="Chard">Char<b>d</b></span>`);
-        expect(options[2]).lightDom.to.equal(`Chicory`);
-        expect(options[3]).lightDom.to.equal(`Victoria Plum`);
+        expect(getOptionTextNode(options[0])).lightDom.to.equal(`Artichoke`);
+        expect(getOptionTextNode(options[1])).lightDom.to.equal(
+          `<span aria-label="Chard">Char<b>d</b></span>`,
+        );
+        expect(getOptionTextNode(options[2])).lightDom.to.equal(`Chicory`);
+        expect(getOptionTextNode(options[3])).lightDom.to.equal(`Victoria Plum`);
       });
 
       it('highlights matching complex options', async () => {
@@ -2761,16 +2781,29 @@ export function runComboboxSuite({
         await mimicUserTyping(/** @type {LionCombobox} */ (el), 'ch');
 
         await el.updateComplete;
-        expect(options[0]).lightDom.to.equal(
+        if (!supportsRichOptionContent) {
+          expect(getOptionTextNode(options[0])).lightDom.to.equal(
+            `<span aria-label="Artichoke">Arti<b>ch</b>oke</span>`,
+          );
+          expect(getOptionTextNode(options[1])).lightDom.to.equal(
+            `<span aria-label="Chard"><b>Ch</b>ard</span>`,
+          );
+          expect(getOptionTextNode(options[2])).lightDom.to.equal(
+            `<span aria-label="Chicory"><b>Ch</b>icory</span>`,
+          );
+          expect(getOptionTextNode(options[3])).lightDom.to.equal('Victoria Plum');
+          return;
+        }
+        expect(getOptionTextNode(options[0])).lightDom.to.equal(
           `<span aria-label=" Artichoke Cardoon "><div>Arti<b>ch</b>oke</div><small>Cardoon</small>`,
         );
-        expect(options[1]).lightDom.to.equal(
+        expect(getOptionTextNode(options[1])).lightDom.to.equal(
           `<span aria-label=" Chard Beet "><div><b>Ch</b>ard</div><small>Beet</small>`,
         );
-        expect(options[2]).lightDom.to.equal(
+        expect(getOptionTextNode(options[2])).lightDom.to.equal(
           `<span aria-label=" Chicory Chicory "><div><b>Ch</b>icory</div><small><b>Ch</b>icory</small>`,
         );
-        expect(options[3]).lightDom.to.equal(
+        expect(getOptionTextNode(options[3])).lightDom.to.equal(
           `<div>Victoria Plum</div><small>Prunus domestica</small>`,
         );
       });
@@ -2791,12 +2824,12 @@ export function runComboboxSuite({
         await mimicUserTyping(/** @type {LionCombobox} */ (el), 'c');
 
         await el.updateComplete;
-        expect(options[0]).lightDom.to.equal(
+        expect(getOptionTextNode(options[0])).lightDom.to.equal(
           `<span aria-label="Artichoke">Arti<b>c</b>hoke</span>`,
         );
         el.reset();
         await el.updateComplete;
-        expect(options[0]).lightDom.to.equal(`Artichoke`);
+        expect(getOptionTextNode(options[0])).lightDom.to.equal(`Artichoke`);
       });
 
       it('synchronizes textbox when autocomplete is "inline" or "both"', async () => {
@@ -3179,26 +3212,26 @@ export function runComboboxSuite({
           }
           const tagName = defineCE(X);
           const tag = unsafeStatic(tagName);
-
+          const optionTag = unsafeStatic(defineCE(class extends LionOption {}));
           const el = /** @type {LionCombobox} */ (
             await fixture(html`
               <${tag} name="foo" autocomplete="both">
-                <${tags.option} ${optionFixture('Artichoke')} .choiceValue="${'Artichoke'}">
+                <${optionTag} .choiceValue="${'Artichoke'}">
                   <div data-key>Artichoke</div>
                   <small>Cardoon</small>
-                </${tags.option}>
-                <${tags.option} ${optionFixture('Chard')} .choiceValue="${'Chard'}">
+                </${optionTag}>
+                <${optionTag} .choiceValue="${'Chard'}">
                   <div data-key>Chard</div>
                   <small>Beet</small>
-                </${tags.option}>
-                <${tags.option} ${optionFixture('Chicory')} .choiceValue="${'Chicory'}">
+                </${optionTag}>
+                <${optionTag} .choiceValue="${'Chicory'}">
                   <div data-key>Chicory</div>
                   <small>Chicory</small>
-                </${tags.option}>
-                <${tags.option} ${optionFixture('Victoria Plum')} .choiceValue="${'Victoria Plum'}">
+                </${optionTag}>
+                <${optionTag} .choiceValue="${'Victoria Plum'}">
                   <div data-key>Victoria Plum</div>
                   <small>Prunus domestica</small>
-                </${tags.option}>
+                </${optionTag}>
               </${tag}>
             `)
           );
@@ -3509,9 +3542,12 @@ export function runComboboxSuite({
           const [el, options] = await fruitFixture({ autocomplete: 'both', matchMode: 'all' });
           await mimicUserTyping(/** @type {LionCombobox} */ (el), 'choke');
           await el.updateComplete;
-          // @ts-ignore [dynamic-key-access-in-test]
-          const labelledElement = options[0].querySelector('span[aria-label="Artichoke"]');
-          expect(labelledElement).to.not.be.null;
+          const labelledElement = getOptionTextNode(options[0]).querySelector(
+            'span[aria-label="Artichoke"]',
+          );
+          if (!(labelledElement instanceof HTMLElement)) {
+            throw new Error('Highlighted option label was not found.');
+          }
           expect(labelledElement.innerText).to.equal('Artichoke');
         });
 
@@ -3530,11 +3566,17 @@ export function runComboboxSuite({
 
           await mimicUserTyping(/** @type {LionCombobox} */ (el), 'choke');
           await el.updateComplete;
-          const labelledElement = options[0].querySelector(
-            'span[aria-label=" Artichoke Cardoon "]',
+          const labelledElement = getOptionTextNode(options[0]).querySelector(
+            supportsRichOptionContent
+              ? 'span[aria-label=" Artichoke Cardoon "]'
+              : 'span[aria-label="Artichoke"]',
           );
-          expect(labelledElement).to.not.be.null;
-          expect(labelledElement.innerText).to.equal('Artichoke\nCardoon');
+          if (!(labelledElement instanceof HTMLElement)) {
+            throw new Error('Highlighted complex option label was not found.');
+          }
+          expect(labelledElement.innerText).to.equal(
+            supportsRichOptionContent ? 'Artichoke\nCardoon' : 'Artichoke',
+          );
         });
       });
     });
@@ -3674,7 +3716,7 @@ export function runComboboxSuite({
         // because this closely mimics what happens in the browser
         _inputNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
         expect(el.opened).to.equal(true);
-        expect(visibleOptions().length).to.equal(0);
+        expect(visibleOptions().length).to.equal(showAllOnEmptyByDefault ? 4 : 0);
         expect(_inputNode.value).to.equal('');
       });
 
@@ -3702,7 +3744,7 @@ export function runComboboxSuite({
 
         visibleOptions()[0].click();
         expect(el.opened).to.equal(true);
-        expect(visibleOptions().length).to.equal(0);
+        expect(visibleOptions().length).to.equal(showAllOnEmptyByDefault ? 4 : 0);
         expect(_inputNode.value).to.equal('');
       });
 
