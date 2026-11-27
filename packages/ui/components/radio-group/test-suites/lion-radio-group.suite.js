@@ -1,5 +1,8 @@
 import { html } from 'lit/static-html.js';
 import { unsafeStatic, expect, fixture as _fixture } from '@open-wc/testing';
+import sinon from 'sinon';
+import { Required } from '@lion/ui/form-core.js';
+import '@lion/ui/define/lion-radio-group.js';
 import { LionRadio, LionRadioGroup } from '@lion/ui/radio-group.js';
 import { resolveSuiteTag } from '../../core/test-helpers/resolveSuiteTag.js';
 
@@ -175,6 +178,92 @@ export function runRadioGroupSuite({
         </${tags.host}>
       `);
       await expect(el).to.be.accessible();
+    });
+
+    it('does not invoke feedbackCondition when removed from DOM', async () => {
+      const feedbackConditionSpy = sinon.spy();
+      const container = await fixture(html`
+        <div>
+          <${tags.host} name="gender" .feedbackCondition="${feedbackConditionSpy}">
+            <${tags.radio} label="Male" value="male"></${tags.radio}>
+            <${tags.radio} label="Female" value="female"></${tags.radio}>
+          </${tags.host}>
+        </div>
+      `);
+      const el = /** @type {LionRadioGroup} */ (container.firstElementChild);
+      await el.updateComplete;
+      feedbackConditionSpy.resetHistory();
+
+      el.remove();
+      expect(feedbackConditionSpy).to.not.have.been.called;
+    });
+
+    it('does not invoke feedbackCondition when removed from DOM with validators and touched', async () => {
+      const feedbackConditionSpy = sinon.spy();
+      const container = await fixture(html`
+        <div>
+          <${tags.host}
+            name="gender"
+            .validators=${[new Required()]}
+            .feedbackCondition="${feedbackConditionSpy}"
+          >
+            <${tags.radio} label="Male" value="male"></${tags.radio}>
+            <${tags.radio} label="Female" value="female"></${tags.radio}>
+          </${tags.host}>
+        </div>
+      `);
+      const el = /** @type {LionRadioGroup} */ (container.firstElementChild);
+      el.touched = true;
+      await el.updateComplete;
+      feedbackConditionSpy.resetHistory();
+
+      el.remove();
+      expect(feedbackConditionSpy).to.not.have.been.called;
+    });
+
+    it('updates validity when a selected option is removed from a connected group', async () => {
+      const el = await fixture(html`
+        <${tags.host} name="gender" .validators=${[new Required()]}>
+          <${tags.radio} label="Male" .choiceValue=${'male'}></${tags.radio}>
+          <${tags.radio} label="Female" .choiceValue=${'female'}></${tags.radio}>
+        </${tags.host}>
+      `);
+      el.formElements[0].checked = true;
+      expect(el.modelValue).to.equal('male');
+      expect(el.hasFeedbackFor).to.deep.equal([]);
+
+      const option1 = el.formElements[0];
+      option1.remove();
+
+      expect(el.modelValue).to.equal('');
+      expect(el.hasFeedbackFor).to.deep.equal(['error']);
+    });
+
+    it('updates validity when a selected option is moved to another connected group', async () => {
+      const container = await fixture(html`
+        <div>
+          <${tags.host} id="group1" name="g1" .validators=${[new Required()]}>
+            <${tags.radio} id="r1" label="Option 1" .choiceValue=${'1'}></${tags.radio}>
+          </${tags.host}>
+          <${tags.host} id="group2" name="g2" .validators=${[new Required()]}>
+            <${tags.radio} id="r2" label="Option 2" .choiceValue=${'2'}></${tags.radio}>
+          </${tags.host}>
+        </div>
+      `);
+      const g1 = /** @type {LionRadioGroup} */ (container.querySelector('#group1'));
+      const g2 = /** @type {LionRadioGroup} */ (container.querySelector('#group2'));
+      const r1 = /** @type {LionRadio} */ (container.querySelector('#r1'));
+
+      g1.formElements[0].checked = true;
+      expect(g1.hasFeedbackFor).to.deep.equal([]);
+      expect(g2.hasFeedbackFor).to.deep.equal(['error']);
+
+      g2.appendChild(r1);
+      await g1.updateComplete;
+      await g2.updateComplete;
+
+      expect(g1.hasFeedbackFor).to.deep.equal(['error']);
+      expect(g2.hasFeedbackFor).to.deep.equal([]);
     });
   });
 }

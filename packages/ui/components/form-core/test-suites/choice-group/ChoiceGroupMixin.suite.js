@@ -824,5 +824,46 @@ export function runChoiceGroupMixinSuite({
         expect(formEv.detail.isTriggeredByUser).to.be.false;
       });
     });
+
+    it('does not invoke feedbackCondition when removed from DOM', async () => {
+      const feedbackConditionSpy = sinon.spy();
+      const container = await fixture(html`
+        <div>
+          <${tags.host} name="group" .feedbackCondition="${feedbackConditionSpy}">
+            <${tags.child} label="Option 1" .choiceValue=${'1'}></${tags.child}>
+            <${tags.child} label="Option 2" .choiceValue=${'2'}></${tags.child}>
+          </${tags.host}>
+        </div>
+      `);
+      const el = /** @type {ChoiceInputGroup} */ (container.firstElementChild);
+      await el.updateComplete;
+      feedbackConditionSpy.resetHistory();
+
+      el.remove();
+      expect(feedbackConditionSpy).to.not.have.been.called;
+    });
+
+    it('does not invoke feedbackCondition when removed from DOM with validators and touched', async () => {
+      const feedbackConditionSpy = sinon.spy();
+      const container = await fixture(html`
+        <div>
+          <${tags.host}
+            name="group"
+            .validators=${[new Required()]}
+            .feedbackCondition="${feedbackConditionSpy}"
+          >
+            <${tags.child} label="Option 1" .choiceValue=${'1'}></${tags.child}>
+            <${tags.child} label="Option 2" .choiceValue=${'2'}></${tags.child}>
+          </${tags.host}>
+        </div>
+      `);
+      const el = /** @type {ChoiceInputGroup} */ (container.firstElementChild);
+      el.touched = true;
+      await el.updateComplete;
+      feedbackConditionSpy.resetHistory();
+
+      el.remove();
+      expect(feedbackConditionSpy).to.not.have.been.called;
+    });
   });
 }
