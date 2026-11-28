@@ -28,7 +28,7 @@ function git(cwd, args) {
     encoding: 'utf8',
     maxBuffer: 128 * 1024 * 1024,
     stdio: ['ignore', 'pipe', 'pipe'],
-  }).trim();
+  });
 }
 
 /**
@@ -40,11 +40,22 @@ function lines(output) {
 }
 
 /**
+ * File names from a git command run with `-z`. Without it git quotes every name with a non-ASCII
+ * letter, a quote or a newline in it (`"caf\303\251.js"`), and that name matches no file.
+ *
+ * @param {string} output
+ * @returns {string[]}
+ */
+function paths(output) {
+  return output.split('\0').filter(Boolean);
+}
+
+/**
  * @param {string} cwd
  * @returns {string} the repository root
  */
 export function repoRoot(cwd) {
-  return git(cwd, ['rev-parse', '--show-toplevel']);
+  return git(cwd, ['rev-parse', '--show-toplevel']).trim();
 }
 
 /**
@@ -55,7 +66,7 @@ export function repoRoot(cwd) {
  * @returns {string}
  */
 export function headRevision(cwd) {
-  return git(cwd, ['rev-parse', 'HEAD']);
+  return git(cwd, ['rev-parse', 'HEAD']).trim();
 }
 
 /**
@@ -63,8 +74,8 @@ export function headRevision(cwd) {
  * @returns {{ files: string[], untracked: string[] }}
  */
 export function changedFilesLocal(cwd) {
-  const tracked = lines(git(cwd, ['diff', 'HEAD', '--name-only', '--diff-filter=ACMR']));
-  const untracked = lines(git(cwd, ['ls-files', '--others', '--exclude-standard']));
+  const tracked = paths(git(cwd, ['diff', '-z', 'HEAD', '--name-only', '--diff-filter=ACMR']));
+  const untracked = paths(git(cwd, ['ls-files', '-z', '--others', '--exclude-standard']));
   return { files: [...new Set([...tracked, ...untracked])], untracked };
 }
 
@@ -75,7 +86,7 @@ export function changedFilesLocal(cwd) {
  */
 export function mergeBase(cwd, ref) {
   try {
-    return git(cwd, ['merge-base', ref, 'HEAD']);
+    return git(cwd, ['merge-base', ref, 'HEAD']).trim();
   } catch {
     return '';
   }
@@ -92,7 +103,7 @@ export function changedFilesForPullRequest(cwd, base) {
   if (!base_) {
     throw new Error(`no merge base with ${JSON.stringify(base)}`);
   }
-  return lines(git(cwd, ['diff', '--name-only', '--diff-filter=ACMR', base_]));
+  return paths(git(cwd, ['diff', '-z', '--name-only', '--diff-filter=ACMR', base_]));
 }
 
 /**
@@ -174,7 +185,7 @@ export function changedFilesSinceRelease(cwd, files) {
       continue;
     }
     reasons.push(`${packageName}: since ${tag}`);
-    for (const file of lines(git(cwd, ['diff', '--name-only', '--diff-filter=ACMR', tag]))) {
+    for (const file of paths(git(cwd, ['diff', '-z', '--name-only', '--diff-filter=ACMR', tag]))) {
       changed.add(file);
     }
   }
@@ -191,7 +202,7 @@ export function changedFilesSinceRelease(cwd, files) {
  */
 export function fileAtRevision(cwd, ref, file) {
   try {
-    return git(cwd, ['show', `${ref}:${file}`]);
+    return git(cwd, ['show', `${ref}:${file}`]).trim();
   } catch {
     return '';
   }
