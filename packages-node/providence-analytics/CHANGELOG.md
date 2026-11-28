@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.23.1
+
+### Patch Changes
+
+- fe5fb8f: fsGlob: support absolute glob and literal patterns instead of joining them with cwd.
+
 ## 0.23.0
 
 ### Minor Changes
