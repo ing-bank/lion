@@ -1,5 +1,12 @@
 # rocket-preset-extend-lion-docs
 
+## 0.4.3
+
+### Patch Changes
+
+- Updated dependencies [ab6467d]
+  - remark-extend@0.6.0
+
 ## 0.4.2
 
 ### Patch Changes

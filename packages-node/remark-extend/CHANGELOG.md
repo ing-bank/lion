@@ -1,5 +1,15 @@
 # Change Log
 
+## 0.6.0
+
+### Minor Changes
+
+- ab6467d: Carry along js import blocks that precede a section imported via `::importBlock`/`::importBlockContent`/`::importSmallBlock`/`::importSmallBlockContent`, and rewrite their relative local import/require specifiers so they keep resolving from the importing file's location. Bare (package) specifiers are left untouched.
+
+  A page that imports several sections of the same file now receives each `js script`/`js client` import statement once: those blocks end up in a single page module, where a second declaration of the same binding is a `SyntaxError: Identifier 'x' has already been declared`. An exact duplicate statement is dropped. Two statements that declare the same local name from different specifiers - `import { html } from '@mdjs/mdjs-preview'` and `import { html } from 'lit'` - are kept apart by renaming the declaration that yields (`html as html1`) and rewriting the occurrences of that name in its own block, so neither import is lost and no template literal, string or comment is touched. The page's own declaration keeps the plain name and an imported block yields, so code elsewhere on the page that leans on the page's own import keeps resolving. Every other collision is resolved the same way - the later declaration yields - so a page that declares one name twice itself, or through an import spread over many lines, needs no manual fix. An imported file is read with LF line endings, so a Windows checkout (CRLF) no longer puts carriage returns into the blocks it contributes. Plain `js` blocks are code samples and are left as they are.
+
+  The page module also covers the code of `js story` and `js preview-story` blocks, which mdjs joins into that same module, so two of those declaring one name is the same failure. There the invisible block yields: a `preview-story` keeps the code as written - the reader sees it in the preview's code slot - and only the code the browser runs is renamed. That is the order everywhere: an invisible block before a displayed one, an imported block before the page's own, and the later one before the earlier one. A rename is carried into the other invisible blocks of the file it came from, so a section whose declaration and usages live in different blocks stays consistent, while the block a reader sees keeps the code as written.
+
 ## 0.5.3
 
 ### Patch Changes
@@ -55,7 +65,6 @@
 - 5db622e9: BREAKING CHANGE: Changing approach from overwriting extending files to using an import-based approach.
 
   Removed features:
-
   - `::replaceFrom`
   - `::replaceBetween`
   - `::addMdAfter`
@@ -63,7 +72,6 @@
   - `::removeBetween`
 
   Added Features:
-
   - `::import`
   - `::importBlock`
   - `::importBlockContent`
